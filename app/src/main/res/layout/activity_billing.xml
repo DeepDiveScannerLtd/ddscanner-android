@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_window"
+    android:orientation="vertical"
+    tools:context=".ui.activities.MainActivity"
+    android:gravity="center_horizontal">
+
+    <include layout="@layout/view_toolbar" />
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp">
+
+        <LinearLayout
+            android:background="@android:color/white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/edit_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
+                android:hint="@string/cardHolderName" />
+
+            <EditText
+                android:id="@+id/edit_card_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
+                android:hint="@string/cardNumber" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/month"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginTop="20dp"
+                    android:hint="@string/cardMonth" />
+
+                <EditText
+                    android:id="@+id/year"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginTop="20dp"
+                    android:hint="@string/cardYear" />
+
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/edit_ccv"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_marginLeft="40dp"
+                android:layout_marginTop="20dp"
+                android:hint="@string/cardCCVCode" />
+
+            <Button
+                android:id="@+id/button_pay"
+                android:background="@color/accent"
+                android:layout_width="match_parent"
+                android:textColor="@android:color/white"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:textSize="26sp"
+                android:text="@string/placeOrder" />
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

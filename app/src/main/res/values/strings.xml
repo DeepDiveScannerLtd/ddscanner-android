@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Deep Dive Scanner</string>
+    <string name="billingActivityTitle">Billing details</string>
+    <string name="conditionsActivityTitle">Conditions</string>
+    <string name="cardNumber">Card number</string>
+    <string name="cardHolderName">Name on card</string>
+    <string name="cardMonth">Month</string>
+    <string name="cardYear">Year</string>
+    <string name="cardCCVCode">Year</string>
+    <string name="placeOrder">PLACE ORDER</string>
+    <string name="noteConditions">Note</string>
+    <string name="conditionsTotal">TOTAL</string>
+</resources>

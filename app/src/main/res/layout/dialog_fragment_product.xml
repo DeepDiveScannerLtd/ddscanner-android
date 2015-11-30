@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:auto="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/dialog_create_or_edit_word_view"
+    android:layout_width="match_parent"
+    android:layout_height="300dp"
+    android:background="@color/primary">
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Rating"
+        android:textSize="26sp"
+        android:textColor="@android:color/white"
+        android:padding="10dp"/>
+
+    <LinearLayout
+        android:id="@+id/stars"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/textView2"
+        android:layout_alignBottom="@+id/textView2"
+        android:layout_toRightOf="@+id/textView2"
+        android:gravity="right|center"
+        android:paddingRight="10dp">
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView2"
+        android:text="From"
+        android:textSize="26sp"
+        android:textColor="@android:color/white"
+        android:padding="10dp"/>
+
+    <Button
+        android:id="@+id/explore"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/accent"
+        android:text="EXPLORE"
+        android:textSize="24sp"
+        android:layout_alignParentBottom="true"
+        android:textColor="@android:color/white"
+        android:padding="10dp"/>
+</RelativeLayout>
+
