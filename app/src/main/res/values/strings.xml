@@ -10,4 +10,21 @@
     <string name="placeOrder">PLACE ORDER</string>
     <string name="noteConditions">Note</string>
     <string name="conditionsTotal">TOTAL</string>
+    <string name="depthPlace">DEPTH</string>
+    <string name="visibilityPlace">VISIBILITY</string>
+    <string name="accessPlace">ACCESS</string>
+    <string name="sealifePlace">Sealife</string>
+    <string name="btnBookNow">BOOK NOW</string>
+    <string name="selectCity">Select a city</string>
+    <string name="divingLevel">Select your diving level</string>
+    <string name="bookingSuccessfull">Booking successfully completed</string>
+    <string name="description">DESCRIPTION</string>
+    <string name="userName">NAME</string>
+    <string name="rating">Rating</string>
+    <string name="from">FROM</string>
+    <string name="explore">EXPLORE</string>
+    <string name="optionTitle">TITLE</string>
+    <string name="optionDuration">Duration</string>
+    <string name="startTime">Start time</string>
+    <string name="btnChoseOption">CHOSE THIS OPTION</string>
 </resources>

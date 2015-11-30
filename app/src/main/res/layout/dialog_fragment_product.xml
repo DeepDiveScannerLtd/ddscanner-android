@@ -10,7 +10,7 @@
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Rating"
+        android:text="@string/rating"
         android:textSize="26sp"
         android:textColor="@android:color/white"
         android:padding="10dp"/>
@@ -34,7 +34,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView2"
-        android:text="From"
+        android:text="@string/from"
         android:textSize="26sp"
         android:textColor="@android:color/white"
         android:padding="10dp"/>
@@ -44,7 +44,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/accent"
-        android:text="EXPLORE"
+        android:text="@string/explore"
         android:textSize="24sp"
         android:layout_alignParentBottom="true"
         android:textColor="@android:color/white"

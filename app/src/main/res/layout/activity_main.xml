@@ -38,7 +38,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:text="Select a city" />
+                android:text="@string/selectCity" />
 
             <Spinner
                 android:id="@+id/main_cities_spinner"
@@ -65,7 +65,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:text="Select your diving level" />
+                android:text="@string/divingLevel" />
 
             <Spinner
                 android:id="@+id/main_licenses_spinner"

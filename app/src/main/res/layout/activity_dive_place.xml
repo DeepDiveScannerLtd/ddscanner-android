@@ -62,7 +62,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="DEPTH"
+                    android:text="@string/depthPlace"
                     android:textSize="24sp" />
 
                 <TextView
@@ -70,7 +70,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="VISIBILITY"
+                    android:text="@string/visibilityPlace"
                     android:textSize="24sp" />
 
                 <TextView
@@ -78,7 +78,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="ACCESS"
+                    android:text="@string/accessPlace"
                     android:textSize="24sp" />
 
             </LinearLayout>
@@ -94,7 +94,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="DEPTH"
+                    android:text="@string/depthPlace"
                     android:textSize="20sp" />
 
                 <TextView
@@ -103,7 +103,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="VISIBILITY"
+                    android:text="@string/visibilityPlace"
                     android:textSize="20sp" />
 
                 <TextView
@@ -112,7 +112,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="ACCESS"
+                    android:text="@string/accessPlace"
                     android:textSize="20sp" />
 
             </LinearLayout>
@@ -122,7 +122,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="15dp"
-                android:text="Sealife"
+                android:text="@string/sealifePlace"
                 android:textSize="26sp" />
 
             <LinearLayout
@@ -156,6 +156,6 @@
         android:layout_alignParentBottom="true"
         android:background="@color/accent"
         android:textColor="@android:color/white"
-        android:text="BOOK NOW"/>
+        android:text="@string/btnBookNow"/>
 
 </RelativeLayout>
