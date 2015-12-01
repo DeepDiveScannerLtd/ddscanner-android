@@ -1,5 +1,6 @@
 package travel.ilave.deepdivescanner.ui.activities;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -33,6 +34,7 @@ public class    MainActivity extends AppCompatActivity implements View.OnClickLi
     private Spinner licensesSpinner;
     private FloatingActionButton searchFab;
     private CitiesLicensesWrapper citiesLicensesWrapper;
+    private ProgressDialog progressDialog;
 
     private int selectedCityPosition = -1;
     private int selectedLicensePosition = -1;
@@ -56,6 +58,8 @@ public class    MainActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void requestCities() {
+        progressDialog = new ProgressDialog(this);
+        progressDialog.show();
         RestClient.getServiceInstance().getCities(new Callback<Response>() {
             @Override
             public void success(Response s, Response response) {
@@ -86,6 +90,7 @@ public class    MainActivity extends AppCompatActivity implements View.OnClickLi
     private void populateLicensesSpinner(List<String> licenses) {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.item_spinner, android.R.id.text1, licenses);
         licensesSpinner.setAdapter(adapter);
+        progressDialog.dismiss();
     }
 
     @Override
@@ -121,4 +126,5 @@ public class    MainActivity extends AppCompatActivity implements View.OnClickLi
         Intent intent = new Intent(context, MainActivity.class);
         context.startActivity(intent);
     }
+
 }

@@ -1,5 +1,6 @@
 package travel.ilave.deepdivescanner.ui.activities;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
@@ -38,6 +39,7 @@ public class CityActivity extends AppCompatActivity implements PlacesPagerAdapte
     private ViewPager placeViewPager;
     private PlacesPagerAdapter placesPagerAdapter;
     private TabLayout tabLayout;
+    private ProgressDialog progressDialog;
 
     private City city;
     private ProductsWrapper productsWrapper;
@@ -51,13 +53,7 @@ public class CityActivity extends AppCompatActivity implements PlacesPagerAdapte
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-/*        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
-*/
+
         tabLayout = (TabLayout) findViewById(R.id.place_sliding_tabs);
         placeViewPager = (ViewPager) findViewById(R.id.place_view_pager);
 
@@ -67,6 +63,8 @@ public class CityActivity extends AppCompatActivity implements PlacesPagerAdapte
     }
 
     private void requestCityProducts(String cityId, String license) {
+        progressDialog = new ProgressDialog(this);
+        progressDialog.show();
         RestClient.getServiceInstance().getCityProductsByLicense(cityId, license, new Callback<Response>() {
             @Override
             public void success(Response s, Response response) {
@@ -94,6 +92,7 @@ public class CityActivity extends AppCompatActivity implements PlacesPagerAdapte
         placeViewPager.setAdapter(placesPagerAdapter);
         placeViewPager.setOffscreenPageLimit(3);
         tabLayout.setupWithViewPager(placeViewPager);
+        progressDialog.dismiss();
     }
 
     public static void show(Context context, City city, String license) {
@@ -101,6 +100,7 @@ public class CityActivity extends AppCompatActivity implements PlacesPagerAdapte
         intent.putExtra(CITY, city);
         intent.putExtra(LICENSE, license);
         context.startActivity(intent);
+
     }
 
     @Override

@@ -2,6 +2,7 @@ package travel.ilave.deepdivescanner.ui.activities;
 
 import android.app.DatePickerDialog;
 import android.app.DialogFragment;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -49,6 +50,7 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
     private LinearLayout sealifeLayout;
     private TextView description;
     private Button book_now;
+    private ProgressDialog progressDialog;
 
     private Product product;
     private ProductDetails productDetails;
@@ -80,6 +82,8 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void requestProductDetails(String productId) {
+        progressDialog = new ProgressDialog(this);
+        progressDialog.show();
         RestClient.getServiceInstance().getProductById(productId, new Callback<Response>() {
             @Override
             public void success(Response s, Response response) {
@@ -90,6 +94,7 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
                 responseString = responseString.replaceAll("\\n/", "/");
                 productDetails = new Gson().fromJson(responseString, ProductDetails.class);
                 populateProductDetails();
+                progressDialog.dismiss();
             }
 
             @Override
