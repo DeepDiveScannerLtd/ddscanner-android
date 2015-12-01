@@ -40,4 +40,5 @@ dependencies {
     compile 'org.parceler:parceler-api:1.0.4'
     compile 'com.facebook.fresco:fresco:0.7.0+'
     compile 'com.google.android.gms:play-services-gcm:8.3.0'
+    compile 'me.zhanghai.android.materialprogressbar:library:1.1.4'
 }

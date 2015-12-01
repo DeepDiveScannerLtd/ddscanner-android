@@ -73,6 +73,7 @@ public class VoucherActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("VOUCHER");
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 
     private void requestTraveler() {

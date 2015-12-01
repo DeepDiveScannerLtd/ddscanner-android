@@ -6,6 +6,7 @@ import android.opengl.ETC1;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -66,6 +67,7 @@ public class ConditionsActivity extends AppCompatActivity implements View.OnClic
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.conditionsActivityTitle);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         productName = (TextView) findViewById(R.id.name);
         duration = (TextView) findViewById(R.id.duration);
@@ -168,4 +170,14 @@ public class ConditionsActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 }

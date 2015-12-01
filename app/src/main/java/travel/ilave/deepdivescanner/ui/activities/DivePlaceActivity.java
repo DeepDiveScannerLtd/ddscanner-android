@@ -10,6 +10,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -60,6 +61,7 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         productImagesViewPager = (ViewPager) findViewById(R.id.product_images);
         starsLayout = (LinearLayout) findViewById(R.id.stars);
@@ -153,5 +155,16 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
     @Override
     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
         OffersActivity.show(this, product.getId(), "" + i + "-" + (i1 + 1) + "-" + i2, product.getName());
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

@@ -9,6 +9,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Display;
+import android.view.MenuItem;
+import android.view.View;
 
 import com.google.gson.Gson;
 
@@ -48,7 +50,14 @@ public class CityActivity extends AppCompatActivity implements PlacesPagerAdapte
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+/*        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+*/
         tabLayout = (TabLayout) findViewById(R.id.place_sliding_tabs);
         placeViewPager = (ViewPager) findViewById(R.id.place_view_pager);
 
@@ -107,5 +116,16 @@ public class CityActivity extends AppCompatActivity implements PlacesPagerAdapte
     @Override
     public void onExploreClicked() {
         DivePlaceActivity.show(this, selectedProduct);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }
