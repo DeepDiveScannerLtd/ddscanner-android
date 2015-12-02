@@ -13,6 +13,8 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import java.net.SocketTimeoutException;
+
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -120,11 +122,12 @@ public class BillingActivity extends AppCompatActivity implements View.OnClickLi
                     public void failure(RetrofitError error) {
                         LogUtils.i("failure Message is " + error.getMessage());
                         LogUtils.i("failure body is " + error.getBody());
-
-                        if (error.getKind().equals(RetrofitError.Kind.NETWORK)) {
-                            Toast.makeText(BillingActivity.this, R.string.errorConnection, Toast.LENGTH_LONG);
-                        } else if(error.getKind().equals(RetrofitError.Kind.HTTP)) {
-                            Toast.makeText(BillingActivity.this, R.string.serverNotResp, Toast.LENGTH_LONG);
+                        if (error.getCause() instanceof SocketTimeoutException) {
+                            if (error.getKind().equals(RetrofitError.Kind.NETWORK)) {
+                                Toast.makeText(BillingActivity.this, R.string.errorConnection, Toast.LENGTH_LONG);
+                            } else if (error.getKind().equals(RetrofitError.Kind.HTTP)) {
+                                Toast.makeText(BillingActivity.this, R.string.serverNotResp, Toast.LENGTH_LONG);
+                            }
                         }
                         // TODO Handle result handling when activity stopped
                         // TODO Handle errors

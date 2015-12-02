@@ -1,6 +1,10 @@
 <resources>
+    <string name="accessPlace">ACCESS</string>
+    <string name="address">Address</string>
     <string name="app_name">Deep Dive Scanner</string>
     <string name="billingActivityTitle">Billing details</string>
+    <string name="btnBookNow">BOOK NOW</string>
+    <string name="btnRetry">RETRY</string>
     <string name="conditionsActivityTitle">Conditions</string>
     <string name="cardNumber">Card number</string>
     <string name="cardHolderName">Name on card</string>
@@ -12,9 +16,7 @@
     <string name="conditionsTotal">TOTAL</string>
     <string name="depthPlace">DEPTH</string>
     <string name="visibilityPlace">VISIBILITY</string>
-    <string name="accessPlace">ACCESS</string>
     <string name="sealifePlace">Sealife</string>
-    <string name="btnBookNow">BOOK NOW</string>
     <string name="selectCity">Select a city</string>
     <string name="divingLevel">Select your diving level</string>
     <string name="bookingSuccessfull">Booking successfully completed</string>
@@ -32,10 +34,9 @@
     <string name="errorConnection">Please check your internet connection</string>
     <string name="choseLicense">Please choose your license</string>
     <string name="choseCity">Please choose city!</string>
-    <string name="btnRetry">RETRY</string>
+
     <string name="firstName">First name</string>
     <string name="lastName">Last name</string>
-    <string name="address">Address</string>
     <string name="postalCode">Postal Code</string>
     <string name="city">City</string>
     <string name="phone">Phone</string>

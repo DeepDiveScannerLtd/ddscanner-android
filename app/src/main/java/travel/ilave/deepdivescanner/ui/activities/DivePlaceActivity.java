@@ -19,9 +19,12 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.Gson;
+
+import java.net.SocketTimeoutException;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -102,6 +105,13 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
             public void failure(RetrofitError error) {
                 LogUtils.i("failure Message is " + error.getMessage());
                 LogUtils.i("failure body is " + error.getBody());
+                if (error.getCause() instanceof SocketTimeoutException) {
+                    if (error.getKind().equals(RetrofitError.Kind.NETWORK)) {
+                        Toast.makeText(DivePlaceActivity.this, R.string.errorConnection, Toast.LENGTH_LONG);
+                    } else if (error.getKind().equals(RetrofitError.Kind.HTTP)) {
+                        Toast.makeText(DivePlaceActivity.this, R.string.serverNotResp, Toast.LENGTH_LONG);
+                    }
+                }
                 // TODO Handle result handling when activity stopped
                 // TODO Handle errors
             }
