@@ -7,7 +7,7 @@
     <string name="cardMonth">Month</string>
     <string name="cardYear">Year</string>
     <string name="cardCCVCode">Year</string>
-    <string name="placeOrder">PLACE ORDER</string>
+    <string name="placeOrder">PAY</string>
     <string name="noteConditions">Note</string>
     <string name="conditionsTotal">TOTAL</string>
     <string name="depthPlace">DEPTH</string>
@@ -29,4 +29,7 @@
     <string name="btnChoseOption">CHOSE THIS OPTION</string>
     <string name="offers">Offers</string>
     <string name="pleaseWait">Please wait</string>
+    <string name="errorConnection">Please check your internet connection and restart app</string>
+    <string name="choseLicense">Please choose your license</string>
+    <string name="choseCity">Please choose city!</string>
 </resources>

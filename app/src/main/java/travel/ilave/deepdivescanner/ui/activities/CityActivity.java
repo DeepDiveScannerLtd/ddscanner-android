@@ -60,6 +60,7 @@ public class CityActivity extends AppCompatActivity implements PlacesPagerAdapte
         city = (City) getIntent().getSerializableExtra(CITY);
         String license = getIntent().getStringExtra(LICENSE);
         requestCityProducts(city.getId(), license);
+
     }
 
     private void requestCityProducts(String cityId, String license) {

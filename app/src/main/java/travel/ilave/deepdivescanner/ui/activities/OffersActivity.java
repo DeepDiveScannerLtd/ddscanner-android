@@ -1,5 +1,6 @@
 package travel.ilave.deepdivescanner.ui.activities;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -33,6 +34,7 @@ public class OffersActivity extends AppCompatActivity implements AdapterView.OnI
     private Toolbar toolbar;
     private OffersAdapter mAdapter;
     ListView mListView;
+    private ProgressDialog progressDialog;
 
     private String productId;
     private String date;
@@ -60,6 +62,8 @@ public class OffersActivity extends AppCompatActivity implements AdapterView.OnI
     }
 
     private void requestProductOffers(String productId, String date) {
+        progressDialog = new ProgressDialog(this);
+        progressDialog.show();
         RestClient.getServiceInstance().getProductOffers(productId, date, new Callback<Response>() {
             @Override
             public void success(Response s, Response response) {
@@ -69,6 +73,7 @@ public class OffersActivity extends AppCompatActivity implements AdapterView.OnI
                 // TODO Handle result handling when activity stopped
                 offers = (ArrayList<Offer>) new Gson().fromJson(responseString, OffersWrapper.class).getOptions();
                 populateOffersList();
+                progressDialog.dismiss();
             }
 
             @Override

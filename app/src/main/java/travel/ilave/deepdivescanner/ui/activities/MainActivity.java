@@ -3,8 +3,10 @@ package travel.ilave.deepdivescanner.ui.activities;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -54,7 +56,13 @@ public class    MainActivity extends AppCompatActivity implements View.OnClickLi
         licensesSpinner.setOnItemSelectedListener(this);
         searchFab = (FloatingActionButton) findViewById(R.id.main_search_fab);
         searchFab.setOnClickListener(this);
-        requestCities();
+        if (!isOnline()) {
+            Toast.makeText(getApplicationContext(), R.string.errorConnection, Toast.LENGTH_LONG).show();
+            searchFab.hide();
+        } else {
+            requestCities();
+        }
+
     }
 
     private void requestCities() {
@@ -96,10 +104,10 @@ public class    MainActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onClick(View view) {
         if (selectedCityPosition == -1) {
-            Toast.makeText(this, "Please choose city!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.choseCity, Toast.LENGTH_SHORT).show();
         }
         if (selectedCityPosition == -1) {
-            Toast.makeText(this, "Please choose your license!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.choseLicense, Toast.LENGTH_SHORT).show();
         }
         CityActivity.show(this, citiesLicensesWrapper.getCities().get(selectedCityPosition), citiesLicensesWrapper.getLicences().get(selectedLicensePosition));
     }
@@ -125,6 +133,11 @@ public class    MainActivity extends AppCompatActivity implements View.OnClickLi
     public static void show(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
         context.startActivity(intent);
+    }
+
+    public boolean isOnline() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnectedOrConnecting();
     }
 
 }
