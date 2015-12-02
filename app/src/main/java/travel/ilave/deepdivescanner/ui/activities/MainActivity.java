@@ -68,9 +68,11 @@ public class    MainActivity extends AppCompatActivity implements View.OnClickLi
     private void requestCities() {
         progressDialog = new ProgressDialog(this);
         progressDialog.show();
+
         RestClient.getServiceInstance().getCities(new Callback<Response>() {
             @Override
             public void success(Response s, Response response) {
+
                 String responseString = new String(((TypedByteArray) s.getBody()).getBytes());
                 LogUtils.i("response code is " + s.getStatus());
                 LogUtils.i("response body is " + responseString);

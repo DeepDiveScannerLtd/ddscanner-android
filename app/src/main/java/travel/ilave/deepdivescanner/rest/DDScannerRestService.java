@@ -15,7 +15,7 @@ import travel.ilave.deepdivescanner.entities.request.TravelerRequest;
 /**
  * Created by unight on 03.07.2015.
  */
-public interface        DDScannerRestService {
+public interface DDScannerRestService {
 
     @GET("/api/diving/cities")
     void getCities(Callback<Response> callback);

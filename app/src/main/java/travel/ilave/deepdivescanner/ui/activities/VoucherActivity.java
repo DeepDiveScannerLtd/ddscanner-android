@@ -107,7 +107,7 @@ public class VoucherActivity extends AppCompatActivity {
     }
 
     private void populateVoucher() {
-        mOptionNameText.setText(place);
+        mOptionNameText.setText(traveller.getOptionName());
         mDescriptionText.setText(traveller.getOptionName());
         mNameText.setText(traveller.getFirstName() + " " + traveller.getLastName());
         mDateText.setText(traveller.getDate());
