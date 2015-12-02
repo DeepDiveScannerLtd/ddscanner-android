@@ -1,5 +1,6 @@
 package travel.ilave.deepdivescanner.ui.activities;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.opengl.ETC1;
@@ -50,6 +51,7 @@ public class ConditionsActivity extends AppCompatActivity implements View.OnClic
     private Button continue_to_billing;
     private Spinner langSpinner;
     private Spinner placesSpinner;
+    private ProgressDialog progressDialog;
 
     private Offer offer;
     private OfferCondition offerCondition;
@@ -93,6 +95,9 @@ public class ConditionsActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void requestOfferConditionss(String productId) {
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Please wait");
+        progressDialog.show();
         RestClient.getServiceInstance().getOfferConditions(productId, new Callback<Response>() {
             @Override
             public void success(Response s, Response response) {
@@ -103,6 +108,7 @@ public class ConditionsActivity extends AppCompatActivity implements View.OnClic
                 responseString = responseString.replaceAll("\\n/", "/");
                 offerCondition = new Gson().fromJson(responseString, OfferCondition.class);
                 populateOfferConditions();
+                progressDialog.dismiss();
             }
 
             @Override

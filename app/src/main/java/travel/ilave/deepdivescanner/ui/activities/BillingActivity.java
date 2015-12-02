@@ -1,5 +1,6 @@
 package travel.ilave.deepdivescanner.ui.activities;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -48,6 +49,7 @@ public class BillingActivity extends AppCompatActivity implements View.OnClickLi
     private EditText cardMonth;
     private EditText cardYear;
     private EditText cvv;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +98,10 @@ public class BillingActivity extends AppCompatActivity implements View.OnClickLi
         br.setNote(note);
         br.setOptionId(optionId);
         br.setPickupId(pickupId);
-        br.setPriceId(new String[] {priceId});
+        br.setPriceId(new String[]{priceId});
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Please wait");
+        progressDialog.show();
         RestClient.getServiceInstance().booking(br,
                 new Callback<Response>() {
                     @Override
@@ -107,6 +112,7 @@ public class BillingActivity extends AppCompatActivity implements View.OnClickLi
                         Booking bookingEntity = new Gson().fromJson(responseString, Booking.class);
                         VoucherActivity.show(BillingActivity.this, bookingEntity.getCountries().get(0).id, bookingEntity.getBookingId(), place);
                         // TODO Handle result handling when activity stopped
+                        progressDialog.dismiss();
                     }
 
                     @Override

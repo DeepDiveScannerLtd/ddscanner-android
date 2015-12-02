@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -37,6 +38,7 @@ public class    MainActivity extends AppCompatActivity implements View.OnClickLi
     private FloatingActionButton searchFab;
     private CitiesLicensesWrapper citiesLicensesWrapper;
     private ProgressDialog progressDialog;
+    private Button btnError;
 
     private int selectedCityPosition = -1;
     private int selectedLicensePosition = -1;
@@ -44,29 +46,43 @@ public class    MainActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        if (isOnline()) {
+            setContentView(R.layout.activity_main);
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(R.string.app_name);
+            toolbar = (Toolbar) findViewById(R.id.toolbar);
+            setSupportActionBar(toolbar);
+            getSupportActionBar().setTitle(R.string.app_name);
 
-        citiesSpinner = (Spinner) findViewById(R.id.main_cities_spinner);
-        citiesSpinner.setOnItemSelectedListener(this);
-        licensesSpinner = (Spinner) findViewById(R.id.main_licenses_spinner);
-        licensesSpinner.setOnItemSelectedListener(this);
-        searchFab = (FloatingActionButton) findViewById(R.id.main_search_fab);
-        searchFab.setOnClickListener(this);
-        if (!isOnline()) {
+            citiesSpinner = (Spinner) findViewById(R.id.main_cities_spinner);
+            citiesSpinner.setOnItemSelectedListener(this);
+            licensesSpinner = (Spinner) findViewById(R.id.main_licenses_spinner);
+            licensesSpinner.setOnItemSelectedListener(this);
+            searchFab = (FloatingActionButton) findViewById(R.id.main_search_fab);
+            searchFab.setOnClickListener(this);
+      /*  if (!isOnline()) {
             Toast.makeText(getApplicationContext(), R.string.errorConnection, Toast.LENGTH_LONG).show();
             searchFab.hide();
         } else {
             requestCities();
+        }*/
+            requestCities();
+        } else {
+            setContentView(R.layout.activity_error);
+            btnError = (Button) findViewById(R.id.btnRefresh);
+            btnError.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent i = getIntent();
+                    finish();
+                    startActivity(i);
+                }
+            });
         }
-
     }
 
     private void requestCities() {
         progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Please wait");
         progressDialog.show();
 
         RestClient.getServiceInstance().getCities(new Callback<Response>() {
