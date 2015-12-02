@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -100,6 +101,11 @@ public class VoucherActivity extends AppCompatActivity {
             public void failure(RetrofitError error) {
                 LogUtils.i("failure Message is " + error.getMessage());
                 LogUtils.i("failure body is " + error.getBody());
+                if (error.getKind().equals(RetrofitError.Kind.NETWORK)) {
+                    Toast.makeText(VoucherActivity.this, R.string.errorConnection, Toast.LENGTH_LONG);
+                } else if(error.getKind().equals(RetrofitError.Kind.HTTP)) {
+                    Toast.makeText(VoucherActivity.this, R.string.serverNotResp, Toast.LENGTH_LONG);
+                }
                 // TODO Handle result handling when activity stopped
                 // TODO Handle errors
             }

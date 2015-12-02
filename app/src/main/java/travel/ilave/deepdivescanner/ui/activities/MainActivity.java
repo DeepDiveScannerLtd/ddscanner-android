@@ -102,6 +102,9 @@ public class    MainActivity extends AppCompatActivity implements View.OnClickLi
             public void failure(RetrofitError error) {
                 LogUtils.i("failure Message is " + error.getMessage());
                 LogUtils.i("failure body is " + error.getBody());
+                if(error.getKind().equals(RetrofitError.Kind.HTTP)) {
+                    Toast.makeText(MainActivity.this, R.string.serverNotResp, Toast.LENGTH_LONG);
+                }
                 // TODO Handle result handling when activity stopped
                 // TODO Handle errors
             }
@@ -153,6 +156,7 @@ public class    MainActivity extends AppCompatActivity implements View.OnClickLi
         context.startActivity(intent);
     }
 
+    /* Checking internet connection */
     public boolean isOnline() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         return cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnectedOrConnecting();

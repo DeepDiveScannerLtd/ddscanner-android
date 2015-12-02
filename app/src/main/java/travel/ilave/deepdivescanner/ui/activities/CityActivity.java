@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Display;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -76,12 +77,18 @@ public class CityActivity extends AppCompatActivity implements PlacesPagerAdapte
                 // TODO Handle result handling when activity stopped
                 productsWrapper = new Gson().fromJson(responseString, ProductsWrapper.class);
                 populatePlaceViewpager();
+                progressDialog.dismiss();
             }
 
             @Override
             public void failure(RetrofitError error) {
                 LogUtils.i("failure Message is " + error.getMessage());
                 LogUtils.i("failure body is " + error.getBody());
+                if (error.getKind().equals(RetrofitError.Kind.NETWORK)) {
+                    Toast.makeText(CityActivity.this, R.string.errorConnection, Toast.LENGTH_LONG);
+                } else if(error.getKind().equals(RetrofitError.Kind.HTTP)) {
+                    Toast.makeText(CityActivity.this, R.string.serverNotResp, Toast.LENGTH_LONG);
+                }
                 // TODO Handle result handling when activity stopped
                 // TODO Handle errors
             }
@@ -94,7 +101,6 @@ public class CityActivity extends AppCompatActivity implements PlacesPagerAdapte
         placeViewPager.setAdapter(placesPagerAdapter);
         placeViewPager.setOffscreenPageLimit(3);
         tabLayout.setupWithViewPager(placeViewPager);
-        progressDialog.dismiss();
     }
 
     public static void show(Context context, City city, String license) {

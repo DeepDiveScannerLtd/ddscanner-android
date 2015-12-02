@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -115,6 +116,11 @@ public class ConditionsActivity extends AppCompatActivity implements View.OnClic
             public void failure(RetrofitError error) {
                 LogUtils.i("failure Message is " + error.getMessage());
                 LogUtils.i("failure body is " + error.getBody());
+                if (error.getKind().equals(RetrofitError.Kind.NETWORK)) {
+                    Toast.makeText(ConditionsActivity.this, R.string.errorConnection, Toast.LENGTH_LONG);
+                } else if(error.getKind().equals(RetrofitError.Kind.HTTP)) {
+                    Toast.makeText(ConditionsActivity.this, R.string.serverNotResp, Toast.LENGTH_LONG);
+                }
                 // TODO Handle result handling when activity stopped
                 // TODO Handle errors
             }
