@@ -71,8 +71,8 @@ public class GCMListenerService extends GcmListenerService {
 
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle("GCM Message")
+                .setSmallIcon(R.drawable.dds_logo)
+                .setContentTitle("DD Scanner")
                 .setContentText(message)
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)
