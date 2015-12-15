@@ -23,7 +23,37 @@
             android:layout_gravity="center"
             android:gravity="center"
             android:orientation="vertical">
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
+                android:hint="@string/firstName"
+                android:id="@+id/firstName" />
 
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
+                android:id="@+id/lastName"
+                android:hint="@string/lastName" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
+                android:id="@+id/phone"
+                android:hint="@string/phone" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
+                android:id="@+id/email"
+                android:hint="@string/email" />
             <EditText
                 android:id="@+id/edit_name"
                 android:layout_width="match_parent"

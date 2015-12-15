@@ -78,7 +78,6 @@ public class CityActivity extends AppCompatActivity implements PlacesPagerAdapte
                 // TODO Handle result handling when activity stopped
                 productsWrapper = new Gson().fromJson(responseString, ProductsWrapper.class);
                 populatePlaceViewpager();
-                progressDialog.dismiss();
             }
 
             @Override
@@ -104,6 +103,7 @@ public class CityActivity extends AppCompatActivity implements PlacesPagerAdapte
         placeViewPager.setAdapter(placesPagerAdapter);
         placeViewPager.setOffscreenPageLimit(3);
         tabLayout.setupWithViewPager(placeViewPager);
+        progressDialog.dismiss();
     }
 
     public static void show(Context context, City city, String license) {

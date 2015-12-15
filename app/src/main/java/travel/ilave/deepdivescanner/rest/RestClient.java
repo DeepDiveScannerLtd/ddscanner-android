@@ -11,7 +11,7 @@ public abstract class RestClient {
 
     public static DDScannerRestService getServiceInstance() {
         if (serviceInstance == null) {
-            RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint("http://ilave.travel").build();
+            RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint("http://www.trizeri.com").build();
             serviceInstance = restAdapter.create(DDScannerRestService.class);
         }
         return serviceInstance;
