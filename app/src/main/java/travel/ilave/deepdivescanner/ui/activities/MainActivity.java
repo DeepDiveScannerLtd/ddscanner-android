@@ -117,7 +117,7 @@ public class    MainActivity extends AppCompatActivity implements View.OnClickLi
 
     private void requestCities() {
         progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Please wait");
+        progressDialog.setMessage(getApplicationContext().getResources().getString(R.string.pleaseWait));
         progressDialog.show();
 
         RestClient.getServiceInstance().getCities(new Callback<Response>() {

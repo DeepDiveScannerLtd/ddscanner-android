@@ -110,7 +110,7 @@ public class BillingActivity extends AppCompatActivity implements View.OnClickLi
         br.setPickupId(pickupId);
         br.setPriceId(new String[]{priceId});
         progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Please wait");
+        progressDialog.setMessage(getApplicationContext().getResources().getString(R.string.pleaseWait));
         progressDialog.show();
         RestClient.getServiceInstance().booking(br,
                 new Callback<Response>() {

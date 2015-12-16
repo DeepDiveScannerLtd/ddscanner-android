@@ -67,7 +67,7 @@ public class CityActivity extends AppCompatActivity implements PlacesPagerAdapte
 
     private void requestCityProducts(String cityId, String license) {
         progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Please wait");
+        progressDialog.setMessage(getApplicationContext().getResources().getString(R.string.pleaseWait));
         progressDialog.show();
         RestClient.getServiceInstance().getCityProductsByLicense(cityId, license, new Callback<Response>() {
             @Override

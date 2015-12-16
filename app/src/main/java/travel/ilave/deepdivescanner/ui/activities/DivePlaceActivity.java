@@ -93,7 +93,7 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
 
     private void requestProductDetails(String productId) {
         progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Please wait");
+        progressDialog.setMessage(getApplicationContext().getResources().getString(R.string.pleaseWait));
         progressDialog.show();
         RestClient.getServiceInstance().getProductById(productId, new Callback<Response>() {
             @Override
