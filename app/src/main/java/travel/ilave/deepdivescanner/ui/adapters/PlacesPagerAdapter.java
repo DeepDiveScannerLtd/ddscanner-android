@@ -21,7 +21,8 @@ import travel.ilave.deepdivescanner.entities.City;
 import travel.ilave.deepdivescanner.entities.Product;
 import travel.ilave.deepdivescanner.ui.fragments.ImproveLevelFragment;
 
-public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements GoogleMap.OnMarkerClickListener {
+
+public class PlacesPagerAdapter extends FragmentStatePagerAdapter  {
 
     public static final String ARGS = "args";
 
@@ -54,19 +55,19 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Goo
                     public void onMapReady(GoogleMap googleMap) {
                         LatLng city = new LatLng(Double.valueOf(PlacesPagerAdapter.this.city.getLat()), Double.valueOf(PlacesPagerAdapter.this.city.getLng()));
                         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(city, 8.0f));
-                        googleMap.setOnMarkerClickListener(PlacesPagerAdapter.this);
+                       // googleMap.setOnMarkerClickListener(PlacesPagerAdapter.this);
 
 
-                        for (Product product : products) {
+                        /*for (Product product : products) {
                             if (!product.isHotOffers()) {
-                                //googleMap.setInfoWindowAdapter(new InfoWindowAdapter(context));
+                                googleMap.setInfoWindowAdapter(new InfoWindowAdapter(context));
                                 LatLng place = new LatLng(Double.valueOf(product.getLat()), Double.valueOf(product.getLng()));
                                 Marker marker = googleMap.addMarker(new MarkerOptions().position(place));
                                 marker.setTitle(product.getName());
-                                //googleMap.setInfoWindowAdapter(new InfoWindowAdapter(context, product));
                                 PlacesPagerAdapter.this.markersMap.put(marker, product);
                             }
-                        }
+                        }*/
+                        googleMap.setInfoWindowAdapter(new InfoWindowAdapter(context, products, googleMap));
                     }
                 });
                 break;
@@ -77,19 +78,21 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Goo
                     public void onMapReady(GoogleMap googleMap) {
                         LatLng city = new LatLng(Double.valueOf(PlacesPagerAdapter.this.city.getLat()), Double.valueOf(PlacesPagerAdapter.this.city.getLng()));
                         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(city, 8.0f));
-                        googleMap.setOnMarkerClickListener(PlacesPagerAdapter.this);
-
+                       // googleMap.setOnMarkerClickListener(PlacesPagerAdapter.this);
+                        /*
                         for (Product product : products) {
                             if (product.isHotOffers()) {
-                                //googleMap.setInfoWindowAdapter(new InfoWindowAdapter(context));
+                               /googleMap.setInfoWindowAdapter(new InfoWindowAdapter(context));
                                 LatLng place = new LatLng(Double.valueOf(product.getLat()), Double.valueOf(product.getLng()));
                                 Marker marker = googleMap.addMarker(new MarkerOptions().position(place));
                                 marker.setTitle(product.getName());
-                                //googleMap.setInfoWindowAdapter(new InfoWindowAdapter(context, product));
+                                googleMap.setInfoWindowAdapter(new InfoWindowAdapter(context, product));
                                 PlacesPagerAdapter.this.markersMap.put(marker, product);
-
                             }
                         }
+                        */
+                        googleMap.setInfoWindowAdapter(new InfoWindowAdapter(context, products, googleMap));
+
                     }
                 });
                 break;
@@ -121,14 +124,13 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Goo
         }
     }
 
-    @Override
+  /*  @Override
     public boolean onMarkerClick(Marker marker) {
         selected = markersMap.get(marker);
-        System.out.println(selected.getName());
-       // marker.showInfoWindow();
-        onProductSelectedListener.onProductSelected(markersMap.get(marker));
+        marker.showInfoWindow();
+       // onProductSelectedListener.onProductSelected(markersMap.get(marker));
         return true;
-    }
+    }*/
 
     public interface OnProductSelectedListener {
         void onProductSelected(Product selectedProduct);

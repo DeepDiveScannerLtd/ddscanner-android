@@ -11,7 +11,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import travel.ilave.deepdivescanner.R;
 import travel.ilave.deepdivescanner.entities.Product;
@@ -20,22 +25,31 @@ import travel.ilave.deepdivescanner.ui.dialogs.ProductInfoDialog;
 /**
  * Created by lashket on 10.12.15.
  */
-public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
+public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter, GoogleMap.OnMarkerClickListener {
     private View view;
     private LayoutInflater inflater;
     private Context mContext;
-    private Product product;
+    private ArrayList<Product> products;
     private TextView title;
     private TextView from;
+    private Product product;
+    private GoogleMap googleMap;
+    private HashMap<Marker, Product> markersMap = new HashMap<>();
 
-    public InfoWindowAdapter(Context context, Product prdct) {
-        product = prdct;
+    public InfoWindowAdapter(Context context, ArrayList<Product> prdct, GoogleMap map) {
+        products = prdct;
         mContext = context;
+        googleMap = map;
+        for (Product product : products) {
+            LatLng place = new LatLng(Double.valueOf(product.getLat()), Double.valueOf(product.getLng()));
+            Marker marker = googleMap.addMarker(new MarkerOptions().position(place));
+            markersMap.put(marker, product);
+        }
     }
 
     @Override
     public View getInfoWindow(Marker marker) {
-
+        product = markersMap.get(marker);
         inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         view = inflater.inflate(R.layout.info_window, null);
         title = ((TextView)view.findViewById(R.id.markerTitle));
@@ -64,6 +78,10 @@ public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
         return null;
     }
 
-
-
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        marker.showInfoWindow();
+        // onProductSelectedListener.onProductSelected(markersMap.get(marker));
+        return true;
+    }
 }
