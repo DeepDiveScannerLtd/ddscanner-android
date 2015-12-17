@@ -40,6 +40,7 @@ import travel.ilave.deepdivescanner.entities.City;
 import travel.ilave.deepdivescanner.rest.RestClient;
 import travel.ilave.deepdivescanner.services.RegistrationIntentService;
 import travel.ilave.deepdivescanner.utils.LogUtils;
+import travel.ilave.deepdivescanner.utils.SharedPreferenceHelper;
 
 public class    MainActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
@@ -66,8 +67,8 @@ public class    MainActivity extends AppCompatActivity implements View.OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        lastCity = loadPref(CITY);
-        lastLicense = loadPref(LICENSE);
+        lastCity = SharedPreferenceHelper.loadPref(CITY);
+        lastLicense = SharedPreferenceHelper.loadPref(LICENSE);
 
         if (isOnline()) {
             setContentView(R.layout.activity_main);
@@ -183,7 +184,7 @@ public class    MainActivity extends AppCompatActivity implements View.OnClickLi
             Toast.makeText(this, R.string.choseLicense, Toast.LENGTH_SHORT).show();
         }
 
-        saveToPref(citiesSpinner.getItemAtPosition(selectedCityPosition).toString(),
+        SharedPreferenceHelper.saveLicenseCity(citiesSpinner.getItemAtPosition(selectedCityPosition).toString(),
                 licensesSpinner.getItemAtPosition(selectedLicensePosition).toString());
         CityActivity.show(this, citiesLicensesWrapper.getCities().get(selectedCityPosition), citiesLicensesWrapper.getLicences().get(selectedLicensePosition));
     }
@@ -229,20 +230,6 @@ public class    MainActivity extends AppCompatActivity implements View.OnClickLi
             return false;
         }
         return true;
-    }
-
-   public void saveToPref(String city, String license) {
-        sPref = getPreferences(MODE_PRIVATE);
-        SharedPreferences.Editor editor = sPref.edit();
-        editor.putString(CITY, city);
-        editor.putString(LICENSE, license);
-        editor.commit();
-    }
-
-    private String loadPref(String name) {
-        sPref = getPreferences(MODE_PRIVATE);
-        String licenseName = sPref.getString(name, "");
-        return licenseName;
     }
 
     private int getLastCheckedCity (Adapter adapter) {
