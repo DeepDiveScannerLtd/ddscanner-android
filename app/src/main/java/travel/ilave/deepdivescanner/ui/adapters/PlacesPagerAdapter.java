@@ -2,6 +2,7 @@ package travel.ilave.deepdivescanner.ui.adapters;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
@@ -58,6 +59,7 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Loc
     public Fragment getItem(int position) {
         locationManager = (LocationManager) this.context.getSystemService(Context.LOCATION_SERVICE);
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME, MIN_DISTANCE, this);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME, MIN_DISTANCE, this);
         Fragment fragment = null;
         Bundle args = new Bundle();
         switch (position) {
@@ -141,19 +143,21 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Loc
     @Override
     public void onLocationChanged(Location location) {
         String cityName = null;
+        ProgressDialog progressDialog = new ProgressDialog(this.context);
+        progressDialog.setMessage("Please wait");
+        progressDialog.show();
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 10);
         gMap.animateCamera(cameraUpdate);
+        progressDialog.dismiss();
         Geocoder geocoder = new Geocoder(this.context, Locale.getDefault());
         List<Address> addresses;
+
         try {
             addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
             cityName = addresses.get(0).getLocality();
-            System.out.println("----------" + cityName);
-        } catch (IOException e) {
+        } catch (IOException e) {}
 
-        }
-        gMap.addMarker(new MarkerOptions().position(latLng));
         try {
             locationManager.removeUpdates(this);
         } catch (SecurityException e) {}
