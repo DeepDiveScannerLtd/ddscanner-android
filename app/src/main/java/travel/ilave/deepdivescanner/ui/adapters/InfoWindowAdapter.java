@@ -35,7 +35,14 @@ public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter, GoogleMap
     private Product product;
     private GoogleMap googleMap;
     private HashMap<Marker, Product> markersMap = new HashMap<>();
+    private ProductInfoDialog.OnExploreClickListener listener;
 
+    /**
+     *
+     * @param context
+     * @param prdct
+     * @param map
+     */
     public InfoWindowAdapter(Context context, ArrayList<Product> prdct, GoogleMap map) {
         products = prdct;
         mContext = context;
@@ -84,4 +91,5 @@ public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter, GoogleMap
         // onProductSelectedListener.onProductSelected(markersMap.get(marker));
         return true;
     }
+
 }
