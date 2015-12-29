@@ -30,9 +30,7 @@ public class Product implements Parcelable {
     private String name;
     private String description;
     private int rating;
-    private boolean hotOffers;
     private float price;
-    private float hotPrice;
     private String symbol;
     private String lat;
     private String lng;
@@ -41,9 +39,7 @@ public class Product implements Parcelable {
         id = in.readString();
         description = in.readString();
         rating = in.readInt();
-        hotOffers = in.readByte() != 0;
         price = in.readFloat();
-        hotPrice = in.readFloat();
         symbol = in.readString();
         lat = in.readString();
         lng = in.readString();
@@ -93,13 +89,6 @@ public class Product implements Parcelable {
         this.rating = rating;
     }
 
-    public boolean isHotOffers() {
-        return hotOffers;
-    }
-
-    public void setHotOffers(boolean hotOffers) {
-        this.hotOffers = hotOffers;
-    }
 
     public float getPrice() {
         return price;
@@ -109,13 +98,6 @@ public class Product implements Parcelable {
         this.price = price;
     }
 
-    public float getHotPrice() {
-        return hotPrice;
-    }
-
-    public void setHotPrice(float hotPrice) {
-        this.hotPrice = hotPrice;
-    }
 
     public String getSymbol() {
         return symbol;
@@ -151,9 +133,7 @@ public class Product implements Parcelable {
         dest.writeString(id);
         dest.writeString(description);
         dest.writeInt(rating);
-        dest.writeByte((byte) (hotOffers ? 1 : 0));
         dest.writeFloat(price);
-        dest.writeFloat(hotPrice);
         dest.writeString(symbol);
         dest.writeString(lat);
         dest.writeString(lng);

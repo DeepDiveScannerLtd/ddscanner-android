@@ -30,6 +30,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.Gson;
 
 import java.net.SocketTimeoutException;
+import java.util.HashMap;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -56,11 +57,11 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
     private TextView depth_value;
     private TextView visibility_value;
     private TextView access_value;
-    private LinearLayout sealifeLayout;
     private TextView description;
     private Button book_now;
     private ProgressDialog progressDialog;
 
+    private HashMap<String, String> characteristiscs;
     private Product product;
     private ProductDetails productDetails;
     private PlaceImagesPagerAdapter placeImagesPagerAdapter;
@@ -78,7 +79,6 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
 
         productImagesViewPager = (ViewPager) findViewById(R.id.product_images);
         starsLayout = (LinearLayout) findViewById(R.id.stars);
-        reviewsCount = (TextView) findViewById(R.id.reviews_count);
         price = (TextView) findViewById(R.id.price);
         depth_value = (TextView) findViewById(R.id.depth_value);
         visibility_value = (TextView) findViewById(R.id.visibility_value);
@@ -102,7 +102,8 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
                 LogUtils.i("response code is " + s.getStatus());
                 LogUtils.i("response body is " + responseString);
                 // TODO Handle result handling when activity stopped
-                responseString = responseString.replaceAll("\\n/", "/");
+                responseString = responseString.replaceAll("\\\\", "");
+                System.out.println(responseString);
                 productDetails = new Gson().fromJson(responseString, ProductDetails.class);
                 populateProductDetails();
             }
@@ -140,15 +141,14 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
             iv.setAlpha(0.6f);
             starsLayout.addView(iv);
         }
-        reviewsCount.setText("150 Reviews");
-        price.setText("from " + product.getPrice() + "$");
+
         depth_value.setText("" + productDetails.getDept() + "m");
         visibility_value.setText(productDetails.getVisiblity());
         access_value.setText(productDetails.getAccess());
         LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         int i = 0;
         for (String sealifeIcon : productDetails.getSealife()) {
-            iconsUrls[i] = "http://" + sealifeIcon.toString();
+            iconsUrls[i] = sealifeIcon.toString();
             i++;
         }
         GridView sealife = (GridView) findViewById(R.id.usage_example_gridview);

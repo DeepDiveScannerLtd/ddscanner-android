@@ -17,27 +17,27 @@ import travel.ilave.deepdivescanner.entities.request.TravelerRequest;
  */
 public interface DDScannerRestService {
 
-    @GET("/api/diving/cities")
+    @GET("/diving/cities")
     void getCities(Callback<Response> callback);
 
-    @GET("/api/diving/products/city/{cityId}/license/{license}")
-    void getCityProductsByLicense(@Path("cityId") String cityId, @Path("license") String licenseId, Callback<Response> callback);
+    @GET("/diving/products/city/{cityId}")
+    void getCityProductsByLicense(@Path("cityId") String cityId, Callback<Response> callback);
 
-    @GET("/api/diving/product/{id}")
+    @GET("/diving/product/{id}")
     void getProductById(@Path("id") String id, Callback<Response> callback);
 
-    @GET("/api/diving/product/{id}/date/{date}/options")
+    @GET("/diving/product/{id}/date/{date}/options")
     void getProductOffers(@Path("id") String id, @Path("date") String date, Callback<Response> callback);
 
-    @GET("/api/diving/option/{id}/conditions")
+    @GET("/diving/option/{id}/conditions")
     void getOfferConditions(@Path("id") String id, Callback<Response> callback);
 
-    @POST("/api/diving/booking")
+    @POST("/diving/booking")
     void booking(@Body BookingRequest bookingRequest,
                  Callback<Response> callback
     );
 
-    @POST("/api/diving/traveler")
+    @POST("/diving/traveler")
     void traveler(@Body TravelerRequest travelerRequest,
                  Callback<Response> callback
     );

@@ -40,7 +40,7 @@ import travel.ilave.deepdivescanner.services.RegistrationIntentService;
 import travel.ilave.deepdivescanner.utils.LogUtils;
 import travel.ilave.deepdivescanner.utils.SharedPreferenceHelper;
 
-public class    MainActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
     private Toolbar toolbar;
     private Spinner citiesSpinner;
@@ -50,23 +50,18 @@ public class    MainActivity extends AppCompatActivity implements View.OnClickLi
     private ProgressDialog progressDialog;
     private Button btnError;
     private BroadcastReceiver mRegistrationBroadcatReceiver;
-    private SharedPreferences sPref;
 
     private int selectedCityPosition = -1;
-    private int selectedLicensePosition = -1;
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private static final String TAG = "MainActivity";
     private static final String CITY = "CITY";
-    private static final String LICENSE = "LICENSE";
     private String lastCity;
-    private String lastLicense;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         lastCity = SharedPreferenceHelper.loadPref(CITY);
-        lastLicense = SharedPreferenceHelper.loadPref(LICENSE);
 
         if (isOnline()) {
             setContentView(R.layout.activity_main);
@@ -129,7 +124,7 @@ public class    MainActivity extends AppCompatActivity implements View.OnClickLi
                 // TODO Handle result handling when activity stopped
                 citiesLicensesWrapper = new Gson().fromJson(responseString, CitiesLicensesWrapper.class);
                 populateCitiesSpinner(citiesLicensesWrapper.getCities());
-                populateLicensesSpinner(citiesLicensesWrapper.getLicences());
+               // populateLicensesSpinner(citiesLicensesWrapper.getLicences());
             }
 
             @Override
@@ -150,15 +145,9 @@ public class    MainActivity extends AppCompatActivity implements View.OnClickLi
         int lastPos = getLastCheckedCity(adapter);
         citiesSpinner.setAdapter(adapter);
         citiesSpinner.setSelection(lastPos);
-    }
-
-    private void populateLicensesSpinner(List<String> licenses) {
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.item_spinner, android.R.id.text1, licenses);
-        licensesSpinner.setAdapter(adapter);
-        int lastPos = adapter.getPosition(lastLicense);
-        licensesSpinner.setSelection(lastPos);
         progressDialog.dismiss();
     }
+
 
     @Override
     protected void onResume() {
@@ -178,13 +167,9 @@ public class    MainActivity extends AppCompatActivity implements View.OnClickLi
         if (selectedCityPosition == -1) {
             Toast.makeText(this, R.string.choseCity, Toast.LENGTH_SHORT).show();
         }
-        if (selectedLicensePosition == -1) {
-            Toast.makeText(this, R.string.choseLicense, Toast.LENGTH_SHORT).show();
-        }
 
-        SharedPreferenceHelper.saveLicenseCity(citiesSpinner.getItemAtPosition(selectedCityPosition).toString(),
-                licensesSpinner.getItemAtPosition(selectedLicensePosition).toString());
-        CityActivity.show(this, citiesLicensesWrapper.getCities().get(selectedCityPosition), citiesLicensesWrapper.getLicences().get(selectedLicensePosition));
+        SharedPreferenceHelper.saveLicenseCity(citiesSpinner.getItemAtPosition(selectedCityPosition).toString());
+        CityActivity.show(this, citiesLicensesWrapper.getCities().get(selectedCityPosition));
     }
 
     @Override
@@ -192,9 +177,6 @@ public class    MainActivity extends AppCompatActivity implements View.OnClickLi
         switch (adapterView.getId()) {
             case R.id.main_cities_spinner:
                 selectedCityPosition = i;
-                break;
-            case R.id.main_licenses_spinner:
-                selectedLicensePosition = i;
                 break;
         }
     }

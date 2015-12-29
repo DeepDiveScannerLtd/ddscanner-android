@@ -28,11 +28,10 @@ public class SharedPreferenceHelper {
         return prefs.getString(PREFERENCES_GCM_ID, "");
     }
 
-    public static void saveLicenseCity(String city, String license) {
+    public static void saveLicenseCity(String city) {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         Editor editor = prefs.edit();
         editor.putString(CITY, city);
-        editor.putString(LICENSE, license);
         editor.commit();
     }
 

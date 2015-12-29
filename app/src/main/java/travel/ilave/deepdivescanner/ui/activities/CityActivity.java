@@ -10,6 +10,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Display;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -54,25 +55,26 @@ public class CityActivity extends AppCompatActivity implements PlacesPagerAdapte
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_search_location);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         tabLayout = (TabLayout) findViewById(R.id.place_sliding_tabs);
         placeViewPager = (ViewPager) findViewById(R.id.place_view_pager);
 
         city = (City) getIntent().getSerializableExtra(CITY);
-        String license = getIntent().getStringExtra(LICENSE);
-        requestCityProducts(city.getId(), license);
+        requestCityProducts(city.getId());
 
     }
 
-    private void requestCityProducts(String cityId, String license) {
+    private void requestCityProducts(String cityId) {
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage(getApplicationContext().getResources().getString(R.string.pleaseWait));
         progressDialog.show();
-        RestClient.getServiceInstance().getCityProductsByLicense(cityId, license, new Callback<Response>() {
+        RestClient.getServiceInstance().getCityProductsByLicense(cityId, new Callback<Response>() {
             @Override
             public void success(Response s, Response response) {
                 String responseString = new String(((TypedByteArray) s.getBody()).getBytes());
+                System.out.println(responseString);
                 LogUtils.i("response code is " + s.getStatus());
                 LogUtils.i("response body is " + responseString);
                 // TODO Handle result handling when activity stopped
@@ -106,10 +108,9 @@ public class CityActivity extends AppCompatActivity implements PlacesPagerAdapte
         progressDialog.dismiss();
     }
 
-    public static void show(Context context, City city, String license) {
+    public static void show(Context context, City city) {
         Intent intent = new Intent(context, CityActivity.class);
         intent.putExtra(CITY, city);
-        intent.putExtra(LICENSE, license);
         context.startActivity(intent);
 
     }
@@ -127,6 +128,12 @@ public class CityActivity extends AppCompatActivity implements PlacesPagerAdapte
     @Override
     public void onExploreClicked() {
         DivePlaceActivity.show(this, selectedProduct);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_city, menu);
+        return true;
     }
 
     @Override

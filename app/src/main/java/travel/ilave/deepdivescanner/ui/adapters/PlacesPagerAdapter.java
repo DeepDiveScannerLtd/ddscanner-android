@@ -11,6 +11,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v13.app.FragmentStatePagerAdapter;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -31,11 +32,13 @@ import java.util.Locale;
 import travel.ilave.deepdivescanner.entities.City;
 import travel.ilave.deepdivescanner.entities.Product;
 import travel.ilave.deepdivescanner.ui.fragments.ImproveLevelFragment;
+import travel.ilave.deepdivescanner.ui.fragments.ProductListFragment;
 
 
 public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements LocationListener {
 
     public static final String ARGS = "args";
+    private static final String TAG = "PlacesPagerAdapter";
 
     private Context context;
     private City city;
@@ -58,8 +61,8 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Loc
     @Override
     public Fragment getItem(int position) {
         locationManager = (LocationManager) this.context.getSystemService(Context.LOCATION_SERVICE);
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME, MIN_DISTANCE, this);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME, MIN_DISTANCE, this);
+       // locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME, MIN_DISTANCE, this);
+        //locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME, MIN_DISTANCE, this);
         Fragment fragment = null;
         Bundle args = new Bundle();
         switch (position) {
@@ -69,40 +72,17 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Loc
                     @Override
                     public void onMapReady(GoogleMap googleMap) {
                         LatLng city = new LatLng(Double.valueOf(PlacesPagerAdapter.this.city.getLat()), Double.valueOf(PlacesPagerAdapter.this.city.getLng()));
-                       // googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(city, 8.0f));
+                        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(city, 8.0f));
                         gMap = googleMap;
                         googleMap.setInfoWindowAdapter(new InfoWindowAdapter(context, products, googleMap));
                     }
                 });
                 break;
             case 1:
-                fragment = new MapFragment();
-                ((MapFragment) fragment).getMapAsync(new OnMapReadyCallback() {
-                    @Override
-                    public void onMapReady(GoogleMap googleMap) {
-                        LatLng city = new LatLng(Double.valueOf(PlacesPagerAdapter.this.city.getLat()), Double.valueOf(PlacesPagerAdapter.this.city.getLng()));
-                        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(city, 8.0f));
-                       // googleMap.setOnMarkerClickListener(PlacesPagerAdapter.this);
-                        /*
-                        for (Product product : products) {
-                            if (product.isHotOffers()) {
-                               /googleMap.setInfoWindowAdapter(new InfoWindowAdapter(context));
-                                LatLng place = new LatLng(Double.valueOf(product.getLat()), Double.valueOf(product.getLng()));
-                                Marker marker = googleMap.addMarker(new MarkerOptions().position(place));
-                                marker.setTitle(product.getName());
-                                googleMap.setInfoWindowAdapter(new InfoWindowAdapter(context, product));
-                                PlacesPagerAdapter.this.markersMap.put(marker, product);
-                            }
-                        }
-                        */
-                        googleMap.setInfoWindowAdapter(new InfoWindowAdapter(context, products, googleMap));
+                fragment = new ProductListFragment();
+                args.putParcelableArrayList("PRODUCTS", products);
+                break;
 
-                    }
-                });
-                break;
-            case 2:
-                fragment = new ImproveLevelFragment();
-                break;
         }
         fragment.setArguments(args);
 
@@ -111,18 +91,16 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Loc
 
     @Override
     public int getCount() {
-        return 3;
+        return 2;
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
         switch (position) {
             case 0:
-                return "EXPLORE";
+                return "MAP";
             case 1:
-                return "SPECIAL OFFERS";
-            case 2:
-                return "IMPROVE LEVEL";
+                return "LIST";
             default:
                 return "";
         }
@@ -142,7 +120,7 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Loc
 
     @Override
     public void onLocationChanged(Location location) {
-        String cityName = null;
+       /* String cityName = null;
         ProgressDialog progressDialog = new ProgressDialog(this.context);
         progressDialog.setMessage("Please wait");
         progressDialog.show();
@@ -156,11 +134,16 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Loc
         try {
             addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
             cityName = addresses.get(0).getLocality();
-        } catch (IOException e) {}
+        } catch (IOException e) {
+            Log.i(TAG, e.toString());
+        }
 
         try {
             locationManager.removeUpdates(this);
-        } catch (SecurityException e) {}
+        } catch (SecurityException e) {
+            Log.i(TAG, e.toString());
+        }
+        */
     }
 
     @Override
