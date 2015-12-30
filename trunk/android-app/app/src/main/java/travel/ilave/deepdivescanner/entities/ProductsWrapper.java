@@ -22,17 +22,16 @@ public class ProductsWrapper {
 //    },
 //            ]
 
-    private String license;
     private List<Product> products;
 
-    public String getLicense() {
+   /* public String getLicense() {
         return license;
     }
 
     public void setLicense(String license) {
         this.license = license;
     }
-
+*/
     public List<Product> getProducts() {
         return products;
     }

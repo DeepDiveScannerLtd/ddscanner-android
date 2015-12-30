@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.NumberPicker;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -19,7 +18,6 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
-import retrofit.mime.TypedString;
 import travel.ilave.deepdivescanner.R;
 import travel.ilave.deepdivescanner.entities.Booking;
 import travel.ilave.deepdivescanner.entities.request.BookingRequest;
@@ -52,6 +50,10 @@ public class BillingActivity extends AppCompatActivity implements View.OnClickLi
     private EditText cardMonth;
     private EditText cardYear;
     private EditText cvv;
+    private EditText firstName;
+    private EditText lastName;
+    private EditText gsm;
+    private EditText email;
     private ProgressDialog progressDialog;
 
     @Override
@@ -63,6 +65,7 @@ public class BillingActivity extends AppCompatActivity implements View.OnClickLi
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.billingActivityTitle);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().show();
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -89,6 +92,10 @@ public class BillingActivity extends AppCompatActivity implements View.OnClickLi
         cardMonth = (EditText) findViewById(R.id.month);
         cardYear = (EditText) findViewById(R.id.year);
         cvv = (EditText) findViewById(R.id.edit_ccv);
+        firstName = (EditText) findViewById(R.id.firstName);
+        lastName = (EditText) findViewById(R.id.lastName);
+        gsm = (EditText) findViewById(R.id.phone);
+        email = (EditText) findViewById(R.id.email);
 
         findViewById(R.id.button_pay).setOnClickListener(this);
     }
@@ -103,7 +110,7 @@ public class BillingActivity extends AppCompatActivity implements View.OnClickLi
         br.setPickupId(pickupId);
         br.setPriceId(new String[]{priceId});
         progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Please wait");
+        progressDialog.setMessage(getApplicationContext().getResources().getString(R.string.pleaseWait));
         progressDialog.show();
         RestClient.getServiceInstance().booking(br,
                 new Callback<Response>() {

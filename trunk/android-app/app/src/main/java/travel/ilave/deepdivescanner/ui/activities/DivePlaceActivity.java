@@ -9,13 +9,18 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Adapter;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.FrameLayout;
+import android.widget.GridLayout;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -25,6 +30,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.Gson;
 
 import java.net.SocketTimeoutException;
+import java.util.HashMap;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -34,6 +40,7 @@ import travel.ilave.deepdivescanner.R;
 import travel.ilave.deepdivescanner.entities.Product;
 import travel.ilave.deepdivescanner.entities.ProductDetails;
 import travel.ilave.deepdivescanner.rest.RestClient;
+import travel.ilave.deepdivescanner.ui.adapters.IconsAdapter;
 import travel.ilave.deepdivescanner.ui.adapters.PlaceImagesPagerAdapter;
 import travel.ilave.deepdivescanner.ui.fragments.DatePickerFragment;
 import travel.ilave.deepdivescanner.utils.LogUtils;
@@ -50,14 +57,16 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
     private TextView depth_value;
     private TextView visibility_value;
     private TextView access_value;
-    private LinearLayout sealifeLayout;
     private TextView description;
     private Button book_now;
     private ProgressDialog progressDialog;
 
+    private HashMap<String, String> characteristiscs;
     private Product product;
     private ProductDetails productDetails;
     private PlaceImagesPagerAdapter placeImagesPagerAdapter;
+
+    private String[] iconsUrls = new String[5];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,12 +79,10 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
 
         productImagesViewPager = (ViewPager) findViewById(R.id.product_images);
         starsLayout = (LinearLayout) findViewById(R.id.stars);
-        reviewsCount = (TextView) findViewById(R.id.reviews_count);
         price = (TextView) findViewById(R.id.price);
         depth_value = (TextView) findViewById(R.id.depth_value);
         visibility_value = (TextView) findViewById(R.id.visibility_value);
         access_value = (TextView) findViewById(R.id.access_value);
-        sealifeLayout = (LinearLayout) findViewById(R.id.sealife_icons);
         description = (TextView) findViewById(R.id.description);
         book_now = (Button) findViewById(R.id.book_now);
         book_now.setOnClickListener(this);
@@ -86,7 +93,7 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
 
     private void requestProductDetails(String productId) {
         progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Please wait");
+        progressDialog.setMessage(getApplicationContext().getResources().getString(R.string.pleaseWait));
         progressDialog.show();
         RestClient.getServiceInstance().getProductById(productId, new Callback<Response>() {
             @Override
@@ -95,10 +102,10 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
                 LogUtils.i("response code is " + s.getStatus());
                 LogUtils.i("response body is " + responseString);
                 // TODO Handle result handling when activity stopped
-                responseString = responseString.replaceAll("\\n/", "/");
+                responseString = responseString.replaceAll("\\\\", "");
+                System.out.println(responseString);
                 productDetails = new Gson().fromJson(responseString, ProductDetails.class);
                 populateProductDetails();
-                progressDialog.dismiss();
             }
 
             @Override
@@ -134,22 +141,20 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
             iv.setAlpha(0.6f);
             starsLayout.addView(iv);
         }
-        reviewsCount.setText("150 Reviews");
-        price.setText("from " + product.getPrice() + "$");
+
         depth_value.setText("" + productDetails.getDept() + "m");
         visibility_value.setText(productDetails.getVisiblity());
         access_value.setText(productDetails.getAccess());
         LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        int i = 0;
         for (String sealifeIcon : productDetails.getSealife()) {
-            FrameLayout fl = (FrameLayout) inflater.inflate(R.layout.view_sealife_icon, sealifeLayout, false);
-            SimpleDraweeView iv = (SimpleDraweeView) fl.findViewById(R.id.icon);
-
-            Uri uri = Uri.parse("http://" + sealifeIcon.replaceAll("\\n/", "/"));
-            iv.setImageURI(uri);
-
-            sealifeLayout.addView(fl);
+            iconsUrls[i] = sealifeIcon.toString();
+            i++;
         }
+        GridView sealife = (GridView) findViewById(R.id.usage_example_gridview);
+        sealife.setAdapter(new IconsAdapter(DivePlaceActivity.this, iconsUrls));
         description.setText(product.getDescription());
+        progressDialog.dismiss();
     }
 
     public static void show(Context context, Product product) {

@@ -11,11 +11,11 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -38,8 +38,9 @@ import travel.ilave.deepdivescanner.entities.City;
 import travel.ilave.deepdivescanner.rest.RestClient;
 import travel.ilave.deepdivescanner.services.RegistrationIntentService;
 import travel.ilave.deepdivescanner.utils.LogUtils;
+import travel.ilave.deepdivescanner.utils.SharedPreferenceHelper;
 
-public class    MainActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
     private Toolbar toolbar;
     private Spinner citiesSpinner;
@@ -51,13 +52,17 @@ public class    MainActivity extends AppCompatActivity implements View.OnClickLi
     private BroadcastReceiver mRegistrationBroadcatReceiver;
 
     private int selectedCityPosition = -1;
-    private int selectedLicensePosition = -1;
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private static final String TAG = "MainActivity";
+    private static final String CITY = "CITY";
+    private String lastCity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        lastCity = SharedPreferenceHelper.loadPref(CITY);
+
         if (isOnline()) {
             setContentView(R.layout.activity_main);
 
@@ -67,9 +72,9 @@ public class    MainActivity extends AppCompatActivity implements View.OnClickLi
                     SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
                     boolean sentToken = sharedPreferences.getBoolean(RegistrationIntentService.SENT_TOKEN_TO_SERVER, false);
                     if (sentToken) {
-                        Toast.makeText(MainActivity.this, "Succsessfull", Toast.LENGTH_LONG);
+                        
                     } else {
-                        Toast.makeText(MainActivity.this, "Error", Toast.LENGTH_LONG);
+                        //Error with token
                     }
                 }
             };
@@ -106,7 +111,7 @@ public class    MainActivity extends AppCompatActivity implements View.OnClickLi
 
     private void requestCities() {
         progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Please wait");
+        progressDialog.setMessage(getApplicationContext().getResources().getString(R.string.pleaseWait));
         progressDialog.show();
 
         RestClient.getServiceInstance().getCities(new Callback<Response>() {
@@ -119,7 +124,7 @@ public class    MainActivity extends AppCompatActivity implements View.OnClickLi
                 // TODO Handle result handling when activity stopped
                 citiesLicensesWrapper = new Gson().fromJson(responseString, CitiesLicensesWrapper.class);
                 populateCitiesSpinner(citiesLicensesWrapper.getCities());
-                populateLicensesSpinner(citiesLicensesWrapper.getLicences());
+               // populateLicensesSpinner(citiesLicensesWrapper.getLicences());
             }
 
             @Override
@@ -137,14 +142,12 @@ public class    MainActivity extends AppCompatActivity implements View.OnClickLi
 
     private void populateCitiesSpinner(List<City> cities) {
         ArrayAdapter<City> adapter = new ArrayAdapter<City>(this, R.layout.item_spinner, android.R.id.text1, cities);
+        int lastPos = getLastCheckedCity(adapter);
         citiesSpinner.setAdapter(adapter);
-    }
-
-    private void populateLicensesSpinner(List<String> licenses) {
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.item_spinner, android.R.id.text1, licenses);
-        licensesSpinner.setAdapter(adapter);
+        citiesSpinner.setSelection(lastPos);
         progressDialog.dismiss();
     }
+
 
     @Override
     protected void onResume() {
@@ -164,10 +167,9 @@ public class    MainActivity extends AppCompatActivity implements View.OnClickLi
         if (selectedCityPosition == -1) {
             Toast.makeText(this, R.string.choseCity, Toast.LENGTH_SHORT).show();
         }
-        if (selectedCityPosition == -1) {
-            Toast.makeText(this, R.string.choseLicense, Toast.LENGTH_SHORT).show();
-        }
-        CityActivity.show(this, citiesLicensesWrapper.getCities().get(selectedCityPosition), citiesLicensesWrapper.getLicences().get(selectedLicensePosition));
+
+        SharedPreferenceHelper.saveLicenseCity(citiesSpinner.getItemAtPosition(selectedCityPosition).toString());
+        CityActivity.show(this, citiesLicensesWrapper.getCities().get(selectedCityPosition));
     }
 
     @Override
@@ -176,10 +178,6 @@ public class    MainActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.main_cities_spinner:
                 selectedCityPosition = i;
                 break;
-            case R.id.main_licenses_spinner:
-                selectedLicensePosition = i;
-                break;
-
         }
     }
 
@@ -212,6 +210,17 @@ public class    MainActivity extends AppCompatActivity implements View.OnClickLi
             return false;
         }
         return true;
+    }
+
+    private int getLastCheckedCity (Adapter adapter) {
+        int i = 0, lastPos = -1;
+        while ((lastPos == -1) && (i < adapter.getCount())) {
+            if(adapter.getItem(i).toString().equals(lastCity)) {
+                lastPos = i;
+            }
+            i++;
+        }
+        return lastPos;
     }
 
 }

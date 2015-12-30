@@ -65,7 +65,7 @@ public class OffersActivity extends AppCompatActivity implements AdapterView.OnI
 
     private void requestProductOffers(String productId, String date) {
         progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Please wait");
+        progressDialog.setMessage(getApplicationContext().getResources().getString(R.string.pleaseWait));
         progressDialog.show();
         RestClient.getServiceInstance().getProductOffers(productId, date, new Callback<Response>() {
             @Override

@@ -98,7 +98,7 @@ public class ConditionsActivity extends AppCompatActivity implements View.OnClic
 
     private void requestOfferConditionss(String productId) {
         progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Please wait");
+        progressDialog.setMessage(getApplicationContext().getResources().getString(R.string.pleaseWait));
         progressDialog.show();
         RestClient.getServiceInstance().getOfferConditions(productId, new Callback<Response>() {
             @Override

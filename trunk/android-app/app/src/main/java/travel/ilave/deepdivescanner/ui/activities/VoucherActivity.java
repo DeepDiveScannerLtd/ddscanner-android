@@ -86,7 +86,7 @@ public class VoucherActivity extends AppCompatActivity {
         TravelerRequest tr = new TravelerRequest();
         tr.setBookingId(bookingId);
         tr.setCountryId(countryId);
-//        tr.setGoogleId(SharedPreferenceHelper.getGcmId());
+       // tr.setGoogleId(SharedPreferenceHelper.getGcmId());
         tr.setGoogleId("sadf");
         RestClient.getServiceInstance().traveler(tr, new Callback<Response>() {
             @Override

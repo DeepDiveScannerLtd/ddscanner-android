@@ -38,7 +38,7 @@ public class PlaceImagesPagerAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         Fragment fragment = new PlaceImageFragment();
         Bundle args = new Bundle();
-        args.putString(PlaceImageFragment.IMAGE_URL, "http://" + productsImages.get(position));
+        args.putString(PlaceImageFragment.IMAGE_URL, productsImages.get(position));
         fragment.setArguments(args);
         return fragment;
     }

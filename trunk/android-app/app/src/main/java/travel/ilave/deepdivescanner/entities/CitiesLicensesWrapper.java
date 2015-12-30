@@ -23,7 +23,7 @@ public class CitiesLicensesWrapper {
 //            ]
 
     private List<City> cities;
-    private List<String> licences;
+    //private List<String> licences;
 
     public List<City> getCities() {
         return cities;
@@ -33,11 +33,12 @@ public class CitiesLicensesWrapper {
         this.cities = cities;
     }
 
-    public List<String> getLicences() {
+   /* public List<String> getLicences() {
         return licences;
     }
 
     public void setLicences(List<String> licences) {
         this.licences = licences;
     }
+    */
 }
