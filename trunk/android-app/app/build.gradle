@@ -3,8 +3,8 @@ apply plugin: 'com.google.gms.google-services'
 
 android {
     signingConfigs {
-        config {
-            storeFile file('/home/lashket/debug.keystore')
+        debug {
+            storeFile file('../../../build/debug.keystore')
         }
     }
     compileSdkVersion 23
