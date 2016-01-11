@@ -3,12 +3,10 @@ package travel.ilave.deepdivescanner.ui.activities;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.FragmentActivity;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 
 import travel.ilave.deepdivescanner.R;
+import travel.ilave.deepdivescanner.ui.views.DDProgressBarView;
 
 /**
  * Created by Vitaly on 29.11.2015.
@@ -35,7 +33,7 @@ public class SplashActivity extends Activity {
                 SplashActivity.this.finish();
                 MainActivity.show(SplashActivity.this);
             }
-        }, 1500);
+        }, 3 * DDProgressBarView.ANIMATION_DURATION);
     }
 
 }
