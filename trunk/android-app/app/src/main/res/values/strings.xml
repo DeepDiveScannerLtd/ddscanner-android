@@ -20,7 +20,7 @@
     <string name="selectCity">Select a city</string>
     <string name="divingLevel">Select your diving level</string>
     <string name="bookingSuccessfull">Booking successfully completed</string>
-    <string name="description">DESCRIPTION</string>
+    <string name="description">Description</string>
     <string name="userName">NAME</string>
     <string name="rating">Rating</string>
     <string name="from">FROM</string>

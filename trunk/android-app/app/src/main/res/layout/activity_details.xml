@@ -1,0 +1,299 @@
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/collapsing_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:contentScrim="@color/primary"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:fitsSystemWindows="true"
+                android:background="@drawable/top_photo"
+                android:id="@+id/profile_id"
+                app:layout_collapseMode="parallax" />
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar_collapse"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin" />
+
+        </android.support.design.widget.CollapsingToolbarLayout>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:id="@+id/pricing"
+                android:background="@color/money_background"
+                android:layout_width="100dp"
+                android:layout_height="40dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center_horizontal">
+                    <ImageView
+                        android:layout_gravity="center_vertical"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_money_small"
+                        />
+                    <TextView
+                        android:id="@+id/price_details"
+                        android:layout_gravity="center_vertical"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black_text"
+                        android:layout_marginLeft="3dp"
+                        android:text="30"
+                        android:textSize="16dp"
+                        android:textStyle="bold"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black_text"
+                        android:layout_marginLeft="1dp"
+                        android:layout_gravity="center_vertical"
+                        android:textSize="16dp"
+                        android:textStyle="bold"
+                        android:text="$"/>
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_marginLeft="10dp"
+                android:id="@+id/stars"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:layout_toRightOf="@+id/pricing"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/stars"
+                    android:text="135 reviews"
+                    android:textColor="#9F9F9F"
+                    android:gravity="center_vertical"/>
+            </LinearLayout>
+        </RelativeLayout>
+            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/ic_characteristic_depth"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_list_deep"
+                    android:padding="15dp"/>
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/ic_characteristic_depth">
+
+                    <TextView
+                        android:layout_marginTop="13dp"
+                        android:layout_height="wrap_content"
+                        android:text="Max depth"
+                        android:textStyle="bold"
+                        android:textSize="15dp"
+                        android:textColor="@color/black_text"
+                        android:layout_width="wrap_content" />
+                    <TextView
+                        android:id="@+id/characteristic_value_depth"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12dp"
+                        android:text="10 meters" />
+                </LinearLayout>
+            </RelativeLayout>
+            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="vertical" android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/ic_characteristic_visibility"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_list_visibility"
+                    android:padding="15dp"/>
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/ic_characteristic_visibility">
+
+                    <TextView
+                        android:layout_marginTop="13dp"
+                        android:layout_height="wrap_content"
+                        android:text="Visibility"
+                        android:textSize="15dp"
+                        android:textStyle="bold"
+                        android:textColor="@color/black_text"
+                        android:layout_width="wrap_content" />
+                    <TextView
+                        android:id="@+id/characteristic_value_visibility"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12dp"
+                        android:text="10 meters" />
+                </LinearLayout>
+            </RelativeLayout>
+            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="vertical" android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/ic_characteristic_currents"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_list_currents"
+                    android:padding="15dp"/>
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/ic_characteristic_currents">
+
+                    <TextView
+                        android:layout_marginTop="13dp"
+                        android:layout_height="wrap_content"
+                        android:text="Currents"
+                        android:textSize="15dp"
+                        android:textStyle="bold"
+                        android:textColor="@color/black_text"
+                        android:layout_width="wrap_content" />
+                    <TextView
+                        android:id="@+id/characteristic_value_currents"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12dp"
+                        android:text="Strong" />
+                </LinearLayout>
+            </RelativeLayout>
+            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="vertical" android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/ic_characteristic_level"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_list_level"
+                    android:padding="15dp"/>
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/ic_characteristic_level">
+
+                    <TextView
+                        android:layout_marginTop="13dp"
+                        android:layout_height="wrap_content"
+                        android:text="Diver level"
+                        android:textStyle="bold"
+                        android:textSize="15dp"
+                        android:textColor="@color/black_text"
+                        android:layout_width="wrap_content" />
+                    <TextView
+                        android:id="@+id/characteristic_value_level"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12dp"
+                        android:text="High" />
+                </LinearLayout>
+            </RelativeLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_marginLeft="10dp"
+                android:textColor="@color/black_text"
+                android:layout_marginTop="15dp"
+                android:text="@string/sealifePlace"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                />
+            <GridView
+                android:id="@+id/usage_example_gridview"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:numColumns="5"
+                android:clickable="false" />
+            <RelativeLayout
+                android:padding="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+                <ImageView
+                    android:id="@+id/ic_list_descr"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_list_description"/>
+                <TextView
+                    android:id="@+id/description_title"
+                    android:textSize="15dp"
+                    android:layout_marginLeft="15dp"
+                    android:textStyle="bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black_text"
+                    android:layout_toRightOf="@+id/ic_list_descr"
+                    android:text="@string/description"/>
+                <TextView
+                    android:id="@+id/dive_place_description"
+                    android:layout_toRightOf="@+id/ic_list_descr"
+                    android:layout_marginLeft="15dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/description_title"
+                    android:layout_marginTop="10dp" />
+                <Button
+                    android:id="@+id/book_now"
+                    android:layout_marginLeft="45dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@color/orange"
+                    android:text="@string/btnBookNow"
+                    android:layout_below="@id/dive_place_description"
+                    android:layout_width="120dp"
+                    android:layout_height="35dp"
+                    />
+            </RelativeLayout>
+        </LinearLayout>
+
+
+
+    </android.support.v4.widget.NestedScrollView>
+
+</android.support.design.widget.CoordinatorLayout>

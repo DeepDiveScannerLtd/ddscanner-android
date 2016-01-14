@@ -75,7 +75,7 @@ public class ConditionsActivity extends AppCompatActivity implements View.OnClic
 
         productName = (TextView) findViewById(R.id.name);
         duration = (TextView) findViewById(R.id.duration);
-        depth_value = (TextView) findViewById(R.id.depth_value);
+       // depth_value = (TextView) findViewById(R.id.depth_value);
         type = (TextView) findViewById(R.id.type);
         type_desc = (TextView) findViewById(R.id.type_desc);
         plus = (TextView) findViewById(R.id.plus);

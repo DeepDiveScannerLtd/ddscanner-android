@@ -1,5 +1,6 @@
 package travel.ilave.deepdivescanner.ui.activities;
 
+import android.app.ActionBar;
 import android.app.DatePickerDialog;
 import android.app.DialogFragment;
 import android.app.ProgressDialog;
@@ -7,11 +8,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Adapter;
@@ -56,34 +59,33 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
     private TextView price;
     private TextView depth_value;
     private TextView visibility_value;
-    private TextView access_value;
     private TextView description;
     private Button book_now;
     private ProgressDialog progressDialog;
+    private CollapsingToolbarLayout collapsingToolbarLayout = null;
 
-    private HashMap<String, String> characteristiscs;
     private Product product;
     private ProductDetails productDetails;
-    private PlaceImagesPagerAdapter placeImagesPagerAdapter;
 
     private String[] iconsUrls = new String[5];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dive_place);
+        setContentView(R.layout.activity_details);
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar_collapse);
         setSupportActionBar(toolbar);
+        collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_actionbar_back);
 
-        productImagesViewPager = (ViewPager) findViewById(R.id.product_images);
+        //productImagesViewPager = (ViewPager) findViewById(R.id.product_images);
         starsLayout = (LinearLayout) findViewById(R.id.stars);
         price = (TextView) findViewById(R.id.price);
-        depth_value = (TextView) findViewById(R.id.depth_value);
-        visibility_value = (TextView) findViewById(R.id.visibility_value);
-        access_value = (TextView) findViewById(R.id.access_value);
-        description = (TextView) findViewById(R.id.description);
+        depth_value = (TextView) findViewById(R.id.characteristic_value_depth);
+        visibility_value = (TextView) findViewById(R.id.characteristic_value_visibility);
+        description = (TextView) findViewById(R.id.dive_place_description);
         book_now = (Button) findViewById(R.id.book_now);
         book_now.setOnClickListener(this);
 
@@ -126,26 +128,26 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void populateProductDetails() {
-        getSupportActionBar().setTitle(productDetails.getName());
-
-        placeImagesPagerAdapter = new PlaceImagesPagerAdapter(getFragmentManager(), productDetails.getImages());
-        productImagesViewPager.setAdapter(placeImagesPagerAdapter);
+        collapsingToolbarLayout.setTitle(productDetails.getName());
+        //placeImagesPagerAdapter = new PlaceImagesPagerAdapter(getFragmentManager(), productDetails.getImages());
+        //productImagesViewPager.setAdapter(placeImagesPagerAdapter);
         for (int i = 0; i < productDetails.getRating(); i++) {
             ImageView iv = new ImageView(this);
-            iv.setImageResource(R.drawable.ic_star_white_24dp);
+            iv.setImageResource(R.drawable.ic_flag_full_small);
+            iv.setPadding(10,0,0,0);
             starsLayout.addView(iv);
         }
         for (int i = 0; i < 5 - productDetails.getRating(); i++) {
             ImageView iv = new ImageView(this);
-            iv.setImageResource(R.drawable.ic_star_border_white_24dp);
-            iv.setAlpha(0.6f);
+            iv.setImageResource(R.drawable.ic_flag_empty_small);
+            iv.setPadding(10, 0, 0, 0);
             starsLayout.addView(iv);
         }
 
         depth_value.setText("" + productDetails.getDept() + "m");
         visibility_value.setText(productDetails.getVisiblity());
-        access_value.setText(productDetails.getAccess());
-        LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        description.setText(product.getDescription());
+       // LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         int i = 0;
         for (String sealifeIcon : productDetails.getSealife()) {
             iconsUrls[i] = sealifeIcon.toString();
@@ -176,6 +178,12 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
     @Override
     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
         OffersActivity.show(this, product.getId(), "" + i + "-" + (i1 + 1) + "-" + i2, product.getName());
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_details, menu);
+        return true;
     }
 
     @Override
