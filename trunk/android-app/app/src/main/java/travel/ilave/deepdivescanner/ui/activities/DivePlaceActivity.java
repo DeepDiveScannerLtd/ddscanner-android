@@ -88,7 +88,6 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
         description = (TextView) findViewById(R.id.dive_place_description);
         book_now = (Button) findViewById(R.id.book_now);
         book_now.setOnClickListener(this);
-
         product = (Product) getIntent().getParcelableExtra(PRODUCT);
         requestProductDetails(product.getId());
     }

@@ -77,13 +77,14 @@ public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter, GoogleMap
         description.setText(product.getDescription());
         for (int i = 0; i < product.getRating(); i++) {
             ImageView iv = new ImageView(mContext);
-            iv.setImageResource(R.mipmap.ic_redflag);
+            iv.setImageResource(R.drawable.ic_flag_full_small);
+            iv.setPadding(5,0,0,0);
             stars.addView(iv);
         }
         for (int i = 0; i < 5 - product.getRating(); i++) {
             ImageView iv = new ImageView(mContext);
-            iv.setImageResource(R.mipmap.ic_grayflag);
-            iv.setAlpha(0.6f);
+            iv.setImageResource(R.drawable.ic_flag_empty_small);
+            iv.setPadding(5,0,0,0);
             stars.addView(iv);
         }
         String price = String.valueOf(product.getPrice());
