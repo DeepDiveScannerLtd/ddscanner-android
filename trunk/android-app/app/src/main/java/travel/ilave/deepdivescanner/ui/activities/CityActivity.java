@@ -4,21 +4,35 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -33,10 +47,13 @@ import travel.ilave.deepdivescanner.ui.adapters.PlacesPagerAdapter;
 import travel.ilave.deepdivescanner.ui.dialogs.ProductInfoDialog;
 import travel.ilave.deepdivescanner.utils.LogUtils;
 
-public class CityActivity extends AppCompatActivity implements PlacesPagerAdapter.OnProductSelectedListener, ProductInfoDialog.OnExploreClickListener {
+public class CityActivity extends AppCompatActivity implements PlacesPagerAdapter.OnProductSelectedListener, ProductInfoDialog.OnExploreClickListener, LocationListener {
 
     public static final String CITY = "CITY";
     public static final String LICENSE = "LICENSE";
+    public static final String TAG = "CityActivity";
+    private static final long MIN_TIME = 400;
+    private static final float MIN_DISTANCE = 1000;
 
     private Toolbar toolbar;
     private ViewPager placeViewPager;
@@ -67,6 +84,9 @@ public class CityActivity extends AppCompatActivity implements PlacesPagerAdapte
     }
 
     private void requestCityProducts(String cityId) {
+       LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME, MIN_DISTANCE, this);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME, MIN_DISTANCE, this);
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage(getApplicationContext().getResources().getString(R.string.pleaseWait));
         progressDialog.show();
@@ -79,7 +99,7 @@ public class CityActivity extends AppCompatActivity implements PlacesPagerAdapte
                 LogUtils.i("response body is " + responseString);
                 // TODO Handle result handling when activity stopped
                 productsWrapper = new Gson().fromJson(responseString, ProductsWrapper.class);
-                populatePlaceViewpager();
+               // populatePlaceViewpager();
             }
 
             @Override
@@ -99,9 +119,9 @@ public class CityActivity extends AppCompatActivity implements PlacesPagerAdapte
         });
     }
 
-    private void populatePlaceViewpager() {
+    private void populatePlaceViewpager(LatLng latLng) {
         getSupportActionBar().setTitle(city.getName());
-        placesPagerAdapter = new PlacesPagerAdapter(this, getFragmentManager(), city, (ArrayList<Product>) productsWrapper.getProducts(), this);
+        placesPagerAdapter = new PlacesPagerAdapter(this, getFragmentManager(), city, (ArrayList<Product>) productsWrapper.getProducts(), latLng, this);
         placeViewPager.setAdapter(placesPagerAdapter);
         placeViewPager.setOffscreenPageLimit(3);
         tabLayout.setupWithViewPager(placeViewPager);
@@ -136,14 +156,60 @@ public class CityActivity extends AppCompatActivity implements PlacesPagerAdapte
         return true;
     }
 
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
+        if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                Place place = PlaceAutocomplete.getPlace(this, data);
+                Log.i(TAG, "Place: " + place.getName());
+                populatePlaceViewpager(place.getLatLng());
+            } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
+                //SSLEngineResult.Status status = PlaceAutocomplete.getStatus(this, data);
+                // TODO: Handle the error.
+                //Log.i(TAG, status.getStatusMessage());
+
+            } else if (resultCode == RESULT_CANCELED) {
+                // The user canceled the operation.
+            }
+        }
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                onBackPressed();
+                int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
+                try {
+                    Intent intent =
+                            new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
+                                    .build(this);
+                    startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
+                } catch (GooglePlayServicesRepairableException e) {
+                    Log.i(TAG, e.toString());
+                } catch (GooglePlayServicesNotAvailableException e) {
+                    Log.i(TAG, e.toString());
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        String cityName = null;
+        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        populatePlaceViewpager(latLng);
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) { }
+
+    @Override
+    public void onProviderEnabled(String provider) { }
+
+    @Override
+    public void onProviderDisabled(String provider) { }
 }

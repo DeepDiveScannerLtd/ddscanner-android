@@ -61,6 +61,7 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
     private TextView visibility_value;
     private TextView description;
     private Button book_now;
+    private PlaceImagesPagerAdapter placeImagesPagerAdapter;
     private ProgressDialog progressDialog;
     private CollapsingToolbarLayout collapsingToolbarLayout = null;
 
@@ -80,7 +81,7 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_actionbar_back);
 
-        //productImagesViewPager = (ViewPager) findViewById(R.id.product_images);
+        productImagesViewPager = (ViewPager) findViewById(R.id.product_images);
         starsLayout = (LinearLayout) findViewById(R.id.stars);
         price = (TextView) findViewById(R.id.price);
         depth_value = (TextView) findViewById(R.id.characteristic_value_depth);
@@ -128,8 +129,8 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
 
     private void populateProductDetails() {
         collapsingToolbarLayout.setTitle(productDetails.getName());
-        //placeImagesPagerAdapter = new PlaceImagesPagerAdapter(getFragmentManager(), productDetails.getImages());
-        //productImagesViewPager.setAdapter(placeImagesPagerAdapter);
+        placeImagesPagerAdapter = new PlaceImagesPagerAdapter(getFragmentManager(), productDetails.getImages());
+        productImagesViewPager.setAdapter(placeImagesPagerAdapter);
         for (int i = 0; i < productDetails.getRating(); i++) {
             ImageView iv = new ImageView(this);
             iv.setImageResource(R.drawable.ic_flag_full_small);

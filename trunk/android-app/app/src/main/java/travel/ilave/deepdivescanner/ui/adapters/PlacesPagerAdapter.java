@@ -41,6 +41,7 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Loc
     private static final String TAG = "PlacesPagerAdapter";
 
     private Context context;
+    private LatLng latLng;
     private City city;
     private ArrayList<Product> products;
     private HashMap<Marker, Product> markersMap = new HashMap<>();
@@ -49,20 +50,21 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Loc
     private GoogleMap gMap;
     private static final long MIN_TIME = 400;
     private static final float MIN_DISTANCE = 1000;
-    public PlacesPagerAdapter(Context context, FragmentManager fm, City city, ArrayList<Product> products, OnProductSelectedListener onProductSelectedListener) {
+    public PlacesPagerAdapter(Context context, FragmentManager fm, City city, ArrayList<Product> products, LatLng latLng, OnProductSelectedListener onProductSelectedListener) {
         super(fm);
 
         this.context = context;
         this.city = city;
         this.products = products;
         this.onProductSelectedListener = onProductSelectedListener;
+        this.latLng = latLng;
     }
 
     @Override
     public Fragment getItem(int position) {
         locationManager = (LocationManager) this.context.getSystemService(Context.LOCATION_SERVICE);
-       // locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME, MIN_DISTANCE, this);
-        //locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME, MIN_DISTANCE, this);
+        /*locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME, MIN_DISTANCE, this);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME, MIN_DISTANCE, this);*/
         Fragment fragment = null;
         Bundle args = new Bundle();
         switch (position) {
@@ -72,7 +74,7 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Loc
                     @Override
                     public void onMapReady(GoogleMap googleMap) {
                         LatLng city = new LatLng(Double.valueOf(PlacesPagerAdapter.this.city.getLat()), Double.valueOf(PlacesPagerAdapter.this.city.getLng()));
-                        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(city, 8.0f));
+                        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 8.0f));
                         gMap = googleMap;
                         googleMap.setInfoWindowAdapter(new InfoWindowAdapter(context, products, googleMap));
                     }
@@ -105,14 +107,6 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Loc
                 return "";
         }
     }
-
-  /*  @Override
-    public boolean onMarkerClick(Marker marker) {
-        selected = markersMap.get(marker);
-        marker.showInfoWindow();
-       // onProductSelectedListener.onProductSelected(markersMap.get(marker));
-        return true;
-    }*/
 
     public interface OnProductSelectedListener {
         void onProductSelected(Product selectedProduct);
