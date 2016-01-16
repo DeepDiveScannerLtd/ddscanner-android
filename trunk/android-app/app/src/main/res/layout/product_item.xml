@@ -41,7 +41,7 @@
         android:layout_marginTop="103dp"
         android:layout_height="28dp">
         <ImageView
-            android:layout_marginTop="6dp"
+            android:layout_gravity="center_vertical"
             android:layout_width="15dp"
             android:layout_height="15dp"
             android:src="@drawable/ic_money"
@@ -52,7 +52,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/black_text"
-            android:layout_marginTop="5dp"
+            android:layout_gravity="center_vertical"
             android:layout_marginLeft="3dp"
             android:text="1000"
             android:textSize="13dp" />
@@ -62,7 +62,7 @@
             android:textColor="@color/black_text"
             android:layout_marginLeft="1dp"
             android:textSize="13dp"
-            android:layout_marginTop="5dp"
+            android:layout_gravity="center_vertical"
             android:text="$"/>
     </LinearLayout>
 

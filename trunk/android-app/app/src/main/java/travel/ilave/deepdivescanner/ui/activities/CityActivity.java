@@ -3,9 +3,6 @@ package travel.ilave.deepdivescanner.ui.activities;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Point;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -15,24 +12,19 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
-import com.google.android.gms.maps.CameraUpdate;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
-import java.util.Locale;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -156,7 +148,6 @@ public class CityActivity extends AppCompatActivity implements PlacesPagerAdapte
         return true;
     }
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
@@ -165,10 +156,10 @@ public class CityActivity extends AppCompatActivity implements PlacesPagerAdapte
                 Place place = PlaceAutocomplete.getPlace(this, data);
                 Log.i(TAG, "Place: " + place.getName());
                 populatePlaceViewpager(place.getLatLng());
+                getSupportActionBar().setTitle(place.getAddress());
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                 //SSLEngineResult.Status status = PlaceAutocomplete.getStatus(this, data);
                 // TODO: Handle the error.
-                //Log.i(TAG, status.getStatusMessage());
 
             } else if (resultCode == RESULT_CANCELED) {
                 // The user canceled the operation.
@@ -199,7 +190,6 @@ public class CityActivity extends AppCompatActivity implements PlacesPagerAdapte
 
     @Override
     public void onLocationChanged(Location location) {
-        String cityName = null;
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
         populatePlaceViewpager(latLng);
     }

@@ -35,7 +35,7 @@ import travel.ilave.deepdivescanner.ui.fragments.ImproveLevelFragment;
 import travel.ilave.deepdivescanner.ui.fragments.ProductListFragment;
 
 
-public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements LocationListener {
+public class PlacesPagerAdapter extends FragmentStatePagerAdapter  {
 
     public static final String ARGS = "args";
     private static final String TAG = "PlacesPagerAdapter";
@@ -46,10 +46,7 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Loc
     private ArrayList<Product> products;
     private HashMap<Marker, Product> markersMap = new HashMap<>();
     private OnProductSelectedListener onProductSelectedListener;
-    private LocationManager locationManager;
     private GoogleMap gMap;
-    private static final long MIN_TIME = 400;
-    private static final float MIN_DISTANCE = 1000;
     public PlacesPagerAdapter(Context context, FragmentManager fm, City city, ArrayList<Product> products, LatLng latLng, OnProductSelectedListener onProductSelectedListener) {
         super(fm);
 
@@ -62,9 +59,6 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Loc
 
     @Override
     public Fragment getItem(int position) {
-        locationManager = (LocationManager) this.context.getSystemService(Context.LOCATION_SERVICE);
-        /*locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME, MIN_DISTANCE, this);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME, MIN_DISTANCE, this);*/
         Fragment fragment = null;
         Bundle args = new Bundle();
         switch (position) {
@@ -73,7 +67,6 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Loc
                 ((MapFragment) fragment).getMapAsync(new OnMapReadyCallback() {
                     @Override
                     public void onMapReady(GoogleMap googleMap) {
-                        LatLng city = new LatLng(Double.valueOf(PlacesPagerAdapter.this.city.getLat()), Double.valueOf(PlacesPagerAdapter.this.city.getLng()));
                         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 8.0f));
                         gMap = googleMap;
                         googleMap.setInfoWindowAdapter(new InfoWindowAdapter(context, products, googleMap));
@@ -112,40 +105,4 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Loc
         void onProductSelected(Product selectedProduct);
     }
 
-    @Override
-    public void onLocationChanged(Location location) {
-       /* String cityName = null;
-        ProgressDialog progressDialog = new ProgressDialog(this.context);
-        progressDialog.setMessage("Please wait");
-        progressDialog.show();
-        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 10);
-        gMap.animateCamera(cameraUpdate);
-        progressDialog.dismiss();
-        Geocoder geocoder = new Geocoder(this.context, Locale.getDefault());
-        List<Address> addresses;
-
-        try {
-            addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-            cityName = addresses.get(0).getLocality();
-        } catch (IOException e) {
-            Log.i(TAG, e.toString());
-        }
-
-        try {
-            locationManager.removeUpdates(this);
-        } catch (SecurityException e) {
-            Log.i(TAG, e.toString());
-        }
-        */
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) { }
-
-    @Override
-    public void onProviderEnabled(String provider) { }
-
-    @Override
-    public void onProviderDisabled(String provider) { }
 }
