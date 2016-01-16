@@ -31,7 +31,7 @@
     <string name="btnChoseOption">CHOSE THIS OPTION</string>
     <string name="offers">Offers</string>
     <string name="pleaseWait">Please wait</string>
-    <string name="errorConnection">Please check your internet connection</string>
+    <string name="errorConnection">No internet connection</string>
     <string name="choseLicense">Please choose your license</string>
     <string name="choseCity">Please choose city!</string>
 
