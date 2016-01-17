@@ -1,5 +1,4 @@
 <resources>
-    <string name="accessPlace">ACCESS</string>
     <string name="address">Address</string>
     <string name="app_name">Deep Dive Scanner</string>
     <string name="billingActivityTitle">Billing details</string>
@@ -11,12 +10,10 @@
     <string name="cardMonth">Month</string>
     <string name="cardYear">Year</string>
     <string name="cardCCVCode">Year</string>
+    <string name="depthPlace">DEPTH</string>
     <string name="placeOrder">PAY</string>
     <string name="noteConditions">Note</string>
     <string name="conditionsTotal">TOTAL</string>
-    <string name="depthPlace">DEPTH</string>
-    <string name="visibilityPlace">VISIBILITY</string>
-    <string name="sealifePlace">Sealife</string>
     <string name="selectCity">Select a city</string>
     <string name="divingLevel">Select your diving level</string>
     <string name="bookingSuccessfull">Booking successfully completed</string>
@@ -42,8 +39,20 @@
     <string name="phone">Phone</string>
     <string name="email">Email</string>
     <string name="serverNotResp">Server is not responsible, please try again later</string>
+
+    <!-- Subscribe layout -->
     <string name="subscribe_firstname">First name</string>
     <string name="subscribe_lastname">Last name</string>
     <string name="subscribe_email">E-mail address</string>
     <string name="subscribe_title">Subscribe</string>
+
+    <!-- Details layout -->
+    <string name="sealifePlace">Sealife</string>
+    <string name="details_reviews">reviews</string>
+    <string name="details_depth">Max depth</string>
+    <string name="details_visibility">Visibility</string>
+    <string name="details_currents">Currents</string>
+    <string name="details_level">Diver level</string>
+    <string name="details_description">Description</string>
+    <string name="details_btn_book_now">Book now</string>
 </resources>

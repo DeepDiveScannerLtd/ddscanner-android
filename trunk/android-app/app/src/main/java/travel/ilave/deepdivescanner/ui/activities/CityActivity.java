@@ -1,5 +1,6 @@
 package travel.ilave.deepdivescanner.ui.activities;
 
+import android.app.ActivityOptions;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -11,9 +12,11 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.transition.Explode;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
 import android.widget.Toast;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -63,6 +66,7 @@ public class CityActivity extends AppCompatActivity implements PlacesPagerAdapte
         setContentView(R.layout.activity_city);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_search_location);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -70,8 +74,9 @@ public class CityActivity extends AppCompatActivity implements PlacesPagerAdapte
         tabLayout = (TabLayout) findViewById(R.id.place_sliding_tabs);
         placeViewPager = (ViewPager) findViewById(R.id.place_view_pager);
 
-        city = (City) getIntent().getSerializableExtra(CITY);
-        requestCityProducts(city.getId());
+       // city = (City) getIntent().getSerializableExtra(CITY);
+        String cityId = "9275";
+        requestCityProducts(cityId);
 
     }
 
@@ -91,7 +96,7 @@ public class CityActivity extends AppCompatActivity implements PlacesPagerAdapte
                 LogUtils.i("response body is " + responseString);
                 // TODO Handle result handling when activity stopped
                 productsWrapper = new Gson().fromJson(responseString, ProductsWrapper.class);
-               // populatePlaceViewpager();
+                // populatePlaceViewpager();
             }
 
             @Override
@@ -112,8 +117,8 @@ public class CityActivity extends AppCompatActivity implements PlacesPagerAdapte
     }
 
     private void populatePlaceViewpager(LatLng latLng) {
-        getSupportActionBar().setTitle(city.getName());
-        placesPagerAdapter = new PlacesPagerAdapter(this, getFragmentManager(), city, (ArrayList<Product>) productsWrapper.getProducts(), latLng, this);
+        getSupportActionBar().setTitle("Phuket");
+        placesPagerAdapter = new PlacesPagerAdapter(this, getFragmentManager(), (ArrayList<Product>) productsWrapper.getProducts(), latLng, this);
         placeViewPager.setAdapter(placesPagerAdapter);
         placeViewPager.setOffscreenPageLimit(3);
         tabLayout.setupWithViewPager(placeViewPager);
@@ -171,17 +176,7 @@ public class CityActivity extends AppCompatActivity implements PlacesPagerAdapte
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
-                try {
-                    Intent intent =
-                            new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
-                                    .build(this);
-                    startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
-                } catch (GooglePlayServicesRepairableException e) {
-                    Log.i(TAG, e.toString());
-                } catch (GooglePlayServicesNotAvailableException e) {
-                    Log.i(TAG, e.toString());
-                }
+                openSearchLocationWindow();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -202,4 +197,24 @@ public class CityActivity extends AppCompatActivity implements PlacesPagerAdapte
 
     @Override
     public void onProviderDisabled(String provider) { }
+
+    public static void show(Context context) {
+        Intent intent = new Intent(context, CityActivity.class);
+        context.startActivity(intent);
+    }
+
+    private void openSearchLocationWindow() {
+        int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
+        try {
+            Intent intent =
+                    new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
+                            .build(this);
+            startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
+        } catch (GooglePlayServicesRepairableException e) {
+            Log.i(TAG, e.toString());
+        } catch (GooglePlayServicesNotAvailableException e) {
+            Log.i(TAG, e.toString());
+        }
+    }
+
 }

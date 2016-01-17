@@ -1,5 +1,6 @@
 package travel.ilave.deepdivescanner.ui.adapters;
 
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -7,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,6 +20,7 @@ import java.util.ArrayList;
 import travel.ilave.deepdivescanner.R;
 import travel.ilave.deepdivescanner.entities.Product;
 import travel.ilave.deepdivescanner.entities.ProductDetails;
+import travel.ilave.deepdivescanner.ui.activities.CityActivity;
 import travel.ilave.deepdivescanner.ui.activities.DivePlaceActivity;
 
 /**

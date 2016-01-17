@@ -4,9 +4,11 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.transition.Explode;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 
 import java.util.ArrayList;
 
@@ -21,6 +23,7 @@ public class ProductListFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         Bundle args = this.getArguments();
         ArrayList<Product> products = args.getParcelableArrayList("PRODUCTS");
         View view = inflater.inflate(R.layout.product_list_fragment, container, false);

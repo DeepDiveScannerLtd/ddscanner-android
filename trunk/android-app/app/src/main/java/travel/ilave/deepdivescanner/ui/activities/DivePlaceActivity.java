@@ -156,6 +156,7 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
         GridView sealife = (GridView) findViewById(R.id.usage_example_gridview);
         sealife.setAdapter(new IconsAdapter(DivePlaceActivity.this, iconsUrls));
         description.setText(product.getDescription());
+
         progressDialog.dismiss();
     }
 

@@ -47,11 +47,10 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter  {
     private HashMap<Marker, Product> markersMap = new HashMap<>();
     private OnProductSelectedListener onProductSelectedListener;
     private GoogleMap gMap;
-    public PlacesPagerAdapter(Context context, FragmentManager fm, City city, ArrayList<Product> products, LatLng latLng, OnProductSelectedListener onProductSelectedListener) {
+    public PlacesPagerAdapter(Context context, FragmentManager fm, ArrayList<Product> products, LatLng latLng, OnProductSelectedListener onProductSelectedListener) {
         super(fm);
 
         this.context = context;
-        this.city = city;
         this.products = products;
         this.onProductSelectedListener = onProductSelectedListener;
         this.latLng = latLng;

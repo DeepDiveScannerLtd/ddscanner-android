@@ -31,7 +31,7 @@ public class SplashActivity extends Activity {
             @Override
             public void run() {
                 SplashActivity.this.finish();
-                MainActivity.show(SplashActivity.this);
+                CityActivity.show(SplashActivity.this);
             }
         }, 3 * DDProgressBarView.ANIMATION_DURATION);
     }
