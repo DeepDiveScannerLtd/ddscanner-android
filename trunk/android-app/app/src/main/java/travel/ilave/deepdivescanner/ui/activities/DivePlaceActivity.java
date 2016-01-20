@@ -47,6 +47,7 @@ import travel.ilave.deepdivescanner.ui.adapters.IconsAdapter;
 import travel.ilave.deepdivescanner.ui.adapters.PlaceImagesPagerAdapter;
 import travel.ilave.deepdivescanner.ui.fragments.DatePickerFragment;
 import travel.ilave.deepdivescanner.utils.LogUtils;
+import travel.ilave.deepdivescanner.utils.SharedPreferenceHelper;
 
 public class DivePlaceActivity extends AppCompatActivity implements View.OnClickListener, DatePickerDialog.OnDateSetListener {
 
@@ -178,7 +179,8 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
 
     @Override
     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-        OffersActivity.show(this, product.getId(), "" + i + "-" + (i1 + 1) + "-" + i2, product.getName());
+       Intent intent = new Intent(this, SubscribeActivity.class);
+        startActivity(intent);
     }
 
     @Override
@@ -197,4 +199,6 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
                 return super.onOptionsItemSelected(item);
         }
     }
+
+
 }

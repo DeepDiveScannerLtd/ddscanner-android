@@ -169,7 +169,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         SharedPreferenceHelper.saveLicenseCity(citiesSpinner.getItemAtPosition(selectedCityPosition).toString());
-        CityActivity.show(this, citiesLicensesWrapper.getCities().get(selectedCityPosition));
+       // CityActivity.show(this, citiesLicensesWrapper.getCities().get(selectedCityPosition));
     }
 
     @Override

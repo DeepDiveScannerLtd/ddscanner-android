@@ -41,6 +41,10 @@
             android:screenOrientation="portrait">
         </activity>
         <activity
+            android:name=".ui.activities.SubscribeActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
             android:name=".ui.activities.CityActivity"
             android:screenOrientation="portrait" />
         <activity

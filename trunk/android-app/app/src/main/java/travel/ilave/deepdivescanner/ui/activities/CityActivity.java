@@ -1,6 +1,5 @@
 package travel.ilave.deepdivescanner.ui.activities;
 
-import android.app.ActivityOptions;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -12,11 +11,9 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.transition.Explode;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.Window;
 import android.widget.Toast;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -34,7 +31,6 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 import travel.ilave.deepdivescanner.R;
-import travel.ilave.deepdivescanner.entities.City;
 import travel.ilave.deepdivescanner.entities.Product;
 import travel.ilave.deepdivescanner.entities.ProductsWrapper;
 import travel.ilave.deepdivescanner.rest.RestClient;
@@ -44,7 +40,6 @@ import travel.ilave.deepdivescanner.utils.LogUtils;
 
 public class CityActivity extends AppCompatActivity implements PlacesPagerAdapter.OnProductSelectedListener, ProductInfoDialog.OnExploreClickListener, LocationListener {
 
-    public static final String CITY = "CITY";
     public static final String LICENSE = "LICENSE";
     public static final String TAG = "CityActivity";
     private static final long MIN_TIME = 400;
@@ -55,8 +50,6 @@ public class CityActivity extends AppCompatActivity implements PlacesPagerAdapte
     private PlacesPagerAdapter placesPagerAdapter;
     private TabLayout tabLayout;
     private ProgressDialog progressDialog;
-
-    private City city;
     private ProductsWrapper productsWrapper;
     Product selectedProduct;
 
@@ -74,7 +67,6 @@ public class CityActivity extends AppCompatActivity implements PlacesPagerAdapte
         tabLayout = (TabLayout) findViewById(R.id.place_sliding_tabs);
         placeViewPager = (ViewPager) findViewById(R.id.place_view_pager);
 
-       // city = (City) getIntent().getSerializableExtra(CITY);
         String cityId = "9275";
         requestCityProducts(cityId);
 
@@ -125,12 +117,12 @@ public class CityActivity extends AppCompatActivity implements PlacesPagerAdapte
         progressDialog.dismiss();
     }
 
-    public static void show(Context context, City city) {
+   /* public static void show(Context context, City city) {
         Intent intent = new Intent(context, CityActivity.class);
         intent.putExtra(CITY, city);
         context.startActivity(intent);
 
-    }
+    }*/
 
     @Override
     public void onProductSelected(Product selectedProduct) {

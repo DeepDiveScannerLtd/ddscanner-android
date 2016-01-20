@@ -24,7 +24,7 @@ public class DDProgressBarView extends View {
 
     private static final String TAG = DDProgressBarView.class.getName();
 
-    public static final int ANIMATION_DURATION = 1500;
+    public static final int ANIMATION_DURATION = 3500;
 
     private static Bitmap circleBitmap;
     private static Bitmap backgroundBitmap;

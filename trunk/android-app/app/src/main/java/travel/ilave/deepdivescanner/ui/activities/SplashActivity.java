@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.view.View;
 
 import travel.ilave.deepdivescanner.R;
+import travel.ilave.deepdivescanner.services.GPSTracker;
 import travel.ilave.deepdivescanner.ui.views.DDProgressBarView;
 
 /**
@@ -25,7 +26,14 @@ public class SplashActivity extends Activity {
                         | View.SYSTEM_UI_FLAG_IMMERSIVE);
 
         setContentView(R.layout.activity_splash);
-
+        GPSTracker gps = new GPSTracker(SplashActivity.this);
+        if (gps.canGetLocation()) {
+            double latitude = gps.getLatitude();
+            double longitude = gps.getLongitude();
+            System.out.println(latitude +" - " + longitude);
+        } else {
+            gps.showSettingsAlert();
+        }
         Handler h = new Handler();
         h.postDelayed(new Runnable() {
             @Override
