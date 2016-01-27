@@ -13,7 +13,7 @@ import android.util.Log;
 import com.google.android.gms.gcm.GcmListenerService;
 
 import travel.ilave.deepdivescanner.R;
-import travel.ilave.deepdivescanner.ui.activities.MainActivity;
+import travel.ilave.deepdivescanner.ui.activities.CityActivity;
 
 /**
  * Created by Admin on 29.11.2015.
@@ -64,7 +64,7 @@ public class GCMListenerService extends GcmListenerService {
      * @param message GCM message received.
      */
     private void sendNotification(String message) {
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, CityActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);

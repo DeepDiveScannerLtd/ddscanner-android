@@ -5,7 +5,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import travel.ilave.deepdivescanner.R;
+import travel.ilave.deepdivescanner.entities.City;
 import travel.ilave.deepdivescanner.services.GPSTracker;
 import travel.ilave.deepdivescanner.ui.views.DDProgressBarView;
 
@@ -13,6 +16,10 @@ import travel.ilave.deepdivescanner.ui.views.DDProgressBarView;
  * Created by Vitaly on 29.11.2015.
  */
 public class SplashActivity extends Activity {
+
+    private double latitude;
+    private double longitude;
+    private LatLng latLng;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,8 +35,9 @@ public class SplashActivity extends Activity {
         setContentView(R.layout.activity_splash);
         GPSTracker gps = new GPSTracker(SplashActivity.this);
         if (gps.canGetLocation()) {
-            double latitude = gps.getLatitude();
-            double longitude = gps.getLongitude();
+            latitude = gps.getLatitude();
+            longitude = gps.getLongitude();
+            latLng = new LatLng(latitude, longitude);
             System.out.println(latitude +" - " + longitude);
         } else {
             gps.showSettingsAlert();
@@ -39,9 +47,9 @@ public class SplashActivity extends Activity {
             @Override
             public void run() {
                 SplashActivity.this.finish();
-                CityActivity.show(SplashActivity.this);
+                CityActivity.show(SplashActivity.this, latLng);
             }
-        }, 3 * DDProgressBarView.ANIMATION_DURATION);
+        }, 2 * DDProgressBarView.ANIMATION_DURATION);
     }
 
 }

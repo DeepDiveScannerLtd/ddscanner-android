@@ -5,6 +5,7 @@ import android.os.Parcelable;
 import org.parceler.Parcel;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by Vitaly on 28.11.2015.
@@ -30,19 +31,21 @@ public class Product implements Parcelable {
     private String name;
     private String description;
     private int rating;
-    private float price;
-    private String symbol;
+   // private float price;
+   // private String symbol;
     private String lat;
     private String lng;
+   // private List<String> images;
 
     protected Product(android.os.Parcel in) {
         id = in.readString();
         description = in.readString();
         rating = in.readInt();
-        price = in.readFloat();
-        symbol = in.readString();
+    //    price = in.readFloat();
+     //   symbol = in.readString();
         lat = in.readString();
         lng = in.readString();
+
     }
 
     public static final Creator<Product> CREATOR = new Creator<Product>() {
@@ -81,6 +84,14 @@ public class Product implements Parcelable {
         this.description = description;
     }
 
+  /*  public List<String> getImages() {
+        return images;
+    }
+
+    public void setImages(List<String> images) {
+        this.images = images;
+    }
+*/
     public int getRating() {
         return rating;
     }
@@ -90,7 +101,7 @@ public class Product implements Parcelable {
     }
 
 
-    public float getPrice() {
+  /*  public float getPrice() {
         return price;
     }
 
@@ -106,6 +117,7 @@ public class Product implements Parcelable {
     public void setSymbol(String symbol) {
         this.symbol = symbol;
     }
+*/
 
     public String getLat() {
         return lat;
@@ -133,8 +145,8 @@ public class Product implements Parcelable {
         dest.writeString(id);
         dest.writeString(description);
         dest.writeInt(rating);
-        dest.writeFloat(price);
-        dest.writeString(symbol);
+        //dest.writeFloat(price);
+        //dest.writeString(symbol);
         dest.writeString(lat);
         dest.writeString(lng);
     }

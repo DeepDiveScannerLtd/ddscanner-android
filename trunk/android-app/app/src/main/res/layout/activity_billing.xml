@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:background="@color/background_window"
     android:orientation="vertical"
-    tools:context=".ui.activities.MainActivity"
     android:gravity="center_horizontal">
 
     <include layout="@layout/view_toolbar" />

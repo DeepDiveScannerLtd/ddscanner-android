@@ -9,11 +9,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.ArrayAdapter;
 
 import java.util.ArrayList;
 
 import travel.ilave.deepdivescanner.R;
+import travel.ilave.deepdivescanner.entities.DiveSpot;
 import travel.ilave.deepdivescanner.entities.Product;
+import travel.ilave.deepdivescanner.ui.adapters.PlacesPagerAdapter;
 import travel.ilave.deepdivescanner.ui.adapters.ProductListAdapter;
 
 /**
@@ -21,18 +24,22 @@ import travel.ilave.deepdivescanner.ui.adapters.ProductListAdapter;
  */
 public class ProductListFragment extends Fragment {
 
+    private static RecyclerView rc;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        Bundle args = this.getArguments();
-        ArrayList<Product> products = args.getParcelableArrayList("PRODUCTS");
         View view = inflater.inflate(R.layout.product_list_fragment, container, false);
-        RecyclerView rc = (RecyclerView) view.findViewById(R.id.cv);
+        rc = (RecyclerView) view.findViewById(R.id.cv);
         
         rc.setHasFixedSize(true);
         rc.setLayoutManager(new LinearLayoutManager(getActivity()));
-        rc.setAdapter(new ProductListAdapter(products));
 
         return view;
     }
+
+    public static void setadapter(ArrayList<DiveSpot> diveSpots) {
+        rc.setAdapter(new ProductListAdapter(diveSpots));
+    }
+
 }

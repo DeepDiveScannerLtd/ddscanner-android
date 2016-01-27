@@ -37,11 +37,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.activities.MainActivity"
+            android:name=".ui.activities.SubscribeActivity"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".ui.activities.SubscribeActivity"
+            android:name=".ui.activities.FilterActivity"
             android:screenOrientation="portrait">
         </activity>
         <activity

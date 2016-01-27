@@ -6,6 +6,11 @@
         <item name="windowActionBar">false</item>
         <item name="colorAccent">@color/orange</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+        <item name="android:radioButtonStyle">@style/RadioButton</item>
+    </style>
+
+    <style name="RadioButton" parent="@android:style/Widget.CompoundButton.RadioButton">
+        <item name="android:button">@drawable/radio</item>
     </style>
 
     <style name="drawer_item">

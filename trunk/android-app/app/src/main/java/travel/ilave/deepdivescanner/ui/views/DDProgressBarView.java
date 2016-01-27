@@ -24,7 +24,7 @@ public class DDProgressBarView extends View {
 
     private static final String TAG = DDProgressBarView.class.getName();
 
-    public static final int ANIMATION_DURATION = 3500;
+    public static final int ANIMATION_DURATION = 1500;
 
     private static Bitmap circleBitmap;
     private static Bitmap backgroundBitmap;
@@ -77,7 +77,7 @@ public class DDProgressBarView extends View {
         paint.setColor(Color.rgb(0, 148, 255));
 
         backgroundPaint = new Paint();
-        backgroundPaint.setARGB(255, 0, 0, 0);
+        backgroundPaint.setColor(Color.TRANSPARENT);
     }
 
     private void initOnSizeChanged() {

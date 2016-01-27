@@ -34,14 +34,19 @@ import com.google.gson.Gson;
 
 import java.net.SocketTimeoutException;
 import java.util.HashMap;
+import java.util.List;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 import travel.ilave.deepdivescanner.R;
+import travel.ilave.deepdivescanner.entities.DiveSpot;
+import travel.ilave.deepdivescanner.entities.DiveSpotFull;
+import travel.ilave.deepdivescanner.entities.DivespotDetails;
 import travel.ilave.deepdivescanner.entities.Product;
 import travel.ilave.deepdivescanner.entities.ProductDetails;
+import travel.ilave.deepdivescanner.entities.Sealife;
 import travel.ilave.deepdivescanner.rest.RestClient;
 import travel.ilave.deepdivescanner.ui.adapters.IconsAdapter;
 import travel.ilave.deepdivescanner.ui.adapters.PlaceImagesPagerAdapter;
@@ -61,13 +66,14 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
     private TextView depth_value;
     private TextView visibility_value;
     private TextView description;
+    private List<Sealife> sealifes;
     private Button book_now;
     private PlaceImagesPagerAdapter placeImagesPagerAdapter;
     private ProgressDialog progressDialog;
     private CollapsingToolbarLayout collapsingToolbarLayout = null;
 
-    private Product product;
-    private ProductDetails productDetails;
+    private DiveSpot diveSpot;
+    private DivespotDetails divespotDetails;
 
     private String[] iconsUrls = new String[5];
 
@@ -76,29 +82,19 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar_collapse);
-        setSupportActionBar(toolbar);
-        collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_actionbar_back);
+        findViews();
+       // toolbarSetting();
 
-        productImagesViewPager = (ViewPager) findViewById(R.id.product_images);
-        starsLayout = (LinearLayout) findViewById(R.id.stars);
-        price = (TextView) findViewById(R.id.price);
-        depth_value = (TextView) findViewById(R.id.characteristic_value_depth);
-        visibility_value = (TextView) findViewById(R.id.characteristic_value_visibility);
-        description = (TextView) findViewById(R.id.dive_place_description);
-        book_now = (Button) findViewById(R.id.book_now);
         book_now.setOnClickListener(this);
-        product = (Product) getIntent().getParcelableExtra(PRODUCT);
-        requestProductDetails(product.getId());
+        diveSpot = getIntent().getParcelableExtra(PRODUCT);
+        requestProductDetails(diveSpot.getId());
     }
 
     private void requestProductDetails(String productId) {
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage(getApplicationContext().getResources().getString(R.string.pleaseWait));
         progressDialog.show();
-        RestClient.getServiceInstance().getProductById(productId, new Callback<Response>() {
+        RestClient.getServiceInstance().getDiveSpotById(productId, new Callback<Response>() {
             @Override
             public void success(Response s, Response response) {
                 String responseString = new String(((TypedByteArray) s.getBody()).getBytes());
@@ -107,7 +103,8 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
                 // TODO Handle result handling when activity stopped
                 responseString = responseString.replaceAll("\\\\", "");
                 System.out.println(responseString);
-                productDetails = new Gson().fromJson(responseString, ProductDetails.class);
+                divespotDetails = new Gson().fromJson(responseString, DivespotDetails.class);
+                toolbarSetting(divespotDetails.getDivespot().getName());
                 populateProductDetails();
             }
 
@@ -128,36 +125,61 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
         });
     }
 
+    /* Find views in activity_details.xml */
+    private void findViews() {
+        productImagesViewPager = (ViewPager) findViewById(R.id.product_images);
+        starsLayout = (LinearLayout) findViewById(R.id.stars);
+        price = (TextView) findViewById(R.id.price);
+        depth_value = (TextView) findViewById(R.id.characteristic_value_depth);
+        visibility_value = (TextView) findViewById(R.id.characteristic_value_visibility);
+        description = (TextView) findViewById(R.id.dive_place_description);
+        book_now = (Button) findViewById(R.id.book_now);
+        collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar_collapse);
+    }
+
+    /* change toolbar settings */
+    private void toolbarSetting(String name) {
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(name);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_actionbar_back);
+    }
+
     private void populateProductDetails() {
-        collapsingToolbarLayout.setTitle(productDetails.getName());
-        placeImagesPagerAdapter = new PlaceImagesPagerAdapter(getFragmentManager(), productDetails.getImages());
-        productImagesViewPager.setAdapter(placeImagesPagerAdapter);
-        for (int i = 0; i < productDetails.getRating(); i++) {
+        DiveSpot diveSpot = divespotDetails.getDivespot();
+        System.out.println(diveSpot.getDescription());
+        description.setText(diveSpot.getDescription());
+
+       /* placeImagesPagerAdapter = new PlaceImagesPagerAdapter(getFragmentManager(), diveSpotFull.getImages());
+        productImagesViewPager.setAdapter(placeImagesPagerAdapter);*/
+        for (int i = 0; i < diveSpot.getRating(); i++) {
             ImageView iv = new ImageView(this);
             iv.setImageResource(R.drawable.ic_flag_full_small);
-            iv.setPadding(10,0,0,0);
+            iv.setPadding(5,0,5,0);
             starsLayout.addView(iv);
         }
-        for (int i = 0; i < 5 - productDetails.getRating(); i++) {
+        for (int i = 0; i < 5 - diveSpot.getRating(); i++) {
             ImageView iv = new ImageView(this);
             iv.setImageResource(R.drawable.ic_flag_empty_small);
-            iv.setPadding(10, 0, 0, 0);
+            iv.setPadding(5, 0, 5, 0);
             starsLayout.addView(iv);
         }
-
-        depth_value.setText("" + productDetails.getDept() + "m");
-        visibility_value.setText(productDetails.getVisiblity());
-        description.setText(product.getDescription());
-       // LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+/*
+        depth_value.setText("" + diveSpotFull.getDepth() + "m");
+        visibility_value.setText(diveSpotFull.getVisibility());
+        description.setText(diveSpotFull.getDescription());
+        sealifes = divespotDetails.getSealifes();
+        LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         int i = 0;
-        for (String sealifeIcon : productDetails.getSealife()) {
+        for (String sealifeIcon : diveSpotFull.getSealifes()) {
             iconsUrls[i] = sealifeIcon.toString();
             i++;
         }
         GridView sealife = (GridView) findViewById(R.id.usage_example_gridview);
         sealife.setAdapter(new IconsAdapter(DivePlaceActivity.this, iconsUrls));
-        description.setText(product.getDescription());
-
+        description.setText(diveSpot.getDescription());
+*/
         progressDialog.dismiss();
     }
 
@@ -179,8 +201,7 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
 
     @Override
     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-       Intent intent = new Intent(this, SubscribeActivity.class);
-        startActivity(intent);
+       SubscribeActivity.show(DivePlaceActivity.this);
     }
 
     @Override

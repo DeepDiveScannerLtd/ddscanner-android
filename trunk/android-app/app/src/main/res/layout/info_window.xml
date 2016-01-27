@@ -34,53 +34,12 @@
             android:layout_marginBottom="10dp"
             android:layout_marginRight="10dp"/>
     </LinearLayout>
-    <LinearLayout
-        android:id="@+id/pricing"
-        android:layout_width="90dp"
-        android:layout_height="30dp"
-        android:background="@color/money_background"
-        android:layout_below="@+id/descr">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_gravity="center_vertical"
-            android:gravity="center_horizontal"
-            android:layout_height="wrap_content">
-            <ImageView
-                android:layout_gravity="center_vertical"
-                android:gravity="center_horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_money"
-                />
-            <TextView
-                android:id="@+id/price1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/black_text"
-                android:layout_marginLeft="3dp"
-                android:layout_gravity="center_vertical"
-                android:gravity="center_horizontal"
-                android:textStyle="bold"
-                android:textSize="16dp" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/black_text"
-                android:layout_gravity="center_vertical"
-                android:gravity="center_horizontal"
-                android:layout_marginLeft="1dp"
-                android:textSize="16dp"
-                android:textStyle="bold"
-                android:text="$"/>
-        </LinearLayout>
 
-    </LinearLayout>
     <LinearLayout
-        android:layout_toRightOf="@+id/pricing"
         android:layout_below="@+id/descr"
         android:id="@+id/stars"
         android:gravity="center_vertical|center_horizontal"
-        android:layout_width="170dp"
+        android:layout_width="2600dp"
         android:layout_height="30dp"
         android:background="@color/white"
         android:orientation="horizontal"

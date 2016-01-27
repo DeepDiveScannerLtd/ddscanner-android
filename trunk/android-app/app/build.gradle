@@ -38,8 +38,9 @@ dependencies {
     compile 'com.squareup.retrofit:retrofit:1.9.0'
     compile 'com.google.android.gms:play-services-maps:8.3.0'
     compile 'org.parceler:parceler-api:1.0.4'
-    compile 'com.facebook.fresco:fresco:0.7.0+'
+    compile 'com.facebook.fresco:fresco:0.7.0'
     compile 'com.google.android.gms:play-services-gcm:8.4.0'
     compile 'com.google.android.gms:play-services-location:8.4.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.appyvet:materialrangebar:1.3'
 }

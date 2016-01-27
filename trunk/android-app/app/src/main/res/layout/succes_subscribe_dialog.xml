@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+
+
+    <RelativeLayout
+        android:layout_width="300dp"
+        android:id="@+id/great"
+        android:layout_marginTop="45dp"
+        android:layout_height="90dp"
+        android:background="@color/white"
+        android:gravity="center_horizontal|bottom">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Great!"
+            android:fontFamily="sans-serif-medium"
+            android:textColor="@color/black_text"
+            android:textSize="24sp"/>
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/great_text"
+        android:layout_below="@+id/great"
+        android:layout_width="300dp"
+        android:background="@color/white"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal">
+        <TextView
+            android:layout_width="260dp"
+            android:layout_marginTop="5dp"
+            android:id="@+id/great_text_d"
+            android:layout_height="wrap_content"
+            android:text="You are email in our waiting list. As the app rolls out, we will let you know!"
+            android:fontFamily="sans-serif"
+            android:textColor="@color/black_text"
+            android:textSize="16sp"/>
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/popup_check"
+        android:gravity="center_horizontal"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/popup_check"/>
+    </RelativeLayout>
+</RelativeLayout>

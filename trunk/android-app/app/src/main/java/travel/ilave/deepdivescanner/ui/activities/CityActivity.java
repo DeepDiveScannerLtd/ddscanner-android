@@ -1,12 +1,14 @@
 package travel.ilave.deepdivescanner.ui.activities;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -14,31 +16,29 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
+import android.view.View;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.gson.Gson;
 
-import java.net.SocketTimeoutException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
-import retrofit.mime.TypedByteArray;
 import travel.ilave.deepdivescanner.R;
-import travel.ilave.deepdivescanner.entities.Product;
-import travel.ilave.deepdivescanner.entities.ProductsWrapper;
-import travel.ilave.deepdivescanner.rest.RestClient;
+import travel.ilave.deepdivescanner.entities.DiveSpot;
+import travel.ilave.deepdivescanner.entities.DivespotsWrapper;
+import travel.ilave.deepdivescanner.entities.Filters;
+import travel.ilave.deepdivescanner.services.RegistrationIntentService;
 import travel.ilave.deepdivescanner.ui.adapters.PlacesPagerAdapter;
-import travel.ilave.deepdivescanner.ui.dialogs.ProductInfoDialog;
-import travel.ilave.deepdivescanner.utils.LogUtils;
 
-public class CityActivity extends AppCompatActivity implements PlacesPagerAdapter.OnProductSelectedListener, ProductInfoDialog.OnExploreClickListener, LocationListener {
+
+public class CityActivity extends AppCompatActivity /*implements PlacesPagerAdapter.OnProductSelectedListener*/ {
 
     public static final String LICENSE = "LICENSE";
     public static final String TAG = "CityActivity";
@@ -49,9 +49,15 @@ public class CityActivity extends AppCompatActivity implements PlacesPagerAdapte
     private ViewPager placeViewPager;
     private PlacesPagerAdapter placesPagerAdapter;
     private TabLayout tabLayout;
+    private DivespotsWrapper divespotsWrapper;
+    private LatLng latLng;
+    private Filters filters = new Filters();
+    private Map<String, String> map = new HashMap<String, String>();
+    private BroadcastReceiver mRegistrationBroadcatReceiver;
+    private FloatingActionButton floatingActionButton;
     private ProgressDialog progressDialog;
-    private ProductsWrapper productsWrapper;
-    Product selectedProduct;
+
+    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,77 +72,52 @@ public class CityActivity extends AppCompatActivity implements PlacesPagerAdapte
 
         tabLayout = (TabLayout) findViewById(R.id.place_sliding_tabs);
         placeViewPager = (ViewPager) findViewById(R.id.place_view_pager);
+        latLng =  getIntent().getParcelableExtra("LATLNG");
+        filters = getIntent().getParcelableExtra("FILTERS");
+        System.out.println(latLng);
+        floatingActionButton = (FloatingActionButton) findViewById(R.id.filterButton);
 
-        String cityId = "9275";
-        requestCityProducts(cityId);
-
-    }
-
-    private void requestCityProducts(String cityId) {
-       LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME, MIN_DISTANCE, this);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME, MIN_DISTANCE, this);
         progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage(getApplicationContext().getResources().getString(R.string.pleaseWait));
+        progressDialog.setMessage("Please wait");
         progressDialog.show();
-        RestClient.getServiceInstance().getCityProductsByLicense(cityId, new Callback<Response>() {
-            @Override
-            public void success(Response s, Response response) {
-                String responseString = new String(((TypedByteArray) s.getBody()).getBytes());
-                System.out.println(responseString);
-                LogUtils.i("response code is " + s.getStatus());
-                LogUtils.i("response body is " + responseString);
-                // TODO Handle result handling when activity stopped
-                productsWrapper = new Gson().fromJson(responseString, ProductsWrapper.class);
-                // populatePlaceViewpager();
-            }
 
+        mRegistrationBroadcatReceiver = new BroadcastReceiver() {
             @Override
-            public void failure(RetrofitError error) {
-                LogUtils.i("failure Message is " + error.getMessage());
-                LogUtils.i("failure body is " + error.getBody());
-                if (error.getCause() instanceof SocketTimeoutException) {
-                    if (error.getKind().equals(RetrofitError.Kind.NETWORK)) {
-                        Toast.makeText(CityActivity.this, R.string.errorConnection, Toast.LENGTH_LONG);
-                    } else if (error.getKind().equals(RetrofitError.Kind.HTTP)) {
-                        Toast.makeText(CityActivity.this, R.string.serverNotResp, Toast.LENGTH_LONG);
-                    }
+            public void onReceive(Context context, Intent intent) {
+                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+                boolean sentToken = sharedPreferences.getBoolean(RegistrationIntentService.SENT_TOKEN_TO_SERVER, false);
+                if (sentToken) {
+
+                } else {
+                    //Error with token
                 }
-                // TODO Handle result handling when activity stopped
-                // TODO Handle errors
+            }
+        };
+
+        if (checkPlayServices()) {
+            Intent intent = new Intent(this, RegistrationIntentService.class);
+            startService(intent);
+        }
+       // requestCityProducts();
+        populatePlaceViewpager(latLng);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+                FilterActivity.show(CityActivity.this, PlacesPagerAdapter.getLastLatlng());
             }
         });
+
     }
 
     private void populatePlaceViewpager(LatLng latLng) {
         getSupportActionBar().setTitle("Phuket");
-        placesPagerAdapter = new PlacesPagerAdapter(this, getFragmentManager(), (ArrayList<Product>) productsWrapper.getProducts(), latLng, this);
+        divespotsWrapper = new DivespotsWrapper();
+        placesPagerAdapter = new PlacesPagerAdapter(this, getFragmentManager(), (ArrayList<DiveSpot>) divespotsWrapper.getDiveSpots(), latLng, filters);
         placeViewPager.setAdapter(placesPagerAdapter);
         placeViewPager.setOffscreenPageLimit(3);
         tabLayout.setupWithViewPager(placeViewPager);
         progressDialog.dismiss();
-    }
-
-   /* public static void show(Context context, City city) {
-        Intent intent = new Intent(context, CityActivity.class);
-        intent.putExtra(CITY, city);
-        context.startActivity(intent);
-
-    }*/
-
-    @Override
-    public void onProductSelected(Product selectedProduct) {
-        this.selectedProduct = selectedProduct;
-        ProductInfoDialog dialog = new ProductInfoDialog();
-        Bundle args = new Bundle();
-        args.putParcelable(ProductInfoDialog.PRODUCT, selectedProduct);
-        dialog.setArguments(args);
-        dialog.show(getFragmentManager(), "");
-    }
-
-    @Override
-    public void onExploreClicked() {
-        DivePlaceActivity.show(this, selectedProduct);
     }
 
     @Override
@@ -170,28 +151,22 @@ public class CityActivity extends AppCompatActivity implements PlacesPagerAdapte
             case android.R.id.home:
                 openSearchLocationWindow();
                 return true;
+            case R.id.profile:
+                SubscribeActivity.show(CityActivity.this);
+                return true;
+            case R.id.logbook:
+                SubscribeActivity.show(CityActivity.this);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    @Override
-    public void onLocationChanged(Location location) {
-        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-        populatePlaceViewpager(latLng);
-    }
 
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) { }
 
-    @Override
-    public void onProviderEnabled(String provider) { }
-
-    @Override
-    public void onProviderDisabled(String provider) { }
-
-    public static void show(Context context) {
+    public static void show(Context context, LatLng latLng) {
         Intent intent = new Intent(context, CityActivity.class);
+        intent.putExtra("LATLNG", latLng);
         context.startActivity(intent);
     }
 
@@ -209,4 +184,18 @@ public class CityActivity extends AppCompatActivity implements PlacesPagerAdapte
         }
     }
 
+    private boolean checkPlayServices() {
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (apiAvailability.isUserResolvableError(resultCode)) {
+                apiAvailability.getErrorDialog(this, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST).show();
+            } else {
+                Log.i(TAG, "This device is not supported");
+                finish();
+            }
+            return false;
+        }
+        return true;
+    }
 }

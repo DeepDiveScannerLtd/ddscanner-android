@@ -18,7 +18,8 @@ public abstract class RestClient {
             }
         };
         if (serviceInstance == null) {
-            RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint("http://api.trizeri.com").setRequestInterceptor(requestInterceptor).build();
+            RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint("http://api.trizeri.com").setRequestInterceptor(requestInterceptor)
+                    .build();
             serviceInstance = restAdapter.create(DDScannerRestService.class);
         }
         return serviceInstance;

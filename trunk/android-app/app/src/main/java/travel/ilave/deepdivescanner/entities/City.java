@@ -6,21 +6,6 @@ import java.io.Serializable;
  * Created by Vitaly on 28.11.2015.
  */
 public class City implements Serializable {
-    //    "cities": [
-//    {
-//        "id": "1",
-//            "name": "Bangkok"
-//    },
-//    {
-//        "id": "2",
-//            "name": "Phuket"
-//    },
-//            ],
-//            "licences": [
-//            "OWD",
-//            "AWD",
-//            "DM"
-//            ]
 
     private String id;
     private String name;

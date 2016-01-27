@@ -18,6 +18,7 @@ import java.net.URI;
 import java.util.ArrayList;
 
 import travel.ilave.deepdivescanner.R;
+import travel.ilave.deepdivescanner.entities.DiveSpot;
 import travel.ilave.deepdivescanner.entities.Product;
 import travel.ilave.deepdivescanner.entities.ProductDetails;
 import travel.ilave.deepdivescanner.ui.activities.CityActivity;
@@ -28,10 +29,10 @@ import travel.ilave.deepdivescanner.ui.activities.DivePlaceActivity;
  */
 public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.ProductListViewHolder>{
 
-    public static ArrayList<Product> products;
+    public static ArrayList<DiveSpot> divespots;
 
-    public ProductListAdapter(ArrayList<Product> products) {
-        this.products = products;
+    public ProductListAdapter(ArrayList<DiveSpot> divespots) {
+        this.divespots = divespots;
     }
 
     @Override
@@ -45,15 +46,18 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
 
     @Override
     public void onBindViewHolder(ProductListViewHolder productListViewHolder, int i) {
-        Product product = products.get(i);
-        productListViewHolder.productPrice.setText(String.valueOf(product.getPrice()));
+        DiveSpot divespot = divespots.get(i);
+//        productListViewHolder.productPrice.setText(String.valueOf("15"));
        // productListViewHolder.description.setText(product.getDescription());
-        productListViewHolder.title.setText(product.getName());
+        if(divespot.getName() != null) {
+             productListViewHolder.title.setText(divespot.getName());
+        }
     }
 
     @Override
     public int getItemCount() {
-        return products.size();
+        if (divespots == null) { return 0; }
+        else { return divespots.size(); }
     }
 
     public static class ProductListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -70,7 +74,7 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
             super(v);
             context = itemView.getContext();
             v.setOnClickListener(this);
-            productPrice = (TextView) v.findViewById(R.id.product_price);
+           // productPrice = (TextView) v.findViewById(R.id.product_price);
             imageView = (ImageView) v.findViewById(R.id.product_logo);
             title = (TextView) v.findViewById(R.id.product_title);
             description = (TextView) v.findViewById(R.id.product_description);
@@ -79,9 +83,9 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
         @Override
         public void onClick(View v) {
             Intent i = new Intent(context, DivePlaceActivity.class);
-            i.putExtra(PRODUCT, products.get(getPosition()));
+            i.putExtra(PRODUCT, divespots.get(getPosition()));
             context.startActivity(i);
-            System.out.println(products.get(getPosition()).getName());
+            System.out.println(divespots.get(getPosition()).getName());
         }
     }
 

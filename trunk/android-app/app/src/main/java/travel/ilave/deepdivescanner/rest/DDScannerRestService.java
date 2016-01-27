@@ -1,14 +1,17 @@
 package travel.ilave.deepdivescanner.rest;
 
+import java.util.Map;
+
 import retrofit.Callback;
 import retrofit.client.Response;
 import retrofit.http.Body;
+import retrofit.http.FieldMap;
+import retrofit.http.FormUrlEncoded;
 import retrofit.http.GET;
-import retrofit.http.Headers;
-import retrofit.http.Multipart;
 import retrofit.http.POST;
 import retrofit.http.Path;
-import travel.ilave.deepdivescanner.entities.Booking;
+import retrofit.http.QueryMap;
+import travel.ilave.deepdivescanner.entities.Subscriber;
 import travel.ilave.deepdivescanner.entities.request.BookingRequest;
 import travel.ilave.deepdivescanner.entities.request.TravelerRequest;
 
@@ -20,17 +23,28 @@ public interface DDScannerRestService {
     @GET("/diving/cities")
     void getCities(Callback<Response> callback);
 
-    @GET("/diving/products/city/{cityId}")
-    void getCityProductsByLicense(@Path("cityId") String cityId, Callback<Response> callback);
+    @GET("/diving/divespots/{lat}/{lng}/{radius}")
+    void getProductsByCoordinates(@Path("lat") String lat, @Path("lng") String lng, @Path("radius") String radius, Callback<Response> callback);
 
     @GET("/diving/product/{id}")
     void getProductById(@Path("id") String id, Callback<Response> callback);
+
+    @GET("/diving/divespot/{id}")
+    void getDiveSpotById(@Path("id") String id, Callback<Response> callback);
 
     @GET("/diving/product/{id}/date/{date}/options")
     void getProductOffers(@Path("id") String id, @Path("date") String date, Callback<Response> callback);
 
     @GET("/diving/option/{id}/conditions")
     void getOfferConditions(@Path("id") String id, Callback<Response> callback);
+
+    @FormUrlEncoded
+    @POST("/diving/subscribe")
+    void subscribe(@FieldMap Map<String,String> map, Callback<Response> callback);
+
+    @GET("/diving/divespots")
+    void getDivespots(@QueryMap Map<String,String> map, Callback<Response> callback);
+
 
     @POST("/diving/booking")
     void booking(@Body BookingRequest bookingRequest,
