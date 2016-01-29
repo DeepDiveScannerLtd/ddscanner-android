@@ -6,6 +6,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
@@ -26,8 +28,11 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import travel.ilave.deepdivescanner.R;
@@ -36,6 +41,7 @@ import travel.ilave.deepdivescanner.entities.DivespotsWrapper;
 import travel.ilave.deepdivescanner.entities.Filters;
 import travel.ilave.deepdivescanner.services.RegistrationIntentService;
 import travel.ilave.deepdivescanner.ui.adapters.PlacesPagerAdapter;
+import travel.ilave.deepdivescanner.ui.dialogs.SubscribeDialog;
 
 
 public class CityActivity extends AppCompatActivity /*implements PlacesPagerAdapter.OnProductSelectedListener*/ {
@@ -56,6 +62,7 @@ public class CityActivity extends AppCompatActivity /*implements PlacesPagerAdap
     private BroadcastReceiver mRegistrationBroadcatReceiver;
     private FloatingActionButton floatingActionButton;
     private ProgressDialog progressDialog;
+    private SubscribeDialog subscribeDialog = new SubscribeDialog();
 
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
@@ -63,19 +70,13 @@ public class CityActivity extends AppCompatActivity /*implements PlacesPagerAdap
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_city);
-
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-
+        findViews();
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_search_location);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        tabLayout = (TabLayout) findViewById(R.id.place_sliding_tabs);
-        placeViewPager = (ViewPager) findViewById(R.id.place_view_pager);
         latLng =  getIntent().getParcelableExtra("LATLNG");
         filters = getIntent().getParcelableExtra("FILTERS");
-        System.out.println(latLng);
-        floatingActionButton = (FloatingActionButton) findViewById(R.id.filterButton);
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Please wait");
@@ -98,8 +99,11 @@ public class CityActivity extends AppCompatActivity /*implements PlacesPagerAdap
             Intent intent = new Intent(this, RegistrationIntentService.class);
             startService(intent);
         }
+        progressDialog.dismiss();
        // requestCityProducts();
         populatePlaceViewpager(latLng);
+        getSupportActionBar().setTitle(getCity(latLng));
+        System.out.println(getCity(latLng));
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -111,13 +115,18 @@ public class CityActivity extends AppCompatActivity /*implements PlacesPagerAdap
     }
 
     private void populatePlaceViewpager(LatLng latLng) {
-        getSupportActionBar().setTitle("Phuket");
         divespotsWrapper = new DivespotsWrapper();
         placesPagerAdapter = new PlacesPagerAdapter(this, getFragmentManager(), (ArrayList<DiveSpot>) divespotsWrapper.getDiveSpots(), latLng, filters);
         placeViewPager.setAdapter(placesPagerAdapter);
         placeViewPager.setOffscreenPageLimit(3);
         tabLayout.setupWithViewPager(placeViewPager);
-        progressDialog.dismiss();
+    }
+
+    private void findViews() {
+        tabLayout = (TabLayout) findViewById(R.id.place_sliding_tabs);
+        placeViewPager = (ViewPager) findViewById(R.id.place_view_pager);
+        floatingActionButton = (FloatingActionButton) findViewById(R.id.filterButton);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
     }
 
     @Override
@@ -152,10 +161,10 @@ public class CityActivity extends AppCompatActivity /*implements PlacesPagerAdap
                 openSearchLocationWindow();
                 return true;
             case R.id.profile:
-                SubscribeActivity.show(CityActivity.this);
+                subscribeDialog.show(getFragmentManager(), "");
                 return true;
             case R.id.logbook:
-                SubscribeActivity.show(CityActivity.this);
+                subscribeDialog.show(getFragmentManager(), "");
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -197,5 +206,30 @@ public class CityActivity extends AppCompatActivity /*implements PlacesPagerAdap
             return false;
         }
         return true;
+    }
+
+    /* Get city by coordinates */
+    private String getCity(LatLng latLng) {
+        String city = "";
+
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+
+        try {
+            List<Address> addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
+
+            if (addresses != null) {
+                Address returnedAddress = addresses.get(0);
+                if (returnedAddress.getAddressLine(1) != null) {
+                    city = returnedAddress.getAddressLine(1);
+                } else {
+                    city = returnedAddress.getAddressLine(2);
+                }
+
+            }
+        } catch (Exception e) {
+
+        }
+
+        return city;
     }
 }

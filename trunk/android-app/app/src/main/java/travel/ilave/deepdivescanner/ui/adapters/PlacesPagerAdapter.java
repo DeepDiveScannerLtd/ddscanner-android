@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v13.app.FragmentStatePagerAdapter;
+import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -128,9 +129,11 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Goo
         RestClient.getServiceInstance().getDivespots(map, new Callback<Response>() {
             @Override
             public void success(Response s, Response response) {
+                System.out.println(response.getBody());
                 String responseString = new String(((TypedByteArray) s.getBody()).getBytes());
                 LogUtils.i("response code is " + s.getStatus());
                 LogUtils.i("response body is " + responseString);
+                System.out.println("----" + responseString);
                 divespotsWrapper = new Gson().fromJson(responseString, DivespotsWrapper.class);
                 divespots = (ArrayList<DiveSpot>) divespotsWrapper.getDiveSpots();
                 placesPagerAdapter = new PlacesPagerAdapter(context, fm, (ArrayList<DiveSpot>) divespotsWrapper.getDiveSpots(), center, filters);
@@ -140,8 +143,15 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Goo
 
             @Override
             public void failure(RetrofitError error) {
+                Log.i("PLACES", error.getResponse().getBody().toString());
+                Log.i("PLACES", error.getResponse().getReason());
+                Log.i("PLACES", error.getResponse().getUrl());
+                System.out.println(error.getResponse().getBody());
+               /* Log.i("PLACES", error.getMessage().toString());
+                Log.i("PLACES", error.getBody().toString());
+                Log.i("PLACES", error.getLocalizedMessage().toString());
                 LogUtils.i("failure Message is " + error.getMessage());
-                LogUtils.i("failure body is " + error.getBody());
+                LogUtils.i("failure body is " + error.getBody());*/
                 if (error.getCause() instanceof SocketTimeoutException) {
                     if (error.getKind().equals(RetrofitError.Kind.NETWORK)) {
 

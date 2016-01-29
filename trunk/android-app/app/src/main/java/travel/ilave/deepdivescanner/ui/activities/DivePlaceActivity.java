@@ -50,6 +50,7 @@ import travel.ilave.deepdivescanner.entities.Sealife;
 import travel.ilave.deepdivescanner.rest.RestClient;
 import travel.ilave.deepdivescanner.ui.adapters.IconsAdapter;
 import travel.ilave.deepdivescanner.ui.adapters.PlaceImagesPagerAdapter;
+import travel.ilave.deepdivescanner.ui.dialogs.SubscribeDialog;
 import travel.ilave.deepdivescanner.ui.fragments.DatePickerFragment;
 import travel.ilave.deepdivescanner.utils.LogUtils;
 import travel.ilave.deepdivescanner.utils.SharedPreferenceHelper;
@@ -71,6 +72,7 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
     private PlaceImagesPagerAdapter placeImagesPagerAdapter;
     private ProgressDialog progressDialog;
     private CollapsingToolbarLayout collapsingToolbarLayout = null;
+    private SubscribeDialog subscribeDialog = new SubscribeDialog();
 
     private DiveSpot diveSpot;
     private DivespotDetails divespotDetails;
@@ -201,7 +203,8 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
 
     @Override
     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-       SubscribeActivity.show(DivePlaceActivity.this);
+        SubscribeDialog subscribeDialog = new SubscribeDialog();
+        subscribeDialog.show(getFragmentManager(), "");
     }
 
     @Override
@@ -216,6 +219,8 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
             case android.R.id.home:
                 onBackPressed();
                 return true;
+            case R.id.favorite:
+                subscribeDialog.show(getFragmentManager(), "");
             default:
                 return super.onOptionsItemSelected(item);
         }

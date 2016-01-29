@@ -14,6 +14,6 @@
         android:id="@+id/logbook"
         android:orderInCategory="100"
         android:title="Profile"
-        android:icon="@drawable/ic_user"
+        android:icon="@drawable/ic_actionbar_user"
         app:showAsAction= "ifRoom"/>
 </menu>

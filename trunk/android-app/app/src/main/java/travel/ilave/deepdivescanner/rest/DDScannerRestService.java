@@ -8,6 +8,7 @@ import retrofit.http.Body;
 import retrofit.http.FieldMap;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.GET;
+import retrofit.http.Headers;
 import retrofit.http.POST;
 import retrofit.http.Path;
 import retrofit.http.QueryMap;
@@ -42,6 +43,8 @@ public interface DDScannerRestService {
     @POST("/diving/subscribe")
     void subscribe(@FieldMap Map<String,String> map, Callback<Response> callback);
 
+
+    @Headers("Content-type: application/json")
     @GET("/diving/divespots")
     void getDivespots(@QueryMap Map<String,String> map, Callback<Response> callback);
 

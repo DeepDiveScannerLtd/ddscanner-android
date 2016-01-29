@@ -4,8 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.support.v7.widget.Toolbar;
 
@@ -38,6 +41,7 @@ public class FilterActivity extends AppCompatActivity {
         findViews();
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_actionbar_back);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -109,6 +113,32 @@ public class FilterActivity extends AppCompatActivity {
                 break;
         }
         return currents;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_filter, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.reset_filters:
+                resetChecking();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    void resetChecking() {
+        RadioButton radioButton = (RadioButton) findViewById(rgCurrents.getCheckedRadioButtonId());
+        radioButton.setChecked(false);
+        radioButton = (RadioButton) findViewById(rgLevel.getCheckedRadioButtonId());
+        radioButton.setChecked(false);
+        radioButton = (RadioButton) findViewById(rgVisibility.getCheckedRadioButtonId());
+        radioButton.setChecked(false);
     }
 
 }

@@ -88,54 +88,54 @@ public class DDProgressBarView extends View {
 
     private void initOnSizeChanged() {
         //init random set of points
-        aPoints.add(new PointF(296 / koefX + progressBarLeftTopX, 304 / koefY + progressBarLeftTopX));
-        aPoints.add(new PointF(277 / koefX + progressBarLeftTopX, 304 / koefY + progressBarLeftTopX));
-        aPoints.add(new PointF(274 / koefX + progressBarLeftTopX, 305 / koefY + progressBarLeftTopX));
-        aPoints.add(new PointF(189 / koefX + progressBarLeftTopX, 366 / koefY + progressBarLeftTopX));
-        aPoints.add(new PointF(160 / koefX + progressBarLeftTopX, 357 / koefY + progressBarLeftTopX));
-        aPoints.add(new PointF(133 / koefX + progressBarLeftTopX, 346 / koefY + progressBarLeftTopX));
-        aPoints.add(new PointF(104 / koefX + progressBarLeftTopX, 331 / koefY + progressBarLeftTopX));
-        aPoints.add(new PointF(81 / koefX + progressBarLeftTopX, 316 / koefY + progressBarLeftTopX));
-        aPoints.add(new PointF(62 / koefX + progressBarLeftTopX, 300 / koefY + progressBarLeftTopX));
-        aPoints.add(new PointF(44 / koefX + progressBarLeftTopX, 280 / koefY + progressBarLeftTopX));
-        aPoints.add(new PointF(28 / koefX + progressBarLeftTopX, 255 / koefY + progressBarLeftTopX));
-        aPoints.add(new PointF(18 / koefX + progressBarLeftTopX, 230 / koefY + progressBarLeftTopX));
-        aPoints.add(new PointF(11 / koefX + progressBarLeftTopX, 195 / koefY + progressBarLeftTopX));
-        aPoints.add(new PointF(17 / koefX + progressBarLeftTopX, 164 / koefY + progressBarLeftTopX));
-        aPoints.add(new PointF(29 / koefX + progressBarLeftTopX, 134 / koefY + progressBarLeftTopX));
-        aPoints.add(new PointF(45 / koefX + progressBarLeftTopX, 109 / koefY + progressBarLeftTopX));
-        aPoints.add(new PointF(64 / koefX + progressBarLeftTopX, 89 / koefY + progressBarLeftTopX));
-        aPoints.add(new PointF(88 / koefX + progressBarLeftTopX, 70 / koefY + progressBarLeftTopX));
-        aPoints.add(new PointF(112 / koefX + progressBarLeftTopX, 55 / koefY + progressBarLeftTopX));
-        aPoints.add(new PointF(139 / koefX + progressBarLeftTopX, 42 / koefY + progressBarLeftTopX));
-        aPoints.add(new PointF(168 / koefX + progressBarLeftTopX, 31 / koefY + progressBarLeftTopX));
-        aPoints.add(new PointF(196 / koefX + progressBarLeftTopX, 23 / koefY + progressBarLeftTopX));
-        aPoints.add(new PointF(227 / koefX + progressBarLeftTopX, 16 / koefY + progressBarLeftTopX));
-        aPoints.add(new PointF(255 / koefX + progressBarLeftTopX, 13 / koefY + progressBarLeftTopX));
-        aPoints.add(new PointF(289 / koefX + progressBarLeftTopX, 11 / koefY + progressBarLeftTopX));
-        aPoints.add(new PointF(322 / koefX + progressBarLeftTopX, 13 / koefY + progressBarLeftTopX));
-        aPoints.add(new PointF(350 / koefX + progressBarLeftTopX, 16 / koefY + progressBarLeftTopX));
-        aPoints.add(new PointF(381 / koefX + progressBarLeftTopX, 23 / koefY + progressBarLeftTopX));
-        aPoints.add(new PointF(409 / koefX + progressBarLeftTopX, 31 / koefY + progressBarLeftTopX));
-        aPoints.add(new PointF(438 / koefX + progressBarLeftTopX, 42 / koefY + progressBarLeftTopX));
-        aPoints.add(new PointF(465 / koefX + progressBarLeftTopX, 55 / koefY + progressBarLeftTopX));
-        aPoints.add(new PointF(489 / koefX + progressBarLeftTopX, 70 / koefY + progressBarLeftTopX));
-        aPoints.add(new PointF(513 / koefX + progressBarLeftTopX, 89 / koefY + progressBarLeftTopX));
-        aPoints.add(new PointF(532 / koefX + progressBarLeftTopX, 109 / koefY + progressBarLeftTopX));
-        aPoints.add(new PointF(548 / koefX + progressBarLeftTopX, 134 / koefY + progressBarLeftTopX));
-        aPoints.add(new PointF(560 / koefX + progressBarLeftTopX, 164 / koefY + progressBarLeftTopX));
-        aPoints.add(new PointF(566 / koefX + progressBarLeftTopX, 195 / koefY + progressBarLeftTopX));
-        aPoints.add(new PointF(559 / koefX + progressBarLeftTopX, 230 / koefY + progressBarLeftTopX));
-        aPoints.add(new PointF(549 / koefX + progressBarLeftTopX, 255 / koefY + progressBarLeftTopX));
-        aPoints.add(new PointF(533 / koefX + progressBarLeftTopX, 280 / koefY + progressBarLeftTopX));
-        aPoints.add(new PointF(515 / koefX + progressBarLeftTopX, 300 / koefY + progressBarLeftTopX));
-        aPoints.add(new PointF(496 / koefX + progressBarLeftTopX, 316 / koefY + progressBarLeftTopX));
-        aPoints.add(new PointF(473 / koefX + progressBarLeftTopX, 331 / koefY + progressBarLeftTopX));
-        aPoints.add(new PointF(444 / koefX + progressBarLeftTopX, 346 / koefY + progressBarLeftTopX));
-        aPoints.add(new PointF(417 / koefX + progressBarLeftTopX, 357 / koefY + progressBarLeftTopX));
-        aPoints.add(new PointF(388 / koefX + progressBarLeftTopX, 366 / koefY + progressBarLeftTopX));
-        aPoints.add(new PointF(303 / koefX + progressBarLeftTopX, 305 / koefY + progressBarLeftTopX));
-        aPoints.add(new PointF(300 / koefX + progressBarLeftTopX, 304 / koefY + progressBarLeftTopX));
+        aPoints.add(new PointF(296 / koefX + progressBarLeftTopX, 304 / koefY + progressBarLeftTopY));
+        aPoints.add(new PointF(277 / koefX + progressBarLeftTopX, 304 / koefY + progressBarLeftTopY));
+        aPoints.add(new PointF(274 / koefX + progressBarLeftTopX, 305 / koefY + progressBarLeftTopY));
+        aPoints.add(new PointF(189 / koefX + progressBarLeftTopX, 366 / koefY + progressBarLeftTopY));
+        aPoints.add(new PointF(160 / koefX + progressBarLeftTopX, 357 / koefY + progressBarLeftTopY));
+        aPoints.add(new PointF(133 / koefX + progressBarLeftTopX, 346 / koefY + progressBarLeftTopY));
+        aPoints.add(new PointF(104 / koefX + progressBarLeftTopX, 331 / koefY + progressBarLeftTopY));
+        aPoints.add(new PointF(81 / koefX + progressBarLeftTopX, 316 / koefY + progressBarLeftTopY));
+        aPoints.add(new PointF(62 / koefX + progressBarLeftTopX, 300 / koefY + progressBarLeftTopY));
+        aPoints.add(new PointF(44 / koefX + progressBarLeftTopX, 280 / koefY + progressBarLeftTopY));
+        aPoints.add(new PointF(28 / koefX + progressBarLeftTopX, 255 / koefY + progressBarLeftTopY));
+        aPoints.add(new PointF(18 / koefX + progressBarLeftTopX, 230 / koefY + progressBarLeftTopY));
+        aPoints.add(new PointF(11 / koefX + progressBarLeftTopX, 195 / koefY + progressBarLeftTopY));
+        aPoints.add(new PointF(17 / koefX + progressBarLeftTopX, 164 / koefY + progressBarLeftTopY));
+        aPoints.add(new PointF(29 / koefX + progressBarLeftTopX, 134 / koefY + progressBarLeftTopY));
+        aPoints.add(new PointF(45 / koefX + progressBarLeftTopX, 109 / koefY + progressBarLeftTopY));
+        aPoints.add(new PointF(64 / koefX + progressBarLeftTopX, 89 / koefY + progressBarLeftTopY));
+        aPoints.add(new PointF(88 / koefX + progressBarLeftTopX, 70 / koefY + progressBarLeftTopY));
+        aPoints.add(new PointF(112 / koefX + progressBarLeftTopX, 55 / koefY + progressBarLeftTopY));
+        aPoints.add(new PointF(139 / koefX + progressBarLeftTopX, 42 / koefY + progressBarLeftTopY));
+        aPoints.add(new PointF(168 / koefX + progressBarLeftTopX, 31 / koefY + progressBarLeftTopY));
+        aPoints.add(new PointF(196 / koefX + progressBarLeftTopX, 23 / koefY + progressBarLeftTopY));
+        aPoints.add(new PointF(227 / koefX + progressBarLeftTopX, 16 / koefY + progressBarLeftTopY));
+        aPoints.add(new PointF(255 / koefX + progressBarLeftTopX, 13 / koefY + progressBarLeftTopY));
+        aPoints.add(new PointF(289 / koefX + progressBarLeftTopX, 11 / koefY + progressBarLeftTopY));
+        aPoints.add(new PointF(322 / koefX + progressBarLeftTopX, 13 / koefY + progressBarLeftTopY));
+        aPoints.add(new PointF(350 / koefX + progressBarLeftTopX, 16 / koefY + progressBarLeftTopY));
+        aPoints.add(new PointF(381 / koefX + progressBarLeftTopX, 23 / koefY + progressBarLeftTopY));
+        aPoints.add(new PointF(409 / koefX + progressBarLeftTopX, 31 / koefY + progressBarLeftTopY));
+        aPoints.add(new PointF(438 / koefX + progressBarLeftTopX, 42 / koefY + progressBarLeftTopY));
+        aPoints.add(new PointF(465 / koefX + progressBarLeftTopX, 55 / koefY + progressBarLeftTopY));
+        aPoints.add(new PointF(489 / koefX + progressBarLeftTopX, 70 / koefY + progressBarLeftTopY));
+        aPoints.add(new PointF(513 / koefX + progressBarLeftTopX, 89 / koefY + progressBarLeftTopY));
+        aPoints.add(new PointF(532 / koefX + progressBarLeftTopX, 109 / koefY + progressBarLeftTopY));
+        aPoints.add(new PointF(548 / koefX + progressBarLeftTopX, 134 / koefY + progressBarLeftTopY));
+        aPoints.add(new PointF(560 / koefX + progressBarLeftTopX, 164 / koefY + progressBarLeftTopY));
+        aPoints.add(new PointF(566 / koefX + progressBarLeftTopX, 195 / koefY + progressBarLeftTopY));
+        aPoints.add(new PointF(559 / koefX + progressBarLeftTopX, 230 / koefY + progressBarLeftTopY));
+        aPoints.add(new PointF(549 / koefX + progressBarLeftTopX, 255 / koefY + progressBarLeftTopY));
+        aPoints.add(new PointF(533 / koefX + progressBarLeftTopX, 280 / koefY + progressBarLeftTopY));
+        aPoints.add(new PointF(515 / koefX + progressBarLeftTopX, 300 / koefY + progressBarLeftTopY));
+        aPoints.add(new PointF(496 / koefX + progressBarLeftTopX, 316 / koefY + progressBarLeftTopY));
+        aPoints.add(new PointF(473 / koefX + progressBarLeftTopX, 331 / koefY + progressBarLeftTopY));
+        aPoints.add(new PointF(444 / koefX + progressBarLeftTopX, 346 / koefY + progressBarLeftTopY));
+        aPoints.add(new PointF(417 / koefX + progressBarLeftTopX, 357 / koefY + progressBarLeftTopY));
+        aPoints.add(new PointF(388 / koefX + progressBarLeftTopX, 366 / koefY + progressBarLeftTopY));
+        aPoints.add(new PointF(303 / koefX + progressBarLeftTopX, 305 / koefY + progressBarLeftTopY));
+        aPoints.add(new PointF(300 / koefX + progressBarLeftTopX, 304 / koefY + progressBarLeftTopY));
         //init smooth curve
         PointF point = aPoints.get(0);
         circleMovementPath.moveTo(point.x, point.y);
@@ -160,8 +160,6 @@ public class DDProgressBarView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        System.out.println(canvas.getWidth());
-        System.out.println("----------" + koefX);
         canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), backgroundPaint);
         canvas.drawBitmap(backgroundBitmap, progressBarLeftTopX, progressBarLeftTopY, paint);
         //animate the sprite
@@ -169,7 +167,7 @@ public class DDProgressBarView extends View {
         movementPathMeasure.getMatrix((Float) valueAnimator.getAnimatedValue(), mxTransform, PathMeasure.POSITION_MATRIX_FLAG);
         mxTransform.preTranslate(-circleBitmap.getWidth() / 2, -circleBitmap.getHeight() / 2);
         canvas.drawBitmap(circleBitmap, mxTransform, null);
-        canvas.scale(canvas.getWidth() / koefY, canvas.getHeight() / koefX);
+        canvas.scale(canvas.getWidth() / koefX, canvas.getHeight() / koefY);
         canvas.translate(canvas.getWidth(), canvas.getHeight());
         invalidate();
     }

@@ -13,6 +13,10 @@
         <item name="android:button">@drawable/radio</item>
     </style>
 
+    <style name="editTextSub" parent="Widget.AppCompat.EditText">
+        <item name="android:colorFocusedHighlight">@color/primary</item>
+    </style>
+
     <style name="drawer_item">
         <item name="android:gravity">left|center_vertical</item>
         <item name="android:background">@null</item>

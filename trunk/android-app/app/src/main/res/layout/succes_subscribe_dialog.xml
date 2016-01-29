@@ -1,51 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
-
-
+    android:layout_width="310dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <RelativeLayout
-        android:layout_width="300dp"
-        android:id="@+id/great"
-        android:layout_marginTop="45dp"
-        android:layout_height="90dp"
-        android:background="@color/white"
-        android:gravity="center_horizontal|bottom">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Great!"
-            android:fontFamily="sans-serif-medium"
-            android:textColor="@color/black_text"
-            android:textSize="24sp"/>
-    </RelativeLayout>
-    <RelativeLayout
-        android:id="@+id/great_text"
-        android:layout_below="@+id/great"
-        android:layout_width="300dp"
-        android:background="@color/white"
+        android:layout_width="310dp"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal">
-        <TextView
-            android:layout_width="260dp"
-            android:layout_marginTop="5dp"
-            android:id="@+id/great_text_d"
-            android:layout_height="wrap_content"
-            android:text="You are email in our waiting list. As the app rolls out, we will let you know!"
-            android:fontFamily="sans-serif"
-            android:textColor="@color/black_text"
-            android:textSize="16sp"/>
+        android:background="@color/white">
 
-    </RelativeLayout>
-    <RelativeLayout
-        android:id="@+id/popup_check"
-        android:gravity="center_horizontal"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content">
+        <android.support.v7.widget.DialogTitle
+            android:id="@+id/custom_heading"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:fontFamily="sans-serif-medium"
+            android:gravity="center_horizontal"
+            android:text="Gongratulations!"
+            android:textColor="@color/black_text"
+            android:textSize="20sp" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/notification"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/custom_heading"
+            android:gravity="center_horizontal"
+            android:padding="10dp"
+            android:text="leave your email and we will inform about the innovations in the application"
+            android:textSize="14sp" />
+
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/user_name_subscribe"
+            style="@style/editTextSub"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/notification"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:hint="First name"
+            android:textColorHint="@color/accent"
+            android:textColorLink="@color/black_text"
+            android:textCursorDrawable="@null" />
+
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/user_lastname_subscribe"
+            style="@style/editTextSub"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/user_name_subscribe"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:hint="Lastname"
+            android:inputType="textEmailAddress"
+            android:textColorHint="@color/accent"
+            android:textColorLink="@color/black_text"
+            android:textCursorDrawable="@null" />
+
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/user_email_subscribe"
+            style="@style/editTextSub"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/user_lastname_subscribe"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:hint="example@mail.com"
+            android:inputType="textEmailAddress"
+            android:textColorHint="@color/accent"
+            android:textColorLink="@color/black_text"
+            android:textCursorDrawable="@null" />
+
         <ImageView
+            android:id="@+id/divider_dialog"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/user_email_subscribe"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/divider" />
+
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/popup_check"/>
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/divider_dialog">
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/cancel_button_subscribe"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
+                android:text="CANCEL"
+                android:textColor="@color/primary" />
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/okbutton_subscribe"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/cancel_button_subscribe"
+                android:fontFamily="sans-serif-medium"
+                android:text="OK"
+                android:textColor="@color/primary" />
+        </RelativeLayout>
     </RelativeLayout>
 </RelativeLayout>
