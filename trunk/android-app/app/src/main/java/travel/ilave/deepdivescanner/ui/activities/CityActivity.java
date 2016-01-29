@@ -22,6 +22,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -79,7 +80,13 @@ public class CityActivity extends AppCompatActivity /*implements PlacesPagerAdap
             getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_search_location);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-            latLng =  getIntent().getParcelableExtra("LATLNG");
+            if (getIntent().getParcelableExtra("LATLNG") != null) {
+                latLng = getIntent().getParcelableExtra("LATLNG");
+            }
+            else {
+                Toast.makeText(CityActivity.this, "Can't get your current location", Toast.LENGTH_LONG).show();
+
+            }
             filters = getIntent().getParcelableExtra("FILTERS");
 
             progressDialog = new ProgressDialog(this);
@@ -104,7 +111,6 @@ public class CityActivity extends AppCompatActivity /*implements PlacesPagerAdap
                 startService(intent);
             }
             progressDialog.dismiss();
-            // requestCityProducts();
             populatePlaceViewpager(latLng);
             getSupportActionBar().setTitle(getCity(latLng));
             floatingActionButton.setOnClickListener(new View.OnClickListener() {
@@ -122,7 +128,7 @@ public class CityActivity extends AppCompatActivity /*implements PlacesPagerAdap
                 @Override
                 public void onClick(View v) {
                     Intent i = getBaseContext().getPackageManager()
-                            .getLaunchIntentForPackage( getBaseContext().getPackageName() );
+                            .getLaunchIntentForPackage(getBaseContext().getPackageName());
                     i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(i);
                 }

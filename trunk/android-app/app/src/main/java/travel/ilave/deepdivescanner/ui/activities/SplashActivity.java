@@ -34,15 +34,10 @@ public class SplashActivity extends Activity {
 
         setContentView(R.layout.activity_splash);
         GPSTracker gps = new GPSTracker(SplashActivity.this);
-        /*if (gps.canGetLocation()) {*/
-            latitude = gps.getLatitude();
-            longitude = gps.getLongitude();
-            latLng = new LatLng(latitude, longitude);
-            System.out.println(latLng);
-     /*   } else {
-            gps.showSettingsAlert();
-        }*/
-       Handler h = new Handler();
+        latitude = gps.getLatitude();
+        longitude = gps.getLongitude();
+        latLng = new LatLng(latitude, longitude);
+        Handler h = new Handler();
         h.postDelayed(new Runnable() {
             @Override
             public void run() {

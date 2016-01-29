@@ -71,7 +71,8 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Goo
                             @Override
                             public void onCameraChange(CameraPosition cameraPosition) {
                                 googleMap.clear();
-                                googleMap.setInfoWindowAdapter(new InfoWindowAdapter(context, divespots, googleMap));
+                                InfoWindowAdapter infoWindowAdapter = new InfoWindowAdapter(context, divespots, googleMap);
+                                googleMap.setInfoWindowAdapter(infoWindowAdapter);
                                 final double radiusMax = radius(googleMap.getCameraPosition().target, googleMap.getProjection().getVisibleRegion().latLngBounds.northeast);
                                 requestCityProducts(googleMap.getCameraPosition().target, radiusMax);
                             }
