@@ -51,19 +51,20 @@ public class GPSTracker extends Service implements LocationListener {
             if (!isGPSEnabled && !isNetworkEnabled) {
                 //
             } else {
-                this.canGetLocation = true;
                 if (isNetworkEnabled) {
                     locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
-                    Log.d("NETWORK", "network");
+                    Log.i("NETWORK", "network");
                     if (locationManager != null) {
                         location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
                         if (location != null) {
                             latitude = location.getLatitude();
                             longitude = location.getLongitude();
+                            this.canGetLocation = true;
+                            System.out.println(location);
                         }
                     }
                 }
-                if (isGPSEnabled) {
+                else {
                     if (location == null) {
                         locationManager.requestLocationUpdates(
                                 LocationManager.GPS_PROVIDER,
@@ -76,6 +77,7 @@ public class GPSTracker extends Service implements LocationListener {
                             if (location != null) {
                                 latitude = location.getLatitude();
                                 longitude = location.getLongitude();
+                                this.canGetLocation = true;
                             }
                         }
                     }
@@ -116,7 +118,7 @@ public class GPSTracker extends Service implements LocationListener {
     }
 
 
-    public void showSettingsAlert(){
+    /*public void showSettingsAlert(){
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
 
         alertDialog.setTitle("GPS is settings");
@@ -138,7 +140,7 @@ public class GPSTracker extends Service implements LocationListener {
 
         alertDialog.show();
     }
-
+*/
     @Override
     public void onLocationChanged(Location location) {
     }

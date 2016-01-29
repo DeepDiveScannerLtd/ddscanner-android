@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
@@ -19,6 +21,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -69,49 +72,62 @@ public class CityActivity extends AppCompatActivity /*implements PlacesPagerAdap
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_city);
-        findViews();
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_search_location);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (hasConnection(this)) {
+            setContentView(R.layout.activity_city);
+            findViews();
+            setSupportActionBar(toolbar);
+            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_search_location);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        latLng =  getIntent().getParcelableExtra("LATLNG");
-        filters = getIntent().getParcelableExtra("FILTERS");
+            latLng =  getIntent().getParcelableExtra("LATLNG");
+            filters = getIntent().getParcelableExtra("FILTERS");
 
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Please wait");
-        progressDialog.show();
+            progressDialog = new ProgressDialog(this);
+            progressDialog.setMessage("Please wait");
+            progressDialog.show();
 
-        mRegistrationBroadcatReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-                boolean sentToken = sharedPreferences.getBoolean(RegistrationIntentService.SENT_TOKEN_TO_SERVER, false);
-                if (sentToken) {
+            mRegistrationBroadcatReceiver = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+                    boolean sentToken = sharedPreferences.getBoolean(RegistrationIntentService.SENT_TOKEN_TO_SERVER, false);
+                    if (sentToken) {
 
-                } else {
-                    //Error with token
+                    } else {
+                        //Error with token
+                    }
                 }
-            }
-        };
+            };
 
-        if (checkPlayServices()) {
-            Intent intent = new Intent(this, RegistrationIntentService.class);
-            startService(intent);
+            if (checkPlayServices()) {
+                Intent intent = new Intent(this, RegistrationIntentService.class);
+                startService(intent);
+            }
+            progressDialog.dismiss();
+            // requestCityProducts();
+            populatePlaceViewpager(latLng);
+            getSupportActionBar().setTitle(getCity(latLng));
+            floatingActionButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finish();
+                    FilterActivity.show(CityActivity.this, PlacesPagerAdapter.getLastLatlng());
+                }
+            });
         }
-        progressDialog.dismiss();
-       // requestCityProducts();
-        populatePlaceViewpager(latLng);
-        getSupportActionBar().setTitle(getCity(latLng));
-        System.out.println(getCity(latLng));
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-                FilterActivity.show(CityActivity.this, PlacesPagerAdapter.getLastLatlng());
-            }
-        });
-
+        else {
+            setContentView(R.layout.activity_error);
+            Button btnRefresh = (Button) findViewById(R.id.btnRefresh);
+            btnRefresh.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent i = getBaseContext().getPackageManager()
+                            .getLaunchIntentForPackage( getBaseContext().getPackageName() );
+                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(i);
+                }
+            });
+        }
     }
 
     private void populatePlaceViewpager(LatLng latLng) {
@@ -231,5 +247,26 @@ public class CityActivity extends AppCompatActivity /*implements PlacesPagerAdap
         }
 
         return city;
+    }
+
+    public static boolean hasConnection(final Context context)
+    {
+        ConnectivityManager cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo wifiInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        if (wifiInfo != null && wifiInfo.isConnected())
+        {
+            return true;
+        }
+        wifiInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+        if (wifiInfo != null && wifiInfo.isConnected())
+        {
+            return true;
+        }
+        wifiInfo = cm.getActiveNetworkInfo();
+        if (wifiInfo != null && wifiInfo.isConnected())
+        {
+            return true;
+        }
+        return false;
     }
 }

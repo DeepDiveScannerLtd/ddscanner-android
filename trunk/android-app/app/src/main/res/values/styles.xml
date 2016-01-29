@@ -7,6 +7,8 @@
         <item name="colorAccent">@color/orange</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
         <item name="android:radioButtonStyle">@style/RadioButton</item>
+        <item name="android:homeAsUpIndicator">@drawable/ic_actionbar_back</item>
+        <item name="homeAsUpIndicator">@drawable/ic_actionbar_back</item>
     </style>
 
     <style name="RadioButton" parent="@android:style/Widget.CompoundButton.RadioButton">

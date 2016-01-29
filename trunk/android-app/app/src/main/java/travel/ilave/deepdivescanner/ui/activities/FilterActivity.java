@@ -41,7 +41,6 @@ public class FilterActivity extends AppCompatActivity {
         findViews();
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_actionbar_back);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -127,6 +126,9 @@ public class FilterActivity extends AppCompatActivity {
             case R.id.reset_filters:
                 resetChecking();
                 return true;
+            case android.R.id.home:
+                onBackPressed();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -134,11 +136,17 @@ public class FilterActivity extends AppCompatActivity {
 
     void resetChecking() {
         RadioButton radioButton = (RadioButton) findViewById(rgCurrents.getCheckedRadioButtonId());
-        radioButton.setChecked(false);
+        if (radioButton != null) {
+            radioButton.setChecked(false);
+        }
         radioButton = (RadioButton) findViewById(rgLevel.getCheckedRadioButtonId());
-        radioButton.setChecked(false);
+        if (radioButton != null) {
+            radioButton.setChecked(false);
+        }
         radioButton = (RadioButton) findViewById(rgVisibility.getCheckedRadioButtonId());
-        radioButton.setChecked(false);
+        if (radioButton != null) {
+            radioButton.setChecked(false);
+        }
     }
 
 }

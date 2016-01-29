@@ -42,10 +42,8 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Goo
     private PlacesPagerAdapter placesPagerAdapter;
     private DivespotsWrapper divespotsWrapper;
     private  static ArrayList<DiveSpot> divespots;
-    private ProductListAdapter productListAdapter;
     private static GoogleMap gMap;
     private Filters filters;
-    private ProgressDialog progressDialog;
 
     public PlacesPagerAdapter(Context context, FragmentManager fm, ArrayList<DiveSpot> divespots, LatLng latLng, Filters filters) {
         super(fm);
@@ -133,7 +131,6 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Goo
                 String responseString = new String(((TypedByteArray) s.getBody()).getBytes());
                 LogUtils.i("response code is " + s.getStatus());
                 LogUtils.i("response body is " + responseString);
-                System.out.println("----" + responseString);
                 divespotsWrapper = new Gson().fromJson(responseString, DivespotsWrapper.class);
                 divespots = (ArrayList<DiveSpot>) divespotsWrapper.getDiveSpots();
                 placesPagerAdapter = new PlacesPagerAdapter(context, fm, (ArrayList<DiveSpot>) divespotsWrapper.getDiveSpots(), center, filters);
@@ -147,11 +144,6 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Goo
                 Log.i("PLACES", error.getResponse().getReason());
                 Log.i("PLACES", error.getResponse().getUrl());
                 System.out.println(error.getResponse().getBody());
-               /* Log.i("PLACES", error.getMessage().toString());
-                Log.i("PLACES", error.getBody().toString());
-                Log.i("PLACES", error.getLocalizedMessage().toString());
-                LogUtils.i("failure Message is " + error.getMessage());
-                LogUtils.i("failure body is " + error.getBody());*/
                 if (error.getCause() instanceof SocketTimeoutException) {
                     if (error.getKind().equals(RetrofitError.Kind.NETWORK)) {
 
@@ -159,8 +151,7 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Goo
 
                     }
                 }
-                // TODO Handle result handling when activity stopped
-                // TODO Handle errors
+
             }
         });
     }

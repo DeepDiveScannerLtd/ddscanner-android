@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+
+    <ImageView
+        android:id="@+id/dc_avatar"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:src="@drawable/dc_avatar"/>
+    <android.support.v7.widget.AppCompatTextView
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:id="@+id/dc_name"
+        android:textSize="18sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/dc_avatar"
+        android:text="No Gravity Dive Center"
+        android:fontFamily="sans-serif-medium"
+        android:textColor="@color/black_text"/>
+    <LinearLayout
+        android:layout_toRightOf="@+id/dc_avatar"
+        android:layout_below="@+id/dc_name"
+        android:layout_marginLeft="10dp"
+        android:id="@+id/stars"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+    </LinearLayout>
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/dc_reviews"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:text="135 reviews"
+        android:layout_toRightOf="@+id/stars"
+        android:layout_below="@+id/dc_name"
+        android:gravity="center_vertical"/>
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/dc_address"
+        android:layout_width="wrap_content"
+        android:padding="10dp"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/dc_avatar"
+        android:layout_below="@+id/stars"
+        android:text="78/12 moo 1, Vichit Rd, Phuket town, phuket 8300 thailand"/>
+    <ImageView
+        android:id="@+id/ic_phone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/dc_avatar"
+        android:layout_below="@+id/dc_address"
+        android:layout_marginLeft="10dp"
+        android:src="@drawable/ic_phone"/>
+    <android.support.v7.widget.AppCompatTextView
+        android:layout_toRightOf="@+id/ic_phone"
+        android:layout_below="@+id/dc_address"
+        android:id="@+id/dc_telefon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="phone"
+        android:textSize="18sp"
+        android:layout_marginLeft="5dp"
+        android:textColor="@color/black_text"
+        android:text="+67 49 299 4825"/>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/dc_avatar"
+        android:layout_below="@+id/ic_phone"
+        android:src="@drawable/divider"
+        android:layout_marginTop="10dp"/>
+
+</RelativeLayout>

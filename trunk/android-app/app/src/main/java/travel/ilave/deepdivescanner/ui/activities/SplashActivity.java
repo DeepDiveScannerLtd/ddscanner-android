@@ -34,22 +34,22 @@ public class SplashActivity extends Activity {
 
         setContentView(R.layout.activity_splash);
         GPSTracker gps = new GPSTracker(SplashActivity.this);
-        if (gps.canGetLocation()) {
+        /*if (gps.canGetLocation()) {*/
             latitude = gps.getLatitude();
             longitude = gps.getLongitude();
             latLng = new LatLng(latitude, longitude);
-            System.out.println(latitude +" - " + longitude);
-        } else {
+            System.out.println(latLng);
+     /*   } else {
             gps.showSettingsAlert();
-        }
-        Handler h = new Handler();
+        }*/
+       Handler h = new Handler();
         h.postDelayed(new Runnable() {
             @Override
             public void run() {
                 SplashActivity.this.finish();
                 CityActivity.show(SplashActivity.this, latLng);
             }
-        }, 2 * DDProgressBarView.ANIMATION_DURATION);
+        }, DDProgressBarView.ANIMATION_DURATION);
     }
 
 }
