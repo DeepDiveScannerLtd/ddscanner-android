@@ -24,7 +24,7 @@ import travel.ilave.deepdivescanner.ui.activities.DivePlaceActivity;
 /**
  * Created by lashket on 10.12.15.
  */
-public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter, GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
+public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter, GoogleMap.OnInfoWindowClickListener {
     public static final String PRODUCT = "PRODUCT";
 
     private View view;
@@ -83,12 +83,6 @@ public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter, GoogleMap
     @Override
     public View getInfoContents(Marker marker) {
         return null;
-    }
-
-    @Override
-    public boolean onMarkerClick(Marker marker) {
-        marker.showInfoWindow();
-        return true;
     }
 
     @Override

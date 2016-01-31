@@ -8,12 +8,14 @@ import android.os.Bundle;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.util.Log;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.gson.Gson;
 
 import java.net.SocketTimeoutException;
@@ -31,19 +33,24 @@ import travel.ilave.deepdivescanner.entities.DivespotsWrapper;
 import travel.ilave.deepdivescanner.entities.Filters;
 import travel.ilave.deepdivescanner.rest.RestClient;
 import travel.ilave.deepdivescanner.ui.fragments.ProductListFragment;
+import travel.ilave.deepdivescanner.ui.fragments.TouchableMapFragment;
+import travel.ilave.deepdivescanner.ui.views.OnMapTouchedListener;
 import travel.ilave.deepdivescanner.utils.LogUtils;
 
 
-public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements GoogleMap.OnCameraChangeListener {
+public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements GoogleMap.OnCameraChangeListener, GoogleMap.OnMarkerClickListener, OnMapTouchedListener {
+
+    private static final String TAG = PlacesPagerAdapter.class.getName();
 
     private Context context;
     private LatLng latLng;
     private FragmentManager fm;
     private PlacesPagerAdapter placesPagerAdapter;
     private DivespotsWrapper divespotsWrapper;
-    private  static ArrayList<DiveSpot> divespots;
+    private static ArrayList<DiveSpot> divespots;
     private static GoogleMap gMap;
     private Filters filters;
+    private TouchableMapFragment touchableMapFragment;
 
     public PlacesPagerAdapter(Context context, FragmentManager fm, ArrayList<DiveSpot> divespots, LatLng latLng, Filters filters) {
         super(fm);
@@ -56,35 +63,26 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Goo
 
     @Override
     public Fragment getItem(int position) {
-        Fragment fragment = null;
         switch (position) {
             case 0:
-                fragment = new MapFragment();
-                ((MapFragment) fragment).getMapAsync(new OnMapReadyCallback() {
+                touchableMapFragment = new TouchableMapFragment();
+                touchableMapFragment.getMapAsync(new OnMapReadyCallback() {
                     @Override
                     public void onMapReady(final GoogleMap googleMap) {
-                        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 8.0f));
                         gMap = googleMap;
-                        final double radiusMax = radius(googleMap.getCameraPosition().target, googleMap.getProjection().getVisibleRegion().latLngBounds.northeast);
-                        requestCityProducts(googleMap.getCameraPosition().target, radiusMax);
-                        googleMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
-                            @Override
-                            public void onCameraChange(CameraPosition cameraPosition) {
-                                googleMap.clear();
-                                InfoWindowAdapter infoWindowAdapter = new InfoWindowAdapter(context, divespots, googleMap);
-                                googleMap.setInfoWindowAdapter(infoWindowAdapter);
-                                final double radiusMax = radius(googleMap.getCameraPosition().target, googleMap.getProjection().getVisibleRegion().latLngBounds.northeast);
-                                requestCityProducts(googleMap.getCameraPosition().target, radiusMax);
-                            }
-                        });
+                        gMap.setOnMarkerClickListener(PlacesPagerAdapter.this);
+                        gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 8.0f));
+                        touchableMapFragment.setOnMapTouchedListener(PlacesPagerAdapter.this);
+                        final double radiusMax = radius(gMap.getCameraPosition().target, gMap.getProjection().getVisibleRegion().latLngBounds.northeast);
+                        requestCityProducts(gMap.getCameraPosition().target, radiusMax);
+                        gMap.setOnCameraChangeListener(PlacesPagerAdapter.this);
                     }
                 });
-                break;
+                return touchableMapFragment;
             case 1:
-                fragment = new ProductListFragment();
-                break;
+                return new ProductListFragment();
         }
-        return fragment;
+        return null;
     }
 
     @Override
@@ -108,7 +106,7 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Goo
     public double radius(LatLng latCenter, LatLng topRightCorner) {
         double maxRadius = 0;
 
-        maxRadius =  topRightCorner.latitude - latCenter.latitude;
+        maxRadius = topRightCorner.latitude - latCenter.latitude;
 
         if ((topRightCorner.longitude - latCenter.longitude) > maxRadius) {
             maxRadius = topRightCorner.longitude - latCenter.longitude;
@@ -116,8 +114,37 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Goo
         return maxRadius;
     }
 
-   @Override
-    public  void onCameraChange (CameraPosition cameraPosition) {
+    @Override
+    public void onMapTouchedDown() {
+        LogUtils.i(TAG, "onMapTouchedDown");
+        gMap.setOnCameraChangeListener(PlacesPagerAdapter.this);
+    }
+
+    @Override
+    public void onMapTouchedUp() {
+
+    }
+
+    @Override
+    public void onCameraChange(CameraPosition cameraPosition) {
+        LogUtils.i(TAG, "onCameraChange");
+        gMap.clear();
+        InfoWindowAdapter infoWindowAdapter = new InfoWindowAdapter(context, divespots, gMap);
+        gMap.setInfoWindowAdapter(infoWindowAdapter);
+        final double radiusMax = radius(gMap.getCameraPosition().target, gMap.getProjection().getVisibleRegion().latLngBounds.northeast);
+        requestCityProducts(gMap.getCameraPosition().target, radiusMax);
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        LogUtils.i(TAG, "onMarkerClick");
+        gMap.setOnCameraChangeListener(null);
+        LatLng latLng = new LatLng(marker.getPosition().latitude, marker.getPosition().longitude);
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 10);
+        gMap.animateCamera(cameraUpdate);
+
+        marker.showInfoWindow();
+        return true;
     }
 
     public void requestCityProducts(final LatLng center, Double radius) {
@@ -157,5 +184,7 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Goo
         });
     }
 
-    public static LatLng getLastLatlng() { return gMap.getCameraPosition().target; }
+    public static LatLng getLastLatlng() {
+        return gMap.getCameraPosition().target;
+    }
 }
