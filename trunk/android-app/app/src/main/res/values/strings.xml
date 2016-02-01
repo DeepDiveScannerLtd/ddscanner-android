@@ -55,4 +55,6 @@
     <string name="details_level">Diver level</string>
     <string name="details_description">Description</string>
     <string name="details_btn_book_now">Book now</string>
+
+    <string name="facebook_app_id">1691716511044593</string>
 </resources>
