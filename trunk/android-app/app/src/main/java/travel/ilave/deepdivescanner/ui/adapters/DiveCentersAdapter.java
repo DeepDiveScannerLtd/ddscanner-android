@@ -2,6 +2,7 @@ package travel.ilave.deepdivescanner.ui.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.media.Image;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +26,7 @@ public class DiveCentersAdapter extends RecyclerView.Adapter<DiveCentersAdapter.
         View itemView = LayoutInflater.
                 from(viewGroup.getContext()).
                 inflate(R.layout.dive_center_item, viewGroup, false);
+
         return new DiveCentersViewHolder(itemView);
     }
 
@@ -39,10 +41,19 @@ public class DiveCentersAdapter extends RecyclerView.Adapter<DiveCentersAdapter.
     }
 
     public static class DiveCentersViewHolder extends RecyclerView.ViewHolder  {
-        
+
+        private ImageView imgLogo;
+        private TextView dcName;
+        private TextView dcAddress;
+        private TextView dcPhone;
 
         public DiveCentersViewHolder(View v) {
             super(v);
+            imgLogo = (ImageView) v.findViewById(R.id.dc_avatar);
+            dcName = (TextView) v.findViewById(R.id.dc_name);
+            dcAddress = (TextView) v.findViewById(R.id.dc_address);
+            dcPhone = (TextView) v.findViewById(R.id.dc_telefon);
+
 
         }
 

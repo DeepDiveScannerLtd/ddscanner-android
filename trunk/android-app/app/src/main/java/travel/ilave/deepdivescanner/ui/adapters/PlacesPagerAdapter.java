@@ -141,10 +141,6 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Goo
 
             @Override
             public void failure(RetrofitError error) {
-                Log.i("PLACES", error.getResponse().getBody().toString());
-                Log.i("PLACES", error.getResponse().getReason());
-                Log.i("PLACES", error.getResponse().getUrl());
-                System.out.println(error.getResponse().getBody());
                 if (error.getCause() instanceof SocketTimeoutException) {
                     if (error.getKind().equals(RetrofitError.Kind.NETWORK)) {
 

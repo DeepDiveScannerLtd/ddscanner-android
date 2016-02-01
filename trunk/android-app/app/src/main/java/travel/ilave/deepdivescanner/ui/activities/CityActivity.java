@@ -21,7 +21,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -48,12 +50,9 @@ import travel.ilave.deepdivescanner.ui.adapters.PlacesPagerAdapter;
 import travel.ilave.deepdivescanner.ui.dialogs.SubscribeDialog;
 
 
-public class CityActivity extends AppCompatActivity /*implements PlacesPagerAdapter.OnProductSelectedListener*/ {
+public class CityActivity extends AppCompatActivity {
 
-    public static final String LICENSE = "LICENSE";
     public static final String TAG = "CityActivity";
-    private static final long MIN_TIME = 400;
-    private static final float MIN_DISTANCE = 1000;
 
     private Toolbar toolbar;
     private ViewPager placeViewPager;
@@ -65,7 +64,6 @@ public class CityActivity extends AppCompatActivity /*implements PlacesPagerAdap
     private Map<String, String> map = new HashMap<String, String>();
     private BroadcastReceiver mRegistrationBroadcatReceiver;
     private FloatingActionButton floatingActionButton;
-    private ProgressDialog progressDialog;
     private SubscribeDialog subscribeDialog = new SubscribeDialog();
 
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
@@ -79,20 +77,8 @@ public class CityActivity extends AppCompatActivity /*implements PlacesPagerAdap
             setSupportActionBar(toolbar);
             getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_search_location);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-            if (getIntent().getParcelableExtra("LATLNG") != null) {
-                latLng = getIntent().getParcelableExtra("LATLNG");
-            }
-            else {
-                Toast.makeText(CityActivity.this, "Can't get your current location", Toast.LENGTH_LONG).show();
-
-            }
+            latLng = getIntent().getParcelableExtra("LATLNG");
             filters = getIntent().getParcelableExtra("FILTERS");
-
-            progressDialog = new ProgressDialog(this);
-            progressDialog.setMessage("Please wait");
-            progressDialog.show();
-
             mRegistrationBroadcatReceiver = new BroadcastReceiver() {
                 @Override
                 public void onReceive(Context context, Intent intent) {
@@ -110,7 +96,6 @@ public class CityActivity extends AppCompatActivity /*implements PlacesPagerAdap
                 Intent intent = new Intent(this, RegistrationIntentService.class);
                 startService(intent);
             }
-            progressDialog.dismiss();
             populatePlaceViewpager(latLng);
             getSupportActionBar().setTitle(getCity(latLng));
             floatingActionButton.setOnClickListener(new View.OnClickListener() {

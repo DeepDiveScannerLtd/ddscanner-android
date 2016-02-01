@@ -78,14 +78,11 @@ public class FilterActivity extends AppCompatActivity {
             case R.id.vis_excelent:
                 visibility = "excellent";
                 break;
-            case R.id.vis_high:
-                visibility = "high";
+            case R.id.vis_good:
+                visibility = "good";
                 break;
-            case R.id.vis_medium:
-                visibility = "medium";
-                break;
-            case R.id.vis_low:
-                visibility = "low";
+            case R.id.vis_bad:
+                visibility = "bad";
                 break;
             default:
                 break;
@@ -99,11 +96,11 @@ public class FilterActivity extends AppCompatActivity {
             case -1:
                 currents = "";
                 break;
-            case R.id.cur_high:
-                currents = "high";
+            case R.id.cur_moderate:
+                currents = "moderate";
                 break;
-            case R.id.cur_medium:
-                currents = "medium";
+            case R.id.cur_strong:
+                currents = "strong";
                 break;
             case R.id.cur_low:
                 currents = "low";

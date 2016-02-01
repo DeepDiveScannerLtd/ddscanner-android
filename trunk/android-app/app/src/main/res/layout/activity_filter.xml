@@ -46,34 +46,24 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/divider"/>
             <RadioButton
-                android:id="@+id/vis_high"
+                android:id="@+id/vis_good"
                 style="@style/RadioButton"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:text="High"
+                android:text="Good"
                 />
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:src="@drawable/divider"/>
             <RadioButton
-                android:id="@+id/vis_medium"
+                android:id="@+id/vis_bad"
                 style="@style/RadioButton"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:text="Medium"
+                android:text="Bad"
                 />
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:src="@drawable/divider"/>
-            <RadioButton
-                android:id="@+id/vis_low"
-                style="@style/RadioButton"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:text="Low"
-                />
+
         </RadioGroup>
         <TextView
             android:layout_marginTop="10dp"
@@ -110,22 +100,22 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/divider"/>
             <RadioButton
-                android:id="@+id/cur_medium"
+                android:id="@+id/cur_moderate"
                 style="@style/RadioButton"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:text="Medium"
+                android:text="Moderate"
                 />
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:src="@drawable/divider"/>
             <RadioButton
-                android:id="@+id/cur_high"
+                android:id="@+id/cur_strong"
                 style="@style/RadioButton"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:text="High"
+                android:text="Strong"
                 />
         </RadioGroup>
         <TextView
