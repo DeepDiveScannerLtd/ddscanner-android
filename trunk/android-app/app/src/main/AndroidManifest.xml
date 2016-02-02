@@ -54,6 +54,10 @@
             android:screenOrientation="portrait">
         </activity>
         <activity
+            android:name=".ui.activities.SocialLogin"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
             android:name=".ui.activities.CityActivity"
             android:screenOrientation="portrait" />
         <activity

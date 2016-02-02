@@ -41,7 +41,7 @@ public class SplashActivity extends Activity {
             @Override
             public void run() {
                 SplashActivity.this.finish();
-                CityActivity.show(SplashActivity.this, latLng);
+                SocialLogin.show(SplashActivity.this, latLng);
             }
         }, DDProgressBarView.ANIMATION_DURATION);
     }
