@@ -31,15 +31,19 @@ import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.model.LatLng;
+import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
+import com.twitter.sdk.android.core.models.User;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import io.fabric.sdk.android.Fabric;
 import travel.ilave.deepdivescanner.R;
 
 public class SocialLogin extends AppCompatActivity implements View.OnClickListener{
@@ -57,6 +61,7 @@ public class SocialLogin extends AppCompatActivity implements View.OnClickListen
     private LoginButton login;
     /*Twitter*/
     private TwitterLoginButton twitterLoginButton;
+    private TwitterSession session;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,21 +124,26 @@ public class SocialLogin extends AppCompatActivity implements View.OnClickListen
         });
 
         /*Twitter*/
-
+        TwitterAuthConfig authConfig = new TwitterAuthConfig("tT7PhwjwXb8dEXbhQzI529VR4", "C4wijpAOBWWwUVsmtyoMEhWUQD5P6BFulUDTVQGQmrJI32BlaT");
+        System.out.println(authConfig);
+        Fabric.with(this, new Twitter(authConfig));
         twitterLoginButton = (TwitterLoginButton) findViewById(R.id.twitter_login_button);
         twitterLoginButton.setCallback(new Callback<TwitterSession>() {
             @Override
             public void success(Result<TwitterSession> result) {
                 System.out.println("Twitter Success");
+                System.out.println(result.data.getUserName());
+                session = result.data;
+                getUserData();
             }
 
             @Override
             public void failure(TwitterException e) {
-
+                System.out.println("Twitter fail" + e);
             }
         });
     }
-
+    /*Facebook*/
     public void RequestData() {
         GraphRequest request = GraphRequest.newMeRequest(AccessToken.getCurrentAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
             @Override
@@ -157,11 +167,14 @@ public class SocialLogin extends AppCompatActivity implements View.OnClickListen
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1) {
+            // Google plus request
             System.out.println("1111");
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSignInResult(result);
         } else {
+            //Facebook request
             callbackManager.onActivityResult(requestCode, resultCode, data);
+            twitterLoginButton.onActivityResult(requestCode, resultCode, data);
         }
     }
 
@@ -291,6 +304,38 @@ public class SocialLogin extends AppCompatActivity implements View.OnClickListen
         }
     }
 /*End google plus login*/
+
+
+    void getUserData() {
+        Twitter.getApiClient(session).getAccountService()
+                .verifyCredentials(true, false, new Callback<User>() {
+
+                    @Override
+                    public void failure(TwitterException e) {
+
+                    }
+
+                    @Override
+                    public void success(Result<User> userResult) {
+
+                        User user = userResult.data;
+                        String twitterImage = user.profileImageUrl;
+
+                        try {
+                            Log.d("imageurl", user.profileImageUrl);
+                            Log.d("name", user.name);
+                            //Log.d("email",user.email);
+                            Log.d("des", user.description);
+                            Log.d("followers ", String.valueOf(user.followersCount));
+                            Log.d("createdAt", user.createdAt);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+
+                    }
+
+                });}
 
     public static void show(Context context, LatLng latLng) {
         Intent intent = new Intent(context, SocialLogin.class);
