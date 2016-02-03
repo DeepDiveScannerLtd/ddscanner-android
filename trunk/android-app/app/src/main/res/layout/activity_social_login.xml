@@ -27,7 +27,7 @@
 
     <com.google.android.gms.common.SignInButton
         android:id="@+id/google_signin_button"
-        android:layout_width="300dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingTop="15dp"
         android:paddingBottom="15dp"
@@ -54,6 +54,12 @@
             android:text="Sign out"
              />
         </LinearLayout>
-        
+    <com.twitter.sdk.android.core.identity.TwitterLoginButton
+        android:id="@+id/twitter_login_button"
+        android:layout_gravity="center"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content" />
+
+
 
 </LinearLayout>

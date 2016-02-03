@@ -31,6 +31,11 @@ import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.model.LatLng;
+import com.twitter.sdk.android.core.Callback;
+import com.twitter.sdk.android.core.Result;
+import com.twitter.sdk.android.core.TwitterException;
+import com.twitter.sdk.android.core.TwitterSession;
+import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -50,6 +55,8 @@ public class SocialLogin extends AppCompatActivity implements View.OnClickListen
     /* For facebook */
     private CallbackManager callbackManager;
     private LoginButton login;
+    /*Twitter*/
+    private TwitterLoginButton twitterLoginButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +78,7 @@ public class SocialLogin extends AppCompatActivity implements View.OnClickListen
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
         signInButton = (SignInButton) findViewById(R.id.google_signin_button);
-        signInButton.setSize(SignInButton.SIZE_STANDARD);
+        signInButton.setSize(SignInButton.SIZE_WIDE);
         signInButton.setScopes(gso.getScopeArray());
         signInButton.setOnClickListener(this);
         findViewById(R.id.sign_out_button).setOnClickListener(this);
@@ -80,7 +87,6 @@ public class SocialLogin extends AppCompatActivity implements View.OnClickListen
         callbackManager = CallbackManager.Factory.create();
         login = (LoginButton) findViewById(R.id.facebook_login_button);
         login.setReadPermissions("public_profile email");
-
         if (AccessToken.getCurrentAccessToken() != null) {
             RequestData();
         }
@@ -109,6 +115,21 @@ public class SocialLogin extends AppCompatActivity implements View.OnClickListen
 
             @Override
             public void onError(FacebookException exception) {
+            }
+        });
+
+        /*Twitter*/
+
+        twitterLoginButton = (TwitterLoginButton) findViewById(R.id.twitter_login_button);
+        twitterLoginButton.setCallback(new Callback<TwitterSession>() {
+            @Override
+            public void success(Result<TwitterSession> result) {
+                System.out.println("Twitter Success");
+            }
+
+            @Override
+            public void failure(TwitterException e) {
+
             }
         });
     }
@@ -262,7 +283,7 @@ public class SocialLogin extends AppCompatActivity implements View.OnClickListen
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
-            System.out.println(acct.getEmail());
+            System.out.println(acct.getEmail() + acct.getDisplayName());
             updateUI(true);
         } else {
             // Signed out, show unauthenticated UI.

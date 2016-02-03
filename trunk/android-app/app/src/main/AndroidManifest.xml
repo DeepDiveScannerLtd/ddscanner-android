@@ -112,6 +112,9 @@
         <activity
             android:name=".ui.activities.VoucherActivity"
             android:screenOrientation="portrait" />
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="ed7107427d4db24c8d8509e14cd4e3e30daf7805" />
     </application>
 
 </manifest>
