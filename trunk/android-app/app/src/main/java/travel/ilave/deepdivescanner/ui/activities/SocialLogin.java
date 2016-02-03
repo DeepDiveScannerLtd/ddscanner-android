@@ -1,5 +1,6 @@
 package travel.ilave.deepdivescanner.ui.activities;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -26,6 +27,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.OptionalPendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONException;
@@ -35,9 +39,14 @@ import travel.ilave.deepdivescanner.R;
 
 public class SocialLogin extends AppCompatActivity implements View.OnClickListener{
 
+
+
+    private static final String TAG = "SignInActivity";
+
     /* For google plus */
     private GoogleApiClient mGoogleApiClient;
     private SignInButton signInButton;
+    private ProgressDialog mProgressDialog;
     /* For facebook */
     private CallbackManager callbackManager;
     private LoginButton login;
@@ -65,6 +74,7 @@ public class SocialLogin extends AppCompatActivity implements View.OnClickListen
         signInButton.setSize(SignInButton.SIZE_STANDARD);
         signInButton.setScopes(gso.getScopeArray());
         signInButton.setOnClickListener(this);
+        findViewById(R.id.sign_out_button).setOnClickListener(this);
 
         /*Facebook*/
         callbackManager = CallbackManager.Factory.create();
@@ -125,7 +135,6 @@ public class SocialLogin extends AppCompatActivity implements View.OnClickListen
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        System.out.println("Request code is - - - " + resultCode + " - " + requestCode + " - " + data);
         if (requestCode == 1) {
             System.out.println("1111");
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
@@ -154,14 +163,92 @@ public class SocialLogin extends AppCompatActivity implements View.OnClickListen
     }
 
     /*Google plus*/
+
+
+    public void onStart() {
+        super.onStart();
+
+        OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
+        if (opr.isDone()) {
+            // If the user's cached credentials are valid, the OptionalPendingResult will be "done"
+            // and the GoogleSignInResult will be available instantly.
+            Log.d(TAG, "Got cached sign-in");
+            GoogleSignInResult result = opr.get();
+            handleSignInResult(result);
+        } else {
+            // If the user has not previously signed in on this device or the sign-in has expired,
+            // this asynchronous branch will attempt to sign in the user silently.  Cross-device
+            // single sign-on will occur in this branch.
+            showProgressDialog();
+            opr.setResultCallback(new ResultCallback<GoogleSignInResult>() {
+                @Override
+                public void onResult(GoogleSignInResult googleSignInResult) {
+                    hideProgressDialog();
+                    handleSignInResult(googleSignInResult);
+                }
+            });
+        }
+    }
+
+    private void signOut() {
+        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
+                new ResultCallback<Status>() {
+                    @Override
+                    public void onResult(Status status) {
+                        // [START_EXCLUDE]
+                        updateUI(false);
+                        // [END_EXCLUDE]
+                    }
+                });
+    }
+
+    private void revokeAccess() {
+        Auth.GoogleSignInApi.revokeAccess(mGoogleApiClient).setResultCallback(
+                new ResultCallback<Status>() {
+                    @Override
+                    public void onResult(Status status) {
+                        // [START_EXCLUDE]
+                        updateUI(false);
+                        // [END_EXCLUDE]
+                    }
+                });
+    }
+
+    private void showProgressDialog() {
+        if (mProgressDialog == null) {
+            mProgressDialog = new ProgressDialog(this);
+            mProgressDialog.setMessage("Loading");
+            mProgressDialog.setIndeterminate(true);
+        }
+
+        mProgressDialog.show();
+    }
+
+    private void hideProgressDialog() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.hide();
+        }
+    }
+
+    private void updateUI(boolean signedIn) {
+        if (signedIn) {
+            findViewById(R.id.google_signin_button).setVisibility(View.GONE);
+            findViewById(R.id.sign_out_and_disconnect).setVisibility(View.VISIBLE);
+        } else {
+            findViewById(R.id.google_signin_button).setVisibility(View.VISIBLE);
+            findViewById(R.id.sign_out_and_disconnect).setVisibility(View.GONE);
+        }
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.google_signin_button:
-              //  if (GoogleApiClient.on)
                 signIn();
                 break;
-            // ...
+            case R.id.sign_out_button:
+                signOut();
+                break;
         }
     }
 
@@ -176,10 +263,13 @@ public class SocialLogin extends AppCompatActivity implements View.OnClickListen
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
             System.out.println(acct.getEmail());
+            updateUI(true);
         } else {
             // Signed out, show unauthenticated UI.
+            updateUI(false);
         }
     }
+/*End google plus login*/
 
     public static void show(Context context, LatLng latLng) {
         Intent intent = new Intent(context, SocialLogin.class);
