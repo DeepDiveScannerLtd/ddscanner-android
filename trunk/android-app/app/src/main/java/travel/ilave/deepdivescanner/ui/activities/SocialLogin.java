@@ -43,13 +43,20 @@ import com.twitter.sdk.android.core.models.User;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import io.fabric.sdk.android.Fabric;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 import travel.ilave.deepdivescanner.R;
+import travel.ilave.deepdivescanner.rest.RestClient;
 
 public class SocialLogin extends AppCompatActivity implements View.OnClickListener{
 
-
-
+    private String[] firstLastname = new String[2];
+    private Map<String,String> map = new HashMap<String, String>();
     private static final String TAG = "SignInActivity";
 
     /* For google plus */
@@ -154,6 +161,7 @@ public class SocialLogin extends AppCompatActivity implements View.OnClickListen
                     if (json != null) {
                         String text = "<b>Name :</b> " + json.getString("name") + "<br><br><b>Email :</b> " + json.getString("email") + "<br><br><b>Profile link :</b> " + json.getString("link");
                         System.out.println(text);
+                        firstLastname = json.getString("name").split(" ");
                     }
 
                 } catch (JSONException e) {
@@ -167,12 +175,10 @@ public class SocialLogin extends AppCompatActivity implements View.OnClickListen
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1) {
-            // Google plus request
             System.out.println("1111");
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSignInResult(result);
         } else {
-            //Facebook request
             callbackManager.onActivityResult(requestCode, resultCode, data);
             twitterLoginButton.onActivityResult(requestCode, resultCode, data);
         }
@@ -204,15 +210,10 @@ public class SocialLogin extends AppCompatActivity implements View.OnClickListen
 
         OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
         if (opr.isDone()) {
-            // If the user's cached credentials are valid, the OptionalPendingResult will be "done"
-            // and the GoogleSignInResult will be available instantly.
             Log.d(TAG, "Got cached sign-in");
             GoogleSignInResult result = opr.get();
             handleSignInResult(result);
         } else {
-            // If the user has not previously signed in on this device or the sign-in has expired,
-            // this asynchronous branch will attempt to sign in the user silently.  Cross-device
-            // single sign-on will occur in this branch.
             showProgressDialog();
             opr.setResultCallback(new ResultCallback<GoogleSignInResult>() {
                 @Override
@@ -229,9 +230,7 @@ public class SocialLogin extends AppCompatActivity implements View.OnClickListen
                 new ResultCallback<Status>() {
                     @Override
                     public void onResult(Status status) {
-                        // [START_EXCLUDE]
                         updateUI(false);
-                        // [END_EXCLUDE]
                     }
                 });
     }
@@ -241,9 +240,7 @@ public class SocialLogin extends AppCompatActivity implements View.OnClickListen
                 new ResultCallback<Status>() {
                     @Override
                     public void onResult(Status status) {
-                        // [START_EXCLUDE]
                         updateUI(false);
-                        // [END_EXCLUDE]
                     }
                 });
     }
@@ -297,6 +294,7 @@ public class SocialLogin extends AppCompatActivity implements View.OnClickListen
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
             System.out.println(acct.getEmail() + acct.getDisplayName());
+            firstLastname = acct.getDisplayName().split("");
             updateUI(true);
         } else {
             // Signed out, show unauthenticated UI.
@@ -322,8 +320,8 @@ public class SocialLogin extends AppCompatActivity implements View.OnClickListen
                         String twitterImage = user.profileImageUrl;
 
                         try {
-                            Log.d("imageurl", user.profileImageUrl);
                             Log.d("name", user.name);
+                            firstLastname = user.name.split(" "); //separation first and last name of user
                             //Log.d("email",user.email);
                             Log.d("des", user.description);
                             Log.d("followers ", String.valueOf(user.followersCount));
@@ -341,5 +339,24 @@ public class SocialLogin extends AppCompatActivity implements View.OnClickListen
         Intent intent = new Intent(context, SocialLogin.class);
         intent.putExtra("LATLNG", latLng);
         context.startActivity(intent);
+    }
+
+    private void sendRequest(String[] firstLastname, String email) {
+        map.put("firstName", firstLastname[0]);
+        map.put("lastName", firstLastname[1]);
+        map.put("eMail", email);
+        RestClient.getServiceInstance().subscribe(map, new retrofit.Callback<Response>() {
+            @Override
+            public void success(Response s, Response response) {
+                String responseString = new String(((TypedByteArray) s.getBody()).getBytes());
+                System.out.println(s.getBody());
+                System.out.println(s.getStatus());
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                System.out.println(error.getMessage());
+            }
+        });
     }
 }
