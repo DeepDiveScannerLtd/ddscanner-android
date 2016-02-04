@@ -23,6 +23,20 @@ public class SharedPreferenceHelper {
         editor.commit();
     }
 
+    public static void setIsUserSignedIn(Boolean isUserSignedIn) {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        Editor editor = prefs.edit();
+        editor.putString("ISLOGINED", "1");
+        editor.commit();
+    }
+
+    public static boolean getIsUserLogined() {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        String is = prefs.getString("ISLOGINED", "");
+        if (is.equals("1")) { return true; }
+        else { return false; }
+    }
+
     public static String getGcmId() {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         return prefs.getString(PREFERENCES_GCM_ID, "");

@@ -52,6 +52,7 @@ import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 import travel.ilave.deepdivescanner.R;
 import travel.ilave.deepdivescanner.rest.RestClient;
+import travel.ilave.deepdivescanner.utils.SharedPreferenceHelper;
 
 public class SocialLogin extends AppCompatActivity implements View.OnClickListener{
 
@@ -81,7 +82,7 @@ public class SocialLogin extends AppCompatActivity implements View.OnClickListen
                 .requestEmail()
                 .build();
         mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this /* FragmentActivity */, new GoogleApiClient.OnConnectionFailedListener() {
+                .enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
                     @Override
                     public void onConnectionFailed(ConnectionResult connectionResult) {
 
@@ -140,6 +141,7 @@ public class SocialLogin extends AppCompatActivity implements View.OnClickListen
             public void success(Result<TwitterSession> result) {
                 System.out.println("Twitter Success");
                 System.out.println(result.data.getUserName());
+                sendRequest(result.data.getUserName(), "");
                 session = result.data;
                 getUserData();
             }
@@ -161,6 +163,7 @@ public class SocialLogin extends AppCompatActivity implements View.OnClickListen
                     if (json != null) {
                         String text = "<b>Name :</b> " + json.getString("name") + "<br><br><b>Email :</b> " + json.getString("email") + "<br><br><b>Profile link :</b> " + json.getString("link");
                         System.out.println(text);
+                        sendRequest(json.getString("name"), json.getString("email"));
                         firstLastname = json.getString("name").split(" ");
                     }
 
@@ -294,6 +297,7 @@ public class SocialLogin extends AppCompatActivity implements View.OnClickListen
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
             System.out.println(acct.getEmail() + acct.getDisplayName());
+            sendRequest(acct.getDisplayName(), acct.getEmail());
             firstLastname = acct.getDisplayName().split("");
             updateUI(true);
         } else {
@@ -341,9 +345,11 @@ public class SocialLogin extends AppCompatActivity implements View.OnClickListen
         context.startActivity(intent);
     }
 
-    private void sendRequest(String[] firstLastname, String email) {
-        map.put("firstName", firstLastname[0]);
-        map.put("lastName", firstLastname[1]);
+    private void sendRequest(String firstLastname, String email) {
+        String[] firstlast = new String[2];
+        firstlast = firstLastname.split(" ");
+        map.put("firstName", firstlast[0]);
+        map.put("lastName", firstlast[1]);
         map.put("eMail", email);
         RestClient.getServiceInstance().subscribe(map, new retrofit.Callback<Response>() {
             @Override
@@ -351,6 +357,8 @@ public class SocialLogin extends AppCompatActivity implements View.OnClickListen
                 String responseString = new String(((TypedByteArray) s.getBody()).getBytes());
                 System.out.println(s.getBody());
                 System.out.println(s.getStatus());
+                SharedPreferenceHelper.setIsUserSignedIn(true);
+                onBackPressed();
             }
 
             @Override
