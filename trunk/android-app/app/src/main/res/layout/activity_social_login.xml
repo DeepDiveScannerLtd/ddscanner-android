@@ -6,6 +6,8 @@
     android:background="@drawable/bg_photo"
     tools:context=".MainActivity">
 
+    <include layout="@layout/view_toolbar" />
+
     <ImageView
         android:id="@+id/picture"
         android:src="@drawable/mask"

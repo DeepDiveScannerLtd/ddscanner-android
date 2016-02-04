@@ -223,6 +223,7 @@
                 android:textSize="15sp"
                 android:textStyle="bold"
                 />
+
             <GridView
                 android:id="@+id/usage_example_gridview"
                 xmlns:android="http://schemas.android.com/apk/res/android"

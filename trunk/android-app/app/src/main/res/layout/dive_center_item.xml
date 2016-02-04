@@ -91,7 +91,7 @@
         android:layout_marginLeft="5dp"
         android:layout_toRightOf="@+id/dc_ic_mail"
         android:layout_below="@+id/dc_telefon"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="8dp"
         android:textColor="@color/black_text"/>
 
 </RelativeLayout>
