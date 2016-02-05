@@ -46,7 +46,7 @@ public class DiveCentersListAdapter extends RecyclerView.Adapter<DiveCentersList
 
     @Override
     public int getItemCount() {
-        diveCenters.size();
+        return diveCenters.size();
     }
 
     public static class DiveCentersListViewHolder extends RecyclerView.ViewHolder  {

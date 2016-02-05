@@ -6,9 +6,11 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v13.app.FragmentStatePagerAdapter;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,12 +28,13 @@ public class DiveCentersPagerAdapter extends FragmentStatePagerAdapter {
     private Context context;
     private Divecenters diveCenters;
     private ArrayList<DiveCenter> divecenters;
+    private LatLng latLng;
 
-    public DiveCentersPagerAdapter(Context context, FragmentManager fm, Divecenters diveCenters) {
+    public DiveCentersPagerAdapter(Context context, FragmentManager fm, Divecenters diveCenters, LatLng latLng) {
         super(fm);
         this.context = context;
         this.diveCenters = diveCenters;
-
+        this.latLng = latLng;
     }
 
     @Override
@@ -45,7 +48,7 @@ public class DiveCentersPagerAdapter extends FragmentStatePagerAdapter {
                 ((MapFragment) fragment).getMapAsync(new OnMapReadyCallback() {
                     @Override
                     public void onMapReady(GoogleMap googleMap) {
-
+                        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 8.0f));
                     }
                 });
                 break;

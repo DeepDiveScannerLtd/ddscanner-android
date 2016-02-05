@@ -58,7 +58,7 @@ public class DiveCentersActivity extends AppCompatActivity {
     }
 
     private void populateDiveCentesPager(Divecenters divecenters) {
-        diveCentersPagerAdapter = new DiveCentersPagerAdapter(this, getFragmentManager(), divecenters);
+        diveCentersPagerAdapter = new DiveCentersPagerAdapter(this, getFragmentManager(), divecenters, latLng);
         viewPager.setAdapter(diveCentersPagerAdapter);
         viewPager.setOffscreenPageLimit(3);
         tabLayout.setupWithViewPager(viewPager);
