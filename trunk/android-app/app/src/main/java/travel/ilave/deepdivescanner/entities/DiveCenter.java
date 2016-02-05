@@ -1,11 +1,10 @@
 package travel.ilave.deepdivescanner.entities;
 
-import java.io.Serializable;
-
+import android.os.Parcelable;
 /**
  * Created by lashket on 5.2.16.
  */
-public class DiveCenter implements Serializable {
+public class DiveCenter implements Parcelable {
 
     private String id;
     private String name;
@@ -14,6 +13,28 @@ public class DiveCenter implements Serializable {
     private String lat;
     private String lng;
     private String logo;
+
+    protected DiveCenter(android.os.Parcel in) {
+        id = in.readString();
+        name = in.readString();
+        email = in.readString();
+        phone = in.readString();
+        lat = in.readString();
+        lng = in.readString();
+        logo = in.readString();
+    }
+
+    public static final Creator<DiveCenter> CREATOR = new Creator<DiveCenter>() {
+        @Override
+        public DiveCenter createFromParcel(android.os.Parcel in) {
+            return new DiveCenter(in);
+        }
+
+        @Override
+        public DiveCenter[] newArray(int size) {
+            return new DiveCenter[size];
+        }
+    };
 
     public String getId() {
         return id;
@@ -69,6 +90,22 @@ public class DiveCenter implements Serializable {
 
     public void setLogo(String logo) {
         this.logo = logo;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(android.os.Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(name);
+        dest.writeString(email);
+        dest.writeString(phone);
+        dest.writeString(lat);
+        dest.writeString(lng);
+        dest.writeString(logo);
     }
 
 }

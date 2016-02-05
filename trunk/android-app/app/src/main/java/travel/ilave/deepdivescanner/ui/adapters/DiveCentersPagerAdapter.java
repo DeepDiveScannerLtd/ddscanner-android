@@ -10,6 +10,11 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import travel.ilave.deepdivescanner.entities.DiveCenter;
+import travel.ilave.deepdivescanner.entities.Divecenters;
 import travel.ilave.deepdivescanner.ui.fragments.DiveCenterListFragment;
 
 
@@ -18,12 +23,20 @@ import travel.ilave.deepdivescanner.ui.fragments.DiveCenterListFragment;
  */
 public class DiveCentersPagerAdapter extends FragmentStatePagerAdapter {
 
-    public DiveCentersPagerAdapter(Context context, FragmentManager fm) {
+    private Context context;
+    private Divecenters diveCenters;
+    private ArrayList<DiveCenter> divecenters;
+
+    public DiveCentersPagerAdapter(Context context, FragmentManager fm, Divecenters diveCenters) {
         super(fm);
+        this.context = context;
+        this.diveCenters = diveCenters;
+
     }
 
     @Override
     public Fragment getItem(int position) {
+        divecenters = (ArrayList<DiveCenter>)diveCenters.getDivecenters();
         Fragment fragment = null;
         Bundle args = new Bundle();
         switch (position) {
@@ -37,7 +50,8 @@ public class DiveCentersPagerAdapter extends FragmentStatePagerAdapter {
                 });
                 break;
             case 0:
-               // fragment = new DiveCenterListFragment();
+                fragment = new DiveCenterListFragment();
+                args.putParcelableArrayList("DIVESPOTS", divecenters);
                 break;
         }
         fragment.setArguments(args);
