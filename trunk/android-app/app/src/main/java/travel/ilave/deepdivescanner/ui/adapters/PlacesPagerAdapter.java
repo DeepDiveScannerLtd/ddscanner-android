@@ -7,6 +7,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -41,7 +42,7 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Goo
     private FragmentManager fm;
     private PlacesPagerAdapter placesPagerAdapter;
     private DivespotsWrapper divespotsWrapper;
-    private  static ArrayList<DiveSpot> divespots;
+    private static ArrayList<DiveSpot> divespots;
     private static GoogleMap gMap;
     private Filters filters;
 
@@ -74,7 +75,6 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Goo
                                 InfoWindowAdapter infoWindowAdapter = new InfoWindowAdapter(context, divespots, googleMap);
                                 googleMap.setInfoWindowAdapter(infoWindowAdapter);
                                 final double radiusMax = radius(googleMap.getCameraPosition().target, googleMap.getProjection().getVisibleRegion().latLngBounds.northeast);
-                                System.out.println("-------Radius------" + radiusMax);
                                 requestCityProducts(googleMap.getCameraPosition().target, radiusMax);
                             }
                         });
@@ -109,7 +109,7 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Goo
     public double radius(LatLng latCenter, LatLng topRightCorner) {
         double maxRadius = 0;
 
-        maxRadius =  topRightCorner.latitude - latCenter.latitude;
+        maxRadius = topRightCorner.latitude - latCenter.latitude;
 
         if ((topRightCorner.longitude - latCenter.longitude) > maxRadius) {
             maxRadius = topRightCorner.longitude - latCenter.longitude;
@@ -117,8 +117,8 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Goo
         return maxRadius;
     }
 
-   @Override
-    public  void onCameraChange (CameraPosition cameraPosition) {
+    @Override
+    public void onCameraChange(CameraPosition cameraPosition) {
     }
 
     public void requestCityProducts(final LatLng center, Double radius) {
@@ -126,12 +126,12 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Goo
         map.put("lat", String.valueOf(center.latitude));
         map.put("lng", String.valueOf(center.longitude));
         map.put("radius", String.valueOf(radius));
-        if (filters.getCurrents() != null) {
+/*        if (filters.getCurrents() != null) {
             map.put("currents", filters.getCurrents());
         }
         if (filters.getVisibility() != null) {
             map.put("visibility", filters.getVisibility());
-        }
+        }*/
         RestClient.getServiceInstance().getDivespots(map, new Callback<Response>() {
             @Override
             public void success(Response s, Response response) {
@@ -148,17 +148,16 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Goo
 
             @Override
             public void failure(RetrofitError error) {
-                if (error.getCause() instanceof SocketTimeoutException) {
-                    if (error.getKind().equals(RetrofitError.Kind.NETWORK)) {
-
-                    } else if (error.getKind().equals(RetrofitError.Kind.HTTP)) {
-
-                    }
+                if (error.getKind().equals(RetrofitError.Kind.NETWORK)) {
+                    Toast.makeText(context, "Please check your internet connection", Toast.LENGTH_LONG).show();
+                } else if (error.getKind().equals(RetrofitError.Kind.HTTP)) {
+                    Toast.makeText(context, "Server is not responsible, please try later", Toast.LENGTH_LONG).show();
                 }
-
             }
         });
     }
 
-    public static LatLng getLastLatlng() { return gMap.getCameraPosition().target; }
+    public static LatLng getLastLatlng() {
+        return gMap.getCameraPosition().target;
+    }
 }

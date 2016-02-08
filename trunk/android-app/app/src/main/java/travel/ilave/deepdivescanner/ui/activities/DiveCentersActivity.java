@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.widget.Toast;
 
 
 import com.google.android.gms.maps.model.LatLng;
@@ -90,7 +91,11 @@ public class DiveCentersActivity extends AppCompatActivity {
 
             @Override
             public void failure(RetrofitError error) {
-               System.out.println(error);
+                if (error.getKind().equals(RetrofitError.Kind.NETWORK)) {
+                    Toast.makeText(DiveCentersActivity.this, "Please check your internet connection", Toast.LENGTH_LONG).show();
+                } else if (error.getKind().equals(RetrofitError.Kind.HTTP)) {
+                    Toast.makeText(DiveCentersActivity.this, "Server is not responsible, please try later", Toast.LENGTH_LONG).show();
+                }
             }
         });
     }

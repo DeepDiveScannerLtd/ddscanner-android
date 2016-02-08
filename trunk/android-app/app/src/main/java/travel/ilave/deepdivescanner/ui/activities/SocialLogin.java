@@ -162,8 +162,9 @@ public class SocialLogin extends AppCompatActivity implements View.OnClickListen
                 JSONObject json = response.getJSONObject();
                 try {
                     if (json != null) {
+                        System.out.println("SHOW-----");
                         String text = "<b>Name :</b> " + json.getString("name") + "<br><br><b>Email :</b> " + json.getString("email") + "<br><br><b>Profile link :</b> " + json.getString("link");
-                        System.out.println(text);
+                        System.out.println(json.toString());
                         sendRequest(json.getString("name"), json.getString("email"));
                     }
 

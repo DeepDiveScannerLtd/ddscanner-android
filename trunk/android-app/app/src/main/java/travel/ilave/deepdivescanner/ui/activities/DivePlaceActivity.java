@@ -104,7 +104,8 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
                 LogUtils.i("response code is " + s.getStatus());
                 LogUtils.i("response body is " + responseString);
                 // TODO Handle result handling when activity stopped
-                responseString = responseString.replaceAll("\\\\", "");
+
+               // responseString = responseString.replaceAll("\\\\", "");
                 System.out.println(responseString);
                 divespotDetails = new Gson().fromJson(responseString, DivespotDetails.class);
                 toolbarSetting(divespotDetails.getDivespot().getName());
@@ -115,12 +116,10 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
             public void failure(RetrofitError error) {
                 LogUtils.i("failure Message is " + error.getMessage());
                 LogUtils.i("failure body is " + error.getBody());
-                if (error.getCause() instanceof SocketTimeoutException) {
-                    if (error.getKind().equals(RetrofitError.Kind.NETWORK)) {
-                        Toast.makeText(DivePlaceActivity.this, R.string.errorConnection, Toast.LENGTH_LONG);
-                    } else if (error.getKind().equals(RetrofitError.Kind.HTTP)) {
-                        Toast.makeText(DivePlaceActivity.this, R.string.serverNotResp, Toast.LENGTH_LONG);
-                    }
+                if (error.getKind().equals(RetrofitError.Kind.NETWORK)) {
+                    Toast.makeText(DivePlaceActivity.this, "Please check your internet connection", Toast.LENGTH_LONG).show();
+                } else if (error.getKind().equals(RetrofitError.Kind.HTTP)) {
+                    Toast.makeText(DivePlaceActivity.this, "Server is not responsible, please try later", Toast.LENGTH_LONG).show();
                 }
                 // TODO Handle result handling when activity stopped
                 // TODO Handle errors
