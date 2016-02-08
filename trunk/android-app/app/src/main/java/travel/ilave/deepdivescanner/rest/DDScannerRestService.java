@@ -16,6 +16,7 @@ import retrofit.http.Path;
 import retrofit.http.QueryMap;
 import travel.ilave.deepdivescanner.entities.Subscriber;
 import travel.ilave.deepdivescanner.entities.request.BookingRequest;
+import travel.ilave.deepdivescanner.entities.request.SubscribeRequest;
 import travel.ilave.deepdivescanner.entities.request.TravelerRequest;
 
 /**
@@ -32,7 +33,7 @@ public interface DDScannerRestService {
    /* @GET("/diving/product/{id}")
     void getProductById(@Path("id") String id, Callback<Response> callback);*/
 
-    @GET("diving/divecenters")
+    @GET("/diving/divecenters")
     void getDiveCenters(@QueryMap Map<String,String> map, Callback<Response> callback);
 
     @GET("/diving/divespot/{id}")
@@ -44,9 +45,8 @@ public interface DDScannerRestService {
     @GET("/diving/option/{id}/conditions")
     void getOfferConditions(@Path("id") String id, Callback<Response> callback);
 
-    @FormUrlEncoded
     @POST("/diving/subscribe")
-    void subscribe(@FieldMap Map<String,String> map, Callback<Response> callback);
+    void subscribe(@Body SubscribeRequest subscribeRequest, Callback<Response> callback);
 
 
     @Headers("Content-type: application/json")

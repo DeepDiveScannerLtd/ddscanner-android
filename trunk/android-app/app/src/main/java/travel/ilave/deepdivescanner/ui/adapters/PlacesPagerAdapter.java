@@ -74,6 +74,7 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Goo
                                 InfoWindowAdapter infoWindowAdapter = new InfoWindowAdapter(context, divespots, googleMap);
                                 googleMap.setInfoWindowAdapter(infoWindowAdapter);
                                 final double radiusMax = radius(googleMap.getCameraPosition().target, googleMap.getProjection().getVisibleRegion().latLngBounds.northeast);
+                                System.out.println("-------Radius------" + radiusMax);
                                 requestCityProducts(googleMap.getCameraPosition().target, radiusMax);
                             }
                         });
@@ -125,6 +126,12 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Goo
         map.put("lat", String.valueOf(center.latitude));
         map.put("lng", String.valueOf(center.longitude));
         map.put("radius", String.valueOf(radius));
+        if (filters.getCurrents() != null) {
+            map.put("currents", filters.getCurrents());
+        }
+        if (filters.getVisibility() != null) {
+            map.put("visibility", filters.getVisibility());
+        }
         RestClient.getServiceInstance().getDivespots(map, new Callback<Response>() {
             @Override
             public void success(Response s, Response response) {

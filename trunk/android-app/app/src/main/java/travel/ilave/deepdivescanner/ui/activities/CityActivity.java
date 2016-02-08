@@ -48,6 +48,7 @@ import travel.ilave.deepdivescanner.entities.Filters;
 import travel.ilave.deepdivescanner.services.RegistrationIntentService;
 import travel.ilave.deepdivescanner.ui.adapters.PlacesPagerAdapter;
 import travel.ilave.deepdivescanner.ui.dialogs.SubscribeDialog;
+import travel.ilave.deepdivescanner.utils.SharedPreferenceHelper;
 
 
 public class CityActivity extends AppCompatActivity {
@@ -168,10 +169,19 @@ public class CityActivity extends AppCompatActivity {
                 openSearchLocationWindow();
                 return true;
             case R.id.profile:
-                subscribeDialog.show(getFragmentManager(), "");
+                if (SharedPreferenceHelper.getIsUserLogined()) {
+                    Toast.makeText(this, "You are already login", Toast.LENGTH_LONG);
+                } else {
+                    SocialLogin.show(CityActivity.this);
+                }
                 return true;
             case R.id.logbook:
-                subscribeDialog.show(getFragmentManager(), "");
+                if (SharedPreferenceHelper.getIsUserLogined()) {
+                    Toast.makeText(this, "You are already login", Toast.LENGTH_LONG);
+                } else {
+                    SocialLogin.show(CityActivity.this);
+                }
+                //subscribeDialog.show(getFragmentManager(), "");
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

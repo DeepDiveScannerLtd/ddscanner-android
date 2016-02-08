@@ -30,6 +30,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 
 import java.net.SocketTimeoutException;
@@ -192,7 +193,9 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
 
     @Override
     public void onClick(View view) {
-        showDatePickerDialog();
+        LatLng latLng = new LatLng(Double.valueOf(diveSpot.getLat()), Double.valueOf(diveSpot.getLng()));
+        DiveCentersActivity.show(DivePlaceActivity.this, latLng);
+        //showDatePickerDialog();
     }
 
     public void showDatePickerDialog() {

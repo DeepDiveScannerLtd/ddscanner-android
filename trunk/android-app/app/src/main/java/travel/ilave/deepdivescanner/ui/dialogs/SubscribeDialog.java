@@ -62,7 +62,7 @@ public class SubscribeDialog extends DialogFragment implements View.OnClickListe
         return dialog;
     }
 
-    private void sendSubscribeRequest(Map<String, String> map) {
+   /* private void sendSubscribeRequest(Map<String, String> map) {
         RestClient.getServiceInstance().subscribe(map, new Callback<Response>() {
             @Override
             public void success(Response s, Response response) {
@@ -76,17 +76,17 @@ public class SubscribeDialog extends DialogFragment implements View.OnClickListe
                 System.out.println(error.getMessage());
             }
         });
-    }
+    }*/
 
     @Override
     public void onClick(View v) {
         switch(v.getId())
         {
             case R.id.okbutton_subscribe:
-                map.put("firstName", firstName.getText().toString());
+               /* map.put("firstName", firstName.getText().toString());
                 map.put("lastName", lastName.getText().toString());
                 map.put("email", eMail.getText().toString());
-                sendSubscribeRequest(map);
+                sendSubscribeRequest(map);*/
                 this.dismiss();
                 break;
             case R.id.cancel_button_subscribe:

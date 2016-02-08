@@ -40,13 +40,13 @@ public class DiveCentersListAdapter extends RecyclerView.Adapter<DiveCentersList
 
     @Override
     public void onBindViewHolder(DiveCentersListViewHolder diveCentersListViewHolder, int i) {
-        DiveCenter diveCenter = diveCenters.get(i);
+      //  DiveCenter diveCenter = diveCenters.get(i);
         //set texts
     }
 
     @Override
     public int getItemCount() {
-        return diveCenters.size();
+        return 3;
     }
 
     public static class DiveCentersListViewHolder extends RecyclerView.ViewHolder  {

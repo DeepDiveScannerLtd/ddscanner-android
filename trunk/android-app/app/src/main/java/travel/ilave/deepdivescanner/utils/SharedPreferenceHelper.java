@@ -27,6 +27,7 @@ public class SharedPreferenceHelper {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         Editor editor = prefs.edit();
         editor.putString("ISLOGINED", "1");
+        System.out.println("LOGINED");
         editor.commit();
     }
 

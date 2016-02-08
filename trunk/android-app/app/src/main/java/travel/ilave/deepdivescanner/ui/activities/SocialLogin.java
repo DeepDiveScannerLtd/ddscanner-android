@@ -51,6 +51,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 import travel.ilave.deepdivescanner.R;
+import travel.ilave.deepdivescanner.entities.request.SubscribeRequest;
 import travel.ilave.deepdivescanner.rest.RestClient;
 import travel.ilave.deepdivescanner.utils.SharedPreferenceHelper;
 
@@ -164,7 +165,6 @@ public class SocialLogin extends AppCompatActivity implements View.OnClickListen
                         String text = "<b>Name :</b> " + json.getString("name") + "<br><br><b>Email :</b> " + json.getString("email") + "<br><br><b>Profile link :</b> " + json.getString("link");
                         System.out.println(text);
                         sendRequest(json.getString("name"), json.getString("email"));
-                        firstLastname = json.getString("name").split(" ");
                     }
 
                 } catch (JSONException e) {
@@ -339,31 +339,34 @@ public class SocialLogin extends AppCompatActivity implements View.OnClickListen
 
                 });}
 
-    public static void show(Context context, LatLng latLng) {
+    public static void show(Context context) {
         Intent intent = new Intent(context, SocialLogin.class);
-        intent.putExtra("LATLNG", latLng);
         context.startActivity(intent);
     }
 
     private void sendRequest(String firstLastname, String email) {
         String[] firstlast = new String[2];
         firstlast = firstLastname.split(" ");
-        map.put("firstName", firstlast[0]);
-        map.put("lastName", firstlast[1]);
-        map.put("eMail", email);
-        RestClient.getServiceInstance().subscribe(map, new retrofit.Callback<Response>() {
+        SubscribeRequest subscribeRequest = new SubscribeRequest();
+        subscribeRequest.setFirstName(firstlast[0]);
+        subscribeRequest.setLastName(firstlast[1]);
+        subscribeRequest.seteMail(email);
+        subscribeRequest.setAppId("11");
+        RestClient.getServiceInstance().subscribe(subscribeRequest, new retrofit.Callback<Response>() {
             @Override
             public void success(Response s, Response response) {
                 String responseString = new String(((TypedByteArray) s.getBody()).getBytes());
                 System.out.println(s.getBody());
                 System.out.println(s.getStatus());
+                System.out.println("Request is sending");
                 SharedPreferenceHelper.setIsUserSignedIn(true);
                 onBackPressed();
             }
 
             @Override
             public void failure(RetrofitError error) {
-                System.out.println(error.getMessage());
+                System.out.println("FAIL");
+                System.out.println(error.getBody().toString());
             }
         });
     }

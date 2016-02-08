@@ -79,7 +79,7 @@ public class SubscribeActivity extends AppCompatActivity implements View.OnClick
         dialog.show();
     }
 
-    private void sendSubscribeRequest(Map<String, String> map) {
+   /* private void sendSubscribeRequest(Map<String, String> map) {
         RestClient.getServiceInstance().subscribe(map, new Callback<Response>() {
             @Override
             public void success(Response s, Response response) {
@@ -93,7 +93,7 @@ public class SubscribeActivity extends AppCompatActivity implements View.OnClick
                 System.out.println(error.getMessage());
             }
         });
-    }
+    }*/
 
     public static void show(Context context) {
         Intent intent = new Intent(context, SubscribeActivity.class);

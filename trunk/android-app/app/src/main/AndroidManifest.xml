@@ -59,6 +59,10 @@
             android:screenOrientation="portrait">
         </activity>
         <activity
+            android:name=".ui.activities.DiveCentersActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
             android:name=".ui.activities.SocialLogin"
             android:screenOrientation="portrait">
         </activity>

@@ -1,5 +1,6 @@
 package travel.ilave.deepdivescanner.ui.activities;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 
 
 import com.google.android.gms.maps.model.LatLng;
@@ -31,13 +33,13 @@ import travel.ilave.deepdivescanner.ui.adapters.DiveCentersPagerAdapter;
 public class DiveCentersActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
-    private RecyclerView recyclerView;
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private Divecenters divecenters = new Divecenters();
     private DiveCentersPagerAdapter diveCentersPagerAdapter;
     private LatLng latLng;
     private Map<String, String> map = new HashMap<String, String>();
+    private ProgressDialog progressDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,6 +73,9 @@ public class DiveCentersActivity extends AppCompatActivity {
     }
 
     private void requestDiveCenters(LatLng latLng) {
+        progressDialog = new ProgressDialog(DiveCentersActivity.this);
+        progressDialog.setMessage(getResources().getString(R.string.pleaseWait));
+        progressDialog.show();
         map.put("lat", String.valueOf(latLng.latitude));
         map.put("lng", String.valueOf(latLng.longitude));
         RestClient.getServiceInstance().getDiveCenters(map, new Callback<Response>() {
@@ -78,12 +83,14 @@ public class DiveCentersActivity extends AppCompatActivity {
             public void success(Response s, Response response) {
                 String responseString = new String(((TypedByteArray) s.getBody()).getBytes());
                 divecenters = new Gson().fromJson(responseString, Divecenters.class);
+
                 populateDiveCentesPager(divecenters);
+                progressDialog.dismiss();
             }
 
             @Override
             public void failure(RetrofitError error) {
-
+               System.out.println(error);
             }
         });
     }
