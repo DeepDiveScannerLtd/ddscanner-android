@@ -33,7 +33,7 @@ public interface DDScannerRestService {
    /* @GET("/diving/product/{id}")
     void getProductById(@Path("id") String id, Callback<Response> callback);*/
 
-    @GET("/diving/divecenters")
+    @GET("/diving/divecentres")
     void getDiveCenters(@QueryMap Map<String,String> map, Callback<Response> callback);
 
     @GET("/diving/divespot/{id}")

@@ -67,7 +67,7 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Goo
                         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 8.0f));
                         gMap = googleMap;
                         final double radiusMax = radius(googleMap.getCameraPosition().target, googleMap.getProjection().getVisibleRegion().latLngBounds.northeast);
-                        requestCityProducts(googleMap.getCameraPosition().target, radiusMax);
+                        requestCityProducts(googleMap.getProjection().getVisibleRegion().latLngBounds.southwest,googleMap.getProjection().getVisibleRegion().latLngBounds.northeast, googleMap.getCameraPosition().target);
                         googleMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
                             @Override
                             public void onCameraChange(CameraPosition cameraPosition) {
@@ -75,7 +75,7 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Goo
                                 InfoWindowAdapter infoWindowAdapter = new InfoWindowAdapter(context, divespots, googleMap);
                                 googleMap.setInfoWindowAdapter(infoWindowAdapter);
                                 final double radiusMax = radius(googleMap.getCameraPosition().target, googleMap.getProjection().getVisibleRegion().latLngBounds.northeast);
-                                requestCityProducts(googleMap.getCameraPosition().target, radiusMax);
+                                requestCityProducts(googleMap.getProjection().getVisibleRegion().latLngBounds.southwest,googleMap.getProjection().getVisibleRegion().latLngBounds.northeast, googleMap.getCameraPosition().target);
                             }
                         });
                     }
@@ -121,11 +121,12 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Goo
     public void onCameraChange(CameraPosition cameraPosition) {
     }
 
-    public void requestCityProducts(final LatLng center, Double radius) {
+    public void requestCityProducts(LatLng left, LatLng right, final LatLng center) {
         Map<String, String> map = new HashMap<String, String>();
-        map.put("lat", String.valueOf(center.latitude));
-        map.put("lng", String.valueOf(center.longitude));
-        map.put("radius", String.valueOf(radius));
+        map.put("latLeft", String.valueOf(left.latitude - 2.0));
+        map.put("lngLeft", String.valueOf(left.longitude - 1.0));
+        map.put("lngRight", String.valueOf(right.longitude + 1.0));
+        map.put("latRight", String.valueOf(right.latitude + 2.0));
 /*        if (filters.getCurrents() != null) {
             map.put("currents", filters.getCurrents());
         }
@@ -149,10 +150,12 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Goo
             @Override
             public void failure(RetrofitError error) {
                 if (error.getKind().equals(RetrofitError.Kind.NETWORK)) {
-                    Toast.makeText(context, "Please check your internet connection", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, "Please check your internet connection", Toast.LENGTH_SHORT).show();
                 } else if (error.getKind().equals(RetrofitError.Kind.HTTP)) {
-                    Toast.makeText(context, "Server is not responsible, please try later", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, "Server is not responsible, please try later", Toast.LENGTH_SHORT).show();
                 }
+                String json =  new String(((TypedByteArray)error.getResponse().getBody()).getBytes());
+                System.out.println("failure" + json.toString());
             }
         });
     }

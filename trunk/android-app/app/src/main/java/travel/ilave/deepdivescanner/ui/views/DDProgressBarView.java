@@ -41,10 +41,13 @@ public class DDProgressBarView extends View {
     private Path circleMovementPath = new Path();
     private PathMeasure movementPathMeasure;
 
-    private int progressBarLeftTopX;
-    private int progressBarLeftTopY;
+    private float progressBarLeftTopX;
+    private float progressBarLeftTopY;
     private float koefX = 1;
     private float koefY = 1;
+    private int mWidth;
+    private int mHeight;
+    private float mAngle;
 
     public DDProgressBarView(Context context) {
         super(context);
@@ -61,6 +64,15 @@ public class DDProgressBarView extends View {
         super(context, attrs, defStyleAttr);
 
         init(context);
+    }
+
+
+    @Override protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec)
+    {
+        mWidth = View.MeasureSpec.getSize(widthMeasureSpec);
+        mHeight = View.MeasureSpec.getSize(heightMeasureSpec);
+
+        setMeasuredDimension(mWidth, mHeight);
     }
 
     private void init(Context context) {
@@ -161,21 +173,28 @@ public class DDProgressBarView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), backgroundPaint);
-        canvas.drawBitmap(backgroundBitmap, progressBarLeftTopX, progressBarLeftTopY, paint);
+        int cx = (mWidth - backgroundBitmap.getWidth()) >> 1; // same as (...) / 2
+        int cy = (mHeight - backgroundBitmap.getHeight()) >> 1;
+
+        if (mAngle > 0) {
+            canvas.rotate(mAngle, mWidth >> 1, mHeight >> 1);
+        }
+        canvas.drawBitmap(backgroundBitmap, cx, cy, paint);
         //animate the sprite
         Matrix mxTransform = new Matrix();
         movementPathMeasure.getMatrix((Float) valueAnimator.getAnimatedValue(), mxTransform, PathMeasure.POSITION_MATRIX_FLAG);
         mxTransform.preTranslate(-circleBitmap.getWidth() / 2, -circleBitmap.getHeight() / 2);
         canvas.drawBitmap(circleBitmap, mxTransform, null);
-        canvas.scale(canvas.getWidth() / koefX, canvas.getHeight() / koefY);
-        canvas.translate(canvas.getWidth(), canvas.getHeight());
+       /* canvas.scale(canvas.getWidth(), canvas.getHeight());
+        canvas.translate(canvas.getWidth(), canvas.getHeight());*/
         invalidate();
     }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        koefX = (float)1920.0 / h;
-        koefY = (float)1080.0 / w;
+        koefY = (float)1920.0 / h;
+        koefX = (float)1080.0 / w;
+        System.out.println("Koef y = " + koefX + " Koef x = " + koefY + " Height = " + h);
        progressBarLeftTopX = (w - backgroundBitmap.getWidth()) / 2;
         progressBarLeftTopY = (h - backgroundBitmap.getHeight()) / 2;
         initOnSizeChanged();

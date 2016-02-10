@@ -26,6 +26,7 @@ public class FilterActivity extends AppCompatActivity {
 
     private RadioGroup rgLevel;
     private RadioGroup rgCurrents;
+    private RadioButton radioButton;
     private LatLng latLng;
     private RadioGroup rgVisibility;
     private Toolbar toolbar;
