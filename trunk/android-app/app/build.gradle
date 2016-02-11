@@ -71,4 +71,5 @@ dependencies {
     compile('com.twitter.sdk.android:twitter:1.12.0@aar') {
         transitive = true;
     }
+    compile('com.google.maps.android:android-maps-utils:0.3.4')
 }

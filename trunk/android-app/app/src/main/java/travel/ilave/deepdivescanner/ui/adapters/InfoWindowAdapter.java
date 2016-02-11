@@ -33,56 +33,57 @@ public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter, GoogleMap
     private ArrayList<DiveSpot> divespots;
     private TextView title;
     private TextView from;
-    private DiveSpot divespot;
+    private DiveSpot diveSpot;
     private GoogleMap googleMap;
-    private HashMap<Marker, DiveSpot> markersMap = new HashMap<>();
+    private HashMap<LatLng, DiveSpot> markersMap = new HashMap<>();
     private TextView description;
 
-    public InfoWindowAdapter(Context context, ArrayList<DiveSpot> prdct, GoogleMap map) {
-        divespots = prdct;
-        mContext = context;
-        googleMap = map;
+    public InfoWindowAdapter(Context context, ArrayList<DiveSpot> diveSpots, GoogleMap map) {
+        this.divespots = diveSpots;
+        this.mContext = context;
+        this.googleMap = map;
         googleMap.setOnInfoWindowClickListener(this);
         if (divespots != null) {
             for (DiveSpot divespot : divespots) {
+                System.out.println(divespot.getName());
                 LatLng place = new LatLng(Double.valueOf(divespot.getLat()), Double.valueOf(divespot.getLng()));
                 Marker marker = googleMap.addMarker(new MarkerOptions().position(place).icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_pin)));
-                markersMap.put(marker, divespot);
+                markersMap.put(place, divespot);
             }
         }
     }
 
     @Override
     public View getInfoWindow(Marker marker) {
-        divespot = markersMap.get(marker);
+
         inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         view = inflater.inflate(R.layout.info_window, null);
+        diveSpot = markersMap.get(marker.getPosition());
         description = ((TextView) view.findViewById(R.id.description_popup));
         title = ((TextView)view.findViewById(R.id.popup_product_name));
-       // from = ((TextView)view.findViewById(R.id.price1));
+        title.setText(diveSpot.getName());
+        description.setText(diveSpot.getDescription());
+        // from = ((TextView)view.findViewById(R.id.price1));
         LinearLayout stars = (LinearLayout) view.findViewById(R.id.stars);
-        /*title.setText(divespot.getName());
-        description.setText(divespot.getDescription());
-        for (int i = 0; i < divespot.getRating(); i++) {
+        for (int i = 0; i < diveSpot.getRating(); i++) {
             ImageView iv = new ImageView(mContext);
             iv.setImageResource(R.drawable.ic_flag_full_small);
             iv.setPadding(5,0,0,0);
             stars.addView(iv);
         }
-        for (int i = 0; i < 5 - divespot.getRating(); i++) {
+        for (int i = 0; i < 5 - diveSpot.getRating(); i++) {
             ImageView iv = new ImageView(mContext);
             iv.setImageResource(R.drawable.ic_flag_empty_small);
             iv.setPadding(5,0,0,0);
             stars.addView(iv);
         }
-        String price = String.valueOf("15");
-        from.setText(price);*/
         return view;
+
     }
 
     @Override
     public View getInfoContents(Marker marker) {
-        return null;
+       return null;
     }
 
     @Override
@@ -94,7 +95,7 @@ public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter, GoogleMap
     @Override
     public void onInfoWindowClick(Marker marker) {
         Intent i = new Intent(mContext, DivePlaceActivity.class);
-        i.putExtra(PRODUCT, markersMap.get(marker));
+        i.putExtra(PRODUCT, markersMap.get(marker.getPosition()).getId());
         mContext.startActivity(i);
     }
 

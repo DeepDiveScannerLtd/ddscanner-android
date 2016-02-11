@@ -39,7 +39,7 @@
         android:layout_below="@+id/descr"
         android:id="@+id/stars"
         android:gravity="center_vertical|center_horizontal"
-        android:layout_width="2600dp"
+        android:layout_width="260dp"
         android:layout_height="30dp"
         android:background="@color/white"
         android:orientation="horizontal"

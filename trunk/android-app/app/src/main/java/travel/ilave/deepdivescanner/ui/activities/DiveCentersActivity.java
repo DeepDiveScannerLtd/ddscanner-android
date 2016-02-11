@@ -27,6 +27,7 @@ import travel.ilave.deepdivescanner.R;
 import travel.ilave.deepdivescanner.entities.Divecenters;
 import travel.ilave.deepdivescanner.rest.RestClient;
 import travel.ilave.deepdivescanner.ui.adapters.DiveCentersPagerAdapter;
+import travel.ilave.deepdivescanner.ui.adapters.PlacesPagerAdapter;
 
 /**
  * Created by lashket on 29.1.16.
@@ -77,12 +78,13 @@ public class DiveCentersActivity extends AppCompatActivity {
         progressDialog = new ProgressDialog(DiveCentersActivity.this);
         progressDialog.setMessage(getResources().getString(R.string.pleaseWait));
         progressDialog.show();
-        map.put("lat", String.valueOf(latLng.latitude));
-        map.put("lng", String.valueOf(latLng.longitude));
+        map = PlacesPagerAdapter.getLastRequest();
+        System.out.println(map);
         RestClient.getServiceInstance().getDiveCenters(map, new Callback<Response>() {
             @Override
             public void success(Response s, Response response) {
                 String responseString = new String(((TypedByteArray) s.getBody()).getBytes());
+                System.out.println(responseString);
                 divecenters = new Gson().fromJson(responseString, Divecenters.class);
 
                 populateDiveCentesPager(divecenters);
@@ -96,6 +98,8 @@ public class DiveCentersActivity extends AppCompatActivity {
                 } else if (error.getKind().equals(RetrofitError.Kind.HTTP)) {
                     Toast.makeText(DiveCentersActivity.this, "Server is not responsible, please try later", Toast.LENGTH_LONG).show();
                 }
+                String json =  new String(((TypedByteArray)error.getResponse().getBody()).getBytes());
+                System.out.println("failure" + json.toString());
             }
         });
     }

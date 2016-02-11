@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -83,11 +85,11 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
         @Override
         public void onClick(View v) {
             Intent i = new Intent(context, DivePlaceActivity.class);
-            i.putExtra(PRODUCT, divespots.get(getPosition()));
+            i.putExtra(PRODUCT, divespots.get(getPosition()).getId());
             context.startActivity(i);
-            System.out.println(divespots.get(getPosition()).getName());
         }
     }
+
 
 
 }

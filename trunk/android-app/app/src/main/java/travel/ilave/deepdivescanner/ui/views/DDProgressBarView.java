@@ -179,7 +179,7 @@ public class DDProgressBarView extends View {
         if (mAngle > 0) {
             canvas.rotate(mAngle, mWidth >> 1, mHeight >> 1);
         }
-        canvas.drawBitmap(backgroundBitmap, cx, cy, paint);
+        canvas.drawBitmap(backgroundBitmap, progressBarLeftTopX, progressBarLeftTopY, paint);
         //animate the sprite
         Matrix mxTransform = new Matrix();
         movementPathMeasure.getMatrix((Float) valueAnimator.getAnimatedValue(), mxTransform, PathMeasure.POSITION_MATRIX_FLAG);

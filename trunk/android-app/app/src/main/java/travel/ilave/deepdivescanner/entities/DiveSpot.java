@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by lashket on 20.1.16.
  */
-public class DiveSpot implements Parcelable {
+public class DiveSpot implements  Serializable {
     private String id;
     private String name;
     private int rating;
@@ -17,7 +17,7 @@ public class DiveSpot implements Parcelable {
     private String lng;
     private List<String> images;
 
-    protected DiveSpot(android.os.Parcel in) {
+   /* protected DiveSpot(android.os.Parcel in) {
         id = in.readString();
         description = in.readString();
         rating = in.readInt();
@@ -36,7 +36,7 @@ public class DiveSpot implements Parcelable {
             return new DiveSpot[size];
         }
     };
-
+*/
     public String getId() {
         return id;
     }
@@ -85,7 +85,7 @@ public class DiveSpot implements Parcelable {
         this.description = description;
     }
 
-    @Override
+  /*  @Override
     public int describeContents() {
         return 0;
     }
@@ -98,6 +98,6 @@ public class DiveSpot implements Parcelable {
         dest.writeString(lat);
         dest.writeString(lng);
         dest.writeList(images);
-    }
+    }*/
 
 }

@@ -11,6 +11,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.android.clustering.ClusterManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,8 @@ public class DiveCentersPagerAdapter extends FragmentStatePagerAdapter {
     private Divecenters diveCenters;
     private ArrayList<DiveCenter> divecenters;
     private LatLng latLng;
+    private String logoPath;
+    private ClusterManager<MyItem> mClusterManager;
 
     public DiveCentersPagerAdapter(Context context, FragmentManager fm, Divecenters diveCenters, LatLng latLng) {
         super(fm);
@@ -40,6 +43,7 @@ public class DiveCentersPagerAdapter extends FragmentStatePagerAdapter {
     @Override
     public Fragment getItem(int position) {
         divecenters = (ArrayList<DiveCenter>)diveCenters.getDivecenters();
+        logoPath = diveCenters.getLogoPath();
         Fragment fragment = null;
         Bundle args = new Bundle();
         switch (position) {
@@ -49,12 +53,15 @@ public class DiveCentersPagerAdapter extends FragmentStatePagerAdapter {
                     @Override
                     public void onMapReady(GoogleMap googleMap) {
                         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 8.0f));
+                        googleMap.setInfoWindowAdapter(new DiveCentersInfoWindowAdapter(context, divecenters, googleMap, latLng, logoPath));
+                        googleMap.getUiSettings().setZoomControlsEnabled(true);
                     }
                 });
                 break;
             case 0:
                 fragment = new DiveCenterListFragment();
                 args.putParcelableArrayList("DIVESPOTS", divecenters);
+                args.putString("LOGOPATH", logoPath);
                 break;
         }
         fragment.setArguments(args);

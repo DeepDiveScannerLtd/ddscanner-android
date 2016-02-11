@@ -89,8 +89,8 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
        // toolbarSetting();
 
         book_now.setOnClickListener(this);
-        diveSpot = getIntent().getParcelableExtra(PRODUCT);
-        requestProductDetails(diveSpot.getId());
+//        diveSpot = getIntent().getParcelableExtra(PRODUCT);
+        requestProductDetails(getIntent().getStringExtra(PRODUCT));
     }
 
     private void requestProductDetails(String productId) {
@@ -148,7 +148,7 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void populateProductDetails() {
-        DiveSpot diveSpot = divespotDetails.getDivespot();
+        diveSpot = divespotDetails.getDivespot();
         System.out.println(diveSpot.getDescription());
         description.setText(diveSpot.getDescription());
 

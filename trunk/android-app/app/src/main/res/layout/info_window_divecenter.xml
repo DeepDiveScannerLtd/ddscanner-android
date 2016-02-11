@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="330dp"
-    android:layout_height="wrap_content"
-    android:background="@color/white">
+    android:orientation="vertical" android:layout_width="300dp"
+    android:layout_height="wrap_content">
     <RelativeLayout
-        android:layout_width="wrap_content"
+        android:background="@color/white"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:padding="20dp">
+        android:padding="10dp">
         <ImageView
             android:id="@+id/iw_dc_avatar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/dc_avatar"/>
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/dc_avatar_empty" />
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/iw_dc_name"
             android:layout_width="wrap_content"
@@ -54,12 +54,13 @@
             android:layout_height="wrap_content">
         <ImageView
             android:id="@+id/ic_phone"
+            android:layout_marginTop="3dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_phone"/>
         <android.support.v7.widget.AppCompatTextView
             android:layout_toRightOf="@+id/ic_phone"
-            android:id="@+id/dc_telefon"
+            android:id="@+id/iw_dc_telefon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:inputType="phone"
@@ -67,23 +68,7 @@
             android:layout_marginLeft="5dp"
             android:textColor="@color/black_text"
             android:text="+67 49 299 4825"/>
-        <ImageView
-            android:id="@+id/dc_ic_mail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_mail"
-            android:layout_below="@+id/dc_telefon"
-            android:layout_marginTop="10dp"/>
-        <android.support.v7.widget.AppCompatTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="lashket@gmail.com"
-            android:textSize="18sp"
-            android:layout_marginLeft="5dp"
-            android:layout_toRightOf="@+id/dc_ic_mail"
-            android:layout_below="@+id/dc_telefon"
-            android:layout_marginTop="8dp"
-            android:textColor="@color/black_text"/>
+
         </RelativeLayout>
     </RelativeLayout>
 </RelativeLayout>

@@ -43,6 +43,7 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Goo
     private PlacesPagerAdapter placesPagerAdapter;
     private DivespotsWrapper divespotsWrapper;
     private static ArrayList<DiveSpot> divespots;
+    private static Map<String, String> map = new HashMap<String, String>();
     private static GoogleMap gMap;
     private Filters filters;
 
@@ -71,7 +72,7 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Goo
                         googleMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
                             @Override
                             public void onCameraChange(CameraPosition cameraPosition) {
-                                googleMap.clear();
+                               // googleMap.clear();
                                 InfoWindowAdapter infoWindowAdapter = new InfoWindowAdapter(context, divespots, googleMap);
                                 googleMap.setInfoWindowAdapter(infoWindowAdapter);
                                 final double radiusMax = radius(googleMap.getCameraPosition().target, googleMap.getProjection().getVisibleRegion().latLngBounds.northeast);
@@ -122,7 +123,6 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Goo
     }
 
     public void requestCityProducts(LatLng left, LatLng right, final LatLng center) {
-        Map<String, String> map = new HashMap<String, String>();
         map.put("latLeft", String.valueOf(left.latitude - 2.0));
         map.put("lngLeft", String.valueOf(left.longitude - 1.0));
         map.put("lngRight", String.valueOf(right.longitude + 1.0));
@@ -163,4 +163,6 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Goo
     public static LatLng getLastLatlng() {
         return gMap.getCameraPosition().target;
     }
+
+    public static Map<String, String> getLastRequest() { return map; }
 }
