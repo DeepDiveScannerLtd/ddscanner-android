@@ -30,6 +30,7 @@ import travel.ilave.deepdivescanner.R;
 import travel.ilave.deepdivescanner.entities.DiveSpot;
 import travel.ilave.deepdivescanner.entities.DivespotsWrapper;
 import travel.ilave.deepdivescanner.entities.Filters;
+import travel.ilave.deepdivescanner.listeners.MultiListener;
 import travel.ilave.deepdivescanner.rest.RestClient;
 import travel.ilave.deepdivescanner.ui.fragments.ProductListFragment;
 import travel.ilave.deepdivescanner.utils.LogUtils;
@@ -136,7 +137,6 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Goo
         RestClient.getServiceInstance().getDivespots(map, new Callback<Response>() {
             @Override
             public void success(Response s, Response response) {
-                System.out.println(response.getBody());
                 String responseString = new String(((TypedByteArray) s.getBody()).getBytes());
                 LogUtils.i("response code is " + s.getStatus());
                 LogUtils.i("response body is " + responseString);

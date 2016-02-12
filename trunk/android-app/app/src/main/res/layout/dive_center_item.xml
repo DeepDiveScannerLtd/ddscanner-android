@@ -55,6 +55,7 @@
         android:layout_toRightOf="@+id/dc_avatar"
         android:layout_below="@+id/dc_address"
         android:layout_marginLeft="10dp"
+        android:layout_marginTop="3dp"
         android:src="@drawable/ic_phone"/>
     <android.support.v7.widget.AppCompatTextView
         android:layout_toRightOf="@+id/ic_phone"
@@ -67,30 +68,12 @@
         android:layout_marginLeft="5dp"
         android:textColor="@color/black_text"
         android:text="+67 49 299 4825"/>
-    <ImageView
-        android:id="@+id/dc_ic_mail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_mail"
-        android:layout_toRightOf="@+id/dc_avatar"
-        android:layout_below="@+id/dc_telefon"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"/>
-    <android.support.v7.widget.AppCompatTextView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="lashket@gmail.com"
-    android:textSize="18sp"
-    android:layout_marginLeft="5dp"
-    android:layout_toRightOf="@+id/dc_ic_mail"
-    android:layout_below="@+id/dc_telefon"
-    android:layout_marginTop="8dp"
-    android:textColor="@color/black_text"/>
+
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/dc_avatar"
-        android:layout_below="@+id/dc_ic_mail"
+        android:layout_below="@+id/dc_telefon"
         android:src="@drawable/divider"
         android:layout_marginTop="10dp"/>
 
