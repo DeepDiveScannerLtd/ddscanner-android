@@ -73,4 +73,5 @@ dependencies {
     }
     compile('com.google.maps.android:android-maps-utils:0.3.4')
     compile 'com.firebase:firebase-client-android:2.5.0+'
+    compile 'org.twitter4j:twitter4j-core:4.0.2'
 }
