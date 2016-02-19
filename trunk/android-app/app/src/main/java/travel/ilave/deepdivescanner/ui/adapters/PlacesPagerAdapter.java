@@ -49,7 +49,6 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Goo
     private ClusterManager<MyItem> mClusterManager;
     private static GoogleMap gMap;
     private Filters filters;
-    private MultiListener multiListener;
 
     public PlacesPagerAdapter(Context context, FragmentManager fm, ArrayList<DiveSpot> divespots, LatLng latLng, Filters filters) {
         super(fm);
@@ -143,7 +142,6 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Goo
         RestClient.getServiceInstance().getDivespots(map, new Callback<Response>() {
             @Override
             public void success(Response s, Response response) {
-                System.out.println(response.getBody());
                 String responseString = new String(((TypedByteArray) s.getBody()).getBytes());
                 LogUtils.i("response code is " + s.getStatus());
                 LogUtils.i("response body is " + responseString);

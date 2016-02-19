@@ -1,6 +1,5 @@
 package travel.ilave.deepdivescanner.rest;
 
-import com.facebook.CallbackManager;
 
 import java.util.Map;
 

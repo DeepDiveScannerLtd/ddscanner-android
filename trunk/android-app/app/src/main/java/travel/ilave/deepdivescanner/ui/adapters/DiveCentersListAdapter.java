@@ -49,19 +49,16 @@ public class DiveCentersListAdapter extends RecyclerView.Adapter<DiveCentersList
 
     @Override
     public void onBindViewHolder(DiveCentersListViewHolder diveCentersListViewHolder, int i) {
+        int rating = 0;
         DiveCenter diveCenter = diveCenters.get(i);
-        //set texts
         diveCentersListViewHolder.dcName.setText(diveCenter.getName());
         diveCentersListViewHolder.dcPhone.setText(diveCenter.getPhone());
         diveCentersListViewHolder.dcAddress.setText(diveCenter.getAddress());
         if(diveCenter.getLogo() != null) {
             String imageUrlPath = logoPath + diveCenter.getLogo();
             Picasso.with(context).load(imageUrlPath).into(diveCentersListViewHolder.imgLogo);
-           // diveCentersListViewHolder.imgLogo.setImageURI(Uri.parse(imageUrl));
         }
-       // int rating = (int)Math.round(diveCenter.getRating());
-        //if (rating > 5 ) { rating = 0; }
-        int rating = 5;
+        rating = Math.round(diveCenter.getRating());
         for (int k = 0; k < rating; k++) {
             System.out.println(Math.round(diveCenter.getRating()));
             ImageView iv = new ImageView(context);

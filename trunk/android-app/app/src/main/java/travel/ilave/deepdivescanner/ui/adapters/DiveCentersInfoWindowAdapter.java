@@ -47,6 +47,7 @@ public class DiveCentersInfoWindowAdapter implements GoogleMap.InfoWindowAdapter
         this.diveSiteCoordinates = diveSiteCoordinates;
         mClusterManager = new ClusterManager<MyItem>(context, googleMap);
         mClusterManager.setRenderer(new OwnIconRendered(context, googleMap, mClusterManager));
+
         googleMap.setOnCameraChangeListener(mClusterManager);
         googleMap.setOnMarkerClickListener(mClusterManager);
         for(DiveCenter diveCenter : diveCenters) {
@@ -56,6 +57,7 @@ public class DiveCentersInfoWindowAdapter implements GoogleMap.InfoWindowAdapter
             MyItem offsetItem = new MyItem(latLng.latitude, latLng.longitude);
             markersMap.put(latLng, diveCenter);
             mClusterManager.addItem(offsetItem);
+
 
         }
       diveSpotMarker = googleMap.addMarker(new MarkerOptions().position(diveSiteCoordinates).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_ds)));

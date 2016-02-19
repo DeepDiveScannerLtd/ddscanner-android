@@ -1,16 +1,27 @@
+<<<<<<< HEAD
+=======
+
+>>>>>>> dcea8f6191af00bb9ad07d71065968846daf6e57
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/bg_photo"
+<<<<<<< HEAD
     android:orientation="vertical">
 <RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+=======
+    tools:context=".MainActivity">
+
+
+>>>>>>> dcea8f6191af00bb9ad07d71065968846daf6e57
 
     >
     <ImageView
+<<<<<<< HEAD
         android:layout_marginTop="100dp"
         android:layout_width="match_parent"
         android:layout_height="170dp"
@@ -48,5 +59,19 @@
         android:layout_width="300dp"
         android:layout_height="50dp" />
 </RelativeLayout>
+=======
+        android:id="@+id/picture"
+        android:src="@drawable/login_logo"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="40dp"
+        android:layout_width="match_parent"
+        android:layout_height="200sp"/>
+    <com.twitter.sdk.android.core.identity.TwitterLoginButton
+        android:id="@+id/twitter_login_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_centerInParent="true"/>
+>>>>>>> dcea8f6191af00bb9ad07d71065968846daf6e57
 
 </RelativeLayout>
