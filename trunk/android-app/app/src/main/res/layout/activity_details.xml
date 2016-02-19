@@ -211,8 +211,10 @@
                         android:text="High" />
 
                 </LinearLayout>
+
             </RelativeLayout>
             <TextView
+                android:id="@+id/sealife"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
@@ -223,14 +225,20 @@
                 android:textSize="15sp"
                 android:textStyle="bold"
                 />
-
-            <GridView
-                android:id="@+id/usage_example_gridview"
-                xmlns:android="http://schemas.android.com/apk/res/android"
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            <android.support.v7.widget.RecyclerView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:numColumns="5"
-                android:clickable="false" />
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                android:id="@+id/sealife_rc"></android.support.v7.widget.RecyclerView>
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="80dp"
+                    android:src="@drawable/sealife_right_shadow"
+                    android:layout_alignParentRight="true"/>
+            </RelativeLayout>
             <RelativeLayout
                 android:padding="15dp"
                 android:layout_width="match_parent"

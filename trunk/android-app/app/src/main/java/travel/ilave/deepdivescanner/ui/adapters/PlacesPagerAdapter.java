@@ -16,6 +16,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
+import com.google.maps.android.clustering.ClusterManager;
 
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
+import travel.ilave.deepdivescanner.MultiListener;
 import travel.ilave.deepdivescanner.R;
 import travel.ilave.deepdivescanner.entities.DiveSpot;
 import travel.ilave.deepdivescanner.entities.DivespotsWrapper;
@@ -44,8 +46,10 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Goo
     private DivespotsWrapper divespotsWrapper;
     private static ArrayList<DiveSpot> divespots;
     private static Map<String, String> map = new HashMap<String, String>();
+    private ClusterManager<MyItem> mClusterManager;
     private static GoogleMap gMap;
     private Filters filters;
+    private MultiListener multiListener;
 
     public PlacesPagerAdapter(Context context, FragmentManager fm, ArrayList<DiveSpot> divespots, LatLng latLng, Filters filters) {
         super(fm);
@@ -65,6 +69,10 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Goo
                 ((MapFragment) fragment).getMapAsync(new OnMapReadyCallback() {
                     @Override
                     public void onMapReady(final GoogleMap googleMap) {
+                        if (latLng.longitude == 0 && latLng.longitude == 0) {
+                            latLng = new LatLng(14,14);
+                        }
+
                         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 8.0f));
                         gMap = googleMap;
                         final double radiusMax = radius(googleMap.getCameraPosition().target, googleMap.getProjection().getVisibleRegion().latLngBounds.northeast);
@@ -75,7 +83,6 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Goo
                                // googleMap.clear();
                                 InfoWindowAdapter infoWindowAdapter = new InfoWindowAdapter(context, divespots, googleMap);
                                 googleMap.setInfoWindowAdapter(infoWindowAdapter);
-                                final double radiusMax = radius(googleMap.getCameraPosition().target, googleMap.getProjection().getVisibleRegion().latLngBounds.northeast);
                                 requestCityProducts(googleMap.getProjection().getVisibleRegion().latLngBounds.southwest,googleMap.getProjection().getVisibleRegion().latLngBounds.northeast, googleMap.getCameraPosition().target);
                             }
                         });
@@ -154,14 +161,18 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Goo
                 } else if (error.getKind().equals(RetrofitError.Kind.HTTP)) {
                     Toast.makeText(context, "Server is not responsible, please try later", Toast.LENGTH_SHORT).show();
                 }
-                String json =  new String(((TypedByteArray)error.getResponse().getBody()).getBytes());
-                System.out.println("failure" + json.toString());
+//                String json =  new String(((TypedByteArray)error.getResponse().getBody()).getBytes());
+              //  System.out.println("failure" + json.toString());
             }
         });
     }
 
     public static LatLng getLastLatlng() {
-        return gMap.getCameraPosition().target;
+        if (gMap == null) {
+            return null;
+        } else {
+            return gMap.getCameraPosition().target;
+        }
     }
 
     public static Map<String, String> getLastRequest() { return map; }

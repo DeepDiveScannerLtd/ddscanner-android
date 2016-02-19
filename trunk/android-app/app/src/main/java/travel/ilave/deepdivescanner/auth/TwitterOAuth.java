@@ -9,6 +9,7 @@ import android.util.Log;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import travel.ilave.deepdivescanner.DDScannerApplication;
 import travel.ilave.deepdivescanner.R;
 import travel.ilave.deepdivescanner.ui.activities.SocialLogin;
 import twitter4j.Twitter;
@@ -32,8 +33,10 @@ public class TwitterOAuth extends Activity {
 
         // setup twitter client
         mTwitter = new TwitterFactory(new ConfigurationBuilder()
-                .setOAuthConsumerKey(getResources().getString(R.string.twitter_consumer_key))
-                .setOAuthConsumerSecret(getResources().getString(R.string.twitter_consumer_secret))
+                .setOAuthConsumerKey(DDScannerApplication.TWITTER_KEY)
+                .setOAuthConsumerSecret(DDScannerApplication.TWITTER_SECRET)
+               // .setOAuthAccessToken("262839527-nZvvEWdTD8nKKmTNGY0tn5UXmO7RnZfmkroOdRr6")
+               // .setOAuthAccessTokenSecret("KCl4AbgsRgSTHWqXXB1JtJg3rCuJ9wMzSc8O7BjC4gJWB")
                 .build()).getInstance();
 
         // setup twitter webview
@@ -54,7 +57,8 @@ public class TwitterOAuth extends Activity {
             protected RequestToken doInBackground(Void... params) {
                 RequestToken token = null;
                 try {
-                    token = mTwitter.getOAuthRequestToken("oauth://cb");
+                    token = mTwitter.getOAuthRequestToken("twitterapp://connect");
+                    System.out.println(token);
                 } catch (TwitterException te) {
                     Log.e(TAG, te.toString());
                 }
@@ -66,8 +70,9 @@ public class TwitterOAuth extends Activity {
                 mTwitterView.setWebViewClient(new WebViewClient() {
                     @Override
                     public void onPageFinished(final WebView view, final String url) {
-                        if (url.startsWith("oauth://cb")) {
+                        if (url.startsWith("twitterapp://connect")) {
                             getTwitterOAuthTokenAndLogin(token, Uri.parse(url).getQueryParameter("oauth_verifier"));
+                            System.out.println(Uri.parse(url).toString());
                         }
                     }
                 });

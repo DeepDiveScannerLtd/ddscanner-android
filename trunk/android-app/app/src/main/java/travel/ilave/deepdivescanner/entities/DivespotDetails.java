@@ -13,7 +13,7 @@ public class DivespotDetails {
     private String sealifePathSmall;
     private String sealifePathMedium;
     private String sealifePathOrigin;
-    private DiveSpot divespot;
+    private DiveSpotFull divespot;
     private List<Sealife> sealifes;
 
     public String getDiveSpotPathSmall() { return diveSpotPathSmall; }
@@ -40,9 +40,9 @@ public class DivespotDetails {
 
     public void setSealifePathOrigin(String sealifePathOrigin) { this.sealifePathOrigin = sealifePathOrigin; }
 
-    public DiveSpot getDivespot() { return divespot; }
+    public DiveSpotFull getDivespot() { return divespot; }
 
-    public void setDivespotFull(DiveSpot divespot) { this.divespot = divespot; }
+    public void setDivespotFull(DiveSpotFull divespot) { this.divespot = divespot; }
 
     public List<Sealife> getSealifes() { return sealifes; }
 

@@ -98,11 +98,10 @@ public class CityActivity extends AppCompatActivity {
                 startService(intent);
             }
             populatePlaceViewpager(latLng);
-            getSupportActionBar().setTitle(getCity(latLng));
+
             floatingActionButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    finish();
                     FilterActivity.show(CityActivity.this, PlacesPagerAdapter.getLastLatlng());
                 }
             });
@@ -269,5 +268,14 @@ public class CityActivity extends AppCompatActivity {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (PlacesPagerAdapter.getLastLatlng() != null) {
+            populatePlaceViewpager(PlacesPagerAdapter.getLastLatlng());
+        }
+        System.out.println("resumed");
     }
 }

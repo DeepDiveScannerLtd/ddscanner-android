@@ -12,6 +12,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
 import com.squareup.picasso.Picasso;
@@ -36,6 +37,7 @@ public class DiveCentersInfoWindowAdapter implements GoogleMap.InfoWindowAdapter
     private HashMap<LatLng, DiveCenter> markersMap = new HashMap<>();
     private ClusterManager<MyItem> mClusterManager;
     private String logoPath;
+    private Marker diveSpotMarker;
 
     public DiveCentersInfoWindowAdapter(Context context, ArrayList<DiveCenter> diveCenters, GoogleMap googleMap, LatLng diveSiteCoordinates, String logoPath) {
         this.context = context;
@@ -44,6 +46,7 @@ public class DiveCentersInfoWindowAdapter implements GoogleMap.InfoWindowAdapter
         this.diveCenters = diveCenters;
         this.diveSiteCoordinates = diveSiteCoordinates;
         mClusterManager = new ClusterManager<MyItem>(context, googleMap);
+        mClusterManager.setRenderer(new OwnIconRendered(context, googleMap, mClusterManager));
         googleMap.setOnCameraChangeListener(mClusterManager);
         googleMap.setOnMarkerClickListener(mClusterManager);
         for(DiveCenter diveCenter : diveCenters) {
@@ -55,7 +58,7 @@ public class DiveCentersInfoWindowAdapter implements GoogleMap.InfoWindowAdapter
             mClusterManager.addItem(offsetItem);
 
         }
-        Marker diveSpotMarker = googleMap.addMarker(new MarkerOptions().position(diveSiteCoordinates).icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_pin)));
+      diveSpotMarker = googleMap.addMarker(new MarkerOptions().position(diveSiteCoordinates).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_ds)));
 
 
     }
@@ -72,7 +75,10 @@ public class DiveCentersInfoWindowAdapter implements GoogleMap.InfoWindowAdapter
         DiveCenter dc = markersMap.get(marker.getPosition());
         if(dc.getLogo() != null) {
             String imageUrlPath = logoPath + dc.getLogo();
-            Picasso.with(context).load(imageUrlPath).into(logo);
+            try {
+                Picasso.with(context).load(imageUrlPath).into(logo);
+            } catch(Exception e){
+            }
             // diveCentersListViewHolder.imgLogo.setImageURI(Uri.parse(imageUrl));
         }
         dc_name.setText(dc.getName());
@@ -97,7 +103,11 @@ public class DiveCentersInfoWindowAdapter implements GoogleMap.InfoWindowAdapter
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        marker.showInfoWindow();
+        if(marker == diveSpotMarker) {
+            return true;
+        } else {
+            marker.showInfoWindow();
+        }
         return true;
     }
 
@@ -105,7 +115,6 @@ public class DiveCentersInfoWindowAdapter implements GoogleMap.InfoWindowAdapter
     public View getInfoContents(Marker marker) {
         return null;
     }
-
 
 }
 

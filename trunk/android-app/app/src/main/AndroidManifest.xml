@@ -67,6 +67,16 @@
             android:screenOrientation="portrait">
         </activity>
         <activity
+            android:name=".auth.TwitterOAuth"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="twitterapp" android:host="connect" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".ui.activities.CityActivity"
             android:screenOrientation="portrait" />
         <activity
@@ -74,6 +84,9 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activities.OffersActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activities.SealifeDetails"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activities.ConditionsActivity"

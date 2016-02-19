@@ -1,374 +1,499 @@
 package travel.ilave.deepdivescanner.ui.activities;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
-import android.support.v7.app.AppCompatActivity;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.facebook.AccessToken;
+import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
-import com.facebook.HttpMethod;
 import com.facebook.login.LoginManager;
-import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.firebase.client.AuthData;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.google.android.gms.auth.GoogleAuthException;
+import com.google.android.gms.auth.GoogleAuthUtil;
+import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.OptionalPendingResult;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.maps.model.LatLng;
-import com.twitter.sdk.android.Twitter;
-import com.twitter.sdk.android.core.Callback;
-import com.twitter.sdk.android.core.Result;
-import com.twitter.sdk.android.core.TwitterAuthConfig;
-import com.twitter.sdk.android.core.TwitterException;
-import com.twitter.sdk.android.core.TwitterSession;
-import com.twitter.sdk.android.core.identity.TwitterLoginButton;
-import com.twitter.sdk.android.core.models.User;
+import com.google.android.gms.plus.Plus;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.fabric.sdk.android.Fabric;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
-import retrofit.mime.TypedByteArray;
 import travel.ilave.deepdivescanner.R;
-import travel.ilave.deepdivescanner.entities.request.SubscribeRequest;
-import travel.ilave.deepdivescanner.rest.RestClient;
-import travel.ilave.deepdivescanner.utils.SharedPreferenceHelper;
+import travel.ilave.deepdivescanner.auth.TwitterOAuth;
 
-public class SocialLogin extends AppCompatActivity implements View.OnClickListener{
 
-    private String[] firstLastname = new String[2];
-    private Map<String,String> map = new HashMap<String, String>();
-    private static final String TAG = "SignInActivity";
+public class SocialLogin extends ActionBarActivity implements
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener {
 
-    /* For google plus */
+    private static final String TAG = SocialLogin.class.getSimpleName();
+
+    /* *************************************
+     *              GENERAL                *
+     ***************************************/
+    /* TextView that is used to display information about the logged in user */
+    private TextView mLoggedInStatusTextView;
+
+    /* A dialog that is presented until the Firebase authentication finished. */
+    private ProgressDialog mAuthProgressDialog;
+
+    /* A reference to the Firebase */
+    private Firebase mFirebaseRef;
+
+    /* Data from the authenticated user */
+    private AuthData mAuthData;
+
+    /* Listener for Firebase session changes */
+    private Firebase.AuthStateListener mAuthStateListener;
+
+    /* *************************************
+     *              FACEBOOK               *
+     ***************************************/
+    /* The login button for Facebook */
+    private LoginButton mFacebookLoginButton;
+    /* The callback manager for Facebook */
+    private CallbackManager mFacebookCallbackManager;
+    /* Used to track user logging in/out off Facebook */
+    private AccessTokenTracker mFacebookAccessTokenTracker;
+
+
+    /* *************************************
+     *              GOOGLE                 *
+     ***************************************/
+    /* Request code used to invoke sign in user interactions for Google+ */
+    public static final int RC_GOOGLE_LOGIN = 1;
+
+    /* Client used to interact with Google APIs. */
     private GoogleApiClient mGoogleApiClient;
-    private SignInButton signInButton;
-    private ProgressDialog mProgressDialog;
-    /* For facebook */
-    private CallbackManager callbackManager;
-    private LoginButton login;
-    /*Twitter*/
-    private TwitterLoginButton twitterLoginButton;
-    private TwitterSession session;
+
+    /* A flag indicating that a PendingIntent is in progress and prevents us from starting further intents. */
+    private boolean mGoogleIntentInProgress;
+
+    /* Track whether the sign-in button has been clicked so that we know to resolve all issues preventing sign-in
+     * without waiting. */
+    private boolean mGoogleLoginClicked;
+
+    /* Store the connection result from onConnectionFailed callbacks so that we can resolve them when the user clicks
+     * sign-in. */
+    private ConnectionResult mGoogleConnectionResult;
+
+    /* The login button for Google */
+    private SignInButton mGoogleLoginButton;
+
+    /* *************************************
+     *              TWITTER                *
+     ***************************************/
+    public static final int RC_TWITTER_LOGIN = 2;
+
+    private Button mTwitterLoginButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FacebookSdk.sdkInitialize(getApplicationContext());
+        /* Load the view and display it */
         setContentView(R.layout.activity_social_login);
 
-        /*Google*/
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
-                    @Override
-                    public void onConnectionFailed(ConnectionResult connectionResult) {
+        /* *************************************
+         *              FACEBOOK               *
+         ***************************************/
+        /* Load the Facebook login button and set up the tracker to monitor access token changes */
+        mFacebookCallbackManager = CallbackManager.Factory.create();
+        mFacebookLoginButton = (LoginButton) findViewById(R.id.login_with_facebook);
+        mFacebookAccessTokenTracker = new AccessTokenTracker() {
+            @Override
+            protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
+                Log.i(TAG, "Facebook.AccessTokenTracker.OnCurrentAccessTokenChanged");
+                SocialLogin.this.onFacebookAccessTokenChange(currentAccessToken);
+            }
+        };
 
-                    }
-                })
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
-        signInButton = (SignInButton) findViewById(R.id.google_signin_button);
-        signInButton.setSize(SignInButton.SIZE_WIDE);
-        signInButton.setScopes(gso.getScopeArray());
-        signInButton.setOnClickListener(this);
-        findViewById(R.id.sign_out_button).setOnClickListener(this);
-
-        /*Facebook*/
-        callbackManager = CallbackManager.Factory.create();
-        login = (LoginButton) findViewById(R.id.facebook_login_button);
-        login.setReadPermissions("public_profile email");
-        if (AccessToken.getCurrentAccessToken() != null) {
-            RequestData();
-        }
-        login.setOnClickListener(new View.OnClickListener() {
+        /* *************************************
+         *               GOOGLE                *
+         ***************************************/
+        /* Load the Google login button */
+        mGoogleLoginButton = (SignInButton) findViewById(R.id.login_with_google);
+        mGoogleLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (AccessToken.getCurrentAccessToken() != null) {
-                    System.out.println(AccessToken.getCurrentAccessToken());
-                    disconnectFromFacebook();
-                }
-            }
-        });
-        login.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-
-                if (AccessToken.getCurrentAccessToken() != null) {
-                    RequestData();
-                }
-            }
-
-            @Override
-            public void onCancel() {
-
-            }
-
-            @Override
-            public void onError(FacebookException exception) {
-            }
-        });
-
-        /*Twitter*/
-        TwitterAuthConfig authConfig = new TwitterAuthConfig("tT7PhwjwXb8dEXbhQzI529VR4", "C4wijpAOBWWwUVsmtyoMEhWUQD5P6BFulUDTVQGQmrJI32BlaT");
-        System.out.println(authConfig);
-        Fabric.with(this, new Twitter(authConfig));
-        twitterLoginButton = (TwitterLoginButton) findViewById(R.id.twitter_login_button);
-        twitterLoginButton.setCallback(new Callback<TwitterSession>() {
-            @Override
-            public void success(Result<TwitterSession> result) {
-                System.out.println("Twitter Success");
-                System.out.println(result.data.getUserName());
-                sendRequest(result.data.getUserName(), "");
-                session = result.data;
-                getUserData();
-            }
-
-            @Override
-            public void failure(TwitterException e) {
-                System.out.println("Twitter fail" + e);
-            }
-        });
-    }
-    /*Facebook*/
-    public void RequestData() {
-        GraphRequest request = GraphRequest.newMeRequest(AccessToken.getCurrentAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
-            @Override
-            public void onCompleted(JSONObject object, GraphResponse response) {
-
-                JSONObject json = response.getJSONObject();
-                try {
-                    if (json != null) {
-                        System.out.println("SHOW-----");
-                        String text = "<b>Name :</b> " + json.getString("name") + "<br><br><b>Email :</b> " + json.getString("email") + "<br><br><b>Profile link :</b> " + json.getString("link");
-                        System.out.println(json.toString());
-                        sendRequest(json.getString("name"), json.getString("email"));
+                mGoogleLoginClicked = true;
+                if (!mGoogleApiClient.isConnecting()) {
+                    if (mGoogleConnectionResult != null) {
+                        resolveSignInError();
+                    } else if (mGoogleApiClient.isConnected()) {
+                        getGoogleOAuthTokenAndLogin();
+                    } else {
+                    /* connect API now */
+                        Log.d(TAG, "Trying to connect to Google API");
+                        mGoogleApiClient.connect();
                     }
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
                 }
             }
         });
+        /* Setup the Google API object to allow Google+ logins */
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(Plus.API)
+                .addScope(Plus.SCOPE_PLUS_LOGIN)
+                .build();
+
+        /* *************************************
+         *                TWITTER              *
+         ***************************************/
+        mTwitterLoginButton = (Button) findViewById(R.id.login_with_twitter);
+        mTwitterLoginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loginWithTwitter();
+            }
+        });
+
+
+        /* *************************************
+         *               GENERAL               *
+         ***************************************/
+        mLoggedInStatusTextView = (TextView) findViewById(R.id.login_status);
+
+        /* Create the Firebase ref that is used for all authentication with Firebase */
+        mFirebaseRef = new Firebase(getResources().getString(R.string.firebase_url));
+
+        /* Setup the progress dialog that is displayed later when authenticating with Firebase */
+        mAuthProgressDialog = new ProgressDialog(this);
+        mAuthProgressDialog.setTitle("Loading");
+        mAuthProgressDialog.setMessage("Authenticating");
+        mAuthProgressDialog.setCancelable(false);
+        mAuthProgressDialog.show();
+
+        mAuthStateListener = new Firebase.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(AuthData authData) {
+                mAuthProgressDialog.hide();
+                setAuthenticatedUser(authData);
+            }
+        };
+        /* Check if the user is authenticated with Firebase already. If this is the case we can set the authenticated
+         * user and hide hide any login buttons */
+        mFirebaseRef.addAuthStateListener(mAuthStateListener);
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onDestroy() {
+        super.onDestroy();
+        // if user logged in with Facebook, stop tracking their token
+        if (mFacebookAccessTokenTracker != null) {
+            mFacebookAccessTokenTracker.stopTracking();
+        }
+
+        // if changing configurations, stop tracking firebase session.
+        mFirebaseRef.removeAuthStateListener(mAuthStateListener);
+    }
+
+    /**
+     * This method fires when any startActivityForResult finishes. The requestCode maps to
+     * the value passed into startActivityForResult.
+     */
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1) {
-            System.out.println("1111");
-            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            handleSignInResult(result);
-        } else {
-            callbackManager.onActivityResult(requestCode, resultCode, data);
-            twitterLoginButton.onActivityResult(requestCode, resultCode, data);
-        }
-    }
-
-
-    public void disconnectFromFacebook() {
-
-        if (AccessToken.getCurrentAccessToken() == null) {
-            return; // already logged out
-        }
-
-        new GraphRequest(AccessToken.getCurrentAccessToken(), "/me/permissions/", null, HttpMethod.DELETE, new GraphRequest
-                .Callback() {
-            @Override
-            public void onCompleted(GraphResponse graphResponse) {
-
-                LoginManager.getInstance().logOut();
-
+        Map<String, String> options = new HashMap<String, String>();
+        if (requestCode == RC_GOOGLE_LOGIN) {
+            /* This was a request by the Google API */
+            if (resultCode != RESULT_OK) {
+                mGoogleLoginClicked = false;
             }
-        }).executeAsync();
-    }
-
-    /*Google plus*/
-
-
-    public void onStart() {
-        super.onStart();
-
-        OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
-        if (opr.isDone()) {
-            Log.d(TAG, "Got cached sign-in");
-            GoogleSignInResult result = opr.get();
-            handleSignInResult(result);
+            mGoogleIntentInProgress = false;
+            if (!mGoogleApiClient.isConnecting()) {
+                mGoogleApiClient.connect();
+            }
+        } else if (requestCode == RC_TWITTER_LOGIN) {
+            options.put("oauth_token", data.getStringExtra("oauth_token"));
+            options.put("oauth_token_secret", data.getStringExtra("oauth_token_secret"));
+            options.put("user_id", data.getStringExtra("user_id"));
+            authWithFirebase("twitter", options);
         } else {
-            showProgressDialog();
-            opr.setResultCallback(new ResultCallback<GoogleSignInResult>() {
-                @Override
-                public void onResult(GoogleSignInResult googleSignInResult) {
-                    hideProgressDialog();
-                    handleSignInResult(googleSignInResult);
-                }
-            });
-        }
-    }
-
-    private void signOut() {
-        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
-                new ResultCallback<Status>() {
-                    @Override
-                    public void onResult(Status status) {
-                        updateUI(false);
-                    }
-                });
-    }
-
-    private void revokeAccess() {
-        Auth.GoogleSignInApi.revokeAccess(mGoogleApiClient).setResultCallback(
-                new ResultCallback<Status>() {
-                    @Override
-                    public void onResult(Status status) {
-                        updateUI(false);
-                    }
-                });
-    }
-
-    private void showProgressDialog() {
-        if (mProgressDialog == null) {
-            mProgressDialog = new ProgressDialog(this);
-            mProgressDialog.setMessage("Loading");
-            mProgressDialog.setIndeterminate(true);
-        }
-
-        mProgressDialog.show();
-    }
-
-    private void hideProgressDialog() {
-        if (mProgressDialog != null && mProgressDialog.isShowing()) {
-            mProgressDialog.hide();
-        }
-    }
-
-    private void updateUI(boolean signedIn) {
-        if (signedIn) {
-            findViewById(R.id.google_signin_button).setVisibility(View.GONE);
-            findViewById(R.id.sign_out_and_disconnect).setVisibility(View.VISIBLE);
-        } else {
-            findViewById(R.id.google_signin_button).setVisibility(View.VISIBLE);
-            findViewById(R.id.sign_out_and_disconnect).setVisibility(View.GONE);
+            /* Otherwise, it's probably the request by the Facebook login button, keep track of the session */
+            mFacebookCallbackManager.onActivityResult(requestCode, resultCode, data);
         }
     }
 
     @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.google_signin_button:
-                signIn();
-                break;
-            case R.id.sign_out_button:
-                signOut();
-                break;
-        }
-    }
-
-    private void signIn() {
-        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-        startActivityForResult(signInIntent, 1);
-    }
-
-    private void handleSignInResult(GoogleSignInResult result) {
-        Log.d("LOGIN", "handleSignInResult:" + result.isSuccess() + result.getStatus());
-        if (result.isSuccess()) {
-            // Signed in successfully, show authenticated UI.
-            GoogleSignInAccount acct = result.getSignInAccount();
-            System.out.println(acct.getEmail() + acct.getDisplayName());
-            sendRequest(acct.getDisplayName(), acct.getEmail());
-            firstLastname = acct.getDisplayName().split("");
-            updateUI(true);
+    public boolean onCreateOptionsMenu(Menu menu) {
+        /* If a user is currently authenticated, display a logout menu */
+        if (this.mAuthData != null) {
+            getMenuInflater().inflate(R.menu.main, menu);
+            return true;
         } else {
-            // Signed out, show unauthenticated UI.
-            updateUI(false);
+            return false;
         }
     }
-/*End google plus login*/
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_logout) {
+            logout();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
-    void getUserData() {
-        Twitter.getApiClient(session).getAccountService()
-                .verifyCredentials(true, false, new Callback<User>() {
+    /**
+     * Unauthenticate from Firebase and from providers where necessary.
+     */
+    private void logout() {
+        if (this.mAuthData != null) {
+            /* logout of Firebase */
+            mFirebaseRef.unauth();
+            /* Logout of any of the Frameworks. This step is optional, but ensures the user is not logged into
+             * Facebook/Google+ after logging out of Firebase. */
+            if (this.mAuthData.getProvider().equals("facebook")) {
+                /* Logout from Facebook */
+                LoginManager.getInstance().logOut();
+            } else if (this.mAuthData.getProvider().equals("google")) {
+                /* Logout from Google+ */
+                if (mGoogleApiClient.isConnected()) {
+                    Plus.AccountApi.clearDefaultAccount(mGoogleApiClient);
+                    mGoogleApiClient.disconnect();
+                }
+            }
+            /* Update authenticated user and show login buttons */
+            setAuthenticatedUser(null);
+        }
+    }
 
-                    @Override
-                    public void failure(TwitterException e) {
+    /**
+     * This method will attempt to authenticate a user to firebase given an oauth_token (and other
+     * necessary parameters depending on the provider)
+     */
+    private void authWithFirebase(final String provider, Map<String, String> options) {
+        if (options.containsKey("error")) {
+            showErrorDialog(options.get("error"));
+        } else {
+            mAuthProgressDialog.show();
+            if (provider.equals("twitter")) {
+                // if the provider is twitter, we pust pass in additional options, so use the options endpoint
+                mFirebaseRef.authWithOAuthToken(provider, options, new AuthResultHandler(provider));
+            } else {
+                // if the provider is not twitter, we just need to pass in the oauth_token
+                mFirebaseRef.authWithOAuthToken(provider, options.get("oauth_token"), new AuthResultHandler(provider));
+            }
+        }
+    }
 
+    /**
+     * Once a user is logged in, take the mAuthData provided from Firebase and "use" it.
+     */
+    private void setAuthenticatedUser(AuthData authData) {
+        if (authData != null) {
+            /* Hide all the login buttons */
+            mFacebookLoginButton.setVisibility(View.GONE);
+            mGoogleLoginButton.setVisibility(View.GONE);
+            mTwitterLoginButton.setVisibility(View.GONE);
+            mLoggedInStatusTextView.setVisibility(View.VISIBLE);
+            /* show a provider specific status text */
+            String name = null;
+            if (authData.getProvider().equals("facebook")
+                    || authData.getProvider().equals("google")
+                    || authData.getProvider().equals("twitter")) {
+                name = (String) authData.getProviderData().get("displayName");
+                System.out.println(authData.getProviderData().get("accessToken"));
+            } else {
+                Log.e(TAG, "Invalid provider: " + authData.getProvider());
+            }
+            if (name != null) {
+                mLoggedInStatusTextView.setText("Logged in as " + name + " (" + authData.getProvider() + ")");
+            }
+        } else {
+            /* No authenticated user show all the login buttons */
+            mFacebookLoginButton.setVisibility(View.VISIBLE);
+            mGoogleLoginButton.setVisibility(View.VISIBLE);
+            mTwitterLoginButton.setVisibility(View.VISIBLE);
+            mLoggedInStatusTextView.setVisibility(View.GONE);
+        }
+        this.mAuthData = authData;
+        /* invalidate options menu to hide/show the logout button */
+        supportInvalidateOptionsMenu();
+    }
+
+    /**
+     * Show errors to users
+     */
+    private void showErrorDialog(String message) {
+        new AlertDialog.Builder(this)
+                .setTitle("Error")
+                .setMessage(message)
+                .setPositiveButton(android.R.string.ok, null)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+    }
+
+    /**
+     * Utility class for authentication results
+     */
+    private class AuthResultHandler implements Firebase.AuthResultHandler {
+
+        private final String provider;
+
+        public AuthResultHandler(String provider) {
+            this.provider = provider;
+        }
+
+        @Override
+        public void onAuthenticated(AuthData authData) {
+            mAuthProgressDialog.hide();
+            Log.i(TAG, provider + " auth successful");
+            setAuthenticatedUser(authData);
+        }
+
+        @Override
+        public void onAuthenticationError(FirebaseError firebaseError) {
+            mAuthProgressDialog.hide();
+            showErrorDialog(firebaseError.toString());
+        }
+    }
+
+    /* ************************************
+     *             FACEBOOK               *
+     **************************************
+     */
+    private void onFacebookAccessTokenChange(AccessToken token) {
+        if (token != null) {
+            mAuthProgressDialog.show();
+            mFirebaseRef.authWithOAuthToken("facebook", token.getToken(), new AuthResultHandler("facebook"));
+        } else {
+            // Logged out of Facebook and currently authenticated with Firebase using Facebook, so do a logout
+            if (this.mAuthData != null && this.mAuthData.getProvider().equals("facebook")) {
+                mFirebaseRef.unauth();
+                setAuthenticatedUser(null);
+            }
+        }
+    }
+
+    /* ************************************
+     *              GOOGLE                *
+     **************************************
+     */
+    /* A helper method to resolve the current ConnectionResult error. */
+    private void resolveSignInError() {
+        if (mGoogleConnectionResult.hasResolution()) {
+            try {
+                mGoogleIntentInProgress = true;
+                mGoogleConnectionResult.startResolutionForResult(this, RC_GOOGLE_LOGIN);
+            } catch (IntentSender.SendIntentException e) {
+                // The intent was canceled before it was sent.  Return to the default
+                // state and attempt to connect to get an updated ConnectionResult.
+                mGoogleIntentInProgress = false;
+                mGoogleApiClient.connect();
+            }
+        }
+    }
+
+    private void getGoogleOAuthTokenAndLogin() {
+        mAuthProgressDialog.show();
+        /* Get OAuth token in Background */
+        AsyncTask<Void, Void, String> task = new AsyncTask<Void, Void, String>() {
+            String errorMessage = null;
+
+            @Override
+            protected String doInBackground(Void... params) {
+                String token = null;
+
+                try {
+                    String scope = String.format("oauth2:%s", Scopes.PLUS_LOGIN);
+                    token = GoogleAuthUtil.getToken(SocialLogin.this, Plus.AccountApi.getAccountName(mGoogleApiClient), scope);
+                } catch (IOException transientEx) {
+                    /* Network or server error */
+                    Log.e(TAG, "Error authenticating with Google: " + transientEx);
+                    errorMessage = "Network error: " + transientEx.getMessage();
+                } catch (UserRecoverableAuthException e) {
+                    Log.w(TAG, "Recoverable Google OAuth error: " + e.toString());
+                    /* We probably need to ask for permissions, so start the intent if there is none pending */
+                    if (!mGoogleIntentInProgress) {
+                        mGoogleIntentInProgress = true;
+                        Intent recover = e.getIntent();
+                        startActivityForResult(recover, RC_GOOGLE_LOGIN);
                     }
+                } catch (GoogleAuthException authEx) {
+                    /* The call is not ever expected to succeed assuming you have already verified that
+                     * Google Play services is installed. */
+                    Log.e(TAG, "Error authenticating with Google: " + authEx.getMessage(), authEx);
+                    errorMessage = "Error authenticating with Google: " + authEx.getMessage();
+                }
+                return token;
+            }
 
-                    @Override
-                    public void success(Result<User> userResult) {
+            @Override
+            protected void onPostExecute(String token) {
+                mGoogleLoginClicked = false;
+                if (token != null) {
+                    /* Successfully got OAuth token, now login with Google */
+                    mFirebaseRef.authWithOAuthToken("google", token, new AuthResultHandler("google"));
+                } else if (errorMessage != null) {
+                    mAuthProgressDialog.hide();
+                    showErrorDialog(errorMessage);
+                }
+            }
+        };
+        task.execute();
+    }
 
-                        User user = userResult.data;
-                        String twitterImage = user.profileImageUrl;
-
-                        try {
-                            Log.d("name", user.name);
-                            firstLastname = user.name.split(" "); //separation first and last name of user
-                            //Log.d("email",user.email);
-                            Log.d("des", user.description);
-                            Log.d("followers ", String.valueOf(user.followersCount));
-                            Log.d("createdAt", user.createdAt);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+    @Override
+    public void onConnected(final Bundle bundle) {
+        /* Connected with Google API, use this to authenticate with Firebase */
+        getGoogleOAuthTokenAndLogin();
+    }
 
 
-                    }
+    @Override
+    public void onConnectionFailed(ConnectionResult result) {
+        if (!mGoogleIntentInProgress) {
+            /* Store the ConnectionResult so that we can use it later when the user clicks on the Google+ login button */
+            mGoogleConnectionResult = result;
 
-                });}
+            if (mGoogleLoginClicked) {
+                /* The user has already clicked login so we attempt to resolve all errors until the user is signed in,
+                 * or they cancel. */
+                resolveSignInError();
+            } else {
+                Log.e(TAG, result.toString());
+            }
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        // ignore
+    }
+
+    /* ************************************
+     *               TWITTER              *
+     **************************************
+     */
+    private void loginWithTwitter() {
+        startActivityForResult(new Intent(this, TwitterOAuth.class), RC_TWITTER_LOGIN);
+    }
+
 
     public static void show(Context context) {
         Intent intent = new Intent(context, SocialLogin.class);
         context.startActivity(intent);
-    }
-
-    private void sendRequest(String firstLastname, String email) {
-        String[] firstlast = new String[2];
-        firstlast = firstLastname.split(" ");
-        SubscribeRequest subscribeRequest = new SubscribeRequest();
-        subscribeRequest.setFirstName(firstlast[0]);
-        subscribeRequest.setLastName(firstlast[1]);
-        subscribeRequest.seteMail(email);
-        subscribeRequest.setAppId("11");
-        RestClient.getServiceInstance().subscribe(subscribeRequest, new retrofit.Callback<Response>() {
-            @Override
-            public void success(Response s, Response response) {
-                String responseString = new String(((TypedByteArray) s.getBody()).getBytes());
-                System.out.println(s.getBody());
-                System.out.println(s.getStatus());
-                System.out.println("Request is sending");
-                SharedPreferenceHelper.setIsUserSignedIn(true);
-                onBackPressed();
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                System.out.println("FAIL");
-                System.out.println(error.getBody().toString());
-            }
-        });
     }
 }

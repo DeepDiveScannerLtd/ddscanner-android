@@ -45,9 +45,8 @@ public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter, GoogleMap
         googleMap.setOnInfoWindowClickListener(this);
         if (divespots != null) {
             for (DiveSpot divespot : divespots) {
-                System.out.println(divespot.getName());
                 LatLng place = new LatLng(Double.valueOf(divespot.getLat()), Double.valueOf(divespot.getLng()));
-                Marker marker = googleMap.addMarker(new MarkerOptions().position(place).icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_pin)));
+                Marker marker = googleMap.addMarker(new MarkerOptions().position(place).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_ds)));
                 markersMap.put(place, divespot);
             }
         }

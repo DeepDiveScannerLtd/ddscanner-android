@@ -55,6 +55,7 @@
         android:layout_toRightOf="@+id/dc_avatar"
         android:layout_below="@+id/dc_address"
         android:layout_marginLeft="10dp"
+        android:layout_marginTop="3dp"
         android:src="@drawable/ic_phone"/>
     <android.support.v7.widget.AppCompatTextView
         android:layout_toRightOf="@+id/ic_phone"
@@ -75,7 +76,7 @@
         android:layout_toRightOf="@+id/dc_avatar"
         android:layout_below="@+id/dc_telefon"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"/>
+        android:layout_marginTop="12dp"/>
     <android.support.v7.widget.AppCompatTextView
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"

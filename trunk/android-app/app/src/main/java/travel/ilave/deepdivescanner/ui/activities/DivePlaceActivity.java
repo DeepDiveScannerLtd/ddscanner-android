@@ -1,40 +1,28 @@
 package travel.ilave.deepdivescanner.ui.activities;
 
-import android.app.ActionBar;
-import android.app.DatePickerDialog;
-import android.app.DialogFragment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Adapter;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.DatePicker;
-import android.widget.FrameLayout;
-import android.widget.GridLayout;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 
-import java.net.SocketTimeoutException;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit.Callback;
@@ -42,21 +30,17 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 import travel.ilave.deepdivescanner.R;
-import travel.ilave.deepdivescanner.entities.DiveSpot;
 import travel.ilave.deepdivescanner.entities.DiveSpotFull;
 import travel.ilave.deepdivescanner.entities.DivespotDetails;
 import travel.ilave.deepdivescanner.entities.Product;
-import travel.ilave.deepdivescanner.entities.ProductDetails;
 import travel.ilave.deepdivescanner.entities.Sealife;
 import travel.ilave.deepdivescanner.rest.RestClient;
-import travel.ilave.deepdivescanner.ui.adapters.IconsAdapter;
 import travel.ilave.deepdivescanner.ui.adapters.PlaceImagesPagerAdapter;
+import travel.ilave.deepdivescanner.ui.adapters.SealifeListAdapter;
 import travel.ilave.deepdivescanner.ui.dialogs.SubscribeDialog;
-import travel.ilave.deepdivescanner.ui.fragments.DatePickerFragment;
 import travel.ilave.deepdivescanner.utils.LogUtils;
-import travel.ilave.deepdivescanner.utils.SharedPreferenceHelper;
 
-public class DivePlaceActivity extends AppCompatActivity implements View.OnClickListener, DatePickerDialog.OnDateSetListener {
+public class DivePlaceActivity extends AppCompatActivity implements View.OnClickListener{
 
     public static final String PRODUCT = "PRODUCT";
 
@@ -68,14 +52,18 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
     private TextView depth_value;
     private TextView visibility_value;
     private TextView description;
-    private List<Sealife> sealifes;
+    private TextView currents_value;
+    private TextView level_value;
     private Button book_now;
     private PlaceImagesPagerAdapter placeImagesPagerAdapter;
     private ProgressDialog progressDialog;
     private CollapsingToolbarLayout collapsingToolbarLayout = null;
     private SubscribeDialog subscribeDialog = new SubscribeDialog();
+    private RecyclerView sealifeRecyclerview;
+    private ArrayList<Sealife> sealifes;
+    private List<String> images;
 
-    private DiveSpot diveSpot;
+    private DiveSpotFull diveSpot;
     private DivespotDetails divespotDetails;
 
     private String[] iconsUrls = new String[5];
@@ -84,12 +72,8 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
-
         findViews();
-       // toolbarSetting();
-
         book_now.setOnClickListener(this);
-//        diveSpot = getIntent().getParcelableExtra(PRODUCT);
         requestProductDetails(getIntent().getStringExtra(PRODUCT));
     }
 
@@ -127,7 +111,6 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
         });
     }
 
-    /* Find views in activity_details.xml */
     private void findViews() {
         productImagesViewPager = (ViewPager) findViewById(R.id.product_images);
         starsLayout = (LinearLayout) findViewById(R.id.stars);
@@ -138,9 +121,11 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
         book_now = (Button) findViewById(R.id.book_now);
         collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         toolbar = (Toolbar) findViewById(R.id.toolbar_collapse);
+        sealifeRecyclerview = (RecyclerView) findViewById(R.id.sealife_rc);
+        currents_value = (TextView) findViewById(R.id.characteristic_value_currents);
+        level_value = (TextView) findViewById(R.id.characteristic_value_level);
     }
 
-    /* change toolbar settings */
     private void toolbarSetting(String name) {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -148,10 +133,16 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void populateProductDetails() {
+        sealifes = (ArrayList<Sealife>)divespotDetails.getSealifes();
+//        images = diveSpot.getImages();
         diveSpot = divespotDetails.getDivespot();
-        System.out.println(diveSpot.getDescription());
+        visibility_value.setText(diveSpot.getVisibility());
+        currents_value.setText(diveSpot.getCurrents());
         description.setText(diveSpot.getDescription());
-
+        level_value.setText(diveSpot.getLevel());
+        LinearLayoutManager linearLayoutManager = new org.solovyev.android.views.llm.LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        sealifeRecyclerview.setLayoutManager(linearLayoutManager);
+        sealifeRecyclerview.setAdapter(new SealifeListAdapter());
        /* placeImagesPagerAdapter = new PlaceImagesPagerAdapter(getFragmentManager(), diveSpotFull.getImages());
         productImagesViewPager.setAdapter(placeImagesPagerAdapter);*/
         for (int i = 0; i < diveSpot.getRating(); i++) {
@@ -166,21 +157,6 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
             iv.setPadding(5, 0, 5, 0);
             starsLayout.addView(iv);
         }
-/*
-        depth_value.setText("" + diveSpotFull.getDepth() + "m");
-        visibility_value.setText(diveSpotFull.getVisibility());
-        description.setText(diveSpotFull.getDescription());
-        sealifes = divespotDetails.getSealifes();
-        LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        int i = 0;
-        for (String sealifeIcon : diveSpotFull.getSealifes()) {
-            iconsUrls[i] = sealifeIcon.toString();
-            i++;
-        }
-        GridView sealife = (GridView) findViewById(R.id.usage_example_gridview);
-        sealife.setAdapter(new IconsAdapter(DivePlaceActivity.this, iconsUrls));
-        description.setText(diveSpot.getDescription());
-*/
         progressDialog.dismiss();
     }
 
@@ -194,19 +170,9 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
     public void onClick(View view) {
         LatLng latLng = new LatLng(Double.valueOf(diveSpot.getLat()), Double.valueOf(diveSpot.getLng()));
         DiveCentersActivity.show(DivePlaceActivity.this, latLng);
-        //showDatePickerDialog();
     }
 
-    public void showDatePickerDialog() {
-        DialogFragment newFragment = new DatePickerFragment();
-        newFragment.show(getFragmentManager(), "datePicker");
-    }
 
-    @Override
-    public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-        SubscribeDialog subscribeDialog = new SubscribeDialog();
-        subscribeDialog.show(getFragmentManager(), "");
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -33,7 +33,9 @@ public class ProductListFragment extends Fragment {
         rc = (RecyclerView) view.findViewById(R.id.cv);
         
         rc.setHasFixedSize(true);
-        rc.setLayoutManager(new LinearLayoutManager(getActivity()));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+     //   linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        rc.setLayoutManager(linearLayoutManager);
 
         return view;
     }
