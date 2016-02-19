@@ -68,7 +68,7 @@
         android:layout_marginLeft="5dp"
         android:textColor="@color/black_text"
         android:text="+67 49 299 4825"/>
-<<<<<<< HEAD
+
     <ImageView
         android:id="@+id/dc_ic_mail"
         android:layout_width="wrap_content"
@@ -88,9 +88,7 @@
     android:layout_below="@+id/dc_telefon"
     android:layout_marginTop="8dp"
     android:textColor="@color/black_text"/>
-=======
 
->>>>>>> dcea8f6191af00bb9ad07d71065968846daf6e57
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

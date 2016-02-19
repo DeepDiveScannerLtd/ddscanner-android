@@ -2,11 +2,8 @@ package travel.ilave.deepdivescanner.ui.adapters;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.os.Bundle;
 import android.support.v13.app.FragmentStatePagerAdapter;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -18,7 +15,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.google.maps.android.clustering.ClusterManager;
 
-import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,8 +23,6 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
-import travel.ilave.deepdivescanner.MultiListener;
-import travel.ilave.deepdivescanner.R;
 import travel.ilave.deepdivescanner.entities.DiveSpot;
 import travel.ilave.deepdivescanner.entities.DivespotsWrapper;
 import travel.ilave.deepdivescanner.entities.Filters;
@@ -49,6 +43,7 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Goo
     private ClusterManager<MyItem> mClusterManager;
     private static GoogleMap gMap;
     private Filters filters;
+    private String path;
 
     public PlacesPagerAdapter(Context context, FragmentManager fm, ArrayList<DiveSpot> divespots, LatLng latLng, Filters filters) {
         super(fm);
@@ -159,8 +154,8 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Goo
                 } else if (error.getKind().equals(RetrofitError.Kind.HTTP)) {
                     Toast.makeText(context, "Server is not responsible, please try later", Toast.LENGTH_SHORT).show();
                 }
-//                String json =  new String(((TypedByteArray)error.getResponse().getBody()).getBytes());
-              //  System.out.println("failure" + json.toString());
+//               String json =  new String(((TypedByteArray)error.getResponse().getBody()).getBytes());
+          //      System.out.println("failure" + json.toString());
             }
         });
     }

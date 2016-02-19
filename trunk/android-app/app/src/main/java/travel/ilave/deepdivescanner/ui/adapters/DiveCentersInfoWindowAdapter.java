@@ -15,6 +15,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
@@ -38,6 +39,8 @@ public class DiveCentersInfoWindowAdapter implements GoogleMap.InfoWindowAdapter
     private ClusterManager<MyItem> mClusterManager;
     private String logoPath;
     private Marker diveSpotMarker;
+    private boolean not_first_time_showing_info_window;
+
 
     public DiveCentersInfoWindowAdapter(Context context, ArrayList<DiveCenter> diveCenters, GoogleMap googleMap, LatLng diveSiteCoordinates, String logoPath) {
         this.context = context;
@@ -77,10 +80,13 @@ public class DiveCentersInfoWindowAdapter implements GoogleMap.InfoWindowAdapter
         DiveCenter dc = markersMap.get(marker.getPosition());
         if(dc.getLogo() != null) {
             String imageUrlPath = logoPath + dc.getLogo();
-            try {
+            if (not_first_time_showing_info_window) {
                 Picasso.with(context).load(imageUrlPath).into(logo);
-            } catch(Exception e){
+            } else {
+                not_first_time_showing_info_window = true;
+                Picasso.with(context).load(imageUrlPath).into(logo, new InfoWindowRefresher(marker));
             }
+
             // diveCentersListViewHolder.imgLogo.setImageURI(Uri.parse(imageUrl));
         }
         dc_name.setText(dc.getName());
@@ -118,5 +124,21 @@ public class DiveCentersInfoWindowAdapter implements GoogleMap.InfoWindowAdapter
         return null;
     }
 
+
+    private class InfoWindowRefresher implements Callback {
+        private Marker markerToRefresh;
+
+        private InfoWindowRefresher(Marker markerToRefresh) {
+            this.markerToRefresh = markerToRefresh;
+        }
+
+        @Override
+        public void onSuccess() {
+            markerToRefresh.showInfoWindow();
+        }
+
+        @Override
+        public void onError() {}
+    }
 }
 

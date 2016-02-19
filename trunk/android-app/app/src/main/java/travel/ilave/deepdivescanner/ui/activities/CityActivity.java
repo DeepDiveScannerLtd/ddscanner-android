@@ -270,12 +270,12 @@ public class CityActivity extends AppCompatActivity {
         return false;
     }
 
-    @Override
+   /* @Override
     public void onResume() {
         super.onResume();
         if (PlacesPagerAdapter.getLastLatlng() != null) {
             populatePlaceViewpager(PlacesPagerAdapter.getLastLatlng());
         }
         System.out.println("resumed");
-    }
+    }*/
 }

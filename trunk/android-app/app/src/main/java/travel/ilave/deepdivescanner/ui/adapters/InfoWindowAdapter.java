@@ -2,6 +2,9 @@ package travel.ilave.deepdivescanner.ui.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.media.Image;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -13,6 +16,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,7 +41,9 @@ public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter, GoogleMap
     private DiveSpot diveSpot;
     private GoogleMap googleMap;
     private HashMap<LatLng, DiveSpot> markersMap = new HashMap<>();
+    private ImageView photo;
     private TextView description;
+    private boolean not_first_time_showing_info_window;
 
     public InfoWindowAdapter(Context context, ArrayList<DiveSpot> diveSpots, GoogleMap map) {
         this.divespots = diveSpots;
@@ -54,16 +61,27 @@ public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter, GoogleMap
 
     @Override
     public View getInfoWindow(Marker marker) {
-
         inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         view = inflater.inflate(R.layout.info_window, null);
+        diveSpot = new DiveSpot();
         diveSpot = markersMap.get(marker.getPosition());
+        photo = (ImageView) view.findViewById(R.id.popup_photo);
+        if (diveSpot.getImages() != null) {
+            System.out.println(diveSpot.getImages().get(0));
+            if (not_first_time_showing_info_window) {
+                Picasso.with(mContext).load(diveSpot.getImages().get(0)).resize(260, 195).into(photo);
+            } else {
+                not_first_time_showing_info_window = true;
+                Picasso.with(mContext).load(diveSpot.getImages().get(0)).resize(260, 195).into(photo, new InfoWindowRefresher(marker));
+            }
+        }
         description = ((TextView) view.findViewById(R.id.description_popup));
         title = ((TextView)view.findViewById(R.id.popup_product_name));
         title.setText(diveSpot.getName());
         description.setText(diveSpot.getDescription());
         // from = ((TextView)view.findViewById(R.id.price1));
         LinearLayout stars = (LinearLayout) view.findViewById(R.id.stars);
+        stars.removeAllViews();
         for (int i = 0; i < diveSpot.getRating(); i++) {
             ImageView iv = new ImageView(mContext);
             iv.setImageResource(R.drawable.ic_flag_full_small);
@@ -77,17 +95,23 @@ public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter, GoogleMap
             stars.addView(iv);
         }
         return view;
-
     }
 
     @Override
     public View getInfoContents(Marker marker) {
-       return null;
+        return null;
     }
 
     @Override
     public boolean onMarkerClick(Marker marker) {
         marker.showInfoWindow();
+      /*  final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                marker.showInfoWindow();
+            }
+        }, 200);*/
         return true;
     }
 
@@ -96,6 +120,22 @@ public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter, GoogleMap
         Intent i = new Intent(mContext, DivePlaceActivity.class);
         i.putExtra(PRODUCT, markersMap.get(marker.getPosition()).getId());
         mContext.startActivity(i);
+    }
+
+    private class InfoWindowRefresher implements Callback {
+        private Marker markerToRefresh;
+
+        private InfoWindowRefresher(Marker markerToRefresh) {
+            this.markerToRefresh = markerToRefresh;
+        }
+
+        @Override
+        public void onSuccess() {
+            markerToRefresh.showInfoWindow();
+        }
+
+        @Override
+        public void onError() {}
     }
 
 }
