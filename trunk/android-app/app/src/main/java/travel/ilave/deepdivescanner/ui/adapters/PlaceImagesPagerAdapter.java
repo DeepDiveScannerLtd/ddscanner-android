@@ -27,10 +27,11 @@ import travel.ilave.deepdivescanner.ui.fragments.PlaceImageFragment;
 public class PlaceImagesPagerAdapter extends FragmentStatePagerAdapter {
 
     private List<String> productsImages;
+    private String path;
 
-    public PlaceImagesPagerAdapter(FragmentManager fm, List<String> productsImages) {
+    public PlaceImagesPagerAdapter(FragmentManager fm, List<String> productsImages, String path) {
         super(fm);
-
+        this.path = path;
         this.productsImages = productsImages;
     }
 
@@ -38,7 +39,7 @@ public class PlaceImagesPagerAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         Fragment fragment = new PlaceImageFragment();
         Bundle args = new Bundle();
-        args.putString(PlaceImageFragment.IMAGE_URL, productsImages.get(position));
+        args.putString(PlaceImageFragment.IMAGE_URL, path + productsImages.get(position));
         fragment.setArguments(args);
         return fragment;
     }

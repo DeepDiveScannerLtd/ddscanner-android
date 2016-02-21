@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 
 import travel.ilave.deepdivescanner.R;
@@ -20,6 +22,16 @@ import travel.ilave.deepdivescanner.ui.activities.SealifeDetails;
 public class SealifeListAdapter extends RecyclerView.Adapter<SealifeListAdapter.SealifeListViewHolder>{
 
     public static ArrayList<Sealife> sealifes;
+    private Context context;
+    private String pathSmall;
+    private static String pathMedium;
+
+    public SealifeListAdapter(ArrayList<Sealife> sealifes, Context context, String pathSmall, String pathMedium) {
+        this.sealifes = sealifes;
+        this.context = context;
+        this.pathMedium = pathMedium;
+        this.pathSmall = pathSmall;
+    }
 
     @Override
     public SealifeListViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
@@ -32,12 +44,14 @@ public class SealifeListAdapter extends RecyclerView.Adapter<SealifeListAdapter.
 
     @Override
     public void onBindViewHolder(SealifeListViewHolder sealifeListViewHolder, int i) {
-
+        Sealife sealife = sealifes.get(i);
+        Picasso.with(context).load(pathSmall + sealife.getImage()).resize(80,60).into(sealifeListViewHolder.sealifeLogo);
+        sealifeListViewHolder.sealifeName.setText(sealife.getName());
     }
 
     @Override
     public int getItemCount() {
-        return 5;
+        return sealifes.size();
     }
 
 
@@ -57,7 +71,7 @@ public class SealifeListAdapter extends RecyclerView.Adapter<SealifeListAdapter.
 
         @Override
         public void onClick(View v) {
-            SealifeDetails.show(context);
+            SealifeDetails.show(context, sealifes.get(getPosition()), pathMedium);
         }
     }
 }

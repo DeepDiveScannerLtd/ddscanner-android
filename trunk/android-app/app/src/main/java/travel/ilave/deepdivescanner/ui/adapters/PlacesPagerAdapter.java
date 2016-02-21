@@ -144,7 +144,7 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Goo
                 divespots = (ArrayList<DiveSpot>) divespotsWrapper.getDiveSpots();
                 placesPagerAdapter = new PlacesPagerAdapter(context, fm, (ArrayList<DiveSpot>) divespotsWrapper.getDiveSpots(), center, filters);
                 gMap.setInfoWindowAdapter(new InfoWindowAdapter(context, (ArrayList<DiveSpot>) divespotsWrapper.getDiveSpots(), gMap));
-                ProductListFragment.setadapter((ArrayList<DiveSpot>) divespotsWrapper.getDiveSpots());
+                ProductListFragment.setadapter((ArrayList<DiveSpot>) divespotsWrapper.getDiveSpots(), context);
             }
 
             @Override

@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -142,9 +143,10 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
         level_value.setText(diveSpot.getLevel());
         LinearLayoutManager linearLayoutManager = new org.solovyev.android.views.llm.LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         sealifeRecyclerview.setLayoutManager(linearLayoutManager);
-        sealifeRecyclerview.setAdapter(new SealifeListAdapter());
-       /* placeImagesPagerAdapter = new PlaceImagesPagerAdapter(getFragmentManager(), diveSpotFull.getImages());
-        productImagesViewPager.setAdapter(placeImagesPagerAdapter);*/
+        sealifeRecyclerview.setAdapter(new SealifeListAdapter(sealifes, this, diveSpot.getSealifePathSmall(), diveSpot.getSealifePathMedium()));
+
+        placeImagesPagerAdapter = new PlaceImagesPagerAdapter(getFragmentManager(), diveSpot.getImages(), diveSpot.getDiveSpotPathMedium());
+        productImagesViewPager.setAdapter(placeImagesPagerAdapter);
         for (int i = 0; i < diveSpot.getRating(); i++) {
             ImageView iv = new ImageView(this);
             iv.setImageResource(R.drawable.ic_flag_full_small);

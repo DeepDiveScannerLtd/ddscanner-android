@@ -93,7 +93,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/dc_avatar"
-        android:layout_below="@+id/dc_telefon"
+        android:layout_below="@+id/dc_ic_mail"
         android:src="@drawable/divider"
         android:layout_marginTop="10dp"/>
 

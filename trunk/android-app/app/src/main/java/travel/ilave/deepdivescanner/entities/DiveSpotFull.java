@@ -18,6 +18,12 @@ public class DiveSpotFull {
     private String currents;
     private String level;
     private List<String> images;
+    private String diveSpotPathSmall;
+    private String diveSpotPathMedium;
+    private String diveSpotPathOrigin;
+    private String sealifePathSmall;
+    private String sealifePathMedium;
+    private String sealifePathOrigin;
 
     public int getId() { return id; }
 
@@ -62,4 +68,29 @@ public class DiveSpotFull {
     public List<String> getImages() { return images; }
 
     public void setImages(List<String> images) { this.images = images; }
+
+    public String getDiveSpotPathSmall() { return diveSpotPathSmall; }
+
+    public void setDiveSpotPathSmall(String diveSpotPathSmall) { this.diveSpotPathSmall = diveSpotPathSmall; }
+
+    public String getDiveSpotPathMedium() { return diveSpotPathMedium; }
+
+    public void setDiveSpotPathMedium(String diveSpotPathMedium) { this.diveSpotPathMedium = diveSpotPathMedium; }
+
+    public String getDiveSpotPathOrigin() { return diveSpotPathOrigin; }
+
+    public void setDiveSpotPathOrigin(String diveSpotPathOrigin) { this.diveSpotPathOrigin = diveSpotPathOrigin; }
+
+
+    public String getSealifePathSmall() { return sealifePathSmall; }
+
+    public void setSealifePathSmall(String sealifePathSmall) { this.sealifePathSmall = sealifePathSmall; }
+
+    public String getSealifePathMedium() { return sealifePathMedium; }
+
+    public void setSealifePathMedium(String sealifePathMedium) { this.sealifePathMedium = sealifePathMedium; }
+
+    public String getSealifePathOrigin() { return sealifePathOrigin; }
+
+    public void setSealifePathOrigin(String sealifePathOrigin) { this.sealifePathOrigin = sealifePathOrigin; }
 }

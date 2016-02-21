@@ -12,7 +12,10 @@ import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
 
@@ -32,9 +35,11 @@ import travel.ilave.deepdivescanner.ui.activities.DivePlaceActivity;
 public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.ProductListViewHolder>{
 
     public static ArrayList<DiveSpot> divespots;
+    private Context conText;
 
-    public ProductListAdapter(ArrayList<DiveSpot> divespots) {
+    public ProductListAdapter(ArrayList<DiveSpot> divespots, Context conText) {
         this.divespots = divespots;
+        this.conText = conText;
     }
 
     @Override
@@ -50,9 +55,25 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
     public void onBindViewHolder(ProductListViewHolder productListViewHolder, int i) {
         DiveSpot divespot = divespots.get(i);
 //        productListViewHolder.productPrice.setText(String.valueOf("15"));
-       // productListViewHolder.description.setText(product.getDescription());
+        productListViewHolder.description.setText(divespot.getDescription());
+        if (divespot.getImages() != null) {
+            Picasso.with(conText).load(divespot.getImages().get(0)).resize(140, 150).into(productListViewHolder.imageView);
+        }
         if(divespot.getName() != null) {
              productListViewHolder.title.setText(divespot.getName());
+        }
+        productListViewHolder.stars.removeAllViews();
+        for (int k = 0; k < divespot.getRating(); k++) {
+            ImageView iv = new ImageView(conText);
+            iv.setImageResource(R.drawable.ic_flag_full_small);
+            iv.setPadding(5,0,0,0);
+            productListViewHolder.stars.addView(iv);
+        }
+        for (int k = 0; k < 5 - divespot.getRating(); k++) {
+            ImageView iv = new ImageView(conText);
+            iv.setImageResource(R.drawable.ic_flag_empty_small);
+            iv.setPadding(5,0,0,0);
+            productListViewHolder.stars.addView(iv);
         }
     }
 
@@ -68,6 +89,7 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
         protected TextView  description;
         protected TextView productPrice;
         protected TextView  price;
+        protected LinearLayout stars;
         private int position;
         private static Context context;
         private final String PRODUCT = "PRODUCT";
@@ -80,6 +102,7 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
             imageView = (ImageView) v.findViewById(R.id.product_logo);
             title = (TextView) v.findViewById(R.id.product_title);
             description = (TextView) v.findViewById(R.id.product_description);
+            stars = (LinearLayout) v.findViewById(R.id.stars);
         }
 
         @Override

@@ -37,6 +37,8 @@ public class DiveSpot implements  Serializable {
         }
     };
 */
+
+
     public String getId() {
         return id;
     }

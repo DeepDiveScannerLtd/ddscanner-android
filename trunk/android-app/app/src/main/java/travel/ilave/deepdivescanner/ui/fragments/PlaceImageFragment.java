@@ -6,8 +6,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.squareup.picasso.Picasso;
 
 import travel.ilave.deepdivescanner.R;
 
@@ -24,9 +26,10 @@ public class PlaceImageFragment extends Fragment {
         String imageUrl = getArguments().getString(IMAGE_URL);
 
         SimpleDraweeView imageView = (SimpleDraweeView) inflater.inflate(R.layout.fragment_image, container, false);
+       // ImageView imageView = (ImageView) inflater.inflate(R.layout.fragment_image, container, false);
         Uri uri = Uri.parse(imageUrl);
         imageView.setImageURI(uri);
-
+     //   Picasso.with(getActivity()).load(imageUrl).into(imageView);
         return imageView;
     }
 }

@@ -1,7 +1,9 @@
 package travel.ilave.deepdivescanner.ui.fragments;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.transition.Explode;
@@ -36,12 +38,12 @@ public class ProductListFragment extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
      //   linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         rc.setLayoutManager(linearLayoutManager);
-
+        rc.setItemAnimator(new DefaultItemAnimator());
         return view;
     }
 
-    public static void setadapter(ArrayList<DiveSpot> diveSpots) {
-        rc.setAdapter(new ProductListAdapter(diveSpots));
+    public static void setadapter(ArrayList<DiveSpot> diveSpots, Context context) {
+        rc.setAdapter(new ProductListAdapter(diveSpots, context));
     }
 
 }

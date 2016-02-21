@@ -16,6 +16,7 @@
             android:padding="10dp"
             android:layout_gravity="right"/>
         <ImageView
+            android:id="@+id/sealife_full_photo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/top_photo"
