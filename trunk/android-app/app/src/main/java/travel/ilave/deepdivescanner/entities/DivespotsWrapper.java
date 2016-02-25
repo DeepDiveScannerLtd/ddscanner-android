@@ -1,12 +1,13 @@
 package travel.ilave.deepdivescanner.entities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by lashket on 21.1.16.
  */
 public class DivespotsWrapper {
-    private List<DiveSpot> divespots;
+    private List<DiveSpot> divespots = new ArrayList<>();
 
     public List<DiveSpot> getDiveSpots() { return divespots; }
 

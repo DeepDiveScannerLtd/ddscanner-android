@@ -113,6 +113,9 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
         }
     }
 
-
+    public void setDiveSpots(ArrayList<DiveSpot> diveSpots) {
+        this.divespots = diveSpots;
+        notifyDataSetChanged();
+    }
 
 }

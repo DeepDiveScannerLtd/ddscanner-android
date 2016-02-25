@@ -3,6 +3,8 @@ package travel.ilave.deepdivescanner.ui.adapters;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.widget.Toast;
 
@@ -17,6 +19,7 @@ import com.google.maps.android.clustering.ClusterManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import retrofit.Callback;
@@ -33,17 +36,22 @@ import travel.ilave.deepdivescanner.utils.LogUtils;
 
 public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements GoogleMap.OnCameraChangeListener {
 
+    private static final String TAG = PlacesPagerAdapter.class.getName();
+
     private Context context;
     private LatLng latLng;
     private FragmentManager fm;
     private PlacesPagerAdapter placesPagerAdapter;
     private DivespotsWrapper divespotsWrapper;
-    private static ArrayList<DiveSpot> divespots;
+    private static ArrayList<DiveSpot> divespots = new ArrayList<>();
     private static Map<String, String> map = new HashMap<String, String>();
     private ClusterManager<MyItem> mClusterManager;
     private static GoogleMap gMap;
     private Filters filters;
     private String path;
+    private InfoWindowAdapter infoWindowAdapter;
+    private MapFragment mapFragment;
+    private ProductListFragment productListFragment;
 
     public PlacesPagerAdapter(Context context, FragmentManager fm, ArrayList<DiveSpot> divespots, LatLng latLng, Filters filters) {
         super(fm);
@@ -59,7 +67,8 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Goo
         Fragment fragment = null;
         switch (position) {
             case 0:
-                fragment = new MapFragment();
+                mapFragment = new MapFragment();
+                fragment = mapFragment;
                 ((MapFragment) fragment).getMapAsync(new OnMapReadyCallback() {
                     @Override
                     public void onMapReady(final GoogleMap googleMap) {
@@ -74,9 +83,6 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Goo
                         googleMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
                             @Override
                             public void onCameraChange(CameraPosition cameraPosition) {
-                               // googleMap.clear();
-                                InfoWindowAdapter infoWindowAdapter = new InfoWindowAdapter(context, divespots, googleMap);
-                                googleMap.setInfoWindowAdapter(infoWindowAdapter);
                                 requestCityProducts(googleMap.getProjection().getVisibleRegion().latLngBounds.southwest,googleMap.getProjection().getVisibleRegion().latLngBounds.northeast, googleMap.getCameraPosition().target);
                             }
                         });
@@ -84,7 +90,8 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Goo
                 });
                 break;
             case 1:
-                fragment = new ProductListFragment();
+                productListFragment = new ProductListFragment();
+                fragment = productListFragment;
                 break;
         }
         return fragment;
@@ -138,13 +145,20 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Goo
             @Override
             public void success(Response s, Response response) {
                 String responseString = new String(((TypedByteArray) s.getBody()).getBytes());
-                LogUtils.i("response code is " + s.getStatus());
-                LogUtils.i("response body is " + responseString);
+                LogUtils.i(TAG, "response code is " + s.getStatus());
+                LogUtils.i(TAG, "response body is " + responseString);
                 divespotsWrapper = new Gson().fromJson(responseString, DivespotsWrapper.class);
                 divespots = (ArrayList<DiveSpot>) divespotsWrapper.getDiveSpots();
-                placesPagerAdapter = new PlacesPagerAdapter(context, fm, (ArrayList<DiveSpot>) divespotsWrapper.getDiveSpots(), center, filters);
-                gMap.setInfoWindowAdapter(new InfoWindowAdapter(context, (ArrayList<DiveSpot>) divespotsWrapper.getDiveSpots(), gMap));
-                ProductListFragment.setadapter((ArrayList<DiveSpot>) divespotsWrapper.getDiveSpots(), context);
+                        if (placesPagerAdapter == null) {
+                            placesPagerAdapter = new PlacesPagerAdapter(context, fm, (ArrayList<DiveSpot>) divespotsWrapper.getDiveSpots(), center, filters);
+                        }
+                        if (infoWindowAdapter == null) {
+                            infoWindowAdapter = new InfoWindowAdapter(context, (ArrayList<DiveSpot>) divespotsWrapper.getDiveSpots(), gMap);
+                            gMap.setInfoWindowAdapter(infoWindowAdapter);
+                        } else {
+                            infoWindowAdapter.updateDiveSpots(divespots);
+                        }
+                        productListFragment.fillDiveSpots((ArrayList<DiveSpot>) divespotsWrapper.getDiveSpots());
             }
 
             @Override

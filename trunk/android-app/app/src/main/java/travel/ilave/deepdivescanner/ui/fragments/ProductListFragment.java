@@ -26,7 +26,8 @@ import travel.ilave.deepdivescanner.ui.adapters.ProductListAdapter;
  */
 public class ProductListFragment extends Fragment {
 
-    private static RecyclerView rc;
+    private RecyclerView rc;
+    private ProductListAdapter productListAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -42,8 +43,13 @@ public class ProductListFragment extends Fragment {
         return view;
     }
 
-    public static void setadapter(ArrayList<DiveSpot> diveSpots, Context context) {
-        rc.setAdapter(new ProductListAdapter(diveSpots, context));
+    public void fillDiveSpots(ArrayList<DiveSpot> diveSpots) {
+        if (productListAdapter == null) {
+            productListAdapter = new ProductListAdapter(diveSpots, getActivity());
+            rc.setAdapter(productListAdapter);
+        } else {
+            productListAdapter.setDiveSpots(diveSpots);
+        }
     }
 
 }
