@@ -9,7 +9,7 @@ import java.util.List;
  * Created by lashket on 20.1.16.
  */
 public class DiveSpot implements  Serializable {
-    private String id;
+    private long id;
     private String name;
     private int rating;
     private String description;
@@ -39,11 +39,11 @@ public class DiveSpot implements  Serializable {
 */
 
 
-    public String getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -87,7 +87,22 @@ public class DiveSpot implements  Serializable {
         this.description = description;
     }
 
-  /*  @Override
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        DiveSpot diveSpot = (DiveSpot) o;
+
+        return getId() == diveSpot.getId();
+
+    }
+
+    @Override
+    public int hashCode() {
+        return (int) (getId() ^ (getId() >>> 32));
+    }
+    /*  @Override
     public int describeContents() {
         return 0;
     }
