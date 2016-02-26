@@ -45,7 +45,6 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Goo
     private DivespotsWrapper divespotsWrapper;
     private static ArrayList<DiveSpot> divespots = new ArrayList<>();
     private static Map<String, String> map = new HashMap<String, String>();
-    private ClusterManager<MyItem> mClusterManager;
     private static GoogleMap gMap;
     private Filters filters;
     private String path;
@@ -75,10 +74,8 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Goo
                         if (latLng.longitude == 0 && latLng.longitude == 0) {
                             latLng = new LatLng(14,14);
                         }
-
                         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 8.0f));
                         gMap = googleMap;
-                        final double radiusMax = radius(googleMap.getCameraPosition().target, googleMap.getProjection().getVisibleRegion().latLngBounds.northeast);
                         requestCityProducts(googleMap.getProjection().getVisibleRegion().latLngBounds.southwest,googleMap.getProjection().getVisibleRegion().latLngBounds.northeast, googleMap.getCameraPosition().target);
                         googleMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
                             @Override
@@ -135,12 +132,6 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Goo
         map.put("lngLeft", String.valueOf(left.longitude - 1.0));
         map.put("lngRight", String.valueOf(right.longitude + 1.0));
         map.put("latRight", String.valueOf(right.latitude + 2.0));
-/*        if (filters.getCurrents() != null) {
-            map.put("currents", filters.getCurrents());
-        }
-        if (filters.getVisibility() != null) {
-            map.put("visibility", filters.getVisibility());
-        }*/
         RestClient.getServiceInstance().getDivespots(map, new Callback<Response>() {
             @Override
             public void success(Response s, Response response) {

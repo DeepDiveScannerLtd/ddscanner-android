@@ -80,6 +80,7 @@ public class CityActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             latLng = getIntent().getParcelableExtra("LATLNG");
             filters = getIntent().getParcelableExtra("FILTERS");
+            getSupportActionBar().setTitle(getCity(latLng));
             mRegistrationBroadcatReceiver = new BroadcastReceiver() {
                 @Override
                 public void onReceive(Context context, Intent intent) {
@@ -177,7 +178,7 @@ public class CityActivity extends AppCompatActivity {
                 return true;
             case R.id.logbook:
                 if (SharedPreferenceHelper.getIsUserLogined()) {
-                    Toast.makeText(this, "You are already l3ogin", Toast.LENGTH_LONG);
+                    Toast.makeText(this, "You are already login", Toast.LENGTH_LONG);
                 } else {
                     SocialNetworks.show(CityActivity.this);
                 }
@@ -228,9 +229,7 @@ public class CityActivity extends AppCompatActivity {
     /* Get city by coordinates */
     private String getCity(LatLng latLng) {
         String city = "";
-
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
-
         try {
             List<Address> addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
 

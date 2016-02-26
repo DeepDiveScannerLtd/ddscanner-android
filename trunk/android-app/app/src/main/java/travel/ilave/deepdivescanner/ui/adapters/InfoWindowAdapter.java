@@ -19,6 +19,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import travel.ilave.deepdivescanner.MultiListener;
 import travel.ilave.deepdivescanner.R;
 import travel.ilave.deepdivescanner.entities.DiveSpot;
 import travel.ilave.deepdivescanner.ui.activities.DivePlaceActivity;
@@ -102,20 +103,13 @@ public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter, GoogleMap
     @Override
     public boolean onMarkerClick(Marker marker) {
         marker.showInfoWindow();
-      /*  final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                marker.showInfoWindow();
-            }
-        }, 200);*/
         return true;
     }
 
     @Override
     public void onInfoWindowClick(Marker marker) {
         Intent i = new Intent(mContext, DivePlaceActivity.class);
-        i.putExtra(PRODUCT, diveSpotsMap.get(marker.getPosition()).getId());
+        i.putExtra(PRODUCT, String.valueOf(diveSpotsMap.get(marker.getPosition()).getId()));
         mContext.startActivity(i);
     }
 
