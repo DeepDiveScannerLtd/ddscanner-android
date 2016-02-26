@@ -51,14 +51,27 @@ public class DiveCentersListAdapter extends RecyclerView.Adapter<DiveCentersList
     public void onBindViewHolder(DiveCentersListViewHolder diveCentersListViewHolder, int i) {
         int rating = 0;
         DiveCenter diveCenter = diveCenters.get(i);
-        diveCentersListViewHolder.dcName.setText(diveCenter.getName());
-        diveCentersListViewHolder.dcPhone.setText(diveCenter.getPhone());
-        diveCentersListViewHolder.dcAddress.setText(diveCenter.getAddress());
+        if(diveCenter.getName() != null) {
+            diveCentersListViewHolder.dcName.setText(diveCenter.getName());
+        } else {
+            diveCentersListViewHolder.dcName.setText("-");
+        }
+        if(diveCenter.getPhone() != null) {
+            diveCentersListViewHolder.dcPhone.setText(diveCenter.getPhone());
+        } else {
+            diveCentersListViewHolder.dcPhone.setText("-");
+        }
+        if(diveCenter.getAddress() != null) {
+            diveCentersListViewHolder.dcAddress.setText(diveCenter.getAddress());
+        } else {
+            diveCentersListViewHolder.dcAddress.setText("-");
+        }
         if(diveCenter.getLogo() != null) {
             String imageUrlPath = logoPath + diveCenter.getLogo();
             Picasso.with(context).load(imageUrlPath).into(diveCentersListViewHolder.imgLogo);
         }
         rating = Math.round(diveCenter.getRating());
+        diveCentersListViewHolder.starsLayout.removeAllViews();
         for (int k = 0; k < rating; k++) {
             System.out.println(Math.round(diveCenter.getRating()));
             ImageView iv = new ImageView(context);

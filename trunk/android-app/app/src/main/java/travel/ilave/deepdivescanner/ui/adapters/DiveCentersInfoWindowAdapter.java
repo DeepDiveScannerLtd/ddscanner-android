@@ -40,6 +40,7 @@ public class DiveCentersInfoWindowAdapter implements GoogleMap.InfoWindowAdapter
     private String logoPath;
     private Marker diveSpotMarker;
     private boolean not_first_time_showing_info_window;
+    private LatLng diveSpotLatLng;
 
 
     public DiveCentersInfoWindowAdapter(Context context, ArrayList<DiveCenter> diveCenters, GoogleMap googleMap, LatLng diveSiteCoordinates, String logoPath) {
@@ -63,49 +64,57 @@ public class DiveCentersInfoWindowAdapter implements GoogleMap.InfoWindowAdapter
 
 
         }
-      diveSpotMarker = googleMap.addMarker(new MarkerOptions().position(diveSiteCoordinates).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_ds)));
-
+      diveSpotMarker = googleMap.addMarker(new MarkerOptions().position(diveSiteCoordinates).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_ds)).title("DS"));
+        diveSpotLatLng = diveSpotMarker.getPosition();
 
     }
 
     @Override
     public View getInfoWindow(Marker marker) {
-        LayoutInflater  inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.info_window_divecenter, null);
-        TextView dc_name = (TextView) view.findViewById(R.id.iw_dc_name);
-        ImageView logo = (ImageView) view.findViewById(R.id.iw_dc_avatar);
-        TextView dc_address = (TextView) view.findViewById(R.id.iw_dc_address);
-        TextView dc_telephone = (TextView) view.findViewById(R.id.iw_dc_telefon);
-        LinearLayout stars = (LinearLayout) view.findViewById(R.id.stars);
-        DiveCenter dc = markersMap.get(marker.getPosition());
-        if(dc.getLogo() != null) {
-            String imageUrlPath = logoPath + dc.getLogo();
-            if (not_first_time_showing_info_window) {
-                Picasso.with(context).load(imageUrlPath).into(logo);
-            } else {
-                not_first_time_showing_info_window = true;
-                Picasso.with(context).load(imageUrlPath).into(logo, new InfoWindowRefresher(marker));
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View view = inflater.inflate(R.layout.info_window_divecenter, null);
+            TextView dc_name = (TextView) view.findViewById(R.id.iw_dc_name);
+            ImageView logo = (ImageView) view.findViewById(R.id.iw_dc_avatar);
+            TextView dc_address = (TextView) view.findViewById(R.id.iw_dc_address);
+            TextView dc_telephone = (TextView) view.findViewById(R.id.iw_dc_telefon);
+            LinearLayout stars = (LinearLayout) view.findViewById(R.id.stars);
+            DiveCenter dc = markersMap.get(marker.getPosition());
+            if (dc.getLogo() != null) {
+                String imageUrlPath = logoPath + dc.getLogo();
+                if (not_first_time_showing_info_window) {
+                    Picasso.with(context).load(imageUrlPath).into(logo);
+                } else {
+                    not_first_time_showing_info_window = true;
+                    Picasso.with(context).load(imageUrlPath).into(logo, new InfoWindowRefresher(marker));
+                }
+
+                // diveCentersListViewHolder.imgLogo.setImageURI(Uri.parse(imageUrl));
             }
+            dc_name.setText(dc.getName());
+            if (dc.getAddress() != null) {
+                dc_address.setText(dc.getAddress());
+            } else {
+                dc_address.setText("-");
+            }
+            if (dc.getPhone() != null) {
+                dc_telephone.setText(dc.getPhone());
+            } else {
+                dc_telephone.setText("-");
+            }
+            for (int i = 0; i < dc.getRating(); i++) {
+                ImageView iv = new ImageView(context);
+                iv.setImageResource(R.drawable.ic_flag_full_small);
+                iv.setPadding(5, 0, 0, 0);
+                stars.addView(iv);
+            }
+            for (int i = 0; i < 5 - dc.getRating(); i++) {
+                ImageView iv = new ImageView(context);
+                iv.setImageResource(R.drawable.ic_flag_empty_small);
+                iv.setPadding(5, 0, 0, 0);
+                stars.addView(iv);
+            }
+            return view;
 
-            // diveCentersListViewHolder.imgLogo.setImageURI(Uri.parse(imageUrl));
-        }
-        dc_name.setText(dc.getName());
-        dc_address.setText(dc.getAddress());
-        dc_telephone.setText(dc.getPhone());
-        for (int i = 0; i < dc.getRating(); i++) {
-            ImageView iv = new ImageView(context);
-            iv.setImageResource(R.drawable.ic_flag_full_small);
-            iv.setPadding(5,0,0,0);
-            stars.addView(iv);
-        }
-        for (int i = 0; i < 5 - dc.getRating(); i++) {
-            ImageView iv = new ImageView(context);
-            iv.setImageResource(R.drawable.ic_flag_empty_small);
-            iv.setPadding(5,0,0,0);
-            stars.addView(iv);
-        }
-
-        return view;
 
     }
 

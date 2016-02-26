@@ -63,20 +63,6 @@
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".ui.activities.SocialLogin"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity
-            android:name=".auth.TwitterOAuth"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="twitterapp" android:host="connect" />
-            </intent-filter>
-        </activity>
-        <activity
             android:name=".ui.activities.CityActivity"
             android:screenOrientation="portrait" />
         <activity
@@ -128,6 +114,8 @@
         android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.activities.VoucherActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ui.activities.SocialNetworks"
             android:screenOrientation="portrait" />
         <meta-data
             android:name="io.fabric.ApiKey"

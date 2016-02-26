@@ -171,16 +171,17 @@ public class CityActivity extends AppCompatActivity {
                 if (SharedPreferenceHelper.getIsUserLogined()) {
                     Toast.makeText(this, "You are already login", Toast.LENGTH_LONG);
                 } else {
-                    SocialLogin.show(CityActivity.this);
+                    SocialNetworks.show(CityActivity.this);
                 }
+              //  subscribeDialog.show(getFragmentManager(), "");
                 return true;
             case R.id.logbook:
                 if (SharedPreferenceHelper.getIsUserLogined()) {
-                    Toast.makeText(this, "You are already login", Toast.LENGTH_LONG);
+                    Toast.makeText(this, "You are already l3ogin", Toast.LENGTH_LONG);
                 } else {
-                    SocialLogin.show(CityActivity.this);
+                    SocialNetworks.show(CityActivity.this);
                 }
-                //subscribeDialog.show(getFragmentManager(), "");
+               // subscribeDialog.show(getFragmentManager(), "");
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

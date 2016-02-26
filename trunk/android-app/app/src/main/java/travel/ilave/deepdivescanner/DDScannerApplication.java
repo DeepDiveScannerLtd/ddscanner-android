@@ -3,10 +3,16 @@ package travel.ilave.deepdivescanner;
 import android.app.Application;
 
 
+import com.crashlytics.android.Crashlytics;
 import com.facebook.FacebookSdk;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
-import com.firebase.client.Firebase;
+import com.twitter.sdk.android.Twitter;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
+import com.twitter.sdk.android.core.TwitterAuthToken;
+import com.twitter.sdk.android.core.TwitterSession;
+
+import io.fabric.sdk.android.Fabric;
 
 /**
  * Created by Vitaly on 28.11.2015.
@@ -28,12 +34,16 @@ public class DDScannerApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-     //   TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
-       // Fabric.with(this, new Twitter(authConfig));
+        TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
+        Fabric.with(this, new Crashlytics(), new Twitter(authConfig));
         FacebookSdk.sdkInitialize(this);
-        Firebase.setAndroidContext(this);
 
         instance = this;
         Fresco.initialize(this);
+
+       /* TwitterSession twitterSession = Twitter.getSessionManager().getActiveSession();
+        TwitterAuthToken authToken = twitterSession.getAuthToken();*/
+
+
     }
 }

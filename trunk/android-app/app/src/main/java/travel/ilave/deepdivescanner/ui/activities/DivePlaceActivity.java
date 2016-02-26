@@ -3,6 +3,7 @@ package travel.ilave.deepdivescanner.ui.activities;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.view.ViewPager;
@@ -56,6 +57,7 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
     private TextView currents_value;
     private TextView level_value;
     private Button book_now;
+    private ImageView none_photo;
     private PlaceImagesPagerAdapter placeImagesPagerAdapter;
     private ProgressDialog progressDialog;
     private CollapsingToolbarLayout collapsingToolbarLayout = null;
@@ -125,6 +127,7 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
         sealifeRecyclerview = (RecyclerView) findViewById(R.id.sealife_rc);
         currents_value = (TextView) findViewById(R.id.characteristic_value_currents);
         level_value = (TextView) findViewById(R.id.characteristic_value_level);
+        none_photo = (ImageView) findViewById(R.id.nonne_photos);
     }
 
     private void toolbarSetting(String name) {
@@ -144,9 +147,12 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
         LinearLayoutManager linearLayoutManager = new org.solovyev.android.views.llm.LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         sealifeRecyclerview.setLayoutManager(linearLayoutManager);
         sealifeRecyclerview.setAdapter(new SealifeListAdapter(sealifes, this, diveSpot.getSealifePathSmall(), diveSpot.getSealifePathMedium()));
-
-        placeImagesPagerAdapter = new PlaceImagesPagerAdapter(getFragmentManager(), diveSpot.getImages(), diveSpot.getDiveSpotPathMedium());
-        productImagesViewPager.setAdapter(placeImagesPagerAdapter);
+        if (diveSpot.getImages() != null) {
+            none_photo.setVisibility(View.GONE);
+            productImagesViewPager.setVisibility(View.VISIBLE);
+            placeImagesPagerAdapter = new PlaceImagesPagerAdapter(getFragmentManager(), diveSpot.getImages(), diveSpot.getDiveSpotPathMedium());
+            productImagesViewPager.setAdapter(placeImagesPagerAdapter);
+        }
         for (int i = 0; i < diveSpot.getRating(); i++) {
             ImageView iv = new ImageView(this);
             iv.setImageResource(R.drawable.ic_flag_full_small);

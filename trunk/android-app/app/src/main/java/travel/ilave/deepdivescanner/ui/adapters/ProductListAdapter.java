@@ -3,6 +3,7 @@ package travel.ilave.deepdivescanner.ui.adapters;
 import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -53,11 +54,15 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
 
     @Override
     public void onBindViewHolder(ProductListViewHolder productListViewHolder, int i) {
-        DiveSpot divespot = divespots.get(i);
+
+        DiveSpot divespot = new DiveSpot();
+        divespot = divespots.get(i);
 //        productListViewHolder.productPrice.setText(String.valueOf("15"));
         productListViewHolder.description.setText(divespot.getDescription());
         if (divespot.getImages() != null) {
             Picasso.with(conText).load(divespot.getImages().get(0)).resize(140, 150).into(productListViewHolder.imageView);
+        } else {
+            productListViewHolder.imageView.setImageDrawable(conText.getDrawable(R.drawable.list_photo));
         }
         if(divespot.getName() != null) {
              productListViewHolder.title.setText(divespot.getName());
