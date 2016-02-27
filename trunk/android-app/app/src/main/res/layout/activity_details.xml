@@ -215,6 +215,7 @@
                 </LinearLayout>
 
             </RelativeLayout>
+
             <TextView
                 android:id="@+id/sealife"
                 android:layout_width="wrap_content"
@@ -225,11 +226,14 @@
                 android:layout_marginTop="15dp"
                 android:text="@string/sealifePlace"
                 android:textSize="15sp"
+                android:visibility="gone"
                 android:textStyle="bold"
                 />
             <RelativeLayout
+                android:id="@+id/list_sl"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:visibility="gone">
             <android.support.v7.widget.RecyclerView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

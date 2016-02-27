@@ -39,92 +39,96 @@ public class DiveCentersInfoWindowAdapter implements GoogleMap.InfoWindowAdapter
     private ClusterManager<MyItem> mClusterManager;
     private String logoPath;
     private Marker diveSpotMarker;
-    private boolean not_first_time_showing_info_window;
+    private boolean not_first_time_showing_info_window = false;
     private LatLng diveSpotLatLng;
+    private String dsName;
 
 
-    public DiveCentersInfoWindowAdapter(Context context, ArrayList<DiveCenter> diveCenters, GoogleMap googleMap, LatLng diveSiteCoordinates, String logoPath) {
+    public DiveCentersInfoWindowAdapter(Context context, ArrayList<DiveCenter> diveCenters, GoogleMap googleMap, LatLng diveSiteCoordinates, String logoPath, String dsName) {
         this.context = context;
         this.logoPath = logoPath;
         this.googleMap = googleMap;
         this.diveCenters = diveCenters;
+        this.dsName = dsName;
         this.diveSiteCoordinates = diveSiteCoordinates;
         mClusterManager = new ClusterManager<MyItem>(context, googleMap);
         mClusterManager.setRenderer(new OwnIconRendered(context, googleMap, mClusterManager));
-
         googleMap.setOnCameraChangeListener(mClusterManager);
         googleMap.setOnMarkerClickListener(mClusterManager);
-        for(DiveCenter diveCenter : diveCenters) {
+        googleMap.getUiSettings().setMapToolbarEnabled(false);
+        for (DiveCenter diveCenter : diveCenters) {
             LatLng latLng = new LatLng(Double.valueOf(diveCenter.getLat()), Double.valueOf(diveCenter.getLng()));
-           // Marker marker = googleMap.addMarker(new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_dc)));
-           // markersMap.put(marker, "false");
+            // Marker marker = googleMap.addMarker(new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_dc)));
+            // markersMap.put(marker, "false");
             MyItem offsetItem = new MyItem(latLng.latitude, latLng.longitude);
             markersMap.put(latLng, diveCenter);
             mClusterManager.addItem(offsetItem);
 
 
         }
-      diveSpotMarker = googleMap.addMarker(new MarkerOptions().position(diveSiteCoordinates).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_ds)).title("DS"));
+        diveSpotMarker = googleMap.addMarker(new MarkerOptions().position(diveSiteCoordinates).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_ds)).title(dsName));
         diveSpotLatLng = diveSpotMarker.getPosition();
 
     }
 
     @Override
     public View getInfoWindow(Marker marker) {
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View view = inflater.inflate(R.layout.info_window_divecenter, null);
-            TextView dc_name = (TextView) view.findViewById(R.id.iw_dc_name);
-            ImageView logo = (ImageView) view.findViewById(R.id.iw_dc_avatar);
-            TextView dc_address = (TextView) view.findViewById(R.id.iw_dc_address);
-            TextView dc_telephone = (TextView) view.findViewById(R.id.iw_dc_telefon);
-            LinearLayout stars = (LinearLayout) view.findViewById(R.id.stars);
-            DiveCenter dc = markersMap.get(marker.getPosition());
-            if (dc.getLogo() != null) {
-                String imageUrlPath = logoPath + dc.getLogo();
-                if (not_first_time_showing_info_window) {
-                    Picasso.with(context).load(imageUrlPath).into(logo);
-                } else {
-                    not_first_time_showing_info_window = true;
-                    Picasso.with(context).load(imageUrlPath).into(logo, new InfoWindowRefresher(marker));
-                }
-
-                // diveCentersListViewHolder.imgLogo.setImageURI(Uri.parse(imageUrl));
-            }
-            dc_name.setText(dc.getName());
-            if (dc.getAddress() != null) {
-                dc_address.setText(dc.getAddress());
+        if (marker.getTitle() != null) {
+            return null;
+        }
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = inflater.inflate(R.layout.info_window_divecenter, null);
+        TextView dc_name = (TextView) view.findViewById(R.id.iw_dc_name);
+        ImageView logo = (ImageView) view.findViewById(R.id.iw_dc_avatar);
+        TextView dc_address = (TextView) view.findViewById(R.id.iw_dc_address);
+        TextView dc_telephone = (TextView) view.findViewById(R.id.iw_dc_telefon);
+        LinearLayout stars = (LinearLayout) view.findViewById(R.id.stars);
+        DiveCenter dc = markersMap.get(marker.getPosition());
+        if (dc.getLogo() != null) {
+            String imageUrlPath = logoPath + dc.getLogo();
+            if (not_first_time_showing_info_window) {
+                Picasso.with(context).load(imageUrlPath).into(logo);
             } else {
-                dc_address.setText("-");
+                not_first_time_showing_info_window = true;
+                Picasso.with(context).load(imageUrlPath).into(logo, new InfoWindowRefresher(marker));
             }
-            if (dc.getPhone() != null) {
-                dc_telephone.setText(dc.getPhone());
-            } else {
-                dc_telephone.setText("-");
-            }
-            for (int i = 0; i < dc.getRating(); i++) {
-                ImageView iv = new ImageView(context);
-                iv.setImageResource(R.drawable.ic_flag_full_small);
-                iv.setPadding(5, 0, 0, 0);
-                stars.addView(iv);
-            }
-            for (int i = 0; i < 5 - dc.getRating(); i++) {
-                ImageView iv = new ImageView(context);
-                iv.setImageResource(R.drawable.ic_flag_empty_small);
-                iv.setPadding(5, 0, 0, 0);
-                stars.addView(iv);
-            }
-            return view;
 
+            // diveCentersListViewHolder.imgLogo.setImageURI(Uri.parse(imageUrl));
+        }
+        dc_name.setText(dc.getName());
+        if (dc.getAddress() != null) {
+            dc_address.setText(dc.getAddress());
+        } else {
+            dc_address.setText("-");
+        }
+        if (dc.getPhone() != null) {
+            dc_telephone.setText(dc.getPhone());
+        } else {
+            dc_telephone.setText("-");
+        }
+        for (int i = 0; i < dc.getRating(); i++) {
+            ImageView iv = new ImageView(context);
+            iv.setImageResource(R.drawable.ic_flag_full_small);
+            iv.setPadding(5, 0, 0, 0);
+            stars.addView(iv);
+        }
+        for (int i = 0; i < 5 - dc.getRating(); i++) {
+            ImageView iv = new ImageView(context);
+            iv.setImageResource(R.drawable.ic_flag_empty_small);
+            iv.setPadding(5, 0, 0, 0);
+            stars.addView(iv);
+        }
 
+        return view;
     }
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        if(marker == diveSpotMarker) {
-            return true;
-        } else {
-            marker.showInfoWindow();
+        if (marker.getTitle() != null && marker.getTitle().equals("DS")) {
+            return false;
         }
+        marker.showInfoWindow();
+
         return true;
     }
 
@@ -147,7 +151,8 @@ public class DiveCentersInfoWindowAdapter implements GoogleMap.InfoWindowAdapter
         }
 
         @Override
-        public void onError() {}
+        public void onError() {
+        }
     }
 }
 

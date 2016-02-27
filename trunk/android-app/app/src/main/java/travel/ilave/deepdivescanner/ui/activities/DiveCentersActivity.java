@@ -34,7 +34,7 @@ import travel.ilave.deepdivescanner.ui.adapters.PlacesPagerAdapter;
  * Created by lashket on 29.1.16.
  */
 public class DiveCentersActivity extends AppCompatActivity {
-
+    private static final String TAG = "DiveCentersActivity";
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
@@ -43,6 +43,7 @@ public class DiveCentersActivity extends AppCompatActivity {
     private LatLng latLng;
     private Map<String, String> map = new HashMap<String, String>();
     private ProgressDialog progressDialog;
+    private String dsName;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,6 +51,7 @@ public class DiveCentersActivity extends AppCompatActivity {
         setContentView(R.layout.activity_dive_centers);
         findViews();
         latLng = getIntent().getParcelableExtra("LATLNG");
+        dsName = getIntent().getStringExtra("NAME");
         requestDiveCenters(latLng);
     }
 
@@ -63,15 +65,16 @@ public class DiveCentersActivity extends AppCompatActivity {
     }
 
     private void populateDiveCentesPager(Divecenters divecenters) {
-        diveCentersPagerAdapter = new DiveCentersPagerAdapter(this, getFragmentManager(), divecenters, latLng);
+        diveCentersPagerAdapter = new DiveCentersPagerAdapter(this, getFragmentManager(), divecenters, latLng, dsName);
         viewPager.setAdapter(diveCentersPagerAdapter);
         viewPager.setOffscreenPageLimit(3);
         tabLayout.setupWithViewPager(viewPager);
     }
 
-    public static void show(Context context, LatLng latLng) {
+    public static void show(Context context, LatLng latLng, String name) {
         Intent intent = new Intent(context, DiveCentersActivity.class);
         intent.putExtra("LATLNG", latLng);
+        intent.putExtra("NAME", name);
         context.startActivity(intent);
     }
 
@@ -79,15 +82,16 @@ public class DiveCentersActivity extends AppCompatActivity {
         progressDialog = new ProgressDialog(DiveCentersActivity.this);
         progressDialog.setMessage(getResources().getString(R.string.pleaseWait));
         progressDialog.show();
-        map = PlacesPagerAdapter.getLastRequest();
-        System.out.println(map);
+        map.put("latLeft", String.valueOf(latLng.latitude - 2.0));
+        map.put("lngLeft", String.valueOf(latLng.longitude - 2.0));
+        map.put("lngRight", String.valueOf(latLng.longitude + 2.0));
+        map.put("latRight", String.valueOf(latLng.latitude + 2.0));
         RestClient.getServiceInstance().getDiveCenters(map, new Callback<Response>() {
             @Override
             public void success(Response s, Response response) {
                 String responseString = new String(((TypedByteArray) s.getBody()).getBytes());
                 System.out.println(responseString);
                 divecenters = new Gson().fromJson(responseString, Divecenters.class);
-
                 populateDiveCentesPager(divecenters);
                 progressDialog.dismiss();
             }
@@ -100,7 +104,7 @@ public class DiveCentersActivity extends AppCompatActivity {
                     Toast.makeText(DiveCentersActivity.this, "Server is not responsible, please try later", Toast.LENGTH_LONG).show();
                 }
                 String json =  new String(((TypedByteArray)error.getResponse().getBody()).getBytes());
-                System.out.println("failure" + json.toString());
+                Log.i(TAG, json);
             }
         });
     }

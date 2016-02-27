@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -65,8 +66,10 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
     private RecyclerView sealifeRecyclerview;
     private ArrayList<Sealife> sealifes;
     private List<String> images;
+    private RelativeLayout sealifeLayout;
 
     private DiveSpotFull diveSpot;
+
     private DivespotDetails divespotDetails;
 
     private String[] iconsUrls = new String[5];
@@ -128,6 +131,8 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
         currents_value = (TextView) findViewById(R.id.characteristic_value_currents);
         level_value = (TextView) findViewById(R.id.characteristic_value_level);
         none_photo = (ImageView) findViewById(R.id.nonne_photos);
+      //  sealifeLayout = (RelativeLayout) findViewById(R.id.sealife_layout);
+
     }
 
     private void toolbarSetting(String name) {
@@ -145,8 +150,13 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
         description.setText(diveSpot.getDescription());
         level_value.setText(diveSpot.getLevel());
         LinearLayoutManager linearLayoutManager = new org.solovyev.android.views.llm.LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        sealifeRecyclerview.setLayoutManager(linearLayoutManager);
-        sealifeRecyclerview.setAdapter(new SealifeListAdapter(sealifes, this, diveSpot.getSealifePathSmall(), diveSpot.getSealifePathMedium()));
+
+        if (divespotDetails.getSealifes() != null) {
+            findViewById(R.id.sealife).setVisibility(View.VISIBLE);
+            findViewById(R.id.list_sl).setVisibility(View.VISIBLE);
+            sealifeRecyclerview.setLayoutManager(linearLayoutManager);
+            sealifeRecyclerview.setAdapter(new SealifeListAdapter(sealifes, this, diveSpot.getSealifePathSmall(), diveSpot.getSealifePathMedium()));
+        }
         if (diveSpot.getImages() != null) {
             none_photo.setVisibility(View.GONE);
             productImagesViewPager.setVisibility(View.VISIBLE);
@@ -177,7 +187,8 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
     @Override
     public void onClick(View view) {
         LatLng latLng = new LatLng(Double.valueOf(diveSpot.getLat()), Double.valueOf(diveSpot.getLng()));
-        DiveCentersActivity.show(DivePlaceActivity.this, latLng);
+        String name = diveSpot.getName();
+        DiveCentersActivity.show(DivePlaceActivity.this, latLng, name);
     }
 
 

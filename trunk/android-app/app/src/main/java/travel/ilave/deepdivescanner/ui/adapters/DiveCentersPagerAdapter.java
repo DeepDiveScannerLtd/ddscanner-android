@@ -32,12 +32,14 @@ public class DiveCentersPagerAdapter extends FragmentStatePagerAdapter {
     private LatLng latLng;
     private String logoPath;
     private ClusterManager<MyItem> mClusterManager;
+    private String dsName;
 
-    public DiveCentersPagerAdapter(Context context, FragmentManager fm, Divecenters diveCenters, LatLng latLng) {
+    public DiveCentersPagerAdapter(Context context, FragmentManager fm, Divecenters diveCenters, LatLng latLng, String dsName) {
         super(fm);
         this.context = context;
         this.diveCenters = diveCenters;
         this.latLng = latLng;
+        this.dsName = dsName;
     }
 
     @Override
@@ -53,8 +55,7 @@ public class DiveCentersPagerAdapter extends FragmentStatePagerAdapter {
                     @Override
                     public void onMapReady(GoogleMap googleMap) {
                         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 8.0f));
-                        googleMap.setInfoWindowAdapter(new DiveCentersInfoWindowAdapter(context, divecenters, googleMap, latLng, logoPath));
-                        googleMap.getUiSettings().setZoomControlsEnabled(true);
+                        googleMap.setInfoWindowAdapter(new DiveCentersInfoWindowAdapter(context, divecenters, googleMap, latLng, logoPath, dsName));
                     }
                 });
                 break;

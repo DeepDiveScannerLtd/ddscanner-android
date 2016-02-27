@@ -34,6 +34,7 @@ import org.json.JSONObject;
 import java.util.Arrays;
 
 import travel.ilave.deepdivescanner.R;
+import travel.ilave.deepdivescanner.utils.SharedPreferenceHelper;
 
 
 /**
@@ -61,11 +62,13 @@ public class SocialNetworks extends AppCompatActivity{
                 TwitterSession session = result.data;
                 // TODO: Remove toast and use the TwitterSession's userID
                 String msg = "@" + session.getUserName() + " logged in! (#" + session.getUserId() + ")";
-                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
+              //  Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
                 Twitter.getApiClient(session).getAccountService().verifyCredentials(true, false, new Callback<User>() {
                     @Override
                     public void success(Result<User> result) {
                         System.out.println(result.data.name);
+                        SharedPreferenceHelper.setIsUserSignedIn(true);
+                        onBackPressed();
                     }
 
                     @Override
@@ -118,6 +121,8 @@ public class SocialNetworks extends AppCompatActivity{
 
                             String result = String.valueOf(object);
                             System.out.println(result);
+                        SharedPreferenceHelper.setIsUserSignedIn(true);
+                        onBackPressed();
 
                     }
                 }).executeAsync();
