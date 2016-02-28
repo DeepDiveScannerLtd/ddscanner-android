@@ -1,6 +1,8 @@
 package travel.ilave.deepdivescanner;
 
 import android.app.Application;
+import android.content.Context;
+import android.support.multidex.MultiDex;
 
 
 import com.crashlytics.android.Crashlytics;
@@ -45,5 +47,10 @@ public class DDScannerApplication extends Application {
         TwitterAuthToken authToken = twitterSession.getAuthToken();*/
 
 
+    }
+
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
     }
 }

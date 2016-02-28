@@ -72,7 +72,7 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Goo
                     @Override
                     public void onMapReady(final GoogleMap googleMap) {
                         if (latLng.longitude == 0 && latLng.longitude == 0) {
-                            latLng = new LatLng(14,14);
+                            latLng = new LatLng(53.902378, 27.557184);
                         }
                         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 8.0f));
                         gMap = googleMap;

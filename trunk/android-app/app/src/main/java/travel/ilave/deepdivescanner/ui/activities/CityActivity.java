@@ -80,7 +80,10 @@ public class CityActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             latLng = getIntent().getParcelableExtra("LATLNG");
             filters = getIntent().getParcelableExtra("FILTERS");
-            getSupportActionBar().setTitle(getCity(latLng));
+            getSupportActionBar().setTitle("DDScanner");
+            if (!getCity(latLng).equals("")) {
+                getSupportActionBar().setTitle(getCity(latLng));
+            }
             mRegistrationBroadcatReceiver = new BroadcastReceiver() {
                 @Override
                 public void onReceive(Context context, Intent intent) {

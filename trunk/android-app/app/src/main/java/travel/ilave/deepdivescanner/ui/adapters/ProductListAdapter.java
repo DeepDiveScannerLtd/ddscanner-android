@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -62,7 +63,7 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
         if (divespot.getImages() != null) {
             Picasso.with(conText).load(divespot.getImages().get(0)).resize(140, 150).into(productListViewHolder.imageView);
         } else {
-            productListViewHolder.imageView.setImageDrawable(conText.getDrawable(R.drawable.list_photo));
+            productListViewHolder.imageView.setImageDrawable(ContextCompat.getDrawable(conText,R.drawable.list_photo));
         }
         if(divespot.getName() != null) {
              productListViewHolder.title.setText(divespot.getName());
