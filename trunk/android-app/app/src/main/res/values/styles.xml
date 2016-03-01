@@ -12,7 +12,7 @@
     </style>
 
     <style name="RadioButton" parent="@android:style/Widget.CompoundButton.RadioButton">
-        <item name="android:button">@drawable/radio</item>
+        <item name="android:textSize">50dp</item>
     </style>
 
     <style name="editTextSub" parent="Widget.AppCompat.EditText">

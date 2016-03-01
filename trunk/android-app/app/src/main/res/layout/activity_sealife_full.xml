@@ -101,6 +101,7 @@
             <RelativeLayout
                 android:id="@+id/char_length"
                 android:layout_marginTop="20dp"
+                android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
                 <android.support.v7.widget.AppCompatTextView
@@ -123,6 +124,7 @@
             <RelativeLayout
                 android:layout_below="@+id/char_length"
                 android:id="@+id/char_weight"
+                android:visibility="gone"
                 android:layout_marginTop="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
@@ -146,6 +148,7 @@
             <RelativeLayout
                 android:layout_below="@+id/char_weight"
                 android:id="@+id/char_depth"
+                android:visibility="gone"
                 android:layout_marginTop="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
@@ -169,6 +172,7 @@
             <RelativeLayout
                 android:layout_below="@+id/char_depth"
                 android:id="@+id/char_scname"
+                android:visibility="gone"
                 android:layout_marginTop="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
@@ -194,6 +198,7 @@
                 android:id="@+id/char_order"
                 android:layout_marginTop="20dp"
                 android:layout_width="wrap_content"
+                android:visibility="gone"
                 android:layout_height="wrap_content">
                 <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/title_order"
@@ -215,6 +220,7 @@
             <RelativeLayout
                 android:layout_below="@+id/char_order"
                 android:id="@+id/char_distribution"
+                android:visibility="gone"
                 android:layout_marginTop="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
@@ -239,6 +245,7 @@
                 android:layout_below="@+id/char_distribution"
                 android:id="@+id/char_scclass"
                 android:layout_marginTop="20dp"
+                android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
                 <android.support.v7.widget.AppCompatTextView
@@ -262,6 +269,7 @@
                 android:layout_below="@+id/char_scclass"
                 android:id="@+id/char_habitat"
                 android:layout_marginTop="20dp"
+                android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
                 <android.support.v7.widget.AppCompatTextView

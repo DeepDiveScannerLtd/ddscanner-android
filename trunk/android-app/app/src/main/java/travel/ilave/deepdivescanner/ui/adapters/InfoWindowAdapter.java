@@ -51,6 +51,7 @@ public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter, GoogleMap
         this.mContext = context;
         this.googleMap = map;
         googleMap.setOnInfoWindowClickListener(this);
+        googleMap.getUiSettings().setMapToolbarEnabled(false);
         if (this.diveSpots != null) {
             for (DiveSpot diveSpot : this.diveSpots) {
                 addNewDiveSpot(diveSpot);
@@ -67,10 +68,10 @@ public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter, GoogleMap
         photo = (ImageView) view.findViewById(R.id.popup_photo);
         if (diveSpot.getImages() != null) {
             if (not_first_time_showing_info_window) {
-                Picasso.with(mContext).load(diveSpot.getImages().get(0)).resize(260, 195).into(photo);
+                Picasso.with(mContext).load(diveSpot.getImages().get(0)).resize(260, 116).into(photo);
             } else {
                 not_first_time_showing_info_window = true;
-                Picasso.with(mContext).load(diveSpot.getImages().get(0)).resize(260, 195).into(photo, new InfoWindowRefresher(marker));
+                Picasso.with(mContext).load(diveSpot.getImages().get(0)).resize(260, 116).into(photo, new InfoWindowRefresher(marker));
             }
         }
         description = ((TextView) view.findViewById(R.id.description_popup));

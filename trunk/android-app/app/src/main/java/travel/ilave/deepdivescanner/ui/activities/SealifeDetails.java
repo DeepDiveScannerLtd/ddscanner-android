@@ -21,24 +21,32 @@ import travel.ilave.deepdivescanner.entities.Sealife;
  */
 public class SealifeDetails extends AppCompatActivity {
 
-    private TextView length,weight,depth,scname,order,distribution,scclass,habitat;
+    private TextView length, weight, depth, scname, order, distribution, scclass, habitat;
     private ImageView photo;
     private Sealife sealife;
     private String pathMedium;
     private CollapsingToolbarLayout collapsingToolbarLayout = null;
     private Toolbar toolbar;
 
+    public static void show(Context context, Sealife sealife, String pathMedium) {
+        Intent intent = new Intent(context, SealifeDetails.class);
+        intent.putExtra("SEALIFE", sealife);
+        intent.putExtra("PATH", pathMedium);
+        context.startActivity(intent);
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sealife_full);
         findViews();
-        sealife =(Sealife) getIntent().getSerializableExtra("SEALIFE");
+        sealife = (Sealife) getIntent().getSerializableExtra("SEALIFE");
         pathMedium = getIntent().getStringExtra("PATH");
         Picasso.with(this).load(pathMedium + sealife.getImage()).into(photo);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(sealife.getName());
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_actionbar_back);
         setContent();
 
     }
@@ -58,21 +66,67 @@ public class SealifeDetails extends AppCompatActivity {
     }
 
     private void setContent() {
-        length.setText(sealife.getLength());
-        weight.setText(sealife.getWeight());
-        depth.setText(sealife.getDepth());
-        scname.setText(sealife.getScName());
-        order.setText(sealife.getOrder());
-        distribution.setText(sealife.getDistribution());
-        scclass.setText(sealife.getScCLass());
-        habitat.setText(sealife.getHabitat());
-    }
+        if (sealife.getLength() != null) {
+            if (!sealife.getLength().equals("")) {
+                System.out.println(sealife.getLength());
+                length.setText(sealife.getLength());
+                findViewById(R.id.char_length).setVisibility(View.VISIBLE);
+            }
+        }
 
-    public static void show(Context context, Sealife sealife, String pathMedium) {
-        Intent intent = new Intent(context, SealifeDetails.class);
-        intent.putExtra("SEALIFE", sealife);
-        intent.putExtra("PATH", pathMedium);
-        context.startActivity(intent);
+        if (sealife.getWeight() != null) {
+            if (!sealife.getWeight().equals("")) {
+                System.out.println(sealife.getWeight());
+                weight.setText(sealife.getWeight());
+                findViewById(R.id.char_weight).setVisibility(View.VISIBLE);
+            }
+        }
+
+        if (sealife.getDepth() != null) {
+            if (!sealife.getDepth().equals("")) {
+                System.out.println(sealife.getDepth());
+                depth.setText(sealife.getDepth());
+                findViewById(R.id.char_depth).setVisibility(View.VISIBLE);
+            }
+        }
+
+        if (sealife.getScName() != null) {
+            if (!sealife.getScName().equals("")) {
+                System.out.println(sealife.getScName());
+                scname.setText(sealife.getScName());
+                findViewById(R.id.char_scname).setVisibility(View.VISIBLE);
+            }
+        }
+
+        if (sealife.getOrder() != null) {
+            if (!sealife.getOrder().equals("")) {
+                System.out.println(sealife.getOrder());
+                order.setText(sealife.getOrder());
+                findViewById(R.id.char_order).setVisibility(View.VISIBLE);
+            }
+        }
+
+        if (sealife.getDistribution() != null) {
+            System.out.println(sealife.getDistribution());
+            distribution.setText(sealife.getDistribution());
+            findViewById(R.id.char_distribution).setVisibility(View.VISIBLE);
+        }
+
+        if (sealife.getScCLass() != null) {
+            if (!sealife.getScCLass().equals("")) {
+                System.out.println(sealife.getScCLass());
+                scclass.setText(sealife.getScCLass());
+                findViewById(R.id.char_scclass).setVisibility(View.VISIBLE);
+            }
+        }
+
+        if (sealife.getHabitat() != null) {
+            if (!sealife.getHabitat().equals("")) {
+                System.out.println(sealife.getHabitat());
+                habitat.setText(sealife.getHabitat());
+                findViewById(R.id.char_habitat).setVisibility(View.VISIBLE);
+            }
+        }
     }
 
     @Override

@@ -98,13 +98,11 @@ public class DiveCentersInfoWindowAdapter implements GoogleMap.InfoWindowAdapter
         dc_name.setText(dc.getName());
         if (dc.getAddress() != null) {
             dc_address.setText(dc.getAddress());
-        } else {
-            dc_address.setText("-");
+            dc_address.setVisibility(View.VISIBLE);
         }
         if (dc.getPhone() != null) {
             dc_telephone.setText(dc.getPhone());
-        } else {
-            dc_telephone.setText("-");
+            view.findViewById(R.id.phone_number).setVisibility(View.VISIBLE);
         }
         for (int i = 0; i < dc.getRating(); i++) {
             ImageView iv = new ImageView(context);

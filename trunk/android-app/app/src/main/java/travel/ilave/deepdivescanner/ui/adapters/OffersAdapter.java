@@ -1,7 +1,6 @@
 package travel.ilave.deepdivescanner.ui.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +12,6 @@ import java.util.ArrayList;
 
 import travel.ilave.deepdivescanner.R;
 import travel.ilave.deepdivescanner.entities.Offer;
-import travel.ilave.deepdivescanner.entities.Product;
-import travel.ilave.deepdivescanner.ui.activities.OffersActivity;
 
 /**
  * Created by Admin on 28.11.2015.

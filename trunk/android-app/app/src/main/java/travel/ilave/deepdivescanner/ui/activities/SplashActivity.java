@@ -8,7 +8,6 @@ import android.view.View;
 import com.google.android.gms.maps.model.LatLng;
 
 import travel.ilave.deepdivescanner.R;
-import travel.ilave.deepdivescanner.entities.City;
 import travel.ilave.deepdivescanner.services.GPSTracker;
 import travel.ilave.deepdivescanner.ui.views.DDProgressBarView;
 

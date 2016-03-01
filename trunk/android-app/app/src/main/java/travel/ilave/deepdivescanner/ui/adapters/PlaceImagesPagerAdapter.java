@@ -2,26 +2,11 @@ package travel.ilave.deepdivescanner.ui.adapters;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v13.app.FragmentStatePagerAdapter;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-import travel.ilave.deepdivescanner.entities.City;
-import travel.ilave.deepdivescanner.entities.Product;
-import travel.ilave.deepdivescanner.entities.ProductDetails;
-import travel.ilave.deepdivescanner.ui.fragments.ImproveLevelFragment;
 import travel.ilave.deepdivescanner.ui.fragments.PlaceImageFragment;
 
 public class PlaceImagesPagerAdapter extends FragmentStatePagerAdapter {

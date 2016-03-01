@@ -76,7 +76,7 @@ public class CityActivity extends AppCompatActivity {
             setContentView(R.layout.activity_city);
             findViews();
             setSupportActionBar(toolbar);
-            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_search_location);
+            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_actionbar_search);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             latLng = getIntent().getParcelableExtra("LATLNG");
             filters = getIntent().getParcelableExtra("FILTERS");
@@ -106,7 +106,7 @@ public class CityActivity extends AppCompatActivity {
             floatingActionButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    FilterActivity.show(CityActivity.this, PlacesPagerAdapter.getLastLatlng());
+                    FilterActivity.show(CityActivity.this);
                 }
             });
         }

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.media.Image;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import com.squareup.picasso.Picasso;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 import travel.ilave.deepdivescanner.R;
 import travel.ilave.deepdivescanner.entities.DiveCenter;
@@ -28,6 +30,7 @@ import travel.ilave.deepdivescanner.ui.activities.DivePlaceActivity;
  */
 public class DiveCentersListAdapter extends RecyclerView.Adapter<DiveCentersListAdapter.DiveCentersListViewHolder> {
 
+    private static final String TAG = DiveCentersListAdapter.class.getName();
     public static ArrayList<DiveCenter> diveCenters;
     private String logoPath;
     private Context context;
@@ -51,22 +54,28 @@ public class DiveCentersListAdapter extends RecyclerView.Adapter<DiveCentersList
     public void onBindViewHolder(DiveCentersListViewHolder diveCentersListViewHolder, int i) {
         int rating = 0;
         DiveCenter diveCenter = diveCenters.get(i);
-        if(diveCenter.getName() != null) {
+        if (diveCenter.getName() != null) {
             diveCentersListViewHolder.dcName.setText(diveCenter.getName());
-        } else {
-            diveCentersListViewHolder.dcName.setText("-");
         }
-        if(diveCenter.getPhone() != null) {
-            diveCentersListViewHolder.dcPhone.setText(diveCenter.getPhone());
-        } else {
-            diveCentersListViewHolder.dcPhone.setText("-");
+        if (diveCenter.getPhone() != null) {
+            String phone = diveCenter.getPhone();
+            phone = phone.replaceAll(" ", "");
+            phone = phone.replaceAll("\\-", "\n");
+            diveCentersListViewHolder.dcPhone.setVisibility(View.VISIBLE);
+            diveCentersListViewHolder.dcPhone.setText(phone);
+            diveCentersListViewHolder.ic_phone.setVisibility(View.VISIBLE);
         }
-        if(diveCenter.getAddress() != null) {
+        if (diveCenter.getAddress() != null) {
+            diveCentersListViewHolder.dcAddress.setVisibility(View.VISIBLE);
             diveCentersListViewHolder.dcAddress.setText(diveCenter.getAddress());
-        } else {
-            diveCentersListViewHolder.dcAddress.setText("-");
         }
-        if(diveCenter.getLogo() != null) {
+        if (diveCenter.getEmail() != null) {
+            diveCentersListViewHolder.ic_email.setVisibility(View.VISIBLE);
+            diveCentersListViewHolder.dcEmail.setVisibility(View.VISIBLE);
+            diveCentersListViewHolder.dcEmail.setText(diveCenter.getEmail());
+
+        }
+        if (diveCenter.getLogo() != null) {
             String imageUrlPath = logoPath + diveCenter.getLogo();
             Picasso.with(context).load(imageUrlPath).into(diveCentersListViewHolder.imgLogo);
         }
@@ -76,7 +85,7 @@ public class DiveCentersListAdapter extends RecyclerView.Adapter<DiveCentersList
             System.out.println(Math.round(diveCenter.getRating()));
             ImageView iv = new ImageView(context);
             iv.setImageResource(R.drawable.ic_flag_full_small);
-            iv.setPadding(5,0,5,0);
+            iv.setPadding(5, 0, 5, 0);
             diveCentersListViewHolder.starsLayout.addView(iv);
         }
         for (int k = 0; k < 5 - rating; k++) {
@@ -90,17 +99,18 @@ public class DiveCentersListAdapter extends RecyclerView.Adapter<DiveCentersList
 
     @Override
     public int getItemCount() {
-        if(diveCenters == null)
-        {
+        if (diveCenters == null) {
             return 0;
-        } else {
-            return diveCenters.size();
         }
+
+        return diveCenters.size();
     }
 
-    public static class DiveCentersListViewHolder extends RecyclerView.ViewHolder  {
+    public static class DiveCentersListViewHolder extends RecyclerView.ViewHolder {
 
+        private ImageView ic_phone, ic_email;
         private ImageView imgLogo;
+        private TextView dcEmail;
         private TextView dcName;
         private TextView dcAddress;
         private TextView dcPhone;
@@ -108,13 +118,14 @@ public class DiveCentersListAdapter extends RecyclerView.Adapter<DiveCentersList
 
         public DiveCentersListViewHolder(View v) {
             super(v);
+            dcEmail = (TextView) v.findViewById(R.id.dc_email);
+            ic_phone = (ImageView) v.findViewById(R.id.ic_phone);
+            ic_email = (ImageView) v.findViewById(R.id.dc_ic_mail);
             imgLogo = (ImageView) v.findViewById(R.id.dc_avatar);
             dcName = (TextView) v.findViewById(R.id.dc_name);
             dcAddress = (TextView) v.findViewById(R.id.dc_address);
             dcPhone = (TextView) v.findViewById(R.id.dc_telefon);
             starsLayout = (LinearLayout) v.findViewById(R.id.stars);
-
-
         }
 
     }

@@ -62,6 +62,7 @@ public class DiveCentersActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Dive centers");
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_actionbar_back);
     }
 
     private void populateDiveCentesPager(Divecenters divecenters) {

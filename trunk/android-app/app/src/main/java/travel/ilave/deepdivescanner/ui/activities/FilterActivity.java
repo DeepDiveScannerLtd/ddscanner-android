@@ -1,5 +1,6 @@
 package travel.ilave.deepdivescanner.ui.activities;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,21 +9,30 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.support.v7.widget.Toolbar;
 
+import com.google.android.gms.drive.query.Filter;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.Gson;
 
 import java.io.Serializable;
+import java.util.List;
 
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 import travel.ilave.deepdivescanner.R;
 import travel.ilave.deepdivescanner.entities.Filters;
+import travel.ilave.deepdivescanner.rest.RestClient;
 
 /**
  * Created by lashket on 22.1.16.
  */
-public class FilterActivity extends AppCompatActivity {
+public class FilterActivity extends AppCompatActivity implements View.OnClickListener{
 
     private RadioGroup rgLevel;
     private RadioGroup rgCurrents;
@@ -32,6 +42,10 @@ public class FilterActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private Filters filters = new Filters();
     private Button button;
+    private List<String> currents;
+    private List<String> level;
+    private List<String> visibility;
+    private ProgressDialog progressDialog;
 
 
     @Override
@@ -42,19 +56,13 @@ public class FilterActivity extends AppCompatActivity {
         findViews();
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                System.out.println(getCurrents(rgCurrents.getCheckedRadioButtonId()));
-                filters.setCurrents(String.valueOf(getCurrents(rgCurrents.getCheckedRadioButtonId())));
-                filters.setVisibility(getVisibility(rgVisibility.getCheckedRadioButtonId()));
-                filters.setLevel("");
-                Intent intent = new Intent(FilterActivity.this, CityActivity.class);
-                intent.putExtra("LATLNG", latLng);
-                intent.putExtra("FILTERS", filters);
-                startActivity(intent);
-            }
-        });
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_actionbar_back);
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage(getApplicationContext().getResources().getString(R.string.pleaseWait));
+        progressDialog.show();
+        request();
+        progressDialog.dismiss();
+
     }
 
     private void findViews() {
@@ -65,86 +73,38 @@ public class FilterActivity extends AppCompatActivity {
         button = (Button) findViewById(R.id.apply_filter);
     }
 
-    public static void show(Context context, LatLng latLng) {
+    private void request() {
+
+        RestClient.getServiceInstance().getFilters(new Callback<Response>() {
+            @Override
+            public void success(Response s, Response response) {
+                String responseString = new String(((TypedByteArray) s.getBody()).getBytes());
+                System.out.println(responseString);
+                filters = new Gson().fromJson(responseString, Filters.class);
+                setCurrents(filters.getCurrents());
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
+    }
+
+    private void setCurrents(List<String> currents) {
+
+    }
+
+    @Override
+    public void onClick(View v) {
+
+    }
+
+    public static void show(Context context) {
         Intent intent = new Intent(context, FilterActivity.class);
-        intent.putExtra("LATLNG", latLng);
         context.startActivity(intent);
     }
 
-    private String getVisibility(int checkedId) {
-        String visibility = "";
-        switch (checkedId) {
-            case -1:
-                break;
-            case R.id.vis_excelent:
-                visibility = "excellent";
-                break;
-            case R.id.vis_good:
-                visibility = "good";
-                break;
-            case R.id.vis_bad:
-                visibility = "bad";
-                break;
-            default:
-                break;
-        }
-        return visibility;
-    }
-
-    private String getCurrents(int checkedId) {
-        String currents = "";
-        switch (checkedId) {
-            case -1:
-                currents = "";
-                break;
-            case R.id.cur_moderate:
-                currents = "moderate";
-                break;
-            case R.id.cur_strong:
-                currents = "strong";
-                break;
-            case R.id.cur_low:
-                currents = "low";
-                break;
-            default:
-                break;
-        }
-        return currents;
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_filter, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.reset_filters:
-                resetChecking();
-                return true;
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    void resetChecking() {
-        RadioButton radioButton = (RadioButton) findViewById(rgCurrents.getCheckedRadioButtonId());
-        if (radioButton != null) {
-            radioButton.setChecked(false);
-        }
-        radioButton = (RadioButton) findViewById(rgLevel.getCheckedRadioButtonId());
-        if (radioButton != null) {
-            radioButton.setChecked(false);
-        }
-        radioButton = (RadioButton) findViewById(rgVisibility.getCheckedRadioButtonId());
-        if (radioButton != null) {
-            radioButton.setChecked(false);
-        }
-    }
 
 }

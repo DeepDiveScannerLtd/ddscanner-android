@@ -46,8 +46,8 @@
 
     <ImageView
         android:id="@+id/product_logo"
-        android:layout_width="140dp"
-        android:layout_height="150dp"
+        android:layout_width="130dp"
+        android:layout_height="130dp"
         android:layout_alignParentRight="true"
-        android:src="@drawable/list_photo"/>
+        android:src="@drawable/list_photo_default"/>
     </RelativeLayout>

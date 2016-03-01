@@ -44,12 +44,15 @@
             android:id="@+id/iw_dc_address"
             android:layout_below="@+id/stars"
             android:layout_marginTop="10dp"
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <RelativeLayout
+            android:id="@+id/phone_number"
             android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_below="@+id/iw_dc_address"
+            android:visibility="gone"
             android:layout_height="wrap_content">
         <ImageView
             android:id="@+id/ic_phone"
@@ -62,8 +65,7 @@
             android:id="@+id/iw_dc_telefon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:inputType="phone"
-            android:textSize="18sp"
+            android:textSize="15sp"
             android:layout_marginLeft="5dp"
             android:textColor="@color/black_text"
             android:text="+67 49 299 4825"/>

@@ -139,6 +139,7 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(name);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_actionbar_back);
     }
 
     private void populateProductDetails() {

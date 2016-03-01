@@ -1,34 +1,22 @@
 package travel.ilave.deepdivescanner.ui.adapters;
 
-import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import org.w3c.dom.Text;
-
-import java.net.URI;
 import java.util.ArrayList;
 
 import travel.ilave.deepdivescanner.R;
 import travel.ilave.deepdivescanner.entities.DiveSpot;
-import travel.ilave.deepdivescanner.entities.Product;
-import travel.ilave.deepdivescanner.entities.ProductDetails;
-import travel.ilave.deepdivescanner.ui.activities.CityActivity;
 import travel.ilave.deepdivescanner.ui.activities.DivePlaceActivity;
 
 /**
@@ -61,9 +49,9 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
 //        productListViewHolder.productPrice.setText(String.valueOf("15"));
         productListViewHolder.description.setText(divespot.getDescription());
         if (divespot.getImages() != null) {
-            Picasso.with(conText).load(divespot.getImages().get(0)).resize(140, 150).into(productListViewHolder.imageView);
+            Picasso.with(conText).load(divespot.getImages().get(0)).resize(130, 130).into(productListViewHolder.imageView);
         } else {
-            productListViewHolder.imageView.setImageDrawable(ContextCompat.getDrawable(conText,R.drawable.list_photo));
+            productListViewHolder.imageView.setImageDrawable(ContextCompat.getDrawable(conText,R.drawable.list_photo_default));
         }
         if(divespot.getName() != null) {
              productListViewHolder.title.setText(divespot.getName());
