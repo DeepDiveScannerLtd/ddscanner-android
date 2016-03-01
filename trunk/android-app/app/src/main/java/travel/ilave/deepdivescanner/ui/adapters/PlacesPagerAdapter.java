@@ -3,8 +3,6 @@ package travel.ilave.deepdivescanner.ui.adapters;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.widget.Toast;
 
@@ -15,11 +13,9 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
-import com.google.maps.android.clustering.ClusterManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import retrofit.Callback;
@@ -44,7 +40,7 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Goo
     private PlacesPagerAdapter placesPagerAdapter;
     private DivespotsWrapper divespotsWrapper;
     private static ArrayList<DiveSpot> divespots = new ArrayList<>();
-    private static Map<String, String> map = new HashMap<String, String>();
+    private static Map<String, String> map = new HashMap<>();
     private static GoogleMap gMap;
     private Filters filters;
     private String path;
@@ -71,7 +67,7 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Goo
                 ((MapFragment) fragment).getMapAsync(new OnMapReadyCallback() {
                     @Override
                     public void onMapReady(final GoogleMap googleMap) {
-                        if (latLng.longitude == 0 && latLng.longitude == 0) {
+                        if (latLng.longitude == 0 && latLng.latitude == 0) {
                             latLng = new LatLng(53.902378, 27.557184);
                         }
                         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 8.0f));
@@ -112,16 +108,16 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Goo
     }
 
 
-    public double radius(LatLng latCenter, LatLng topRightCorner) {
-        double maxRadius = 0;
-
-        maxRadius = topRightCorner.latitude - latCenter.latitude;
-
-        if ((topRightCorner.longitude - latCenter.longitude) > maxRadius) {
-            maxRadius = topRightCorner.longitude - latCenter.longitude;
-        }
-        return maxRadius;
-    }
+//    public double radius(LatLng latCenter, LatLng topRightCorner) {
+//        double maxRadius = 0;
+//
+//        maxRadius = topRightCorner.latitude - latCenter.latitude;
+//
+//        if ((topRightCorner.longitude - latCenter.longitude) > maxRadius) {
+//            maxRadius = topRightCorner.longitude - latCenter.longitude;
+//        }
+//        return maxRadius;
+//    }
 
     @Override
     public void onCameraChange(CameraPosition cameraPosition) {
@@ -173,5 +169,5 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Goo
         }
     }
 
-    public static Map<String, String> getLastRequest() { return map; }
+//    public static Map<String, String> getLastRequest() { return map; }
 }

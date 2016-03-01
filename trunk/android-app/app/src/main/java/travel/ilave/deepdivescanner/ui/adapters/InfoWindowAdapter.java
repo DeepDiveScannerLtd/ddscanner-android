@@ -2,13 +2,16 @@ package travel.ilave.deepdivescanner.ui.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Point;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -19,7 +22,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import travel.ilave.deepdivescanner.MultiListener;
+import travel.ilave.deepdivescanner.DDScannerApplication;
 import travel.ilave.deepdivescanner.R;
 import travel.ilave.deepdivescanner.entities.DiveSpot;
 import travel.ilave.deepdivescanner.ui.activities.DivePlaceActivity;
@@ -46,11 +49,14 @@ public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter, GoogleMap
     private ImageView photo;
     private TextView description;
     private boolean not_first_time_showing_info_window;
+    private Point mapCenteringPoint;
 
     public InfoWindowAdapter(Context context, ArrayList<DiveSpot> diveSpots, GoogleMap map) {
         this.mContext = context;
         this.googleMap = map;
         googleMap.setOnInfoWindowClickListener(this);
+        googleMap.setOnMarkerClickListener(this);
+
         if (this.diveSpots != null) {
             for (DiveSpot diveSpot : this.diveSpots) {
                 addNewDiveSpot(diveSpot);
@@ -103,6 +109,11 @@ public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter, GoogleMap
     @Override
     public boolean onMarkerClick(Marker marker) {
         marker.showInfoWindow();
+        Projection projection = googleMap.getProjection();
+        mapCenteringPoint = projection.toScreenLocation(marker.getPosition());
+        mapCenteringPoint.y = mapCenteringPoint.y - DDScannerApplication.getInstance().getResources().getDimensionPixelSize(R.dimen.info_window_height) / 2;
+        LatLng newMarkerPosition = new LatLng(projection.fromScreenLocation(mapCenteringPoint).latitude, marker.getPosition().longitude);
+        googleMap.animateCamera(CameraUpdateFactory.newLatLng(newMarkerPosition), 300, null);
         return true;
     }
 

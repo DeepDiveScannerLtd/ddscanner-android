@@ -1,51 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="260dp"
-    android:layout_height="wrap_content" >
+    android:layout_width="@dimen/info_window_width"
+    android:layout_height="@dimen/info_window_height"
+    android:orientation="vertical">
+
     <ImageView
         android:id="@+id/popup_photo"
-        android:layout_height="195dp"
         android:layout_width="260dp"
+        android:layout_height="195dp"
+        android:background="@color/white"
         android:src="@drawable/photo"
-        android:background="@color/white"/>
+        android:scaleType="centerCrop"/>
+
     <TextView
         android:id="@+id/popup_product_name"
         android:layout_width="175dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="160dp"
         android:layout_marginLeft="10dp"
-        android:textSize="22sp"
+        android:layout_alignBottom="@id/popup_photo"
+        android:ellipsize="end"
         android:textColor="@color/white"
-        android:text="Rock Back"/>
+        android:textSize="22sp" />
+
     <LinearLayout
         android:id="@+id/descr"
-        android:background="@color/white"
         android:layout_width="260dp"
+        android:layout_height="71dp"
         android:layout_below="@+id/popup_photo"
-        android:layout_height="71dp">
+        android:background="@color/white">
+
         <TextView
             android:id="@+id/description_popup"
             android:layout_width="240dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_below="@+id/popup_photo"
-            android:textSize="14sp"
-            android:textColor="@color/black_text"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="10dp"
             android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
             android:ellipsize="end"
             android:lines="3"
-            android:layout_marginRight="10dp"/>
+            android:textColor="@color/black_text"
+            android:textSize="14sp" />
     </LinearLayout>
 
     <LinearLayout
-        android:layout_below="@+id/descr"
         android:id="@+id/stars"
-        android:gravity="center_vertical|center_horizontal"
         android:layout_width="260dp"
         android:layout_height="30dp"
+        android:layout_below="@+id/descr"
         android:background="@color/white"
-        android:orientation="horizontal"
-        >
-    </LinearLayout>
+        android:gravity="center_vertical|center_horizontal"
+        android:orientation="horizontal"></LinearLayout>
 </RelativeLayout>
