@@ -27,57 +27,14 @@
             android:layout_below="@id/custom_heading"
             android:gravity="center_horizontal"
             android:padding="10dp"
-            android:text="leave your email and we will inform about the innovations in the application"
-            android:textSize="14sp" />
-
-        <android.support.v7.widget.AppCompatEditText
-            android:id="@+id/user_name_subscribe"
-            style="@style/editTextSub"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/notification"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:hint="First name"
-            android:textColorHint="@color/accent"
-            android:textColorLink="@color/black_text"
-            android:textCursorDrawable="@null" />
-
-        <android.support.v7.widget.AppCompatEditText
-            android:id="@+id/user_lastname_subscribe"
-            style="@style/editTextSub"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/user_name_subscribe"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="10dp"
-            android:hint="Lastname"
-            android:inputType="textEmailAddress"
-            android:textColorHint="@color/accent"
-            android:textColorLink="@color/black_text"
-            android:textCursorDrawable="@null" />
-
-        <android.support.v7.widget.AppCompatEditText
-            android:id="@+id/user_email_subscribe"
-            style="@style/editTextSub"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/user_lastname_subscribe"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="10dp"
-            android:hint="example@mail.com"
-            android:inputType="textEmailAddress"
-            android:textColorHint="@color/accent"
-            android:textColorLink="@color/black_text"
-            android:textCursorDrawable="@null" />
+            android:text="Do you want to leave feedback on DDScanner"
+            android:textSize="16sp" />
 
         <ImageView
             android:id="@+id/divider_dialog"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/user_email_subscribe"
+            android:layout_below="@+id/notification"
             android:layout_marginTop="10dp"
             android:src="@drawable/divider" />
 

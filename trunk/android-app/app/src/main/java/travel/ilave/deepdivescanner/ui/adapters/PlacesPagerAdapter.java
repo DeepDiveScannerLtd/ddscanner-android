@@ -42,13 +42,13 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Goo
     private static ArrayList<DiveSpot> divespots = new ArrayList<>();
     private static Map<String, String> map = new HashMap<>();
     private static GoogleMap gMap;
-    private Filters filters;
+    private HashMap<String, String> filters = new HashMap<String, String>();
     private String path;
     private InfoWindowAdapter infoWindowAdapter;
     private MapFragment mapFragment;
     private ProductListFragment productListFragment;
 
-    public PlacesPagerAdapter(Context context, FragmentManager fm, ArrayList<DiveSpot> divespots, LatLng latLng, Filters filters) {
+    public PlacesPagerAdapter(Context context, FragmentManager fm, ArrayList<DiveSpot> divespots, LatLng latLng, HashMap<String, String> filters) {
         super(fm);
         this.fm = fm;
         this.context = context;
@@ -128,6 +128,20 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Goo
         map.put("lngLeft", String.valueOf(left.longitude - 1.0));
         map.put("lngRight", String.valueOf(right.longitude + 1.0));
         map.put("latRight", String.valueOf(right.latitude + 2.0));
+        if (filters != null) {
+            if (!filters.get("visibility").equals("")) {
+                map.put("visibility", filters.get("visibility").toLowerCase());
+                System.out.println(filters.get("visibility"));
+            }
+            if (!filters.get("level").equals("")) {
+                map.put("level", filters.get("level").toLowerCase());
+                System.out.println(filters.get("level"));
+            }
+            if (!filters.get("currents").equals("")) {
+                map.put("currents", filters.get("currents").toLowerCase());
+                System.out.println(filters.get("currents"));
+            }
+        }
         RestClient.getServiceInstance().getDivespots(map, new Callback<Response>() {
             @Override
             public void success(Response s, Response response) {
@@ -155,8 +169,8 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter implements Goo
                 } else if (error.getKind().equals(RetrofitError.Kind.HTTP)) {
                     Toast.makeText(context, "Server is not responsible, please try later", Toast.LENGTH_SHORT).show();
                 }
-//               String json =  new String(((TypedByteArray)error.getResponse().getBody()).getBytes());
-          //      System.out.println("failure" + json.toString());
+               String json =  new String(((TypedByteArray)error.getResponse().getBody()).getBytes());
+                System.out.println("failure" + json.toString());
             }
         });
     }

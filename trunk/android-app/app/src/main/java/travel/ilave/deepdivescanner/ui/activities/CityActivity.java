@@ -10,6 +10,8 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
@@ -26,10 +28,13 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.maps.model.LatLng;
@@ -61,13 +66,19 @@ public class CityActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private DivespotsWrapper divespotsWrapper;
     private LatLng latLng;
-    private Filters filters = new Filters();
-    private Map<String, String> map = new HashMap<String, String>();
+    //  private Filters filters = new Filters();
+    private HashMap<String, String> filters = new HashMap<String, String>();
     private BroadcastReceiver mRegistrationBroadcatReceiver;
     private FloatingActionButton floatingActionButton;
+    private FloatingActionButton feedback;
     private SubscribeDialog subscribeDialog = new SubscribeDialog();
 
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +90,7 @@ public class CityActivity extends AppCompatActivity {
             getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_actionbar_search);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             latLng = getIntent().getParcelableExtra("LATLNG");
-            filters = getIntent().getParcelableExtra("FILTERS");
+            filters = (HashMap<String, String>) getIntent().getSerializableExtra("FILTERS");
             getSupportActionBar().setTitle("DDScanner");
             if (!getCity(latLng).equals("")) {
                 getSupportActionBar().setTitle(getCity(latLng));
@@ -109,8 +120,7 @@ public class CityActivity extends AppCompatActivity {
                     FilterActivity.show(CityActivity.this);
                 }
             });
-        }
-        else {
+        } else {
             setContentView(R.layout.activity_error);
             Button btnRefresh = (Button) findViewById(R.id.btnRefresh);
             btnRefresh.setOnClickListener(new View.OnClickListener() {
@@ -123,6 +133,15 @@ public class CityActivity extends AppCompatActivity {
                 }
             });
         }
+        feedback.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               subscribeDialog.show(getFragmentManager(), "");
+            }
+        });
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+       // client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     private void populatePlaceViewpager(LatLng latLng) {
@@ -138,6 +157,7 @@ public class CityActivity extends AppCompatActivity {
         placeViewPager = (ViewPager) findViewById(R.id.place_view_pager);
         floatingActionButton = (FloatingActionButton) findViewById(R.id.filterButton);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        feedback = (FloatingActionButton) findViewById(R.id.feedbackFloat);
     }
 
     @Override
@@ -173,25 +193,24 @@ public class CityActivity extends AppCompatActivity {
                 return true;
             case R.id.profile:
                 if (SharedPreferenceHelper.getIsUserLogined()) {
-                    Toast.makeText(this, "You are already login", Toast.LENGTH_LONG);
+                    Toast.makeText(CityActivity.this, "You are already login", Toast.LENGTH_LONG);
                 } else {
                     SocialNetworks.show(CityActivity.this);
                 }
-              //  subscribeDialog.show(getFragmentManager(), "");
+                //  subscribeDialog.show(getFragmentManager(), "");
                 return true;
             case R.id.logbook:
                 if (SharedPreferenceHelper.getIsUserLogined()) {
-                    Toast.makeText(this, "You are already login", Toast.LENGTH_LONG);
+                    Toast.makeText(CityActivity.this, "You are already login", Toast.LENGTH_LONG);
                 } else {
                     SocialNetworks.show(CityActivity.this);
                 }
-               // subscribeDialog.show(getFragmentManager(), "");
+                // subscribeDialog.show(getFragmentManager(), "");
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
-
 
 
     public static void show(Context context, LatLng latLng) {
@@ -252,26 +271,69 @@ public class CityActivity extends AppCompatActivity {
         return city;
     }
 
-    public static boolean hasConnection(final Context context)
-    {
-        ConnectivityManager cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+    public static boolean hasConnection(final Context context) {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo wifiInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-        if (wifiInfo != null && wifiInfo.isConnected())
-        {
+        if (wifiInfo != null && wifiInfo.isConnected()) {
             return true;
         }
         wifiInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
-        if (wifiInfo != null && wifiInfo.isConnected())
-        {
+        if (wifiInfo != null && wifiInfo.isConnected()) {
             return true;
         }
         wifiInfo = cm.getActiveNetworkInfo();
-        if (wifiInfo != null && wifiInfo.isConnected())
-        {
+        if (wifiInfo != null && wifiInfo.isConnected()) {
             return true;
         }
         return false;
     }
+
+    public static void showWIthFIlters(Context context, HashMap<String, String> map, LatLng latLng) {
+        Intent intent = new Intent(context, CityActivity.class);
+        intent.putExtra("LATLNG", latLng);
+        intent.putExtra("FILTERS", map);
+        context.startActivity(intent);
+    }
+
+  /*  @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "City Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app deep link URI is correct.
+                Uri.parse("android-app://travel.ilave.deepdivescanner.ui.activities/http/host/path")
+        );
+        AppIndex.AppIndexApi.start(client, viewAction);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "City Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app deep link URI is correct.
+                Uri.parse("android-app://travel.ilave.deepdivescanner.ui.activities/http/host/path")
+        );
+        AppIndex.AppIndexApi.end(client, viewAction);
+        client.disconnect();
+    }*/
 
    /* @Override
     public void onResume() {

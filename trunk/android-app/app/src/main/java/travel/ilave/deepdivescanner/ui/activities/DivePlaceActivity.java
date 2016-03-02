@@ -42,6 +42,7 @@ import travel.ilave.deepdivescanner.ui.adapters.PlaceImagesPagerAdapter;
 import travel.ilave.deepdivescanner.ui.adapters.SealifeListAdapter;
 import travel.ilave.deepdivescanner.ui.dialogs.SubscribeDialog;
 import travel.ilave.deepdivescanner.utils.LogUtils;
+import travel.ilave.deepdivescanner.utils.SharedPreferenceHelper;
 
 public class DivePlaceActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -207,7 +208,12 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
                 onBackPressed();
                 return true;
             case R.id.favorite:
-                subscribeDialog.show(getFragmentManager(), "");
+              //  subscribeDialog.show(getFragmentManager(), "");
+                if (SharedPreferenceHelper.getIsUserLogined()) {
+                    Toast.makeText(DivePlaceActivity.this, "You are already login", Toast.LENGTH_LONG);
+                } else {
+                    SocialNetworks.show(DivePlaceActivity.this);
+                }
             default:
                 return super.onOptionsItemSelected(item);
         }

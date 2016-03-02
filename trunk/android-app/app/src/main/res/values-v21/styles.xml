@@ -9,6 +9,10 @@
         <item name="android:colorPrimaryDark">@color/primary_dark</item>
     </style>
 
+    <style name="RadioButton" parent="@android:style/Widget.CompoundButton.RadioButton">
+        <item name="android:button">@drawable/radio</item>
+    </style>
+
     <style name="drawer_item">
         <item name="android:gravity">left|center_vertical</item>
         <item name="android:background">@null</item>

@@ -60,7 +60,7 @@ public class DiveCentersListAdapter extends RecyclerView.Adapter<DiveCentersList
         if (diveCenter.getPhone() != null) {
             String phone = diveCenter.getPhone();
             phone = phone.replaceAll(" ", "");
-            phone = phone.replaceAll("\\-", "\n");
+            phone = phone.replaceAll("\\-+\\+", "\n");
             diveCentersListViewHolder.dcPhone.setVisibility(View.VISIBLE);
             diveCentersListViewHolder.dcPhone.setText(phone);
             diveCentersListViewHolder.ic_phone.setVisibility(View.VISIBLE);

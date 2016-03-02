@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -47,10 +50,6 @@ public class SubscribeDialog extends DialogFragment implements View.OnClickListe
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.succes_subscribe_dialog, null);
         builder.setView(dialogView);
-
-        lastName = (EditText) dialogView.findViewById(R.id.user_lastname_subscribe);
-        firstName = (EditText) dialogView.findViewById(R.id.user_name_subscribe);
-        eMail = (EditText) dialogView.findViewById(R.id.user_email_subscribe);
         btnOk = (Button) dialogView.findViewById(R.id.okbutton_subscribe);
         btnCancel = (Button) dialogView.findViewById(R.id.cancel_button_subscribe);
 
@@ -78,15 +77,22 @@ public class SubscribeDialog extends DialogFragment implements View.OnClickListe
         });
     }*/
 
+    private void sendEmail() {
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("mailto:"));
+        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"info@ddscanner.com"});
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Feedback about ddscanner");
+        intent.putExtra(Intent.EXTRA_TEXT, "\n--"+"\nOS version: " + System.getProperty("os.version") + "\nAPI level: " + Build.VERSION.SDK
+                + "\nDevice: " + Build.DEVICE + "\nModel: " + Build.MODEL + "\nProduct: " + Build.PRODUCT );
+        startActivity(Intent.createChooser(intent, "Send Email"));
+    }
+
     @Override
     public void onClick(View v) {
         switch(v.getId())
         {
             case R.id.okbutton_subscribe:
-               /* map.put("firstName", firstName.getText().toString());
-                map.put("lastName", lastName.getText().toString());
-                map.put("email", eMail.getText().toString());
-                sendSubscribeRequest(map);*/
+                sendEmail();
                 this.dismiss();
                 break;
             case R.id.cancel_button_subscribe:
