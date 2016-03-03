@@ -10,16 +10,20 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.Projection;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.gson.Gson;
-import com.google.maps.android.MarkerManager;
+import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.algo.GridBasedAlgorithm;
+import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -41,10 +45,11 @@ import travel.ilave.deepdivescanner.utils.LogUtils;
 /**
  * Created by lashket on 10.12.15.
  */
-public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
+public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter, ClusterManager.OnClusterClickListener<DiveSpot> {
 
     private static final String TAG = InfoWindowAdapter.class.getName();
     public static final String PRODUCT = "PRODUCT";
+    private static final int CAMERA_ANIMATION_DURATION = 300;
 
     private PlacesPagerAdapter placesPagerAdapter;
     private Context mContext;
@@ -61,9 +66,12 @@ public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
         this.placesPagerAdapter = placesPagerAdapter;
         this.googleMap = map;
         diveSpotsClusterManager = new DiveSpotsClusterManager(context, map);
+        diveSpotsClusterManager.setRenderer(new IconRenderer(context, googleMap, diveSpotsClusterManager));
+        diveSpotsClusterManager.setOnClusterClickListener(this);
         googleMap.setOnInfoWindowClickListener(diveSpotsClusterManager);
         googleMap.getUiSettings().setMapToolbarEnabled(false);
         googleMap.setOnMarkerClickListener(diveSpotsClusterManager);
+        googleMap.setOnCameraChangeListener(diveSpotsClusterManager);
 
         if (diveSpots != null) {
             for (DiveSpot diveSpot : diveSpots) {
@@ -132,7 +140,7 @@ public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
         for (DiveSpot diveSpot : newDiveSpots) {
             addNewDiveSpot(diveSpot);
         }
-
+        diveSpotsClusterManager.cluster();
     }
 
     private void addNewDiveSpot(DiveSpot diveSpot) {
@@ -152,6 +160,18 @@ public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
         diveSpotsMap.remove(new LatLng(Double.valueOf(diveSpot.getLat()), Double.valueOf(diveSpot.getLng())));
         diveSpots.remove(diveSpot);
+    }
+
+    @Override
+    public boolean onClusterClick(Cluster<DiveSpot> cluster) {
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        for (DiveSpot diveSpot : cluster.getItems()) {
+            builder.include(diveSpot.getPosition());
+        }
+        LatLngBounds bounds = builder.build();
+        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 0);
+        googleMap.animateCamera(cu, CAMERA_ANIMATION_DURATION, null);
+        return true;
     }
 
     private class InfoWindowRefresher implements Callback {
@@ -188,12 +208,15 @@ public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
         @Override
         public boolean onMarkerClick(Marker marker) {
+            if (super.onMarkerClick(marker)) {
+                return true;
+            }
             marker.showInfoWindow();
             Projection projection = googleMap.getProjection();
             Point mapCenteringPoint = projection.toScreenLocation(marker.getPosition());
             mapCenteringPoint.y = mapCenteringPoint.y - DDScannerApplication.getInstance().getResources().getDimensionPixelSize(R.dimen.info_window_height) / 2;
             LatLng newMarkerPosition = new LatLng(projection.fromScreenLocation(mapCenteringPoint).latitude, marker.getPosition().longitude);
-            googleMap.animateCamera(CameraUpdateFactory.newLatLng(newMarkerPosition), 300, null);
+            googleMap.animateCamera(CameraUpdateFactory.newLatLng(newMarkerPosition), CAMERA_ANIMATION_DURATION, null);
             return true;
         }
 
@@ -232,6 +255,23 @@ public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
                 //      System.out.println("failure" + json.toString());
             }
         });
+    }
+
+    private class IconRenderer extends DefaultClusterRenderer<DiveSpot> {
+
+        public IconRenderer(Context context, GoogleMap map, ClusterManager<DiveSpot> clusterManager) {
+            super(context, map, clusterManager);
+        }
+
+        @Override
+        protected void onClusterItemRendered(DiveSpot diveSpot, final Marker marker) {
+            super.onClusterItemRendered(diveSpot, marker);
+            try {
+                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 }
