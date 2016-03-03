@@ -16,8 +16,6 @@ import travel.ilave.deepdivescanner.ui.views.DDProgressBarView;
  */
 public class SplashActivity extends Activity {
 
-    private double latitude;
-    private double longitude;
     private LatLng latLng;
 
     public void onCreate(Bundle savedInstanceState) {

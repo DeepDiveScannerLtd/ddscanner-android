@@ -7,12 +7,10 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
-
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
@@ -28,7 +26,6 @@ import travel.ilave.deepdivescanner.R;
 import travel.ilave.deepdivescanner.entities.Divecenters;
 import travel.ilave.deepdivescanner.rest.RestClient;
 import travel.ilave.deepdivescanner.ui.adapters.DiveCentersPagerAdapter;
-import travel.ilave.deepdivescanner.ui.adapters.PlacesPagerAdapter;
 
 /**
  * Created by lashket on 29.1.16.

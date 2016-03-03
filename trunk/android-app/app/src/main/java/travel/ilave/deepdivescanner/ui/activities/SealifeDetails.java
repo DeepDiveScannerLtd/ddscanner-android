@@ -2,7 +2,15 @@ package travel.ilave.deepdivescanner.ui.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -12,6 +20,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.security.PrivateKey;
 
 import travel.ilave.deepdivescanner.R;
 import travel.ilave.deepdivescanner.entities.Sealife;
@@ -26,6 +41,9 @@ public class SealifeDetails extends AppCompatActivity {
     private Sealife sealife;
     private String pathMedium;
     private CollapsingToolbarLayout collapsingToolbarLayout = null;
+    private Drawable drawable;
+    private Bitmap image;
+    private AppBarLayout appBarLayout;
     private Toolbar toolbar;
 
     public static void show(Context context, Sealife sealife, String pathMedium) {
@@ -48,6 +66,32 @@ public class SealifeDetails extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_actionbar_back);
         setContent();
+        appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
+        Picasso.with(this).load(pathMedium + sealife.getImage()).into(new Target() {
+            @Override
+            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                drawable = new BitmapDrawable(bitmap);
+                drawable.setColorFilter(Color.parseColor("#90000000"), PorterDuff.Mode.SRC_ATOP);
+                appBarLayout.setBackgroundDrawable(drawable);
+            }
+
+            @Override
+            public void onBitmapFailed(Drawable errorDrawable) {
+
+            }
+
+            @Override
+            public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+            }
+        });
+      /*  image = getBitmapFromURL(pathMedium+sealife.getImage());
+        if (image != null) {
+            drawable = new BitmapDrawable(image);
+            drawable.setColorFilter(Color.parseColor("#90000000"), PorterDuff.Mode.SRC_ATOP);
+            appBarLayout.setBackgroundDrawable(drawable);
+        }*/
+
 
     }
 
@@ -139,5 +183,20 @@ public class SealifeDetails extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
+ /*   public Bitmap getBitmapFromURL(String imageUrl) {
+        try {
+            URL url = new URL(imageUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            Bitmap myBitmap = BitmapFactory.decodeStream(input);
+            return myBitmap;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }*/
 
 }
