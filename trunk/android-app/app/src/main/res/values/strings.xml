@@ -40,11 +40,7 @@
     <string name="email">Email</string>
     <string name="serverNotResp">Server is not responsible, please try again later</string>
 
-    <!-- Subscribe layout -->
-    <string name="subscribe_firstname">First name</string>
-    <string name="subscribe_lastname">Last name</string>
-    <string name="subscribe_email">E-mail address</string>
-    <string name="subscribe_title">Subscribe</string>
+
 
     <!-- Details layout -->
     <string name="sealifePlace">Sealife</string>
@@ -61,6 +57,9 @@
 
     <string name="twitter_consumer_key">tT7PhwjwXb8dEXbhQzI529VR4</string>
     <string name="twitter_consumer_secret">C4wijpAOBWWwUVsmtyoMEhWUQD5P6BFulUDTVQGQmrJI32BlaT</string>
-    <string name="firebase_url">https://ddscanner.firebaseio.com</string>
+
+    <!-- Feedback dialog -->
+    <string name="feedback_text">Do you want to leave feedback on DDScanner?</string>
+    <string name="feedback_title">Gongratulations!</string>
 
 </resources>

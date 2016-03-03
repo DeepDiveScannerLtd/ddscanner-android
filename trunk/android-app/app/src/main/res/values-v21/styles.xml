@@ -7,10 +7,14 @@
         <item name="colorAccent">@color/accent</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
         <item name="android:colorPrimaryDark">@color/primary_dark</item>
+        <item name="android:radioButtonStyle">@style/RadioButton</item>
     </style>
 
     <style name="RadioButton" parent="@android:style/Widget.CompoundButton.RadioButton">
         <item name="android:button">@drawable/radio</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:width">300dp</item>
     </style>
 
     <style name="drawer_item">

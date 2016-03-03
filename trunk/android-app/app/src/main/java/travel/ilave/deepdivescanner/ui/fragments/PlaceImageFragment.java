@@ -1,6 +1,11 @@
 package travel.ilave.deepdivescanner.ui.fragments;
 
 import android.app.Fragment;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.RectF;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -8,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.facebook.drawee.drawable.ProgressBarDrawable;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.squareup.picasso.Picasso;
 
@@ -32,4 +38,5 @@ public class PlaceImageFragment extends Fragment {
      //   Picasso.with(getActivity()).load(imageUrl).into(imageView);
         return imageView;
     }
+
 }

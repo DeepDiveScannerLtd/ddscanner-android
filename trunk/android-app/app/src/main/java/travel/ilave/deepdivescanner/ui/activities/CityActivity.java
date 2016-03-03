@@ -56,7 +56,7 @@ import travel.ilave.deepdivescanner.ui.dialogs.SubscribeDialog;
 import travel.ilave.deepdivescanner.utils.SharedPreferenceHelper;
 
 
-public class CityActivity extends AppCompatActivity {
+public class CityActivity extends AppCompatActivity implements View.OnClickListener {
 
     public static final String TAG = "CityActivity";
 
@@ -95,31 +95,10 @@ public class CityActivity extends AppCompatActivity {
             if (!getCity(latLng).equals("")) {
                 getSupportActionBar().setTitle(getCity(latLng));
             }
-            mRegistrationBroadcatReceiver = new BroadcastReceiver() {
-                @Override
-                public void onReceive(Context context, Intent intent) {
-                    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-                    boolean sentToken = sharedPreferences.getBoolean(RegistrationIntentService.SENT_TOKEN_TO_SERVER, false);
-                    if (sentToken) {
 
-                    } else {
-                        //Error with token
-                    }
-                }
-            };
-
-            if (checkPlayServices()) {
-                Intent intent = new Intent(this, RegistrationIntentService.class);
-                startService(intent);
-            }
             populatePlaceViewpager(latLng);
+            playServices();
 
-            floatingActionButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    FilterActivity.show(CityActivity.this);
-                }
-            });
         } else {
             setContentView(R.layout.activity_error);
             Button btnRefresh = (Button) findViewById(R.id.btnRefresh);
@@ -133,12 +112,7 @@ public class CityActivity extends AppCompatActivity {
                 }
             });
         }
-        feedback.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-               subscribeDialog.show(getFragmentManager(), "");
-            }
-        });
+
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
        // client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
@@ -158,6 +132,8 @@ public class CityActivity extends AppCompatActivity {
         floatingActionButton = (FloatingActionButton) findViewById(R.id.filterButton);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         feedback = (FloatingActionButton) findViewById(R.id.feedbackFloat);
+        floatingActionButton.setOnClickListener(this);
+        feedback.setOnClickListener(this);
     }
 
     @Override
@@ -217,6 +193,26 @@ public class CityActivity extends AppCompatActivity {
         Intent intent = new Intent(context, CityActivity.class);
         intent.putExtra("LATLNG", latLng);
         context.startActivity(intent);
+    }
+
+    public void playServices() {
+        mRegistrationBroadcatReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+                boolean sentToken = sharedPreferences.getBoolean(RegistrationIntentService.SENT_TOKEN_TO_SERVER, false);
+                if (sentToken) {
+
+                } else {
+                    //Error with token
+                }
+            }
+        };
+
+        if (checkPlayServices()) {
+            Intent intent = new Intent(this, RegistrationIntentService.class);
+            startService(intent);
+        }
     }
 
     private void openSearchLocationWindow() {
@@ -343,4 +339,16 @@ public class CityActivity extends AppCompatActivity {
         }
         System.out.println("resumed");
     }*/
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.feedbackFloat:
+                subscribeDialog.show(getFragmentManager(), "");
+                break;
+            case R.id.filterButton:
+                FilterActivity.show(CityActivity.this);
+                break;
+        }
+    }
 }

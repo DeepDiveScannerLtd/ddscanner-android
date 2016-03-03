@@ -16,7 +16,7 @@
             android:layout_marginTop="20dp"
             android:fontFamily="sans-serif-medium"
             android:gravity="center_horizontal"
-            android:text="Gongratulations!"
+            android:text="@string/feedback_title"
             android:textColor="@color/black_text"
             android:textSize="20sp" />
 
@@ -27,7 +27,7 @@
             android:layout_below="@id/custom_heading"
             android:gravity="center_horizontal"
             android:padding="10dp"
-            android:text="Do you want to leave feedback on DDScanner"
+            android:text="@string/feedback_text"
             android:textSize="16sp" />
 
         <ImageView

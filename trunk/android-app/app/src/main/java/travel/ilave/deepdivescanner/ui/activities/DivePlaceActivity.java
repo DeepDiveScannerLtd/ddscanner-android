@@ -1,5 +1,7 @@
 package travel.ilave.deepdivescanner.ui.activities;
 
+
+
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -119,6 +121,7 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void findViews() {
+
         productImagesViewPager = (ViewPager) findViewById(R.id.product_images);
         starsLayout = (LinearLayout) findViewById(R.id.stars);
         price = (TextView) findViewById(R.id.price);

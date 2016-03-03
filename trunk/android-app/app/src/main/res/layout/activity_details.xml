@@ -14,7 +14,6 @@
             android:layout_height="match_parent"
             app:contentScrim="@color/primary"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
-
             <android.support.v4.view.ViewPager
                 android:id="@+id/product_images"
                 android:layout_width="match_parent"
@@ -42,7 +41,8 @@
                 android:id="@+id/toolbar_collapse"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin" />
+                app:layout_collapseMode="pin"
+                />
 
         </android.support.design.widget.CollapsingToolbarLayout>
 

@@ -2,7 +2,13 @@ package travel.ilave.deepdivescanner.ui.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.pm.PackageInstaller;
+
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.plus.*;
+
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -19,6 +25,12 @@ import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.plus.Plus;
+import com.google.android.gms.plus.model.people.Person;
 import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
@@ -40,13 +52,26 @@ import travel.ilave.deepdivescanner.utils.SharedPreferenceHelper;
 /**
  * Created by lashket on 24.2.16.
  */
-public class SocialNetworks extends AppCompatActivity{
+public class SocialNetworks extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+
+    private static final int RC_SIGN_IN = 0;
+
     private TwitterLoginButton loginButton;
     private Button twitterCustomBtn;
 
     private CallbackManager callbackManager;
     private LoginButton fbLoginButton;
     private Button fbCustomLogin;
+
+    private Button googleCustom;
+    private SignInButton googleSignIn;
+    private GoogleApiClient googleApiClient;
+    private ConnectionResult connectionResult;
+
+    public static void show(Context context) {
+        Intent intent = new Intent(context, SocialNetworks.class);
+        context.startActivity(intent);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -62,7 +87,7 @@ public class SocialNetworks extends AppCompatActivity{
                 TwitterSession session = result.data;
                 // TODO: Remove toast and use the TwitterSession's userID
                 String msg = "@" + session.getUserName() + " logged in! (#" + session.getUserId() + ")";
-              //  Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
+                //  Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
                 Twitter.getApiClient(session).getAccountService().verifyCredentials(true, false, new Callback<User>() {
                     @Override
                     public void success(Result<User> result) {
@@ -100,11 +125,24 @@ public class SocialNetworks extends AppCompatActivity{
                 if (AccessToken.getCurrentAccessToken() == null) {
                     fbLogin();
                     Log.i("LOGIN", "LOGED IN");
-                }
-                else {
+                } else {
                     LoginManager.getInstance().logOut();
                     Log.i("LOGIN", "LOGGED OUT");
                 }
+            }
+        });
+        /*Google plus*/
+        googleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(Plus.API, null)
+                .addScope(Plus.SCOPE_PLUS_LOGIN).build();
+        googleCustom = (Button) findViewById(R.id.custom_google);
+        googleSignIn = (SignInButton) findViewById(R.id.googleSignIn);
+        googleCustom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                googleSignIn.performClick();
             }
         });
     }
@@ -119,8 +157,8 @@ public class SocialNetworks extends AppCompatActivity{
                     @Override
                     public void onCompleted(JSONObject object, GraphResponse response) {
 
-                            String result = String.valueOf(object);
-                            System.out.println(result);
+                        String result = String.valueOf(object);
+                        System.out.println(result);
                         SharedPreferenceHelper.setIsUserSignedIn(true);
                         onBackPressed();
 
@@ -146,12 +184,93 @@ public class SocialNetworks extends AppCompatActivity{
 
         if (requestCode == 140) {
             loginButton.onActivityResult(requestCode, resultCode, data);
+        } else if (requestCode == RC_SIGN_IN) {
+            googleApiClient.connect();
+        } else {
+            callbackManager.onActivityResult(requestCode, resultCode, data);
         }
-        callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
-    public static void show(Context context) {
-        Intent intent = new Intent(context, SocialNetworks.class);
-        context.startActivity(intent);
+    @Override
+    public void onConnectionFailed(ConnectionResult result) {
+        if (!result.hasResolution()) {
+            GooglePlayServicesUtil.getErrorDialog(result.getErrorCode(), this,
+                    0).show();
+            return;
+        }
+        connectionResult = result;
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int arg0) {
+        googleApiClient.connect();
+    }
+
+    @Override
+    public void onConnected(Bundle arg0) {
+        Toast.makeText(this, "User is connected!", Toast.LENGTH_LONG).show();
+        getProfileInformation();
+    }
+
+    private void getProfileInformation() {
+        try {
+            if (Plus.PeopleApi.getCurrentPerson(googleApiClient) != null) {
+                Person currentPerson = Plus.PeopleApi
+                        .getCurrentPerson(googleApiClient);
+                String personName = currentPerson.getDisplayName();
+                String personPhotoUrl = currentPerson.getImage().getUrl();
+                String personGooglePlusProfile = currentPerson.getUrl();
+                String email = Plus.AccountApi.getAccountName(googleApiClient);
+                Log.e("SOCIAL", "Name: " + personName + ", plusProfile: "
+                        + personGooglePlusProfile + ", email: " + email
+                        + ", Image: " + personPhotoUrl);
+
+            } else {
+                Toast.makeText(getApplicationContext(),
+                        "Person information is null", Toast.LENGTH_LONG).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void signInWithGplus() {
+        if (!googleApiClient.isConnecting()) {
+            resolveSignInError();
+        }
+    }
+
+    private void signOutFromGplus() {
+        if (googleApiClient.isConnected()) {
+            Plus.AccountApi.clearDefaultAccount(googleApiClient);
+            googleApiClient.disconnect();
+            googleApiClient.connect();
+        }
+    }
+
+    private void revokeGplusAccess() {
+        if (googleApiClient.isConnected()) {
+            Plus.AccountApi.clearDefaultAccount(googleApiClient);
+            Plus.AccountApi.revokeAccessAndDisconnect(googleApiClient)
+                    .setResultCallback(new ResultCallback<Status>() {
+                        @Override
+                        public void onResult(Status arg0) {
+                            Log.e("SOCIAL", "User access revoked!");
+                            googleApiClient.connect();
+                        }
+
+                    });
+        }
+    }
+
+    private void resolveSignInError() {
+        if (connectionResult.hasResolution()) {
+            try {
+                connectionResult.startResolutionForResult(this, RC_SIGN_IN);
+            } catch (IntentSender.SendIntentException e) {
+                googleApiClient.connect();
+            }
+        }
     }
 }

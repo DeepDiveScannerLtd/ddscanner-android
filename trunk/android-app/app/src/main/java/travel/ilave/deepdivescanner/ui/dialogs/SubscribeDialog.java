@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -79,11 +80,17 @@ public class SubscribeDialog extends DialogFragment implements View.OnClickListe
 
     private void sendEmail() {
         Intent intent = new Intent(Intent.ACTION_SENDTO);
+        String version = new String();
         intent.setData(Uri.parse("mailto:"));
+        try {
+            version = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+
+        }
         intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"info@ddscanner.com"});
-        intent.putExtra(Intent.EXTRA_SUBJECT, "Feedback about ddscanner");
-        intent.putExtra(Intent.EXTRA_TEXT, "\n--"+"\nOS version: " + System.getProperty("os.version") + "\nAPI level: " + Build.VERSION.SDK
-                + "\nDevice: " + Build.DEVICE + "\nModel: " + Build.MODEL + "\nProduct: " + Build.PRODUCT );
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Feedback about DDScanner");
+        intent.putExtra(Intent.EXTRA_TEXT, "My device info:"+"\nOS version: " + System.getProperty("os.version") + "\nAPI level: " + Build.VERSION.SDK
+                + "\nDevice: " + Build.DEVICE + "\nModel: " + Build.MODEL + "\nProduct: " + Build.PRODUCT + "\nApp version: " + version);
         startActivity(Intent.createChooser(intent, "Send Email"));
     }
 
