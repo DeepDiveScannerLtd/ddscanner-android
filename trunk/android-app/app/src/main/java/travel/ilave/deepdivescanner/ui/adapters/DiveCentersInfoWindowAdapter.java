@@ -12,18 +12,15 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.maps.android.clustering.Cluster;
-import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import travel.ilave.deepdivescanner.R;
+import travel.ilave.deepdivescanner.entities.ClusterItemImplementation;
 import travel.ilave.deepdivescanner.entities.DiveCenter;
 
 /**
@@ -36,7 +33,7 @@ public class DiveCentersInfoWindowAdapter implements GoogleMap.InfoWindowAdapter
     private ArrayList<DiveCenter> diveCenters;
     private LatLng diveSiteCoordinates;
     private HashMap<LatLng, DiveCenter> markersMap = new HashMap<>();
-    private ClusterManager<MyItem> mClusterManager;
+    private ClusterManager<ClusterItemImplementation> mClusterManager;
     private String logoPath;
     private Marker diveSpotMarker;
     private boolean not_first_time_showing_info_window = false;
@@ -51,7 +48,7 @@ public class DiveCentersInfoWindowAdapter implements GoogleMap.InfoWindowAdapter
         this.diveCenters = diveCenters;
         this.dsName = dsName;
         this.diveSiteCoordinates = diveSiteCoordinates;
-        mClusterManager = new ClusterManager<MyItem>(context, googleMap);
+        mClusterManager = new ClusterManager<>(context, googleMap);
         mClusterManager.setRenderer(new OwnIconRendered(context, googleMap, mClusterManager));
         googleMap.setOnCameraChangeListener(mClusterManager);
         googleMap.setOnMarkerClickListener(mClusterManager);
@@ -60,7 +57,7 @@ public class DiveCentersInfoWindowAdapter implements GoogleMap.InfoWindowAdapter
             LatLng latLng = new LatLng(Double.valueOf(diveCenter.getLat()), Double.valueOf(diveCenter.getLng()));
             // Marker marker = googleMap.addMarker(new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_dc)));
             // markersMap.put(marker, "false");
-            MyItem offsetItem = new MyItem(latLng.latitude, latLng.longitude);
+            ClusterItemImplementation offsetItem = new ClusterItemImplementation(latLng.latitude, latLng.longitude);
             markersMap.put(latLng, diveCenter);
             mClusterManager.addItem(offsetItem);
 

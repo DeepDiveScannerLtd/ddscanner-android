@@ -127,7 +127,7 @@ public class CityActivity extends AppCompatActivity {
 
     private void populatePlaceViewpager(LatLng latLng) {
         divespotsWrapper = new DivespotsWrapper();
-        placesPagerAdapter = new PlacesPagerAdapter(this, getFragmentManager(), (ArrayList<DiveSpot>) divespotsWrapper.getDiveSpots(), latLng, filters);
+        placesPagerAdapter = new PlacesPagerAdapter(this, getFragmentManager(), latLng, filters);
         placeViewPager.setAdapter(placesPagerAdapter);
         placeViewPager.setOffscreenPageLimit(3);
         tabLayout.setupWithViewPager(placeViewPager);
