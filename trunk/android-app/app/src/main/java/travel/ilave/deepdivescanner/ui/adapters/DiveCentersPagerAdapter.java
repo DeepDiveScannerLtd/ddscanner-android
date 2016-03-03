@@ -14,8 +14,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterManager;
 
 import java.util.ArrayList;
-import java.util.List;
 
+import travel.ilave.deepdivescanner.entities.ClusterItemImplementation;
 import travel.ilave.deepdivescanner.entities.DiveCenter;
 import travel.ilave.deepdivescanner.entities.Divecenters;
 import travel.ilave.deepdivescanner.ui.fragments.DiveCenterListFragment;
@@ -31,7 +31,7 @@ public class DiveCentersPagerAdapter extends FragmentStatePagerAdapter {
     private ArrayList<DiveCenter> divecenters;
     private LatLng latLng;
     private String logoPath;
-    private ClusterManager<MyItem> mClusterManager;
+    private ClusterManager<ClusterItemImplementation> mClusterManager;
     private String dsName;
 
     public DiveCentersPagerAdapter(Context context, FragmentManager fm, Divecenters diveCenters, LatLng latLng, String dsName) {

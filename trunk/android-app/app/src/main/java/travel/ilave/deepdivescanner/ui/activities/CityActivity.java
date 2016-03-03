@@ -31,13 +31,12 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.maps.model.LatLng;
 
-import java.util.ArrayList;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
 import travel.ilave.deepdivescanner.R;
-import travel.ilave.deepdivescanner.entities.DiveSpot;
 import travel.ilave.deepdivescanner.entities.DivespotsWrapper;
 import travel.ilave.deepdivescanner.services.RegistrationIntentService;
 import travel.ilave.deepdivescanner.ui.adapters.PlacesPagerAdapter;
@@ -109,7 +108,7 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
 
     private void populatePlaceViewpager(LatLng latLng) {
         divespotsWrapper = new DivespotsWrapper();
-        placesPagerAdapter = new PlacesPagerAdapter(this, getFragmentManager(), (ArrayList<DiveSpot>) divespotsWrapper.getDiveSpots(), latLng, filters);
+        placesPagerAdapter = new PlacesPagerAdapter(this, getFragmentManager(), latLng, filters);
         placeViewPager.setAdapter(placesPagerAdapter);
         placeViewPager.setOffscreenPageLimit(3);
         tabLayout.setupWithViewPager(placeViewPager);

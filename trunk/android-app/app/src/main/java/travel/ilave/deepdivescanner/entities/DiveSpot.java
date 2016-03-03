@@ -1,14 +1,22 @@
 package travel.ilave.deepdivescanner.entities;
 
 import android.os.Parcelable;
+import android.text.TextUtils;
+
+import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.android.clustering.ClusterItem;
 
 import java.io.Serializable;
 import java.util.List;
 
+import travel.ilave.deepdivescanner.utils.LogUtils;
+
 /**
  * Created by lashket on 20.1.16.
  */
-public class DiveSpot implements  Serializable {
+public class DiveSpot implements Serializable, ClusterItem {
+
+    private static final String TAG = DiveSpot.class.getName();
     private long id;
     private String name;
     private int rating;
@@ -16,6 +24,7 @@ public class DiveSpot implements  Serializable {
     private String lat;
     private String lng;
     private List<String> images;
+    private LatLng latLng;
 
    /* protected DiveSpot(android.os.Parcel in) {
         id = in.readString();
@@ -71,13 +80,30 @@ public class DiveSpot implements  Serializable {
         this.rating = rating;
     }
 
-    public String getLat() { return lat; }
+    public String getLat() {
+        return lat;
+    }
 
-    public void setLat(String lat) { this.lat = lat; }
+    public void setLat(String lat) {
+        this.lat = lat;
+        initLatLng();
+    }
 
-    public String getLng() { return lng; }
+    public String getLng() {
+        return lng;
+    }
 
-    public void setLng(String lng) { this.lng = lng; }
+    public void setLng(String lng) {
+        this.lng = lng;
+        initLatLng();
+    }
+
+    public void initLatLng() {
+        LogUtils.i(TAG, "initLatLng lat=" + lat + " lng=" + lng);
+        if (!TextUtils.isEmpty(lat) && !TextUtils.isEmpty(lng)) {
+            latLng = new LatLng(Double.valueOf(lat), Double.valueOf(lng));
+        }
+    }
 
     public String getDescription() {
         return description;
@@ -101,6 +127,11 @@ public class DiveSpot implements  Serializable {
     @Override
     public int hashCode() {
         return (int) (getId() ^ (getId() >>> 32));
+    }
+
+    @Override
+    public LatLng getPosition() {
+        return latLng;
     }
     /*  @Override
     public int describeContents() {

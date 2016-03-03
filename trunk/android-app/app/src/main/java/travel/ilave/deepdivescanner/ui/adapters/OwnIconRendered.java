@@ -5,24 +5,24 @@ import android.content.Context;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 
 import travel.ilave.deepdivescanner.R;
+import travel.ilave.deepdivescanner.entities.ClusterItemImplementation;
 
 /**
  * Created by lashket on 17.2.16.
  */
-public class OwnIconRendered extends DefaultClusterRenderer<MyItem> {
+public class OwnIconRendered extends DefaultClusterRenderer<ClusterItemImplementation> {
 
     public OwnIconRendered(Context context, GoogleMap map,
-                           ClusterManager<MyItem> clusterManager) {
+                           ClusterManager<ClusterItemImplementation> clusterManager) {
         super(context, map, clusterManager);
     }
 
     @Override
-    protected void onClusterItemRendered(MyItem clusterItem, final Marker marker) {
+    protected void onClusterItemRendered(ClusterItemImplementation clusterItem, final Marker marker) {
         super.onClusterItemRendered(clusterItem, marker);
         try {
             marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.icon_dc));
