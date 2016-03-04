@@ -60,6 +60,7 @@ public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter, ClusterMa
     private DiveSpotsClusterManager diveSpotsClusterManager;
     private Map<String, String> diveSpotsRequestMap = new HashMap<>();
     private DivespotsWrapper divespotsWrapper;
+    private Marker lastClickedMarker;
 
     public InfoWindowAdapter(Context context, PlacesPagerAdapter placesPagerAdapter, ArrayList<DiveSpot> diveSpots, GoogleMap map) {
         this.mContext = context;
@@ -140,6 +141,9 @@ public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter, ClusterMa
         for (DiveSpot diveSpot : newDiveSpots) {
             addNewDiveSpot(diveSpot);
         }
+        if (lastClickedMarker != null && !lastClickedMarker.isInfoWindowShown()) {
+            lastClickedMarker = null;
+        }
         diveSpotsClusterManager.cluster();
     }
 
@@ -212,6 +216,7 @@ public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter, ClusterMa
                 return true;
             }
             marker.showInfoWindow();
+            lastClickedMarker = marker;
             Projection projection = googleMap.getProjection();
             Point mapCenteringPoint = projection.toScreenLocation(marker.getPosition());
             mapCenteringPoint.y = mapCenteringPoint.y - DDScannerApplication.getInstance().getResources().getDimensionPixelSize(R.dimen.info_window_height) / 2;
@@ -268,6 +273,9 @@ public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter, ClusterMa
             super.onClusterItemRendered(diveSpot, marker);
             try {
                 marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
+                if (lastClickedMarker != null && lastClickedMarker.getPosition().equals(marker.getPosition())) {
+                    marker.showInfoWindow();
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
