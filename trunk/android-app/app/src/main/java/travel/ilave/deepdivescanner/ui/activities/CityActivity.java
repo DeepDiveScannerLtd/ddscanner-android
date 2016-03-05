@@ -80,7 +80,7 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
             latLng = getIntent().getParcelableExtra("LATLNG");
             filters = (HashMap<String, String>) getIntent().getSerializableExtra("FILTERS");
             getSupportActionBar().setTitle("DDScanner");
-            if (!getCity(latLng).equals("")) {
+            if (latLng != null && getCity(latLng)!= null && !getCity(latLng).equals("")) {
                 getSupportActionBar().setTitle(getCity(latLng));
             }
 

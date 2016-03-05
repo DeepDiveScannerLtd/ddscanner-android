@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -43,7 +44,7 @@ import travel.ilave.deepdivescanner.ui.dialogs.SubscribeDialog;
 import travel.ilave.deepdivescanner.utils.LogUtils;
 import travel.ilave.deepdivescanner.utils.SharedPreferenceHelper;
 
-public class DivePlaceActivity extends AppCompatActivity implements View.OnClickListener{
+public class DivePlaceActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener, View.OnClickListener{
 
     public static final String PRODUCT = "PRODUCT";
 
@@ -57,6 +58,10 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
     private TextView description;
     private TextView currents_value;
     private TextView level_value;
+    private ImageView[] dots;
+    private int dotsCount = 0;
+    private LinearLayout pager_indicator;
+
     private Button book_now;
     private ImageView none_photo;
     private PlaceImagesPagerAdapter placeImagesPagerAdapter;
@@ -65,9 +70,9 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
     private SubscribeDialog subscribeDialog = new SubscribeDialog();
     private RecyclerView sealifeRecyclerview;
     private ArrayList<Sealife> sealifes;
-    private List<String> images;
+    private static ArrayList<String> images;
     private RelativeLayout sealifeLayout;
-
+    private static String PATH;
     private DiveSpotFull diveSpot;
 
     private DivespotDetails divespotDetails;
@@ -80,6 +85,7 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
         setContentView(R.layout.activity_details);
         findViews();
         book_now.setOnClickListener(this);
+        productImagesViewPager.setOnPageChangeListener(this);
         requestProductDetails(getIntent().getStringExtra(PRODUCT));
     }
 
@@ -95,7 +101,7 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
                 LogUtils.i("response body is " + responseString);
                 // TODO Handle result handling when activity stopped
 
-               // responseString = responseString.replaceAll("\\\\", "");
+                // responseString = responseString.replaceAll("\\\\", "");
                 System.out.println(responseString);
                 divespotDetails = new Gson().fromJson(responseString, DivespotDetails.class);
                 toolbarSetting(divespotDetails.getDivespot().getName());
@@ -118,7 +124,6 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void findViews() {
-
         productImagesViewPager = (ViewPager) findViewById(R.id.product_images);
         starsLayout = (LinearLayout) findViewById(R.id.stars);
         price = (TextView) findViewById(R.id.price);
@@ -132,6 +137,7 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
         currents_value = (TextView) findViewById(R.id.characteristic_value_currents);
         level_value = (TextView) findViewById(R.id.characteristic_value_level);
         none_photo = (ImageView) findViewById(R.id.nonne_photos);
+        pager_indicator = (LinearLayout) findViewById(R.id.viewPagerCountDots);
       //  sealifeLayout = (RelativeLayout) findViewById(R.id.sealife_layout);
 
     }
@@ -147,6 +153,7 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
         sealifes = (ArrayList<Sealife>)divespotDetails.getSealifes();
 //        images = diveSpot.getImages();
         diveSpot = divespotDetails.getDivespot();
+        PATH = diveSpot.getDiveSpotPathMedium();
         visibility_value.setText(diveSpot.getVisibility());
         currents_value.setText(diveSpot.getCurrents());
         description.setText(diveSpot.getDescription());
@@ -160,10 +167,12 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
             sealifeRecyclerview.setAdapter(new SealifeListAdapter(sealifes, this, diveSpot.getSealifePathSmall(), diveSpot.getSealifePathMedium()));
         }
         if (diveSpot.getImages() != null) {
+            images = (ArrayList<String>)diveSpot.getImages();
             none_photo.setVisibility(View.GONE);
             productImagesViewPager.setVisibility(View.VISIBLE);
-            placeImagesPagerAdapter = new PlaceImagesPagerAdapter(getFragmentManager(), diveSpot.getImages(), diveSpot.getDiveSpotPathMedium());
+            placeImagesPagerAdapter = new PlaceImagesPagerAdapter(getFragmentManager(), diveSpot.getImages(), diveSpot.getDiveSpotPathMedium(), DivePlaceActivity.this);
             productImagesViewPager.setAdapter(placeImagesPagerAdapter);
+            setUi();
         }
         for (int i = 0; i < diveSpot.getRating(); i++) {
             ImageView iv = new ImageView(this);
@@ -193,7 +202,25 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
         DiveCentersActivity.show(DivePlaceActivity.this, latLng, name);
     }
 
+    private void setUi() {
+        dotsCount = placeImagesPagerAdapter.getCount();
+        dots = new ImageView[dotsCount];
 
+        for (int i=0; i < dotsCount; i++) {
+            dots[i] = new ImageView(this);
+            dots[i].setImageDrawable(getResources().getDrawable(R.drawable.nonselecteditem_dot));
+
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+
+            params.setMargins(4,0,4,0);
+
+            pager_indicator.addView(dots[i],  params);
+        }
+        dots[0].setImageDrawable(getResources().getDrawable(R.drawable.selecteditem_dot));
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -219,5 +246,28 @@ public class DivePlaceActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
+    public static ArrayList<String> getImages() {
+        return images;
+    }
 
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        for (int i = 0; i < dotsCount; i++) {
+            dots[i].setImageDrawable(getResources().getDrawable(R.drawable.nonselecteditem_dot));
+        }
+        System.out.println(position);
+        dots[position].setImageDrawable(getResources().getDrawable(R.drawable.selecteditem_dot));
+
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
+    }
 }

@@ -22,4 +22,7 @@ public class IconRendered  extends DefaultClusterRenderer<ClusterItemImplementat
     protected void onBeforeClusterItemRendered(ClusterItemImplementation item, MarkerOptions markerOptions) {
       //  markerOptions.icon(item.getIcon)
     }
+
+    
+
 }

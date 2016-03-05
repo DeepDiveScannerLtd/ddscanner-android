@@ -68,7 +68,9 @@
         <activity
             android:name=".ui.activities.SealifeDetails"
             android:screenOrientation="portrait" />
-
+        <activity
+            android:name=".ui.activities.ImageSliderActivity"
+            android:screenOrientation="portrait" />
         <receiver
             android:name="com.google.android.gms.gcm.GcmReceiver"
             android:exported="true"

@@ -6,34 +6,38 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v13.app.FragmentStatePagerAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import travel.ilave.deepdivescanner.ui.fragments.PlaceImageFragment;
+import travel.ilave.deepdivescanner.ui.fragments.SLiderImagesFragment;
 
-public class PlaceImagesPagerAdapter extends FragmentStatePagerAdapter {
+/**
+ * Created by lashket on 4.3.16.
+ */
+public class SliderImagesAdapter extends FragmentStatePagerAdapter {
 
-    private List<String> productsImages;
+    private ArrayList<String> productsImages;
     private String path;
-    private Context context;
 
-    public PlaceImagesPagerAdapter(FragmentManager fm, List<String> productsImages, String path, Context context) {
+    public SliderImagesAdapter(FragmentManager fm, ArrayList<String> productsImages) {
         super(fm);
-        this.path = path;
+
         this.productsImages = productsImages;
-        this.context = context;
     }
 
     @Override
     public Fragment getItem(int position) {
-        Fragment fragment = new PlaceImageFragment();
+        Fragment fragment = new SLiderImagesFragment();
         Bundle args = new Bundle();
-        args.putString(PlaceImageFragment.IMAGE_URL, path + productsImages.get(position));
+        args.putString(PlaceImageFragment.IMAGE_URL,"http://www.trizeri.travel/images/divespots/medium/" + productsImages.get(position));
         fragment.setArguments(args);
+        System.out.println(productsImages.size());
         return fragment;
     }
 
     @Override
-    public int getCount() {
+    public  int getCount() {
         return productsImages.size();
     }
 
@@ -41,5 +45,4 @@ public class PlaceImagesPagerAdapter extends FragmentStatePagerAdapter {
     public CharSequence getPageTitle(int position) {
         return "";
     }
-
 }

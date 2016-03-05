@@ -14,9 +14,15 @@
     <TextView
         android:id="@+id/popup_product_name"
         android:layout_width="240dp"
-        android:layout_height="195dp"
+        android:layout_height="116dp"
         android:layout_marginLeft="10dp"
         android:gravity="bottom"
+        android:text="1232131231"
+        android:shadowColor="@color/black_text"
+        android:shadowDx="2"
+        android:shadowDy="2"
+        android:shadowRadius="3"
+        android:textColor="@color/white"
         android:textSize="22sp" />
 
     <LinearLayout

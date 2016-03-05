@@ -31,6 +31,10 @@
 
     <style name="CollapseTextSize">
         <item name="android:textSize">20sp</item>
+        <item name="android:shadowRadius">3</item>
+        <item name="android:shadowColor">@color/black_text</item>
+        <item name="android:shadowDy">2</item>
+        <item name="android:shadowDx">2</item>
     </style>
 
     <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">

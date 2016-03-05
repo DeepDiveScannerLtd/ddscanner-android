@@ -17,7 +17,11 @@ import com.facebook.drawee.drawable.ProgressBarDrawable;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+
 import travel.ilave.deepdivescanner.R;
+import travel.ilave.deepdivescanner.ui.activities.DivePlaceActivity;
+import travel.ilave.deepdivescanner.ui.activities.ImageSliderActivity;
 
 
 /**
@@ -32,6 +36,12 @@ public class PlaceImageFragment extends Fragment {
         String imageUrl = getArguments().getString(IMAGE_URL);
 
         SimpleDraweeView imageView = (SimpleDraweeView) inflater.inflate(R.layout.fragment_image, container, false);
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ImageSliderActivity.show(getActivity(), (ArrayList<String>)DivePlaceActivity.getImages());
+            }
+        });
        // ImageView imageView = (ImageView) inflater.inflate(R.layout.fragment_image, container, false);
         Uri uri = Uri.parse(imageUrl);
         imageView.setImageURI(uri);

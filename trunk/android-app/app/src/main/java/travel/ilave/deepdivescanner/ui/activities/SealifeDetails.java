@@ -71,7 +71,7 @@ public class SealifeDetails extends AppCompatActivity {
             @Override
             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
                 drawable = new BitmapDrawable(bitmap);
-                drawable.setColorFilter(Color.parseColor("#90000000"), PorterDuff.Mode.SRC_ATOP);
+                drawable.setColorFilter(Color.parseColor("#99000000"), PorterDuff.Mode.SRC_ATOP);
                 appBarLayout.setBackgroundDrawable(drawable);
             }
 
