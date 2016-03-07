@@ -3,9 +3,14 @@ package travel.ilave.deepdivescanner.ui.managers;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
-import android.os.Handler;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.OvalShape;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -15,17 +20,20 @@ import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.Projection;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.algo.GridBasedAlgorithm;
-import com.google.maps.android.clustering.algo.NonHierarchicalDistanceBasedAlgorithm;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
+import com.google.maps.android.ui.IconGenerator;
+import com.google.maps.android.ui.SquareTextView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -58,12 +66,21 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
     private ArrayList<DiveSpot> diveSpots = new ArrayList<>();
     private HashMap<LatLng, DiveSpot> diveSpotsMap = new HashMap<>();
     private PlacesPagerAdapter placesPagerAdapter;
+    private Drawable clusterBackgroundDrawable;
+    private final IconGenerator clusterIconGenerator;
+    private final float density;
 
     public DiveSpotsClusterManager(Context context, GoogleMap googleMap, PlacesPagerAdapter placesPagerAdapter) {
         super(context, googleMap);
         this.context = context;
         this.googleMap = googleMap;
         this.placesPagerAdapter = placesPagerAdapter;
+        this.density = context.getResources().getDisplayMetrics().density;
+        this.clusterBackgroundDrawable = ContextCompat.getDrawable(context, R.drawable.ic_number_2);
+        this.clusterIconGenerator = new IconGenerator(context);
+        this.clusterIconGenerator.setContentView(this.makeSquareTextView(context));
+        this.clusterIconGenerator.setTextAppearance(com.google.maps.android.R.style.ClusterIcon_TextAppearance);
+        this.clusterIconGenerator.setBackground(clusterBackgroundDrawable);
 
         setAlgorithm(new GridBasedAlgorithm<DiveSpot>());
         setRenderer(new IconRenderer(context, googleMap, this));
@@ -114,10 +131,28 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         return true;
     }
 
+    private SquareTextView makeSquareTextView(Context context) {
+        SquareTextView squareTextView = new SquareTextView(context);
+        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(-2, -2);
+        squareTextView.setLayoutParams(layoutParams);
+        squareTextView.setId(com.google.maps.android.R.id.text);
+        int twelveDpi = (int)(12.0F * this.density);
+        squareTextView.setPadding(twelveDpi, twelveDpi, twelveDpi, twelveDpi);
+        return squareTextView;
+    }
+
     private class IconRenderer extends DefaultClusterRenderer<DiveSpot> {
 
         public IconRenderer(Context context, GoogleMap map, ClusterManager<DiveSpot> clusterManager) {
             super(context, map, clusterManager);
+        }
+
+        @Override
+        protected void onBeforeClusterRendered(Cluster<DiveSpot> cluster, MarkerOptions markerOptions) {
+            int bucket = this.getBucket(cluster);
+            BitmapDescriptor descriptor = BitmapDescriptorFactory.fromBitmap(clusterIconGenerator.makeIcon(this.getClusterText(bucket)));
+
+            markerOptions.icon(descriptor);
         }
 
         @Override
