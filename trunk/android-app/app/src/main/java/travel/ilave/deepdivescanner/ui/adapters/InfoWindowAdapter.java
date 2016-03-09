@@ -92,10 +92,14 @@ public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter, ClusterMa
         diveSpot = diveSpotsMap.get(marker.getPosition());
         ImageView photo = (ImageView) view.findViewById(R.id.popup_photo);
         if (diveSpot.getImages() != null) {
+            diveSpot.getImages().get(0).replace("medium", "small");
             if (not_first_time_showing_info_window) {
+                not_first_time_showing_info_window = false;
+                System.out.println("Second time showing");
                 Picasso.with(mContext).load(diveSpot.getImages().get(0)).resize(260, 116).centerCrop().into(photo);
             } else {
                 not_first_time_showing_info_window = true;
+                System.out.println("Try first time showing");
                 Picasso.with(mContext).load(diveSpot.getImages().get(0)).resize(260, 116).centerCrop().into(photo, new InfoWindowRefresher(marker));
             }
         }
@@ -188,6 +192,7 @@ public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter, ClusterMa
 
         @Override
         public void onSuccess() {
+            System.out.println("Start refreshing");
             markerToRefresh.showInfoWindow();
         }
 

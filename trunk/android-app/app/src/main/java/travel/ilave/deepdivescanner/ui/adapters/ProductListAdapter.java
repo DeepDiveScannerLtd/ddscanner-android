@@ -74,7 +74,7 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
     @Override
     public int getItemCount() {
         if (divespots == null) { return 0; }
-        else { return divespots.size(); }
+        return divespots.size();
     }
 
     public static class ProductListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
