@@ -83,9 +83,9 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
                 String responseString = new String(((TypedByteArray) s.getBody()).getBytes());
                 System.out.println(responseString);
                 filters = new Gson().fromJson(responseString, Filters.class);
-                setCurrents(filters.getCurrents());
-                setVisibility(filters.getVisibility());
-                setLevel(filters.getLevel());
+        //        setCurrents(filters.getCurrents());
+             //   setVisibility(filters.getVisibility());
+               // setLevel(filters.getLevel());
             }
 
             @Override
@@ -133,7 +133,7 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
-        if (rgCurrents.getCheckedRadioButtonId() != -1) {
+  /*      if (rgCurrents.getCheckedRadioButtonId() != -1) {
             filtersSend.put("currents",((RadioButton) findViewById(rgCurrents.getCheckedRadioButtonId())).getText().toString());
         } else {
             filtersSend.put("currents", "");
@@ -149,7 +149,7 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
             filtersSend.put("visibility", "");
         }
 
-        CityActivity.showWIthFIlters(this, filtersSend, PlacesPagerAdapter.getLastLatlng());
+        CityActivity.showWIthFIlters(this, filtersSend, PlacesPagerAdapter.getLastLatlng());*/
     }
 
     public static void show(Context context) {

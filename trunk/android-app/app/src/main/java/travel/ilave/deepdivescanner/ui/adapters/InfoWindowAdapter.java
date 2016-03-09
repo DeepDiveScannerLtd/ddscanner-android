@@ -3,6 +3,7 @@ package travel.ilave.deepdivescanner.ui.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -92,10 +93,10 @@ public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter, ClusterMa
         ImageView photo = (ImageView) view.findViewById(R.id.popup_photo);
         if (diveSpot.getImages() != null) {
             if (not_first_time_showing_info_window) {
-                Picasso.with(mContext).load(diveSpot.getImages().get(0)).resize(260, 116).into(photo);
+                Picasso.with(mContext).load(diveSpot.getImages().get(0)).resize(260, 116).centerCrop().into(photo);
             } else {
                 not_first_time_showing_info_window = true;
-                Picasso.with(mContext).load(diveSpot.getImages().get(0)).resize(260, 116).into(photo, new InfoWindowRefresher(marker));
+                Picasso.with(mContext).load(diveSpot.getImages().get(0)).resize(260, 116).centerCrop().into(photo, new InfoWindowRefresher(marker));
             }
         }
         TextView description = ((TextView) view.findViewById(R.id.description_popup));
@@ -257,7 +258,8 @@ public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter, ClusterMa
                     Toast.makeText(DDScannerApplication.getInstance(), "Server is not responsible, please try later", Toast.LENGTH_SHORT).show();
                 }
 //               String json =  new String(((TypedByteArray)error.getResponse().getBody()).getBytes());
-                //      System.out.println("failure" + json.toString());
+             //   Log.i(TAG,json.toString());
+
             }
         });
     }

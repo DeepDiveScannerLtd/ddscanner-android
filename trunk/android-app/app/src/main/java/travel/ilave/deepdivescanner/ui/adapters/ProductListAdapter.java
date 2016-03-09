@@ -49,7 +49,7 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
 //        productListViewHolder.productPrice.setText(String.valueOf("15"));
         productListViewHolder.description.setText(divespot.getDescription());
         if (divespot.getImages() != null) {
-            Picasso.with(conText).load(divespot.getImages().get(0)).resize(130, 130).into(productListViewHolder.imageView);
+            Picasso.with(conText).load(divespot.getImages().get(0)).resize(130, 130).centerCrop().into(productListViewHolder.imageView);
         } else {
             productListViewHolder.imageView.setImageDrawable(ContextCompat.getDrawable(conText,R.drawable.list_photo_default));
         }
