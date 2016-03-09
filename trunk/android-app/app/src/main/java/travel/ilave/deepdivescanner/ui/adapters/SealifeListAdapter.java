@@ -45,7 +45,7 @@ public class SealifeListAdapter extends RecyclerView.Adapter<SealifeListAdapter.
     @Override
     public void onBindViewHolder(SealifeListViewHolder sealifeListViewHolder, int i) {
         Sealife sealife = sealifes.get(i);
-        Picasso.with(context).load(pathSmall + sealife.getImage()).resize(80,60).into(sealifeListViewHolder.sealifeLogo);
+        Picasso.with(context).load(pathSmall + sealife.getImage()).resize(80,60).centerCrop().into(sealifeListViewHolder.sealifeLogo);
         sealifeListViewHolder.sealifeName.setText(sealife.getName());
     }
 

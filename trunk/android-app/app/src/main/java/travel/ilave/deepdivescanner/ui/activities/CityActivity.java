@@ -156,11 +156,11 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
                 openSearchLocationWindow();
                 return true;
             case R.id.profile:
-                if (SharedPreferenceHelper.getIsUserLogined()) {
+              /*  if (SharedPreferenceHelper.getIsUserLogined()) {
                     Toast.makeText(CityActivity.this, "You are already login", Toast.LENGTH_LONG);
                 } else {
                     SocialNetworks.show(CityActivity.this);
-                }
+                }*/
                 //  subscribeDialog.show(getFragmentManager(), "");
                 return true;
             case R.id.logbook:
