@@ -38,6 +38,7 @@ import java.util.Locale;
 
 import travel.ilave.deepdivescanner.R;
 import travel.ilave.deepdivescanner.entities.DivespotsWrapper;
+import travel.ilave.deepdivescanner.services.GooglePlusLogin;
 import travel.ilave.deepdivescanner.services.RegistrationIntentService;
 import travel.ilave.deepdivescanner.ui.adapters.PlacesPagerAdapter;
 import travel.ilave.deepdivescanner.ui.dialogs.SubscribeDialog;
@@ -158,9 +159,9 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.profile:
               /*  if (SharedPreferenceHelper.getIsUserLogined()) {
                     Toast.makeText(CityActivity.this, "You are already login", Toast.LENGTH_LONG);
-                } else {
+                } else {*/
                     SocialNetworks.show(CityActivity.this);
-                }*/
+               // }
                 //  subscribeDialog.show(getFragmentManager(), "");
                 return true;
             case R.id.logbook:

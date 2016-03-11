@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -17,15 +18,23 @@ import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.plus.People;
+import com.google.android.gms.plus.Plus;
+import com.google.android.gms.plus.model.people.Person;
+import com.google.android.gms.plus.model.people.PersonBuffer;
 import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
@@ -38,15 +47,20 @@ import com.twitter.sdk.android.core.models.User;
 import org.json.JSONObject;
 
 import java.util.Arrays;
+import java.util.Map;
 
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 import travel.ilave.deepdivescanner.R;
+import travel.ilave.deepdivescanner.rest.RestClient;
 import travel.ilave.deepdivescanner.utils.SharedPreferenceHelper;
 
 
 /**
  * Created by lashket on 24.2.16.
  */
-public class SocialNetworks extends AppCompatActivity {
+public class SocialNetworks extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener{
 
     private static final int RC_SIGN_IN = 0;
 
@@ -97,6 +111,7 @@ public class SocialNetworks extends AppCompatActivity {
                     }
                 });
                 TwitterAuthToken authToken = session.getAuthToken();
+                Log.i(TAG, session.getAuthToken().secret + "\n" + session.getAuthToken().token);
             }
 
             @Override
@@ -126,25 +141,20 @@ public class SocialNetworks extends AppCompatActivity {
             }
         });
         /*Google plus*/
-        googleSignIn = (SignInButton) findViewById(R.id.googleSignIn);
-        signIn = (Button) findViewById(R.id.custom_google);
-
-        GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken("200652897389-onnv3dgvcnf7bj8dku3psjntif6hiua0.apps.googleusercontent.com")
                 .requestEmail()
                 .build();
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
-                    @Override
-                    public void onConnectionFailed(ConnectionResult connectionResult) {
 
-                    }
-                })
-                .addApi(Auth.GOOGLE_SIGN_IN_API)
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, this )
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
-        googleSignIn.setOnClickListener(new View.OnClickListener() {
+        signIn = (Button) findViewById(R.id.custom_google);
+        signIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                signIn();
             }
         });
     }
@@ -154,13 +164,14 @@ public class SocialNetworks extends AppCompatActivity {
         LoginManager.getInstance().logInWithReadPermissions(SocialNetworks.this, Arrays.asList("email", "public_profile"));
         LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
-            public void onSuccess(LoginResult loginResult) {
+            public void onSuccess(final LoginResult loginResult) {
                 GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
                     @Override
                     public void onCompleted(JSONObject object, GraphResponse response) {
-
+                        Log.i(TAG, loginResult.getAccessToken().toString());
                         String result = String.valueOf(object);
                         System.out.println(result);
+                        Log.i(TAG, "FB - " + loginResult.getAccessToken().getToken());
                         SharedPreferenceHelper.setIsUserSignedIn(true);
                         onBackPressed();
 
@@ -182,8 +193,35 @@ public class SocialNetworks extends AppCompatActivity {
 
     /*Google plus*/
     private void signIn() {
-        Intent intent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-        startActivityForResult(intent, RC_SIGN_IN);
+        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+        startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
+    private void signOut() {
+        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
+                new ResultCallback<Status>() {
+                    @Override
+                    public void onResult(Status status) {
+                        // [START_EXCLUDE]
+                        Log.i(TAG, "Logout");
+                        // [END_EXCLUDE]
+                    }
+                });
+    }
+
+    private void revokeAccess() {
+        Auth.GoogleSignInApi.revokeAccess(mGoogleApiClient).setResultCallback(
+                new ResultCallback<Status>() {
+                    @Override
+                    public void onResult(Status status) {
+                        // [START_EXCLUDE]
+                        Log.i(TAG, "revoking");
+                        // [END_EXCLUDE]
+                    }
+                });
+    }
+    @Override
+    public void onConnectionFailed(ConnectionResult result) {
+
     }
 
     @Override
@@ -192,33 +230,33 @@ public class SocialNetworks extends AppCompatActivity {
 
         if (requestCode == 140) {
             loginButton.onActivityResult(requestCode, resultCode, data);
-        } else if (requestCode == 0) {
+        }
+         else if(requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            handleSignInResult(result);
-        }
-        callbackManager.onActivityResult(requestCode, resultCode, data);
-    }
-
-    private void handleSignInResult(GoogleSignInResult result) {
-        Log.d(TAG, "handleSignInResult:" + result.isSuccess());
-        if (result.isSuccess()) {
-            // Signed in successfully, show authenticated UI.
-            GoogleSignInAccount acct = result.getSignInAccount();
-            SharedPreferenceHelper.setIsUserSignedIn(true);
-            onBackPressed();
+            Log.d(TAG, "onActivityResult:GET_TOKEN:success:" + result.getStatus().isSuccess());
+            if (result.isSuccess()) {
+                GoogleSignInAccount acct = result.getSignInAccount();
+                String idToken = acct.getIdToken();
+                Log.d(TAG, "idToken:" + idToken);
+                // TODO(user): send token to server and validate server-side
+            }
         } else {
-            // Signed out, show unauthenticated UI.
-
+            callbackManager.onActivityResult(requestCode, resultCode, data);
         }
     }
 
-    private void signOut() {
-        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
-                new ResultCallback<Status>() {
-                    @Override
-                    public void onResult(Status status) {
-                        // ...
-                    }
-                });
+    private void sendRegisterRequest(Map<String, String> userData) {
+        RestClient.getServiceInstance().registerUser(userData, new retrofit.Callback<Response>() {
+            @Override
+            public void success(Response s, Response response) {
+                String responseString = new String(((TypedByteArray) s.getBody()).getBytes());
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
     }
 }
