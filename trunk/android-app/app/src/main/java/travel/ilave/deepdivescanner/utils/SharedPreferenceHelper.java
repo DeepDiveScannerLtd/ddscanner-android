@@ -43,10 +43,15 @@ public class SharedPreferenceHelper {
         return prefs.getString(PREFERENCES_GCM_ID, "");
     }
 
-
-
-    public static String loadPref(String name) {
+    public static void setToken(String token) {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
-        return prefs.getString(name, "");
+        Editor editor = prefs.edit();
+        editor.putString("TOKEN", token);
+        editor.commit();
+    }
+
+    public static String getToken() {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        return prefs.getString("TOKEN", "");
     }
 }

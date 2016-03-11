@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -31,6 +32,8 @@ import travel.ilave.deepdivescanner.ui.adapters.PlacesPagerAdapter;
  * Created by lashket on 22.1.16.
  */
 public class FilterActivity extends AppCompatActivity implements View.OnClickListener{
+
+    private static final String TAG = FilterActivity.class.getSimpleName();
 
     private RadioGroup rgLevel;
     private RadioGroup rgCurrents;
@@ -75,25 +78,6 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
         button = (Button) findViewById(R.id.apply_filter);
     }
 
-    private void request() {
-
-        RestClient.getServiceInstance().getFilters(new Callback<Response>() {
-            @Override
-            public void success(Response s, Response response) {
-                String responseString = new String(((TypedByteArray) s.getBody()).getBytes());
-                System.out.println(responseString);
-                filters = new Gson().fromJson(responseString, Filters.class);
-        //        setCurrents(filters.getCurrents());
-             //   setVisibility(filters.getVisibility());
-               // setLevel(filters.getLevel());
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-
-            }
-        });
-    }
 
     private void setCurrents(List<String> currents) {
         LinearLayout.LayoutParams layoutParams = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT,RadioGroup.LayoutParams.WRAP_CONTENT);
@@ -157,5 +141,27 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
         context.startActivity(intent);
     }
 
+    private void request() {
+
+        RestClient.getServiceInstance().getFilters(new Callback<Response>() {
+            @Override
+            public void success(Response s, Response response) {
+                String responseString = new String(((TypedByteArray) s.getBody()).getBytes());
+                System.out.println(responseString);
+                filters = new Gson().fromJson(responseString, Filters.class);
+
+                Log.i(TAG, responseString);
+
+                //        setCurrents(filters.getCurrents());
+                //   setVisibility(filters.getVisibility());
+                // setLevel(filters.getLevel());
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
+    }
 
 }

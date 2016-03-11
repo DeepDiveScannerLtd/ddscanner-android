@@ -29,6 +29,11 @@
         <item name="android:paddingLeft">40dp</item>
     </style>
 
+    <style name="CustomRatingBar" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/rating_bar</item>
+
+    </style>
+
     <style name="CollapseTextSize">
         <item name="android:textSize">20sp</item>
         <item name="android:shadowRadius">3</item>

@@ -47,6 +47,7 @@ import com.twitter.sdk.android.core.models.User;
 import org.json.JSONObject;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 
 import retrofit.RetrofitError;
@@ -76,6 +77,7 @@ public class SocialNetworks extends AppCompatActivity implements GoogleApiClient
     private SignInButton googleSignIn;
     private Button signIn;
     private GoogleApiClient mGoogleApiClient;
+    private String appId;
 
     public static void show(Context context) {
         Intent intent = new Intent(context, SocialNetworks.class);
@@ -86,6 +88,7 @@ public class SocialNetworks extends AppCompatActivity implements GoogleApiClient
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_social_login);
+        appId = SharedPreferenceHelper.getGcmId();
         /*TWITTER*/
         twitterCustomBtn = (Button) findViewById(R.id.twitter_custom);
         loginButton = (TwitterLoginButton) findViewById(R.id.twitter_login_button);
@@ -112,6 +115,7 @@ public class SocialNetworks extends AppCompatActivity implements GoogleApiClient
                 });
                 TwitterAuthToken authToken = session.getAuthToken();
                 Log.i(TAG, session.getAuthToken().secret + "\n" + session.getAuthToken().token);
+                sendRegisterRequest(putTokensToMap(appId, "tw", authToken.token, authToken.secret));
             }
 
             @Override
@@ -172,7 +176,7 @@ public class SocialNetworks extends AppCompatActivity implements GoogleApiClient
                         String result = String.valueOf(object);
                         System.out.println(result);
                         Log.i(TAG, "FB - " + loginResult.getAccessToken().getToken());
-                        SharedPreferenceHelper.setIsUserSignedIn(true);
+                        sendRegisterRequest(putTokensToMap(appId, "fb", loginResult.getAccessToken().getToken()));
                         onBackPressed();
 
                     }
@@ -238,6 +242,7 @@ public class SocialNetworks extends AppCompatActivity implements GoogleApiClient
                 GoogleSignInAccount acct = result.getSignInAccount();
                 String idToken = acct.getIdToken();
                 Log.d(TAG, "idToken:" + idToken);
+                sendRegisterRequest(putTokensToMap(appId, "go", idToken));
                 // TODO(user): send token to server and validate server-side
             }
         } else {
@@ -245,17 +250,32 @@ public class SocialNetworks extends AppCompatActivity implements GoogleApiClient
         }
     }
 
-    private void sendRegisterRequest(Map<String, String> userData) {
+    private Map<String,String> putTokensToMap(String... args) {
+        Map<String,String> map = new HashMap<String,String>();
+        map.put("appId", args[0]);
+        map.put("social", args[1]);
+        map.put("token", args[2]);
+        if (args.length == 4) {
+            map.put("secret", args[3]);
+        }
+        return map;
+    }
+
+    private void sendRegisterRequest(final Map<String, String> userData) {
         RestClient.getServiceInstance().registerUser(userData, new retrofit.Callback<Response>() {
             @Override
             public void success(Response s, Response response) {
+                SharedPreferenceHelper.setToken(userData.get("token"));
                 String responseString = new String(((TypedByteArray) s.getBody()).getBytes());
-
+                Log.i(TAG, responseString);
+                SharedPreferenceHelper.setIsUserSignedIn(true);
+                onBackPressed();
             }
 
             @Override
             public void failure(RetrofitError error) {
-
+                String json =  new String(((TypedByteArray)error.getResponse().getBody()).getBytes());
+                Log.i(TAG,json.toString());
             }
         });
     }

@@ -158,6 +158,7 @@ public class DivePlaceActivity extends AppCompatActivity implements ViewPager.On
         currents_value.setText(diveSpot.getCurrents());
         description.setText(diveSpot.getDescription());
         level_value.setText(diveSpot.getLevel());
+        depth_value.setText(diveSpot.getDepth());
         LinearLayoutManager linearLayoutManager = new org.solovyev.android.views.llm.LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
 
         if (divespotDetails.getSealifes() != null) {

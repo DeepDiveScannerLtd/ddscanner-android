@@ -14,6 +14,7 @@ import com.google.android.gms.iid.InstanceID;
 import java.io.IOException;
 
 import travel.ilave.deepdivescanner.R;
+import travel.ilave.deepdivescanner.utils.SharedPreferenceHelper;
 
 /**
  * Created by Admin on 29.11.2015.
@@ -45,7 +46,7 @@ public class RegistrationIntentService extends IntentService {
                     GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
             // [END get_token]
             Log.i(TAG, "GCM Registration Token: " + token);
-
+            SharedPreferenceHelper.setGcmId(token);
             // TODO: Implement this method to send any registration to your app's servers.
             sendRegistrationToServer(token);
 
