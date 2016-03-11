@@ -54,6 +54,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 import travel.ilave.deepdivescanner.R;
+import travel.ilave.deepdivescanner.entities.request.RegisterRequest;
 import travel.ilave.deepdivescanner.rest.RestClient;
 import travel.ilave.deepdivescanner.utils.SharedPreferenceHelper;
 
@@ -250,22 +251,25 @@ public class SocialNetworks extends AppCompatActivity implements GoogleApiClient
         }
     }
 
-    private Map<String,String> putTokensToMap(String... args) {
+    private RegisterRequest putTokensToMap(String... args) {
         Map<String,String> map = new HashMap<String,String>();
-        map.put("appId", args[0]);
-        map.put("social", args[1]);
-        map.put("token", args[2]);
+        RegisterRequest registerRequest = new RegisterRequest();
+        registerRequest.setAppId(args[0]);
+        registerRequest.setSocial(args[1]);
+        registerRequest.setToken(args[2]);
+
         if (args.length == 4) {
-            map.put("secret", args[3]);
+            registerRequest.setSecret(args[3]);
+        } else {
+            registerRequest.setSecret("");
         }
-        return map;
+        return registerRequest;
     }
 
-    private void sendRegisterRequest(final Map<String, String> userData) {
+    private void sendRegisterRequest(final RegisterRequest userData) {
         RestClient.getServiceInstance().registerUser(userData, new retrofit.Callback<Response>() {
             @Override
             public void success(Response s, Response response) {
-                SharedPreferenceHelper.setToken(userData.get("token"));
                 String responseString = new String(((TypedByteArray) s.getBody()).getBytes());
                 Log.i(TAG, responseString);
                 SharedPreferenceHelper.setIsUserSignedIn(true);
@@ -274,6 +278,7 @@ public class SocialNetworks extends AppCompatActivity implements GoogleApiClient
 
             @Override
             public void failure(RetrofitError error) {
+                Log.i(TAG, error.getMessage());
                 String json =  new String(((TypedByteArray)error.getResponse().getBody()).getBytes());
                 Log.i(TAG,json.toString());
             }
