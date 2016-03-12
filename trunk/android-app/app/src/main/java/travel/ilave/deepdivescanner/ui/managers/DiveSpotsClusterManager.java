@@ -48,6 +48,7 @@ import travel.ilave.deepdivescanner.DDScannerApplication;
 import travel.ilave.deepdivescanner.R;
 import travel.ilave.deepdivescanner.entities.DiveSpot;
 import travel.ilave.deepdivescanner.entities.DivespotsWrapper;
+import travel.ilave.deepdivescanner.entities.request.DiveSpotsRequestMap;
 import travel.ilave.deepdivescanner.rest.RestClient;
 import travel.ilave.deepdivescanner.ui.activities.DivePlaceActivity;
 import travel.ilave.deepdivescanner.ui.adapters.PlacesPagerAdapter;
@@ -61,7 +62,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
     private Context context;
     private GoogleMap googleMap;
     private Marker lastClickedMarker;
-    private Map<String, String> diveSpotsRequestMap = new HashMap<>();
+    private DiveSpotsRequestMap diveSpotsRequestMap = new DiveSpotsRequestMap();
     private DivespotsWrapper divespotsWrapper;
     private ArrayList<DiveSpot> diveSpots = new ArrayList<>();
     private HashMap<LatLng, DiveSpot> diveSpotsMap = new HashMap<>();
@@ -87,14 +88,21 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         setOnClusterClickListener(this);
         getMarkerCollection().setOnInfoWindowAdapter(new InfoWindowAdapter(context));
 
-        requestCityProducts(googleMap.getProjection().getVisibleRegion().latLngBounds.southwest, googleMap.getProjection().getVisibleRegion().latLngBounds.northeast);
+        requestCityProducts();
     }
 
     @Override
     public void onCameraChange(CameraPosition cameraPosition) {
         super.onCameraChange(cameraPosition);
 
-        requestCityProducts(googleMap.getProjection().getVisibleRegion().latLngBounds.southwest, googleMap.getProjection().getVisibleRegion().latLngBounds.northeast);
+        LatLng southwest = googleMap.getProjection().getVisibleRegion().latLngBounds.southwest;
+        LatLng northeast = googleMap.getProjection().getVisibleRegion().latLngBounds.northeast;
+        if (southwest.latitude <= diveSpotsRequestMap.getSouthWestLat() ||
+                southwest.longitude <= diveSpotsRequestMap.getSouthWestLng() ||
+                northeast.latitude >= diveSpotsRequestMap.getNorthEastLat() ||
+                northeast.longitude >= diveSpotsRequestMap.getNorthEastLng()) {
+            requestCityProducts();
+        }
     }
 
     @Override
@@ -136,7 +144,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(-2, -2);
         squareTextView.setLayoutParams(layoutParams);
         squareTextView.setId(com.google.maps.android.R.id.text);
-        int twelveDpi = (int)(12.0F * this.density);
+        int twelveDpi = (int) (12.0F * this.density);
         squareTextView.setPadding(twelveDpi, twelveDpi, twelveDpi, twelveDpi);
         return squareTextView;
     }
@@ -207,11 +215,13 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         diveSpots.remove(diveSpot);
     }
 
-    public void requestCityProducts(LatLng left, LatLng right) {
-        diveSpotsRequestMap.put("latLeft", String.valueOf(left.latitude - 2.0));
-        diveSpotsRequestMap.put("lngLeft", String.valueOf(left.longitude - 1.0));
-        diveSpotsRequestMap.put("lngRight", String.valueOf(right.longitude + 1.0));
-        diveSpotsRequestMap.put("latRight", String.valueOf(right.latitude + 2.0));
+    public void requestCityProducts() {
+        LatLng southwest = googleMap.getProjection().getVisibleRegion().latLngBounds.southwest;
+        LatLng northeast = googleMap.getProjection().getVisibleRegion().latLngBounds.northeast;
+        diveSpotsRequestMap.putSouthWestLat(southwest.latitude - Math.abs(northeast.latitude - southwest.latitude));
+        diveSpotsRequestMap.putSouthWestLng(southwest.longitude - Math.abs(northeast.longitude - southwest.longitude));
+        diveSpotsRequestMap.putNorthEastLat(northeast.latitude + Math.abs(northeast.latitude - southwest.latitude));
+        diveSpotsRequestMap.putNorthEastLng(northeast.longitude + Math.abs(northeast.longitude - southwest.longitude));
         RestClient.getServiceInstance().getDivespots(diveSpotsRequestMap, new retrofit.Callback<Response>() {
             @Override
             public void success(Response s, Response response) {

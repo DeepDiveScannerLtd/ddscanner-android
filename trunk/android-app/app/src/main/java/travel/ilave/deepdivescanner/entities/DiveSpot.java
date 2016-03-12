@@ -99,7 +99,6 @@ public class DiveSpot implements Serializable, ClusterItem {
     }
 
     public void initLatLng() {
-        LogUtils.i(TAG, "initLatLng lat=" + lat + " lng=" + lng);
         if (!TextUtils.isEmpty(lat) && !TextUtils.isEmpty(lng)) {
             latLng = new LatLng(Double.valueOf(lat), Double.valueOf(lng));
         }

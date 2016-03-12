@@ -100,6 +100,7 @@ public class DivePlaceActivity extends AppCompatActivity implements ViewPager.On
     private void requestProductDetails(String productId) {
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage(getApplicationContext().getResources().getString(R.string.pleaseWait));
+        progressDialog.setCancelable(false);
         progressDialog.show();
         RestClient.getServiceInstance().getDiveSpotById(productId, new Callback<Response>() {
             @Override
