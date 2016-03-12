@@ -78,6 +78,7 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
             setSupportActionBar(toolbar);
             getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_actionbar_search);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            
             latLng = getIntent().getParcelableExtra("LATLNG");
             filters = (HashMap<String, String>) getIntent().getSerializableExtra("FILTERS");
             getSupportActionBar().setTitle("DDScanner");

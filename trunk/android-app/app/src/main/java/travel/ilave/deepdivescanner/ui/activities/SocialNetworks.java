@@ -260,8 +260,6 @@ public class SocialNetworks extends AppCompatActivity implements GoogleApiClient
 
         if (args.length == 4) {
             registerRequest.setSecret(args[3]);
-        } else {
-            registerRequest.setSecret("");
         }
         return registerRequest;
     }
@@ -273,6 +271,11 @@ public class SocialNetworks extends AppCompatActivity implements GoogleApiClient
                 String responseString = new String(((TypedByteArray) s.getBody()).getBytes());
                 Log.i(TAG, responseString);
                 SharedPreferenceHelper.setIsUserSignedIn(true);
+                SharedPreferenceHelper.setToken(userData.getToken());
+                SharedPreferenceHelper.setSn(userData.getSocial());
+                if (userData.getSocial().equals("tw")) {
+                    SharedPreferenceHelper.setSecret(userData.getSecret());
+                }
                 onBackPressed();
             }
 

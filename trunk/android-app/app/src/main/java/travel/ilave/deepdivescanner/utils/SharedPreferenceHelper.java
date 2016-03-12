@@ -11,8 +11,10 @@ import travel.ilave.deepdivescanner.DDScannerApplication;
 public class SharedPreferenceHelper {
 
     private static final String PREFERENCES_GCM_ID = "PREFERENCES_GCM_ID";
-    private static final String CITY = "CITY";
-    private static final String LICENSE = "LICENSE";
+    private static final String TOKEN = "TOKEN";
+    private static final String SN = "SOCIALNETWORK";
+    private static final String SECRET = "SECRET";
+
 
     private static SharedPreferences prefs;
 
@@ -46,12 +48,36 @@ public class SharedPreferenceHelper {
     public static void setToken(String token) {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         Editor editor = prefs.edit();
-        editor.putString("TOKEN", token);
+        editor.putString(TOKEN, token);
         editor.commit();
     }
 
     public static String getToken() {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
-        return prefs.getString("TOKEN", "");
+        return prefs.getString(TOKEN, "");
+    }
+
+    public static void setSn(String sn) {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        Editor editor = prefs.edit();
+        editor.putString(SN, sn);
+        editor.commit();
+    }
+
+    public static String getSn() {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        return prefs.getString(SN, "");
+    }
+
+    public static void setSecret(String secret) {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        Editor editor = prefs.edit();
+        editor.putString(SECRET, secret);
+        editor.commit();
+    }
+
+    public static String getSecret() {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        return prefs.getString(SECRET, "");
     }
 }
