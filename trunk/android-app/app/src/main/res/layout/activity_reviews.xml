@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#f6f6f6">
     <include layout="@layout/view_toolbar" />
     <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <RelativeLayout
         android:id="@+id/header"
+        android:layout_below="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:background="@color/white">
@@ -45,23 +49,27 @@
             android:layout_marginTop="6dp"
             android:layout_height="14dp"
             android:textSize="12sp"
-            android:text="12 reviews"/>
+            android:text="No reviews"/>
     </RelativeLayout>
     <ScrollView
         android:layout_below="@+id/header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
         <android.support.v7.widget.RecyclerView
+            android:id="@+id/comm_rc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="5dp"/>
     </ScrollView>
     <Button
+        android:id="@+id/leave_review"
         android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="#ffd21c"
         android:fontFamily="sans-serif-medium"
         android:textSize="15sp"
         android:text="WRITE A REVIEW"/>
-</RelativeLayout>
+    </RelativeLayout>
+</LinearLayout>

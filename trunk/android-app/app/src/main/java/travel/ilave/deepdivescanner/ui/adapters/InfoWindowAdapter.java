@@ -94,7 +94,6 @@ public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter, ClusterMa
         if (diveSpot.getImages() != null) {
             diveSpot.getImages().get(0).replace("medium", "small");
             if (not_first_time_showing_info_window) {
-                not_first_time_showing_info_window = false;
                 System.out.println("Second time showing");
                 Picasso.with(mContext).load(diveSpot.getImages().get(0)).resize(260, 116).centerCrop().into(photo);
             } else {

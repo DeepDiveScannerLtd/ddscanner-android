@@ -7,14 +7,18 @@ import java.util.List;
  */
 public class DivespotDetails {
 
-    private String sealifePathSmall;
-    private String sealifePathMedium;
-    private String sealifePathOrigin;
+    private List<Comment> comments;
     private DiveSpotFull divespot;
     private List<Sealife> sealifes;
 
 
 
+    public List<Comment> getComments() {
+        return comments;
+    }
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
 
     public DiveSpotFull getDivespot() { return divespot; }
 

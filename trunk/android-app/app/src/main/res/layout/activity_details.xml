@@ -78,6 +78,7 @@
             android:orientation="vertical">
 
         <RelativeLayout
+            android:id="@+id/reviews_rating_layout"
             android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -85,21 +86,22 @@
             <LinearLayout
                 android:layout_marginLeft="10dp"
                 android:id="@+id/stars"
+                android:gravity="center_vertical|center_horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
-                android:gravity="center_vertical|center_horizontal"
+                android:layout_centerVertical="true"
                 android:orientation="horizontal"
                 >
             </LinearLayout>
             <TextView
+                android:layout_toRightOf="@+id/stars"
                 android:id="@+id/reviews_number"
-                android:gravity="center_vertical|center_horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:textSize="12sp"
+                android:textSize="14sp"
                 android:layout_marginLeft="12dp"
-                android:text="reviews"/>
+                android:text="No reviews"/>
             <ImageView
                 android:layout_toRightOf="@+id/reviews_number"
                 android:layout_width="wrap_content"

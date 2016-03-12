@@ -25,7 +25,10 @@ import android.widget.Toast;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import retrofit.Callback;
@@ -33,6 +36,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 import travel.ilave.deepdivescanner.R;
+import travel.ilave.deepdivescanner.entities.Comment;
 import travel.ilave.deepdivescanner.entities.DiveSpotFull;
 import travel.ilave.deepdivescanner.entities.DivespotDetails;
 import travel.ilave.deepdivescanner.entities.Product;
@@ -72,8 +76,11 @@ public class DivePlaceActivity extends AppCompatActivity implements ViewPager.On
     private ArrayList<Sealife> sealifes;
     private static ArrayList<String> images;
     private RelativeLayout sealifeLayout;
+    private RelativeLayout reviews_rating;
     private static String PATH;
     private DiveSpotFull diveSpot;
+
+    private HashMap<String, String> values= new HashMap<String, String>();
 
     private DivespotDetails divespotDetails;
 
@@ -85,6 +92,7 @@ public class DivePlaceActivity extends AppCompatActivity implements ViewPager.On
         setContentView(R.layout.activity_details);
         findViews();
         book_now.setOnClickListener(this);
+        reviews_rating.setOnClickListener(this);
         productImagesViewPager.setOnPageChangeListener(this);
         requestProductDetails(getIntent().getStringExtra(PRODUCT));
     }
@@ -138,6 +146,8 @@ public class DivePlaceActivity extends AppCompatActivity implements ViewPager.On
         level_value = (TextView) findViewById(R.id.characteristic_value_level);
         none_photo = (ImageView) findViewById(R.id.nonne_photos);
         pager_indicator = (LinearLayout) findViewById(R.id.viewPagerCountDots);
+        reviews_rating = (RelativeLayout) findViewById(R.id.reviews_rating_layout);
+        reviewsCount = (TextView) findViewById(R.id.reviews_number);
       //  sealifeLayout = (RelativeLayout) findViewById(R.id.sealife_layout);
 
     }
@@ -159,6 +169,9 @@ public class DivePlaceActivity extends AppCompatActivity implements ViewPager.On
         description.setText(diveSpot.getDescription());
         level_value.setText(diveSpot.getLevel());
         depth_value.setText(diveSpot.getDepth());
+        if (divespotDetails.getComments() != null) {
+            reviewsCount.setText(divespotDetails.getComments().size() + " reviews");
+        }
         LinearLayoutManager linearLayoutManager = new org.solovyev.android.views.llm.LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
 
         if (divespotDetails.getSealifes() != null) {
@@ -198,9 +211,22 @@ public class DivePlaceActivity extends AppCompatActivity implements ViewPager.On
 
     @Override
     public void onClick(View view) {
-        LatLng latLng = new LatLng(Double.valueOf(diveSpot.getLat()), Double.valueOf(diveSpot.getLng()));
-        String name = diveSpot.getName();
-        DiveCentersActivity.show(DivePlaceActivity.this, latLng, name);
+        switch (view.getId()) {
+            case R.id.book_now:
+                LatLng latLng = new LatLng(Double.valueOf(diveSpot.getLat()), Double.valueOf(diveSpot.getLng()));
+                String name = diveSpot.getName();
+                DiveCentersActivity.show(DivePlaceActivity.this, latLng, name);
+                break;
+            case R.id.reviews_rating_layout:
+                if (diveSpot.getImages() != null) {
+                    values.put("image", diveSpot.getDiveSpotPathSmall() + diveSpot.getImages().get(0));
+                } else {
+                    values.put("image","");
+                }
+                values.put("name", diveSpot.getName());
+                ReviewsActivity.show(DivePlaceActivity.this, (ArrayList<Comment>)divespotDetails.getComments(), values, diveSpot.getRating());
+                break;
+        }
     }
 
     private void setUi() {

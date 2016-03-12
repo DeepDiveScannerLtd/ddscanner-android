@@ -108,6 +108,7 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
             latLng = getIntent().getParcelableExtra("LATLNG");
             filters = (HashMap<String, String>) getIntent().getSerializableExtra("FILTERS");
             toolbarTitle.setText("DDScanner");
+            toolbarTitle.setOnClickListener(this);
             if (latLng != null && getCity(latLng) != null && !getCity(latLng).equals("")) {
                 toolbarTitle.setText(getCity(latLng));
             }
@@ -256,6 +257,7 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
         switch (item.getItemId()) {
             case android.R.id.home:
                 openSearchLocationWindow();
+                progressDialog.show();
                 return true;
             case R.id.profile:
                 if (SharedPreferenceHelper.getIsUserLogined()) {

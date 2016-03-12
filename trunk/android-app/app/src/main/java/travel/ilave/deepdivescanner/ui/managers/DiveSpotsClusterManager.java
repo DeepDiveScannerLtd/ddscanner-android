@@ -255,7 +255,6 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
             ImageView photo = (ImageView) view.findViewById(R.id.popup_photo);
             if (diveSpot.getImages() != null) {
                 if (not_first_time_showing_info_window) {
-                    not_first_time_showing_info_window = false;
                     Picasso.with(mContext).load(diveSpot.getImages().get(0)).resize(260, 116).into(photo);
                 } else {
                     not_first_time_showing_info_window = true;
