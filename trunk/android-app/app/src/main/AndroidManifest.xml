@@ -69,9 +69,6 @@
             android:name=".ui.activities.SealifeDetails"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".services.GooglePlusLogin"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".ui.activities.ImageSliderActivity"
             android:screenOrientation="portrait" />
         <receiver

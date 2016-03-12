@@ -1,5 +1,6 @@
 package travel.ilave.deepdivescanner.ui.activities;
 
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -20,6 +21,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -38,7 +40,6 @@ import java.util.Locale;
 
 import travel.ilave.deepdivescanner.R;
 import travel.ilave.deepdivescanner.entities.DivespotsWrapper;
-import travel.ilave.deepdivescanner.services.GooglePlusLogin;
 import travel.ilave.deepdivescanner.services.RegistrationIntentService;
 import travel.ilave.deepdivescanner.ui.adapters.PlacesPagerAdapter;
 import travel.ilave.deepdivescanner.ui.dialogs.SubscribeDialog;
@@ -48,26 +49,51 @@ import travel.ilave.deepdivescanner.utils.SharedPreferenceHelper;
 public class CityActivity extends AppCompatActivity implements View.OnClickListener {
 
     public static final String TAG = "CityActivity";
-
+    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private Toolbar toolbar;
     private ViewPager placeViewPager;
     private PlacesPagerAdapter placesPagerAdapter;
     private TabLayout tabLayout;
+    private TextView toolbarTitle;
     private DivespotsWrapper divespotsWrapper;
     private LatLng latLng;
-    //  private Filters filters = new Filters();
     private HashMap<String, String> filters = new HashMap<String, String>();
     private BroadcastReceiver mRegistrationBroadcatReceiver;
     private FloatingActionButton floatingActionButton;
     private FloatingActionButton feedback;
     private SubscribeDialog subscribeDialog = new SubscribeDialog();
+    private ProgressDialog progressDialog;
 
-    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    private GoogleApiClient client;
+
+    public static void show(Context context, LatLng latLng) {
+        Intent intent = new Intent(context, CityActivity.class);
+        intent.putExtra("LATLNG", latLng);
+        context.startActivity(intent);
+    }
+
+    public static boolean hasConnection(final Context context) {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo wifiInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        if (wifiInfo != null && wifiInfo.isConnected()) {
+            return true;
+        }
+        wifiInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+        if (wifiInfo != null && wifiInfo.isConnected()) {
+            return true;
+        }
+        wifiInfo = cm.getActiveNetworkInfo();
+        if (wifiInfo != null && wifiInfo.isConnected()) {
+            return true;
+        }
+        return false;
+    }
+
+    public static void showWIthFIlters(Context context, HashMap<String, String> map, LatLng latLng) {
+        Intent intent = new Intent(context, CityActivity.class);
+        intent.putExtra("LATLNG", latLng);
+        intent.putExtra("FILTERS", map);
+        context.startActivity(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,17 +101,16 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
         if (hasConnection(this)) {
             setContentView(R.layout.activity_city);
             findViews();
-            setSupportActionBar(toolbar);
-            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_actionbar_search);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            
+            toolbarSettings();
+            progressDialog = new ProgressDialog(this);
+            progressDialog.setMessage(getApplicationContext().getResources().getString(R.string.pleaseWait));
+            toolbarTitle = (TextView) findViewById(R.id.toolbarTitle);
             latLng = getIntent().getParcelableExtra("LATLNG");
             filters = (HashMap<String, String>) getIntent().getSerializableExtra("FILTERS");
-            getSupportActionBar().setTitle("DDScanner");
-            if (latLng != null && getCity(latLng)!= null && !getCity(latLng).equals("")) {
-                getSupportActionBar().setTitle(getCity(latLng));
+            toolbarTitle.setText("DDScanner");
+            if (latLng != null && getCity(latLng) != null && !getCity(latLng).equals("")) {
+                toolbarTitle.setText(getCity(latLng));
             }
-
             populatePlaceViewpager(latLng);
             playServices();
 
@@ -102,10 +127,6 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
                 }
             });
         }
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-       // client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     private void populatePlaceViewpager(LatLng latLng) {
@@ -126,10 +147,25 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
         feedback.setOnClickListener(this);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_city, menu);
-        return true;
+    private void toolbarSettings() {
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_actionbar_search);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("");
+    }
+
+    private void openSearchLocationWindow() {
+        int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
+        try {
+            Intent intent =
+                    new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
+                            .build(this);
+            startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
+        } catch (GooglePlayServicesRepairableException e) {
+            Log.i(TAG, e.toString());
+        } catch (GooglePlayServicesNotAvailableException e) {
+            Log.i(TAG, e.toString());
+        }
     }
 
     @Override
@@ -140,48 +176,16 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
                 Place place = PlaceAutocomplete.getPlace(this, data);
                 Log.i(TAG, "Place: " + place.getName());
                 populatePlaceViewpager(place.getLatLng());
-                getSupportActionBar().setTitle(place.getAddress());
+                progressDialog.dismiss();
+                toolbarTitle.setText(place.getAddress());
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
-                //SSLEngineResult.Status status = PlaceAutocomplete.getStatus(this, data);
-                // TODO: Handle the error.
-
+                progressDialog.dismiss();
             } else if (resultCode == RESULT_CANCELED) {
-                // The user canceled the operation.
+                progressDialog.dismiss();
             }
         }
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                openSearchLocationWindow();
-                return true;
-            case R.id.profile:
-                if (SharedPreferenceHelper.getIsUserLogined()) {
-                    Toast.makeText(CityActivity.this, "You are already login", Toast.LENGTH_LONG);
-                } else {
-                    SocialNetworks.show(CityActivity.this);
-                }
-                return true;
-            case R.id.logbook:
-                if (SharedPreferenceHelper.getIsUserLogined()) {
-                    Toast.makeText(CityActivity.this, "You are already login", Toast.LENGTH_LONG);
-                } else {
-                    SocialNetworks.show(CityActivity.this);
-                }
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-
-    public static void show(Context context, LatLng latLng) {
-        Intent intent = new Intent(context, CityActivity.class);
-        intent.putExtra("LATLNG", latLng);
-        context.startActivity(intent);
-    }
 
     public void playServices() {
         mRegistrationBroadcatReceiver = new BroadcastReceiver() {
@@ -200,20 +204,6 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
         if (checkPlayServices()) {
             Intent intent = new Intent(this, RegistrationIntentService.class);
             startService(intent);
-        }
-    }
-
-    private void openSearchLocationWindow() {
-        int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
-        try {
-            Intent intent =
-                    new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
-                            .build(this);
-            startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
-        } catch (GooglePlayServicesRepairableException e) {
-            Log.i(TAG, e.toString());
-        } catch (GooglePlayServicesNotAvailableException e) {
-            Log.i(TAG, e.toString());
         }
     }
 
@@ -255,78 +245,36 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
         return city;
     }
 
-    public static boolean hasConnection(final Context context) {
-        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo wifiInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-        if (wifiInfo != null && wifiInfo.isConnected()) {
-            return true;
-        }
-        wifiInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
-        if (wifiInfo != null && wifiInfo.isConnected()) {
-            return true;
-        }
-        wifiInfo = cm.getActiveNetworkInfo();
-        if (wifiInfo != null && wifiInfo.isConnected()) {
-            return true;
-        }
-        return false;
-    }
-
-    public static void showWIthFIlters(Context context, HashMap<String, String> map, LatLng latLng) {
-        Intent intent = new Intent(context, CityActivity.class);
-        intent.putExtra("LATLNG", latLng);
-        intent.putExtra("FILTERS", map);
-        context.startActivity(intent);
-    }
-
-  /*  @Override
-    public void onStart() {
-        super.onStart();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client.connect();
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "City Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app deep link URI is correct.
-                Uri.parse("android-app://travel.ilave.deepdivescanner.ui.activities/http/host/path")
-        );
-        AppIndex.AppIndexApi.start(client, viewAction);
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_city, menu);
+        return true;
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "City Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app deep link URI is correct.
-                Uri.parse("android-app://travel.ilave.deepdivescanner.ui.activities/http/host/path")
-        );
-        AppIndex.AppIndexApi.end(client, viewAction);
-        client.disconnect();
-    }*/
-
-   /* @Override
-    public void onResume() {
-        super.onResume();
-        if (PlacesPagerAdapter.getLastLatlng() != null) {
-            populatePlaceViewpager(PlacesPagerAdapter.getLastLatlng());
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                openSearchLocationWindow();
+                return true;
+            case R.id.profile:
+                if (SharedPreferenceHelper.getIsUserLogined()) {
+                    Toast.makeText(CityActivity.this, "You are already login", Toast.LENGTH_LONG);
+                } else {
+                    SocialNetworks.show(CityActivity.this);
+                }
+                return true;
+            case R.id.logbook:
+                if (SharedPreferenceHelper.getIsUserLogined()) {
+                    Toast.makeText(CityActivity.this, "You are already login", Toast.LENGTH_LONG);
+                } else {
+                    SocialNetworks.show(CityActivity.this);
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        System.out.println("resumed");
-    }*/
+    }
 
     @Override
     public void onClick(View view) {
@@ -336,6 +284,10 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.filterButton:
                 FilterActivity.show(CityActivity.this);
+                break;
+            case R.id.toolbarTitle:
+                openSearchLocationWindow();
+                progressDialog.show();
                 break;
         }
     }
