@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,6 +66,13 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
     private PlacesPagerAdapter placesPagerAdapter;
     private Drawable clusterBackgroundDrawable;
     private final IconGenerator clusterIconGenerator;
+
+    // filter
+    private String currents;
+    private String level;
+    private String object;
+    private int rating;
+    private String visibility;
 
     public DiveSpotsClusterManager(Context context, GoogleMap googleMap, PlacesPagerAdapter placesPagerAdapter) {
         super(context, googleMap);
@@ -206,6 +214,14 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         diveSpots.remove(diveSpot);
     }
 
+    public void updateFilter(String currents, String level, String object, int rating, String visibility) {
+        this.currents = currents;
+        this.level = level;
+        this.object = object;
+        this.rating = rating;
+        this.visibility = visibility;
+    }
+
     public void requestCityProducts() {
         LatLng southwest = googleMap.getProjection().getVisibleRegion().latLngBounds.southwest;
         LatLng northeast = googleMap.getProjection().getVisibleRegion().latLngBounds.northeast;
@@ -213,6 +229,21 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         diveSpotsRequestMap.putSouthWestLng(southwest.longitude - Math.abs(northeast.longitude - southwest.longitude));
         diveSpotsRequestMap.putNorthEastLat(northeast.latitude + Math.abs(northeast.latitude - southwest.latitude));
         diveSpotsRequestMap.putNorthEastLng(northeast.longitude + Math.abs(northeast.longitude - southwest.longitude));
+        if (!TextUtils.isEmpty(currents)) {
+            diveSpotsRequestMap.putCurrents(currents);
+        }
+        if (!TextUtils.isEmpty(level)) {
+            diveSpotsRequestMap.putLevel(level);
+        }
+        if (!TextUtils.isEmpty(object)) {
+            diveSpotsRequestMap.putObject(object);
+        }
+        if (rating != -1) {
+            diveSpotsRequestMap.putRating(rating);
+        }
+        if (!TextUtils.isEmpty(visibility)) {
+            diveSpotsRequestMap.putVisibility(visibility);
+        }
         RestClient.getServiceInstance().getDivespots(diveSpotsRequestMap, new retrofit.Callback<Response>() {
             @Override
             public void success(Response s, Response response) {

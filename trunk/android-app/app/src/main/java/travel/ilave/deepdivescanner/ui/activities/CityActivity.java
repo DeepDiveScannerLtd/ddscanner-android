@@ -1,16 +1,13 @@
 package travel.ilave.deepdivescanner.ui.activities;
 
 import android.app.ProgressDialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -28,18 +25,15 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.maps.model.LatLng;
 
-
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
 import travel.ilave.deepdivescanner.R;
-import travel.ilave.deepdivescanner.entities.DivespotsWrapper;
+import travel.ilave.deepdivescanner.entities.request.DiveSpotsRequestMap;
 import travel.ilave.deepdivescanner.services.RegistrationIntentService;
 import travel.ilave.deepdivescanner.ui.adapters.PlacesPagerAdapter;
 import travel.ilave.deepdivescanner.ui.dialogs.SubscribeDialog;
@@ -50,15 +44,15 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
 
     public static final String TAG = "CityActivity";
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+    private static final int REQUEST_CODE_PLACE_AUTOCOMPLETE = 1;
+    private static final int REQUEST_CODE_FILTER = 2;
+
     private Toolbar toolbar;
     private ViewPager placeViewPager;
     private PlacesPagerAdapter placesPagerAdapter;
     private TabLayout tabLayout;
     private TextView toolbarTitle;
-    private DivespotsWrapper divespotsWrapper;
     private LatLng latLng;
-    private HashMap<String, String> filters = new HashMap<String, String>();
-    private BroadcastReceiver mRegistrationBroadcatReceiver;
     private FloatingActionButton floatingActionButton;
     private FloatingActionButton feedback;
     private SubscribeDialog subscribeDialog = new SubscribeDialog();
@@ -88,13 +82,6 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
         return false;
     }
 
-    public static void showWIthFIlters(Context context, HashMap<String, String> map, LatLng latLng) {
-        Intent intent = new Intent(context, CityActivity.class);
-        intent.putExtra("LATLNG", latLng);
-        intent.putExtra("FILTERS", map);
-        context.startActivity(intent);
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,7 +93,6 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
             progressDialog.setMessage(getApplicationContext().getResources().getString(R.string.pleaseWait));
             toolbarTitle = (TextView) findViewById(R.id.toolbarTitle);
             latLng = getIntent().getParcelableExtra("LATLNG");
-            filters = (HashMap<String, String>) getIntent().getSerializableExtra("FILTERS");
             toolbarTitle.setText("DDScanner");
             toolbarTitle.setOnClickListener(this);
             if (latLng != null && getCity(latLng) != null && !getCity(latLng).equals("")) {
@@ -131,8 +117,7 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void populatePlaceViewpager(LatLng latLng) {
-        divespotsWrapper = new DivespotsWrapper();
-        placesPagerAdapter = new PlacesPagerAdapter(this, getFragmentManager(), latLng, filters);
+        placesPagerAdapter = new PlacesPagerAdapter(this, getFragmentManager(), latLng);
         placeViewPager.setAdapter(placesPagerAdapter);
         placeViewPager.setOffscreenPageLimit(3);
         tabLayout.setupWithViewPager(placeViewPager);
@@ -156,12 +141,11 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void openSearchLocationWindow() {
-        int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
         try {
             Intent intent =
                     new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
                             .build(this);
-            startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
+            startActivityForResult(intent, REQUEST_CODE_PLACE_AUTOCOMPLETE);
         } catch (GooglePlayServicesRepairableException e) {
             Log.i(TAG, e.toString());
         } catch (GooglePlayServicesNotAvailableException e) {
@@ -171,37 +155,30 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
-        if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                Place place = PlaceAutocomplete.getPlace(this, data);
-                Log.i(TAG, "Place: " + place.getName());
-                populatePlaceViewpager(place.getLatLng());
-                progressDialog.dismiss();
-                toolbarTitle.setText(place.getAddress());
-            } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
-                progressDialog.dismiss();
-            } else if (resultCode == RESULT_CANCELED) {
-                progressDialog.dismiss();
-            }
+        switch (requestCode) {
+            case REQUEST_CODE_PLACE_AUTOCOMPLETE:
+                if (resultCode == RESULT_OK) {
+                    Place place = PlaceAutocomplete.getPlace(this, data);
+                    Log.i(TAG, "Place: " + place.getName());
+                    populatePlaceViewpager(place.getLatLng());
+                    progressDialog.dismiss();
+                    toolbarTitle.setText(place.getAddress());
+                } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
+                    progressDialog.dismiss();
+                } else if (resultCode == RESULT_CANCELED) {
+                    progressDialog.dismiss();
+                }
+                break;
+            case REQUEST_CODE_FILTER:
+                if (resultCode == RESULT_OK) {
+                    placesPagerAdapter.requestDiveSpots(data.getStringExtra(DiveSpotsRequestMap.KEY_CURRENTS), data.getStringExtra(DiveSpotsRequestMap.KEY_LEVEL), data.getStringExtra(DiveSpotsRequestMap.KEY_OBJECT), data.getIntExtra(DiveSpotsRequestMap.KEY_RATING, -1), data.getStringExtra(DiveSpotsRequestMap.KEY_VISIBILITY));
+                }
+                break;
         }
     }
 
 
     public void playServices() {
-        mRegistrationBroadcatReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-                boolean sentToken = sharedPreferences.getBoolean(RegistrationIntentService.SENT_TOKEN_TO_SERVER, false);
-                if (sentToken) {
-
-                } else {
-                    //Error with token
-                }
-            }
-        };
-
         if (checkPlayServices()) {
             Intent intent = new Intent(this, RegistrationIntentService.class);
             startService(intent);
@@ -285,7 +262,9 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
                 subscribeDialog.show(getFragmentManager(), "");
                 break;
             case R.id.filterButton:
-                FilterActivity.show(CityActivity.this);
+                Intent intent = new Intent(this, FilterActivity.class);
+                startActivityForResult(intent, REQUEST_CODE_FILTER);
+//                FilterActivity.show(CityActivity.this);
                 break;
             case R.id.toolbarTitle:
                 openSearchLocationWindow();

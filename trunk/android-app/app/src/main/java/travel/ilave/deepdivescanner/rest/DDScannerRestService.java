@@ -31,7 +31,7 @@ public interface DDScannerRestService {
 
     @Headers("Content-type: application/json")
     @GET("/diving/divespots")
-    void getDivespots(@QueryMap Map<String,String> map, Callback<Response> callback);
+    void getDivespots(@QueryMap Map<String, Object> map, Callback<Response> callback);
 
     @POST("/diving/register")
     void registerUser(@Body RegisterRequest registerRequest, Callback<Response> callback);
