@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Created by lashket on 5.2.16.
  */
-public class Divecenters {
+public class DiveCentersResponseEntity {
     private List<DiveCenter> divecenters;
     private  String logoPath;
 

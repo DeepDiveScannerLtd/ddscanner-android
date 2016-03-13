@@ -4,9 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LayerDrawable;
-import android.graphics.drawable.ShapeDrawable;
-import android.graphics.drawable.shapes.OvalShape;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,7 +36,6 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -69,15 +65,13 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
     private PlacesPagerAdapter placesPagerAdapter;
     private Drawable clusterBackgroundDrawable;
     private final IconGenerator clusterIconGenerator;
-    private final float density;
 
     public DiveSpotsClusterManager(Context context, GoogleMap googleMap, PlacesPagerAdapter placesPagerAdapter) {
         super(context, googleMap);
         this.context = context;
         this.googleMap = googleMap;
         this.placesPagerAdapter = placesPagerAdapter;
-        this.density = context.getResources().getDisplayMetrics().density;
-        this.clusterBackgroundDrawable = ContextCompat.getDrawable(context, R.drawable.ic_number_2);
+        this.clusterBackgroundDrawable = ContextCompat.getDrawable(context, R.drawable.ic_number);
         this.clusterIconGenerator = new IconGenerator(context);
         this.clusterIconGenerator.setContentView(this.makeSquareTextView(context));
         this.clusterIconGenerator.setTextAppearance(com.google.maps.android.R.style.ClusterIcon_TextAppearance);
@@ -141,11 +135,9 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
 
     private SquareTextView makeSquareTextView(Context context) {
         SquareTextView squareTextView = new SquareTextView(context);
-        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(-2, -2);
+        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         squareTextView.setLayoutParams(layoutParams);
         squareTextView.setId(com.google.maps.android.R.id.text);
-        int twelveDpi = (int) (12.0F * this.density);
-        squareTextView.setPadding(twelveDpi, twelveDpi, twelveDpi, twelveDpi);
         return squareTextView;
     }
 
@@ -168,7 +160,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
             super.onClusterItemRendered(diveSpot, marker);
             try {
                 marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
-                if (lastClickedMarker != null && lastClickedMarker.getPosition().equals(marker.getPosition())) {
+                if (lastClickedMarker != null && lastClickedMarker.getPosition().equals(marker.getPosition()) && lastClickedMarker.isInfoWindowShown()) {
                     marker.showInfoWindow();
                 }
             } catch (Exception e) {
@@ -197,7 +189,6 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
     }
 
     private void addNewDiveSpot(DiveSpot diveSpot) {
-        diveSpot.initLatLng();
         if (diveSpot.getPosition() == null) {
             LogUtils.i(TAG, "addNewDiveSpot diveSpot.getPosition() == null");
         } else {

@@ -22,30 +22,17 @@ import travel.ilave.deepdivescanner.ui.managers.DiveSpotsClusterManager;
 public class PlacesPagerAdapter extends FragmentStatePagerAdapter {
 
     private static final String TAG = PlacesPagerAdapter.class.getName();
-    private static GoogleMap gMap;
     private Context context;
     private LatLng latLng;
-    private FragmentManager fm;
     private HashMap<String, String> filters = new HashMap<String, String>();
-    private String path;
     private MapFragment mapFragment;
     private ProductListFragment productListFragment;
-    private DiveSpotsClusterManager diveSpotsClusterManager;
 
     public PlacesPagerAdapter(Context context, FragmentManager fm, LatLng latLng, HashMap<String, String> filters) {
         super(fm);
-        this.fm = fm;
         this.context = context;
         this.latLng = latLng;
         this.filters = filters;
-    }
-
-    public static LatLng getLastLatlng() {
-        if (gMap == null) {
-            return null;
-        } else {
-            return gMap.getCameraPosition().target;
-        }
     }
 
     @Override
@@ -62,8 +49,7 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter {
                             latLng = new LatLng(53.902378, 27.557184);
                         }
                         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 8.0f));
-                        gMap = googleMap;
-                        diveSpotsClusterManager = new DiveSpotsClusterManager(context, gMap, PlacesPagerAdapter.this);
+                        DiveSpotsClusterManager diveSpotsClusterManager = new DiveSpotsClusterManager(context, googleMap, PlacesPagerAdapter.this);
                         googleMap.setOnInfoWindowClickListener(diveSpotsClusterManager);
                         googleMap.getUiSettings().setMapToolbarEnabled(false);
                         googleMap.setOnMarkerClickListener(diveSpotsClusterManager);

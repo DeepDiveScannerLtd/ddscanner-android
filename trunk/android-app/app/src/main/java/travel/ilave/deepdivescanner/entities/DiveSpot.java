@@ -86,7 +86,6 @@ public class DiveSpot implements Serializable, ClusterItem {
 
     public void setLat(String lat) {
         this.lat = lat;
-        initLatLng();
     }
 
     public String getLng() {
@@ -95,13 +94,6 @@ public class DiveSpot implements Serializable, ClusterItem {
 
     public void setLng(String lng) {
         this.lng = lng;
-        initLatLng();
-    }
-
-    public void initLatLng() {
-        if (!TextUtils.isEmpty(lat) && !TextUtils.isEmpty(lng)) {
-            latLng = new LatLng(Double.valueOf(lat), Double.valueOf(lng));
-        }
     }
 
     public String getDescription() {
@@ -130,6 +122,9 @@ public class DiveSpot implements Serializable, ClusterItem {
 
     @Override
     public LatLng getPosition() {
+        if (!TextUtils.isEmpty(lat) && !TextUtils.isEmpty(lng)) {
+            latLng = new LatLng(Double.valueOf(lat), Double.valueOf(lng));
+        }
         return latLng;
     }
     /*  @Override
