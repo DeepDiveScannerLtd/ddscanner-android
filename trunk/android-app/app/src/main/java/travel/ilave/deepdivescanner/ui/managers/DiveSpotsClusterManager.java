@@ -37,6 +37,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -71,7 +73,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
     private String currents;
     private String level;
     private String object;
-    private int rating;
+    private int rating = -1;
     private String visibility;
 
     public DiveSpotsClusterManager(Context context, GoogleMap googleMap, PlacesPagerAdapter placesPagerAdapter) {
@@ -223,6 +225,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
     }
 
     public void requestCityProducts() {
+        diveSpotsRequestMap.clear();
         LatLng southwest = googleMap.getProjection().getVisibleRegion().latLngBounds.southwest;
         LatLng northeast = googleMap.getProjection().getVisibleRegion().latLngBounds.northeast;
         diveSpotsRequestMap.putSouthWestLat(southwest.latitude - Math.abs(northeast.latitude - southwest.latitude));
@@ -243,6 +246,9 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         }
         if (!TextUtils.isEmpty(visibility)) {
             diveSpotsRequestMap.putVisibility(visibility);
+        }
+        for (Map.Entry<String, Object> entry : diveSpotsRequestMap.entrySet()) {
+            LogUtils.i(TAG, "get dive spots request parameter: " + entry.getKey() + " " + entry.getValue());
         }
         RestClient.getServiceInstance().getDivespots(diveSpotsRequestMap, new retrofit.Callback<Response>() {
             @Override
