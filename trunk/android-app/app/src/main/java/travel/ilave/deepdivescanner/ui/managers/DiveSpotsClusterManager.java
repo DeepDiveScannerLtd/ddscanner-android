@@ -4,10 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LayerDrawable;
-import android.graphics.drawable.ShapeDrawable;
-import android.graphics.drawable.shapes.OvalShape;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +37,6 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -48,6 +45,7 @@ import travel.ilave.deepdivescanner.DDScannerApplication;
 import travel.ilave.deepdivescanner.R;
 import travel.ilave.deepdivescanner.entities.DiveSpot;
 import travel.ilave.deepdivescanner.entities.DivespotsWrapper;
+import travel.ilave.deepdivescanner.entities.request.DiveSpotsRequestMap;
 import travel.ilave.deepdivescanner.rest.RestClient;
 import travel.ilave.deepdivescanner.ui.activities.DivePlaceActivity;
 import travel.ilave.deepdivescanner.ui.adapters.PlacesPagerAdapter;
@@ -61,22 +59,27 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
     private Context context;
     private GoogleMap googleMap;
     private Marker lastClickedMarker;
-    private Map<String, String> diveSpotsRequestMap = new HashMap<>();
+    private DiveSpotsRequestMap diveSpotsRequestMap = new DiveSpotsRequestMap();
     private DivespotsWrapper divespotsWrapper;
     private ArrayList<DiveSpot> diveSpots = new ArrayList<>();
     private HashMap<LatLng, DiveSpot> diveSpotsMap = new HashMap<>();
     private PlacesPagerAdapter placesPagerAdapter;
     private Drawable clusterBackgroundDrawable;
     private final IconGenerator clusterIconGenerator;
-    private final float density;
+
+    // filter
+    private String currents;
+    private String level;
+    private String object;
+    private int rating;
+    private String visibility;
 
     public DiveSpotsClusterManager(Context context, GoogleMap googleMap, PlacesPagerAdapter placesPagerAdapter) {
         super(context, googleMap);
         this.context = context;
         this.googleMap = googleMap;
         this.placesPagerAdapter = placesPagerAdapter;
-        this.density = context.getResources().getDisplayMetrics().density;
-        this.clusterBackgroundDrawable = ContextCompat.getDrawable(context, R.drawable.ic_number_2);
+        this.clusterBackgroundDrawable = ContextCompat.getDrawable(context, R.drawable.ic_number);
         this.clusterIconGenerator = new IconGenerator(context);
         this.clusterIconGenerator.setContentView(this.makeSquareTextView(context));
         this.clusterIconGenerator.setTextAppearance(com.google.maps.android.R.style.ClusterIcon_TextAppearance);
@@ -87,14 +90,21 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         setOnClusterClickListener(this);
         getMarkerCollection().setOnInfoWindowAdapter(new InfoWindowAdapter(context));
 
-        requestCityProducts(googleMap.getProjection().getVisibleRegion().latLngBounds.southwest, googleMap.getProjection().getVisibleRegion().latLngBounds.northeast);
+        requestCityProducts();
     }
 
     @Override
     public void onCameraChange(CameraPosition cameraPosition) {
         super.onCameraChange(cameraPosition);
 
-        requestCityProducts(googleMap.getProjection().getVisibleRegion().latLngBounds.southwest, googleMap.getProjection().getVisibleRegion().latLngBounds.northeast);
+        LatLng southwest = googleMap.getProjection().getVisibleRegion().latLngBounds.southwest;
+        LatLng northeast = googleMap.getProjection().getVisibleRegion().latLngBounds.northeast;
+        if (southwest.latitude <= diveSpotsRequestMap.getSouthWestLat() ||
+                southwest.longitude <= diveSpotsRequestMap.getSouthWestLng() ||
+                northeast.latitude >= diveSpotsRequestMap.getNorthEastLat() ||
+                northeast.longitude >= diveSpotsRequestMap.getNorthEastLng()) {
+            requestCityProducts();
+        }
     }
 
     @Override
@@ -133,11 +143,9 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
 
     private SquareTextView makeSquareTextView(Context context) {
         SquareTextView squareTextView = new SquareTextView(context);
-        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(-2, -2);
+        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         squareTextView.setLayoutParams(layoutParams);
         squareTextView.setId(com.google.maps.android.R.id.text);
-        int twelveDpi = (int)(12.0F * this.density);
-        squareTextView.setPadding(twelveDpi, twelveDpi, twelveDpi, twelveDpi);
         return squareTextView;
     }
 
@@ -160,7 +168,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
             super.onClusterItemRendered(diveSpot, marker);
             try {
                 marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
-                if (lastClickedMarker != null && lastClickedMarker.getPosition().equals(marker.getPosition())) {
+                if (lastClickedMarker != null && lastClickedMarker.getPosition().equals(marker.getPosition()) && lastClickedMarker.isInfoWindowShown()) {
                     marker.showInfoWindow();
                 }
             } catch (Exception e) {
@@ -189,7 +197,6 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
     }
 
     private void addNewDiveSpot(DiveSpot diveSpot) {
-        diveSpot.initLatLng();
         if (diveSpot.getPosition() == null) {
             LogUtils.i(TAG, "addNewDiveSpot diveSpot.getPosition() == null");
         } else {
@@ -207,11 +214,36 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         diveSpots.remove(diveSpot);
     }
 
-    public void requestCityProducts(LatLng left, LatLng right) {
-        diveSpotsRequestMap.put("latLeft", String.valueOf(left.latitude - 2.0));
-        diveSpotsRequestMap.put("lngLeft", String.valueOf(left.longitude - 1.0));
-        diveSpotsRequestMap.put("lngRight", String.valueOf(right.longitude + 1.0));
-        diveSpotsRequestMap.put("latRight", String.valueOf(right.latitude + 2.0));
+    public void updateFilter(String currents, String level, String object, int rating, String visibility) {
+        this.currents = currents;
+        this.level = level;
+        this.object = object;
+        this.rating = rating;
+        this.visibility = visibility;
+    }
+
+    public void requestCityProducts() {
+        LatLng southwest = googleMap.getProjection().getVisibleRegion().latLngBounds.southwest;
+        LatLng northeast = googleMap.getProjection().getVisibleRegion().latLngBounds.northeast;
+        diveSpotsRequestMap.putSouthWestLat(southwest.latitude - Math.abs(northeast.latitude - southwest.latitude));
+        diveSpotsRequestMap.putSouthWestLng(southwest.longitude - Math.abs(northeast.longitude - southwest.longitude));
+        diveSpotsRequestMap.putNorthEastLat(northeast.latitude + Math.abs(northeast.latitude - southwest.latitude));
+        diveSpotsRequestMap.putNorthEastLng(northeast.longitude + Math.abs(northeast.longitude - southwest.longitude));
+        if (!TextUtils.isEmpty(currents)) {
+            diveSpotsRequestMap.putCurrents(currents);
+        }
+        if (!TextUtils.isEmpty(level)) {
+            diveSpotsRequestMap.putLevel(level);
+        }
+        if (!TextUtils.isEmpty(object)) {
+            diveSpotsRequestMap.putObject(object);
+        }
+        if (rating != -1) {
+            diveSpotsRequestMap.putRating(rating);
+        }
+        if (!TextUtils.isEmpty(visibility)) {
+            diveSpotsRequestMap.putVisibility(visibility);
+        }
         RestClient.getServiceInstance().getDivespots(diveSpotsRequestMap, new retrofit.Callback<Response>() {
             @Override
             public void success(Response s, Response response) {

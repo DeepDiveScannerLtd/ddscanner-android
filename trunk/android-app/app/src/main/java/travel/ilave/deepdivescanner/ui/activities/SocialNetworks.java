@@ -276,7 +276,7 @@ public class SocialNetworks extends AppCompatActivity implements GoogleApiClient
                 if (userData.getSocial().equals("tw")) {
                     SharedPreferenceHelper.setSecret(userData.getSecret());
                 }
-                onBackPressed();
+                finish();
             }
 
             @Override

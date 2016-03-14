@@ -23,7 +23,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 import travel.ilave.deepdivescanner.R;
-import travel.ilave.deepdivescanner.entities.Divecenters;
+import travel.ilave.deepdivescanner.entities.DiveCentersResponseEntity;
 import travel.ilave.deepdivescanner.rest.RestClient;
 import travel.ilave.deepdivescanner.ui.adapters.DiveCentersPagerAdapter;
 
@@ -35,10 +35,10 @@ public class DiveCentersActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    private Divecenters divecenters = new Divecenters();
+    private DiveCentersResponseEntity divecenters = new DiveCentersResponseEntity();
     private DiveCentersPagerAdapter diveCentersPagerAdapter;
     private LatLng latLng;
-    private Map<String, String> map = new HashMap<String, String>();
+    private Map<String, String> map = new HashMap<>();
     private ProgressDialog progressDialog;
     private String dsName;
 
@@ -62,8 +62,8 @@ public class DiveCentersActivity extends AppCompatActivity {
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_actionbar_back);
     }
 
-    private void populateDiveCentesPager(Divecenters divecenters) {
-        diveCentersPagerAdapter = new DiveCentersPagerAdapter(this, getFragmentManager(), divecenters, latLng, dsName);
+    private void populateDiveCentesPager(DiveCentersResponseEntity diveCentersResponseEntity) {
+        diveCentersPagerAdapter = new DiveCentersPagerAdapter(this, getFragmentManager(), diveCentersResponseEntity, latLng, dsName);
         viewPager.setAdapter(diveCentersPagerAdapter);
         viewPager.setOffscreenPageLimit(3);
         tabLayout.setupWithViewPager(viewPager);
@@ -89,7 +89,7 @@ public class DiveCentersActivity extends AppCompatActivity {
             public void success(Response s, Response response) {
                 String responseString = new String(((TypedByteArray) s.getBody()).getBytes());
                 System.out.println(responseString);
-                divecenters = new Gson().fromJson(responseString, Divecenters.class);
+                divecenters = new Gson().fromJson(responseString, DiveCentersResponseEntity.class);
                 populateDiveCentesPager(divecenters);
                 progressDialog.dismiss();
             }

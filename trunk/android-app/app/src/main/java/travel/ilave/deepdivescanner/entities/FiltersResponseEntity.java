@@ -2,18 +2,26 @@ package travel.ilave.deepdivescanner.entities;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
  * Created by lashket on 24.1.16.
  */
-public class Filters implements Serializable {
+public class FiltersResponseEntity implements Serializable {
     private Map<String, String> currents;
     private Map<String, String> level;
     private Map<String, String> object;
-    private List<String> rating;
+    private int[] rating;
     private Map<String, String> visibility;
+
+    public FiltersResponseEntity() {
+        currents = new HashMap<>();
+        level = new HashMap<>();
+        object = new HashMap<>();
+        visibility = new HashMap<>();
+    }
 
     public Map<String, String> getCurrents() {
         return currents;
@@ -39,11 +47,11 @@ public class Filters implements Serializable {
         this.object = object;
     }
 
-    public List<String> getRating() {
+    public int[] getRating() {
         return rating;
     }
 
-    public void setRating(List<String> rating) {
+    public void setRating(int[] rating) {
         this.rating = rating;
     }
 

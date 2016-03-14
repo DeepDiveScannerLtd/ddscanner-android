@@ -1,13 +1,17 @@
 package travel.ilave.deepdivescanner.entities;
 
 import android.os.Parcelable;
+import android.text.TextUtils;
+
+import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.android.clustering.ClusterItem;
 
 import java.io.Serializable;
 
 /**
  * Created by lashket on 5.2.16.
  */
-public class DiveCenter implements Parcelable, Serializable {
+public class DiveCenter implements Parcelable, Serializable, ClusterItem {
 
     private String id;
     private String name;
@@ -18,6 +22,7 @@ public class DiveCenter implements Parcelable, Serializable {
     private String logo;
     private String address;
     private float rating;
+    private LatLng latLng;
 
     protected DiveCenter(android.os.Parcel in) {
         id = in.readString();
@@ -133,4 +138,11 @@ public class DiveCenter implements Parcelable, Serializable {
         dest.writeFloat(rating);
     }
 
+    @Override
+    public LatLng getPosition() {
+        if (!TextUtils.isEmpty(lat) && !TextUtils.isEmpty(lng)) {
+            latLng = new LatLng(Double.valueOf(lat), Double.valueOf(lng));
+        }
+        return latLng;
+    }
 }
