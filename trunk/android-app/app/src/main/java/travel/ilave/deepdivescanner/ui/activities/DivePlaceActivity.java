@@ -1,6 +1,7 @@
 package travel.ilave.deepdivescanner.ui.activities;
 
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -43,6 +45,7 @@ import travel.ilave.deepdivescanner.entities.Product;
 import travel.ilave.deepdivescanner.entities.Sealife;
 import travel.ilave.deepdivescanner.rest.RestClient;
 import travel.ilave.deepdivescanner.ui.adapters.PlaceImagesPagerAdapter;
+import travel.ilave.deepdivescanner.ui.adapters.ReviewsListAdapter;
 import travel.ilave.deepdivescanner.ui.adapters.SealifeListAdapter;
 import travel.ilave.deepdivescanner.ui.dialogs.SubscribeDialog;
 import travel.ilave.deepdivescanner.utils.LogUtils;
@@ -51,6 +54,8 @@ import travel.ilave.deepdivescanner.utils.SharedPreferenceHelper;
 public class DivePlaceActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener, View.OnClickListener{
 
     public static final String PRODUCT = "PRODUCT";
+    public static final String TAG = DivePlaceActivity.class.getSimpleName();
+
 
     private Toolbar toolbar;
     private ViewPager productImagesViewPager;
@@ -61,10 +66,12 @@ public class DivePlaceActivity extends AppCompatActivity implements ViewPager.On
     private TextView visibility_value;
     private TextView description;
     private TextView currents_value;
+    private TextView object_value;
     private TextView level_value;
     private ImageView[] dots;
     private int dotsCount = 0;
     private LinearLayout pager_indicator;
+    private String productId;
 
     private Button book_now;
     private ImageView none_photo;
@@ -94,6 +101,7 @@ public class DivePlaceActivity extends AppCompatActivity implements ViewPager.On
         book_now.setOnClickListener(this);
         reviews_rating.setOnClickListener(this);
         productImagesViewPager.setOnPageChangeListener(this);
+        productId = getIntent().getStringExtra(PRODUCT);
         requestProductDetails(getIntent().getStringExtra(PRODUCT));
     }
 
@@ -126,6 +134,9 @@ public class DivePlaceActivity extends AppCompatActivity implements ViewPager.On
                 } else if (error.getKind().equals(RetrofitError.Kind.HTTP)) {
                     Toast.makeText(DivePlaceActivity.this, "Server is not responsible, please try later", Toast.LENGTH_LONG).show();
                 }
+                Log.i(TAG, error.getMessage());
+                String json =  new String(((TypedByteArray)error.getResponse().getBody()).getBytes());
+                Log.i(TAG,json.toString());
                 // TODO Handle result handling when activity stopped
                 // TODO Handle errors
             }
@@ -149,6 +160,7 @@ public class DivePlaceActivity extends AppCompatActivity implements ViewPager.On
         pager_indicator = (LinearLayout) findViewById(R.id.viewPagerCountDots);
         reviews_rating = (RelativeLayout) findViewById(R.id.reviews_rating_layout);
         reviewsCount = (TextView) findViewById(R.id.reviews_number);
+        object_value = (TextView) findViewById(R.id.characteristic_value_object);
       //  sealifeLayout = (RelativeLayout) findViewById(R.id.sealife_layout);
 
     }
@@ -170,6 +182,16 @@ public class DivePlaceActivity extends AppCompatActivity implements ViewPager.On
         description.setText(diveSpot.getDescription());
         level_value.setText(diveSpot.getLevel());
         depth_value.setText(diveSpot.getDepth());
+        if (diveSpot.getObject() != null && !diveSpot.getObject().equals("other")) {
+            RelativeLayout relativeLayout;
+            ImageView lastDivider;
+            relativeLayout = (RelativeLayout) findViewById(R.id.layout_object);
+            lastDivider = (ImageView) findViewById(R.id.last_divider);
+            lastDivider.setVisibility(View.VISIBLE);
+            relativeLayout.setVisibility(View.VISIBLE);
+            object_value.setText(diveSpot.getObject());
+
+        }
         if (divespotDetails.getComments() != null) {
             reviewsCount.setText(divespotDetails.getComments().size() + " reviews");
         }
@@ -225,7 +247,15 @@ public class DivePlaceActivity extends AppCompatActivity implements ViewPager.On
                     values.put("image","");
                 }
                 values.put("name", diveSpot.getName());
-                ReviewsActivity.show(DivePlaceActivity.this, (ArrayList<Comment>)divespotDetails.getComments(), values, diveSpot.getRating());
+                values.put("id", String.valueOf(diveSpot.getId()));
+                Intent intent = new Intent(DivePlaceActivity.this, ReviewsActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("COMMENTS", (ArrayList<Comment>) divespotDetails.getComments());
+                intent.putExtras(bundle);
+                intent.putExtra("VALUES", values);
+                intent.putExtra("RATING", diveSpot.getRating());
+                startActivityForResult(intent, 9001);
+               // ReviewsActivity.show(DivePlaceActivity.this, (ArrayList<Comment>)divespotDetails.getComments(), values, diveSpot.getRating());
                 break;
         }
     }
@@ -292,6 +322,22 @@ public class DivePlaceActivity extends AppCompatActivity implements ViewPager.On
         System.out.println(position);
         dots[position].setImageDrawable(getResources().getDrawable(R.drawable.selecteditem_dot));
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == 9001) {
+            if(resultCode == Activity.RESULT_OK){
+                Intent intent = new Intent(DivePlaceActivity.this, DivePlaceActivity.class);
+                intent.putExtra("PRODUCT", productId);
+                finish();
+                startActivity(intent);
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+                //Write your code if there's no result
+            }
+        }
     }
 
     @Override

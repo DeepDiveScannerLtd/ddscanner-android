@@ -14,6 +14,7 @@ import retrofit.http.POST;
 import retrofit.http.Path;
 import retrofit.http.QueryMap;
 import travel.ilave.deepdivescanner.entities.request.RegisterRequest;
+import travel.ilave.deepdivescanner.entities.request.SendReviewRequest;
 
 /**
  * Created by unight on 03.07.2015.
@@ -35,5 +36,8 @@ public interface DDScannerRestService {
 
     @POST("/diving/register")
     void registerUser(@Body RegisterRequest registerRequest, Callback<Response> callback);
+
+    @POST("/diving/comment")
+    void addCOmmentToDiveSpot(@Body SendReviewRequest sendReviewRequest, Callback<Response> callback);
 
 }

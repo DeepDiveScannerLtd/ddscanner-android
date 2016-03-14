@@ -1,12 +1,15 @@
 package travel.ilave.deepdivescanner.ui.activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -41,12 +44,13 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     private int rating;
     private Button leaveReview;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reviews);
-        comments = (ArrayList<Comment>) getIntent().getSerializableExtra("COMMENTS");
+        Bundle bundle = getIntent().getExtras();
+        comments = (ArrayList<Comment>) bundle.getSerializable("COMMENTS");
+        Log.i("Reviews", comments.get(0).getComment());
         values = (HashMap<String, String>) getIntent().getSerializableExtra("VALUES");
         rating = getIntent().getIntExtra("RATING", 0);
         findViews();
@@ -82,7 +86,9 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
         if (comments != null) {
             ds_reviews.setText(comments.size() + " reviews");
         }
-        commentsRc.setAdapter(new ReviewsListAdapter());
+        commentsRc.setHasFixedSize(true);
+        commentsRc.setLayoutManager(new LinearLayoutManager(this));
+        commentsRc.setAdapter(new ReviewsListAdapter(comments, ReviewsActivity.this));
         for (int i = 0; i < rating; i++) {
             ImageView iv = new ImageView(this);
             iv.setImageResource(R.drawable.ic_flag_full_small);
@@ -99,7 +105,9 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
 
     public static void show(Context context, ArrayList<Comment> comments, HashMap<String, String> values, int rating) {
         Intent intent = new Intent(context, ReviewsActivity.class);
-        intent.putExtra("COMMENTS", comments);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("COMMENTS", comments);
+        intent.putExtras(bundle);
         intent.putExtra("VALUES", values);
         intent.putExtra("RATING", rating);
         context.startActivity(intent);
@@ -110,7 +118,9 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                onBackPressed();
+                Intent returnIntent = new Intent();
+                setResult(Activity.RESULT_OK,returnIntent);
+                finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -118,10 +128,29 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == 9001) {
+            if(resultCode == Activity.RESULT_OK){
+                Comment comment = (Comment)data.getSerializableExtra("COMMENT");
+                Log.i("ReviewsActivity", comment.getComment());
+                comments.add(0, comment);
+                commentsRc.setAdapter(new ReviewsListAdapter(comments, ReviewsActivity.this));
+                ds_reviews.setText(comments.size() + " reviews");
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+                //Write your code if there's no result
+            }
+        }
+    }
+
+    @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.leave_review:
-                LeaveReviewActivity.show(ReviewsActivity.this);
+                Intent intent = new Intent(ReviewsActivity.this, LeaveReviewActivity.class);
+                intent.putExtra("id", values.get("id"));
+                startActivityForResult(intent, 9001);
                 break;
         }
     }

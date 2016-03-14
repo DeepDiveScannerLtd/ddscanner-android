@@ -287,10 +287,10 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
             ImageView photo = (ImageView) view.findViewById(R.id.popup_photo);
             if (diveSpot.getImages() != null) {
                 if (not_first_time_showing_info_window) {
-                    Picasso.with(mContext).load(diveSpot.getImages().get(0)).resize(260, 116).into(photo);
+                    Picasso.with(mContext).load(diveSpot.getImages().get(0)).resize(260, 116).centerCrop().into(photo);
                 } else {
                     not_first_time_showing_info_window = true;
-                    Picasso.with(mContext).load(diveSpot.getImages().get(0)).resize(260, 116).into(photo, new InfoWindowRefresher(marker));
+                    Picasso.with(mContext).load(diveSpot.getImages().get(0)).resize(260, 116).centerCrop().into(photo, new InfoWindowRefresher(marker));
                 }
             }
             TextView description = ((TextView) view.findViewById(R.id.description_popup));

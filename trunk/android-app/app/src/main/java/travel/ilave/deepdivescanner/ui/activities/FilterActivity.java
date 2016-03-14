@@ -4,14 +4,18 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
@@ -33,6 +37,7 @@ import travel.ilave.deepdivescanner.R;
 import travel.ilave.deepdivescanner.entities.FiltersResponseEntity;
 import travel.ilave.deepdivescanner.entities.request.DiveSpotsRequestMap;
 import travel.ilave.deepdivescanner.rest.RestClient;
+import travel.ilave.deepdivescanner.utils.SharedPreferenceHelper;
 
 /**
  * Created by lashket on 22.1.16.
@@ -43,21 +48,18 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
 
     private RadioGroup rgLevel;
     private RadioGroup rgCurrents;
-    private RadioButton radioButton;
-    private LatLng latLng;
     private RadioGroup rgVisibility;
+    private RadioGroup rgObject;
     private Toolbar toolbar;
     private FiltersResponseEntity filters = new FiltersResponseEntity();
     private Button button;
     private ProgressDialog progressDialog;
-    private HashMap<String, String> filtersSend = new HashMap<String, String>();
 
 
     @Override
     protected void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
         setContentView(R.layout.activity_filter);
-        latLng = getIntent().getParcelableExtra("LATLNG");
         findViews();
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -75,17 +77,26 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
         rgCurrents = (RadioGroup) findViewById(R.id.rg_currents);
         rgLevel = (RadioGroup) findViewById(R.id.rg_level);
         rgVisibility = (RadioGroup) findViewById(R.id.rg_visibility);
+        rgObject = (RadioGroup) findViewById(R.id.rg_object);
         button = (Button) findViewById(R.id.apply_filter);
     }
 
 
     private void setFilerGroup(RadioGroup radioGroup, Map<String, String> currents) {
+        ImageView divider = new ImageView(this);
+        divider.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.divider));
+        divider.setPadding(0,16,0,0);
+        int i = 0;
         LinearLayout.LayoutParams layoutParams = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT, RadioGroup.LayoutParams.WRAP_CONTENT);
         for (Map.Entry<String, String> entry : currents.entrySet()) {
             RadioButton radioButton = new RadioButton(this);
+            radioButton.setPadding(0,16,0,0);
             radioButton.setTag(entry.getKey());
             radioButton.setText(entry.getValue());
             radioGroup.addView(radioButton, 0, layoutParams);
+           /* if (i < currents.size() - 1) {
+                radioGroup.addView(divider, 0, layoutParams);
+            }*/
         }
     }
 
@@ -104,10 +115,10 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
         if (selectedRadioButtonId != -1) {
             data.putExtra(DiveSpotsRequestMap.KEY_VISIBILITY, findViewById(selectedRadioButtonId).getTag().toString());
         }
-//        selectedRadioButtonId = rgCurrents.getCheckedRadioButtonId();
-//        if (selectedRadioButtonId != -1) {
-//            data.putExtra(DiveSpotsRequestMap.KEY_CURRENTS, findViewById(selectedRadioButtonId).getTag().toString());
-//        }
+        selectedRadioButtonId = rgObject.getCheckedRadioButtonId();
+        if (selectedRadioButtonId != -1) {
+            data.putExtra(DiveSpotsRequestMap.KEY_OBJECT, findViewById(selectedRadioButtonId).getTag().toString());
+        }
 //        selectedRadioButtonId = rgCurrents.getCheckedRadioButtonId();
 //        if (selectedRadioButtonId != -1) {
 //            data.putExtra(DiveSpotsRequestMap.KEY_CURRENTS, findViewById(selectedRadioButtonId).getTag().toString());
@@ -178,6 +189,7 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
                 setFilerGroup(rgCurrents, filters.getCurrents());
                 setFilerGroup(rgVisibility, filters.getVisibility());
                 setFilerGroup(rgLevel, filters.getLevel());
+                setFilerGroup(rgObject, filters.getObject());
             }
 
             @Override
@@ -185,6 +197,17 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
 
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
 }

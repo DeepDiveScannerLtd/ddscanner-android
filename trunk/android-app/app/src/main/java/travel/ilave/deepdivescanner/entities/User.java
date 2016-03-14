@@ -1,9 +1,11 @@
 package travel.ilave.deepdivescanner.entities;
 
+import java.io.Serializable;
+
 /**
  * Created by lashket on 10.3.16.
  */
-public class User {
+public class User implements Serializable{
 
     private String name;
     private String picture;

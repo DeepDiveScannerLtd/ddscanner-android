@@ -1,5 +1,7 @@
 package travel.ilave.deepdivescanner.entities;
 
+import android.os.Parcelable;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -9,6 +11,15 @@ import java.util.List;
 public class Comment implements Serializable {
     private String comment;
     private User user;
+    private String rating;
+
+    public String getRating() {
+        return rating;
+    }
+
+    public void setRating(String rating) {
+        this.rating = rating;
+    }
 
     public String getComment() {
         return comment;
