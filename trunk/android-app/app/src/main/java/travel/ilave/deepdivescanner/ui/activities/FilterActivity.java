@@ -11,11 +11,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
@@ -37,6 +39,7 @@ import travel.ilave.deepdivescanner.R;
 import travel.ilave.deepdivescanner.entities.FiltersResponseEntity;
 import travel.ilave.deepdivescanner.entities.request.DiveSpotsRequestMap;
 import travel.ilave.deepdivescanner.rest.RestClient;
+import travel.ilave.deepdivescanner.utils.SharedPreferenceHelper;
 
 /**
  * Created by lashket on 22.1.16.
@@ -99,6 +102,17 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
     public void onClick(View v) {
         Intent data = new Intent();
         int selectedRadioButtonId = rgCurrents.getCheckedRadioButtonId();
@@ -128,23 +142,6 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
 
         setResult(RESULT_OK, data);
         finish();
-  /*      if (rgCurrents.getCheckedRadioButtonId() != -1) {
-            filtersSend.put("currents",((RadioButton) findViewById(rgCurrents.getCheckedRadioButtonId())).getText().toString());
-        } else {
-            filtersSend.put("currents", "");
-        }
-        if (rgLevel.getCheckedRadioButtonId() != -1) {
-            filtersSend.put("level",((RadioButton) findViewById(rgLevel.getCheckedRadioButtonId())).getText().toString());
-        } else {
-            filtersSend.put("level", "");
-        }
-        if (rgVisibility.getCheckedRadioButtonId() != -1) {
-            filtersSend.put("visibility",((RadioButton) findViewById(rgVisibility.getCheckedRadioButtonId())).getText().toString());
-        } else {
-            filtersSend.put("visibility", "");
-        }
-
-        CityActivity.showWIthFIlters(this, filtersSend, PlacesPagerAdapter.getLastLatlng());*/
     }
 
     public static void show(Context context) {
