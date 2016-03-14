@@ -63,7 +63,6 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         leaveReview = (Button) findViewById(R.id.leave_review);
         leaveReview.setOnClickListener(this);
-        commentsRc.setAdapter(new ReviewsListAdapter());
     }
 
     private void toolbarSettings() {
@@ -83,7 +82,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
         if (comments != null) {
             ds_reviews.setText(comments.size() + " reviews");
         }
-
+        commentsRc.setAdapter(new ReviewsListAdapter());
         for (int i = 0; i < rating; i++) {
             ImageView iv = new ImageView(this);
             iv.setImageResource(R.drawable.ic_flag_full_small);
