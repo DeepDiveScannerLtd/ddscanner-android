@@ -31,8 +31,7 @@
                 android:scaleType="centerCrop"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="visible"
-                android:src="@drawable/details_photo"/>
+                android:visibility="visible"/>
            <!-- <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="60dp"

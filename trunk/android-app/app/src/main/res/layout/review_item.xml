@@ -8,7 +8,6 @@
         android:id="@+id/user_avatar"
         android:layout_width="41dp"
         android:layout_height="41dp"
-        android:src="@drawable/review_avatar"
         android:layout_marginTop="14dp"
         android:layout_marginLeft="14dp"/>
     <TextView

@@ -3,10 +3,14 @@ package travel.ilave.deepdivescanner.ui.activities;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -83,8 +87,13 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
         LinearLayout.LayoutParams layoutParams = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT, RadioGroup.LayoutParams.WRAP_CONTENT);
         for (Map.Entry<String, String> entry : currents.entrySet()) {
             RadioButton radioButton = new RadioButton(this);
+            radioButton.setButtonDrawable(R.drawable.bg_radio_button);
+            radioButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+            layoutParams.topMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics());
+            layoutParams.bottomMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics());
             radioButton.setTag(entry.getKey());
             radioButton.setText(entry.getValue());
+            radioButton.setTypeface(Typeface.SANS_SERIF);
             radioGroup.addView(radioButton, 0, layoutParams);
         }
     }
