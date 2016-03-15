@@ -245,15 +245,6 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
                     progressDialog.dismiss();
                 }
                 return true;
-            case R.id.logbook:
-                if (SharedPreferenceHelper.getIsUserLogined()) {
-                    Toast.makeText(CityActivity.this, "You are already login", Toast.LENGTH_LONG);
-                } else {
-                    progressDialog.show();
-                    SocialNetworks.show(CityActivity.this);
-                    progressDialog.dismiss();
-                }
-                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

@@ -3,6 +3,12 @@ package travel.ilave.deepdivescanner.ui.activities;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapShader;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.RectF;
+import android.graphics.Shader;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -78,13 +84,17 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
 
     private void setContent() {
         if (!values.get("image").equals("")) {
-            Picasso.with(this).load(values.get("image")).resize(55, 55).centerCrop().into(ds_photo);
+            Picasso.with(this).load(values.get("image")).resize(55, 55).centerCrop().transform(new RoundedTransformation(3,3)).into(ds_photo);
         } else {
             ds_photo.setImageDrawable(ContextCompat.getDrawable(ReviewsActivity.this, R.drawable.rewiews_photo));
         }
         ds_title.setText(values.get("name"));
         if (comments != null) {
-            ds_reviews.setText(comments.size() + " reviews");
+            if (comments.size() == 1) {
+                ds_reviews.setText(comments.size() + " review");
+            } else {
+                ds_reviews.setText(comments.size() + " reviews");
+            }
         }
         commentsRc.setHasFixedSize(true);
         commentsRc.setLayoutManager(new LinearLayoutManager(this));
@@ -139,7 +149,11 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
                 }
                 comments.add(0, comment);
                 commentsRc.setAdapter(new ReviewsListAdapter(comments, ReviewsActivity.this));
-                ds_reviews.setText(comments.size() + " reviews");
+                if (comments.size() == 1) {
+                    ds_reviews.setText(comments.size() + " review");
+                } else {
+                    ds_reviews.setText(comments.size() + " reviews");
+                }
             }
             if (resultCode == Activity.RESULT_CANCELED) {
                 //Write your code if there's no result
@@ -155,6 +169,40 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
                 intent.putExtra("id", values.get("id"));
                 startActivityForResult(intent, 9001);
                 break;
+        }
+    }
+
+    public class RoundedTransformation implements com.squareup.picasso.Transformation {
+        private final int radius;
+        private final int margin;  // dp
+
+        // radius is corner radii in dp
+        // margin is the board in dp
+        public RoundedTransformation(final int radius, final int margin) {
+            this.radius = radius;
+            this.margin = margin;
+        }
+
+        @Override
+        public Bitmap transform(final Bitmap source) {
+            final Paint paint = new Paint();
+            paint.setAntiAlias(true);
+            paint.setShader(new BitmapShader(source, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP));
+
+            Bitmap output = Bitmap.createBitmap(source.getWidth(), source.getHeight(), Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(output);
+            canvas.drawRoundRect(new RectF(margin, margin, source.getWidth() - margin, source.getHeight() - margin), radius, radius, paint);
+
+            if (source != output) {
+                source.recycle();
+            }
+
+            return output;
+        }
+
+        @Override
+        public String key() {
+            return "rounded";
         }
     }
 }

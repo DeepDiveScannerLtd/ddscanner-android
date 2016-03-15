@@ -161,7 +161,6 @@ public class DivePlaceActivity extends AppCompatActivity implements ViewPager.On
         reviews_rating = (RelativeLayout) findViewById(R.id.reviews_rating_layout);
         reviewsCount = (TextView) findViewById(R.id.reviews_number);
         object_value = (TextView) findViewById(R.id.characteristic_value_object);
-      //  sealifeLayout = (RelativeLayout) findViewById(R.id.sealife_layout);
 
     }
 
@@ -181,7 +180,7 @@ public class DivePlaceActivity extends AppCompatActivity implements ViewPager.On
         currents_value.setText(diveSpot.getCurrents());
         description.setText(diveSpot.getDescription());
         level_value.setText(diveSpot.getLevel());
-        depth_value.setText(diveSpot.getDepth());
+        depth_value.setText(diveSpot.getDepth() + " metres");
         if (diveSpot.getObject() != null && !diveSpot.getObject().equals("other")) {
             RelativeLayout relativeLayout;
             ImageView lastDivider;
@@ -298,13 +297,12 @@ public class DivePlaceActivity extends AppCompatActivity implements ViewPager.On
             case android.R.id.home:
                 onBackPressed();
                 return true;
-            case R.id.favorite:
-              //  subscribeDialog.show(getFragmentManager(), "");
+          /*  case R.id.favorite:
                 if (SharedPreferenceHelper.getIsUserLogined()) {
                     Toast.makeText(DivePlaceActivity.this, "You are already login", Toast.LENGTH_LONG);
                 } else {
                     SocialNetworks.show(DivePlaceActivity.this);
-                }
+                }*/
             default:
                 return super.onOptionsItemSelected(item);
         }

@@ -8,12 +8,6 @@
         android:id="@+id/profile"
         android:orderInCategory="100"
         android:title="Profile"
-        android:icon="@drawable/ic_actionbar_logbook"
-        app:showAsAction= "ifRoom"/>
-    <item
-        android:id="@+id/logbook"
-        android:orderInCategory="100"
-        android:title="Profile"
         android:icon="@drawable/ic_actionbar_user"
         app:showAsAction= "ifRoom"/>
 </menu>
