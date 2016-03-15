@@ -32,26 +32,9 @@ public class SLiderImagesFragment extends Fragment {
         View view = inflater.inflate(R.layout.slider_image_fragment, container, false);
 
         ImageView imageView = (ImageView)view.findViewById(R.id.slider_image);
-        //ameLayout frameLayout = (FrameLayout) view.findViewById(R.id.framelayout_slider);
+
         Picasso.with(getActivity()).load(imageUrl).into(imageView);
-      /*  Picasso.with(getActivity()).load(imageUrl).into(new Target() {
-            @Override
-            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                Drawable drawable = new BitmapDrawable(bitmap);
-                drawable.setColorFilter(Color.parseColor("#99000000"), PorterDuff.Mode.SRC_ATOP);
-                frameLayout.setBackgroundDrawable(drawable);
-            }
 
-            @Override
-            public void onBitmapFailed(Drawable errorDrawable) {
-
-            }
-
-            @Override
-            public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-            }
-        });*/
         return view;
     }
 

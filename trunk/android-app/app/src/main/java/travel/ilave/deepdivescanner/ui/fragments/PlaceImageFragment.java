@@ -32,7 +32,6 @@ public class PlaceImageFragment extends Fragment {
     public static final String IMAGE_URL = "IMAGE_URL";
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         String imageUrl = getArguments().getString(IMAGE_URL);
 
         SimpleDraweeView imageView = (SimpleDraweeView) inflater.inflate(R.layout.fragment_image, container, false);
@@ -42,10 +41,8 @@ public class PlaceImageFragment extends Fragment {
                 ImageSliderActivity.show(getActivity(), (ArrayList<String>)DivePlaceActivity.getImages());
             }
         });
-       // ImageView imageView = (ImageView) inflater.inflate(R.layout.fragment_image, container, false);
         Uri uri = Uri.parse(imageUrl);
         imageView.setImageURI(uri);
-     //   Picasso.with(getActivity()).load(imageUrl).into(imageView);
         return imageView;
     }
 

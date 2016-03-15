@@ -18,7 +18,6 @@ import travel.ilave.deepdivescanner.ui.fragments.SLiderImagesFragment;
 public class SliderImagesAdapter extends FragmentStatePagerAdapter {
 
     private ArrayList<String> productsImages;
-    private String path;
 
     public SliderImagesAdapter(FragmentManager fm, ArrayList<String> productsImages) {
         super(fm);
@@ -32,7 +31,6 @@ public class SliderImagesAdapter extends FragmentStatePagerAdapter {
         Bundle args = new Bundle();
         args.putString(PlaceImageFragment.IMAGE_URL,"http://www.trizeri.travel/images/divespots/medium/" + productsImages.get(position));
         fragment.setArguments(args);
-        System.out.println(productsImages.size());
         return fragment;
     }
 
