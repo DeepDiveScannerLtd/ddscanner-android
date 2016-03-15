@@ -1,0 +1,86 @@
+package com.ddscanner.ui.adapters;
+
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.content.Context;
+import android.os.Bundle;
+import android.os.Parcelable;
+import android.support.v13.app.FragmentStatePagerAdapter;
+
+import com.ddscanner.entities.DiveCentersResponseEntity;
+import com.ddscanner.ui.fragments.DiveCenterListFragment;
+import com.ddscanner.ui.managers.DiveCentersClusterManager;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+
+import java.util.ArrayList;
+
+/**
+ * Created by lashket on 4.2.16.
+ */
+public class DiveCentersPagerAdapter extends FragmentStatePagerAdapter {
+
+    private Context context;
+    private DiveCentersResponseEntity diveCentersResponseEntity;
+    private LatLng diveSpotLatLng;
+    private String diveSpotName;
+
+    public DiveCentersPagerAdapter(Context context, FragmentManager fm, DiveCentersResponseEntity diveCenters, LatLng diveSpotLatLng, String diveSpotName) {
+        super(fm);
+        this.context = context;
+        this.diveCentersResponseEntity = diveCenters;
+        this.diveSpotLatLng = diveSpotLatLng;
+        this.diveSpotName = diveSpotName;
+    }
+
+    @Override
+    public Fragment getItem(int position) {
+        Fragment fragment = null;
+        Bundle args = new Bundle();
+        switch (position) {
+            case 1:
+                fragment = new MapFragment();
+                ((MapFragment) fragment).getMapAsync(new OnMapReadyCallback() {
+                    @Override
+                    public void onMapReady(GoogleMap googleMap) {
+                        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(diveSpotLatLng, 8.0f));
+                        DiveCentersClusterManager diveCentersClusterManager = new DiveCentersClusterManager(context, googleMap, diveCentersResponseEntity.getDivecenters(), diveSpotLatLng, diveSpotName, diveCentersResponseEntity.getLogoPath());
+                        googleMap.setOnInfoWindowClickListener(diveCentersClusterManager);
+                        googleMap.getUiSettings().setMapToolbarEnabled(false);
+                        googleMap.setOnMarkerClickListener(diveCentersClusterManager);
+                        googleMap.setOnCameraChangeListener(diveCentersClusterManager);
+                        googleMap.setInfoWindowAdapter(diveCentersClusterManager.getMarkerManager());
+                    }
+                });
+                break;
+            case 0:
+                fragment = new DiveCenterListFragment();
+                args.putParcelableArrayList("DIVESPOTS", (ArrayList<? extends Parcelable>) diveCentersResponseEntity.getDivecenters());
+                args.putString("LOGOPATH", diveCentersResponseEntity.getLogoPath());
+                break;
+        }
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public int getCount() {
+        return 2;
+    }
+
+    @Override
+    public CharSequence getPageTitle(int position) {
+        switch (position) {
+            case 0:
+                return "LIST";
+            case 1:
+                return "MAP";
+            default:
+                return "";
+        }
+    }
+
+}
