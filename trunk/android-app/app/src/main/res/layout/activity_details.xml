@@ -33,6 +33,7 @@
                 android:layout_height="match_parent"
                 android:visibility="visible"
                 android:src="@drawable/divespot_photo_default"/>
+
            <!-- <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="60dp"

@@ -3,11 +3,14 @@ package travel.ilave.deepdivescanner.ui.activities;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -90,15 +93,20 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
         LinearLayout.LayoutParams layoutParams = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT, RadioGroup.LayoutParams.WRAP_CONTENT);
         for (Map.Entry<String, String> entry : currents.entrySet()) {
             RadioButton radioButton = new RadioButton(this);
-            radioButton.setPadding(0,16,0,0);
+            radioButton.setButtonDrawable(R.drawable.bg_radio_button);
+            radioButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+            layoutParams.topMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics());
+            layoutParams.bottomMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics());
             radioButton.setTag(entry.getKey());
             radioButton.setText(entry.getValue());
+            radioButton.setTypeface(Typeface.SANS_SERIF);
             radioGroup.addView(radioButton, 0, layoutParams);
            /* if (i < currents.size() - 1) {
                 radioGroup.addView(divider, 0, layoutParams);
             }*/
         }
     }
+
 
     @Override
     public void onClick(View v) {
@@ -130,23 +138,6 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
 
         setResult(RESULT_OK, data);
         finish();
-  /*      if (rgCurrents.getCheckedRadioButtonId() != -1) {
-            filtersSend.put("currents",((RadioButton) findViewById(rgCurrents.getCheckedRadioButtonId())).getText().toString());
-        } else {
-            filtersSend.put("currents", "");
-        }
-        if (rgLevel.getCheckedRadioButtonId() != -1) {
-            filtersSend.put("level",((RadioButton) findViewById(rgLevel.getCheckedRadioButtonId())).getText().toString());
-        } else {
-            filtersSend.put("level", "");
-        }
-        if (rgVisibility.getCheckedRadioButtonId() != -1) {
-            filtersSend.put("visibility",((RadioButton) findViewById(rgVisibility.getCheckedRadioButtonId())).getText().toString());
-        } else {
-            filtersSend.put("visibility", "");
-        }
-
-        CityActivity.showWIthFIlters(this, filtersSend, PlacesPagerAdapter.getLastLatlng());*/
     }
 
     public static void show(Context context) {
