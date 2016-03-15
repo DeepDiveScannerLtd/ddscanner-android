@@ -46,12 +46,15 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter {
                     @Override
                     public void onMapReady(final GoogleMap googleMap) {
                         if (latLng.longitude == 0 && latLng.latitude == 0) {
-                            latLng = new LatLng(53.902378, 27.557184);
+                            latLng = new LatLng(0,0);
+                            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 1.0f));
+                        } else {
+                            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 1.0f));
                         }
-                        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 8.0f));
                         diveSpotsClusterManager = new DiveSpotsClusterManager(context, googleMap, PlacesPagerAdapter.this);
                         googleMap.setOnInfoWindowClickListener(diveSpotsClusterManager);
                         googleMap.getUiSettings().setMapToolbarEnabled(false);
+                       // googleMap.setMyLocationEnabled(true);
                         googleMap.setOnMarkerClickListener(diveSpotsClusterManager);
                         googleMap.setOnCameraChangeListener(diveSpotsClusterManager);
                         googleMap.setInfoWindowAdapter(diveSpotsClusterManager.getMarkerManager());
