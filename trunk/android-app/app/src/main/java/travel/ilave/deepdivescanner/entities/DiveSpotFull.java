@@ -24,6 +24,15 @@ public class DiveSpotFull {
     private String sealifePathSmall;
     private String sealifePathMedium;
     private String sealifePathOrigin;
+    private String object;
+
+    public String getObject() {
+        return object;
+    }
+
+    public void setObject(String object) {
+        this.object = object;
+    }
 
     public int getId() { return id; }
 

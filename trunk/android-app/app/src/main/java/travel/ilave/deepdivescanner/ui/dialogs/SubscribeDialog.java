@@ -81,7 +81,7 @@ public class SubscribeDialog extends DialogFragment implements View.OnClickListe
         } catch (PackageManager.NameNotFoundException e) {
 
         }
-        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"info@ddscanner.com"});
+        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"support@ddscanner.com"});
         intent.putExtra(Intent.EXTRA_SUBJECT, "Feedback about DDScanner");
         intent.putExtra(Intent.EXTRA_TEXT, "My device info:"+"\nOS version: " + System.getProperty("os.version") + "\nAPI level: " + Build.VERSION.SDK
                 + "\nDevice: " + Build.DEVICE + "\nModel: " + Build.MODEL + "\nProduct: " + Build.PRODUCT + "\nApp version: " + version + "\n--" + "\nMy feedback:" + "\n");

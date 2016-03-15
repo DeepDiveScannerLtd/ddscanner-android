@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:background="@color/white">
 
-        <android.support.v7.widget.DialogTitle
+      <!--  <android.support.v7.widget.DialogTitle
             android:id="@+id/custom_heading"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -18,13 +18,13 @@
             android:gravity="center_horizontal"
             android:text="@string/feedback_title"
             android:textColor="@color/black_text"
-            android:textSize="20sp" />
+            android:textSize="20sp" /> -->
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/notification"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/custom_heading"
+
             android:gravity="center_horizontal"
             android:padding="10dp"
             android:text="@string/feedback_text"

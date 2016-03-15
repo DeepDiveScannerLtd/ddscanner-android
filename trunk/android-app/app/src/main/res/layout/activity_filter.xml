@@ -86,13 +86,38 @@
             android:layout_height="wrap_content">
 
         </RadioGroup>
+        <TextView
+            android:id="@+id/object"
+            android:layout_below="@+id/rg_level"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="OBJECT"
+            android:textSize="16dp"
+            android:layout_marginTop="5dp"
+            android:fontFamily="sans-serif-medium"
+            android:textColor="@color/black_text" />
+        <ImageView
+            android:id="@+id/line_title_object"
+            android:layout_marginTop="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/object"
+            android:src="@drawable/divider_title"/>
+        <RadioGroup
+            android:layout_marginTop="10dp"
+            android:id="@+id/rg_object"
+            android:layout_below="@+id/line_title_object"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </RadioGroup>
         <Button
             android:id="@+id/apply_filter"
             android:layout_marginLeft="45dp"
             android:layout_marginTop="20dp"
             android:background="@color/orange"
             android:text="APPLY"
-            android:layout_below="@id/rg_level"
+            android:layout_below="@id/rg_object"
             android:layout_width="120dp"
             android:layout_height="35dp"
             />

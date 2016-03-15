@@ -14,6 +14,7 @@ import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -50,21 +51,18 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
 
     private RadioGroup rgLevel;
     private RadioGroup rgCurrents;
-    private RadioButton radioButton;
-    private LatLng latLng;
     private RadioGroup rgVisibility;
+    private RadioGroup rgObject;
     private Toolbar toolbar;
     private FiltersResponseEntity filters = new FiltersResponseEntity();
     private Button button;
     private ProgressDialog progressDialog;
-    private HashMap<String, String> filtersSend = new HashMap<String, String>();
 
 
     @Override
     protected void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
         setContentView(R.layout.activity_filter);
-        latLng = getIntent().getParcelableExtra("LATLNG");
         findViews();
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -82,11 +80,16 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
         rgCurrents = (RadioGroup) findViewById(R.id.rg_currents);
         rgLevel = (RadioGroup) findViewById(R.id.rg_level);
         rgVisibility = (RadioGroup) findViewById(R.id.rg_visibility);
+        rgObject = (RadioGroup) findViewById(R.id.rg_object);
         button = (Button) findViewById(R.id.apply_filter);
     }
 
 
     private void setFilerGroup(RadioGroup radioGroup, Map<String, String> currents) {
+        ImageView divider = new ImageView(this);
+        divider.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.divider));
+        divider.setPadding(0,16,0,0);
+        int i = 0;
         LinearLayout.LayoutParams layoutParams = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT, RadioGroup.LayoutParams.WRAP_CONTENT);
         for (Map.Entry<String, String> entry : currents.entrySet()) {
             RadioButton radioButton = new RadioButton(this);
@@ -98,19 +101,12 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
             radioButton.setText(entry.getValue());
             radioButton.setTypeface(Typeface.SANS_SERIF);
             radioGroup.addView(radioButton, 0, layoutParams);
+           /* if (i < currents.size() - 1) {
+                radioGroup.addView(divider, 0, layoutParams);
+            }*/
         }
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
 
     @Override
     public void onClick(View v) {
@@ -127,10 +123,10 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
         if (selectedRadioButtonId != -1) {
             data.putExtra(DiveSpotsRequestMap.KEY_VISIBILITY, findViewById(selectedRadioButtonId).getTag().toString());
         }
-//        selectedRadioButtonId = rgCurrents.getCheckedRadioButtonId();
-//        if (selectedRadioButtonId != -1) {
-//            data.putExtra(DiveSpotsRequestMap.KEY_CURRENTS, findViewById(selectedRadioButtonId).getTag().toString());
-//        }
+        selectedRadioButtonId = rgObject.getCheckedRadioButtonId();
+        if (selectedRadioButtonId != -1) {
+            data.putExtra(DiveSpotsRequestMap.KEY_OBJECT, findViewById(selectedRadioButtonId).getTag().toString());
+        }
 //        selectedRadioButtonId = rgCurrents.getCheckedRadioButtonId();
 //        if (selectedRadioButtonId != -1) {
 //            data.putExtra(DiveSpotsRequestMap.KEY_CURRENTS, findViewById(selectedRadioButtonId).getTag().toString());
@@ -184,6 +180,7 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
                 setFilerGroup(rgCurrents, filters.getCurrents());
                 setFilerGroup(rgVisibility, filters.getVisibility());
                 setFilerGroup(rgLevel, filters.getLevel());
+                setFilerGroup(rgObject, filters.getObject());
             }
 
             @Override
@@ -191,6 +188,17 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
 
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
 }

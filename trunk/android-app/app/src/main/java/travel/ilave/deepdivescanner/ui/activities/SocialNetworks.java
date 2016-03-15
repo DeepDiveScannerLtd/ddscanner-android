@@ -252,7 +252,6 @@ public class SocialNetworks extends AppCompatActivity implements GoogleApiClient
     }
 
     private RegisterRequest putTokensToMap(String... args) {
-        Map<String,String> map = new HashMap<String,String>();
         RegisterRequest registerRequest = new RegisterRequest();
         registerRequest.setAppId(args[0]);
         registerRequest.setSocial(args[1]);
@@ -265,6 +264,10 @@ public class SocialNetworks extends AppCompatActivity implements GoogleApiClient
     }
 
     private void sendRegisterRequest(final RegisterRequest userData) {
+        Log.i(TAG, userData.getToken());
+        Log.i(TAG, userData.getAppId());
+//        Log.i(TAG, userData.getSecret());
+        Log.i(TAG, userData.getSocial());
         RestClient.getServiceInstance().registerUser(userData, new retrofit.Callback<Response>() {
             @Override
             public void success(Response s, Response response) {

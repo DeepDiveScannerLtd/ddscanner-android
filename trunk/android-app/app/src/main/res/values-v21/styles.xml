@@ -8,6 +8,7 @@
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
         <item name="android:colorPrimaryDark">@color/primary_dark</item>
         <item name="android:radioButtonStyle">@style/RadioButton</item>
+        <item name="android:actionMenuTextColor">@color/orange</item>
     </style>
 
     <style name="RadioButton" parent="@android:style/Widget.CompoundButton.RadioButton">

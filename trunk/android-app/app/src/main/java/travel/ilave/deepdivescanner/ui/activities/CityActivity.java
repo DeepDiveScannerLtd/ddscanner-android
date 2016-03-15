@@ -14,6 +14,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -240,14 +241,9 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
                 if (SharedPreferenceHelper.getIsUserLogined()) {
                     Toast.makeText(CityActivity.this, "You are already login", Toast.LENGTH_LONG);
                 } else {
+                    progressDialog.show();
                     SocialNetworks.show(CityActivity.this);
-                }
-                return true;
-            case R.id.logbook:
-                if (SharedPreferenceHelper.getIsUserLogined()) {
-                    Toast.makeText(CityActivity.this, "You are already login", Toast.LENGTH_LONG);
-                } else {
-                    SocialNetworks.show(CityActivity.this);
+                    progressDialog.dismiss();
                 }
                 return true;
             default:
