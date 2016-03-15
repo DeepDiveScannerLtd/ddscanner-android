@@ -2,13 +2,15 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="@dimen/info_window_width"
     android:layout_height="@dimen/info_window_height"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@android:color/white">
 
     <ImageView
         android:id="@+id/popup_photo"
         android:layout_width="260dp"
         android:layout_height="116dp"
         android:background="@color/white"
+        android:alpha="0.4"
         android:src="@drawable/map_info_photo_default" />
 
     <TextView

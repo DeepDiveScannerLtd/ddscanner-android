@@ -47,7 +47,6 @@ dependencies {
     compile 'org.solovyev.android.views:linear-layout-manager:0.5@aar'
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.android.support:recyclerview-v7:23.1.1'
-    compile 'com.android.support:cardview-v7:23.1.1'
     compile 'com.facebook.android:facebook-android-sdk:4.9.0'
 //    compile ('com.facebook.android:facebook-android-sdk:4.9.0'){
 //        exclude group: 'com.parse.bolts', module: 'bolts-tasks'

@@ -2,6 +2,7 @@ package travel.ilave.deepdivescanner.ui.managers;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
@@ -32,13 +33,12 @@ import com.google.maps.android.clustering.algo.GridBasedAlgorithm;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
 import com.google.maps.android.ui.SquareTextView;
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -57,7 +57,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
 
     private static final String TAG = DiveSpotsClusterManager.class.getName();
     private static final int CAMERA_ANIMATION_DURATION = 300;
-
+    private final IconGenerator clusterIconGenerator;
     private Context context;
     private GoogleMap googleMap;
     private Marker lastClickedMarker;
@@ -67,14 +67,15 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
     private HashMap<LatLng, DiveSpot> diveSpotsMap = new HashMap<>();
     private PlacesPagerAdapter placesPagerAdapter;
     private Drawable clusterBackgroundDrawable;
-    private final IconGenerator clusterIconGenerator;
-
     // filter
     private String currents;
     private String level;
     private String object;
     private int rating = -1;
     private String visibility;
+    private HashMap<Marker, Bitmap> markerBitmapCache = new HashMap<>();
+
+    private InfoWindowRefresher infoWindowRefresher;
 
     public DiveSpotsClusterManager(Context context, GoogleMap googleMap, PlacesPagerAdapter placesPagerAdapter) {
         super(context, googleMap);
@@ -149,34 +150,6 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         squareTextView.setLayoutParams(layoutParams);
         squareTextView.setId(com.google.maps.android.R.id.text);
         return squareTextView;
-    }
-
-    private class IconRenderer extends DefaultClusterRenderer<DiveSpot> {
-
-        public IconRenderer(Context context, GoogleMap map, ClusterManager<DiveSpot> clusterManager) {
-            super(context, map, clusterManager);
-        }
-
-        @Override
-        protected void onBeforeClusterRendered(Cluster<DiveSpot> cluster, MarkerOptions markerOptions) {
-            int bucket = this.getBucket(cluster);
-            BitmapDescriptor descriptor = BitmapDescriptorFactory.fromBitmap(clusterIconGenerator.makeIcon(this.getClusterText(bucket)));
-
-            markerOptions.icon(descriptor);
-        }
-
-        @Override
-        protected void onClusterItemRendered(DiveSpot diveSpot, final Marker marker) {
-            super.onClusterItemRendered(diveSpot, marker);
-            try {
-                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
-                if (lastClickedMarker != null && lastClickedMarker.getPosition().equals(marker.getPosition()) && lastClickedMarker.isInfoWindowShown()) {
-                    marker.showInfoWindow();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     public void updateDiveSpots(ArrayList<DiveSpot> diveSpots) {
@@ -274,12 +247,39 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         });
     }
 
+    private class IconRenderer extends DefaultClusterRenderer<DiveSpot> {
+
+        public IconRenderer(Context context, GoogleMap map, ClusterManager<DiveSpot> clusterManager) {
+            super(context, map, clusterManager);
+        }
+
+        @Override
+        protected void onBeforeClusterRendered(Cluster<DiveSpot> cluster, MarkerOptions markerOptions) {
+            int bucket = this.getBucket(cluster);
+            BitmapDescriptor descriptor = BitmapDescriptorFactory.fromBitmap(clusterIconGenerator.makeIcon(this.getClusterText(bucket)));
+
+            markerOptions.icon(descriptor);
+        }
+
+        @Override
+        protected void onClusterItemRendered(DiveSpot diveSpot, final Marker marker) {
+            super.onClusterItemRendered(diveSpot, marker);
+            try {
+                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
+                if (lastClickedMarker != null && lastClickedMarker.getPosition().equals(marker.getPosition()) && lastClickedMarker.isInfoWindowShown()) {
+                    marker.showInfoWindow();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     private class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
         public static final String PRODUCT = "PRODUCT";
 
         private Context mContext;
-        private boolean not_first_time_showing_info_window;
 
         public InfoWindowAdapter(Context context) {
             this.mContext = context;
@@ -290,14 +290,15 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View view = inflater.inflate(R.layout.info_window, null);
             DiveSpot diveSpot = diveSpotsMap.get(marker.getPosition());
-            ImageView photo = (ImageView) view.findViewById(R.id.popup_photo);
-            if (diveSpot.getImages() != null) {
-                if (not_first_time_showing_info_window) {
-                    Picasso.with(mContext).load(diveSpot.getImages().get(0)).resize(260, 116).into(photo);
-                } else {
-                    not_first_time_showing_info_window = true;
-                    Picasso.with(mContext).load(diveSpot.getImages().get(0)).resize(260, 116).into(photo, new InfoWindowRefresher(marker));
-                }
+            Bitmap bitmap = markerBitmapCache.get(marker);
+            if (bitmap == null) {
+                infoWindowRefresher = new InfoWindowRefresher(marker);
+                LogUtils.i(TAG, "getInfoWindow image=" + diveSpot.getImages().get(0));
+                Picasso.with(mContext).load(diveSpot.getImages().get(0)).resize(260, 116).into(infoWindowRefresher);
+            } else {
+                ImageView photo = (ImageView) view.findViewById(R.id.popup_photo);
+                photo.setAlpha(1f);
+                photo.setImageBitmap(bitmap);
             }
             TextView description = ((TextView) view.findViewById(R.id.description_popup));
             TextView title = ((TextView) view.findViewById(R.id.popup_product_name));
@@ -326,21 +327,33 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
             return null;
         }
 
-        private class InfoWindowRefresher implements Callback {
-            private Marker markerToRefresh;
+    }
 
-            private InfoWindowRefresher(Marker markerToRefresh) {
-                this.markerToRefresh = markerToRefresh;
-            }
+    private class InfoWindowRefresher implements Target {
+        private Marker markerToRefresh;
 
-            @Override
-            public void onSuccess() {
+        private InfoWindowRefresher(Marker markerToRefresh) {
+            this.markerToRefresh = markerToRefresh;
+        }
+
+        @Override
+        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+            LogUtils.i(TAG, "InfoWindowRefresher onSuccess markerToRefresh=" + markerToRefresh + " markerToRefresh.isInfoWindowShown()=" + markerToRefresh.isInfoWindowShown());
+            if (markerToRefresh != null && markerToRefresh.isInfoWindowShown()) {
+                markerBitmapCache.put(markerToRefresh, bitmap);
+//                markerToRefresh.hideInfoWindow();
                 markerToRefresh.showInfoWindow();
             }
+        }
 
-            @Override
-            public void onError() {
-            }
+        @Override
+        public void onBitmapFailed(Drawable errorDrawable) {
+            LogUtils.i(getClass().getSimpleName(), "Error loading thumbnail!");
+        }
+
+        @Override
+        public void onPrepareLoad(Drawable placeHolderDrawable) {
+
         }
     }
 }
