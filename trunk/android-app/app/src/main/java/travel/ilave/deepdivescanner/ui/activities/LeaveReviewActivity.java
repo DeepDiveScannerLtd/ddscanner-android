@@ -1,6 +1,7 @@
 package travel.ilave.deepdivescanner.ui.activities;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -34,10 +35,10 @@ public class LeaveReviewActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
     private Comment comment = new Comment();
-    private User user = new User();
     private String diveSpotId;
     private EditText text;
     private RatingBar ratingBar;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +47,7 @@ public class LeaveReviewActivity extends AppCompatActivity {
         diveSpotId = getIntent().getStringExtra("id");
         findVIews();
         toolbarSettings();
+        setProgressDialog();
 
     }
 
@@ -60,6 +62,12 @@ public class LeaveReviewActivity extends AppCompatActivity {
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_actionbar_back);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("New review");
+    }
+
+    private void setProgressDialog() {
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage(getApplicationContext().getResources().getString(R.string.pleaseWait));
+        progressDialog.setCancelable(false);
     }
 
     private void sendReview() {
@@ -87,6 +95,7 @@ public class LeaveReviewActivity extends AppCompatActivity {
 
                 Intent returnIntent = new Intent();
                 returnIntent.putExtra("COMMENT", comment);
+                progressDialog.dismiss();
                 setResult(Activity.RESULT_OK,returnIntent);
                 finish();
 
@@ -94,6 +103,7 @@ public class LeaveReviewActivity extends AppCompatActivity {
 
             @Override
             public void failure(RetrofitError error) {
+                progressDialog.dismiss();
                 Log.i(TAG, error.getMessage());
                 String json =  new String(((TypedByteArray)error.getResponse().getBody()).getBytes());
                 Log.i(TAG,json.toString());
@@ -109,6 +119,7 @@ public class LeaveReviewActivity extends AppCompatActivity {
                 onBackPressed();
                 return true;
             case R.id.send_review:
+                progressDialog.show();
                 sendReview();
                 return true;
             default:
