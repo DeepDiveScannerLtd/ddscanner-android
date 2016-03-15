@@ -6,6 +6,7 @@ import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -105,7 +106,14 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
                 southwest.longitude <= diveSpotsRequestMap.getSouthWestLng() ||
                 northeast.latitude >= diveSpotsRequestMap.getNorthEastLat() ||
                 northeast.longitude >= diveSpotsRequestMap.getNorthEastLng()) {
-            requestCityProducts();
+            if (checkArea(southwest, northeast)) {
+                requestCityProducts();
+            } else {
+                Toast toast = Toast.makeText(context, "Please zoom in to see dive spots", Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.TOP | Gravity.CENTER, 0, 220);
+                toast.show();
+                //Toast.makeText(context, "Please zoom in to show dive spots", Toast.LENGTH_SHORT).setGravity(Gravity.CENTER_VERTICAL,0,0).show();
+            }
         }
     }
 
@@ -214,6 +222,13 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
 
         diveSpotsMap.remove(new LatLng(Double.valueOf(diveSpot.getLat()), Double.valueOf(diveSpot.getLng())));
         diveSpots.remove(diveSpot);
+    }
+
+    private boolean checkArea(LatLng southWest, LatLng northEast) {
+        if (Math.abs(northEast.longitude - southWest.longitude) > 8 || Math.abs(northEast.latitude - southWest.latitude) > 8) {
+            return false;
+        }
+        return true;
     }
 
     public void updateFilter(String currents, String level, String object, int rating, String visibility) {
