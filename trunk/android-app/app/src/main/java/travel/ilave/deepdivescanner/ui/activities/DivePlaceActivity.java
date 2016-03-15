@@ -193,7 +193,13 @@ public class DivePlaceActivity extends AppCompatActivity implements ViewPager.On
 
         }
         if (divespotDetails.getComments() != null) {
-            reviewsCount.setText(divespotDetails.getComments().size() + " reviews");
+            if (divespotDetails.getComments().size() == 1) {
+                reviewsCount.setText(divespotDetails.getComments().size() + " review");
+            } else  {
+                reviewsCount.setText(divespotDetails.getComments().size() + " reviews");
+            }
+        } else {
+            reviewsCount.setText("No reviews");
         }
         LinearLayoutManager linearLayoutManager = new org.solovyev.android.views.llm.LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
 

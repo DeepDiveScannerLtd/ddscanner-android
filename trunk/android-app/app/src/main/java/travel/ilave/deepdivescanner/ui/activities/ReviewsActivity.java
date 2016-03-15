@@ -50,7 +50,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.activity_reviews);
         Bundle bundle = getIntent().getExtras();
         comments = (ArrayList<Comment>) bundle.getSerializable("COMMENTS");
-        Log.i("Reviews", comments.get(0).getComment());
+//        Log.i("Reviews", comments.get(0).getComment());
         values = (HashMap<String, String>) getIntent().getSerializableExtra("VALUES");
         rating = getIntent().getIntExtra("RATING", 0);
         findViews();
@@ -134,6 +134,9 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
             if(resultCode == Activity.RESULT_OK){
                 Comment comment = (Comment)data.getSerializableExtra("COMMENT");
                 Log.i("ReviewsActivity", comment.getComment());
+                if (comments == null) {
+                    comments = new ArrayList<Comment>();
+                }
                 comments.add(0, comment);
                 commentsRc.setAdapter(new ReviewsListAdapter(comments, ReviewsActivity.this));
                 ds_reviews.setText(comments.size() + " reviews");
