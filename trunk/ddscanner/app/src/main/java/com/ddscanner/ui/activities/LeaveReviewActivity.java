@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.RatingBar;
+import android.widget.Toast;
 
 import com.ddscanner.R;
 import com.ddscanner.entities.Comment;
@@ -81,20 +82,18 @@ public class LeaveReviewActivity extends AppCompatActivity {
             sendReviewRequest.setSecret(SharedPreferenceHelper.getSecret());
         }
         sendReviewRequest.setToken(SharedPreferenceHelper.getToken());
-
         sendReviewRequest.setComment(text.getText().toString());
-
         RestClient.getServiceInstance().addCOmmentToDiveSpot(sendReviewRequest, new Callback<Response>() {
             @Override
             public void success(Response s, Response response) {
                 String responseString = new String(((TypedByteArray) s.getBody()).getBytes());
                 comment = new Gson().fromJson(responseString, Comment.class);
-                Log.i(TAG, "Success leavenig comment\n Response string - "+ responseString);
+                Log.i(TAG, "Success leavenig comment\n Response string - " + responseString);
 
                 Intent returnIntent = new Intent();
                 returnIntent.putExtra("COMMENT", comment);
                 progressDialog.dismiss();
-                setResult(Activity.RESULT_OK,returnIntent);
+                setResult(Activity.RESULT_OK, returnIntent);
                 finish();
 
             }
@@ -103,8 +102,8 @@ public class LeaveReviewActivity extends AppCompatActivity {
             public void failure(RetrofitError error) {
                 progressDialog.dismiss();
                 Log.i(TAG, error.getMessage());
-                String json =  new String(((TypedByteArray)error.getResponse().getBody()).getBytes());
-                Log.i(TAG,json.toString());
+                String json = new String(((TypedByteArray) error.getResponse().getBody()).getBytes());
+                Log.i(TAG, json.toString());
                 SocialNetworks.show(LeaveReviewActivity.this);
             }
         });
@@ -117,8 +116,10 @@ public class LeaveReviewActivity extends AppCompatActivity {
                 onBackPressed();
                 return true;
             case R.id.send_review:
-                progressDialog.show();
-                sendReview();
+                if (checkText(text.getText().toString())) {
+                    progressDialog.show();
+                    sendReview();
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -128,6 +129,16 @@ public class LeaveReviewActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_add_review, menu);
+        return true;
+    }
+
+    private boolean checkText(String text) {
+        text = text.trim();
+        if (text.length() == 0) {
+            Toast toast = Toast.makeText(getApplicationContext(), "Please leave your feedback", Toast.LENGTH_SHORT);
+            toast.show();
+            return false;
+        }
         return true;
     }
 }

@@ -175,7 +175,7 @@ public class DivePlaceActivity extends AppCompatActivity implements ViewPager.On
         description.setText(diveSpot.getDescription());
         level_value.setText(diveSpot.getLevel());
         depth_value.setText(diveSpot.getDepth() + " metres");
-        if (diveSpot.getObject() != null && !diveSpot.getObject().equals("other")) {
+        if (diveSpot.getObject() != null && !diveSpot.getObject().equals("Other")) {
             RelativeLayout relativeLayout;
             ImageView lastDivider;
             relativeLayout = (RelativeLayout) findViewById(R.id.layout_object);
