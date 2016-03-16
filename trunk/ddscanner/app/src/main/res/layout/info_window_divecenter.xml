@@ -37,6 +37,7 @@
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:text="135 reviews"
+            android:visibility="gone"
             android:layout_toRightOf="@+id/stars"
             android:layout_below="@+id/iw_dc_name"
             android:gravity="center_vertical"/>

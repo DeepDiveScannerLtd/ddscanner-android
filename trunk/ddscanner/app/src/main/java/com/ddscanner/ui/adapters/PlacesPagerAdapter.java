@@ -13,6 +13,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 
 import java.util.ArrayList;
 
@@ -24,11 +25,13 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter {
     private MapFragment mapFragment;
     private ProductListFragment productListFragment;
     private DiveSpotsClusterManager diveSpotsClusterManager;
+    private LatLngBounds latLngBounds;
 
-    public PlacesPagerAdapter(Context context, FragmentManager fm, LatLng latLng) {
+    public PlacesPagerAdapter(Context context, FragmentManager fm, LatLng latLng, LatLngBounds latLngBounds) {
         super(fm);
         this.context = context;
         this.latLng = latLng;
+        this.latLngBounds = latLngBounds;
     }
 
     @Override
@@ -45,7 +48,7 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter {
                             latLng = new LatLng(0,0);
                             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 7.0f));
                         } else {
-                            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 8.0f));
+                            googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 0));
                         }
                         diveSpotsClusterManager = new DiveSpotsClusterManager(context, googleMap, PlacesPagerAdapter.this);
                         googleMap.setOnInfoWindowClickListener(diveSpotsClusterManager);

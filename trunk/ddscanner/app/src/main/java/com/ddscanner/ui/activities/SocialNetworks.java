@@ -92,9 +92,7 @@ public class SocialNetworks extends AppCompatActivity implements GoogleApiClient
                 Twitter.getApiClient(session).getAccountService().verifyCredentials(true, false, new Callback<User>() {
                     @Override
                     public void success(Result<User> result) {
-                        System.out.println(result.data.name);
                         SharedPreferenceHelper.setIsUserSignedIn(true);
-                        onBackPressed();
                     }
 
                     @Override
@@ -166,7 +164,6 @@ public class SocialNetworks extends AppCompatActivity implements GoogleApiClient
                         System.out.println(result);
                         Log.i(TAG, "FB - " + loginResult.getAccessToken().getToken());
                         sendRegisterRequest(putTokensToMap(appId, "fb", loginResult.getAccessToken().getToken()));
-                        onBackPressed();
 
                     }
                 }).executeAsync();

@@ -35,6 +35,7 @@ import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 
 import java.util.List;
 import java.util.Locale;
@@ -94,12 +95,16 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
             progressDialog.setMessage(getApplicationContext().getResources().getString(R.string.pleaseWait));
             toolbarTitle = (TextView) findViewById(R.id.toolbarTitle);
             latLng = getIntent().getParcelableExtra("LATLNG");
+            if (latLng == null) {
+                latLng = new LatLng(0,0);
+            }
             toolbarTitle.setText("DDScanner");
             toolbarTitle.setOnClickListener(this);
+            LatLngBounds latLngBounds = new LatLngBounds(new LatLng(latLng.latitude - 0.1, latLng.longitude - 0.1), new LatLng(latLng.latitude + 0.1, latLng.longitude + 0.1));
             if (latLng != null && getCity(latLng) != null && !getCity(latLng).equals("")) {
                 toolbarTitle.setText(getCity(latLng));
             }
-            populatePlaceViewpager(latLng);
+            populatePlaceViewpager(latLng, latLngBounds);
             playServices();
 
         } else {
@@ -117,8 +122,8 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private void populatePlaceViewpager(LatLng latLng) {
-        placesPagerAdapter = new PlacesPagerAdapter(this, getFragmentManager(), latLng);
+    private void populatePlaceViewpager(LatLng latLng, LatLngBounds latLngBounds) {
+        placesPagerAdapter = new PlacesPagerAdapter(this, getFragmentManager(), latLng, latLngBounds );
         placeViewPager.setAdapter(placesPagerAdapter);
         placeViewPager.setOffscreenPageLimit(3);
         tabLayout.setupWithViewPager(placeViewPager);
@@ -162,7 +167,7 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
                 if (resultCode == RESULT_OK) {
                     Place place = PlaceAutocomplete.getPlace(this, data);
                     Log.i(TAG, "Place: " + place.getName());
-                    populatePlaceViewpager(place.getLatLng());
+                    populatePlaceViewpager(place.getLatLng(), place.getViewport());
                     progressDialog.dismiss();
                     toolbarTitle.setText(place.getAddress());
                 } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
