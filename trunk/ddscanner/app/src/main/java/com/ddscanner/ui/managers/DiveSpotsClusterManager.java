@@ -78,6 +78,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
     private HashMap<Marker, Bitmap> markerBitmapCache = new HashMap<>();
 
     private InfoWindowRefresher infoWindowRefresher;
+    private boolean isCanMakeRequest = false;
 
     public DiveSpotsClusterManager(Context context, GoogleMap googleMap, PlacesPagerAdapter placesPagerAdapter) {
         super(context, googleMap);
@@ -105,14 +106,18 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         LatLng southwest = googleMap.getProjection().getVisibleRegion().latLngBounds.southwest;
         LatLng northeast = googleMap.getProjection().getVisibleRegion().latLngBounds.northeast;
         if (checkArea(southwest,northeast)) {
-            if (southwest.latitude <= diveSpotsRequestMap.getSouthWestLat() ||
-                    southwest.longitude <= diveSpotsRequestMap.getSouthWestLng() ||
-                    northeast.latitude >= diveSpotsRequestMap.getNorthEastLat() ||
-                    northeast.longitude >= diveSpotsRequestMap.getNorthEastLng()) {
-                requestCityProducts();
-                if (!CityActivity.getCurrentTitle()) {
-                    CityActivity.setTitle();
+            if (isCanMakeRequest) {
+                if (southwest.latitude <= diveSpotsRequestMap.getSouthWestLat() ||
+                        southwest.longitude <= diveSpotsRequestMap.getSouthWestLng() ||
+                        northeast.latitude >= diveSpotsRequestMap.getNorthEastLat() ||
+                        northeast.longitude >= diveSpotsRequestMap.getNorthEastLng()) {
+                    requestCityProducts();
+                    if (!CityActivity.getCurrentTitle()) {
+                        CityActivity.setTitle();
+                    }
                 }
+            } else {
+                requestCityProducts();
             }
         } else {
             CityActivity.showToast();
@@ -218,6 +223,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         LatLng southwest = googleMap.getProjection().getVisibleRegion().latLngBounds.southwest;
         LatLng northeast = googleMap.getProjection().getVisibleRegion().latLngBounds.northeast;
         if (checkArea(southwest, northeast)) {
+            isCanMakeRequest = true;
             diveSpotsRequestMap.putSouthWestLat(southwest.latitude - Math.abs(northeast.latitude - southwest.latitude));
             diveSpotsRequestMap.putSouthWestLng(southwest.longitude - Math.abs(northeast.longitude - southwest.longitude));
             diveSpotsRequestMap.putNorthEastLat(northeast.latitude + Math.abs(northeast.latitude - southwest.latitude));
