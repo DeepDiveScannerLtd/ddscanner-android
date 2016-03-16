@@ -15,12 +15,7 @@
           "certificate_hash": []
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "195706914618-to8m69ol3pld75ticikmuhoo3khsmbop.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [],
       "services": {
         "analytics_service": {

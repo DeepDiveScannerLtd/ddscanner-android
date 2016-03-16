@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -188,8 +189,36 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
             case android.R.id.home:
                 onBackPressed();
                 return true;
+            case R.id.reset_filters:
+                resetFilters();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_filter, menu);
+        return true;
+    }
+
+    private void resetFilters() {
+        if (rgCurrents.getCheckedRadioButtonId() != -1) {
+            RadioButton radioButton = (RadioButton) findViewById(rgCurrents.getCheckedRadioButtonId());
+            radioButton.setChecked(false);
+        }
+        if (rgLevel.getCheckedRadioButtonId() != -1) {
+            RadioButton radioButton = (RadioButton) findViewById(rgLevel.getCheckedRadioButtonId());
+            radioButton.setChecked(false);
+        }
+        if (rgObject.getCheckedRadioButtonId() != -1) {
+            RadioButton radioButton = (RadioButton) findViewById(rgObject.getCheckedRadioButtonId());
+            radioButton.setChecked(false);
+        }
+        if (rgVisibility.getCheckedRadioButtonId() != -1) {
+            RadioButton radioButton = (RadioButton) findViewById(rgVisibility.getCheckedRadioButtonId());
+            radioButton.setChecked(false);
         }
     }
 

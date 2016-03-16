@@ -1,6 +1,7 @@
 package com.ddscanner.ui.managers;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.DiveCenter;
+import com.ddscanner.utils.LogUtils;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -32,6 +34,7 @@ import com.google.maps.android.ui.IconGenerator;
 import com.google.maps.android.ui.SquareTextView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.util.HashMap;
 import java.util.List;
@@ -48,6 +51,8 @@ public class DiveCentersClusterManager extends ClusterManager<DiveCenter> implem
     private Drawable clusterBackgroundDrawable;
     private final IconGenerator clusterIconGenerator;
     private String logoPath;
+    private HashMap<Marker, Bitmap> markerBitmapCache = new HashMap<>();
+    private InfoWindowRefresher infoWindowRefresher;
 
     public DiveCentersClusterManager(Context context, GoogleMap googleMap, List<DiveCenter> diveCenters, LatLng diveSpotLatLng, String diveSpotName, String logoPath) {
         super(context, googleMap);
@@ -139,8 +144,6 @@ public class DiveCentersClusterManager extends ClusterManager<DiveCenter> implem
 
         public static final String PRODUCT = "PRODUCT";
 
-        private boolean not_first_time_showing_info_window;
-
         @Override
         public View getInfoWindow(Marker marker) {
             if (marker.getTitle() != null) {
@@ -154,16 +157,15 @@ public class DiveCentersClusterManager extends ClusterManager<DiveCenter> implem
             TextView dc_telephone = (TextView) view.findViewById(R.id.iw_dc_telefon);
             LinearLayout stars = (LinearLayout) view.findViewById(R.id.stars);
             DiveCenter dc = diveCentersMap.get(marker.getPosition());
-            if (dc.getLogo() != null) {
-                String imageUrlPath = logoPath + dc.getLogo();
-                if (not_first_time_showing_info_window) {
-                    Picasso.with(context).load(imageUrlPath).into(logo);
-                } else {
-                    not_first_time_showing_info_window = true;
-                    Picasso.with(context).load(imageUrlPath).into(logo, new InfoWindowRefresher(marker));
-                }
-
-                // diveCentersListViewHolder.imgLogo.setImageURI(Uri.parse(imageUrl));
+            Bitmap bitmap = markerBitmapCache.get(marker);
+            if (bitmap == null) {
+                infoWindowRefresher = new InfoWindowRefresher(marker);
+                LogUtils.i(TAG, "getInfoWindow image=" + dc.getLogo());
+                Picasso.with(context).load(dc.getLogo()).resize(60,60).into(infoWindowRefresher);
+            } else {
+                ImageView photo = (ImageView) view.findViewById(R.id.dc_avatar);
+                photo.setAlpha(1f);
+                photo.setImageBitmap(bitmap);
             }
             dc_name.setText(dc.getName());
             if (dc.getAddress() != null) {
@@ -195,21 +197,32 @@ public class DiveCentersClusterManager extends ClusterManager<DiveCenter> implem
             return null;
         }
 
-        private class InfoWindowRefresher implements Callback {
-            private Marker markerToRefresh;
+    }
+    private class InfoWindowRefresher implements Target {
+        private Marker markerToRefresh;
 
-            private InfoWindowRefresher(Marker markerToRefresh) {
-                this.markerToRefresh = markerToRefresh;
-            }
+        private InfoWindowRefresher(Marker markerToRefresh) {
+            this.markerToRefresh = markerToRefresh;
+        }
 
-            @Override
-            public void onSuccess() {
+        @Override
+        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+            LogUtils.i(TAG, "InfoWindowRefresher onSuccess markerToRefresh=" + markerToRefresh + " markerToRefresh.isInfoWindowShown()=" + markerToRefresh.isInfoWindowShown());
+            if (markerToRefresh != null && markerToRefresh.isInfoWindowShown()) {
+                markerBitmapCache.put(markerToRefresh, bitmap);
+//                markerToRefresh.hideInfoWindow();
                 markerToRefresh.showInfoWindow();
             }
+        }
 
-            @Override
-            public void onError() {
-            }
+        @Override
+        public void onBitmapFailed(Drawable errorDrawable) {
+            LogUtils.i(getClass().getSimpleName(), "Error loading thumbnail!");
+        }
+
+        @Override
+        public void onPrepareLoad(Drawable placeHolderDrawable) {
+
         }
     }
 }

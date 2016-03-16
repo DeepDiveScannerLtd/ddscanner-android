@@ -135,7 +135,7 @@ public class SocialNetworks extends AppCompatActivity implements GoogleApiClient
         });
         /*Google plus*/
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken("200652897389-onnv3dgvcnf7bj8dku3psjntif6hiua0.apps.googleusercontent.com")
+                .requestIdToken("195706914618-ist9f8ins485k2gglbomgdp4l2pn57iq.apps.googleusercontent.com")
                 .requestEmail()
                 .build();
 
