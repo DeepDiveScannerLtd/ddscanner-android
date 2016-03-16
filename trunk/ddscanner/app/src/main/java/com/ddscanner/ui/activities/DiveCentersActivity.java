@@ -101,8 +101,10 @@ public class DiveCentersActivity extends AppCompatActivity {
                 } else if (error.getKind().equals(RetrofitError.Kind.HTTP)) {
                     Toast.makeText(DiveCentersActivity.this, "Server is not responsible, please try later", Toast.LENGTH_LONG).show();
                 }
-                String json =  new String(((TypedByteArray)error.getResponse().getBody()).getBytes());
-                Log.i(TAG, json);
+                if (error != null) {
+                    String json = new String(((TypedByteArray) error.getResponse().getBody()).getBytes());
+                    Log.i(TAG, json);
+                }
             }
         });
     }

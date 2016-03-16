@@ -102,8 +102,10 @@ public class LeaveReviewActivity extends AppCompatActivity {
             public void failure(RetrofitError error) {
                 progressDialog.dismiss();
                 Log.i(TAG, error.getMessage());
-                String json = new String(((TypedByteArray) error.getResponse().getBody()).getBytes());
-                Log.i(TAG, json.toString());
+                if (error != null) {
+                    String json = new String(((TypedByteArray) error.getResponse().getBody()).getBytes());
+                    Log.i(TAG, json);
+                }
                 SocialNetworks.show(LeaveReviewActivity.this);
             }
         });
