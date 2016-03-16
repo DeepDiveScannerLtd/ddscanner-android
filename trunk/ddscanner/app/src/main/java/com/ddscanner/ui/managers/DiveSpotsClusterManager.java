@@ -22,6 +22,7 @@ import com.ddscanner.entities.DiveSpot;
 import com.ddscanner.entities.DivespotsWrapper;
 import com.ddscanner.entities.request.DiveSpotsRequestMap;
 import com.ddscanner.rest.RestClient;
+import com.ddscanner.ui.activities.CityActivity;
 import com.ddscanner.ui.activities.DivePlaceActivity;
 import com.ddscanner.ui.adapters.PlacesPagerAdapter;
 import com.ddscanner.utils.LogUtils;
@@ -103,18 +104,18 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
 
         LatLng southwest = googleMap.getProjection().getVisibleRegion().latLngBounds.southwest;
         LatLng northeast = googleMap.getProjection().getVisibleRegion().latLngBounds.northeast;
-        if (southwest.latitude <= diveSpotsRequestMap.getSouthWestLat() ||
-                southwest.longitude <= diveSpotsRequestMap.getSouthWestLng() ||
-                northeast.latitude >= diveSpotsRequestMap.getNorthEastLat() ||
-                northeast.longitude >= diveSpotsRequestMap.getNorthEastLng()) {
-            if (checkArea(southwest, northeast)) {
+        if (checkArea(southwest,northeast)) {
+            if (southwest.latitude <= diveSpotsRequestMap.getSouthWestLat() ||
+                    southwest.longitude <= diveSpotsRequestMap.getSouthWestLng() ||
+                    northeast.latitude >= diveSpotsRequestMap.getNorthEastLat() ||
+                    northeast.longitude >= diveSpotsRequestMap.getNorthEastLng()) {
                 requestCityProducts();
-            } else {
-                Toast toast = Toast.makeText(context, "Please zoom in to see dive spots", Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.TOP | Gravity.CENTER, 0, 220);
-                toast.show();
-                //Toast.makeText(context, "Please zoom in to show dive spots", Toast.LENGTH_SHORT).setGravity(Gravity.CENTER_VERTICAL,0,0).show();
+                if (!CityActivity.getCurrentTitle()) {
+                    CityActivity.setTitle();
+                }
             }
+        } else {
+            CityActivity.showToast();
         }
     }
 
@@ -216,50 +217,52 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         diveSpotsRequestMap.clear();
         LatLng southwest = googleMap.getProjection().getVisibleRegion().latLngBounds.southwest;
         LatLng northeast = googleMap.getProjection().getVisibleRegion().latLngBounds.northeast;
-        diveSpotsRequestMap.putSouthWestLat(southwest.latitude - Math.abs(northeast.latitude - southwest.latitude));
-        diveSpotsRequestMap.putSouthWestLng(southwest.longitude - Math.abs(northeast.longitude - southwest.longitude));
-        diveSpotsRequestMap.putNorthEastLat(northeast.latitude + Math.abs(northeast.latitude - southwest.latitude));
-        diveSpotsRequestMap.putNorthEastLng(northeast.longitude + Math.abs(northeast.longitude - southwest.longitude));
-        if (!TextUtils.isEmpty(currents)) {
-            diveSpotsRequestMap.putCurrents(currents);
-        }
-        if (!TextUtils.isEmpty(level)) {
-            diveSpotsRequestMap.putLevel(level);
-        }
-        if (!TextUtils.isEmpty(object)) {
-            diveSpotsRequestMap.putObject(object);
-        }
-        if (rating != -1) {
-            diveSpotsRequestMap.putRating(rating);
-        }
-        if (!TextUtils.isEmpty(visibility)) {
-            diveSpotsRequestMap.putVisibility(visibility);
-        }
-        for (Map.Entry<String, Object> entry : diveSpotsRequestMap.entrySet()) {
-            LogUtils.i(TAG, "get dive spots request parameter: " + entry.getKey() + " " + entry.getValue());
-        }
-        RestClient.getServiceInstance().getDivespots(diveSpotsRequestMap, new retrofit.Callback<Response>() {
-            @Override
-            public void success(Response s, Response response) {
-                String responseString = new String(((TypedByteArray) s.getBody()).getBytes());
-                LogUtils.i(TAG, "response code is " + s.getStatus());
-                LogUtils.i(TAG, "response body is " + responseString);
-                divespotsWrapper = new Gson().fromJson(responseString, DivespotsWrapper.class);
-                updateDiveSpots((ArrayList<DiveSpot>) divespotsWrapper.getDiveSpots());
-                placesPagerAdapter.populateDiveSpotsList((ArrayList<DiveSpot>) divespotsWrapper.getDiveSpots());
+        if (checkArea(southwest, northeast)) {
+            diveSpotsRequestMap.putSouthWestLat(southwest.latitude - Math.abs(northeast.latitude - southwest.latitude));
+            diveSpotsRequestMap.putSouthWestLng(southwest.longitude - Math.abs(northeast.longitude - southwest.longitude));
+            diveSpotsRequestMap.putNorthEastLat(northeast.latitude + Math.abs(northeast.latitude - southwest.latitude));
+            diveSpotsRequestMap.putNorthEastLng(northeast.longitude + Math.abs(northeast.longitude - southwest.longitude));
+            if (!TextUtils.isEmpty(currents)) {
+                diveSpotsRequestMap.putCurrents(currents);
             }
-
-            @Override
-            public void failure(RetrofitError error) {
-                if (error.getKind().equals(RetrofitError.Kind.NETWORK)) {
-                    Toast.makeText(DDScannerApplication.getInstance(), "Please check your internet connection", Toast.LENGTH_SHORT).show();
-                } else if (error.getKind().equals(RetrofitError.Kind.HTTP)) {
-                    Toast.makeText(DDScannerApplication.getInstance(), "Server is not responsible, please try later", Toast.LENGTH_SHORT).show();
+            if (!TextUtils.isEmpty(level)) {
+                diveSpotsRequestMap.putLevel(level);
+            }
+            if (!TextUtils.isEmpty(object)) {
+                diveSpotsRequestMap.putObject(object);
+            }
+            if (rating != -1) {
+                diveSpotsRequestMap.putRating(rating);
+            }
+            if (!TextUtils.isEmpty(visibility)) {
+                diveSpotsRequestMap.putVisibility(visibility);
+            }
+            for (Map.Entry<String, Object> entry : diveSpotsRequestMap.entrySet()) {
+                LogUtils.i(TAG, "get dive spots request parameter: " + entry.getKey() + " " + entry.getValue());
+            }
+            RestClient.getServiceInstance().getDivespots(diveSpotsRequestMap, new retrofit.Callback<Response>() {
+                @Override
+                public void success(Response s, Response response) {
+                    String responseString = new String(((TypedByteArray) s.getBody()).getBytes());
+                    LogUtils.i(TAG, "response code is " + s.getStatus());
+                    LogUtils.i(TAG, "response body is " + responseString);
+                    divespotsWrapper = new Gson().fromJson(responseString, DivespotsWrapper.class);
+                    updateDiveSpots((ArrayList<DiveSpot>) divespotsWrapper.getDiveSpots());
+                    placesPagerAdapter.populateDiveSpotsList((ArrayList<DiveSpot>) divespotsWrapper.getDiveSpots());
                 }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    if (error.getKind().equals(RetrofitError.Kind.NETWORK)) {
+                        Toast.makeText(DDScannerApplication.getInstance(), "Please check your internet connection", Toast.LENGTH_SHORT).show();
+                    } else if (error.getKind().equals(RetrofitError.Kind.HTTP)) {
+                        Toast.makeText(DDScannerApplication.getInstance(), "Server is not responsible, please try later", Toast.LENGTH_SHORT).show();
+                    }
 //               String json =  new String(((TypedByteArray)error.getResponse().getBody()).getBytes());
-                //      System.out.println("failure" + json.toString());
-            }
-        });
+                    //      System.out.println("failure" + json.toString());
+                }
+            });
+        }
     }
 
     private class IconRenderer extends DefaultClusterRenderer<DiveSpot> {

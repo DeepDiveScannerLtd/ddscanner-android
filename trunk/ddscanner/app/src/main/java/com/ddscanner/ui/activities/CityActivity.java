@@ -18,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +38,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.logging.Handler;
 
 public class CityActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -49,12 +51,13 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
     private ViewPager placeViewPager;
     private PlacesPagerAdapter placesPagerAdapter;
     private TabLayout tabLayout;
-    private TextView toolbarTitle;
+    private static TextView toolbarTitle;
     private LatLng latLng;
     private FloatingActionButton floatingActionButton;
     private FloatingActionButton feedback;
     private SubscribeDialog subscribeDialog = new SubscribeDialog();
     private ProgressDialog progressDialog;
+    private static RelativeLayout toast;
 
 
     public static void show(Context context, LatLng latLng) {
@@ -127,6 +130,7 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
         floatingActionButton = (FloatingActionButton) findViewById(R.id.filterButton);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         feedback = (FloatingActionButton) findViewById(R.id.feedbackFloat);
+        toast = (RelativeLayout) findViewById(R.id.toast);
         floatingActionButton.setOnClickListener(this);
         feedback.setOnClickListener(this);
     }
@@ -265,4 +269,31 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
                 break;
         }
     }
+
+    public static void showToast() {
+        toast.setVisibility(View.VISIBLE);
+        android.os.Handler handler = new android.os.Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                hideToast();
+            }
+        }, 1700);
+    }
+
+    public static void hideToast() {
+        toast.setVisibility(View.GONE);
+    }
+
+    public static boolean getCurrentTitle() {
+       if (toolbarTitle.getText().toString().equals("DDScanner")){
+           return true;
+       }
+       return false;
+    }
+
+    public static void setTitle() {
+        toolbarTitle.setText("DDScanner");
+    }
+
 }
