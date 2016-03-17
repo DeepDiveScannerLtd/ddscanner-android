@@ -1,6 +1,7 @@
 package com.ddscanner.ui.adapters;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -68,6 +69,8 @@ public class DiveCentersListAdapter extends RecyclerView.Adapter<DiveCentersList
         if (diveCenter.getLogo() != null) {
             String imageUrlPath = logoPath + diveCenter.getLogo();
             Picasso.with(context).load(imageUrlPath).into(diveCentersListViewHolder.imgLogo);
+        } else {
+            diveCentersListViewHolder.imgLogo.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.dc_avatar_empty);
         }
         rating = Math.round(diveCenter.getRating());
         diveCentersListViewHolder.starsLayout.removeAllViews();
