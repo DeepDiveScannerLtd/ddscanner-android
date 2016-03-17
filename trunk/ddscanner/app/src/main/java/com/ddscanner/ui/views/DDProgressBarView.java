@@ -13,7 +13,7 @@ import android.graphics.PathMeasure;
 import android.graphics.PointF;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AccelerateDecelerateInterpolator;
 
 import com.ddscanner.R;
 
@@ -22,10 +22,10 @@ import java.util.List;
 
 public class DDProgressBarView extends View {
 
+    public static final int BASE_MASK_BG_WIDTH = 578;
+    public static final int BASE_MASK_BG_HEIGHT = 382;
+    public static final int ANIMATION_DURATION = 1800;
     private static final String TAG = DDProgressBarView.class.getName();
-
-    public static final int ANIMATION_DURATION = 3500;
-
     private static Bitmap circleBitmap;
     private static Bitmap backgroundBitmap;
 
@@ -64,8 +64,8 @@ public class DDProgressBarView extends View {
     }
 
 
-    @Override protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec)
-    {
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         mWidth = MeasureSpec.getSize(widthMeasureSpec);
         mHeight = MeasureSpec.getSize(heightMeasureSpec);
 
@@ -74,7 +74,6 @@ public class DDProgressBarView extends View {
 
     private void init(Context context) {
         //load background
-
 
         if (backgroundBitmap == null) {
             backgroundBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.mask);
@@ -160,8 +159,10 @@ public class DDProgressBarView extends View {
 
         valueAnimator = ValueAnimator.ofFloat(0, movementPathMeasure.getLength());
         valueAnimator.setDuration(ANIMATION_DURATION);
-        valueAnimator.setInterpolator(new AccelerateInterpolator(0.8f));
-        valueAnimator.setRepeatMode(ValueAnimator.RESTART);
+//        valueAnimator.setInterpolator(new AccelerateInterpolator(0.8f));
+//        valueAnimator.setInterpolator(new CycleInterpolator(0.8f));
+        valueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+        valueAnimator.setRepeatMode(ValueAnimator.INFINITE);
         valueAnimator.setRepeatCount(ValueAnimator.INFINITE);
         valueAnimator.start();
 
@@ -170,8 +171,6 @@ public class DDProgressBarView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), backgroundPaint);
-        int cx = (mWidth - backgroundBitmap.getWidth()) >> 1; // same as (...) / 2
-        int cy = (mHeight - backgroundBitmap.getHeight()) >> 1;
 
         if (mAngle > 0) {
             canvas.rotate(mAngle, mWidth >> 1, mHeight >> 1);
@@ -182,17 +181,15 @@ public class DDProgressBarView extends View {
         movementPathMeasure.getMatrix((Float) valueAnimator.getAnimatedValue(), mxTransform, PathMeasure.POSITION_MATRIX_FLAG);
         mxTransform.preTranslate(-circleBitmap.getWidth() / 2, -circleBitmap.getHeight() / 2);
         canvas.drawBitmap(circleBitmap, mxTransform, null);
-       /* canvas.scale(canvas.getWidth(), canvas.getHeight());
-        canvas.translate(canvas.getWidth(), canvas.getHeight());*/
         invalidate();
     }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        koefY = (float)1920.0 / h;
-        koefX = (float)1080.0 / w;
+        koefY = (float) BASE_MASK_BG_HEIGHT / backgroundBitmap.getHeight();
+        koefX = (float) BASE_MASK_BG_WIDTH / backgroundBitmap.getWidth();
         System.out.println("Koef y = " + koefX + " Koef x = " + koefY + " Height = " + h);
-       progressBarLeftTopX = (w - backgroundBitmap.getWidth()) / 2;
+        progressBarLeftTopX = (w - backgroundBitmap.getWidth()) / 2;
         progressBarLeftTopY = (h - backgroundBitmap.getHeight()) / 2;
         initOnSizeChanged();
     }
