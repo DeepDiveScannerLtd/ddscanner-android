@@ -8,6 +8,7 @@ import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -39,6 +40,7 @@ public class SealifeDetails extends AppCompatActivity {
     private Bitmap image;
     private AppBarLayout appBarLayout;
     private Toolbar toolbar;
+    private ImageView backgroundImage;
 
     public static void show(Context context, Sealife sealife, String pathMedium) {
         Intent intent = new Intent(context, SealifeDetails.class);
@@ -64,9 +66,10 @@ public class SealifeDetails extends AppCompatActivity {
         display.getMetrics(outMetrics);
         float density  = getResources().getDisplayMetrics().density;
         float dpWidth  = outMetrics.widthPixels / density;
+        Picasso.with(this).load(pathMedium + sealife.getImage()).resize(Math.round(dpWidth), 460).centerCrop().into(backgroundImage);
+        backgroundImage.setColorFilter(Color.parseColor("#99000000"), PorterDuff.Mode.SRC_ATOP);
         setContent();
-        appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
-        Picasso.with(this).load(pathMedium + sealife.getImage()).resize(Math.round(dpWidth), 460).centerCrop().into(new Target() {
+       /* Picasso.with(this).load(pathMedium + sealife.getImage()).resize(Math.round(dpWidth), 460).centerCrop().into(new Target() {
             @Override
             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
                 drawable = new BitmapDrawable(bitmap);
@@ -83,7 +86,7 @@ public class SealifeDetails extends AppCompatActivity {
             public void onPrepareLoad(Drawable placeHolderDrawable) {
 
             }
-        });
+        });*/
       /*  image = getBitmapFromURL(pathMedium+sealife.getImage());
         if (image != null) {
             drawable = new BitmapDrawable(image);
@@ -106,6 +109,7 @@ public class SealifeDetails extends AppCompatActivity {
         distribution = (TextView) findViewById(R.id.distribution);
         scclass = (TextView) findViewById(R.id.scclass);
         habitat = (TextView) findViewById(R.id.habitat);
+        backgroundImage = (ImageView) findViewById(R.id.background_photo);
     }
 
     private void setContent() {

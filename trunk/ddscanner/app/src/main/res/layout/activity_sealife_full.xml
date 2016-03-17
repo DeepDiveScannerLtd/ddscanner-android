@@ -72,7 +72,10 @@
             app:contentScrim="@color/primary"
 
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
-
+            <ImageView
+                android:id="@+id/background_photo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
             <ImageView
                 android:id="@+id/sealife_full_photo"
                 android:layout_width="wrap_content"
