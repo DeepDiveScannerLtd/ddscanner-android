@@ -70,7 +70,7 @@ public class DiveCentersListAdapter extends RecyclerView.Adapter<DiveCentersList
             String imageUrlPath = logoPath + diveCenter.getLogo();
             Picasso.with(context).load(imageUrlPath).into(diveCentersListViewHolder.imgLogo);
         } else {
-            diveCentersListViewHolder.imgLogo.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.dc_avatar_empty);
+            diveCentersListViewHolder.imgLogo.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.dc_avatar_empty));
         }
         rating = Math.round(diveCenter.getRating());
         diveCentersListViewHolder.starsLayout.removeAllViews();
