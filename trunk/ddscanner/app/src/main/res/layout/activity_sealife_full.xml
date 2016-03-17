@@ -103,12 +103,12 @@
             <RelativeLayout
                 android:id="@+id/char_length"
                 android:layout_marginTop="20dp"
-                android:visibility="gone"
+                android:visibility="visible"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
                 <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/title_length"
-                    android:textSize="14sp"
+                    android:textSize="16sp"
                     android:fontFamily="sans-serif-medium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -120,7 +120,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black_text"
-                    android:textSize="12sp"
+                    android:textSize="14sp"
                     android:text="-"/>
             </RelativeLayout>
             <RelativeLayout
@@ -132,7 +132,7 @@
                 android:layout_height="wrap_content">
                 <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/title_weight"
-                    android:textSize="14sp"
+                    android:textSize="16sp"
                     android:fontFamily="sans-serif-medium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -144,7 +144,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black_text"
-                    android:textSize="12sp"
+                    android:textSize="14sp"
                     android:text="-"/>
             </RelativeLayout>
             <RelativeLayout
@@ -156,7 +156,7 @@
                 android:layout_height="wrap_content">
                 <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/title_depth"
-                    android:textSize="14sp"
+                    android:textSize="16sp"
                     android:fontFamily="sans-serif-medium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -168,7 +168,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black_text"
-                    android:textSize="12sp"
+                    android:textSize="14sp"
                     android:text="-"/>
             </RelativeLayout>
             <RelativeLayout
@@ -180,7 +180,7 @@
                 android:layout_height="wrap_content">
                 <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/title_scname"
-                    android:textSize="14sp"
+                    android:textSize="16sp"
                     android:fontFamily="sans-serif-medium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -192,7 +192,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black_text"
-                    android:textSize="12sp"
+                    android:textSize="14sp"
                     android:text="-"/>
             </RelativeLayout>
             <RelativeLayout
@@ -204,7 +204,7 @@
                 android:layout_height="wrap_content">
                 <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/title_order"
-                    android:textSize="14sp"
+                    android:textSize="16sp"
                     android:fontFamily="sans-serif-medium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -216,7 +216,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black_text"
-                    android:textSize="12sp"
+                    android:textSize="14sp"
                     android:text="-"/>
             </RelativeLayout>
             <RelativeLayout
@@ -228,7 +228,7 @@
                 android:layout_height="wrap_content">
                 <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/title_distribution"
-                    android:textSize="14sp"
+                    android:textSize="16sp"
                     android:fontFamily="sans-serif-medium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -240,7 +240,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black_text"
-                    android:textSize="12sp"
+                    android:textSize="14sp"
                     android:text="-"/>
             </RelativeLayout>
             <RelativeLayout
@@ -252,7 +252,7 @@
                 android:layout_height="wrap_content">
                 <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/title_scclass"
-                    android:textSize="14sp"
+                    android:textSize="16sp"
                     android:fontFamily="sans-serif-medium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -264,7 +264,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black_text"
-                    android:textSize="12sp"
+                    android:textSize="14sp"
                     android:text="-"/>
             </RelativeLayout>
             <RelativeLayout
@@ -276,7 +276,7 @@
                 android:layout_height="wrap_content">
                 <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/title_habitat"
-                    android:textSize="14sp"
+                    android:textSize="16sp"
                     android:fontFamily="sans-serif-medium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -288,7 +288,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black_text"
-                    android:textSize="12sp"
+                    android:textSize="14sp"
                     android:text="-"/>
             </RelativeLayout>
         </RelativeLayout>

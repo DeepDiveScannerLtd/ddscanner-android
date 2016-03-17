@@ -82,7 +82,7 @@ public class LeaveReviewActivity extends AppCompatActivity {
             sendReviewRequest.setSecret(SharedPreferenceHelper.getSecret());
         }
         sendReviewRequest.setToken(SharedPreferenceHelper.getToken());
-        sendReviewRequest.setComment(text.getText().toString());
+        sendReviewRequest.setComment(text.getText().toString().trim());
         RestClient.getServiceInstance().addCOmmentToDiveSpot(sendReviewRequest, new Callback<Response>() {
             @Override
             public void success(Response s, Response response) {

@@ -33,6 +33,7 @@ import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.PlaceImagesPagerAdapter;
 import com.ddscanner.ui.adapters.SealifeListAdapter;
 import com.ddscanner.ui.dialogs.SubscribeDialog;
+import com.ddscanner.ui.managers.SealifeLinearLayoutManager;
 import com.ddscanner.utils.LogUtils;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
@@ -199,7 +200,12 @@ public class DivePlaceActivity extends AppCompatActivity implements ViewPager.On
         if (divespotDetails.getSealifes() != null) {
             findViewById(R.id.sealife).setVisibility(View.VISIBLE);
             findViewById(R.id.list_sl).setVisibility(View.VISIBLE);
-            sealifeRecyclerview.setLayoutManager(linearLayoutManager);
+            LinearLayoutManager layoutManager = new SealifeLinearLayoutManager(DivePlaceActivity.this);
+            layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+            sealifeRecyclerview.setNestedScrollingEnabled(false);
+            sealifeRecyclerview.setHasFixedSize(false);
+            sealifeRecyclerview.setLayoutManager(layoutManager);
+         //   sealifeRecyclerview.setLayoutManager(linearLayoutManager);
             sealifeRecyclerview.setAdapter(new SealifeListAdapter(sealifes, this, diveSpot.getSealifePathSmall(), diveSpot.getSealifePathMedium()));
         }
         if (diveSpot.getImages() != null) {

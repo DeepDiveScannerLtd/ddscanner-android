@@ -13,6 +13,7 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.MenuItem;
 import android.view.View;
@@ -59,12 +60,13 @@ public class SealifeDetails extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_actionbar_back);
         Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        int width = size.x;
+        DisplayMetrics outMetrics = new DisplayMetrics ();
+        display.getMetrics(outMetrics);
+        float density  = getResources().getDisplayMetrics().density;
+        float dpWidth  = outMetrics.widthPixels / density;
         setContent();
         appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
-        Picasso.with(this).load(pathMedium + sealife.getImage()).resize(width, 460).centerCrop().into(new Target() {
+        Picasso.with(this).load(pathMedium + sealife.getImage()).resize(Math.round(dpWidth), 460).centerCrop().into(new Target() {
             @Override
             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
                 drawable = new BitmapDrawable(bitmap);
