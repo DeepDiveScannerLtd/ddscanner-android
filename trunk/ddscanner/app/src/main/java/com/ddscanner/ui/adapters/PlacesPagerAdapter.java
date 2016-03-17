@@ -48,7 +48,12 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter {
                             latLng = new LatLng(0,0);
                             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 7.0f));
                         } else {
-                            googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 0));
+                            if (latLngBounds != null) {
+                                googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 0));
+                            } else {
+                                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 14.0f));
+                            }
+
                         }
                         diveSpotsClusterManager = new DiveSpotsClusterManager(context, googleMap, PlacesPagerAdapter.this);
                         googleMap.setOnInfoWindowClickListener(diveSpotsClusterManager);
