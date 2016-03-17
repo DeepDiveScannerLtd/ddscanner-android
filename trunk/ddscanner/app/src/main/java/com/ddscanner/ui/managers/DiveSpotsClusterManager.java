@@ -318,7 +318,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
             if (bitmap == null) {
                 infoWindowRefresher = new InfoWindowRefresher(marker);
                 LogUtils.i(TAG, "getInfoWindow image=" + diveSpot.getImages().get(0));
-                Picasso.with(mContext).load(diveSpot.getImages().get(0)).resize(260, 116).into(infoWindowRefresher);
+                Picasso.with(mContext).load(diveSpot.getImages().get(0)).resize(260, 116).centerCrop().into(infoWindowRefresher);
             } else {
                 ImageView photo = (ImageView) view.findViewById(R.id.popup_photo);
                 photo.setAlpha(1f);
