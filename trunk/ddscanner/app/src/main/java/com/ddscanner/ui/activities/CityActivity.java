@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.ddscanner.R;
 import com.ddscanner.entities.request.DiveSpotsRequestMap;
+import com.ddscanner.rest.RestClient;
 import com.ddscanner.services.RegistrationIntentService;
 import com.ddscanner.ui.adapters.PlacesPagerAdapter;
 import com.ddscanner.ui.dialogs.SubscribeDialog;
@@ -40,6 +41,10 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import java.util.List;
 import java.util.Locale;
 import java.util.logging.Handler;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class CityActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -299,6 +304,20 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
 
     public static void setTitle() {
         toolbarTitle.setText("DDScanner");
+    }
+
+    public static void checkGcm() {
+        RestClient.getServiceInstance().identifyGcmToken(SharedPreferenceHelper.getGcmId(), new Callback<Response>() {
+            @Override
+            public void success(Response response, Response response2) {
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
     }
 
 }

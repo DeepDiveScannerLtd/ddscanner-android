@@ -39,4 +39,7 @@ public interface DDScannerRestService {
     @POST("/diving/comment")
     void addCOmmentToDiveSpot(@Body SendReviewRequest sendReviewRequest, Callback<Response> callback);
 
+    @POST("/diving/identify")
+    void identifyGcmToken(@Body String token, Callback<Response> callback);
+
 }

@@ -15,6 +15,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Display;
 import android.view.MenuItem;
 import android.view.View;
@@ -57,6 +58,7 @@ public class SealifeDetails extends AppCompatActivity {
         sealife = (Sealife) getIntent().getSerializableExtra("SEALIFE");
         pathMedium = getIntent().getStringExtra("PATH");
         Picasso.with(this).load(pathMedium + sealife.getImage()).into(photo);
+        Log.i("SEALIFEFULL", pathMedium + sealife.getImage());
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(sealife.getName());
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -69,32 +71,6 @@ public class SealifeDetails extends AppCompatActivity {
         Picasso.with(this).load(pathMedium + sealife.getImage()).resize(Math.round(dpWidth), 460).centerCrop().into(backgroundImage);
         backgroundImage.setColorFilter(Color.parseColor("#99000000"), PorterDuff.Mode.SRC_ATOP);
         setContent();
-       /* Picasso.with(this).load(pathMedium + sealife.getImage()).resize(Math.round(dpWidth), 460).centerCrop().into(new Target() {
-            @Override
-            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                drawable = new BitmapDrawable(bitmap);
-                drawable.setColorFilter(Color.parseColor("#99000000"), PorterDuff.Mode.SRC_ATOP);
-                appBarLayout.setBackgroundDrawable(drawable);
-            }
-
-            @Override
-            public void onBitmapFailed(Drawable errorDrawable) {
-
-            }
-
-            @Override
-            public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-            }
-        });*/
-      /*  image = getBitmapFromURL(pathMedium+sealife.getImage());
-        if (image != null) {
-            drawable = new BitmapDrawable(image);
-            drawable.setColorFilter(Color.parseColor("#90000000"), PorterDuff.Mode.SRC_ATOP);
-            appBarLayout.setBackgroundDrawable(drawable);
-        }*/
-
-
     }
 
     public void findViews() {
