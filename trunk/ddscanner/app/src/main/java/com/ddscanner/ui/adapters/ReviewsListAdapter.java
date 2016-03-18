@@ -1,6 +1,8 @@
 package com.ddscanner.ui.adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.Spanned;
@@ -27,6 +29,8 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
 
     private ArrayList<Comment> comments;
     private Context context;
+    private String userName;
+    private String socialNetwork;
 
     public ReviewsListAdapter(ArrayList<Comment> comments, Context context) {
         this.comments = comments;
@@ -47,10 +51,17 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         Comment comment = comments.get(i);
         reviewsListViewHolder.user_review.setText(comment.getComment());
        // reviewsListViewHolder.user_name.setText(comment.getUser().getName());
-        Spanned html = Html.fromHtml("<a href='"+ comment.getUser().getLink() +
-                "'>"+comment.getUser().getName() + "</a>");
+     /*  Spanned html = Html.fromHtml("<a href='"+ comment.getUser().getLink() +
+                "'>"+comment.getUser().getName() + "</a>");*/
         reviewsListViewHolder.user_name.setMovementMethod(LinkMovementMethod.getInstance());
-        reviewsListViewHolder.user_name.setText(html);
+        reviewsListViewHolder.user_name.setText(comment.getUser().getName());
+     //   reviewsListViewHolder.user_name.setText(html);
+        reviewsListViewHolder.user_name.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openLink(userName, socialNetwork);
+            }
+        });
         reviewsListViewHolder.rating.setText(comment.getRating());
         Picasso.with(context).load(comment.getUser().getPicture()).resize(41,41).centerCrop().into(reviewsListViewHolder.user_avatar);
         Log.i(TAG, "Try showing content");
@@ -78,6 +89,38 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
             rating = (TextView) v.findViewById(R.id.rating);
             user_name = (TextView) v.findViewById(R.id.user_name);
             user_review = (TextView) v.findViewById(R.id.review);
+        }
+    }
+
+    private void openLink(String userName, String socialNetwork) {
+        switch (socialNetwork) {
+            case "tw":
+                try {
+                    Intent intent = new Intent(Intent.ACTION_VIEW,
+                            Uri.parse("twitter://user?screen_name=" + userName));
+                    context.startActivity(intent);
+
+                }catch (Exception e) {
+                    context.startActivity(new Intent(Intent.ACTION_VIEW,
+                            Uri.parse("https://twitter.com/#!/" + userName)));
+                }
+                break;
+            case "go":
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse("https://plus.google.com/"+ userName + "/"));
+                intent.setPackage("com.google.android.apps.plus"); // don't open the browser, make sure it opens in Google+ app
+                context.startActivity(intent);
+                break;
+            case "fb":
+                try {
+                    Intent intent1 = new Intent(Intent.ACTION_VIEW, Uri.parse("fb://profile/" + userName));
+                    context.startActivity(intent1);
+
+                }catch(Exception e){
+
+                    context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.facebook.com/" + userName)));
+                }
+                break;
         }
     }
 

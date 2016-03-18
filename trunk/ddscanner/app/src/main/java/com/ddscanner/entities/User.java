@@ -10,6 +10,7 @@ public class User implements Serializable{
     private String name;
     private String picture;
     private String link;
+    private String social;
 
     public String getName() {
         return name;

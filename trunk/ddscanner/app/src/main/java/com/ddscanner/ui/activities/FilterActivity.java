@@ -83,11 +83,8 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
         ImageView divider = new ImageView(this);
         divider.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.divider));
         divider.setPadding(0,16,0,0);
-        int i = 0;
-        int id = -1;
         LinearLayout.LayoutParams layoutParams = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT, RadioGroup.LayoutParams.WRAP_CONTENT);
         for (Map.Entry<String, String> entry : currents.entrySet()) {
-            id = -3;
             RadioButton radioButton = new RadioButton(this);
             radioButton.setButtonDrawable(R.drawable.bg_radio_button);
             radioButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
@@ -98,14 +95,8 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
             radioButton.setTypeface(Typeface.SANS_SERIF);
             radioGroup.addView(radioButton, 0, layoutParams);
             if (entry.getKey().equals(tag)) {
-                Log.i(TAG, "find");
-                id  = radioButton.getId();
-                radioGroup.check(id);
-                Log.i(TAG, String.valueOf(id));
+                radioGroup.check(radioButton.getId());
             }
-           /* if (i < currents.size() - 1) {
-                radioGroup.addView(divider, 0, layoutParams);
-            }*/
         }
     }
 
