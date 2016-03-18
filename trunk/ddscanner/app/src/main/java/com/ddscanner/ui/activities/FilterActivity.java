@@ -23,6 +23,7 @@ import com.ddscanner.R;
 import com.ddscanner.entities.FiltersResponseEntity;
 import com.ddscanner.entities.request.DiveSpotsRequestMap;
 import com.ddscanner.rest.RestClient;
+import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -78,13 +79,15 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
     }
 
 
-    private void setFilerGroup(RadioGroup radioGroup, Map<String, String> currents) {
+    private void setFilerGroup(RadioGroup radioGroup, Map<String, String> currents, String tag) {
         ImageView divider = new ImageView(this);
         divider.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.divider));
         divider.setPadding(0,16,0,0);
         int i = 0;
+        int id = -1;
         LinearLayout.LayoutParams layoutParams = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT, RadioGroup.LayoutParams.WRAP_CONTENT);
         for (Map.Entry<String, String> entry : currents.entrySet()) {
+            id = -3;
             RadioButton radioButton = new RadioButton(this);
             radioButton.setButtonDrawable(R.drawable.bg_radio_button);
             radioButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
@@ -94,6 +97,12 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
             radioButton.setText(entry.getValue());
             radioButton.setTypeface(Typeface.SANS_SERIF);
             radioGroup.addView(radioButton, 0, layoutParams);
+            if (entry.getKey().equals(tag)) {
+                Log.i(TAG, "find");
+                id  = radioButton.getId();
+                radioGroup.check(id);
+                Log.i(TAG, String.valueOf(id));
+            }
            /* if (i < currents.size() - 1) {
                 radioGroup.addView(divider, 0, layoutParams);
             }*/
@@ -107,18 +116,22 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
         int selectedRadioButtonId = rgCurrents.getCheckedRadioButtonId();
         if (selectedRadioButtonId != -1) {
             data.putExtra(DiveSpotsRequestMap.KEY_CURRENTS, findViewById(selectedRadioButtonId).getTag().toString());
+            SharedPreferenceHelper.setCurrents(findViewById(selectedRadioButtonId).getTag().toString());
         }
         selectedRadioButtonId = rgLevel.getCheckedRadioButtonId();
         if (selectedRadioButtonId != -1) {
             data.putExtra(DiveSpotsRequestMap.KEY_LEVEL, findViewById(selectedRadioButtonId).getTag().toString());
+            SharedPreferenceHelper.setLevel(findViewById(selectedRadioButtonId).getTag().toString());
         }
         selectedRadioButtonId = rgVisibility.getCheckedRadioButtonId();
         if (selectedRadioButtonId != -1) {
             data.putExtra(DiveSpotsRequestMap.KEY_VISIBILITY, findViewById(selectedRadioButtonId).getTag().toString());
+            SharedPreferenceHelper.setVisibility(findViewById(selectedRadioButtonId).getTag().toString());
         }
         selectedRadioButtonId = rgObject.getCheckedRadioButtonId();
         if (selectedRadioButtonId != -1) {
             data.putExtra(DiveSpotsRequestMap.KEY_OBJECT, findViewById(selectedRadioButtonId).getTag().toString());
+            SharedPreferenceHelper.setObject(findViewById(selectedRadioButtonId).getTag().toString());
         }
 //        selectedRadioButtonId = rgCurrents.getCheckedRadioButtonId();
 //        if (selectedRadioButtonId != -1) {
@@ -170,10 +183,10 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
 
                 Log.i(TAG, responseString);
 
-                setFilerGroup(rgCurrents, filters.getCurrents());
-                setFilerGroup(rgVisibility, filters.getVisibility());
-                setFilerGroup(rgLevel, filters.getLevel());
-                setFilerGroup(rgObject, filters.getObject());
+                setFilerGroup(rgCurrents, filters.getCurrents(), SharedPreferenceHelper.getCurrents());
+                setFilerGroup(rgVisibility, filters.getVisibility(), SharedPreferenceHelper.getVisibility());
+                setFilerGroup(rgLevel, filters.getLevel(), SharedPreferenceHelper.getLevel());
+                setFilerGroup(rgObject, filters.getObject(), SharedPreferenceHelper.getObject());
             }
 
             @Override

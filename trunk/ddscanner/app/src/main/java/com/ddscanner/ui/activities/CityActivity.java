@@ -72,6 +72,13 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
         context.startActivity(intent);
     }
 
+    private void clearFilterSharedPrefences() {
+        SharedPreferenceHelper.setObject("");
+        SharedPreferenceHelper.setCurrents("");
+        SharedPreferenceHelper.setVisibility("");
+        SharedPreferenceHelper.setLevel("");
+    }
+
     public static boolean hasConnection(final Context context) {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo wifiInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
@@ -96,6 +103,7 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
             setContentView(R.layout.activity_city);
             findViews();
             toolbarSettings();
+            clearFilterSharedPrefences();
             progressDialog = new ProgressDialog(this);
             progressDialog.setMessage(getApplicationContext().getResources().getString(R.string.pleaseWait));
             toolbarTitle = (TextView) findViewById(R.id.toolbarTitle);
