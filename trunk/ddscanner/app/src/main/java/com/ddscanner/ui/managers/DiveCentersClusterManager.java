@@ -87,8 +87,7 @@ public class DiveCentersClusterManager extends ClusterManager<DiveCenter> implem
         Projection projection = googleMap.getProjection();
         Point mapCenteringPoint = projection.toScreenLocation(marker.getPosition());
         mapCenteringPoint.y = mapCenteringPoint.y - DDScannerApplication.getInstance().getResources().getDimensionPixelSize(R.dimen.info_window_height) / 2;
-        LatLng newMarkerPosition = new LatLng(projection.fromScreenLocation(mapCenteringPoint).latitude, marker.getPosition().longitude);
-        googleMap.animateCamera(CameraUpdateFactory.newLatLng(newMarkerPosition), CAMERA_ANIMATION_DURATION, null);
+        googleMap.animateCamera(CameraUpdateFactory.newLatLng(projection.fromScreenLocation(mapCenteringPoint)), CAMERA_ANIMATION_DURATION, null);
         return true;
     }
 
