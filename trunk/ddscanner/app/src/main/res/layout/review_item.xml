@@ -38,7 +38,7 @@
         <TextView
             android:layout_marginLeft="4dp"
             android:layout_marginTop="3dp"
-            android:background="@color/tw__composer_red"
+            android:background="@drawable/rating_rectangle"
             android:layout_below="@+id/user_name"
             android:layout_toRightOf="@+id/rated"
             android:id="@+id/rating"

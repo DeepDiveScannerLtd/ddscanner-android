@@ -117,7 +117,6 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
                     context.startActivity(intent1);
 
                 }catch(Exception e){
-
                     context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.facebook.com/" + userName)));
                 }
                 break;

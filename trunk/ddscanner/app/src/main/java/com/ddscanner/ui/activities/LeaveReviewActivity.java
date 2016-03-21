@@ -31,6 +31,7 @@ import retrofit.mime.TypedByteArray;
 public class LeaveReviewActivity extends AppCompatActivity {
 
     private static final String TAG = LeaveReviewActivity.class.getSimpleName();
+    private static final int RC_LOGIN = 8001;
 
     private Toolbar toolbar;
     private Comment comment = new Comment();
@@ -106,9 +107,23 @@ public class LeaveReviewActivity extends AppCompatActivity {
                     String json = new String(((TypedByteArray) error.getResponse().getBody()).getBytes());
                     Log.i(TAG, json);
                 }
-                SocialNetworks.show(LeaveReviewActivity.this);
+                // SocialNetworks.show(LeaveReviewActivity.this);
+                Intent intent = new Intent(LeaveReviewActivity.this, SocialNetworks.class);
+                startActivityForResult(intent, RC_LOGIN);
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == RC_LOGIN) {
+            if (resultCode == RESULT_OK) {
+                sendReview();
+            }
+            if (resultCode == RESULT_CANCELED) {
+                Log.i(TAG, "Error with login");
+            }
+        }
     }
 
     @Override

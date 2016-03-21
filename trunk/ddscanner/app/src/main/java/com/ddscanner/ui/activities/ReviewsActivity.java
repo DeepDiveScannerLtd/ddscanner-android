@@ -171,10 +171,8 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
 
     public class RoundedTransformation implements com.squareup.picasso.Transformation {
         private final int radius;
-        private final int margin;  // dp
+        private final int margin;
 
-        // radius is corner radii in dp
-        // margin is the board in dp
         public RoundedTransformation(final int radius, final int margin) {
             this.radius = radius;
             this.margin = margin;

@@ -1,5 +1,6 @@
 package com.ddscanner.ui.activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -264,6 +265,8 @@ public class SocialNetworks extends AppCompatActivity implements GoogleApiClient
                 if (userData.getSocial().equals("tw")) {
                     SharedPreferenceHelper.setSecret(userData.getSecret());
                 }
+                Intent returnIntent = new Intent();
+                setResult(Activity.RESULT_OK, returnIntent);
                 finish();
             }
 

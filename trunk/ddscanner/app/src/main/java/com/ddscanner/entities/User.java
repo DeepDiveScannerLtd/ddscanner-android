@@ -11,6 +11,23 @@ public class User implements Serializable{
     private String picture;
     private String link;
     private String social;
+    private String id;
+
+    public String getSocial() {
+        return social;
+    }
+
+    public void setSocial(String social) {
+        this.social = social;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
