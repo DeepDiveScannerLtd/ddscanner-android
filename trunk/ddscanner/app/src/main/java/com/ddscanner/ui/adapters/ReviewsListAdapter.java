@@ -29,8 +29,6 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
 
     private ArrayList<Comment> comments;
     private Context context;
-    private String userName;
-    private String socialNetwork;
 
     public ReviewsListAdapter(ArrayList<Comment> comments, Context context) {
         this.comments = comments;
@@ -48,20 +46,21 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
 
     @Override
     public void onBindViewHolder(ReviewsListViewHolder reviewsListViewHolder, int i) {
-        Comment comment = comments.get(i);
-        reviewsListViewHolder.user_review.setText(comment.getComment());
-       // reviewsListViewHolder.user_name.setText(comment.getUser().getName());
-     /*  Spanned html = Html.fromHtml("<a href='"+ comment.getUser().getLink() +
-                "'>"+comment.getUser().getName() + "</a>");*/
-        reviewsListViewHolder.user_name.setMovementMethod(LinkMovementMethod.getInstance());
-        reviewsListViewHolder.user_name.setText(comment.getUser().getName());
-     //   reviewsListViewHolder.user_name.setText(html);
-        reviewsListViewHolder.user_name.setOnClickListener(new View.OnClickListener() {
+        final Comment comment = comments.get(i);
+        View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openLink(userName, socialNetwork);
+                if (!comment.getUser().getType().equals("fb")) {
+                    openLink(comment.getUser().getId(), comment.getUser().getType());
+                } else {
+                    openLink(comment.getUser().getLink(), comment.getUser().getType());
+                }
             }
-        });
+        };
+        reviewsListViewHolder.user_review.setText(comment.getComment());
+        reviewsListViewHolder.user_name.setText(comment.getUser().getName());
+        reviewsListViewHolder.user_name.setOnClickListener(onClickListener);
+        reviewsListViewHolder.user_avatar.setOnClickListener(onClickListener);
         reviewsListViewHolder.rating.setText(comment.getRating());
         Picasso.with(context).load(comment.getUser().getPicture()).resize(41,41).centerCrop().into(reviewsListViewHolder.user_avatar);
         Log.i(TAG, "Try showing content");
@@ -74,7 +73,6 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         }
         return comments.size();
     }
-
 
     public static class ReviewsListViewHolder extends RecyclerView.ViewHolder {
 
@@ -106,18 +104,22 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
                 }
                 break;
             case "go":
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse("https://plus.google.com/"+ userName + "/"));
-                intent.setPackage("com.google.android.apps.plus"); // don't open the browser, make sure it opens in Google+ app
-                context.startActivity(intent);
+                try {
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse("https://plus.google.com/" + userName));
+                    intent.setPackage("com.google.android.apps.plus"); // don't open the browser, make sure it opens in Google+ app
+                    context.startActivity(intent);
+                } catch (Exception e) {
+                    context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://plus.google.com/" + userName)));
+                }
                 break;
             case "fb":
                 try {
-                    Intent intent1 = new Intent(Intent.ACTION_VIEW, Uri.parse("fb://profile/" + userName));
+                    Intent intent1 = new Intent(Intent.ACTION_VIEW, Uri.parse("fb://facewebmodal/f?href=" + userName));
                     context.startActivity(intent1);
 
                 }catch(Exception e){
-                    context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.facebook.com/" + userName)));
+                    context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com/" + userName)));
                 }
                 break;
         }

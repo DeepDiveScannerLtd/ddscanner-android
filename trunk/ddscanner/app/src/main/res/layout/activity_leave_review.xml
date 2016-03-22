@@ -30,6 +30,7 @@
     </FrameLayout>
     <LinearLayout
         android:layout_below="@+id/header"
+        android:id="@+id/message_layout"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:background="@color/white"

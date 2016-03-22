@@ -18,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -64,6 +65,7 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
     private SubscribeDialog subscribeDialog = new SubscribeDialog();
     private ProgressDialog progressDialog;
     private static RelativeLayout toast;
+    private static ProgressBar progressBar;
 
 
     public static void show(Context context, LatLng latLng) {
@@ -149,6 +151,7 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         feedback = (FloatingActionButton) findViewById(R.id.feedbackFloat);
         toast = (RelativeLayout) findViewById(R.id.toast);
+        progressBar = (ProgressBar) findViewById(R.id.request_progress);
         floatingActionButton.setOnClickListener(this);
         feedback.setOnClickListener(this);
     }
@@ -297,6 +300,20 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
                 hideToast();
             }
         }, 1700);
+    }
+
+    public static void showPb() {
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    public static void hidePb() {
+        android.os.Handler handler = new android.os.Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                progressBar.setVisibility(View.GONE);
+            }
+        }, 1200);
     }
 
     public static void hideToast() {

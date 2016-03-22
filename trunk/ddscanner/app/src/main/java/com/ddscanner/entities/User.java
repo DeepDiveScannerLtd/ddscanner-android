@@ -10,15 +10,15 @@ public class User implements Serializable{
     private String name;
     private String picture;
     private String link;
-    private String social;
+    private String type;
     private String id;
 
-    public String getSocial() {
-        return social;
+    public String getType() {
+        return type;
     }
 
-    public void setSocial(String social) {
-        this.social = social;
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getId() {

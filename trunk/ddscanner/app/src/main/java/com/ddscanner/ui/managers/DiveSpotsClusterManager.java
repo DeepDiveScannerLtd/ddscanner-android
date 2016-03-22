@@ -95,8 +95,11 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         setRenderer(new IconRenderer(context, googleMap, this));
         setOnClusterClickListener(this);
         getMarkerCollection().setOnInfoWindowAdapter(new InfoWindowAdapter(context));
-
-        requestCityProducts();
+        if (checkArea(googleMap.getProjection().getVisibleRegion().latLngBounds.southwest, googleMap.getProjection().getVisibleRegion().latLngBounds.northeast)) {
+            requestCityProducts();
+        } else {
+            CityActivity.showToast();
+        }
     }
 
     @Override
@@ -222,6 +225,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         LatLng southwest = googleMap.getProjection().getVisibleRegion().latLngBounds.southwest;
         LatLng northeast = googleMap.getProjection().getVisibleRegion().latLngBounds.northeast;
         if (checkArea(southwest, northeast)) {
+            CityActivity.showPb();
             isCanMakeRequest = true;
             diveSpotsRequestMap.putSouthWestLat(southwest.latitude - Math.abs(northeast.latitude - southwest.latitude));
             diveSpotsRequestMap.putSouthWestLng(southwest.longitude - Math.abs(northeast.longitude - southwest.longitude));
@@ -254,6 +258,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
                     divespotsWrapper = new Gson().fromJson(responseString, DivespotsWrapper.class);
                     updateDiveSpots((ArrayList<DiveSpot>) divespotsWrapper.getDiveSpots());
                     placesPagerAdapter.populateDiveSpotsList((ArrayList<DiveSpot>) divespotsWrapper.getDiveSpots());
+                    CityActivity.hidePb();
                 }
 
                 @Override

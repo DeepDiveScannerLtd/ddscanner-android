@@ -46,7 +46,7 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter {
                     public void onMapReady(final GoogleMap googleMap) {
                         if (latLng.longitude == 0 && latLng.latitude == 0) {
                             latLng = new LatLng(0,0);
-                            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 7.0f));
+                            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 1.0f));
                         } else {
                             if (latLngBounds != null) {
                                 googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 0));
