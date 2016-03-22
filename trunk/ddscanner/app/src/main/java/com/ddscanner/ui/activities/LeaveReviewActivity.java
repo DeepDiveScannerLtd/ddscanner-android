@@ -60,6 +60,7 @@ public class LeaveReviewActivity extends AppCompatActivity {
     private void findVIews() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         text = (EditText) findViewById(R.id.review_text);
+        text.setTag("comment");
         ratingBar = (RatingBar) findViewById(R.id.rating_bar);
     }
 

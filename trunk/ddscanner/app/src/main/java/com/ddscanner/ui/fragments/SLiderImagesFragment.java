@@ -6,8 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.ddscanner.R;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -23,10 +25,36 @@ public class SLiderImagesFragment extends Fragment {
         View view = inflater.inflate(R.layout.slider_image_fragment, container, false);
 
         ImageView imageView = (ImageView)view.findViewById(R.id.slider_image);
+        ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
 
-        Picasso.with(getActivity()).load(imageUrl).into(imageView);
+        Picasso.with(getActivity()).load(imageUrl).into(imageView, new ImageLoadedCallback(progressBar) {
+            @Override
+        public void onSuccess() {
+                if (this.progressBar != null) {
+                    this.progressBar.setVisibility(View.GONE);
+                }
+            }
+        });
 
         return view;
+    }
+
+    private class ImageLoadedCallback implements Callback {
+        ProgressBar progressBar;
+
+        public  ImageLoadedCallback(ProgressBar progBar){
+            progressBar = progBar;
+        }
+
+        @Override
+        public void onSuccess() {
+
+        }
+
+        @Override
+        public void onError() {
+
+        }
     }
 
 }

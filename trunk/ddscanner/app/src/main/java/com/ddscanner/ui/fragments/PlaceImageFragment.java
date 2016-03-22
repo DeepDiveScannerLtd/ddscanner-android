@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import com.ddscanner.R;
 import com.ddscanner.ui.activities.DivePlaceActivity;
 import com.ddscanner.ui.activities.ImageSliderActivity;
+import com.ddscanner.ui.views.CIrcleProgressBar;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.ArrayList;
@@ -31,6 +32,7 @@ public class PlaceImageFragment extends Fragment {
                 ImageSliderActivity.show(getActivity(), (ArrayList<String>) DivePlaceActivity.getImages());
             }
         });
+        imageView.getHierarchy().setProgressBarImage(new CIrcleProgressBar());
         Uri uri = Uri.parse(imageUrl);
         imageView.setImageURI(uri);
         return imageView;

@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -268,6 +269,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
                     } else if (error.getKind().equals(RetrofitError.Kind.HTTP)) {
                         Toast.makeText(DDScannerApplication.getInstance(), "Server is not responsible, please try later", Toast.LENGTH_SHORT).show();
                     }
+                    CityActivity.hidePb();
 //               String json =  new String(((TypedByteArray)error.getResponse().getBody()).getBytes());
                     //      System.out.println("failure" + json.toString());
                 }
