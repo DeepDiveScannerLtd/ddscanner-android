@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.Button;
 
 import com.ddscanner.R;
+import com.ddscanner.entities.DivespotDetails;
+import com.ddscanner.entities.RegisterResponse;
 import com.ddscanner.entities.request.RegisterRequest;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.utils.SharedPreferenceHelper;
@@ -31,6 +33,7 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.google.gson.Gson;
 import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
@@ -68,6 +71,8 @@ public class SocialNetworks extends AppCompatActivity implements GoogleApiClient
     private Button signIn;
     private GoogleApiClient mGoogleApiClient;
     private String appId;
+    private com.ddscanner.entities.User selfProfile;
+    private RegisterResponse registerResponse = new RegisterResponse();
 
     public static void show(Context context) {
         Intent intent = new Intent(context, SocialNetworks.class);
@@ -250,10 +255,6 @@ public class SocialNetworks extends AppCompatActivity implements GoogleApiClient
     }
 
     private void sendRegisterRequest(final RegisterRequest userData) {
-        Log.i(TAG, userData.getToken());
-        Log.i(TAG, userData.getAppId());
-//        Log.i(TAG, userData.getSecret());
-        Log.i(TAG, userData.getSocial());
         RestClient.getServiceInstance().registerUser(userData, new retrofit.Callback<Response>() {
             @Override
             public void success(Response s, Response response) {
@@ -265,6 +266,12 @@ public class SocialNetworks extends AppCompatActivity implements GoogleApiClient
                 if (userData.getSocial().equals("tw")) {
                     SharedPreferenceHelper.setSecret(userData.getSecret());
                 }
+                registerResponse = new Gson().fromJson(responseString, RegisterResponse.class);
+                selfProfile = registerResponse.getUser();
+                SharedPreferenceHelper.setUserid(selfProfile.getId());
+                SharedPreferenceHelper.setPhotolink(selfProfile.getPicture());
+                SharedPreferenceHelper.setUsername(selfProfile.getName());
+                SharedPreferenceHelper.setLink(selfProfile.getLink());
                 Intent returnIntent = new Intent();
                 setResult(Activity.RESULT_OK, returnIntent);
                 finish();
@@ -272,9 +279,11 @@ public class SocialNetworks extends AppCompatActivity implements GoogleApiClient
 
             @Override
             public void failure(RetrofitError error) {
-                Log.i(TAG, error.getMessage());
-                String json =  new String(((TypedByteArray)error.getResponse().getBody()).getBytes());
-                Log.i(TAG,json.toString());
+                if (error != null) {
+                    Log.i(TAG, error.getMessage());
+                    String json = new String(((TypedByteArray) error.getResponse().getBody()).getBytes());
+                    Log.i(TAG, json.toString());
+                }
             }
         });
     }

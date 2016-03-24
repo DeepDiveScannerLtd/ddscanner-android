@@ -2,6 +2,7 @@ package com.ddscanner.ui.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,11 +10,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.ddscanner.R;
 import com.ddscanner.entities.DiveSpot;
 import com.ddscanner.ui.activities.DivePlaceActivity;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -42,13 +45,19 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
 
     @Override
     public void onBindViewHolder(ProductListViewHolder productListViewHolder, int i) {
-
         DiveSpot divespot = new DiveSpot();
         divespot = divespots.get(i);
-//        productListViewHolder.productPrice.setText(String.valueOf("15"));
         productListViewHolder.description.setText(divespot.getDescription());
+        productListViewHolder.progressBar.getIndeterminateDrawable().setColorFilter(conText.getResources().getColor(R.color.primary), PorterDuff.Mode.MULTIPLY);
         if (divespot.getImages() != null) {
-            Picasso.with(conText).load(divespot.getImages().get(0)).resize(130, 130).centerCrop().into(productListViewHolder.imageView);
+            Picasso.with(conText).load(divespot.getImages().get(0)).resize(130, 130).centerCrop().into(productListViewHolder.imageView, new ImageLoadedCallback(productListViewHolder.progressBar) {
+                @Override
+                public void onSuccess() {
+                    if (this.progressBar != null) {
+                        progressBar.setVisibility(View.GONE);
+                    }
+                }
+            });
         } else {
             productListViewHolder.imageView.setImageDrawable(ContextCompat.getDrawable(conText, R.drawable.list_photo_default));
         }
@@ -83,6 +92,7 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
         protected TextView productPrice;
         protected TextView  price;
         protected LinearLayout stars;
+        protected ProgressBar progressBar;
         private int position;
         private static Context context;
         private final String PRODUCT = "PRODUCT";
@@ -96,6 +106,7 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
             title = (TextView) v.findViewById(R.id.product_title);
             description = (TextView) v.findViewById(R.id.product_description);
             stars = (LinearLayout) v.findViewById(R.id.stars);
+            progressBar = (ProgressBar) v.findViewById(R.id.progressBar);
         }
 
         @Override
@@ -110,5 +121,25 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
         this.divespots = diveSpots;
         notifyDataSetChanged();
     }
+
+    private class ImageLoadedCallback implements Callback {
+        ProgressBar progressBar;
+
+        public  ImageLoadedCallback(ProgressBar progBar){
+            progressBar = progBar;
+        }
+
+        @Override
+        public void onSuccess() {
+
+        }
+
+        @Override
+        public void onError() {
+
+        }
+    }
+
+
 
 }

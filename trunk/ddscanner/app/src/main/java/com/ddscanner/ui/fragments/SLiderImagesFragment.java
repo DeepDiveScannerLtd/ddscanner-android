@@ -42,7 +42,7 @@ public class SLiderImagesFragment extends Fragment {
     private class ImageLoadedCallback implements Callback {
         ProgressBar progressBar;
 
-        public  ImageLoadedCallback(ProgressBar progBar){
+        public ImageLoadedCallback(ProgressBar progBar) {
             progressBar = progBar;
         }
 

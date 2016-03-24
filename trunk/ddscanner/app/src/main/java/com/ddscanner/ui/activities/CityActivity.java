@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ddscanner.R;
+import com.ddscanner.entities.User;
 import com.ddscanner.entities.request.DiveSpotsRequestMap;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.services.RegistrationIntentService;
@@ -261,8 +262,8 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
                 progressDialog.show();
                 return true;
             case R.id.profile:
-                if (SharedPreferenceHelper.getIsUserLogined()) {
-                    Toast.makeText(CityActivity.this, "You are already login", Toast.LENGTH_LONG);
+                if (SharedPreferenceHelper.getIsUserLogined() && !SharedPreferenceHelper.getUserid().equals("")) {
+                    ProfileActivity.show(CityActivity.this, getUserData());
                 } else {
                     progressDialog.show();
                     SocialNetworks.show(CityActivity.this);
@@ -344,6 +345,27 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
 
             }
         });
+    }
+
+   @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        Log.i(TAG, "Starting" );
+
+    }
+
+    private User getUserData() {
+        User user = new User();
+        user.setId(SharedPreferenceHelper.getUserid());
+        user.setPicture(SharedPreferenceHelper.getPhotolink());
+        user.setType(SharedPreferenceHelper.getSn());
+        user.setName(SharedPreferenceHelper.getUsername());
+        user.setLink(SharedPreferenceHelper.getLink());
+        return user;
     }
 
 }

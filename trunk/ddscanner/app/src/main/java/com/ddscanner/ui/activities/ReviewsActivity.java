@@ -26,6 +26,7 @@ import android.widget.TextView;
 import com.ddscanner.R;
 import com.ddscanner.entities.Comment;
 import com.ddscanner.ui.adapters.ReviewsListAdapter;
+import com.ddscanner.ui.views.TransformationRoundImage;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -81,7 +82,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
 
     private void setContent() {
         if (!values.get("image").equals("")) {
-            Picasso.with(this).load(values.get("image")).resize(55, 55).centerCrop().transform(new RoundedTransformation(3,3)).into(ds_photo);
+            Picasso.with(this).load(values.get("image")).resize(55, 55).centerCrop().transform(new TransformationRoundImage(3,3)).into(ds_photo);
         } else {
             ds_photo.setImageDrawable(ContextCompat.getDrawable(ReviewsActivity.this, R.drawable.rewiews_photo));
         }
@@ -166,38 +167,6 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
                 intent.putExtra("id", values.get("id"));
                 startActivityForResult(intent, 9001);
                 break;
-        }
-    }
-
-    public class RoundedTransformation implements com.squareup.picasso.Transformation {
-        private final int radius;
-        private final int margin;
-
-        public RoundedTransformation(final int radius, final int margin) {
-            this.radius = radius;
-            this.margin = margin;
-        }
-
-        @Override
-        public Bitmap transform(final Bitmap source) {
-            final Paint paint = new Paint();
-            paint.setAntiAlias(true);
-            paint.setShader(new BitmapShader(source, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP));
-
-            Bitmap output = Bitmap.createBitmap(source.getWidth(), source.getHeight(), Bitmap.Config.ARGB_8888);
-            Canvas canvas = new Canvas(output);
-            canvas.drawRoundRect(new RectF(margin, margin, source.getWidth() - margin, source.getHeight() - margin), radius, radius, paint);
-
-            if (source != output) {
-                source.recycle();
-            }
-
-            return output;
-        }
-
-        @Override
-        public String key() {
-            return "rounded";
         }
     }
 }

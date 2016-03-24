@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.ddscanner.R;
 import com.ddscanner.entities.Comment;
+import com.ddscanner.ui.activities.ProfileActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -50,11 +51,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!comment.getUser().getType().equals("fb")) {
-                    openLink(comment.getUser().getId(), comment.getUser().getType());
-                } else {
-                    openLink(comment.getUser().getLink(), comment.getUser().getType());
-                }
+                ProfileActivity.show(context, comment.getUser());
             }
         };
         reviewsListViewHolder.user_review.setText(comment.getComment());
@@ -90,39 +87,6 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         }
     }
 
-    private void openLink(String userName, String socialNetwork) {
-        switch (socialNetwork) {
-            case "tw":
-                try {
-                    Intent intent = new Intent(Intent.ACTION_VIEW,
-                            Uri.parse("twitter://user?screen_name=" + userName));
-                    context.startActivity(intent);
 
-                }catch (Exception e) {
-                    context.startActivity(new Intent(Intent.ACTION_VIEW,
-                            Uri.parse("https://twitter.com/#!/" + userName)));
-                }
-                break;
-            case "go":
-                try {
-                    Intent intent = new Intent(Intent.ACTION_VIEW);
-                    intent.setData(Uri.parse("https://plus.google.com/" + userName));
-                    intent.setPackage("com.google.android.apps.plus"); // don't open the browser, make sure it opens in Google+ app
-                    context.startActivity(intent);
-                } catch (Exception e) {
-                    context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://plus.google.com/" + userName)));
-                }
-                break;
-            case "fb":
-                try {
-                    Intent intent1 = new Intent(Intent.ACTION_VIEW, Uri.parse("fb://facewebmodal/f?href=" + userName));
-                    context.startActivity(intent1);
-
-                }catch(Exception e){
-                    context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com/" + userName)));
-                }
-                break;
-        }
-    }
 
 }

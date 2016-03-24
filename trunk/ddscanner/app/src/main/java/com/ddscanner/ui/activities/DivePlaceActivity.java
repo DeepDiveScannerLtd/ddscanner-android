@@ -111,10 +111,6 @@ public class DivePlaceActivity extends AppCompatActivity implements ViewPager.On
                 String responseString = new String(((TypedByteArray) s.getBody()).getBytes());
                 LogUtils.i("response code is " + s.getStatus());
                 LogUtils.i("response body is " + responseString);
-                // TODO Handle result handling when activity stopped
-
-                // responseString = responseString.replaceAll("\\\\", "");
-                System.out.println(responseString);
                 divespotDetails = new Gson().fromJson(responseString, DivespotDetails.class);
                 toolbarSetting(divespotDetails.getDivespot().getName());
                 populateProductDetails();
