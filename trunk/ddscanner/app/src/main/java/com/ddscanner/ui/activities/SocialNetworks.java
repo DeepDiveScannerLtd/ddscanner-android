@@ -133,6 +133,7 @@ public class SocialNetworks extends AppCompatActivity implements GoogleApiClient
                     Log.i(TAG, "LOGED IN");
                 } else {
                     LoginManager.getInstance().logOut();
+                    fbLogin();
                     Log.i(TAG, "LOGGED OUT");
                 }
             }

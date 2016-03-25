@@ -19,6 +19,12 @@
 
     <permission android:name="com.ddscanner.permission.C2D_MESSAGE" />
 
+    <receiver android:name="com.appsflyer.MultipleInstallBroadcastReceiver" android:exported="true">
+        <intent-filter>
+            <action android:name="com.android.vending.INSTALL_REFERRER" />
+        </intent-filter>
+    </receiver>
+
     <application
         android:name=".DDScannerApplication"
         android:allowBackup="true"

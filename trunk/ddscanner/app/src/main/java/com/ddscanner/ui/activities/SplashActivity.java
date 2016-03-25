@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 
+import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.R;
 import com.ddscanner.services.GPSTracker;
 import com.ddscanner.ui.views.DDProgressBarView;
@@ -29,6 +30,7 @@ public class SplashActivity extends Activity {
                         | View.SYSTEM_UI_FLAG_IMMERSIVE);
 
         setContentView(R.layout.activity_splash);
+        AppsFlyerLib.getInstance().startTracking(this, "5A7vyAMVwKT4RBiTaxrpSU");
         GPSTracker gps = new GPSTracker(SplashActivity.this);
         latLng = new LatLng(gps.getLatitude(), gps.getLongitude());
         Handler h = new Handler();

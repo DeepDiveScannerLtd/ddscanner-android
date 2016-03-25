@@ -39,10 +39,6 @@ public class DDScannerApplication extends Application {
         instance = this;
         Fresco.initialize(this);
 
-       /* TwitterSession twitterSession = Twitter.getSessionManager().getActiveSession();
-        TwitterAuthToken authToken = twitterSession.getAuthToken();*/
-
-
     }
 
     protected void attachBaseContext(Context base) {
