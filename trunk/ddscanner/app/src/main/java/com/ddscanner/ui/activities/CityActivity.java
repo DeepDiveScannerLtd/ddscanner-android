@@ -24,6 +24,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.appsflyer.AFInAppEventType;
+import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.R;
 import com.ddscanner.entities.User;
 import com.ddscanner.entities.request.DiveSpotsRequestMap;
@@ -104,6 +106,7 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (hasConnection(this)) {
+            AppsFlyerLib.getInstance().startTracking(this, "5A7vyAMVwKT4RBiTaxrpSU");
             setContentView(R.layout.activity_city);
             findViews();
             toolbarSettings();

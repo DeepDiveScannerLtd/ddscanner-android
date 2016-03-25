@@ -24,6 +24,16 @@
             <action android:name="com.android.vending.INSTALL_REFERRER" />
         </intent-filter>
     </receiver>
+    <receiver android:name="com.google.android.apps.analytics.AnalyticsReceiver" android:exported="true">
+        <intent-filter>
+            <action android:name="com.android.vending.INSTALL_REFERRER" />
+        </intent-filter>
+    </receiver>
+    <receiver android:name="com.admob.android.ads.analytics.InstallReceiver" android:exported="true">
+        <intent-filter>
+            <action android:name="com.android.vending.INSTALL_REFERRER" />
+        </intent-filter>
+    </receiver>
 
     <application
         android:name=".DDScannerApplication"

@@ -68,7 +68,6 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
                 int i = reviewsListViewHolder.user_review.getLineCount();
                 if (i > 3) {
                     reviewsListViewHolder.user_review.setMaxLines(3);
-                    reviewsListViewHolder.user_review.setPadding(14,14,14,0);
                     reviewsListViewHolder.showMore.setVisibility(View.VISIBLE);
                     reviewsListViewHolder.showMore.setOnClickListener(new View.OnClickListener() {
                         @Override

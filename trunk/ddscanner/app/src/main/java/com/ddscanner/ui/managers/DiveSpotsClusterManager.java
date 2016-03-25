@@ -26,6 +26,7 @@ import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.activities.CityActivity;
 import com.ddscanner.ui.activities.DivePlaceActivity;
 import com.ddscanner.ui.adapters.PlacesPagerAdapter;
+import com.ddscanner.ui.views.TransformationRoundImage;
 import com.ddscanner.utils.LogUtils;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -318,14 +319,14 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         @Override
         public View getInfoWindow(Marker marker) {
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View view = inflater.inflate(R.layout.info_window, null);
+            View view = inflater.inflate(R.layout.ds_info_window, null);
             DiveSpot diveSpot = diveSpotsMap.get(marker.getPosition());
             Bitmap bitmap = markerBitmapCache.get(marker);
             if (bitmap == null) {
                 infoWindowRefresher = new InfoWindowRefresher(marker);
                 if (diveSpot.getImages() != null) {
                     LogUtils.i(TAG, "getInfoWindow image=" + diveSpot.getImages().get(0));
-                    Picasso.with(mContext).load(diveSpot.getImages().get(0)).resize(260, 116).centerCrop().into(infoWindowRefresher);
+                    Picasso.with(mContext).load(diveSpot.getImages().get(0)).resize(70, 70).centerCrop().transform(new TransformationRoundImage(4,0)).into(infoWindowRefresher);
                 }
             } else {
                 ImageView photo = (ImageView) view.findViewById(R.id.popup_photo);

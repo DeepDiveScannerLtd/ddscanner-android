@@ -2,6 +2,8 @@ package com.ddscanner.ui.fragments;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +28,11 @@ public class SLiderImagesFragment extends Fragment {
 
         ImageView imageView = (ImageView)view.findViewById(R.id.slider_image);
         ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
-
+        Display display = getActivity().getWindowManager().getDefaultDisplay();
+        DisplayMetrics outMetrics = new DisplayMetrics();
+        display.getMetrics(outMetrics);
+        float density = getResources().getDisplayMetrics().density;
+        float dpWidth = outMetrics.widthPixels / density;
         Picasso.with(getActivity()).load(imageUrl).into(imageView, new ImageLoadedCallback(progressBar) {
             @Override
         public void onSuccess() {
