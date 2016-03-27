@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +26,7 @@ import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.activities.CityActivity;
 import com.ddscanner.ui.activities.DivePlaceActivity;
 import com.ddscanner.ui.adapters.PlacesPagerAdapter;
+import com.ddscanner.ui.views.TransformationRoundImage;
 import com.ddscanner.utils.LogUtils;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -95,8 +97,11 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         setRenderer(new IconRenderer(context, googleMap, this));
         setOnClusterClickListener(this);
         getMarkerCollection().setOnInfoWindowAdapter(new InfoWindowAdapter(context));
-
-        requestCityProducts();
+        if (checkArea(googleMap.getProjection().getVisibleRegion().latLngBounds.southwest, googleMap.getProjection().getVisibleRegion().latLngBounds.northeast)) {
+            requestCityProducts();
+        } else {
+            CityActivity.showToast();
+        }
     }
 
     @Override
@@ -222,6 +227,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         LatLng southwest = googleMap.getProjection().getVisibleRegion().latLngBounds.southwest;
         LatLng northeast = googleMap.getProjection().getVisibleRegion().latLngBounds.northeast;
         if (checkArea(southwest, northeast)) {
+            CityActivity.showPb();
             isCanMakeRequest = true;
             diveSpotsRequestMap.putSouthWestLat(southwest.latitude - Math.abs(northeast.latitude - southwest.latitude));
             diveSpotsRequestMap.putSouthWestLng(southwest.longitude - Math.abs(northeast.longitude - southwest.longitude));
@@ -254,6 +260,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
                     divespotsWrapper = new Gson().fromJson(responseString, DivespotsWrapper.class);
                     updateDiveSpots((ArrayList<DiveSpot>) divespotsWrapper.getDiveSpots());
                     placesPagerAdapter.populateDiveSpotsList((ArrayList<DiveSpot>) divespotsWrapper.getDiveSpots());
+                    CityActivity.hidePb();
                 }
 
                 @Override
@@ -263,6 +270,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
                     } else if (error.getKind().equals(RetrofitError.Kind.HTTP)) {
                         Toast.makeText(DDScannerApplication.getInstance(), "Server is not responsible, please try later", Toast.LENGTH_SHORT).show();
                     }
+                    CityActivity.hidePb();
 //               String json =  new String(((TypedByteArray)error.getResponse().getBody()).getBytes());
                     //      System.out.println("failure" + json.toString());
                 }
@@ -311,13 +319,15 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         @Override
         public View getInfoWindow(Marker marker) {
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View view = inflater.inflate(R.layout.info_window, null);
+            View view = inflater.inflate(R.layout.ds_info_window, null);
             DiveSpot diveSpot = diveSpotsMap.get(marker.getPosition());
             Bitmap bitmap = markerBitmapCache.get(marker);
             if (bitmap == null) {
                 infoWindowRefresher = new InfoWindowRefresher(marker);
-                LogUtils.i(TAG, "getInfoWindow image=" + diveSpot.getImages().get(0));
-                Picasso.with(mContext).load(diveSpot.getImages().get(0)).resize(260, 116).centerCrop().into(infoWindowRefresher);
+                if (diveSpot.getImages() != null) {
+                    LogUtils.i(TAG, "getInfoWindow image=" + diveSpot.getImages().get(0));
+                    Picasso.with(mContext).load(diveSpot.getImages().get(0)).resize(70, 70).centerCrop().transform(new TransformationRoundImage(4,0)).into(infoWindowRefresher);
+                }
             } else {
                 ImageView photo = (ImageView) view.findViewById(R.id.popup_photo);
                 photo.setAlpha(1f);

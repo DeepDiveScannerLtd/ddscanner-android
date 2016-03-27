@@ -111,10 +111,6 @@ public class DivePlaceActivity extends AppCompatActivity implements ViewPager.On
                 String responseString = new String(((TypedByteArray) s.getBody()).getBytes());
                 LogUtils.i("response code is " + s.getStatus());
                 LogUtils.i("response body is " + responseString);
-                // TODO Handle result handling when activity stopped
-
-                // responseString = responseString.replaceAll("\\\\", "");
-                System.out.println(responseString);
                 divespotDetails = new Gson().fromJson(responseString, DivespotDetails.class);
                 toolbarSetting(divespotDetails.getDivespot().getName());
                 populateProductDetails();
@@ -129,9 +125,11 @@ public class DivePlaceActivity extends AppCompatActivity implements ViewPager.On
                 } else if (error.getKind().equals(RetrofitError.Kind.HTTP)) {
                     Toast.makeText(DivePlaceActivity.this, "Server is not responsible, please try later", Toast.LENGTH_LONG).show();
                 }
-                Log.i(TAG, error.getMessage());
-                String json =  new String(((TypedByteArray)error.getResponse().getBody()).getBytes());
-                Log.i(TAG,json.toString());
+                if (error != null) {
+                    Log.i(TAG, error.getMessage());
+                    String json = new String(((TypedByteArray) error.getResponse().getBody()).getBytes());
+                    Log.i(TAG, json.toString());
+                }
                 // TODO Handle result handling when activity stopped
                 // TODO Handle errors
             }

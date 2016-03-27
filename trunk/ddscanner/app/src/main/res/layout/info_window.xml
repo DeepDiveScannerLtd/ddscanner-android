@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="@dimen/info_window_width"
-    android:layout_height="@dimen/info_window_height"
-    android:orientation="vertical"
-    android:background="@android:color/white">
-
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <RelativeLayout
+        android:id="@+id/top"
+        android:background="@drawable/info_window_round"
+        android:layout_width="@dimen/info_window_width"
+        android:layout_height="@dimen/info_window_height">
     <ImageView
         android:id="@+id/popup_photo"
         android:layout_width="260dp"
         android:layout_height="116dp"
-        android:background="@color/white"
         android:alpha="0.4"
-        android:src="@drawable/map_info_photo_default" />
+        android:src="@drawable/map_info_photo_default"
+        android:background="@drawable/only_top_image_border"/>
 
     <TextView
         android:id="@+id/popup_product_name"
@@ -30,8 +33,7 @@
         android:id="@+id/descr"
         android:layout_width="260dp"
         android:layout_height="71dp"
-        android:layout_below="@+id/popup_photo"
-        android:background="@color/white">
+        android:layout_below="@+id/popup_photo">
 
         <TextView
             android:id="@+id/description_popup"
@@ -53,7 +55,12 @@
         android:layout_width="260dp"
         android:layout_height="30dp"
         android:layout_below="@+id/descr"
-        android:background="@color/white"
         android:gravity="center_vertical|center_horizontal"
         android:orientation="horizontal"></LinearLayout>
+        </RelativeLayout>
+  <ImageView
+      android:layout_below="@+id/top"
+      android:layout_width="260dp"
+      android:layout_height="wrap_content"
+      android:src="@drawable/triangle"/>
 </RelativeLayout>

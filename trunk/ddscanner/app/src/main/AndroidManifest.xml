@@ -19,6 +19,22 @@
 
     <permission android:name="com.ddscanner.permission.C2D_MESSAGE" />
 
+    <receiver android:name="com.appsflyer.MultipleInstallBroadcastReceiver" android:exported="true">
+        <intent-filter>
+            <action android:name="com.android.vending.INSTALL_REFERRER" />
+        </intent-filter>
+    </receiver>
+    <receiver android:name="com.google.android.apps.analytics.AnalyticsReceiver" android:exported="true">
+        <intent-filter>
+            <action android:name="com.android.vending.INSTALL_REFERRER" />
+        </intent-filter>
+    </receiver>
+    <receiver android:name="com.admob.android.ads.analytics.InstallReceiver" android:exported="true">
+        <intent-filter>
+            <action android:name="com.android.vending.INSTALL_REFERRER" />
+        </intent-filter>
+    </receiver>
+
     <application
         android:name=".DDScannerApplication"
         android:allowBackup="true"
@@ -60,6 +76,10 @@
         </activity>
         <activity
             android:name=".ui.activities.DiveCentersActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name=".ui.activities.ProfileActivity"
             android:screenOrientation="portrait">
         </activity>
         <activity

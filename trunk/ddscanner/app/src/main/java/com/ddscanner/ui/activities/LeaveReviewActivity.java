@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.Toast;
 
@@ -19,6 +20,11 @@ import com.ddscanner.entities.request.SendReviewRequest;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+import java.util.Map;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -31,6 +37,7 @@ import retrofit.mime.TypedByteArray;
 public class LeaveReviewActivity extends AppCompatActivity {
 
     private static final String TAG = LeaveReviewActivity.class.getSimpleName();
+    private static final int RC_LOGIN = 8001;
 
     private Toolbar toolbar;
     private Comment comment = new Comment();
@@ -53,6 +60,7 @@ public class LeaveReviewActivity extends AppCompatActivity {
     private void findVIews() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         text = (EditText) findViewById(R.id.review_text);
+        text.setTag("comment");
         ratingBar = (RatingBar) findViewById(R.id.rating_bar);
     }
 
@@ -101,14 +109,40 @@ public class LeaveReviewActivity extends AppCompatActivity {
             @Override
             public void failure(RetrofitError error) {
                 progressDialog.dismiss();
-                Log.i(TAG, error.getMessage());
                 if (error != null) {
+                    Log.i(TAG, error.getMessage());
                     String json = new String(((TypedByteArray) error.getResponse().getBody()).getBytes());
                     Log.i(TAG, json);
+                    if (error.getMessage().contains("400")) {
+                        Intent intent = new Intent(LeaveReviewActivity.this, SocialNetworks.class);
+                        startActivityForResult(intent, RC_LOGIN);
+                    } else {
+                        JsonObject jsonObject = new JsonParser().parse(json).getAsJsonObject();
+                        for(Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) {
+                            System.out.println(entry.getKey());
+                            System.out.println(entry.getValue());
+                            if (entry.getKey().equals("token") || entry.getKey().equals("social")) {
+                                Intent intent = new Intent(LeaveReviewActivity.this, SocialNetworks.class);
+                                startActivityForResult(intent, RC_LOGIN);
+                                break;
+                            }
+                        }
+                    }
                 }
-                SocialNetworks.show(LeaveReviewActivity.this);
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == RC_LOGIN) {
+            if (resultCode == RESULT_OK) {
+                sendReview();
+            }
+            if (resultCode == RESULT_CANCELED) {
+                Log.i(TAG, "Error with login");
+            }
+        }
     }
 
     @Override
@@ -134,10 +168,12 @@ public class LeaveReviewActivity extends AppCompatActivity {
         return true;
     }
 
-    private boolean checkText(String text) {
-        text = text.trim();
-        if (text.length() == 0) {
+    private boolean checkText(String comment) {
+        comment = comment.trim();
+        if (comment.length() == 0) {
             Toast toast = Toast.makeText(getApplicationContext(), "Please leave your feedback", Toast.LENGTH_SHORT);
+            LinearLayout header = (LinearLayout) findViewById(R.id.message_layout);
+            header.setBackgroundResource(R.drawable.error_border);
             toast.show();
             return false;
         }

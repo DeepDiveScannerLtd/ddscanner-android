@@ -3,5 +3,5 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="info_window_width">260dp</dimen>
-    <dimen name="info_window_height">296dp</dimen>
+    <dimen name="info_window_height">227dp</dimen>
 </resources>

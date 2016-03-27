@@ -74,7 +74,7 @@ public class DiveCentersClusterManager extends ClusterManager<DiveCenter> implem
             addItem(diveCenter);
             diveCentersMap.put(diveCenter.getPosition(), diveCenter);
         }
-        googleMap.addMarker(new MarkerOptions().position(diveSpotLatLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_ds)).title(diveSpotName));
+        googleMap.addMarker(new MarkerOptions().position(diveSpotLatLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds)).title(diveSpotName));
     }
 
     @Override
@@ -140,8 +140,6 @@ public class DiveCentersClusterManager extends ClusterManager<DiveCenter> implem
     }
 
     private class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
-
-        public static final String PRODUCT = "PRODUCT";
 
         @Override
         public View getInfoWindow(Marker marker) {

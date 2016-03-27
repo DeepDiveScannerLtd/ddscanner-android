@@ -5,6 +5,7 @@ import android.content.Context;
 import android.support.multidex.MultiDex;
 
 import com.crashlytics.android.Crashlytics;
+import com.ddscanner.utils.SharedPreferenceHelper;
 import com.facebook.FacebookSdk;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.twitter.sdk.android.Twitter;
@@ -35,13 +36,8 @@ public class DDScannerApplication extends Application {
         TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
         Fabric.with(this, new Crashlytics(), new Twitter(authConfig));
         FacebookSdk.sdkInitialize(this);
-
         instance = this;
         Fresco.initialize(this);
-
-       /* TwitterSession twitterSession = Twitter.getSessionManager().getActiveSession();
-        TwitterAuthToken authToken = twitterSession.getAuthToken();*/
-
 
     }
 
@@ -49,4 +45,5 @@ public class DDScannerApplication extends Application {
         super.attachBaseContext(base);
         MultiDex.install(this);
     }
+
 }

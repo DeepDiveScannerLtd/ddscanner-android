@@ -7,6 +7,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -18,11 +19,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.appsflyer.AFInAppEventType;
+import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.R;
+import com.ddscanner.entities.User;
 import com.ddscanner.entities.request.DiveSpotsRequestMap;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.services.RegistrationIntentService;
@@ -64,12 +69,20 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
     private SubscribeDialog subscribeDialog = new SubscribeDialog();
     private ProgressDialog progressDialog;
     private static RelativeLayout toast;
+    private static ProgressBar progressBar;
 
 
     public static void show(Context context, LatLng latLng) {
         Intent intent = new Intent(context, CityActivity.class);
         intent.putExtra("LATLNG", latLng);
         context.startActivity(intent);
+    }
+
+    private void clearFilterSharedPrefences() {
+        SharedPreferenceHelper.setObject("");
+        SharedPreferenceHelper.setCurrents("");
+        SharedPreferenceHelper.setVisibility("");
+        SharedPreferenceHelper.setLevel("");
     }
 
     public static boolean hasConnection(final Context context) {
@@ -93,9 +106,11 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (hasConnection(this)) {
+            AppsFlyerLib.getInstance().startTracking(this, "5A7vyAMVwKT4RBiTaxrpSU");
             setContentView(R.layout.activity_city);
             findViews();
             toolbarSettings();
+            clearFilterSharedPrefences();
             progressDialog = new ProgressDialog(this);
             progressDialog.setMessage(getApplicationContext().getResources().getString(R.string.pleaseWait));
             toolbarTitle = (TextView) findViewById(R.id.toolbarTitle);
@@ -141,6 +156,7 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         feedback = (FloatingActionButton) findViewById(R.id.feedbackFloat);
         toast = (RelativeLayout) findViewById(R.id.toast);
+        progressBar = (ProgressBar) findViewById(R.id.request_progress);
         floatingActionButton.setOnClickListener(this);
         feedback.setOnClickListener(this);
     }
@@ -249,8 +265,8 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
                 progressDialog.show();
                 return true;
             case R.id.profile:
-                if (SharedPreferenceHelper.getIsUserLogined()) {
-                    Toast.makeText(CityActivity.this, "You are already login", Toast.LENGTH_LONG);
+                if (SharedPreferenceHelper.getIsUserLogined() && !SharedPreferenceHelper.getUserid().equals("")) {
+                    ProfileActivity.show(CityActivity.this, getUserData());
                 } else {
                     progressDialog.show();
                     SocialNetworks.show(CityActivity.this);
@@ -291,6 +307,20 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
         }, 1700);
     }
 
+    public static void showPb() {
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    public static void hidePb() {
+        android.os.Handler handler = new android.os.Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                progressBar.setVisibility(View.GONE);
+            }
+        }, 1200);
+    }
+
     public static void hideToast() {
         toast.setVisibility(View.GONE);
     }
@@ -318,6 +348,27 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
 
             }
         });
+    }
+
+   @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        Log.i(TAG, "Starting" );
+
+    }
+
+    private User getUserData() {
+        User user = new User();
+        user.setId(SharedPreferenceHelper.getUserid());
+        user.setPicture(SharedPreferenceHelper.getPhotolink());
+        user.setType(SharedPreferenceHelper.getSn());
+        user.setName(SharedPreferenceHelper.getUsername());
+        user.setLink(SharedPreferenceHelper.getLink());
+        return user;
     }
 
 }

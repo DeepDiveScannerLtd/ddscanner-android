@@ -41,7 +41,7 @@
         android:layout_below="@+id/dc_name"
         android:layout_toRightOf="@+id/stars"
         android:gravity="center_vertical"
-        android:text="135 reviews" />
+        android:text="" />
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/dc_address"

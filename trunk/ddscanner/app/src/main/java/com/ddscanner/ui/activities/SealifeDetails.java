@@ -20,10 +20,12 @@ import android.view.Display;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.ddscanner.R;
 import com.ddscanner.entities.Sealife;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -42,6 +44,7 @@ public class SealifeDetails extends AppCompatActivity {
     private AppBarLayout appBarLayout;
     private Toolbar toolbar;
     private ImageView backgroundImage;
+    private ProgressBar progressBar;
 
     public static void show(Context context, Sealife sealife, String pathMedium) {
         Intent intent = new Intent(context, SealifeDetails.class);
@@ -57,17 +60,25 @@ public class SealifeDetails extends AppCompatActivity {
         findViews();
         sealife = (Sealife) getIntent().getSerializableExtra("SEALIFE");
         pathMedium = getIntent().getStringExtra("PATH");
-        Picasso.with(this).load(pathMedium + sealife.getImage()).into(photo);
+        Picasso.with(this).load(pathMedium + sealife.getImage()).into(photo, new ImageLoadedCallback(progressBar) {
+            @Override
+            public void onSuccess() {
+                if (this.progressBar != null) {
+                    this.progressBar.setVisibility(View.GONE);
+                }
+            }
+
+        });
         Log.i("SEALIFEFULL", pathMedium + sealife.getImage());
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(sealife.getName());
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_actionbar_back);
         Display display = getWindowManager().getDefaultDisplay();
-        DisplayMetrics outMetrics = new DisplayMetrics ();
+        DisplayMetrics outMetrics = new DisplayMetrics();
         display.getMetrics(outMetrics);
-        float density  = getResources().getDisplayMetrics().density;
-        float dpWidth  = outMetrics.widthPixels / density;
+        float density = getResources().getDisplayMetrics().density;
+        float dpWidth = outMetrics.widthPixels / density;
         Picasso.with(this).load(pathMedium + sealife.getImage()).resize(Math.round(dpWidth), 460).centerCrop().into(backgroundImage);
         backgroundImage.setColorFilter(Color.parseColor("#99000000"), PorterDuff.Mode.SRC_ATOP);
         setContent();
@@ -86,6 +97,7 @@ public class SealifeDetails extends AppCompatActivity {
         scclass = (TextView) findViewById(R.id.scclass);
         habitat = (TextView) findViewById(R.id.habitat);
         backgroundImage = (ImageView) findViewById(R.id.background_photo);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
     }
 
     private void setContent() {
@@ -160,6 +172,24 @@ public class SealifeDetails extends AppCompatActivity {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private class ImageLoadedCallback implements Callback {
+        ProgressBar progressBar;
+
+        public ImageLoadedCallback(ProgressBar progBar) {
+            progressBar = progBar;
+        }
+
+        @Override
+        public void onSuccess() {
+
+        }
+
+        @Override
+        public void onError() {
+
         }
     }
 

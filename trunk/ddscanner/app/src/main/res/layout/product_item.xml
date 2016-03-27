@@ -51,4 +51,14 @@
         android:layout_height="130dp"
         android:layout_alignParentRight="true"
         android:src="@drawable/list_photo_default"/>
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleSmall"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_gravity="center"
+        android:layout_alignParentRight="true"
+        android:visibility="visible"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="40dp" />
     </RelativeLayout>

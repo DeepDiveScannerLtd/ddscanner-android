@@ -1,19 +1,27 @@
 package com.ddscanner.ui.adapters;
 
+import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ddscanner.R;
 import com.ddscanner.entities.Comment;
+import com.ddscanner.ui.activities.ProfileActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -24,9 +32,11 @@ import java.util.ArrayList;
 public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.ReviewsListViewHolder> {
 
     private static final String TAG = ReviewsListAdapter.class.getSimpleName();
-
+    private static final int MAX_LINES_COUNT = 2;
+    private boolean isExpanded = false;
     private ArrayList<Comment> comments;
     private Context context;
+    private Button button;
 
     public ReviewsListAdapter(ArrayList<Comment> comments, Context context) {
         this.comments = comments;
@@ -43,14 +53,56 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
     }
 
     @Override
-    public void onBindViewHolder(ReviewsListViewHolder reviewsListViewHolder, int i) {
-        Comment comment = comments.get(i);
+    public void onBindViewHolder(final ReviewsListViewHolder reviewsListViewHolder, int i) {
+        final Comment comment = comments.get(i);
+        View.OnClickListener onClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ProfileActivity.show(context, comment.getUser());
+            }
+        };
         reviewsListViewHolder.user_review.setText(comment.getComment());
-       // reviewsListViewHolder.user_name.setText(comment.getUser().getName());
-        Spanned html = Html.fromHtml("<a href='"+ comment.getUser().getLink() +
-                "'>"+comment.getUser().getName() + "</a>");
-        reviewsListViewHolder.user_name.setMovementMethod(LinkMovementMethod.getInstance());
-        reviewsListViewHolder.user_name.setText(html);
+        reviewsListViewHolder.user_review.post(new Runnable() {
+            @Override
+            public void run() {
+                int i = reviewsListViewHolder.user_review.getLineCount();
+                if (i > 3) {
+                    reviewsListViewHolder.user_review.setMaxLines(3);
+                    reviewsListViewHolder.showMore.setVisibility(View.VISIBLE);
+                    reviewsListViewHolder.showMore.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (isExpanded) {
+                                reviewsListViewHolder.user_review.setMaxLines(3);
+                                reviewsListViewHolder.user_review.setEllipsize(TextUtils.TruncateAt.END);
+                                reviewsListViewHolder.showMore.setText("Show more");
+                                ObjectAnimator animation = ObjectAnimator.ofInt(
+                                        reviewsListViewHolder.user_review,
+                                        "maxLines",
+                                        3);
+                                animation.setDuration(4000);
+                                animation.start();
+                            } else {
+                                reviewsListViewHolder.user_review.setMaxLines(Integer.MAX_VALUE);
+                                reviewsListViewHolder.user_review.setEllipsize(null);
+                                reviewsListViewHolder.showMore.setText("Less");
+                                ObjectAnimator animation = ObjectAnimator.ofInt(
+                                        reviewsListViewHolder.user_review,
+                                        "maxLines",
+                                        10);
+                                animation.setDuration(4000);
+                                animation.start();
+                            }
+                            isExpanded = !isExpanded;
+                        }
+                    });
+                }
+            }
+        });
+
+        reviewsListViewHolder.user_name.setText(comment.getUser().getName());
+        reviewsListViewHolder.user_name.setOnClickListener(onClickListener);
+        reviewsListViewHolder.user_avatar.setOnClickListener(onClickListener);
         reviewsListViewHolder.rating.setText(comment.getRating());
         Picasso.with(context).load(comment.getUser().getPicture()).resize(41,41).centerCrop().into(reviewsListViewHolder.user_avatar);
         Log.i(TAG, "Try showing content");
@@ -64,13 +116,13 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         return comments.size();
     }
 
-
     public static class ReviewsListViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView user_avatar;
         private TextView rating;
         private TextView user_name;
         private TextView user_review;
+        private TextView showMore;
 
         public ReviewsListViewHolder(View v) {
             super(v);
@@ -78,6 +130,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
             rating = (TextView) v.findViewById(R.id.rating);
             user_name = (TextView) v.findViewById(R.id.user_name);
             user_review = (TextView) v.findViewById(R.id.review);
+            showMore = (TextView) v.findViewById(R.id.show_more);
         }
     }
 
