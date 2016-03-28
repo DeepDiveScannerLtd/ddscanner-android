@@ -354,12 +354,12 @@
                     android:layout_marginTop="10dp" />
                 <Button
                     android:id="@+id/book_now"
-                    android:layout_marginLeft="45dp"
                     android:layout_marginTop="20dp"
                     android:background="@color/orange"
                     android:text="@string/details_btn_book_now"
                     android:layout_below="@id/dive_place_description"
-                    android:layout_width="120dp"
+                    android:layout_width="match_parent"
+                    android:padding="10dp"
                     android:layout_height="35dp"
                     />
             </RelativeLayout>

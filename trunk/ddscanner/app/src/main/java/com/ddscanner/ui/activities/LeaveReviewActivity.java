@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.Toast;
 
+import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.R;
 import com.ddscanner.entities.Comment;
 import com.ddscanner.entities.request.SendReviewRequest;
@@ -78,7 +79,7 @@ public class LeaveReviewActivity extends AppCompatActivity {
     }
 
     private void sendReview() {
-
+       // AppsFlyerLib.getInstance().trackEvent(getApplicationContext(), "Send review clicked", );
         Log.i(TAG, SharedPreferenceHelper.getSn());
         Log.i(TAG, SharedPreferenceHelper.getToken());
 
@@ -100,10 +101,9 @@ public class LeaveReviewActivity extends AppCompatActivity {
 
                 Intent returnIntent = new Intent();
                 returnIntent.putExtra("COMMENT", comment);
-                progressDialog.dismiss();
                 setResult(Activity.RESULT_OK, returnIntent);
                 finish();
-
+                progressDialog.dismiss();
             }
 
             @Override
@@ -141,6 +141,7 @@ public class LeaveReviewActivity extends AppCompatActivity {
             }
             if (resultCode == RESULT_CANCELED) {
                 Log.i(TAG, "Error with login");
+                progressDialog.dismiss();
             }
         }
     }

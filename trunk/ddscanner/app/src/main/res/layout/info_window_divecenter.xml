@@ -3,6 +3,7 @@
     android:orientation="vertical" android:layout_width="300dp"
     android:layout_height="wrap_content">
     <RelativeLayout
+        android:id="@+id/top"
         android:background="@color/white"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
@@ -73,4 +74,9 @@
 
         </RelativeLayout>
     </RelativeLayout>
+    <ImageView
+        android:layout_below="@+id/top"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:src="@drawable/triangle"/>
 </RelativeLayout>

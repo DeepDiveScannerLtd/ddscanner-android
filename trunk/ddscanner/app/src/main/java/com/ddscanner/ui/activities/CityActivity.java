@@ -266,8 +266,6 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
         switch (item.getItemId()) {
             case android.R.id.home:
                 openSearchLocationWindow();
-                map.put("FilterButtonCLicked", true);
-                AppsFlyerLib.getInstance().trackEvent(getApplicationContext(), "Filter", map);
                 progressDialog.show();
                 return true;
             case R.id.profile:

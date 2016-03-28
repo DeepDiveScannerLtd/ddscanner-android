@@ -18,7 +18,7 @@
     <TextView
         android:id="@+id/popup_product_name"
         android:layout_toRightOf="@+id/popup_photo"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="6dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="18dp"
@@ -27,29 +27,35 @@
         android:textColor="@color/black_text"
         />
     <LinearLayout
+        android:layout_marginTop="5dp"
         android:id="@+id/stars"
         android:layout_toRightOf="@+id/popup_photo"
         android:layout_below="@+id/popup_product_name"
         android:layout_width="wrap_content"
-        android:layout_height="20dp"
+        android:layout_height="12dp"
         android:gravity="center_vertical|center_horizontal"
         android:orientation="horizontal" />
         <TextView
+            android:layout_marginTop="5dp"
             android:id="@+id/reviews"
             android:layout_width="wrap_content"
-            android:layout_height="20dp"
+            android:layout_height="12dp"
+            android:textSize="10sp"
+            android:textColor="#9f9f9f"
             android:layout_toRightOf="@+id/stars"
             android:layout_below="@id/popup_product_name"
             android:gravity="center"
             android:layout_marginLeft="5dp"
             android:text="reviews"/>
     <TextView
+        android:textColor="#707070"
+        android:layout_marginTop="5dp"
         android:id="@+id/description_popup"
         android:layout_below="@+id/stars"
         android:layout_toRightOf="@+id/popup_photo"
         android:lines="1"
         android:ellipsize="end"
-        android:layout_width="230dp"
+        android:layout_width="220dp"
         android:text="Very beautiful dive site for diving bla bla bla"
         android:textSize="14dp"
         android:layout_height="wrap_content"
@@ -57,6 +63,7 @@
         <ImageView
             android:layout_alignParentRight="true"
             android:layout_width="20dp"
+            android:layout_marginRight="5dp"
             android:layout_height="10dp"
             android:layout_marginTop="35dp"
             android:layout_toRightOf="@+id/description_popup"

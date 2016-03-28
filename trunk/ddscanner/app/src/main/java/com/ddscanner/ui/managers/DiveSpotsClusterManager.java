@@ -345,13 +345,13 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
             for (int i = 0; i < diveSpot.getRating(); i++) {
                 ImageView iv = new ImageView(mContext);
                 iv.setImageResource(R.drawable.ic_flag_full_small);
-                iv.setPadding(5, 0, 0, 0);
+                iv.setPadding(1, 0, 0, 0);
                 stars.addView(iv);
             }
             for (int i = 0; i < 5 - diveSpot.getRating(); i++) {
                 ImageView iv = new ImageView(mContext);
                 iv.setImageResource(R.drawable.ic_flag_empty_small);
-                iv.setPadding(5, 0, 0, 0);
+                iv.setPadding(1, 0, 0, 0);
                 stars.addView(iv);
             }
             return view;

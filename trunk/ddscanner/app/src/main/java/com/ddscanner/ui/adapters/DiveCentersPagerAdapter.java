@@ -41,7 +41,7 @@ public class DiveCentersPagerAdapter extends FragmentStatePagerAdapter {
         Fragment fragment = null;
         Bundle args = new Bundle();
         switch (position) {
-            case 1:
+            case 0:
                 fragment = new MapFragment();
                 ((MapFragment) fragment).getMapAsync(new OnMapReadyCallback() {
                     @Override
@@ -56,7 +56,7 @@ public class DiveCentersPagerAdapter extends FragmentStatePagerAdapter {
                     }
                 });
                 break;
-            case 0:
+            case 1:
                 fragment = new DiveCenterListFragment();
                 args.putParcelableArrayList("DIVESPOTS", (ArrayList<? extends Parcelable>) diveCentersResponseEntity.getDivecenters());
                 args.putString("LOGOPATH", diveCentersResponseEntity.getLogoPath());
