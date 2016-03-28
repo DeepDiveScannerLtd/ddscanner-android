@@ -333,6 +333,8 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
                 photo.setAlpha(1f);
                 photo.setImageBitmap(bitmap);
             }
+            TextView reviews = ((TextView) view.findViewById(R.id.reviews));
+            reviews.setText(diveSpot.getReviews() + " reviews");
             TextView description = ((TextView) view.findViewById(R.id.description_popup));
             TextView title = ((TextView) view.findViewById(R.id.popup_product_name));
             title.setText(diveSpot.getName());

@@ -22,8 +22,16 @@ public class DiveSpot implements Serializable, ClusterItem {
     private String lng;
     private List<String> images;
     private LatLng latLng;
+    private String reviews;
 
-   /* protected DiveSpot(android.os.Parcel in) {
+    public String getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(String reviews) {
+        this.reviews = reviews;
+    }
+    /* protected DiveSpot(android.os.Parcel in) {
         id = in.readString();
         description = in.readString();
         rating = in.readInt();
