@@ -55,6 +55,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
     @Override
     public void onBindViewHolder(final ReviewsListViewHolder reviewsListViewHolder, int i) {
         final Comment comment = comments.get(i);
+        reviewsListViewHolder.showMore.setVisibility(View.GONE);
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {

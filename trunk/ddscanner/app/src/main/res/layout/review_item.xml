@@ -3,7 +3,8 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white"
-    android:layout_marginTop="6dp">
+    android:layout_marginTop="6dp"
+    android:paddingBottom="10dp">
     <ImageView
         android:id="@+id/user_avatar"
         android:layout_width="41dp"
@@ -78,13 +79,12 @@
         android:paddingLeft="14dp"
         android:paddingTop="14dp"
         android:paddingRight="14dp"
-        android:paddingBottom="14dp"
         android:textColor="#616161">
         </TextView>
     <TextView
         android:id="@+id/show_more"
         android:layout_width="match_parent"
-        android:layout_height="25dp"
+        android:layout_height="20dp"
         android:layout_below="@+id/review"
         android:gravity="center_vertical"
         android:text="Show more"

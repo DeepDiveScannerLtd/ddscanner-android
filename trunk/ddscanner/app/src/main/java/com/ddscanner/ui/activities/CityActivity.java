@@ -43,8 +43,11 @@ import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
 import java.util.logging.Handler;
 
 import retrofit.Callback;
@@ -70,6 +73,7 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
     private ProgressDialog progressDialog;
     private static RelativeLayout toast;
     private static ProgressBar progressBar;
+    private Map<String, Object> map = new HashMap<String, Object>();
 
 
     public static void show(Context context, LatLng latLng) {
@@ -262,6 +266,8 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
         switch (item.getItemId()) {
             case android.R.id.home:
                 openSearchLocationWindow();
+                map.put("FilterButtonCLicked", true);
+                AppsFlyerLib.getInstance().trackEvent(getApplicationContext(), "Filter", map);
                 progressDialog.show();
                 return true;
             case R.id.profile:
