@@ -33,6 +33,7 @@ import com.ddscanner.rest.RestClient;
 import com.ddscanner.services.RegistrationIntentService;
 import com.ddscanner.ui.adapters.PlacesPagerAdapter;
 import com.ddscanner.ui.dialogs.SubscribeDialog;
+import com.ddscanner.utils.EventTrackerHelper;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -126,6 +127,10 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
             toolbarTitle.setOnClickListener(this);
             LatLngBounds latLngBounds = new LatLngBounds(new LatLng(latLng.latitude - 0.1, latLng.longitude - 0.1), new LatLng(latLng.latitude + 0.1, latLng.longitude + 0.1));
             if (latLng != null && getCity(latLng) != null && !getCity(latLng).equals("")) {
+                AppsFlyerLib.getInstance().trackEvent(getApplicationContext(),
+                        EventTrackerHelper.EVENT_LOCATION_DETERMINED, new HashMap<String, Object>() {{
+                            put(EventTrackerHelper.PARAM_LOCATION_DETERMINED, latLng.toString());
+                        }});
                 toolbarTitle.setText(getCity(latLng));
             }
             populatePlaceViewpager(latLng, latLngBounds);
@@ -190,8 +195,12 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
         switch (requestCode) {
             case REQUEST_CODE_PLACE_AUTOCOMPLETE:
                 if (resultCode == RESULT_OK) {
-                    Place place = PlaceAutocomplete.getPlace(this, data);
-                    Log.i(TAG, "Place: " + place.getName());
+                    final Place place = PlaceAutocomplete.getPlace(this, data);
+                    AppsFlyerLib.getInstance().trackEvent(getApplicationContext(),
+                            EventTrackerHelper.EVENT_PLACE_SEARCH_CHOSEN, new HashMap<String, Object>() {{
+                                put(EventTrackerHelper.PARAM_PLACE_SEARCH_CHOSEN, place.getLatLng().toString());
+                            }});
+                    Log.i(TAG, "Place: " + place.getName() + " - " + place.getLatLng().toString());
                     populatePlaceViewpager(place.getLatLng(), place.getViewport());
                     progressDialog.dismiss();
                     toolbarTitle.setText(place.getAddress());
@@ -265,6 +274,8 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                AppsFlyerLib.getInstance().trackEvent(getApplicationContext(),
+                        EventTrackerHelper.EVENT_PLACE_SEARCH_OPENED, new HashMap<String, Object>());
                 openSearchLocationWindow();
                 progressDialog.show();
                 return true;
@@ -286,6 +297,8 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.feedbackFloat:
+                AppsFlyerLib.getInstance().trackEvent(getApplicationContext(),
+                        EventTrackerHelper.EVENT_LEAVE_FEEDBACK_CLICK, new HashMap<String, Object>());
                 subscribeDialog.show(getFragmentManager(), "");
                 break;
             case R.id.filterButton:
@@ -294,6 +307,8 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
 //                FilterActivity.show(CityActivity.this);
                 break;
             case R.id.toolbarTitle:
+                AppsFlyerLib.getInstance().trackEvent(getApplicationContext(),
+                        EventTrackerHelper.EVENT_PLACE_SEARCH_OPENED, new HashMap<String, Object>());
                 openSearchLocationWindow();
                 progressDialog.show();
                 break;

@@ -4,7 +4,7 @@
     android:layout_height="wrap_content">
     <RelativeLayout
         android:id="@+id/top"
-        android:background="@color/white"
+        android:background="@drawable/only_top_image_border"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:padding="10dp">

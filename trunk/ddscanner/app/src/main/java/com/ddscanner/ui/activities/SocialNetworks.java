@@ -9,11 +9,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.R;
 import com.ddscanner.entities.DivespotDetails;
 import com.ddscanner.entities.RegisterResponse;
 import com.ddscanner.entities.request.RegisterRequest;
 import com.ddscanner.rest.RestClient;
+import com.ddscanner.utils.EventTrackerHelper;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -46,6 +48,7 @@ import com.twitter.sdk.android.core.models.User;
 import org.json.JSONObject;
 
 import java.util.Arrays;
+import java.util.HashMap;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -83,6 +86,8 @@ public class SocialNetworks extends AppCompatActivity implements GoogleApiClient
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_social_login);
+        AppsFlyerLib.getInstance().trackEvent(getApplicationContext(),
+                EventTrackerHelper.EVENT_SIGN_IN_OPENED, new HashMap<String, Object>());
         appId = SharedPreferenceHelper.getGcmId();
         /*TWITTER*/
         twitterCustomBtn = (Button) findViewById(R.id.twitter_custom);
@@ -108,6 +113,10 @@ public class SocialNetworks extends AppCompatActivity implements GoogleApiClient
                 });
                 TwitterAuthToken authToken = session.getAuthToken();
                 Log.i(TAG, session.getAuthToken().secret + "\n" + session.getAuthToken().token);
+                AppsFlyerLib.getInstance().trackEvent(getApplicationContext(), EventTrackerHelper
+                        .EVENT_SIGN_IN_BTN_CLICK, new HashMap<String, Object>(){{
+                    put(EventTrackerHelper.PARAM_SIGN_IN_BTN_CLICK, "twitter");
+                }});
                 sendRegisterRequest(putTokensToMap(appId, "tw", authToken.token, authToken.secret));
             }
 
@@ -170,6 +179,10 @@ public class SocialNetworks extends AppCompatActivity implements GoogleApiClient
                         String result = String.valueOf(object);
                         System.out.println(result);
                         Log.i(TAG, "FB - " + loginResult.getAccessToken().getToken());
+                        AppsFlyerLib.getInstance().trackEvent(getApplicationContext(), EventTrackerHelper
+                                .EVENT_SIGN_IN_BTN_CLICK, new HashMap<String, Object>() {{
+                            put(EventTrackerHelper.PARAM_SIGN_IN_BTN_CLICK, "facebook");
+                        }});
                         sendRegisterRequest(putTokensToMap(appId, "fb", loginResult.getAccessToken().getToken()));
 
                     }
@@ -235,6 +248,10 @@ public class SocialNetworks extends AppCompatActivity implements GoogleApiClient
                 GoogleSignInAccount acct = result.getSignInAccount();
                 String idToken = acct.getIdToken();
                 Log.d(TAG, "idToken:" + idToken);
+                AppsFlyerLib.getInstance().trackEvent(getApplicationContext(), EventTrackerHelper
+                        .EVENT_SIGN_IN_BTN_CLICK, new HashMap<String, Object>() {{
+                    put(EventTrackerHelper.PARAM_SIGN_IN_BTN_CLICK, "google");
+                }});
                 sendRegisterRequest(putTokensToMap(appId, "go", idToken));
                 // TODO(user): send token to server and validate server-side
             }
@@ -275,6 +292,8 @@ public class SocialNetworks extends AppCompatActivity implements GoogleApiClient
                 SharedPreferenceHelper.setLink(selfProfile.getLink());
                 Intent returnIntent = new Intent();
                 setResult(Activity.RESULT_OK, returnIntent);
+                AppsFlyerLib.getInstance().trackEvent(getApplicationContext(), EventTrackerHelper
+                        .EVENT_SIGN_IN_OPENED, new HashMap<String, Object>());
                 finish();
             }
 
@@ -288,4 +307,14 @@ public class SocialNetworks extends AppCompatActivity implements GoogleApiClient
             }
         });
     }
+
+    @Override
+    public void onBackPressed() {
+        Intent returnIntent = new Intent();
+        setResult(Activity.RESULT_CANCELED, returnIntent);
+        AppsFlyerLib.getInstance().trackEvent(getApplicationContext(), EventTrackerHelper
+                .EVENT_SIGN_IN_CANCELLED, new HashMap<String, Object>());
+        finish();
+    }
+
 }

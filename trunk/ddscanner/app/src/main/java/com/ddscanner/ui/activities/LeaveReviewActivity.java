@@ -19,12 +19,14 @@ import com.ddscanner.R;
 import com.ddscanner.entities.Comment;
 import com.ddscanner.entities.request.SendReviewRequest;
 import com.ddscanner.rest.RestClient;
+import com.ddscanner.utils.EventTrackerHelper;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import retrofit.Callback;
@@ -153,6 +155,10 @@ public class LeaveReviewActivity extends AppCompatActivity {
                 onBackPressed();
                 return true;
             case R.id.send_review:
+                AppsFlyerLib.getInstance().trackEvent(getApplicationContext(),
+                        EventTrackerHelper.EVENT_SEND_REVIEW_CLICK, new HashMap<String, Object>() {{
+                            put(EventTrackerHelper.PARAM_SEND_REVIEW_CLICK, diveSpotId);
+                        }});
                 if (checkText(text.getText().toString())) {
                     progressDialog.show();
                     sendReview();

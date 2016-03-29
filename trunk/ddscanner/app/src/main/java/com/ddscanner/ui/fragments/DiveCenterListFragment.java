@@ -8,11 +8,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.R;
 import com.ddscanner.entities.DiveCenter;
 import com.ddscanner.ui.adapters.DiveCentersListAdapter;
+import com.ddscanner.utils.EventTrackerHelper;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by lashket on 4.2.16.
@@ -20,6 +23,8 @@ import java.util.ArrayList;
 public class DiveCenterListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        AppsFlyerLib.getInstance().trackEvent(getActivity().getApplicationContext(),
+                EventTrackerHelper.EVENT_DIVE_CENTERS_LIST_OPENED, new HashMap<String, Object>());
         Bundle args = this.getArguments();
         ArrayList<DiveCenter> divecenters = args.getParcelableArrayList("DIVESPOTS");
         String logoPath = args.getString("LOGOPATH");

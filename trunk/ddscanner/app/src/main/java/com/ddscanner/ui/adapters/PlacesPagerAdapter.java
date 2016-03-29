@@ -5,9 +5,11 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.support.v13.app.FragmentStatePagerAdapter;
 
+import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.entities.DiveSpot;
 import com.ddscanner.ui.fragments.ProductListFragment;
 import com.ddscanner.ui.managers.DiveSpotsClusterManager;
+import com.ddscanner.utils.EventTrackerHelper;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -16,6 +18,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class PlacesPagerAdapter extends FragmentStatePagerAdapter {
 
@@ -44,6 +47,8 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter {
                 ((MapFragment) fragment).getMapAsync(new OnMapReadyCallback() {
                     @Override
                     public void onMapReady(final GoogleMap googleMap) {
+                        AppsFlyerLib.getInstance().trackEvent(context,
+                                EventTrackerHelper.EVENT_DIVE_SITES_MAP_OPENED, new HashMap<String, Object>());
                         if (latLng.longitude == 0 && latLng.latitude == 0) {
                             latLng = new LatLng(0,0);
                             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 1.0f));

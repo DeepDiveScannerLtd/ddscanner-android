@@ -23,6 +23,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.R;
 import com.ddscanner.entities.Comment;
 import com.ddscanner.entities.DiveSpotFull;
@@ -34,6 +35,7 @@ import com.ddscanner.ui.adapters.PlaceImagesPagerAdapter;
 import com.ddscanner.ui.adapters.SealifeListAdapter;
 import com.ddscanner.ui.dialogs.SubscribeDialog;
 import com.ddscanner.ui.managers.SealifeLinearLayoutManager;
+import com.ddscanner.utils.EventTrackerHelper;
 import com.ddscanner.utils.LogUtils;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
@@ -241,6 +243,8 @@ public class DivePlaceActivity extends AppCompatActivity implements ViewPager.On
             case R.id.book_now:
                 LatLng latLng = new LatLng(Double.valueOf(diveSpot.getLat()), Double.valueOf(diveSpot.getLng()));
                 String name = diveSpot.getName();
+                AppsFlyerLib.getInstance().trackEvent(getApplicationContext(),
+                        EventTrackerHelper.EVENT_BOOK_CLICK, new HashMap<String, Object>());
                 DiveCentersActivity.show(DivePlaceActivity.this, latLng, name);
                 break;
             case R.id.reviews_rating_layout:
@@ -257,6 +261,10 @@ public class DivePlaceActivity extends AppCompatActivity implements ViewPager.On
                 intent.putExtras(bundle);
                 intent.putExtra("VALUES", values);
                 intent.putExtra("RATING", diveSpot.getRating());
+                AppsFlyerLib.getInstance().trackEvent(getApplicationContext(),
+                        EventTrackerHelper.EVENT_REVIEWS_CLICK, new HashMap<String, Object>() {{
+                            put(EventTrackerHelper.PARAM_REVIEWS_CLICK, diveSpot.getId());
+                        }});
                 startActivityForResult(intent, 9001);
                // ReviewsActivity.show(DivePlaceActivity.this, (ArrayList<Comment>)divespotDetails.getComments(), values, diveSpot.getRating());
                 break;

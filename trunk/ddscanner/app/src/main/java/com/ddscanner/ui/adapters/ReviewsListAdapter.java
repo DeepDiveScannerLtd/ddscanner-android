@@ -19,12 +19,15 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.R;
 import com.ddscanner.entities.Comment;
 import com.ddscanner.ui.activities.ProfileActivity;
+import com.ddscanner.utils.EventTrackerHelper;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by lashket on 12.3.16.
@@ -60,6 +63,8 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
             @Override
             public void onClick(View v) {
                 ProfileActivity.show(context, comment.getUser());
+                AppsFlyerLib.getInstance().trackEvent(context,
+                        EventTrackerHelper.EVENT_REVIEW_USER_PROFILE_CLICK, new HashMap<String, Object>());
             }
         };
         reviewsListViewHolder.user_review.setText(comment.getComment());

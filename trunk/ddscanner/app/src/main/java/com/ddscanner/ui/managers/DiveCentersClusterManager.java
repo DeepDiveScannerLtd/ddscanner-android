@@ -1,6 +1,7 @@
 package com.ddscanner.ui.managers;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
@@ -12,9 +13,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.DiveCenter;
+import com.ddscanner.ui.activities.DivePlaceActivity;
+import com.ddscanner.utils.EventTrackerHelper;
 import com.ddscanner.utils.LogUtils;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -78,10 +82,24 @@ public class DiveCentersClusterManager extends ClusterManager<DiveCenter> implem
     }
 
     @Override
-    public boolean onMarkerClick(Marker marker) {
+    public void onInfoWindowClick(final Marker marker) {
+        AppsFlyerLib.getInstance().trackEvent(context, EventTrackerHelper
+                .EVENT_INFOWINDOW_CLICK, new HashMap<String, Object>() {{
+            put(EventTrackerHelper.PARAM_MARKER_CLICK_TYPE, "dive_center");
+            put(EventTrackerHelper.PARAM_MARKER_CLICK_PLACE_ID, String.valueOf(diveCentersMap.get(marker.getPosition()).getId()));
+        }});
+    }
+
+    @Override
+    public boolean onMarkerClick(final Marker marker) {
         if (super.onMarkerClick(marker)) {
             return true;
         }
+        AppsFlyerLib.getInstance().trackEvent(context, EventTrackerHelper
+                .EVENT_MARKER_CLICK, new HashMap<String, Object>() {{
+            put(EventTrackerHelper.PARAM_MARKER_CLICK_TYPE, "dive_center");
+            put(EventTrackerHelper.PARAM_MARKER_CLICK_PLACE_ID, String.valueOf(diveCentersMap.get(marker.getPosition()).getId()));
+        }});
         marker.showInfoWindow();
         lastClickedMarker = marker;
         Projection projection = googleMap.getProjection();

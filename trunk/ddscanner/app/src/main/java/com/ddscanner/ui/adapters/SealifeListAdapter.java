@@ -8,12 +8,15 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.R;
 import com.ddscanner.entities.Sealife;
 import com.ddscanner.ui.activities.SealifeDetails;
+import com.ddscanner.utils.EventTrackerHelper;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by lashket on 17.2.16.
@@ -71,6 +74,10 @@ public class SealifeListAdapter extends RecyclerView.Adapter<SealifeListAdapter.
         @Override
         public void onClick(View v) {
             SealifeDetails.show(context, sealifes.get(getPosition()), pathMedium);
+            AppsFlyerLib.getInstance().trackEvent(context,
+                    EventTrackerHelper.EVENT_SEALIFE_CLICKED, new HashMap<String, Object>() {{
+                        put(EventTrackerHelper.PARAM_SEALIFE_CLICKED, sealifes.get(getPosition()));
+                    }});
         }
     }
 }

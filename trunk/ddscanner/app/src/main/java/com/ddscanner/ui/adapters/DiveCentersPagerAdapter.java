@@ -7,9 +7,11 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v13.app.FragmentStatePagerAdapter;
 
+import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.entities.DiveCentersResponseEntity;
 import com.ddscanner.ui.fragments.DiveCenterListFragment;
 import com.ddscanner.ui.managers.DiveCentersClusterManager;
+import com.ddscanner.utils.EventTrackerHelper;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -17,6 +19,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by lashket on 4.2.16.
@@ -46,6 +49,8 @@ public class DiveCentersPagerAdapter extends FragmentStatePagerAdapter {
                 ((MapFragment) fragment).getMapAsync(new OnMapReadyCallback() {
                     @Override
                     public void onMapReady(GoogleMap googleMap) {
+                        AppsFlyerLib.getInstance().trackEvent(context,
+                                EventTrackerHelper.EVENT_DIVE_CENTERS_MAP_OPENED, new HashMap<String, Object>());
                         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(diveSpotLatLng, 8.0f));
                         DiveCentersClusterManager diveCentersClusterManager = new DiveCentersClusterManager(context, googleMap, diveCentersResponseEntity.getDivecenters(), diveSpotLatLng, diveSpotName, diveCentersResponseEntity.getLogoPath());
                         googleMap.setOnInfoWindowClickListener(diveCentersClusterManager);
@@ -75,9 +80,9 @@ public class DiveCentersPagerAdapter extends FragmentStatePagerAdapter {
     public CharSequence getPageTitle(int position) {
         switch (position) {
             case 0:
-                return "LIST";
-            case 1:
                 return "MAP";
+            case 1:
+                return "LIST";
             default:
                 return "";
         }

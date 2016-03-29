@@ -13,13 +13,16 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.R;
 import com.ddscanner.entities.DiveSpot;
 import com.ddscanner.ui.activities.DivePlaceActivity;
+import com.ddscanner.utils.EventTrackerHelper;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by lashket on 23.12.15.
@@ -113,6 +116,10 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
         public void onClick(View v) {
             Intent i = new Intent(context, DivePlaceActivity.class);
             i.putExtra(PRODUCT, String.valueOf(divespots.get(getPosition()).getId()));
+            AppsFlyerLib.getInstance().trackEvent(context,
+                    EventTrackerHelper.EVENT_DIVE_SITES_LIST_ITEM_CLICK, new HashMap<String, Object>() {{
+                        put(EventTrackerHelper.PARAM_DIVE_SITES_LIST_ITEM_CLICK, divespots.get(getPosition()).getId());
+                    }});
             context.startActivity(i);
         }
     }

@@ -23,10 +23,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.R;
 import com.ddscanner.entities.Comment;
 import com.ddscanner.ui.adapters.ReviewsListAdapter;
 import com.ddscanner.ui.views.TransformationRoundImage;
+import com.ddscanner.utils.EventTrackerHelper;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -165,6 +167,10 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.leave_review:
                 Intent intent = new Intent(ReviewsActivity.this, LeaveReviewActivity.class);
                 intent.putExtra("id", values.get("id"));
+                AppsFlyerLib.getInstance().trackEvent(getApplicationContext(),
+                        EventTrackerHelper.EVENT_WRITE_REVIEW_CLICK, new HashMap<String, Object>() {{
+                            put(EventTrackerHelper.PARAM_WRITE_REVIEW_CLICK, values.get("id"));
+                        }});
                 startActivityForResult(intent, 9001);
                 break;
         }

@@ -19,17 +19,21 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.R;
 import com.ddscanner.entities.FiltersResponseEntity;
 import com.ddscanner.entities.request.DiveSpotsRequestMap;
 import com.ddscanner.rest.RestClient;
+import com.ddscanner.utils.EventTrackerHelper;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -57,6 +61,8 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
     protected void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
         setContentView(R.layout.activity_filter);
+        AppsFlyerLib.getInstance().trackEvent(getApplicationContext(),
+                EventTrackerHelper.EVENT_FILTER_OPENED, new HashMap<String, Object>());
         findViews();
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -103,26 +109,31 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
+        Map <String, Object> eventValues = new HashMap<String, Object>();
         Intent data = new Intent();
         int selectedRadioButtonId = rgCurrents.getCheckedRadioButtonId();
         if (selectedRadioButtonId != -1) {
             data.putExtra(DiveSpotsRequestMap.KEY_CURRENTS, findViewById(selectedRadioButtonId).getTag().toString());
             SharedPreferenceHelper.setCurrents(findViewById(selectedRadioButtonId).getTag().toString());
+            eventValues.put(DiveSpotsRequestMap.KEY_CURRENTS, findViewById(selectedRadioButtonId).getTag().toString());
         }
         selectedRadioButtonId = rgLevel.getCheckedRadioButtonId();
         if (selectedRadioButtonId != -1) {
             data.putExtra(DiveSpotsRequestMap.KEY_LEVEL, findViewById(selectedRadioButtonId).getTag().toString());
             SharedPreferenceHelper.setLevel(findViewById(selectedRadioButtonId).getTag().toString());
+            eventValues.put(DiveSpotsRequestMap.KEY_LEVEL, findViewById(selectedRadioButtonId).getTag().toString());
         }
         selectedRadioButtonId = rgVisibility.getCheckedRadioButtonId();
         if (selectedRadioButtonId != -1) {
             data.putExtra(DiveSpotsRequestMap.KEY_VISIBILITY, findViewById(selectedRadioButtonId).getTag().toString());
             SharedPreferenceHelper.setVisibility(findViewById(selectedRadioButtonId).getTag().toString());
+            eventValues.put(DiveSpotsRequestMap.KEY_VISIBILITY, findViewById(selectedRadioButtonId).getTag().toString());
         }
         selectedRadioButtonId = rgObject.getCheckedRadioButtonId();
         if (selectedRadioButtonId != -1) {
             data.putExtra(DiveSpotsRequestMap.KEY_OBJECT, findViewById(selectedRadioButtonId).getTag().toString());
             SharedPreferenceHelper.setObject(findViewById(selectedRadioButtonId).getTag().toString());
+            eventValues.put(DiveSpotsRequestMap.KEY_OBJECT, findViewById(selectedRadioButtonId).getTag().toString());
         }
 //        selectedRadioButtonId = rgCurrents.getCheckedRadioButtonId();
 //        if (selectedRadioButtonId != -1) {
@@ -132,7 +143,8 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
 //        if (selectedRadioButtonId != -1) {
 //            data.putExtra(DiveSpotsRequestMap.KEY_CURRENTS, findViewById(selectedRadioButtonId).getTag().toString());
 //        }
-
+        AppsFlyerLib.getInstance().trackEvent(getApplicationContext(),
+                EventTrackerHelper.EVENT_FILTER_APPLIED, eventValues);
         setResult(RESULT_OK, data);
         finish();
     }
@@ -191,6 +203,8 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                AppsFlyerLib.getInstance().trackEvent(getApplicationContext(),
+                        EventTrackerHelper.EVENT_FILTER_CANCELLED, new HashMap<String, Object>());
                 onBackPressed();
                 return true;
             case R.id.reset_filters:
@@ -224,6 +238,8 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
             RadioButton radioButton = (RadioButton) findViewById(rgVisibility.getCheckedRadioButtonId());
             radioButton.setChecked(false);
         }
+        AppsFlyerLib.getInstance().trackEvent(getApplicationContext(),
+                EventTrackerHelper.EVENT_FILTER_RESET, new HashMap<String, Object>());
     }
 
 }
