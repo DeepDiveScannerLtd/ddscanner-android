@@ -12,10 +12,12 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.R;
 import com.ddscanner.entities.DiveCentersResponseEntity;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.DiveCentersPagerAdapter;
+import com.ddscanner.utils.EventTrackerHelper;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 
@@ -30,7 +32,7 @@ import retrofit.mime.TypedByteArray;
 /**
  * Created by lashket on 29.1.16.
  */
-public class DiveCentersActivity extends AppCompatActivity {
+public class DiveCentersActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener {
     private static final String TAG = "DiveCentersActivity";
     private Toolbar toolbar;
     private TabLayout tabLayout;
@@ -120,4 +122,27 @@ public class DiveCentersActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onPageSelected(int position) {
+        switch (position) {
+            case 0:
+                AppsFlyerLib.getInstance().trackEvent(getApplicationContext(),
+                        EventTrackerHelper.EVENT_DIVE_CENTERS_MAP_OPENED, new HashMap<String, Object>());
+                break;
+            case 1:
+                AppsFlyerLib.getInstance().trackEvent(getApplicationContext().getApplicationContext(),
+                        EventTrackerHelper.EVENT_DIVE_CENTERS_LIST_OPENED, new HashMap<String, Object>());
+                break;
+        }
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
+    }
 }

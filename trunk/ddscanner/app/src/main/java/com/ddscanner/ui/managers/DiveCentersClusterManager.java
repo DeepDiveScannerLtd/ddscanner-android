@@ -95,11 +95,13 @@ public class DiveCentersClusterManager extends ClusterManager<DiveCenter> implem
         if (super.onMarkerClick(marker)) {
             return true;
         }
-        AppsFlyerLib.getInstance().trackEvent(context, EventTrackerHelper
-                .EVENT_MARKER_CLICK, new HashMap<String, Object>() {{
-            put(EventTrackerHelper.PARAM_MARKER_CLICK_TYPE, "dive_center");
-            put(EventTrackerHelper.PARAM_MARKER_CLICK_PLACE_ID, String.valueOf(diveCentersMap.get(marker.getPosition()).getId()));
-        }});
+        if (marker.getTitle() == null) {
+            AppsFlyerLib.getInstance().trackEvent(context, EventTrackerHelper
+                    .EVENT_MARKER_CLICK, new HashMap<String, Object>() {{
+                put(EventTrackerHelper.PARAM_MARKER_CLICK_TYPE, "dive_center");
+                put(EventTrackerHelper.PARAM_MARKER_CLICK_PLACE_ID, String.valueOf(diveCentersMap.get(marker.getPosition()).getId()));
+            }});
+        }
         marker.showInfoWindow();
         lastClickedMarker = marker;
         Projection projection = googleMap.getProjection();

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v13.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
 
 import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.entities.DiveCentersResponseEntity;
@@ -49,12 +50,11 @@ public class DiveCentersPagerAdapter extends FragmentStatePagerAdapter {
                 ((MapFragment) fragment).getMapAsync(new OnMapReadyCallback() {
                     @Override
                     public void onMapReady(GoogleMap googleMap) {
-                        AppsFlyerLib.getInstance().trackEvent(context,
-                                EventTrackerHelper.EVENT_DIVE_CENTERS_MAP_OPENED, new HashMap<String, Object>());
                         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(diveSpotLatLng, 8.0f));
                         DiveCentersClusterManager diveCentersClusterManager = new DiveCentersClusterManager(context, googleMap, diveCentersResponseEntity.getDivecenters(), diveSpotLatLng, diveSpotName, diveCentersResponseEntity.getLogoPath());
                         googleMap.setOnInfoWindowClickListener(diveCentersClusterManager);
-                        googleMap.getUiSettings().setMapToolbarEnabled(false);
+                        googleMap.getUiSettings().setMapToolbarEnabled(true);
+                        googleMap.getUiSettings().setZoomControlsEnabled(false);
                         googleMap.setOnMarkerClickListener(diveCentersClusterManager);
                         googleMap.setOnCameraChangeListener(diveCentersClusterManager);
                         googleMap.setInfoWindowAdapter(diveCentersClusterManager.getMarkerManager());

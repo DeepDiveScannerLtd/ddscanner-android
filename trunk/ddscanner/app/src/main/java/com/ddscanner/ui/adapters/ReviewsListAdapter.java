@@ -72,20 +72,20 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
             @Override
             public void run() {
                 int i = reviewsListViewHolder.user_review.getLineCount();
-                if (i > 3) {
-                    reviewsListViewHolder.user_review.setMaxLines(3);
+                if (i > 5) {
+                    reviewsListViewHolder.user_review.setMaxLines(5);
                     reviewsListViewHolder.showMore.setVisibility(View.VISIBLE);
                     reviewsListViewHolder.showMore.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             if (isExpanded) {
-                                reviewsListViewHolder.user_review.setMaxLines(3);
+                                reviewsListViewHolder.user_review.setMaxLines(5);
                                 reviewsListViewHolder.user_review.setEllipsize(TextUtils.TruncateAt.END);
                                 reviewsListViewHolder.showMore.setText("Show more");
                                 ObjectAnimator animation = ObjectAnimator.ofInt(
                                         reviewsListViewHolder.user_review,
                                         "maxLines",
-                                        3);
+                                        5);
                                 animation.setDuration(4000);
                                 animation.start();
                             } else {
@@ -95,7 +95,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
                                 ObjectAnimator animation = ObjectAnimator.ofInt(
                                         reviewsListViewHolder.user_review,
                                         "maxLines",
-                                        10);
+                                        10000);
                                 animation.setDuration(4000);
                                 animation.start();
                             }

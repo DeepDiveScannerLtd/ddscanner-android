@@ -55,7 +55,7 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class CityActivity extends AppCompatActivity implements View.OnClickListener {
+public class CityActivity extends AppCompatActivity implements View.OnClickListener, ViewPager.OnPageChangeListener {
 
     public static final String TAG = "CityActivity";
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
@@ -166,6 +166,7 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
         feedback = (FloatingActionButton) findViewById(R.id.feedbackFloat);
         toast = (RelativeLayout) findViewById(R.id.toast);
         progressBar = (ProgressBar) findViewById(R.id.request_progress);
+        placeViewPager.setOnPageChangeListener(this);
         floatingActionButton.setOnClickListener(this);
         feedback.setOnClickListener(this);
     }
@@ -376,7 +377,7 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
-        Log.i(TAG, "Starting" );
+        Log.i(TAG, "Starting");
 
     }
 
@@ -388,6 +389,31 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
         user.setName(SharedPreferenceHelper.getUsername());
         user.setLink(SharedPreferenceHelper.getLink());
         return user;
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        Log.i(TAG, String.valueOf(position));
+        switch (position) {
+            case 0:
+                AppsFlyerLib.getInstance().trackEvent(getApplicationContext(),
+                        EventTrackerHelper.EVENT_DIVE_SITES_MAP_OPENED, new HashMap<String, Object>());
+                break;
+            case 1:
+                AppsFlyerLib.getInstance().trackEvent(getApplicationContext().getApplicationContext(),
+                        EventTrackerHelper.EVENT_DIVE_SITES_LIST_OPENED, new HashMap<String, Object>());
+                break;
+        }
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
     }
 
 }

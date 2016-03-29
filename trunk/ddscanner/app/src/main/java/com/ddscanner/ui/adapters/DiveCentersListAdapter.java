@@ -2,8 +2,11 @@ package com.ddscanner.ui.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Paint;
+import android.net.Uri;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,10 +57,10 @@ public class DiveCentersListAdapter extends RecyclerView.Adapter<DiveCentersList
             diveCentersListViewHolder.dcName.setText(diveCenter.getName());
         }
         if (diveCenter.getPhone() != null) {
-            String phone = diveCenter.getPhone();
-            phone = phone.replaceAll(" \\+", "\n+");
+            final String phone = diveCenter.getPhone();
             diveCentersListViewHolder.dcPhone.setVisibility(View.VISIBLE);
             diveCentersListViewHolder.dcPhone.setText(phone);
+            diveCentersListViewHolder.dcPhone.setPaintFlags(diveCentersListViewHolder.dcPhone.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
             diveCentersListViewHolder.dcPhone.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -65,6 +68,14 @@ public class DiveCentersListAdapter extends RecyclerView.Adapter<DiveCentersList
                             EventTrackerHelper.EVENT_CALL_NUMBER_CLICK, new HashMap<String, Object>() {{
                                 put(EventTrackerHelper.PARAM_CALL_NUMBER_CLICK, diveCenter.getId());
                             }});
+                    try {
+                        String uri = "tel:" + phone.trim();
+                        Intent intent = new Intent(Intent.ACTION_DIAL);
+                        intent.setData(Uri.parse(uri));
+                        context.startActivity(intent);
+                    } catch (Exception e) {
+                        Log.e(TAG, e.toString());
+                    }
                 }
             });
             diveCentersListViewHolder.ic_phone.setVisibility(View.VISIBLE);
@@ -76,6 +87,8 @@ public class DiveCentersListAdapter extends RecyclerView.Adapter<DiveCentersList
         if (diveCenter.getEmail() != null) {
             diveCentersListViewHolder.ic_email.setVisibility(View.VISIBLE);
             diveCentersListViewHolder.dcEmail.setVisibility(View.VISIBLE);
+            diveCentersListViewHolder.dcEmail.setText(diveCenter.getEmail());
+            diveCentersListViewHolder.dcEmail.setPaintFlags(diveCentersListViewHolder.dcEmail.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
             diveCentersListViewHolder.dcEmail.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -83,10 +96,12 @@ public class DiveCentersListAdapter extends RecyclerView.Adapter<DiveCentersList
                             EventTrackerHelper.EVENT_WRITE_EMAIL_CLICK, new HashMap<String, Object>() {{
                                 put(EventTrackerHelper.PARAM_WRITE_EMAIL_CLICK, diveCenter.getId());
                             }});
+                    Intent intent = new Intent(Intent.ACTION_SENDTO);
+                    intent.setData(Uri.parse("mailto:"));
+                    intent.putExtra(Intent.EXTRA_EMAIL, new String[]{diveCenter.getEmail()});
+                    context.startActivity(Intent.createChooser(intent, "Send Email"));
                 }
             });
-            diveCentersListViewHolder.dcEmail.setText(diveCenter.getEmail());
-
         }
         if (diveCenter.getLogo() != null) {
             String imageUrlPath = logoPath + diveCenter.getLogo();
@@ -97,7 +112,6 @@ public class DiveCentersListAdapter extends RecyclerView.Adapter<DiveCentersList
         rating = Math.round(diveCenter.getRating());
         diveCentersListViewHolder.starsLayout.removeAllViews();
         for (int k = 0; k < rating; k++) {
-            System.out.println(Math.round(diveCenter.getRating()));
             ImageView iv = new ImageView(context);
             iv.setImageResource(R.drawable.ic_flag_full_small);
             iv.setPadding(5, 0, 5, 0);

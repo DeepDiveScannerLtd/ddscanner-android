@@ -4,6 +4,8 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.support.v13.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.util.Log;
 
 import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.entities.DiveSpot;
@@ -47,8 +49,6 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter {
                 ((MapFragment) fragment).getMapAsync(new OnMapReadyCallback() {
                     @Override
                     public void onMapReady(final GoogleMap googleMap) {
-                        AppsFlyerLib.getInstance().trackEvent(context,
-                                EventTrackerHelper.EVENT_DIVE_SITES_MAP_OPENED, new HashMap<String, Object>());
                         if (latLng.longitude == 0 && latLng.latitude == 0) {
                             latLng = new LatLng(0,0);
                             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 1.0f));
@@ -103,4 +103,5 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter {
         diveSpotsClusterManager.updateFilter(currents, level, object, rating, visibility);
         diveSpotsClusterManager.requestCityProducts();
     }
+
 }

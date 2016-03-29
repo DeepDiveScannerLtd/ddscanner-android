@@ -29,9 +29,6 @@ public class ProductListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        AppsFlyerLib.getInstance().trackEvent(getActivity().getApplicationContext(),
-                EventTrackerHelper.EVENT_DIVE_SITES_LIST_OPENED, new HashMap<String, Object>());
-
         View view = inflater.inflate(R.layout.product_list_fragment, container, false);
         rc = (RecyclerView) view.findViewById(R.id.cv);
         

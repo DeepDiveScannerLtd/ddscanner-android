@@ -75,7 +75,7 @@
         android:ellipsize="end"
         android:textSize="14sp"
         android:minLines="1"
-        android:maxLines="10"
+        android:maxLines="10000"
         android:paddingLeft="14dp"
         android:paddingTop="14dp"
         android:paddingRight="14dp"

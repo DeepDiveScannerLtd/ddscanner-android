@@ -62,7 +62,7 @@
         android:layout_marginTop="5dp"
         android:layout_toRightOf="@+id/dc_avatar"
         android:src="@drawable/ic_phone"
-        android:visibility="visible" />
+        android:visibility="gone" />
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/dc_telefon"
@@ -71,11 +71,11 @@
         android:layout_below="@+id/dc_address"
         android:layout_marginLeft="5dp"
         android:layout_toRightOf="@+id/ic_phone"
-        android:autoLink="phone"
         android:text="+67 49 299 4825"
-        android:textColor="@color/black_text"
+        android:textColor="@color/primary"
+        android:background="?attr/selectableItemBackground"
         android:textSize="18sp"
-        android:visibility="visible" />
+        android:visibility="gone" />
 
     <ImageView
         android:id="@+id/dc_ic_mail"
@@ -83,7 +83,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/dc_telefon"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="14dp"
+        android:layout_marginTop="16dp"
         android:layout_toRightOf="@+id/dc_avatar"
         android:src="@drawable/ic_mail"
         android:visibility="gone" />
@@ -95,10 +95,10 @@
         android:layout_below="@+id/dc_telefon"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="8dp"
-        android:autoLink="email"
         android:layout_toRightOf="@+id/dc_ic_mail"
         android:text="lashket@gmail.com"
-        android:textColor="@color/black_text"
+        android:textColor="@color/primary"
+        android:background="?attr/selectableItemBackground"
         android:textSize="18sp"
         android:visibility="gone" />
 

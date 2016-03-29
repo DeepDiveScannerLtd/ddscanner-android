@@ -106,6 +106,7 @@
                 android:layout_toRightOf="@+id/reviews_number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
                 android:src="@drawable/ic_arrow_reviews"/>
@@ -255,7 +256,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_marginTop="10dp"
-                        android:src="@drawable/divider" />
+                        android:src="@drawable/divider"
+                        android:visibility="gone"/>
                 </LinearLayout>
 
             </RelativeLayout>
@@ -294,25 +296,33 @@
                 </LinearLayout>
 
             </RelativeLayout>
-
+            <RelativeLayout
+                android:layout_marginTop="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#f9f9f9">
             <TextView
+                android:layout_marginTop="17dp"
                 android:id="@+id/sealife"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
                 android:layout_marginLeft="10dp"
                 android:textColor="@color/black_text"
-                android:layout_marginTop="15dp"
-                android:text="@string/sealifePlace"
+                android:text="SEALIFE"
                 android:textSize="15sp"
-                android:visibility="gone"
+                android:visibility="visible"
                 android:textStyle="bold"
                 />
             <RelativeLayout
+                android:layout_below="@+id/sealife"
+                android:background="#f9f9f9"
+                android:layout_marginTop="15dp"
                 android:id="@+id/list_sl"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone">
+                android:visibility="visible"
+                android:paddingBottom="15dp">
             <android.support.v7.widget.RecyclerView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -323,6 +333,7 @@
                     android:layout_height="80dp"
                     android:src="@drawable/sealife_right_shadow"
                     android:layout_alignParentRight="true"/>
+            </RelativeLayout>
             </RelativeLayout>
             <RelativeLayout
                 android:padding="15dp"
@@ -359,8 +370,8 @@
                     android:text="@string/details_btn_book_now"
                     android:layout_below="@id/dive_place_description"
                     android:layout_width="match_parent"
-                    android:padding="10dp"
-                    android:layout_height="35dp"
+                    android:gravity="center"
+                    android:layout_height="45dp"
                     />
             </RelativeLayout>
         </LinearLayout>
@@ -368,5 +379,4 @@
 
 
     </android.support.v4.widget.NestedScrollView>
-
 </android.support.design.widget.CoordinatorLayout>

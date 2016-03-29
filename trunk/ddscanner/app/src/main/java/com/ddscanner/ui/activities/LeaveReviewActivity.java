@@ -119,6 +119,7 @@ public class LeaveReviewActivity extends AppCompatActivity {
                         Intent intent = new Intent(LeaveReviewActivity.this, SocialNetworks.class);
                         startActivityForResult(intent, RC_LOGIN);
                     } else {
+                        String errors = "";
                         JsonObject jsonObject = new JsonParser().parse(json).getAsJsonObject();
                         for(Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) {
                             System.out.println(entry.getKey());
@@ -127,6 +128,16 @@ public class LeaveReviewActivity extends AppCompatActivity {
                                 Intent intent = new Intent(LeaveReviewActivity.this, SocialNetworks.class);
                                 startActivityForResult(intent, RC_LOGIN);
                                 break;
+                            } else {
+                                LinearLayout header = (LinearLayout) findViewById(R.id.message_layout);
+                                header.setBackgroundResource(R.drawable.error_border);
+                                errors = errors + entry.getValue() + "\n";
+                            }
+                            Toast toast = Toast.makeText(getApplicationContext(), errors, Toast.LENGTH_LONG);
+                            if (!errors.equals("")) {
+                                errors = errors.replace("[", "");
+                                errors = errors.replace("]", "");
+                                toast.show();
                             }
                         }
                     }
