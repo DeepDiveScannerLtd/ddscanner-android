@@ -33,7 +33,6 @@ import com.google.gson.JsonParser;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -226,22 +225,10 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
 
         clearFilterSharedPrefences();
 
-        if (rgCurrents.getCheckedRadioButtonId() != -1) {
-            RadioButton radioButton = (RadioButton) findViewById(rgCurrents.getCheckedRadioButtonId());
-            radioButton.setChecked(false);
-        }
-        if (rgLevel.getCheckedRadioButtonId() != -1) {
-            RadioButton radioButton = (RadioButton) findViewById(rgLevel.getCheckedRadioButtonId());
-            radioButton.setChecked(false);
-        }
-        if (rgObject.getCheckedRadioButtonId() != -1) {
-            RadioButton radioButton = (RadioButton) findViewById(rgObject.getCheckedRadioButtonId());
-            radioButton.setChecked(false);
-        }
-        if (rgVisibility.getCheckedRadioButtonId() != -1) {
-            RadioButton radioButton = (RadioButton) findViewById(rgVisibility.getCheckedRadioButtonId());
-            radioButton.setChecked(false);
-        }
+        rgCurrents.clearCheck();
+        rgLevel.clearCheck();
+        rgObject.clearCheck();
+        rgVisibility.clearCheck();
         AppsFlyerLib.getInstance().trackEvent(getApplicationContext(),
                 EventTrackerHelper.EVENT_FILTER_RESET, new HashMap<String, Object>());
     }
