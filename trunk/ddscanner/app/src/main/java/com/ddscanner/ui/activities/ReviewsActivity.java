@@ -96,7 +96,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
                 ds_reviews.setText(comments.size() + " reviews");
             }
         }
-        commentsRc.setHasFixedSize(true);
+        commentsRc.setHasFixedSize(false);
         commentsRc.setLayoutManager(new LinearLayoutManager(this));
         commentsRc.setAdapter(new ReviewsListAdapter(comments, ReviewsActivity.this));
         for (int i = 0; i < rating; i++) {

@@ -35,20 +35,20 @@ public class SealifeLinearLayoutManager extends LinearLayoutManager {
         int height = 0;
         for (int i = 0; i < getItemCount(); i++) {
             if (getOrientation() == HORIZONTAL) {
-                measureScrapChild(recycler, i,
-                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-                        heightSpec,
-                        mMeasuredDimension);
+//                measureScrapChild(recycler, i,
+//                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+//                        heightSpec,
+//                        mMeasuredDimension);
 
                 width = width + mMeasuredDimension[0];
                 if (i == 0) {
                     height = mMeasuredDimension[1];
                 }
             } else {
-                measureScrapChild(recycler, i,
-                        widthSpec,
-                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-                        mMeasuredDimension);
+//                measureScrapChild(recycler, i,
+//                        widthSpec,
+//                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+//                        mMeasuredDimension);
 
                 height = height + mMeasuredDimension[1];
                 if (i == 0) {
