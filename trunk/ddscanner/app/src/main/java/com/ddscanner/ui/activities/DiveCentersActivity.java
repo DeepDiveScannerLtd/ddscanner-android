@@ -145,4 +145,15 @@ public class DiveCentersActivity extends AppCompatActivity implements ViewPager.
     public void onPageScrollStateChanged(int state) {
 
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        Log.i(TAG, "Starting");
+
+    }
 }

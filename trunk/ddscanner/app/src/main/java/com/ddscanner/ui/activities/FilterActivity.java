@@ -94,6 +94,7 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
             RadioButton radioButton = new RadioButton(this);
             radioButton.setButtonDrawable(R.drawable.bg_radio_button);
             radioButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+            radioButton.setCompoundDrawablePadding(30);
             layoutParams.topMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics());
             layoutParams.bottomMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics());
             radioButton.setTag(entry.getKey());
@@ -222,6 +223,9 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void resetFilters() {
+
+        clearFilterSharedPrefences();
+
         if (rgCurrents.getCheckedRadioButtonId() != -1) {
             RadioButton radioButton = (RadioButton) findViewById(rgCurrents.getCheckedRadioButtonId());
             radioButton.setChecked(false);
@@ -240,6 +244,13 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
         }
         AppsFlyerLib.getInstance().trackEvent(getApplicationContext(),
                 EventTrackerHelper.EVENT_FILTER_RESET, new HashMap<String, Object>());
+    }
+
+    private void clearFilterSharedPrefences() {
+        SharedPreferenceHelper.setObject("");
+        SharedPreferenceHelper.setCurrents("");
+        SharedPreferenceHelper.setVisibility("");
+        SharedPreferenceHelper.setLevel("");
     }
 
 }

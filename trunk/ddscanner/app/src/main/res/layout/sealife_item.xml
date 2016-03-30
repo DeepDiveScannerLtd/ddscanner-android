@@ -9,8 +9,7 @@
     <android.support.v7.widget.AppCompatImageView
         android:id="@+id/seaife_logo"
         android:layout_width="80dp"
-        android:layout_height="60dp"
-        android:src="@drawable/sealife_photo"/>
+        android:layout_height="60dp" />
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/sealife_name"
         android:layout_width="80dp"

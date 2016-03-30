@@ -3,15 +3,19 @@ package com.ddscanner.ui.activities;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.appsflyer.AppsFlyerLib;
@@ -41,6 +45,7 @@ public class LeaveReviewActivity extends AppCompatActivity {
 
     private static final String TAG = LeaveReviewActivity.class.getSimpleName();
     private static final int RC_LOGIN = 8001;
+    private static final int COMMENT_MAX_LENGTH = 250;
 
     private Toolbar toolbar;
     private Comment comment = new Comment();
@@ -48,23 +53,45 @@ public class LeaveReviewActivity extends AppCompatActivity {
     private EditText text;
     private RatingBar ratingBar;
     private ProgressDialog progressDialog;
+    private TextView symbolNumberLeft;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_leave_review);
         diveSpotId = getIntent().getStringExtra("id");
-        findVIews();
+        findViews();
         toolbarSettings();
         setProgressDialog();
 
+        text.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (COMMENT_MAX_LENGTH - text.length() < 10) {
+                    symbolNumberLeft.setTextColor(getResources().getColor(R.color.tw__composer_red));
+                } else {
+                    symbolNumberLeft.setTextColor(Color.parseColor("#9f9f9f"));
+                }
+                symbolNumberLeft.setText(String.valueOf(COMMENT_MAX_LENGTH - text.length()));
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
     }
 
-    private void findVIews() {
+    private void findViews() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         text = (EditText) findViewById(R.id.review_text);
         text.setTag("comment");
         ratingBar = (RatingBar) findViewById(R.id.rating_bar);
+        symbolNumberLeft = (TextView) findViewById(R.id.left_number);
+
     }
 
     private void toolbarSettings() {

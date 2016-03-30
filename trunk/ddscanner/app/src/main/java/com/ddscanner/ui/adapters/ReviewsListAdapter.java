@@ -25,6 +25,7 @@ import com.ddscanner.entities.Comment;
 import com.ddscanner.ui.activities.ProfileActivity;
 import com.ddscanner.utils.EventTrackerHelper;
 import com.squareup.picasso.Picasso;
+import com.ms.square.android.expandabletextview.ExpandableTextView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,11 +36,8 @@ import java.util.HashMap;
 public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.ReviewsListViewHolder> {
 
     private static final String TAG = ReviewsListAdapter.class.getSimpleName();
-    private static final int MAX_LINES_COUNT = 2;
-    private boolean isExpanded = false;
     private ArrayList<Comment> comments;
     private Context context;
-    private Button button;
 
     public ReviewsListAdapter(ArrayList<Comment> comments, Context context) {
         this.comments = comments;
@@ -58,7 +56,6 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
     @Override
     public void onBindViewHolder(final ReviewsListViewHolder reviewsListViewHolder, int i) {
         final Comment comment = comments.get(i);
-        reviewsListViewHolder.showMore.setVisibility(View.GONE);
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -68,44 +65,6 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
             }
         };
         reviewsListViewHolder.user_review.setText(comment.getComment());
-        reviewsListViewHolder.user_review.post(new Runnable() {
-            @Override
-            public void run() {
-                int i = reviewsListViewHolder.user_review.getLineCount();
-                if (i > 5) {
-                    reviewsListViewHolder.user_review.setMaxLines(5);
-                    reviewsListViewHolder.showMore.setVisibility(View.VISIBLE);
-                    reviewsListViewHolder.showMore.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (isExpanded) {
-                                reviewsListViewHolder.user_review.setMaxLines(5);
-                                reviewsListViewHolder.user_review.setEllipsize(TextUtils.TruncateAt.END);
-                                reviewsListViewHolder.showMore.setText("Show more");
-                                ObjectAnimator animation = ObjectAnimator.ofInt(
-                                        reviewsListViewHolder.user_review,
-                                        "maxLines",
-                                        5);
-                                animation.setDuration(4000);
-                                animation.start();
-                            } else {
-                                reviewsListViewHolder.user_review.setMaxLines(Integer.MAX_VALUE);
-                                reviewsListViewHolder.user_review.setEllipsize(null);
-                                reviewsListViewHolder.showMore.setText("Less");
-                                ObjectAnimator animation = ObjectAnimator.ofInt(
-                                        reviewsListViewHolder.user_review,
-                                        "maxLines",
-                                        10000);
-                                animation.setDuration(4000);
-                                animation.start();
-                            }
-                            isExpanded = !isExpanded;
-                        }
-                    });
-                }
-            }
-        });
-
         reviewsListViewHolder.user_name.setText(comment.getUser().getName());
         reviewsListViewHolder.user_name.setOnClickListener(onClickListener);
         reviewsListViewHolder.user_avatar.setOnClickListener(onClickListener);
@@ -128,7 +87,6 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         private TextView rating;
         private TextView user_name;
         private TextView user_review;
-        private TextView showMore;
 
         public ReviewsListViewHolder(View v) {
             super(v);
@@ -136,7 +94,6 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
             rating = (TextView) v.findViewById(R.id.rating);
             user_name = (TextView) v.findViewById(R.id.user_name);
             user_review = (TextView) v.findViewById(R.id.review);
-            showMore = (TextView) v.findViewById(R.id.show_more);
         }
     }
 

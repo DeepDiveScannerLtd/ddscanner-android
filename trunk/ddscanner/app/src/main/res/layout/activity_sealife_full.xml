@@ -81,7 +81,6 @@
                 android:id="@+id/sealife_full_photo"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/sealife_photo"
                 app:layout_collapseMode="parallax"
                 android:layout_gravity="center"/>
             <ProgressBar
