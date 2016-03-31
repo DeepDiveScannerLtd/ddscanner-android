@@ -17,6 +17,7 @@ import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.DiveCenter;
+import com.ddscanner.ui.activities.DiveCenterDetailsActivity;
 import com.ddscanner.ui.activities.DivePlaceActivity;
 import com.ddscanner.utils.EventTrackerHelper;
 import com.ddscanner.utils.LogUtils;
@@ -88,6 +89,7 @@ public class DiveCentersClusterManager extends ClusterManager<DiveCenter> implem
             put(EventTrackerHelper.PARAM_MARKER_CLICK_TYPE, "dive_center");
             put(EventTrackerHelper.PARAM_MARKER_CLICK_PLACE_ID, String.valueOf(diveCentersMap.get(marker.getPosition()).getId()));
         }});
+        DiveCenterDetailsActivity.show(context, diveCentersMap.get(marker.getPosition()), logoPath);
     }
 
     @Override
@@ -174,14 +176,16 @@ public class DiveCentersClusterManager extends ClusterManager<DiveCenter> implem
             LinearLayout stars = (LinearLayout) view.findViewById(R.id.stars);
             DiveCenter dc = diveCentersMap.get(marker.getPosition());
             Bitmap bitmap = markerBitmapCache.get(marker);
-            if (bitmap == null) {
-                infoWindowRefresher = new InfoWindowRefresher(marker);
-                LogUtils.i(TAG, "getInfoWindow image=" + dc.getLogo());
-                Picasso.with(context).load(dc.getLogo()).resize(60,60).into(infoWindowRefresher);
-            } else {
-                ImageView photo = (ImageView) view.findViewById(R.id.dc_avatar);
-                photo.setAlpha(1f);
-                photo.setImageBitmap(bitmap);
+            if (dc.getLogo() != null) {
+                if (bitmap == null) {
+                    infoWindowRefresher = new InfoWindowRefresher(marker);
+                    LogUtils.i(TAG, "getInfoWindow image=" + dc.getLogo());
+                    Picasso.with(context).load(logoPath + dc.getLogo()).resize(60, 60).into(infoWindowRefresher);
+                } else {
+                    ImageView photo = (ImageView) view.findViewById(R.id.iw_dc_avatar);
+                    photo.setAlpha(1f);
+                    photo.setImageBitmap(bitmap);
+                }
             }
             dc_name.setText(dc.getName());
             if (dc.getAddress() != null) {
@@ -191,13 +195,13 @@ public class DiveCentersClusterManager extends ClusterManager<DiveCenter> implem
             for (int i = 0; i < dc.getRating(); i++) {
                 ImageView iv = new ImageView(context);
                 iv.setImageResource(R.drawable.ic_flag_full_small);
-                iv.setPadding(5, 0, 0, 0);
+                iv.setPadding(2, 0, 0, 0);
                 stars.addView(iv);
             }
             for (int i = 0; i < 5 - dc.getRating(); i++) {
                 ImageView iv = new ImageView(context);
                 iv.setImageResource(R.drawable.ic_flag_empty_small);
-                iv.setPadding(5, 0, 0, 0);
+                iv.setPadding(2, 0, 0, 0);
                 stars.addView(iv);
             }
 

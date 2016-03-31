@@ -35,6 +35,8 @@
                 android:layout_toRightOf="@+id/ds_photo"
                 android:fontFamily="sans-serif-medium"
                 android:text="Blue hole"
+                android:lines="1"
+                android:ellipsize="end"
                 android:textColor="@color/black_text"
                 android:textSize="20sp" />
 

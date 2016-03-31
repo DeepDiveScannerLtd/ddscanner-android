@@ -24,6 +24,7 @@
             android:id="@+id/dc_logo"
             android:layout_below="@+id/toolbar"
             android:layout_width="match_parent"
+            android:layout_marginTop="35dp"
             android:layout_height="75dp" />
         <TextView
             android:id="@+id/dc_name"
@@ -33,14 +34,14 @@
             android:layout_height="wrap_content"
             android:text="Sharms Dive Centre Diving Hurghada Egypt"
             android:textSize="@dimen/dc_name_title"
-            android:layout_marginTop="11dp"
+            android:layout_marginTop="16dp"
             android:layout_marginLeft="35dp"
             android:layout_marginRight="35dp"
             android:textColor="@color/white"/>
         <LinearLayout
             android:id="@+id/stars"
             android:layout_below="@+id/dc_name"
-            android:layout_width="260dp"
+            android:layout_width="match_parent"
             android:layout_marginTop="11dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="30dp"
@@ -53,9 +54,9 @@
         android:layout_height="wrap_content">
         <RelativeLayout
             android:id="@+id/dc_address_layout"
+            android:visibility="gone"
             android:layout_width="match_parent"
-            android:layout_height="75dp"
-            android:background="?attr/selectableItemBackground">
+            android:layout_height="75dp">
             <ImageView
                 android:id="@+id/ic_dc_location"
                 android:src="@drawable/ic_location_dc"
@@ -86,6 +87,7 @@
             android:layout_below="@+id/dc_address_layout"
             android:layout_width="match_parent"
             android:layout_height="75dp"
+            android:visibility="gone"
             android:background="?attr/selectableItemBackground">
             <ImageView
                 android:id="@+id/ic_dc_phone"
@@ -118,6 +120,7 @@
             android:layout_below="@+id/dc_phone_layout"
             android:layout_width="match_parent"
             android:layout_height="75dp"
+            android:visibility="gone"
             android:background="?attr/selectableItemBackground">
             <ImageView
                 android:id="@+id/ic_dc_email"

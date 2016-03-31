@@ -12,6 +12,7 @@
         android:id="@+id/popup_photo"
         android:layout_width="80dp"
         android:layout_height="80dp"
+        android:alpha="0.4"
         android:src="@drawable/list_photo_default"
         android:background="@drawable/only_top_image_border"
         android:padding="5dp"/>

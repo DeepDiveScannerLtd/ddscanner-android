@@ -11,7 +11,7 @@ import java.io.Serializable;
 /**
  * Created by lashket on 5.2.16.
  */
-public class DiveCenter implements Parcelable, Serializable, ClusterItem {
+public class DiveCenter implements Parcelable, ClusterItem {
 
     private String id;
     private String name;
@@ -134,8 +134,8 @@ public class DiveCenter implements Parcelable, Serializable, ClusterItem {
         dest.writeString(lat);
         dest.writeString(lng);
         dest.writeString(logo);
-        dest.writeString(address);
         dest.writeFloat(rating);
+        dest.writeString(address);
     }
 
     @Override

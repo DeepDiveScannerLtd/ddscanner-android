@@ -1,114 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/cv"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
-    android:orientation="vertical">
+    android:layout_marginTop="4dp"
+    android:layout_marginRight="5dp"
+    android:layout_marginLeft="5dp"
+    android:layout_marginBottom="4dp">
 
-    <ImageView
-        android:id="@+id/dc_avatar"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:padding="10dp"
-        android:src="@drawable/dc_avatar_empty" />
-
-    <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/dc_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_toRightOf="@+id/dc_avatar"
-        android:fontFamily="sans-serif-medium"
-        android:text="No Gravity Dive Center"
-        android:textColor="@color/black_text"
-        android:textSize="18sp" />
-
-    <LinearLayout
-        android:id="@+id/stars"
-        android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:layout_below="@+id/dc_name"
-        android:layout_marginLeft="10dp"
-        android:layout_toRightOf="@+id/dc_avatar"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"></LinearLayout>
-
-    <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/dc_reviews"
-        android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:layout_below="@+id/dc_name"
-        android:layout_toRightOf="@+id/stars"
-        android:gravity="center_vertical"
-        android:text="" />
-
-    <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/dc_address"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/stars"
-        android:layout_toRightOf="@+id/dc_avatar"
-        android:padding="10dp"
-        android:text="78/12 moo 1, Vichit Rd, Phuket town, phuket 8300 thailand"
-        android:visibility="gone" />
-
-    <ImageView
-        android:id="@+id/ic_phone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/dc_address"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="5dp"
-        android:layout_toRightOf="@+id/dc_avatar"
-        android:src="@drawable/ic_phone"
-        android:visibility="gone" />
-
-    <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/dc_telefon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/dc_address"
-        android:layout_marginLeft="5dp"
-        android:layout_toRightOf="@+id/ic_phone"
-        android:text="+67 49 299 4825"
-        android:textColor="@color/primary"
-        android:background="?attr/selectableItemBackground"
-        android:textSize="18sp"
-        android:visibility="gone" />
-
-    <ImageView
-        android:id="@+id/dc_ic_mail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/dc_telefon"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="16dp"
-        android:layout_toRightOf="@+id/dc_avatar"
-        android:src="@drawable/ic_mail"
-        android:visibility="gone" />
-
-    <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/dc_email"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/dc_telefon"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="8dp"
-        android:layout_toRightOf="@+id/dc_ic_mail"
-        android:text="lashket@gmail.com"
-        android:textColor="@color/primary"
-        android:background="?attr/selectableItemBackground"
-        android:textSize="18sp"
-        android:visibility="gone" />
-
-    <ImageView
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/dc_email"
-        android:layout_marginTop="10dp"
-        android:layout_toRightOf="@+id/dc_avatar"
-        android:src="@drawable/divider" />
+        android:background="@color/white">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground">
+        <ImageView
+            android:id="@+id/dc_avatar"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:padding="10dp"
+            android:src="@drawable/dc_avatar_empty" />
 
+        <TextView
+            android:id="@+id/dc_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:lines="1"
+            android:ellipsize="end"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="12dp"
+            android:layout_toRightOf="@+id/dc_avatar"
+            android:fontFamily="sans-serif-medium"
+            android:textColor="@color/black_text"
+            android:textSize="18sp" />
 
-</RelativeLayout>
+        <LinearLayout
+            android:id="@+id/stars"
+            android:layout_width="wrap_content"
+            android:layout_height="12dp"
+            android:layout_below="@+id/dc_name"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="4dp"
+            android:layout_toRightOf="@+id/dc_avatar"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"></LinearLayout>
+
+        <TextView
+            android:id="@+id/dc_address"
+            android:lines="1"
+            android:ellipsize="end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/stars"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_toRightOf="@+id/dc_avatar"
+            android:textColor="#707070"
+            android:visibility="visible" />
+        </RelativeLayout>
+    </RelativeLayout>
+</android.support.v7.widget.CardView>
