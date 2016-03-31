@@ -4,4 +4,10 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="info_window_width">320dp</dimen>
     <dimen name="info_window_height">90dp</dimen>
+
+    <!-- DC details padding-->
+    <dimen name="icons_padding">26dp</dimen>
+    <dimen name="dc_top_margin_divider_text">16dp</dimen>
+    <dimen name="dc_text_size">16sp</dimen>
+    <dimen name="dc_name_title">22sp</dimen>
 </resources>

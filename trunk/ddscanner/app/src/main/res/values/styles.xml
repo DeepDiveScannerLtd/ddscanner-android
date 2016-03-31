@@ -60,7 +60,7 @@
     </style>
 
     <style name="radio_button">
-        <item name="android:drawablePadding">10dp</item>
+        <item name="android:drawablePadding">50dip</item>
         <item name="android:textSize">15sp</item>
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:layout_marginTop">10dp</item>

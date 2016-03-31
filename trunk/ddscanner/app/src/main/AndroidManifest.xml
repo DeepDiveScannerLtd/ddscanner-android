@@ -15,7 +15,6 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
-    <uses-permission android:name="android.permission.CALL_PHONE" />
 
 
     <permission android:name="com.ddscanner.permission.C2D_MESSAGE" />
@@ -47,7 +46,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDt6pJZggDyU-aQy2Ks6i7WgZd6ayKK-I8" />
+            android:value="AIzaSyA5jpAj7uwrxA4oaYvI_bdV9IDbb7gUrZc" />
 
         <activity
             android:name=".ui.activities.SplashActivity"

@@ -93,7 +93,7 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
             RadioButton radioButton = new RadioButton(this);
             radioButton.setButtonDrawable(R.drawable.bg_radio_button);
             radioButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
-            radioButton.setCompoundDrawablePadding(30);
+            radioButton.setPadding(40,0,0,0);
             layoutParams.topMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics());
             layoutParams.bottomMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics());
             radioButton.setTag(entry.getKey());
