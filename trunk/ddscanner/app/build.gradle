@@ -25,10 +25,16 @@ android {
         targetSdkVersion 23
         multiDexEnabled true
         versionCode 4
-        versionName "1.0.0"
+        versionName "1.0.1"
 
     }
     buildTypes {
+//        debug {
+//            applicationIdSuffix ".debug"
+//            minifyEnabled false
+//            shrinkResources false
+//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules-debug.pro'
+//        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
