@@ -7,11 +7,11 @@
         android:background="@drawable/only_top_image_border"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:padding="10dp">
+        android:padding="5dp">
         <ImageView
             android:id="@+id/iw_dc_avatar"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
             android:src="@drawable/dc_avatar_empty" />
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/iw_dc_name"
@@ -22,6 +22,7 @@
             android:text="No Gravity Dive Center"
             android:fontFamily="sans-serif-medium"
             android:textColor="@color/black_text"
+            android:layout_marginTop="2dp"
             android:layout_toRightOf="@+id/iw_dc_avatar"
             android:layout_marginLeft="10dp"
             android:textSize="18sp"/>
@@ -31,7 +32,8 @@
             android:layout_marginLeft="10dp"
             android:id="@+id/stars"
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_marginTop="4dp"
+            android:layout_height="12dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
         </LinearLayout>
@@ -47,34 +49,14 @@
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/iw_dc_address"
             android:layout_below="@+id/stars"
-            android:layout_marginTop="10dp"
-            android:visibility="gone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <RelativeLayout
-            android:id="@+id/phone_number"
-            android:layout_marginTop="10dp"
-            android:layout_width="match_parent"
-            android:layout_below="@+id/iw_dc_address"
-            android:visibility="gone"
-            android:layout_height="wrap_content">
-        <ImageView
-            android:id="@+id/ic_phone"
-            android:layout_marginTop="3dp"
+            android:layout_toRightOf="@+id/iw_dc_avatar"
+            android:layout_marginTop="4dp"
+            android:layout_marginLeft="10dp"
+            android:visibility="visible"
+            android:textSize="12sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_phone"/>
-        <android.support.v7.widget.AppCompatTextView
-            android:layout_toRightOf="@+id/ic_phone"
-            android:id="@+id/iw_dc_telefon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="15sp"
-            android:layout_marginLeft="5dp"
-            android:textColor="@color/black_text"
-            android:text="+67 49 299 4825"/>
-
-        </RelativeLayout>
+            android:text="123123123123"/>
     </RelativeLayout>
     <ImageView
         android:layout_below="@+id/top"

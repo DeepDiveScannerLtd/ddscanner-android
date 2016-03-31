@@ -171,7 +171,6 @@ public class DiveCentersClusterManager extends ClusterManager<DiveCenter> implem
             TextView dc_name = (TextView) view.findViewById(R.id.iw_dc_name);
             ImageView logo = (ImageView) view.findViewById(R.id.iw_dc_avatar);
             TextView dc_address = (TextView) view.findViewById(R.id.iw_dc_address);
-            TextView dc_telephone = (TextView) view.findViewById(R.id.iw_dc_telefon);
             LinearLayout stars = (LinearLayout) view.findViewById(R.id.stars);
             DiveCenter dc = diveCentersMap.get(marker.getPosition());
             Bitmap bitmap = markerBitmapCache.get(marker);
@@ -188,10 +187,6 @@ public class DiveCentersClusterManager extends ClusterManager<DiveCenter> implem
             if (dc.getAddress() != null) {
                 dc_address.setText(dc.getAddress());
                 dc_address.setVisibility(View.VISIBLE);
-            }
-            if (dc.getPhone() != null) {
-                dc_telephone.setText(dc.getPhone());
-                view.findViewById(R.id.phone_number).setVisibility(View.VISIBLE);
             }
             for (int i = 0; i < dc.getRating(); i++) {
                 ImageView iv = new ImageView(context);
