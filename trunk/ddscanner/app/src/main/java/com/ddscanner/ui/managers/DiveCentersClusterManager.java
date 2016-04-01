@@ -52,6 +52,7 @@ public class DiveCentersClusterManager extends ClusterManager<DiveCenter> implem
     private Context context;
     private GoogleMap googleMap;
     private Marker lastClickedMarker;
+    private Marker diveSpotMarker;
     private HashMap<LatLng, DiveCenter> diveCentersMap = new HashMap<>();
     private Drawable clusterBackgroundDrawable;
     private final IconGenerator clusterIconGenerator;
@@ -79,17 +80,19 @@ public class DiveCentersClusterManager extends ClusterManager<DiveCenter> implem
             addItem(diveCenter);
             diveCentersMap.put(diveCenter.getPosition(), diveCenter);
         }
-        googleMap.addMarker(new MarkerOptions().position(diveSpotLatLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds)).title(diveSpotName));
+        diveSpotMarker = googleMap.addMarker(new MarkerOptions().position(diveSpotLatLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds)).title(diveSpotName));
     }
 
     @Override
     public void onInfoWindowClick(final Marker marker) {
-        AppsFlyerLib.getInstance().trackEvent(context, EventTrackerHelper
-                .EVENT_INFOWINDOW_CLICK, new HashMap<String, Object>() {{
-            put(EventTrackerHelper.PARAM_MARKER_CLICK_TYPE, "dive_center");
-            put(EventTrackerHelper.PARAM_MARKER_CLICK_PLACE_ID, String.valueOf(diveCentersMap.get(marker.getPosition()).getId()));
-        }});
-        DiveCenterDetailsActivity.show(context, diveCentersMap.get(marker.getPosition()), logoPath);
+        if (!marker.getPosition().equals(diveSpotMarker.getPosition())) {
+            AppsFlyerLib.getInstance().trackEvent(context, EventTrackerHelper
+                    .EVENT_INFOWINDOW_CLICK, new HashMap<String, Object>() {{
+                put(EventTrackerHelper.PARAM_MARKER_CLICK_TYPE, "dive_center");
+                put(EventTrackerHelper.PARAM_MARKER_CLICK_PLACE_ID, String.valueOf(diveCentersMap.get(marker.getPosition()).getId()));
+            }});
+            DiveCenterDetailsActivity.show(context, diveCentersMap.get(marker.getPosition()), logoPath);
+        }
     }
 
     @Override
