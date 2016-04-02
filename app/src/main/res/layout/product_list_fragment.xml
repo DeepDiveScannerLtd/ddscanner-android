@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#E0E0E0"
+    android:orientation="vertical">
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:scrollbars="vertical"
+        android:visibility="gone"
+        android:id="@+id/cv"
+        />
+    <RelativeLayout
+        android:id="@+id/please"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:visibility="gone"
+        android:layout_height="match_parent">
+        <ImageView
+            android:id="@+id/sad"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_sad"/>
+        <TextView
+            android:id="@+id/text"
+            android:layout_below="@+id/sad"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:textColor="#939393"
+            android:text="Sorry! There are no spots here."/>
+        <Button
+            android:id="@+id/btn_back_to_map"
+            android:layout_below="@+id/text"
+            android:text="BACK TO MAP"
+            android:textSize="15sp"
+            android:layout_width="150dp"
+            android:layout_height="40dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="130dp"
+            android:background="@color/orange"/>
+    </RelativeLayout>
+</LinearLayout>

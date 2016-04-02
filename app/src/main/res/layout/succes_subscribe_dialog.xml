@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="310dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="310dp"
+        android:layout_height="wrap_content"
+        android:background="@color/white">
+
+      <!--  <android.support.v7.widget.DialogTitle
+            android:id="@+id/custom_heading"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:fontFamily="sans-serif-medium"
+            android:gravity="center_horizontal"
+            android:text="@string/feedback_title"
+            android:textColor="@color/black_text"
+            android:textSize="20sp" /> -->
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/notification"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:gravity="center_horizontal"
+            android:padding="10dp"
+            android:text="@string/feedback_text"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:id="@+id/divider_dialog"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/notification"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/divider" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/divider_dialog">
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/cancel_button_subscribe"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
+                android:text="CANCEL"
+                android:textColor="@color/primary" />
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/okbutton_subscribe"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/cancel_button_subscribe"
+                android:fontFamily="sans-serif-medium"
+                android:text="OK"
+                android:textColor="@color/primary" />
+        </RelativeLayout>
+    </RelativeLayout>
+</RelativeLayout>
