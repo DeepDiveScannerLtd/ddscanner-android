@@ -1,0 +1,65 @@
+<resources>
+    <string name="address">Address</string>
+    <string name="app_name">DDScanner</string>
+    <string name="billingActivityTitle">Billing details</string>
+    <string name="btnBookNow">BOOK NOW</string>
+    <string name="btnRetry">RETRY</string>
+    <string name="conditionsActivityTitle">Conditions</string>
+    <string name="cardNumber">Card number</string>
+    <string name="cardHolderName">Name on card</string>
+    <string name="cardMonth">Month</string>
+    <string name="cardYear">Year</string>
+    <string name="cardCCVCode">Year</string>
+    <string name="depthPlace">DEPTH</string>
+    <string name="placeOrder">PAY</string>
+    <string name="noteConditions">Note</string>
+    <string name="conditionsTotal">TOTAL</string>
+    <string name="selectCity">Select a city</string>
+    <string name="divingLevel">Select your diving level</string>
+    <string name="bookingSuccessfull">Booking successfully completed</string>
+    <string name="description">Description</string>
+    <string name="userName">NAME</string>
+    <string name="rating">Rating</string>
+    <string name="from">FROM</string>
+    <string name="explore">EXPLORE</string>
+    <string name="optionTitle">TITLE</string>
+    <string name="optionDuration">Duration</string>
+    <string name="startTime">Start time</string>
+    <string name="btnChoseOption">CHOSE THIS OPTION</string>
+    <string name="offers">Offers</string>
+    <string name="pleaseWait">Please wait</string>
+    <string name="errorConnection">No internet connection</string>
+    <string name="choseLicense">Please choose your license</string>
+    <string name="choseCity">Please choose city!</string>
+
+    <string name="firstName">First name</string>
+    <string name="lastName">Last name</string>
+    <string name="postalCode">Postal Code</string>
+    <string name="city">City</string>
+    <string name="phone">Phone</string>
+    <string name="email">Email</string>
+    <string name="serverNotResp">Server is not responsible, please try again later</string>
+
+
+
+    <!-- Details layout -->
+    <string name="sealifePlace">Sealife</string>
+    <string name="details_reviews">reviews</string>
+    <string name="details_depth">Max depth</string>
+    <string name="details_visibility">Visibility</string>
+    <string name="details_currents">Currents</string>
+    <string name="details_level">Diver level</string>
+    <string name="details_description">Description</string>
+    <string name="details_btn_book_now">Contact Dive Centers</string>
+
+    <string name="facebook_app_id">1691716511044593</string>
+    <string name="server_client_id">200652897389-onnv3dgvcnf7bj8dku3psjntif6hiua0.apps.googleusercontent.comm</string>
+
+    <string name="twitter_consumer_key">tT7PhwjwXb8dEXbhQzI529VR4</string>
+    <string name="twitter_consumer_secret">C4wijpAOBWWwUVsmtyoMEhWUQD5P6BFulUDTVQGQmrJI32BlaT</string>
+
+    <!-- Feedback dialog -->
+    <string name="feedback_text">Do you want to leave feedback on DDScanner?</string>
+    <string name="feedback_title">Gongratulations!</string>
+
+</resources>
