@@ -72,7 +72,8 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter {
                         }
                         diveSpotsClusterManager = new DiveSpotsClusterManager(context, googleMap, PlacesPagerAdapter.this, toast, progressBar, toolbarTitle);
                         googleMap.setOnInfoWindowClickListener(diveSpotsClusterManager);
-                        googleMap.getUiSettings().setMapToolbarEnabled(false);
+                        googleMap.getUiSettings().setMapToolbarEnabled(true);
+                        googleMap.getUiSettings().setZoomControlsEnabled(true);
                         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
                        // googleMap.setMyLocationEnabled(true);
                         googleMap.setOnMarkerClickListener(diveSpotsClusterManager);

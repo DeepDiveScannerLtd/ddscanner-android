@@ -59,7 +59,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 break;
         }
         userName.setText(user.getName());
-        Picasso.with(this).load(user.getPicture()).resize(100,100).transform(new TransformationRoundImage(50,1)).into(avatar);
+        Picasso.with(this).load(user.getPicture()).resize(100,100).transform(new TransformationRoundImage(2,1)).into(avatar);
         if (user.getName().equals(SharedPreferenceHelper.getUsername()) && user.getType().equals(SharedPreferenceHelper.getSn())) {
             logout.setVisibility(View.VISIBLE);
             logout.setOnClickListener(this);

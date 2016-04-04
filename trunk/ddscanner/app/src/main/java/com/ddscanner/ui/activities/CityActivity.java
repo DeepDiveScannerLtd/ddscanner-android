@@ -19,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -68,8 +69,8 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
     public static TabLayout tabLayout;
     private static TextView toolbarTitle;
     private LatLng latLng;
-    private FloatingActionButton floatingActionButton;
-    private FloatingActionButton feedback;
+    private ImageButton floatingActionButton;
+    private ImageButton feedback;
     private SubscribeDialog subscribeDialog = new SubscribeDialog();
     private ProgressDialog progressDialog;
     private RelativeLayout toast;
@@ -146,6 +147,7 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
                             .getLaunchIntentForPackage(getBaseContext().getPackageName());
                     i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(i);
+                    finish();
                 }
             });
         }
@@ -161,9 +163,9 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
     private void findViews() {
         tabLayout = (TabLayout) findViewById(R.id.place_sliding_tabs);
         placeViewPager = (ViewPager) findViewById(R.id.place_view_pager);
-        floatingActionButton = (FloatingActionButton) findViewById(R.id.filterButton);
+        floatingActionButton = (ImageButton) findViewById(R.id.filterButton);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        feedback = (FloatingActionButton) findViewById(R.id.feedbackFloat);
+        feedback = (ImageButton) findViewById(R.id.feedbackFloat);
         toast = (RelativeLayout) findViewById(R.id.toast);
         progressBar = (ProgressBar) findViewById(R.id.request_progress);
         placeViewPager.setOnPageChangeListener(this);
@@ -267,7 +269,9 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_city, menu);
+        if (hasConnection(this)) {
+            getMenuInflater().inflate(R.menu.menu_city, menu);
+        }
         return true;
     }
 
