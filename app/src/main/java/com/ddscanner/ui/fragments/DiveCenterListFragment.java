@@ -21,16 +21,29 @@ import java.util.HashMap;
  * Created by lashket on 4.2.16.
  */
 public class DiveCenterListFragment extends Fragment {
+
+    private DiveCentersListAdapter diveCentersListAdapter;
+    private RecyclerView rc;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Bundle args = this.getArguments();
-        ArrayList<DiveCenter> divecenters = args.getParcelableArrayList("DIVESPOTS");
-        String logoPath = args.getString("LOGOPATH");
+      //  Bundle args = this.getArguments();
+      //  ArrayList<DiveCenter> divecenters = args.getParcelableArrayList("DIVESPOTS");
+       // String logoPath = args.getString("LOGOPATH");
         View view = inflater.inflate(R.layout.dive_center_list_fragment, container, false);
-        RecyclerView rc = (RecyclerView) view.findViewById(R.id.dc_rc);
+        rc = (RecyclerView) view.findViewById(R.id.dc_rc);
         rc.setHasFixedSize(true);
         rc.setLayoutManager(new LinearLayoutManager(getActivity()));
-        rc.setAdapter(new DiveCentersListAdapter(divecenters, logoPath, getActivity()));
+      /// rc.setAdapter(new DiveCentersListAdapter(divecenters, logoPath, getActivity()));
         return view;
+    }
+
+    public void fillDiveCenters(ArrayList<DiveCenter> diveCenters, String logoPath) {
+        if (diveCentersListAdapter == null) {
+            diveCentersListAdapter = new DiveCentersListAdapter(diveCenters, logoPath, getActivity());
+            rc.setAdapter(diveCentersListAdapter);
+        } else {
+            diveCentersListAdapter.setDiveCenters(diveCenters, logoPath);
+        }
     }
 }

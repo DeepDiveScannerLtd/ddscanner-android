@@ -1,24 +1,31 @@
 package com.ddscanner.ui.managers;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.DiveCenter;
+import com.ddscanner.entities.DiveCentersResponseEntity;
+import com.ddscanner.entities.DiveSpot;
+import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.activities.DiveCenterDetailsActivity;
 import com.ddscanner.ui.activities.DivePlaceActivity;
+import com.ddscanner.ui.adapters.DiveCentersPagerAdapter;
 import com.ddscanner.utils.EventTrackerHelper;
 import com.ddscanner.utils.LogUtils;
 import com.google.android.gms.maps.CameraUpdate;
@@ -27,10 +34,12 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.algo.GridBasedAlgorithm;
@@ -41,8 +50,14 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 public class DiveCentersClusterManager extends ClusterManager<DiveCenter> implements ClusterManager.OnClusterClickListener<DiveCenter> {
 
@@ -56,16 +71,19 @@ public class DiveCentersClusterManager extends ClusterManager<DiveCenter> implem
     private HashMap<LatLng, DiveCenter> diveCentersMap = new HashMap<>();
     private Drawable clusterBackgroundDrawable;
     private final IconGenerator clusterIconGenerator;
-    private String logoPath;
     private HashMap<Marker, Bitmap> markerBitmapCache = new HashMap<>();
     private InfoWindowRefresher infoWindowRefresher;
+    private List<DiveCenter> diveCenters = new ArrayList<>();
+    private String logoPath;
+    private DiveCentersResponseEntity diveCentersResponseEntity;
+    private DiveCentersPagerAdapter diveCentersPagerAdapter;
 
-    public DiveCentersClusterManager(Context context, GoogleMap googleMap, List<DiveCenter> diveCenters, LatLng diveSpotLatLng, String diveSpotName, String logoPath) {
+    public DiveCentersClusterManager(Context context, GoogleMap googleMap, LatLng diveSpotLatLng, String diveSpotName, DiveCentersPagerAdapter diveCentersPagerAdapter) {
         super(context, googleMap);
         this.context = context;
         this.googleMap = googleMap;
-        this.logoPath = logoPath;
         this.clusterBackgroundDrawable = ContextCompat.getDrawable(context, R.drawable.ic_number);
+        this.diveCentersPagerAdapter = diveCentersPagerAdapter;
         this.clusterIconGenerator = new IconGenerator(context);
         this.clusterIconGenerator.setContentView(this.makeSquareTextView(context));
         this.clusterIconGenerator.setTextAppearance(com.google.maps.android.R.style.ClusterIcon_TextAppearance);
@@ -75,6 +93,7 @@ public class DiveCentersClusterManager extends ClusterManager<DiveCenter> implem
         setRenderer(new IconRenderer(context, googleMap, this));
         setOnClusterClickListener(this);
         getMarkerCollection().setOnInfoWindowAdapter(new InfoWindowAdapter());
+        requestDiveCenters(diveSpotLatLng);
 
         for (DiveCenter diveCenter : diveCenters) {
             addItem(diveCenter);
@@ -93,6 +112,12 @@ public class DiveCentersClusterManager extends ClusterManager<DiveCenter> implem
             }});
             DiveCenterDetailsActivity.show(context, diveCentersMap.get(marker.getPosition()), logoPath);
         }
+    }
+
+    @Override
+    public void onCameraChange(CameraPosition cameraPosition) {
+        super.onCameraChange(cameraPosition);
+        diveCentersPagerAdapter.populateDiveCentersList(changeListToListFragment((ArrayList<DiveCenter>)diveCenters), logoPath);
     }
 
     @Override
@@ -162,6 +187,68 @@ public class DiveCentersClusterManager extends ClusterManager<DiveCenter> implem
                 e.printStackTrace();
             }
         }
+    }
+
+    private void showingMarkers(List<DiveCenter> diveCenters) {
+        for (DiveCenter diveCenter : diveCenters) {
+            addItem(diveCenter);
+            diveCentersMap.put(diveCenter.getPosition(), diveCenter);
+        }
+    }
+
+    private ArrayList<DiveCenter> changeListToListFragment(ArrayList<DiveCenter> oldList) {
+        ArrayList<DiveCenter> newList = new ArrayList<>();
+        for (DiveCenter diveCenter : oldList) {
+            if (isSpotVisibleOnScreen(Float.valueOf(diveCenter.getLat()), Float.valueOf(diveCenter.getLng()))) {
+                Log.i(TAG, "DiveSpotInVisibleRegion");
+                newList.add(diveCenter);
+            }
+        }
+        return newList;
+    }
+
+    private boolean isSpotVisibleOnScreen(float lat, float lng) {
+        LatLng southwest = googleMap.getProjection().getVisibleRegion().latLngBounds.southwest;
+        LatLng northeast = googleMap.getProjection().getVisibleRegion().latLngBounds.northeast;
+        if (lat < northeast.latitude && lat > southwest.latitude && lng < northeast.longitude && lng > southwest.longitude) {
+            Log.i(TAG, "Coordinates in visible region");
+            return true;
+        }
+        return false;
+    }
+
+    public void requestDiveCenters(LatLng latLng) {
+
+        Map<String, String> map = new HashMap<>();
+        map.put("latLeft", String.valueOf(latLng.latitude - 2.0));
+        map.put("lngLeft", String.valueOf(latLng.longitude - 2.0));
+        map.put("lngRight", String.valueOf(latLng.longitude + 2.0));
+        map.put("latRight", String.valueOf(latLng.latitude + 2.0));
+        RestClient.getServiceInstance().getDiveCenters(map, new retrofit.Callback<Response>() {
+            @Override
+            public void success(Response s, Response response) {
+                String responseString = new String(((TypedByteArray) s.getBody()).getBytes());
+                System.out.println(responseString);
+                diveCentersResponseEntity = new Gson().fromJson(responseString, DiveCentersResponseEntity.class);
+                logoPath = diveCentersResponseEntity.getLogoPath();
+                diveCenters = diveCentersResponseEntity.getDivecenters();
+                diveCentersPagerAdapter.populateDiveCentersList(changeListToListFragment((ArrayList<DiveCenter>) diveCenters), logoPath);
+                showingMarkers(diveCenters);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                if (error.getKind().equals(RetrofitError.Kind.NETWORK)) {
+                 //   Toast.makeText(DiveCentersActivity.this, "Please check your internet connection", Toast.LENGTH_LONG).show();
+                } else if (error.getKind().equals(RetrofitError.Kind.HTTP)) {
+                 //   Toast.makeText(DiveCentersActivity.this, "Server is not responsible, please try later", Toast.LENGTH_LONG).show();
+                }
+                if (error != null) {
+                    String json = new String(((TypedByteArray) error.getResponse().getBody()).getBytes());
+                    Log.i(TAG, json);
+                }
+            }
+        });
     }
 
     private class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter {

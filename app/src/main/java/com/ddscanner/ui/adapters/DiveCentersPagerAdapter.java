@@ -9,7 +9,9 @@ import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 
 import com.appsflyer.AppsFlyerLib;
+import com.ddscanner.entities.DiveCenter;
 import com.ddscanner.entities.DiveCentersResponseEntity;
+import com.ddscanner.entities.DiveSpot;
 import com.ddscanner.ui.fragments.DiveCenterListFragment;
 import com.ddscanner.ui.managers.DiveCentersClusterManager;
 import com.ddscanner.utils.EventTrackerHelper;
@@ -31,11 +33,11 @@ public class DiveCentersPagerAdapter extends FragmentStatePagerAdapter {
     private DiveCentersResponseEntity diveCentersResponseEntity;
     private LatLng diveSpotLatLng;
     private String diveSpotName;
+    private DiveCenterListFragment diveCenterListFragment = new DiveCenterListFragment();
 
-    public DiveCentersPagerAdapter(Context context, FragmentManager fm, DiveCentersResponseEntity diveCenters, LatLng diveSpotLatLng, String diveSpotName) {
+    public DiveCentersPagerAdapter(Context context, FragmentManager fm, LatLng diveSpotLatLng, String diveSpotName) {
         super(fm);
         this.context = context;
-        this.diveCentersResponseEntity = diveCenters;
         this.diveSpotLatLng = diveSpotLatLng;
         this.diveSpotName = diveSpotName;
     }
@@ -52,7 +54,7 @@ public class DiveCentersPagerAdapter extends FragmentStatePagerAdapter {
                     public void onMapReady(GoogleMap googleMap) {
                         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(diveSpotLatLng, 8.0f));
                         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-                        DiveCentersClusterManager diveCentersClusterManager = new DiveCentersClusterManager(context, googleMap, diveCentersResponseEntity.getDivecenters(), diveSpotLatLng, diveSpotName, diveCentersResponseEntity.getLogoPath());
+                        DiveCentersClusterManager diveCentersClusterManager = new DiveCentersClusterManager(context, googleMap, diveSpotLatLng, diveSpotName, DiveCentersPagerAdapter.this);
                         googleMap.setOnInfoWindowClickListener(diveCentersClusterManager);
                         googleMap.getUiSettings().setMapToolbarEnabled(true);
                         googleMap.getUiSettings().setZoomControlsEnabled(false);
@@ -63,15 +65,20 @@ public class DiveCentersPagerAdapter extends FragmentStatePagerAdapter {
                 });
                 break;
             case 1:
-                fragment = new DiveCenterListFragment();
-                args.putParcelableArrayList("DIVESPOTS", (ArrayList<? extends Parcelable>) diveCentersResponseEntity.getDivecenters());
-                args.putString("LOGOPATH", diveCentersResponseEntity.getLogoPath());
+                diveCenterListFragment = new DiveCenterListFragment();
+                fragment = diveCenterListFragment;
+//                args.putParcelableArrayList("DIVESPOTS", (ArrayList<? extends Parcelable>) diveCentersResponseEntity.getDivecenters());
+              //  args.putString("LOGOPATH", diveCentersResponseEntity.getLogoPath());
                 break;
         }
-        fragment.setArguments(args);
+  //      fragment.setArguments(args);
         return fragment;
     }
 
+    public void populateDiveCentersList (ArrayList<DiveCenter> diveCenters, String logoPath) {
+        diveCenterListFragment.fillDiveCenters(diveCenters, logoPath);
+    }
+    
     @Override
     public int getCount() {
         return 2;
