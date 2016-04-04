@@ -8,6 +8,7 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.entities.DiveSpot;
@@ -36,14 +37,16 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter {
     private ViewPager placeViewPager;
     private RelativeLayout toast;
     private ProgressBar progressBar;
+    private TextView toolbarTitle;
 
-    public PlacesPagerAdapter(Context context, FragmentManager fm, LatLng latLng, LatLngBounds latLngBounds, RelativeLayout toast, ProgressBar progressBar) {
+    public PlacesPagerAdapter(Context context, FragmentManager fm, LatLng latLng, LatLngBounds latLngBounds, RelativeLayout toast, ProgressBar progressBar, TextView textView) {
         super(fm);
         this.context = context;
         this.latLng = latLng;
         this.latLngBounds = latLngBounds;
         this.toast = toast;
         this.progressBar = progressBar;
+        this.toolbarTitle = textView;
     }
 
     @Override
@@ -67,7 +70,7 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter {
                             }
 
                         }
-                        diveSpotsClusterManager = new DiveSpotsClusterManager(context, googleMap, PlacesPagerAdapter.this, toast, progressBar);
+                        diveSpotsClusterManager = new DiveSpotsClusterManager(context, googleMap, PlacesPagerAdapter.this, toast, progressBar, toolbarTitle);
                         googleMap.setOnInfoWindowClickListener(diveSpotsClusterManager);
                         googleMap.getUiSettings().setMapToolbarEnabled(false);
                         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);

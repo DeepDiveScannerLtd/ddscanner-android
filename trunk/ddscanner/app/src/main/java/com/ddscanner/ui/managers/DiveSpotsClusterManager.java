@@ -82,6 +82,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
     private int rating = -1;
     private String visibility;
     private HashMap<Marker, Bitmap> markerBitmapCache = new HashMap<>();
+    private TextView toolbarTitle;
 
     private InfoWindowRefresher infoWindowRefresher;
     private boolean isCanMakeRequest = false;
@@ -89,7 +90,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
     private ProgressBar progressBar;
     private RelativeLayout toast;
 
-    public DiveSpotsClusterManager(Context context, GoogleMap googleMap, PlacesPagerAdapter placesPagerAdapter, RelativeLayout toast, ProgressBar progressBar) {
+    public DiveSpotsClusterManager(Context context, GoogleMap googleMap, PlacesPagerAdapter placesPagerAdapter, RelativeLayout toast, ProgressBar progressBar, TextView toolbarTitle) {
         super(context, googleMap);
         this.context = context;
         this.googleMap = googleMap;
@@ -101,6 +102,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         this.clusterIconGenerator.setBackground(clusterBackgroundDrawable);
         this.toast = toast;
         this.progressBar = progressBar;
+        this.toolbarTitle = toolbarTitle;
 
         setAlgorithm(new GridBasedAlgorithm<DiveSpot>());
         setRenderer(new IconRenderer(context, googleMap, this));
@@ -156,6 +158,9 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
                         northeast.latitude >= diveSpotsRequestMap.getNorthEastLat() ||
                         northeast.longitude >= diveSpotsRequestMap.getNorthEastLng()) {
                     requestCityProducts();
+                    if (!toolbarTitle.getText().toString().equals("DDSCANNER")) {
+                        toolbarTitle.setText("DDScanner");
+                    }
                 }
             } else {
                 requestCityProducts();

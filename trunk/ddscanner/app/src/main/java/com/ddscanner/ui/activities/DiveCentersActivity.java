@@ -37,11 +37,8 @@ public class DiveCentersActivity extends AppCompatActivity implements ViewPager.
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    private DiveCentersResponseEntity divecenters = new DiveCentersResponseEntity();
     private DiveCentersPagerAdapter diveCentersPagerAdapter;
     private LatLng latLng;
-    private Map<String, String> map = new HashMap<>();
-    private ProgressDialog progressDialog;
     private String dsName;
 
     @Override
@@ -66,10 +63,16 @@ public class DiveCentersActivity extends AppCompatActivity implements ViewPager.
     }
 
     private void populateDiveCentesPager() {
-        diveCentersPagerAdapter = new DiveCentersPagerAdapter(this, getFragmentManager(), latLng, dsName);
+        diveCentersPagerAdapter = new DiveCentersPagerAdapter(this, getFragmentManager(), latLng, dsName, viewPager, tabLayout);
         viewPager.setAdapter(diveCentersPagerAdapter);
         viewPager.setOffscreenPageLimit(3);
         tabLayout.setupWithViewPager(viewPager);
+    }
+
+    public void changeViewPagerItem () {
+
+        this.viewPager.setCurrentItem(0);
+        this.tabLayout.setupWithViewPager(this.viewPager);
     }
 
     public static void show(Context context, LatLng latLng, String name) {
@@ -77,39 +80,6 @@ public class DiveCentersActivity extends AppCompatActivity implements ViewPager.
         intent.putExtra("LATLNG", latLng);
         intent.putExtra("NAME", name);
         context.startActivity(intent);
-    }
-
-    private void requestDiveCenters(LatLng latLng) {
-        progressDialog = new ProgressDialog(DiveCentersActivity.this);
-        progressDialog.setMessage(getResources().getString(R.string.pleaseWait));
-        progressDialog.show();
-        map.put("latLeft", String.valueOf(latLng.latitude - 2.0));
-        map.put("lngLeft", String.valueOf(latLng.longitude - 2.0));
-        map.put("lngRight", String.valueOf(latLng.longitude + 2.0));
-        map.put("latRight", String.valueOf(latLng.latitude + 2.0));
-        RestClient.getServiceInstance().getDiveCenters(map, new Callback<Response>() {
-            @Override
-            public void success(Response s, Response response) {
-                String responseString = new String(((TypedByteArray) s.getBody()).getBytes());
-                System.out.println(responseString);
-                divecenters = new Gson().fromJson(responseString, DiveCentersResponseEntity.class);
-                populateDiveCentesPager();
-                progressDialog.dismiss();
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                if (error.getKind().equals(RetrofitError.Kind.NETWORK)) {
-                    Toast.makeText(DiveCentersActivity.this, "Please check your internet connection", Toast.LENGTH_LONG).show();
-                } else if (error.getKind().equals(RetrofitError.Kind.HTTP)) {
-                    Toast.makeText(DiveCentersActivity.this, "Server is not responsible, please try later", Toast.LENGTH_LONG).show();
-                }
-                if (error != null) {
-                    String json = new String(((TypedByteArray) error.getResponse().getBody()).getBytes());
-                    Log.i(TAG, json);
-                }
-            }
-        });
     }
 
     @Override

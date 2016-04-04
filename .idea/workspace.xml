@@ -2,9 +2,17 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="38b07f36-7d31-483a-b685-2b72db2a2907" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/trunk/ddscanner/.idea/encodings.xml" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/trunk/ddscanner/app/src/main/java/com/ddscanner/ui/activities/CityActivity.java" afterPath="$PROJECT_DIR$/trunk/ddscanner/app/src/main/java/com/ddscanner/ui/activities/CityActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/trunk/ddscanner/app/src/main/java/com/ddscanner/ui/fragments/DiveCenterListFragment.java" afterPath="$PROJECT_DIR$/trunk/ddscanner/app/src/main/java/com/ddscanner/ui/fragments/DiveCenterListFragment.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/trunk/ddscanner/app/src/main/java/com/ddscanner/ui/activities/DiveCentersActivity.java" afterPath="$PROJECT_DIR$/trunk/ddscanner/app/src/main/java/com/ddscanner/ui/activities/DiveCentersActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/trunk/ddscanner/app/src/main/java/com/ddscanner/ui/adapters/DiveCentersPagerAdapter.java" afterPath="$PROJECT_DIR$/trunk/ddscanner/app/src/main/java/com/ddscanner/ui/adapters/DiveCentersPagerAdapter.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/trunk/ddscanner/app/src/main/java/com/ddscanner/ui/managers/DiveSpotsClusterManager.java" afterPath="$PROJECT_DIR$/trunk/ddscanner/app/src/main/java/com/ddscanner/ui/managers/DiveSpotsClusterManager.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/trunk/ddscanner/app/src/main/java/com/ddscanner/ui/activities/FilterActivity.java" afterPath="$PROJECT_DIR$/trunk/ddscanner/app/src/main/java/com/ddscanner/ui/activities/FilterActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/trunk/ddscanner/app/src/main/java/com/ddscanner/ui/adapters/PlacesPagerAdapter.java" afterPath="$PROJECT_DIR$/trunk/ddscanner/app/src/main/java/com/ddscanner/ui/adapters/PlacesPagerAdapter.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/trunk/ddscanner/app/src/main/java/com/ddscanner/ui/fragments/ProductListFragment.java" afterPath="$PROJECT_DIR$/trunk/ddscanner/app/src/main/java/com/ddscanner/ui/fragments/ProductListFragment.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/trunk/ddscanner/app/src/main/res/layout/dive_center_list_fragment.xml" afterPath="$PROJECT_DIR$/trunk/ddscanner/app/src/main/res/layout/dive_center_list_fragment.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/trunk/ddscanner/.idea/misc.xml" afterPath="$PROJECT_DIR$/trunk/ddscanner/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/trunk/ddscanner/.idea/vcs.xml" afterPath="$PROJECT_DIR$/trunk/ddscanner/.idea/vcs.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="ddscanner.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -378,7 +386,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="1366" y="0" width="1920" height="1080" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />

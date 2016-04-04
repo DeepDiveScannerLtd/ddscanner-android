@@ -152,7 +152,7 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void populatePlaceViewpager(LatLng latLng, LatLngBounds latLngBounds) {
-        placesPagerAdapter = new PlacesPagerAdapter(this, getFragmentManager(), latLng, latLngBounds, toast, progressBar );
+        placesPagerAdapter = new PlacesPagerAdapter(this, getFragmentManager(), latLng, latLngBounds, toast, progressBar, toolbarTitle );
         placeViewPager.setAdapter(placesPagerAdapter);
         placeViewPager.setOffscreenPageLimit(3);
         tabLayout.setupWithViewPager(placeViewPager);

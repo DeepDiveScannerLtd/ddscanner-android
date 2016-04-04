@@ -5,6 +5,7 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.design.widget.TabLayout;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 
@@ -34,12 +35,16 @@ public class DiveCentersPagerAdapter extends FragmentStatePagerAdapter {
     private LatLng diveSpotLatLng;
     private String diveSpotName;
     private DiveCenterListFragment diveCenterListFragment = new DiveCenterListFragment();
+    private ViewPager viewPager;
+    private TabLayout tabLayout;
 
-    public DiveCentersPagerAdapter(Context context, FragmentManager fm, LatLng diveSpotLatLng, String diveSpotName) {
+    public DiveCentersPagerAdapter(Context context, FragmentManager fm, LatLng diveSpotLatLng, String diveSpotName, ViewPager viewPager, TabLayout tabLayout) {
         super(fm);
         this.context = context;
         this.diveSpotLatLng = diveSpotLatLng;
         this.diveSpotName = diveSpotName;
+        this.viewPager = viewPager;
+        this.tabLayout = tabLayout;
     }
 
     @Override
@@ -67,16 +72,13 @@ public class DiveCentersPagerAdapter extends FragmentStatePagerAdapter {
             case 1:
                 diveCenterListFragment = new DiveCenterListFragment();
                 fragment = diveCenterListFragment;
-//                args.putParcelableArrayList("DIVESPOTS", (ArrayList<? extends Parcelable>) diveCentersResponseEntity.getDivecenters());
-              //  args.putString("LOGOPATH", diveCentersResponseEntity.getLogoPath());
                 break;
         }
-  //      fragment.setArguments(args);
         return fragment;
     }
 
     public void populateDiveCentersList (ArrayList<DiveCenter> diveCenters, String logoPath) {
-        diveCenterListFragment.fillDiveCenters(diveCenters, logoPath);
+        diveCenterListFragment.fillDiveCenters(diveCenters, logoPath, viewPager, tabLayout);
     }
     
     @Override

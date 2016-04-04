@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -54,6 +55,7 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
     private FiltersResponseEntity filters = new FiltersResponseEntity();
     private Button button;
     private ProgressDialog progressDialog;
+    private int padding = 40;
 
 
     @Override
@@ -72,6 +74,9 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
         request();
         progressDialog.dismiss();
         button.setOnClickListener(this);
+        if (Build.VERSION.SDK_INT < 17) {
+            padding = 60;
+        }
     }
 
     private void findViews() {
@@ -93,7 +98,7 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
             RadioButton radioButton = new RadioButton(this);
             radioButton.setButtonDrawable(R.drawable.bg_radio_button);
             radioButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
-            radioButton.setPadding(40,0,0,0);
+            radioButton.setPadding(padding,0,0,0);
             layoutParams.topMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics());
             layoutParams.bottomMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics());
             radioButton.setTag(entry.getKey());
