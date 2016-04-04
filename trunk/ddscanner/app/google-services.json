@@ -17,7 +17,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "195706914618-to8m69ol3pld75ticikmuhoo3khsmbop.apps.googleusercontent.com",
+          "client_id": "195706914618-i53tprfc1gbtivb56r2p54mqmgkt21j6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ddscanner",
+            "certificate_hash": "378D7C46262C4121294AB514F4ACDF9CEBBE4307"
+          }
+        },
+        {
+          "client_id": "195706914618-ist9f8ins485k2gglbomgdp4l2pn57iq.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -27,7 +35,7 @@
           "status": 1
         },
         "cloud_messaging_service": {
-          "status": 2,
+          "status": 1,
           "apns_config": []
         },
         "appinvite_service": {
@@ -35,7 +43,7 @@
           "other_platform_oauth_client": []
         },
         "google_signin_service": {
-          "status": 1
+          "status": 2
         },
         "ads_service": {
           "status": 1
