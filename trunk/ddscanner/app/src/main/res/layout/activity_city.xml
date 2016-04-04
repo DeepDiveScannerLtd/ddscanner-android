@@ -55,9 +55,9 @@
         android:text="Please zoom in to see dive spots"/>
     </RelativeLayout>
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/filterButton"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         app:elevation="3dp"
@@ -67,17 +67,42 @@
         app:pressedTranslationZ="12dp"/>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/feedbackFloat"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_alignParentBottom="true"
+        android:visibility="gone"
         android:layout_alignParentLeft="true"
         app:elevation="3dp"
         android:layout_margin="20dp"
-
         android:src="@drawable/ic_feedback"
         app:backgroundTint="@color/white"
-        app:pressedTranslationZ="12dp"/>
+        app:pressedTranslationZ="12dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <RelativeLayout
+        android:layout_marginLeft="10dp"
+        android:layout_alignParentBottom="true"
+        android:layout_width="40dp"
+        android:layout_height="80dp"
+        android:layout_marginBottom="16dp"
+        >
+
+        <ImageButton
+            android:layout_centerHorizontal="true"
+            android:id="@+id/filterButton"
+            android:src="@drawable/ic_filter"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/top_border" />
+
+        <ImageButton
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="1dp"
+            android:id="@+id/feedbackFloat"
+            android:layout_below="@+id/filterButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_feedback"
+            android:background="@drawable/bottom_border"/>
+    </RelativeLayout>
 
 
 </RelativeLayout>
