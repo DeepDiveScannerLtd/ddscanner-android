@@ -51,7 +51,8 @@ public class DiveCentersActivity extends AppCompatActivity implements ViewPager.
         findViews();
         latLng = getIntent().getParcelableExtra("LATLNG");
         dsName = getIntent().getStringExtra("NAME");
-        requestDiveCenters(latLng);
+        populateDiveCentesPager();
+       // requestDiveCenters(latLng);
     }
 
     private void findViews() {
@@ -64,8 +65,8 @@ public class DiveCentersActivity extends AppCompatActivity implements ViewPager.
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_actionbar_back);
     }
 
-    private void populateDiveCentesPager(DiveCentersResponseEntity diveCentersResponseEntity) {
-        diveCentersPagerAdapter = new DiveCentersPagerAdapter(this, getFragmentManager(), diveCentersResponseEntity, latLng, dsName);
+    private void populateDiveCentesPager() {
+        diveCentersPagerAdapter = new DiveCentersPagerAdapter(this, getFragmentManager(), latLng, dsName);
         viewPager.setAdapter(diveCentersPagerAdapter);
         viewPager.setOffscreenPageLimit(3);
         tabLayout.setupWithViewPager(viewPager);
@@ -92,7 +93,7 @@ public class DiveCentersActivity extends AppCompatActivity implements ViewPager.
                 String responseString = new String(((TypedByteArray) s.getBody()).getBytes());
                 System.out.println(responseString);
                 divecenters = new Gson().fromJson(responseString, DiveCentersResponseEntity.class);
-                populateDiveCentesPager(divecenters);
+                populateDiveCentesPager();
                 progressDialog.dismiss();
             }
 

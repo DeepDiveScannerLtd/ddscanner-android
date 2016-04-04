@@ -58,7 +58,6 @@ public class DivePlaceActivity extends AppCompatActivity implements ViewPager.On
     private ViewPager productImagesViewPager;
     private LinearLayout starsLayout;
     private TextView reviewsCount;
-    private TextView price;
     private TextView depth_value;
     private TextView visibility_value;
     private TextView description;
@@ -75,7 +74,6 @@ public class DivePlaceActivity extends AppCompatActivity implements ViewPager.On
     private PlaceImagesPagerAdapter placeImagesPagerAdapter;
     private ProgressDialog progressDialog;
     private CollapsingToolbarLayout collapsingToolbarLayout = null;
-    private SubscribeDialog subscribeDialog = new SubscribeDialog();
     private RecyclerView sealifeRecyclerview;
     private ArrayList<Sealife> sealifes;
     private static ArrayList<String> images;
@@ -87,8 +85,6 @@ public class DivePlaceActivity extends AppCompatActivity implements ViewPager.On
     private HashMap<String, String> values= new HashMap<String, String>();
 
     private DivespotDetails divespotDetails;
-
-    private String[] iconsUrls = new String[5];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,8 +128,6 @@ public class DivePlaceActivity extends AppCompatActivity implements ViewPager.On
                     String json = new String(((TypedByteArray) error.getResponse().getBody()).getBytes());
                     Log.i(TAG, json.toString());
                 }
-                // TODO Handle result handling when activity stopped
-                // TODO Handle errors
             }
         });
     }
@@ -141,7 +135,6 @@ public class DivePlaceActivity extends AppCompatActivity implements ViewPager.On
     private void findViews() {
         productImagesViewPager = (ViewPager) findViewById(R.id.product_images);
         starsLayout = (LinearLayout) findViewById(R.id.stars);
-        price = (TextView) findViewById(R.id.price);
         depth_value = (TextView) findViewById(R.id.characteristic_value_depth);
         visibility_value = (TextView) findViewById(R.id.characteristic_value_visibility);
         description = (TextView) findViewById(R.id.dive_place_description);
@@ -168,7 +161,6 @@ public class DivePlaceActivity extends AppCompatActivity implements ViewPager.On
 
     private void populateProductDetails() {
         sealifes = (ArrayList<Sealife>)divespotDetails.getSealifes();
-//        images = diveSpot.getImages();
         diveSpot = divespotDetails.getDivespot();
         PATH = diveSpot.getDiveSpotPathMedium();
         visibility_value.setText(diveSpot.getVisibility());
@@ -195,7 +187,6 @@ public class DivePlaceActivity extends AppCompatActivity implements ViewPager.On
         } else {
             reviewsCount.setText("No reviews");
         }
-        LinearLayoutManager linearLayoutManager = new org.solovyev.android.views.llm.LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
 
         if (divespotDetails.getSealifes() != null) {
             findViewById(R.id.sealife).setVisibility(View.VISIBLE);
@@ -205,7 +196,6 @@ public class DivePlaceActivity extends AppCompatActivity implements ViewPager.On
             sealifeRecyclerview.setNestedScrollingEnabled(false);
             sealifeRecyclerview.setHasFixedSize(false);
             sealifeRecyclerview.setLayoutManager(layoutManager);
-         //   sealifeRecyclerview.setLayoutManager(linearLayoutManager);
             sealifeRecyclerview.setAdapter(new SealifeListAdapter(sealifes, this, diveSpot.getSealifePathSmall(), diveSpot.getSealifePathMedium()));
         }
         if (diveSpot.getImages() != null) {
@@ -266,7 +256,6 @@ public class DivePlaceActivity extends AppCompatActivity implements ViewPager.On
                             put(EventTrackerHelper.PARAM_REVIEWS_CLICK, diveSpot.getId());
                         }});
                 startActivityForResult(intent, 9001);
-               // ReviewsActivity.show(DivePlaceActivity.this, (ArrayList<Comment>)divespotDetails.getComments(), values, diveSpot.getRating());
                 break;
         }
     }
@@ -303,12 +292,6 @@ public class DivePlaceActivity extends AppCompatActivity implements ViewPager.On
             case android.R.id.home:
                 onBackPressed();
                 return true;
-          /*  case R.id.favorite:
-                if (SharedPreferenceHelper.getIsUserLogined()) {
-                    Toast.makeText(DivePlaceActivity.this, "You are already login", Toast.LENGTH_LONG);
-                } else {
-                    SocialNetworks.show(DivePlaceActivity.this);
-                }*/
             default:
                 return super.onOptionsItemSelected(item);
         }

@@ -108,13 +108,13 @@ public class DiveCenterDetailsActivity extends AppCompatActivity {
         for (int k = 0; k < diveCenter.getRating(); k++) {
             ImageView iv = new ImageView(this);
             iv.setImageResource(R.drawable.ic_flag_full_small);
-            iv.setPadding(3, 0, 0, 0);
+            iv.setPadding(10, 0, 0, 0);
             stars.addView(iv);
         }
         for (int k = 0; k < 5 - diveCenter.getRating(); k++) {
             ImageView iv = new ImageView(this);
             iv.setImageResource(R.drawable.ic_flag_empty_small);
-            iv.setPadding(3, 0, 0, 0);
+            iv.setPadding(10, 0, 0, 0);
             stars.addView(iv);
         }
 

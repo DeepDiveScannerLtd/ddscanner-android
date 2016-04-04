@@ -63,17 +63,17 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
     private static final int REQUEST_CODE_FILTER = 2;
 
     private Toolbar toolbar;
-    private ViewPager placeViewPager;
+    public  static ViewPager placeViewPager;
     private PlacesPagerAdapter placesPagerAdapter;
-    private TabLayout tabLayout;
+    public static TabLayout tabLayout;
     private static TextView toolbarTitle;
     private LatLng latLng;
     private FloatingActionButton floatingActionButton;
     private FloatingActionButton feedback;
     private SubscribeDialog subscribeDialog = new SubscribeDialog();
     private ProgressDialog progressDialog;
-    private static RelativeLayout toast;
-    private static ProgressBar progressBar;
+    private RelativeLayout toast;
+    private ProgressBar progressBar;
     private Map<String, Object> map = new HashMap<String, Object>();
 
 
@@ -152,7 +152,7 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void populatePlaceViewpager(LatLng latLng, LatLngBounds latLngBounds) {
-        placesPagerAdapter = new PlacesPagerAdapter(this, getFragmentManager(), latLng, latLngBounds );
+        placesPagerAdapter = new PlacesPagerAdapter(this, getFragmentManager(), latLng, latLngBounds, toast, progressBar );
         placeViewPager.setAdapter(placesPagerAdapter);
         placeViewPager.setOffscreenPageLimit(3);
         tabLayout.setupWithViewPager(placeViewPager);
@@ -314,42 +314,6 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
                 progressDialog.show();
                 break;
         }
-    }
-
-    public static void showToast() {
-        toast.setVisibility(View.VISIBLE);
-        android.os.Handler handler = new android.os.Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                hideToast();
-            }
-        }, 1700);
-    }
-
-    public static void showPb() {
-        progressBar.setVisibility(View.VISIBLE);
-    }
-
-    public static void hidePb() {
-        android.os.Handler handler = new android.os.Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                progressBar.setVisibility(View.GONE);
-            }
-        }, 1200);
-    }
-
-    public static void hideToast() {
-        toast.setVisibility(View.GONE);
-    }
-
-    public static boolean getCurrentTitle() {
-       if (toolbarTitle.getText().toString().equals("DDScanner")){
-           return true;
-       }
-       return false;
     }
 
     public static void setTitle() {

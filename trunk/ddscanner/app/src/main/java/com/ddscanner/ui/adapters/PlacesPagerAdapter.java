@@ -6,6 +6,8 @@ import android.content.Context;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 
 import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.entities.DiveSpot;
@@ -31,12 +33,17 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter {
     private ProductListFragment productListFragment;
     private DiveSpotsClusterManager diveSpotsClusterManager;
     private LatLngBounds latLngBounds;
+    private ViewPager placeViewPager;
+    private RelativeLayout toast;
+    private ProgressBar progressBar;
 
-    public PlacesPagerAdapter(Context context, FragmentManager fm, LatLng latLng, LatLngBounds latLngBounds) {
+    public PlacesPagerAdapter(Context context, FragmentManager fm, LatLng latLng, LatLngBounds latLngBounds, RelativeLayout toast, ProgressBar progressBar) {
         super(fm);
         this.context = context;
         this.latLng = latLng;
         this.latLngBounds = latLngBounds;
+        this.toast = toast;
+        this.progressBar = progressBar;
     }
 
     @Override
@@ -60,9 +67,10 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter {
                             }
 
                         }
-                        diveSpotsClusterManager = new DiveSpotsClusterManager(context, googleMap, PlacesPagerAdapter.this);
+                        diveSpotsClusterManager = new DiveSpotsClusterManager(context, googleMap, PlacesPagerAdapter.this, toast, progressBar);
                         googleMap.setOnInfoWindowClickListener(diveSpotsClusterManager);
                         googleMap.getUiSettings().setMapToolbarEnabled(false);
+                        googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
                        // googleMap.setMyLocationEnabled(true);
                         googleMap.setOnMarkerClickListener(diveSpotsClusterManager);
                         googleMap.setOnCameraChangeListener(diveSpotsClusterManager);

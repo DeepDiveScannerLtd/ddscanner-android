@@ -15,9 +15,6 @@ import retrofit.http.POST;
 import retrofit.http.Path;
 import retrofit.http.QueryMap;
 
-/**
- * Created by unight on 03.07.2015.
- */
 public interface DDScannerRestService {
 
     @GET("/diving/filters")

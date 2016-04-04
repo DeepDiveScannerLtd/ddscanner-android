@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.R;
 import com.ddscanner.entities.DiveCenter;
+import com.ddscanner.entities.DiveSpot;
 import com.ddscanner.ui.activities.DiveCenterDetailsActivity;
 import com.ddscanner.ui.activities.DivePlaceActivity;
 import com.ddscanner.utils.EventTrackerHelper;
@@ -87,6 +88,12 @@ public class DiveCentersListAdapter extends RecyclerView.Adapter<DiveCentersList
             diveCentersListViewHolder.starsLayout.addView(iv);
         }
 
+    }
+
+    public void setDiveCenters(ArrayList<DiveCenter> diveCenters, String logoPathN) {
+        this.diveCenters = diveCenters;
+        this.logoPath = logoPathN;
+        notifyDataSetChanged();
     }
 
     @Override
