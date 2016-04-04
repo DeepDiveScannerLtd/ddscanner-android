@@ -1,8 +1,6 @@
 package com.ddscanner.ui.managers;
 
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
@@ -14,17 +12,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.DiveCenter;
 import com.ddscanner.entities.DiveCentersResponseEntity;
-import com.ddscanner.entities.DiveSpot;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.activities.DiveCenterDetailsActivity;
-import com.ddscanner.ui.activities.DivePlaceActivity;
 import com.ddscanner.ui.adapters.DiveCentersPagerAdapter;
 import com.ddscanner.utils.EventTrackerHelper;
 import com.ddscanner.utils.LogUtils;
@@ -46,7 +41,6 @@ import com.google.maps.android.clustering.algo.GridBasedAlgorithm;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
 import com.google.maps.android.ui.SquareTextView;
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -194,6 +188,7 @@ public class DiveCentersClusterManager extends ClusterManager<DiveCenter> implem
             addItem(diveCenter);
             diveCentersMap.put(diveCenter.getPosition(), diveCenter);
         }
+        cluster();
     }
 
     private ArrayList<DiveCenter> changeListToListFragment(ArrayList<DiveCenter> oldList) {
