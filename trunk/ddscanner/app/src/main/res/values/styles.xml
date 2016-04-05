@@ -35,6 +35,27 @@
         <item name="android:shadowDx">2</item>
     </style>
 
+    <style name="AddDsCharTitleStyle">
+        <item name="android:textSize">@dimen/add_ds_char_title</item>
+        <item name="android:textColor">@color/black_text</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textColorHint">#B2B2B2</item>
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
+    <style name="AddDsSpinner" parent="Base.Widget.AppCompat.Spinner">
+
+    </style>
+
+    <style name="AddDsIconsStyle">
+     <!--   <item name="android:layout_marginLeft">@dimen/add_ds_margin_left</item>
+        <item name="android:layout_marginRight">@dimen/add_ds_margin_right_icon</item> -->
+        <item name="android:layout_height">@dimen/add_ds_char_height</item>
+        <item name="android:layout_width">@dimen/add_ds_char_width</item>
+        <item name="android:gravity">center</item>
+    </style>
+
     <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
         <item name="spinBars">true</item>
         <item name="color">@android:color/white</item>

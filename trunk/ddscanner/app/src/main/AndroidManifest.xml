@@ -57,6 +57,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ui.activities.AddDiveSpotActivity"
+            android:screenOrientation="portrait">
+        </activity>
         <activity
             android:name=".ui.activities.FilterActivity"
             android:screenOrientation="portrait">
