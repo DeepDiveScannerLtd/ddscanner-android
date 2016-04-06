@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.SpinnerAdapter;
 
 import com.ddscanner.R;
@@ -23,6 +24,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
 
     private ImageButton btnAddPhoto;
     private Toolbar toolbar;
+    private RelativeLayout pickLocation;
 
 
     public static void show(Context context) {
@@ -42,11 +44,13 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         btnAddPhoto = (ImageButton) findViewById(R.id.btn_add_photo);
         btnAddPhoto.setOnClickListener(this);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        pickLocation = (RelativeLayout) findViewById(R.id.characteristic_location);
+        pickLocation.setOnClickListener(this);
     }
 
     private void toolbarSettings() {
         setSupportActionBar(toolbar);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_actionbar_search);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_actionbar_back);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("New Divespot");
     }
@@ -58,6 +62,9 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                 Intent i = new Intent(Intent.ACTION_PICK,
                         android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(i, RC_PICK_PHOTO);
+                break;
+            case R.id.characteristic_location:
+                PickLocationActivity.show(AddDiveSpotActivity.this);
                 break;
         }
     }

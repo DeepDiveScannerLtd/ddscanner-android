@@ -33,6 +33,14 @@
                 android:layout_height="115dp">
 
                 <TextView
+                    android:layout_centerInParent="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:textColor="#b2b2b2"
+                    android:text="Add divespot's photo"/>
+
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
@@ -327,7 +335,13 @@
                     android:text="SEALIFE"
                     android:textColor="@color/black_text"
                     android:textSize="15sp" />
-
+                <TextView
+                    android:layout_centerInParent="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:textColor="#b2b2b2"
+                    android:text="Add sealife"/>
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

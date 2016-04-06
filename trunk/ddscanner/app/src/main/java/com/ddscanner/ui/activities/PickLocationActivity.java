@@ -1,0 +1,189 @@
+package com.ddscanner.ui.activities;
+
+import android.content.Context;
+import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.TextView;
+
+import com.ddscanner.R;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+
+import java.util.List;
+import java.util.Locale;
+
+/**
+ * Created by lashket on 5.4.16.
+ */
+public class PickLocationActivity extends AppCompatActivity implements GoogleMap.OnMapClickListener, GoogleMap.OnMarkerDragListener {
+
+    private static final int REQUEST_CODE_PLACE_AUTOCOMPLETE = 8001;
+    private static final String TAG = PickLocationActivity.class.getSimpleName();
+
+    private SupportMapFragment mapFragment;
+    private TextView placeName;
+    private TextView placeCoordinates;
+    private GoogleMap googleMap;
+    private Toolbar toolbar;
+    private Geocoder geocoder;
+    private LatLng pickedLatLng;
+
+    public static void show(Context context) {
+        Intent intent = new Intent(context, PickLocationActivity.class);
+        context.startActivity(intent);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_pick_ds_location);
+        geocoder = new Geocoder(this, Locale.ENGLISH);
+        findViews();
+        toolbarSettings();
+        mapSettings();
+    }
+
+    private void findViews() {
+        placeCoordinates = (TextView) findViewById(R.id.lat_lng);
+        placeName = (TextView) findViewById(R.id.place_name);
+        mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapFragment);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        googleMap = mapFragment.getMap();
+        googleMap.setOnMapClickListener(this);
+        googleMap.setOnMarkerDragListener(this);
+    }
+
+    private void toolbarSettings() {
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_actionbar_back);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("Pick location");
+    }
+
+    private void mapSettings() {
+        mapFragment.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap map) {
+                googleMap = map;
+            }
+        });
+    }
+
+    @Override
+    public void onMapClick(LatLng latLng) {
+        googleMap.clear();
+        pickedLatLng = latLng;
+        placeCoordinates.setText(String.valueOf(latLng.latitude).substring(0, 10) + ", " + String.valueOf(latLng.longitude).substring(0, 10));
+        Marker marker = googleMap.addMarker(new MarkerOptions()
+                .position(latLng)
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds))
+                .draggable(true));
+        new ChangeDataInTextView().execute(latLng);
+    }
+
+    @Override
+    public void onMarkerDrag(Marker marker) {
+    }
+
+    @Override
+    public void onMarkerDragStart(Marker marker) {
+
+    }
+
+    @Override
+    public void onMarkerDragEnd(Marker marker) {
+        pickedLatLng = marker.getPosition();
+        placeCoordinates.setText(String.valueOf(marker.getPosition().latitude).substring(0,6) + ", " + String.valueOf(marker.getPosition().longitude).substring(0, 6));
+        new ChangeDataInTextView().execute(marker.getPosition());
+    }
+
+    private String getCity(LatLng latLng) {
+        String city = "";
+        try {
+            List<Address> addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
+
+            if (addresses != null) {
+                Address returnedAddress = addresses.get(0);
+                if (returnedAddress.getAddressLine(1) != null) {
+                    city = returnedAddress.getAddressLine(1);
+                } else if (returnedAddress.getAddressLine(2) != null) {
+                    city = returnedAddress.getAddressLine(2);
+                } else {
+                    city = returnedAddress.getAddressLine(3);
+                }
+
+            }
+        } catch (Exception e) {
+
+        }
+
+        return city;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_pick_location, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            case R.id.serch_picking_location:
+                openSearchLocationWindow();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void openSearchLocationWindow() {
+        try {
+            Intent intent =
+                    new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY)
+                            .build(this);
+            startActivityForResult(intent, REQUEST_CODE_PLACE_AUTOCOMPLETE);
+        } catch (GooglePlayServicesRepairableException e) {
+            Log.i(TAG, e.toString());
+        } catch (GooglePlayServicesNotAvailableException e) {
+            Log.i(TAG, e.toString());
+        }
+    }
+
+    private class ChangeDataInTextView extends AsyncTask<LatLng, Void, String> {
+
+        @Override
+        protected String doInBackground(LatLng... params) {
+            return getCity(params[0]);
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            if (s != null) {
+                placeName.setText(s);
+            }
+        }
+    }
+
+}
