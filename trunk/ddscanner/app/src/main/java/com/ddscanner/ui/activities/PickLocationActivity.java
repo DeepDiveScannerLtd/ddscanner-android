@@ -16,11 +16,15 @@ import android.widget.TextView;
 import com.ddscanner.R;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -32,7 +36,7 @@ import java.util.Locale;
 /**
  * Created by lashket on 5.4.16.
  */
-public class PickLocationActivity extends AppCompatActivity implements GoogleMap.OnMapClickListener, GoogleMap.OnMarkerDragListener {
+public class PickLocationActivity extends AppCompatActivity implements GoogleMap.OnCameraChangeListener {
 
     private static final int REQUEST_CODE_PLACE_AUTOCOMPLETE = 8001;
     private static final String TAG = PickLocationActivity.class.getSimpleName();
@@ -44,6 +48,7 @@ public class PickLocationActivity extends AppCompatActivity implements GoogleMap
     private Toolbar toolbar;
     private Geocoder geocoder;
     private LatLng pickedLatLng;
+    private ChangeDataInTextView changeDataInTextView;
 
     public static void show(Context context) {
         Intent intent = new Intent(context, PickLocationActivity.class);
@@ -66,8 +71,7 @@ public class PickLocationActivity extends AppCompatActivity implements GoogleMap
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapFragment);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         googleMap = mapFragment.getMap();
-        googleMap.setOnMapClickListener(this);
-        googleMap.setOnMarkerDragListener(this);
+        googleMap.setOnCameraChangeListener(this);
     }
 
     private void toolbarSettings() {
@@ -87,31 +91,11 @@ public class PickLocationActivity extends AppCompatActivity implements GoogleMap
     }
 
     @Override
-    public void onMapClick(LatLng latLng) {
-        googleMap.clear();
-        pickedLatLng = latLng;
-        placeCoordinates.setText(String.valueOf(latLng.latitude).substring(0, 10) + ", " + String.valueOf(latLng.longitude).substring(0, 10));
-        Marker marker = googleMap.addMarker(new MarkerOptions()
-                .position(latLng)
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds))
-                .draggable(true));
-        new ChangeDataInTextView().execute(latLng);
-    }
+    public void onCameraChange(CameraPosition cameraPosition) {
+        new ChangeDataInTextView().execute(cameraPosition.target);
+        pickedLatLng = cameraPosition.target;
+        placeCoordinates.setText(String.valueOf(cameraPosition.target.latitude) + ", " + String.valueOf(cameraPosition.target.longitude));
 
-    @Override
-    public void onMarkerDrag(Marker marker) {
-    }
-
-    @Override
-    public void onMarkerDragStart(Marker marker) {
-
-    }
-
-    @Override
-    public void onMarkerDragEnd(Marker marker) {
-        pickedLatLng = marker.getPosition();
-        placeCoordinates.setText(String.valueOf(marker.getPosition().latitude).substring(0,6) + ", " + String.valueOf(marker.getPosition().longitude).substring(0, 6));
-        new ChangeDataInTextView().execute(marker.getPosition());
     }
 
     private String getCity(LatLng latLng) {
@@ -135,6 +119,15 @@ public class PickLocationActivity extends AppCompatActivity implements GoogleMap
         }
 
         return city;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_PLACE_AUTOCOMPLETE) {
+            Place place = PlaceAutocomplete.getPlace(this, data);
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(place.getViewport(),0));
+        }
     }
 
     @Override

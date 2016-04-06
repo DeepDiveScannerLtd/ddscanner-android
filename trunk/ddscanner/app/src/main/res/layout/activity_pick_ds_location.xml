@@ -21,13 +21,28 @@
             app:titleTextColor="@color/white"
 
             auto:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
-
+    <RelativeLayout
+        android:id="@+id/mapFragmentLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="0.23">
     <fragment
         android:id="@+id/mapFragment"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
-        android:layout_weight="0.23"
         android:layout_height="match_parent" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_ds_pick"
+            android:layout_centerHorizontal="true"
+            android:layout_above="@+id/empty_view"/>
+        <View
+            android:id="@+id/empty_view"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_centerInParent="true"/>
+    </RelativeLayout>
         <LinearLayout
             android:id="@+id/viewB"
             android:layout_width="match_parent"
@@ -70,12 +85,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_check"
-        android:background="@color/orange"
-        app:rippleColor="@color/orange"
-        app:backgroundTint="@color/orange"
-        android:backgroundTint="@color/orange"
         android:layout_marginRight="20dp"
-        app:layout_anchor="@id/mapFragment"
+        app:backgroundTint="@color/orange"
+        app:layout_anchor="@id/mapFragmentLayout"
         app:layout_anchorGravity="bottom|right|end"
         />
 </android.support.design.widget.CoordinatorLayout>
