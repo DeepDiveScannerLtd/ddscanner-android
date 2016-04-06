@@ -1,16 +1,19 @@
 package com.ddscanner.ui.activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import com.ddscanner.R;
@@ -36,7 +39,7 @@ import java.util.Locale;
 /**
  * Created by lashket on 5.4.16.
  */
-public class PickLocationActivity extends AppCompatActivity implements GoogleMap.OnCameraChangeListener {
+public class PickLocationActivity extends AppCompatActivity implements GoogleMap.OnCameraChangeListener, View.OnClickListener {
 
     private static final int REQUEST_CODE_PLACE_AUTOCOMPLETE = 8001;
     private static final String TAG = PickLocationActivity.class.getSimpleName();
@@ -49,6 +52,7 @@ public class PickLocationActivity extends AppCompatActivity implements GoogleMap
     private Geocoder geocoder;
     private LatLng pickedLatLng;
     private ChangeDataInTextView changeDataInTextView;
+    private FloatingActionButton applyLocation;
 
     public static void show(Context context) {
         Intent intent = new Intent(context, PickLocationActivity.class);
@@ -68,6 +72,8 @@ public class PickLocationActivity extends AppCompatActivity implements GoogleMap
     private void findViews() {
         placeCoordinates = (TextView) findViewById(R.id.lat_lng);
         placeName = (TextView) findViewById(R.id.place_name);
+        applyLocation = (FloatingActionButton) findViewById(R.id.apply_location);
+        applyLocation.setOnClickListener(this);
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapFragment);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         googleMap = mapFragment.getMap();
@@ -147,6 +153,18 @@ public class PickLocationActivity extends AppCompatActivity implements GoogleMap
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.apply_location:
+                Intent returnIntent = new Intent();
+                returnIntent.putExtra("LATLNG", pickedLatLng);
+                setResult(Activity.RESULT_OK, returnIntent);
+                finish();
+                break;
         }
     }
 

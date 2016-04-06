@@ -30,8 +30,7 @@
                 android:id="@+id/add_photo_layout"
                 android:background="#F9F9F9"
                 android:layout_width="match_parent"
-                android:layout_height="115dp">
-
+                android:layout_height="150dp">
                 <TextView
                     android:layout_centerInParent="true"
                     android:layout_width="wrap_content"
@@ -58,6 +57,14 @@
                     android:layout_marginRight="10dp"
                     android:layout_marginTop="15dp"
                     android:background="@drawable/ic_plus_addds" />
+                <android.support.v7.widget.RecyclerView
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_below="@+id/btn_add_photo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="90dp"
+                    android:id="@+id/photos_rc"/>
+
             </RelativeLayout>
 
             <RelativeLayout
