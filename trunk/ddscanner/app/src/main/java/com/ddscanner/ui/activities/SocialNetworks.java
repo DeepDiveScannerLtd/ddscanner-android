@@ -47,17 +47,20 @@ import com.twitter.sdk.android.core.models.User;
 
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import okhttp3.ResponseBody;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
+import retrofit2.Call;
 
 /**
  * Created by lashket on 24.2.16.
  */
-public class SocialNetworks extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener{
+public class SocialNetworks extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
     private static final int RC_SIGN_IN = 0;
 
@@ -114,7 +117,7 @@ public class SocialNetworks extends AppCompatActivity implements GoogleApiClient
                 TwitterAuthToken authToken = session.getAuthToken();
                 Log.i(TAG, session.getAuthToken().secret + "\n" + session.getAuthToken().token);
                 AppsFlyerLib.getInstance().trackEvent(getApplicationContext(), EventTrackerHelper
-                        .EVENT_SIGN_IN_BTN_CLICK, new HashMap<String, Object>(){{
+                        .EVENT_SIGN_IN_BTN_CLICK, new HashMap<String, Object>() {{
                     put(EventTrackerHelper.PARAM_SIGN_IN_BTN_CLICK, "twitter");
                 }});
                 sendRegisterRequest(putTokensToMap(appId, "tw", authToken.token, authToken.secret));
@@ -154,7 +157,7 @@ public class SocialNetworks extends AppCompatActivity implements GoogleApiClient
                 .build();
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, this )
+                .enableAutoManage(this, this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
         signIn = (Button) findViewById(R.id.custom_google);
@@ -206,6 +209,7 @@ public class SocialNetworks extends AppCompatActivity implements GoogleApiClient
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
+
     private void signOut() {
         Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
                 new ResultCallback<Status>() {
@@ -229,6 +233,7 @@ public class SocialNetworks extends AppCompatActivity implements GoogleApiClient
                     }
                 });
     }
+
     @Override
     public void onConnectionFailed(ConnectionResult result) {
 
@@ -240,8 +245,7 @@ public class SocialNetworks extends AppCompatActivity implements GoogleApiClient
 
         if (requestCode == 140) {
             loginButton.onActivityResult(requestCode, resultCode, data);
-        }
-         else if(requestCode == RC_SIGN_IN) {
+        } else if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             Log.d(TAG, "onActivityResult:GET_TOKEN:success:" + result.getStatus().isSuccess());
             if (result.isSuccess()) {
@@ -273,37 +277,51 @@ public class SocialNetworks extends AppCompatActivity implements GoogleApiClient
     }
 
     private void sendRegisterRequest(final RegisterRequest userData) {
-        RestClient.getServiceInstance().registerUser(userData, new retrofit.Callback<Response>() {
+        Call<ResponseBody> call = RestClient.getServiceInstance().registerUser(userData);
+        call.enqueue(new retrofit2.Callback<ResponseBody>() {
             @Override
-            public void success(Response s, Response response) {
-                String responseString = new String(((TypedByteArray) s.getBody()).getBytes());
-                Log.i(TAG, responseString);
-                SharedPreferenceHelper.setIsUserSignedIn(true);
-                SharedPreferenceHelper.setToken(userData.getToken());
-                SharedPreferenceHelper.setSn(userData.getSocial());
-                if (userData.getSocial().equals("tw")) {
-                    SharedPreferenceHelper.setSecret(userData.getSecret());
+            public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    String responseString = "";
+                    try {
+                        responseString = response.body().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    Log.i(TAG, responseString);
+                    SharedPreferenceHelper.setIsUserSignedIn(true);
+                    SharedPreferenceHelper.setToken(userData.getToken());
+                    SharedPreferenceHelper.setSn(userData.getSocial());
+                    if (userData.getSocial().equals("tw")) {
+                        SharedPreferenceHelper.setSecret(userData.getSecret());
+                    }
+                    registerResponse = new Gson().fromJson(responseString, RegisterResponse.class);
+                    selfProfile = registerResponse.getUser();
+                    SharedPreferenceHelper.setUserid(selfProfile.getId());
+                    SharedPreferenceHelper.setPhotolink(selfProfile.getPicture());
+                    SharedPreferenceHelper.setUsername(selfProfile.getName());
+                    SharedPreferenceHelper.setLink(selfProfile.getLink());
+                    Intent returnIntent = new Intent();
+                    setResult(Activity.RESULT_OK, returnIntent);
+                    AppsFlyerLib.getInstance().trackEvent(getApplicationContext(), EventTrackerHelper
+                            .EVENT_SIGN_IN_OPENED, new HashMap<String, Object>());
+                    finish();
+                } else {
+                    // TODO Handle errors
+                    Log.i(TAG, response.raw().message());
+                    String responseString = "";
+                    try {
+                        responseString = response.errorBody().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    Log.i(TAG, responseString);
                 }
-                registerResponse = new Gson().fromJson(responseString, RegisterResponse.class);
-                selfProfile = registerResponse.getUser();
-                SharedPreferenceHelper.setUserid(selfProfile.getId());
-                SharedPreferenceHelper.setPhotolink(selfProfile.getPicture());
-                SharedPreferenceHelper.setUsername(selfProfile.getName());
-                SharedPreferenceHelper.setLink(selfProfile.getLink());
-                Intent returnIntent = new Intent();
-                setResult(Activity.RESULT_OK, returnIntent);
-                AppsFlyerLib.getInstance().trackEvent(getApplicationContext(), EventTrackerHelper
-                        .EVENT_SIGN_IN_OPENED, new HashMap<String, Object>());
-                finish();
             }
 
             @Override
-            public void failure(RetrofitError error) {
-                if (error != null) {
-                    Log.i(TAG, error.getMessage());
-                    String json = new String(((TypedByteArray) error.getResponse().getBody()).getBytes());
-                    Log.i(TAG, json.toString());
-                }
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // TODO Handle errors
             }
         });
     }

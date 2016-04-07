@@ -53,13 +53,17 @@ import com.google.maps.android.ui.SquareTextView;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import okhttp3.ResponseBody;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
+import retrofit2.Call;
+import retrofit2.Callback;
 
 public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements ClusterManager.OnClusterClickListener<DiveSpot> {
 
@@ -305,28 +309,38 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
             for (Map.Entry<String, Object> entry : diveSpotsRequestMap.entrySet()) {
                 LogUtils.i(TAG, "get dive spots request parameter: " + entry.getKey() + " " + entry.getValue());
             }
-            RestClient.getServiceInstance().getDivespots(diveSpotsRequestMap, new retrofit.Callback<Response>() {
+            Call<ResponseBody> call = RestClient.getServiceInstance().getDivespots(diveSpotsRequestMap);
+            call.enqueue(new Callback<ResponseBody>() {
                 @Override
-                public void success(Response s, Response response) {
-                    String responseString = new String(((TypedByteArray) s.getBody()).getBytes());
-                    LogUtils.i(TAG, "response code is " + s.getStatus());
-                    LogUtils.i(TAG, "response body is " + responseString);
-                    divespotsWrapper = new Gson().fromJson(responseString, DivespotsWrapper.class);
-                    updateDiveSpots((ArrayList<DiveSpot>) divespotsWrapper.getDiveSpots());
-                    placesPagerAdapter.populateDiveSpotsList(changeListToListFragment((ArrayList<DiveSpot>)divespotsWrapper.getDiveSpots()));
-                    hidePb();
+                public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+                    if (response.isSuccessful()) {
+                        String responseString = "";
+                        try {
+                            responseString = response.body().string();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        LogUtils.i(TAG, "response body is " + responseString);
+                        divespotsWrapper = new Gson().fromJson(responseString, DivespotsWrapper.class);
+                        updateDiveSpots((ArrayList<DiveSpot>) divespotsWrapper.getDiveSpots());
+                        placesPagerAdapter.populateDiveSpotsList(changeListToListFragment((ArrayList<DiveSpot>)divespotsWrapper.getDiveSpots()));
+                        hidePb();
+                    } else {
+                        // TODO Handle errors
+//                        if (error.getKind().equals(RetrofitError.Kind.NETWORK)) {
+//                            Toast.makeText(DDScannerApplication.getInstance(), "Please check your internet connection", Toast.LENGTH_SHORT).show();
+//                        } else if (error.getKind().equals(RetrofitError.Kind.HTTP)) {
+//                            Toast.makeText(DDScannerApplication.getInstance(), "Server is not responsible, please try later", Toast.LENGTH_SHORT).show();
+//                        }
+                        hidePb();
+//               String json =  new String(((TypedByteArray)error.getResponse().getBody()).getBytes());
+                        //      System.out.println("failure" + json.toString());
+                    }
                 }
 
                 @Override
-                public void failure(RetrofitError error) {
-                    if (error.getKind().equals(RetrofitError.Kind.NETWORK)) {
-                        Toast.makeText(DDScannerApplication.getInstance(), "Please check your internet connection", Toast.LENGTH_SHORT).show();
-                    } else if (error.getKind().equals(RetrofitError.Kind.HTTP)) {
-                        Toast.makeText(DDScannerApplication.getInstance(), "Server is not responsible, please try later", Toast.LENGTH_SHORT).show();
-                    }
-                    hidePb();
-//               String json =  new String(((TypedByteArray)error.getResponse().getBody()).getBytes());
-                    //      System.out.println("failure" + json.toString());
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    // TODO Handle errors
                 }
             });
         }

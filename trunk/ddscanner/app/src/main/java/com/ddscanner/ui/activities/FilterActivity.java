@@ -32,13 +32,15 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import okhttp3.ResponseBody;
 import retrofit.mime.TypedByteArray;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by lashket on 22.1.16.
@@ -92,7 +94,7 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
     private void setFilerGroup(RadioGroup radioGroup, Map<String, String> currents, String tag) {
         ImageView divider = new ImageView(this);
         divider.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.divider));
-        divider.setPadding(0,16,0,0);
+        divider.setPadding(0, 16, 0, 0);
         LinearLayout.LayoutParams layoutParams = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT, RadioGroup.LayoutParams.WRAP_CONTENT);
         for (Map.Entry<String, String> entry : currents.entrySet()) {
             RadioButton radioButton = new RadioButton(this);
@@ -161,45 +163,55 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
 
     private void request() {
 
-        RestClient.getServiceInstance().getFilters(new Callback<Response>() {
+        Call<ResponseBody> call = RestClient.getServiceInstance().getFilters();
+        call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void success(Response s, Response response) {
-                String responseString = new String(((TypedByteArray) s.getBody()).getBytes());
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    String responseString = "";
+                    try {
+                        responseString = response.body().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
-                filters = new FiltersResponseEntity();
+                    filters = new FiltersResponseEntity();
 
-                JsonParser parser = new JsonParser();
-                JsonObject jsonObject = parser.parse(responseString).getAsJsonObject();
-                JsonObject currentsJsonObject = jsonObject.getAsJsonObject("currents");
-                for (Map.Entry<String, JsonElement> elementEntry : currentsJsonObject.entrySet()) {
-                    filters.getCurrents().put(elementEntry.getKey(), elementEntry.getValue().getAsString());
-                }
-                JsonObject levelJsonObject = jsonObject.getAsJsonObject("level");
-                for (Map.Entry<String, JsonElement> elementEntry : levelJsonObject.entrySet()) {
-                    filters.getLevel().put(elementEntry.getKey(), elementEntry.getValue().getAsString());
-                }
-                JsonObject objectJsonObject = jsonObject.getAsJsonObject("object");
-                for (Map.Entry<String, JsonElement> elementEntry : objectJsonObject.entrySet()) {
-                    filters.getObject().put(elementEntry.getKey(), elementEntry.getValue().getAsString());
-                }
-                JsonObject visibilityJsonObject = jsonObject.getAsJsonObject("visibility");
-                for (Map.Entry<String, JsonElement> elementEntry : visibilityJsonObject.entrySet()) {
-                    filters.getVisibility().put(elementEntry.getKey(), elementEntry.getValue().getAsString());
-                }
-                Gson gson = new Gson();
-                filters.setRating(gson.fromJson(jsonObject.get("rating").getAsJsonArray(), int[].class));
+                    JsonParser parser = new JsonParser();
+                    JsonObject jsonObject = parser.parse(responseString).getAsJsonObject();
+                    JsonObject currentsJsonObject = jsonObject.getAsJsonObject("currents");
+                    for (Map.Entry<String, JsonElement> elementEntry : currentsJsonObject.entrySet()) {
+                        filters.getCurrents().put(elementEntry.getKey(), elementEntry.getValue().getAsString());
+                    }
+                    JsonObject levelJsonObject = jsonObject.getAsJsonObject("level");
+                    for (Map.Entry<String, JsonElement> elementEntry : levelJsonObject.entrySet()) {
+                        filters.getLevel().put(elementEntry.getKey(), elementEntry.getValue().getAsString());
+                    }
+                    JsonObject objectJsonObject = jsonObject.getAsJsonObject("object");
+                    for (Map.Entry<String, JsonElement> elementEntry : objectJsonObject.entrySet()) {
+                        filters.getObject().put(elementEntry.getKey(), elementEntry.getValue().getAsString());
+                    }
+                    JsonObject visibilityJsonObject = jsonObject.getAsJsonObject("visibility");
+                    for (Map.Entry<String, JsonElement> elementEntry : visibilityJsonObject.entrySet()) {
+                        filters.getVisibility().put(elementEntry.getKey(), elementEntry.getValue().getAsString());
+                    }
+                    Gson gson = new Gson();
+                    filters.setRating(gson.fromJson(jsonObject.get("rating").getAsJsonArray(), int[].class));
 
-                Log.i(TAG, responseString);
+                    Log.i(TAG, responseString);
 
-                setFilerGroup(rgCurrents, filters.getCurrents(), SharedPreferenceHelper.getCurrents());
-                setFilerGroup(rgVisibility, filters.getVisibility(), SharedPreferenceHelper.getVisibility());
-                setFilerGroup(rgLevel, filters.getLevel(), SharedPreferenceHelper.getLevel());
-                setFilerGroup(rgObject, filters.getObject(), SharedPreferenceHelper.getObject());
+                    setFilerGroup(rgCurrents, filters.getCurrents(), SharedPreferenceHelper.getCurrents());
+                    setFilerGroup(rgVisibility, filters.getVisibility(), SharedPreferenceHelper.getVisibility());
+                    setFilerGroup(rgLevel, filters.getLevel(), SharedPreferenceHelper.getLevel());
+                    setFilerGroup(rgObject, filters.getObject(), SharedPreferenceHelper.getObject());
+                } else {
+                    // TODO Handle errors
+                }
             }
 
             @Override
-            public void failure(RetrofitError error) {
-
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // TODO Handle errors
             }
         });
     }

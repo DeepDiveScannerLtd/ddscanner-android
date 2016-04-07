@@ -52,9 +52,11 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.logging.Handler;
 
+import okhttp3.ResponseBody;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import retrofit2.Call;
 
 public class CityActivity extends AppCompatActivity implements View.OnClickListener, ViewPager.OnPageChangeListener {
 
@@ -325,16 +327,18 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public static void checkGcm() {
-        RestClient.getServiceInstance().identifyGcmToken(SharedPreferenceHelper.getGcmId(), new Callback<Response>() {
+        Call<ResponseBody> call = RestClient.getServiceInstance().identifyGcmToken(SharedPreferenceHelper.getGcmId());
+        call.enqueue(new retrofit2.Callback<ResponseBody>() {
             @Override
-            public void success(Response response, Response response2) {
+            public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
 
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
 
             }
+
         });
     }
 

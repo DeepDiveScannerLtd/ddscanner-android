@@ -30,13 +30,14 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
-import retrofit.mime.TypedByteArray;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by lashket on 12.3.16.
@@ -108,7 +109,7 @@ public class LeaveReviewActivity extends AppCompatActivity {
     }
 
     private void sendReview() {
-       // AppsFlyerLib.getInstance().trackEvent(getApplicationContext(), "Send review clicked", );
+        // AppsFlyerLib.getInstance().trackEvent(getApplicationContext(), "Send review clicked", );
         Log.i(TAG, SharedPreferenceHelper.getSn());
         Log.i(TAG, SharedPreferenceHelper.getToken());
 
@@ -121,34 +122,43 @@ public class LeaveReviewActivity extends AppCompatActivity {
         }
         sendReviewRequest.setToken(SharedPreferenceHelper.getToken());
         sendReviewRequest.setComment(text.getText().toString().trim());
-        RestClient.getServiceInstance().addCOmmentToDiveSpot(sendReviewRequest, new Callback<Response>() {
+        Call<ResponseBody> call = RestClient.getServiceInstance().addCOmmentToDiveSpot(sendReviewRequest);
+        call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void success(Response s, Response response) {
-                String responseString = new String(((TypedByteArray) s.getBody()).getBytes());
-                comment = new Gson().fromJson(responseString, Comment.class);
-                Log.i(TAG, "Success leavenig comment\n Response string - " + responseString);
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.raw().isSuccessful()) {
+                    String responseString = null;
+                    try {
+                        responseString = response.body().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    comment = new Gson().fromJson(responseString, Comment.class);
+                    Log.i(TAG, "Success leavenig comment\n Response string - " + responseString);
 
-                Intent returnIntent = new Intent();
-                returnIntent.putExtra("COMMENT", comment);
-                setResult(Activity.RESULT_OK, returnIntent);
-                finish();
-                progressDialog.dismiss();
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                progressDialog.dismiss();
-                if (error != null) {
-                    Log.i(TAG, error.getMessage());
-                    String json = new String(((TypedByteArray) error.getResponse().getBody()).getBytes());
+                    Intent returnIntent = new Intent();
+                    returnIntent.putExtra("COMMENT", comment);
+                    setResult(Activity.RESULT_OK, returnIntent);
+                    finish();
+                    progressDialog.dismiss();
+                } else {
+                    progressDialog.dismiss();
+                    int httpResultCode = response.raw().code();
+                    Log.i(TAG, response.raw().message());
+                    String json = "";
+                    try {
+                        json = response.errorBody().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     Log.i(TAG, json);
-                    if (error.getMessage().contains("400")) {
+                    if (httpResultCode == 400) {
                         Intent intent = new Intent(LeaveReviewActivity.this, SocialNetworks.class);
                         startActivityForResult(intent, RC_LOGIN);
                     } else {
                         String errors = "";
                         JsonObject jsonObject = new JsonParser().parse(json).getAsJsonObject();
-                        for(Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) {
+                        for (Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) {
                             System.out.println(entry.getKey());
                             System.out.println(entry.getValue());
                             if (entry.getKey().equals("token") || entry.getKey().equals("social")) {
@@ -169,6 +179,11 @@ public class LeaveReviewActivity extends AppCompatActivity {
                         }
                     }
                 }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
             }
         });
     }

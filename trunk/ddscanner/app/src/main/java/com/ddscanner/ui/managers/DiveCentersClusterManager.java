@@ -44,14 +44,18 @@ import com.google.maps.android.ui.SquareTextView;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import okhttp3.ResponseBody;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
+import retrofit2.Call;
+import retrofit2.Callback;
 
 public class DiveCentersClusterManager extends ClusterManager<DiveCenter> implements ClusterManager.OnClusterClickListener<DiveCenter> {
 
@@ -219,29 +223,40 @@ public class DiveCentersClusterManager extends ClusterManager<DiveCenter> implem
         map.put("lngLeft", String.valueOf(latLng.longitude - 2.0));
         map.put("lngRight", String.valueOf(latLng.longitude + 2.0));
         map.put("latRight", String.valueOf(latLng.latitude + 2.0));
-        RestClient.getServiceInstance().getDiveCenters(map, new retrofit.Callback<Response>() {
+        Call<ResponseBody> call = RestClient.getServiceInstance().getDiveCenters(map);
+        call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void success(Response s, Response response) {
-                String responseString = new String(((TypedByteArray) s.getBody()).getBytes());
-                System.out.println(responseString);
-                diveCentersResponseEntity = new Gson().fromJson(responseString, DiveCentersResponseEntity.class);
-                logoPath = diveCentersResponseEntity.getLogoPath();
-                diveCenters = diveCentersResponseEntity.getDivecenters();
-                diveCentersPagerAdapter.populateDiveCentersList(changeListToListFragment((ArrayList<DiveCenter>) diveCenters), logoPath);
-                showingMarkers(diveCenters);
+            public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    String responseString = "";
+                    try {
+                        responseString = response.body().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    System.out.println(responseString);
+                    diveCentersResponseEntity = new Gson().fromJson(responseString, DiveCentersResponseEntity.class);
+                    logoPath = diveCentersResponseEntity.getLogoPath();
+                    diveCenters = diveCentersResponseEntity.getDivecenters();
+                    diveCentersPagerAdapter.populateDiveCentersList(changeListToListFragment((ArrayList<DiveCenter>) diveCenters), logoPath);
+                    showingMarkers(diveCenters);
+                } else {
+                    // TODO Handle errors
+//                    if (error.getKind().equals(RetrofitError.Kind.NETWORK)) {
+//                        //   Toast.makeText(DiveCentersActivity.this, "Please check your internet connection", Toast.LENGTH_LONG).show();
+//                    } else if (error.getKind().equals(RetrofitError.Kind.HTTP)) {
+//                        //   Toast.makeText(DiveCentersActivity.this, "Server is not responsible, please try later", Toast.LENGTH_LONG).show();
+//                    }
+//                    if (error != null) {
+//                        String json = new String(((TypedByteArray) error.getResponse().getBody()).getBytes());
+//                        Log.i(TAG, json);
+//                    }
+                }
             }
 
             @Override
-            public void failure(RetrofitError error) {
-                if (error.getKind().equals(RetrofitError.Kind.NETWORK)) {
-                 //   Toast.makeText(DiveCentersActivity.this, "Please check your internet connection", Toast.LENGTH_LONG).show();
-                } else if (error.getKind().equals(RetrofitError.Kind.HTTP)) {
-                 //   Toast.makeText(DiveCentersActivity.this, "Server is not responsible, please try later", Toast.LENGTH_LONG).show();
-                }
-                if (error != null) {
-                    String json = new String(((TypedByteArray) error.getResponse().getBody()).getBytes());
-                    Log.i(TAG, json);
-                }
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // TODO Handle errors
             }
         });
     }

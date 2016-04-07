@@ -40,13 +40,16 @@ import com.ddscanner.utils.LogUtils;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import okhttp3.ResponseBody;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
+import retrofit2.Call;
 
 public class DivePlaceActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener, View.OnClickListener{
 
@@ -103,31 +106,40 @@ public class DivePlaceActivity extends AppCompatActivity implements ViewPager.On
         progressDialog.setMessage(getApplicationContext().getResources().getString(R.string.pleaseWait));
         progressDialog.setCancelable(false);
         progressDialog.show();
-        RestClient.getServiceInstance().getDiveSpotById(productId, new Callback<Response>() {
+        Call<ResponseBody> call = RestClient.getServiceInstance().getDiveSpotById(productId);
+        call.enqueue(new retrofit2.Callback<ResponseBody>() {
             @Override
-            public void success(Response s, Response response) {
-                String responseString = new String(((TypedByteArray) s.getBody()).getBytes());
-                LogUtils.i("response code is " + s.getStatus());
-                LogUtils.i("response body is " + responseString);
-                divespotDetails = new Gson().fromJson(responseString, DivespotDetails.class);
-                toolbarSetting(divespotDetails.getDivespot().getName());
-                populateProductDetails();
+            public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    String responseString = "";
+                    try {
+                        responseString = response.body().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    LogUtils.i("response body is " + responseString);
+                    divespotDetails = new Gson().fromJson(responseString, DivespotDetails.class);
+                    toolbarSetting(divespotDetails.getDivespot().getName());
+                    populateProductDetails();
+                } else {
+                    // TODO Handle errors
+//                    LogUtils.i("failure Message is " + response.raw().message());
+//                    if (error.getKind().equals(RetrofitError.Kind.NETWORK)) {
+//                        Toast.makeText(DivePlaceActivity.this, "Please check your internet connection", Toast.LENGTH_LONG).show();
+//                    } else if (error.getKind().equals(RetrofitError.Kind.HTTP)) {
+//                        Toast.makeText(DivePlaceActivity.this, "Server is not responsible, please try later", Toast.LENGTH_LONG).show();
+//                    }
+//                    if (error != null) {
+//                        Log.i(TAG, error.getMessage());
+//                        String json = new String(((TypedByteArray) error.getResponse().getBody()).getBytes());
+//                        Log.i(TAG, json.toString());
+//                    }
+                }
             }
 
             @Override
-            public void failure(RetrofitError error) {
-                LogUtils.i("failure Message is " + error.getMessage());
-                LogUtils.i("failure body is " + error.getBody());
-                if (error.getKind().equals(RetrofitError.Kind.NETWORK)) {
-                    Toast.makeText(DivePlaceActivity.this, "Please check your internet connection", Toast.LENGTH_LONG).show();
-                } else if (error.getKind().equals(RetrofitError.Kind.HTTP)) {
-                    Toast.makeText(DivePlaceActivity.this, "Server is not responsible, please try later", Toast.LENGTH_LONG).show();
-                }
-                if (error != null) {
-                    Log.i(TAG, error.getMessage());
-                    String json = new String(((TypedByteArray) error.getResponse().getBody()).getBytes());
-                    Log.i(TAG, json.toString());
-                }
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // TODO Handle errors
             }
         });
     }

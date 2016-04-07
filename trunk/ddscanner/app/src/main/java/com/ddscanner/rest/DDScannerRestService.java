@@ -6,37 +6,38 @@ import com.ddscanner.entities.request.SendReviewRequest;
 
 import java.util.Map;
 
-import retrofit.Callback;
-import retrofit.client.Response;
-import retrofit.http.Body;
-import retrofit.http.GET;
-import retrofit.http.Headers;
-import retrofit.http.POST;
-import retrofit.http.Path;
-import retrofit.http.QueryMap;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Response;
+import retrofit2.http.Body;
+import retrofit2.http.GET;
+import retrofit2.http.Headers;
+import retrofit2.http.POST;
+import retrofit2.http.Path;
+import retrofit2.http.QueryMap;
 
 public interface DDScannerRestService {
 
     @GET("/diving/filters")
-    void getFilters(Callback<Response> callback);
+    Call<ResponseBody> getFilters();
 
     @GET("/diving/divecenters")
-    void getDiveCenters(@QueryMap Map<String, String> map, Callback<Response> callback);
+    Call<ResponseBody> getDiveCenters(@QueryMap Map<String, String> map);
 
     @GET("/diving/divespot/{id}")
-    void getDiveSpotById(@Path("id") String id, Callback<Response> callback);
+    Call<ResponseBody> getDiveSpotById(@Path("id") String id);
 
     @Headers("Content-type: application/json")
     @GET("/diving/divespots")
-    void getDivespots(@QueryMap Map<String, Object> map, Callback<Response> callback);
+    Call<ResponseBody> getDivespots(@QueryMap Map<String, Object> map);
 
     @POST("/diving/register")
-    void registerUser(@Body RegisterRequest registerRequest, Callback<Response> callback);
+    Call<ResponseBody> registerUser(@Body RegisterRequest registerRequest);
 
     @POST("/diving/comment")
-    void addCOmmentToDiveSpot(@Body SendReviewRequest sendReviewRequest, Callback<Response> callback);
+    Call<ResponseBody> addCOmmentToDiveSpot(@Body SendReviewRequest sendReviewRequest);
 
     @POST("/diving/identify")
-    void identifyGcmToken(@Body String token, Callback<Response> callback);
+    Call<ResponseBody> identifyGcmToken(@Body String token);
 
 }

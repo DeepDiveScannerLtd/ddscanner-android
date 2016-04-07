@@ -34,6 +34,9 @@ public class SealifeLinearLayoutManager extends LinearLayoutManager {
         int width = 0;
         int height = 0;
         for (int i = 0; i < getItemCount(); i++) {
+            if (i > state.getItemCount()) {
+                continue;
+            }
             if (getOrientation() == HORIZONTAL) {
                 measureScrapChild(recycler, i,
                         View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
