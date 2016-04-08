@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f9f9f9"
+    android:orientation="vertical">
+
+    <include layout="@layout/view_toolbar" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/add_photo_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="230dp"
+                android:gravity="center">
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/ic_add"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:src="@drawable/ic_plus_addds" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/ic_add"
+                        android:text="Add photo"
+                        android:textSize="17sp" />
+                </RelativeLayout>
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/data"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            android:layout_below="@+id/add_photo_layout"
+            android:layout_marginTop="10dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp">
+
+                <EditText
+                    android:id="@+id/name"
+                    style="@style/AddSealifeEditText"
+                    android:hint="Name" />
+
+                <ImageView
+                    android:id="@+id/name_divider"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/name"
+                    android:src="@drawable/divider" />
+
+                <EditText
+                    android:id="@+id/length"
+                    android:layout_below="@+id/name_divider"
+                    style="@style/AddSealifeEditText"
+                    android:hint="Length" />
+
+                <ImageView
+                    android:id="@+id/length_divider"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/length"
+                    android:src="@drawable/divider" />
+                <EditText
+                    android:id="@+id/weight"
+                    android:layout_below="@+id/length_divider"
+                    style="@style/AddSealifeEditText"
+                    android:hint="Weight" />
+
+                <ImageView
+                    android:id="@+id/weight_divider"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/weight"
+                    android:src="@drawable/divider" />
+                <EditText
+                    android:id="@+id/depth"
+                    android:layout_below="@+id/weight_divider"
+                    style="@style/AddSealifeEditText"
+                    android:hint="Weight" />
+
+                <ImageView
+                    android:id="@+id/depth_divider"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/depth"
+                    android:src="@drawable/divider" />
+                <EditText
+                    android:id="@+id/sc_name"
+                    android:layout_below="@+id/depth_divider"
+                    style="@style/AddSealifeEditText"
+                    android:hint="Sc name" />
+
+                <ImageView
+                    android:id="@+id/sc_name_divider"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/sc_name"
+                    android:src="@drawable/divider" />
+                <EditText
+                    android:id="@+id/order"
+                    android:layout_below="@+id/sc_name_divider"
+                    style="@style/AddSealifeEditText"
+                    android:hint="Order" />
+
+                <ImageView
+                    android:id="@+id/order_divider"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/order"
+                    android:src="@drawable/divider" />
+                <EditText
+                    android:id="@+id/sclass"
+                    android:layout_below="@+id/order_divider"
+                    style="@style/AddSealifeEditText"
+                    android:hint="Class" />
+
+                <ImageView
+                    android:id="@+id/class_divider"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/sclass"
+                    android:src="@drawable/divider" />
+                <EditText
+                    android:id="@+id/habitat"
+                    android:layout_below="@+id/class_divider"
+                    style="@style/AddSealifeEditText"
+                    android:hint="Habitat" />
+
+                <ImageView
+                    android:id="@+id/habitat_divider"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/habitat"
+                    android:src="@drawable/divider" />
+                <EditText
+                    android:id="@+id/distribution"
+                    android:layout_below="@+id/habitat_divider"
+                    style="@style/AddSealifeEditText"
+                    android:hint="Distribution" />
+
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+        <RelativeLayout
+            android:layout_below="@+id/data"
+            android:layout_width="match_parent"
+            android:layout_height="100dp">
+            <Button
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_width="105dp"
+                android:layout_height="40dp"
+                android:text="SAVE"
+                android:textColor="@color/black_text"
+                android:background="@color/orange"/>
+        </RelativeLayout>
+    </RelativeLayout>
+</LinearLayout>
