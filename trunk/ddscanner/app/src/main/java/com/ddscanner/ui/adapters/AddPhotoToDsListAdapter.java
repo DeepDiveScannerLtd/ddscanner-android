@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.ddscanner.R;
 import com.ddscanner.ui.activities.AddDiveSpotActivity;
@@ -24,10 +25,12 @@ public class AddPhotoToDsListAdapter extends RecyclerView.Adapter<AddPhotoToDsLi
     private static final String TAG = AddPhotoToDsListAdapter.class.getSimpleName();
     private Context context;
     private List<String> uris;
+    private TextView textView;
 
-    public AddPhotoToDsListAdapter(List<String> uris, Context context) {
+    public AddPhotoToDsListAdapter(List<String> uris, Context context, TextView textView) {
         this.context = context;
         this.uris = uris;
+        this.textView = textView;
     }
 
     @Override
@@ -49,19 +52,22 @@ public class AddPhotoToDsListAdapter extends RecyclerView.Adapter<AddPhotoToDsLi
             @Override
             public void onClick(View v) {
                 uris.remove(position);
-                notifyDataSetChanged();
+                notifyItemRemoved(position);
             }
         });
     }
 
     @Override
     public int getItemCount() {
+        if (uris.size() > 0) {
+            textView.setVisibility(View.GONE);
+        } else {
+            textView.setVisibility(View.VISIBLE);
+        }
         return uris.size();
     }
 
     public static class PhotoListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
-        private AddDiveSpotActivity addDiveSpotActivity = new AddDiveSpotActivity();
 
         protected ImageView photo;
         protected ImageView icDelete;

@@ -7,15 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?actionBarSize"
-        android:background="@color/primary"
-        android:minHeight="?actionBarSize"
-        android:transitionName="toolbar"
-        auto:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        auto:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+<include layout="@layout/view_toolbar"/>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -32,6 +24,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="150dp">
                 <TextView
+                    android:id="@+id/add_photo_title"
                     android:layout_centerInParent="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -92,6 +85,7 @@
                     <TextView
                         android:id="@+id/characteristic_location_title"
                         style="@style/AddDsCharTitleStyle"
+                        android:textColor="@android:color/darker_gray"
                         android:layout_width="match_parent"
                         android:layout_height="54dp"
                         android:layout_toRightOf="@+id/characteristic_location_icon"
@@ -191,7 +185,8 @@
                         android:layout_height="54dp"
                         android:layout_marginRight="20dp"
                         android:layout_toRightOf="@+id/characteristic_visibility_icon"
-                        app:ms_hint="hint" />
+                        app:ms_hint="hint"
+                        android:prompt="@string/details_visibility"/>
 
                     <ImageView
                         android:layout_width="match_parent"
@@ -350,6 +345,7 @@
                     android:textColor="#b2b2b2"
                     android:text="Add sealife"/>
                 <ImageView
+                    android:id="@+id/btn_add_sealife"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"

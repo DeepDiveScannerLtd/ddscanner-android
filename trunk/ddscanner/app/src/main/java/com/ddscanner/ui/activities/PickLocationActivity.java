@@ -78,6 +78,7 @@ public class PickLocationActivity extends AppCompatActivity implements GoogleMap
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         googleMap = mapFragment.getMap();
         googleMap.setOnCameraChangeListener(this);
+        googleMap.getUiSettings().setZoomControlsEnabled(true);
     }
 
     private void toolbarSettings() {
