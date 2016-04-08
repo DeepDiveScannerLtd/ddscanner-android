@@ -1,5 +1,6 @@
 package com.ddscanner.ui.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -23,7 +25,9 @@ import java.util.List;
 /**
  * Created by lashket on 7.4.16.
  */
-public class SearchSealifeActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
+public class SearchSealifeActivity extends AppCompatActivity implements SearchView.OnQueryTextListener, View.OnClickListener {
+
+    private static final int RC_ADD_SEALIFE = 8001;
 
     private Toolbar toolbar;
     private RecyclerView mRecyclerView;
@@ -32,6 +36,7 @@ public class SearchSealifeActivity extends AppCompatActivity implements SearchVi
     private List<ExampleModel> mModels;
     private RelativeLayout notFoundLayout;
     private TextView textNotFound;
+    private Button addManually;
     private static final String[] MOVIES = new String[]{
             "Octopus",
             "Huyopus",
@@ -53,6 +58,8 @@ public class SearchSealifeActivity extends AppCompatActivity implements SearchVi
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         notFoundLayout = (RelativeLayout) findViewById(R.id.not_found_layout);
         textNotFound = (TextView) findViewById(R.id.text_not_found);
+        addManually = (Button) findViewById(R.id.add_manualy);
+        addManually.setOnClickListener(this);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_actionbar_back);
@@ -114,5 +121,15 @@ public class SearchSealifeActivity extends AppCompatActivity implements SearchVi
             notFoundLayout.setVisibility(View.GONE);
         }
         return filteredModelList;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.add_manualy:
+                Intent i = new Intent(SearchSealifeActivity.this, AddSealifeActivity.class);
+                startActivityForResult(i, RC_ADD_SEALIFE);
+                break;
+        }
     }
 }
