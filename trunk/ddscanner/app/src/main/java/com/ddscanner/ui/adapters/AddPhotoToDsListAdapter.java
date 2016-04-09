@@ -53,6 +53,7 @@ public class AddPhotoToDsListAdapter extends RecyclerView.Adapter<AddPhotoToDsLi
             public void onClick(View v) {
                 uris.remove(position);
                 notifyItemRemoved(position);
+                notifyItemRangeChanged(position, uris.size());
             }
         });
     }
