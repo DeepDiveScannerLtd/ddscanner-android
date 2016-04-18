@@ -49,6 +49,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="10dp"
                     android:layout_marginTop="15dp"
+                    android:clickable="true"
                     android:background="@drawable/ic_plus_addds" />
                 <android.support.v7.widget.RecyclerView
                     android:layout_marginLeft="10dp"
