@@ -37,7 +37,8 @@ public class SplashActivity extends Activity {
             @Override
             public void run() {
                 SplashActivity.this.finish();
-                CityActivity.show(SplashActivity.this, latLng);
+                MainActivity.show(SplashActivity.this);
+                //CityActivity.show(SplashActivity.this, latLng);
 //                FilterActivity.show(SplashActivity.this);
                 //AddDiveSpotActivity.show(SplashActivity.this);
             }

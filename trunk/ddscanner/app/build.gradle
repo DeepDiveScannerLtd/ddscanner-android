@@ -87,6 +87,6 @@ dependencies {
     compile 'com.google.android.gms:play-services-gcm:8.4.0'
     compile 'com.google.android.gms:play-services-maps:8.4.0'
     compile 'com.google.android.gms:play-services-location:8.4.0'
-    compile 'com.ms-square:expandableTextView:0.1.4'
     compile 'com.android.support:cardview-v7:23.1.1'
+    compile 'com.android.support:percent:23.0.0'
 }

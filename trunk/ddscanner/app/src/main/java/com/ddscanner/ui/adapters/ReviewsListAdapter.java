@@ -25,7 +25,6 @@ import com.ddscanner.entities.Comment;
 import com.ddscanner.ui.activities.ProfileActivity;
 import com.ddscanner.utils.EventTrackerHelper;
 import com.squareup.picasso.Picasso;
-import com.ms.square.android.expandabletextview.ExpandableTextView;
 
 import java.util.ArrayList;
 import java.util.HashMap;

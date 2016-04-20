@@ -84,6 +84,9 @@
         <item name="tabTextAppearance">@style/customTabText</item>
     </style>
 
+    <style name="ToolbarTabLayout" parent="Widget.Design.TabLayout">
+    </style>
+
     <style name="customTabText">
         <item name="android:textSize">14dp</item>
         <item name="android:textColor">@color/gray</item>
