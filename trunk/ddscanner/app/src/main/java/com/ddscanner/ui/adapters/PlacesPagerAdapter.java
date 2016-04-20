@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.entities.DiveSpot;
+import com.ddscanner.ui.fragments.DiveSpotsMapFragment;
 import com.ddscanner.ui.fragments.ProductListFragment;
 import com.ddscanner.ui.managers.DiveSpotsClusterManager;
 import com.ddscanner.utils.EventTrackerHelper;
@@ -54,6 +55,7 @@ public class PlacesPagerAdapter extends FragmentStatePagerAdapter {
         Fragment fragment = null;
         switch (position) {
             case 0:
+               // fragment = new DiveSpotsMapFragment();
                 mapFragment = new MapFragment();
                 fragment = mapFragment;
                 ((MapFragment) fragment).getMapAsync(new OnMapReadyCallback() {

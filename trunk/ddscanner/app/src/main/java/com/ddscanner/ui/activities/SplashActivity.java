@@ -37,9 +37,9 @@ public class SplashActivity extends Activity {
             @Override
             public void run() {
                 SplashActivity.this.finish();
-                //CityActivity.show(SplashActivity.this, latLng);
+                CityActivity.show(SplashActivity.this, latLng);
 //                FilterActivity.show(SplashActivity.this);
-                AddDiveSpotActivity.show(SplashActivity.this);
+                //AddDiveSpotActivity.show(SplashActivity.this);
             }
         }, DDProgressBarView.ANIMATION_DURATION);
     }

@@ -203,7 +203,8 @@ public class DivePlaceActivity extends AppCompatActivity implements ViewPager.On
         if (divespotDetails.getSealifes() != null) {
             findViewById(R.id.sealife).setVisibility(View.VISIBLE);
             findViewById(R.id.list_sl).setVisibility(View.VISIBLE);
-            LinearLayoutManager layoutManager = new SealifeLinearLayoutManager(DivePlaceActivity.this);
+          //  LinearLayoutManager layoutManager = new SealifeLinearLayoutManager(DivePlaceActivity.this);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(DivePlaceActivity.this);
             layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
             sealifeRecyclerview.setNestedScrollingEnabled(false);
             sealifeRecyclerview.setHasFixedSize(false);
