@@ -17,6 +17,7 @@ import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.R;
 import com.ddscanner.entities.DiveSpot;
 import com.ddscanner.ui.activities.DivePlaceActivity;
+import com.ddscanner.ui.views.TransformationRoundImage;
 import com.ddscanner.utils.EventTrackerHelper;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -50,10 +51,9 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
     public void onBindViewHolder(ProductListViewHolder productListViewHolder, int i) {
         DiveSpot divespot = new DiveSpot();
         divespot = divespots.get(i);
-        productListViewHolder.description.setText(divespot.getDescription());
         productListViewHolder.progressBar.getIndeterminateDrawable().setColorFilter(conText.getResources().getColor(R.color.primary), PorterDuff.Mode.MULTIPLY);
         if (divespot.getImages() != null) {
-            Picasso.with(conText).load(divespot.getImages().get(0)).resize(130, 130).centerCrop().into(productListViewHolder.imageView, new ImageLoadedCallback(productListViewHolder.progressBar) {
+            Picasso.with(conText).load(divespot.getImages().get(0)).resize(130, 130).centerCrop().transform(new TransformationRoundImage(2,0)).into(productListViewHolder.imageView, new ImageLoadedCallback(productListViewHolder.progressBar) {
                 @Override
                 public void onSuccess() {
                     if (this.progressBar != null) {
@@ -70,14 +70,14 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
         productListViewHolder.stars.removeAllViews();
         for (int k = 0; k < divespot.getRating(); k++) {
             ImageView iv = new ImageView(conText);
-            iv.setImageResource(R.drawable.ic_flag_full_small);
-            iv.setPadding(5,0,0,0);
+            iv.setImageResource(R.drawable.ic_iw_star_full);
+            iv.setPadding(0,0,5,0);
             productListViewHolder.stars.addView(iv);
         }
         for (int k = 0; k < 5 - divespot.getRating(); k++) {
             ImageView iv = new ImageView(conText);
-            iv.setImageResource(R.drawable.ic_flag_empty_small);
-            iv.setPadding(5,0,0,0);
+            iv.setImageResource(R.drawable.ic_iw_star_empty);
+            iv.setPadding(0,0,5,0);
             productListViewHolder.stars.addView(iv);
         }
     }
@@ -91,9 +91,6 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
     public static class ProductListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         protected ImageView imageView;
         protected TextView title;
-        protected TextView  description;
-        protected TextView productPrice;
-        protected TextView  price;
         protected LinearLayout stars;
         protected ProgressBar progressBar;
         private int position;
@@ -107,7 +104,6 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
            // productPrice = (TextView) v.findViewById(R.id.product_price);
             imageView = (ImageView) v.findViewById(R.id.product_logo);
             title = (TextView) v.findViewById(R.id.product_title);
-            description = (TextView) v.findViewById(R.id.product_description);
             stars = (LinearLayout) v.findViewById(R.id.stars);
             progressBar = (ProgressBar) v.findViewById(R.id.progressBar);
         }
