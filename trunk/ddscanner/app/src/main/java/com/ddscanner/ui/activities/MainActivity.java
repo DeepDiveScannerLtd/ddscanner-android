@@ -56,9 +56,10 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     }
 
     private void setupTabLayout() {
-        toolbarTabLayout.getTabAt(2).setIcon(R.drawable.ic_ac_tab_profile);
-        toolbarTabLayout.getTabAt(1).setIcon(R.drawable.ic_ac_tab_notif);
-        toolbarTabLayout.getTabAt(0).setIcon(R.drawable.ic_ac_tab_map);
+        toolbarTabLayout.getTabAt(2).setCustomView(R.layout.tab_profile_item);
+        toolbarTabLayout.getTabAt(1).setCustomView(R.layout.tab_notification_item);
+        toolbarTabLayout.getTabAt(0).setCustomView(R.layout.tab_map_item);
+        toolbarTabLayout.getTabAt(0).getCustomView().setSelected(true);
     }
 
     private void setupViewPager(ViewPager viewPager) {
