@@ -1,12 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="Map/list"/>
-
-</LinearLayout>
+        android:layout_height="match_parent">
+    <android.support.v4.view.ViewPager
+        android:id="@+id/maplist_view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+    </LinearLayout>
+    <ProgressBar
+        android:layout_marginTop="10dp"
+        android:id="@+id/request_progress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:indeterminateOnly="true"
+        android:background="@android:color/transparent"
+        android:progressTint="@color/primary"
+        android:indeterminateTint="@color/primary"
+        android:indeterminateTintMode="src_in"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:layout_height="18dp" />
+    <RelativeLayout
+        android:id="@+id/toast"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:gravity="center">
+        <TextView
+            android:layout_marginTop="15dp"
+            android:layout_width="250dp"
+            android:layout_height="30dp"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:background="@drawable/border"
+            android:text="Please zoom in to see dive spots"/>
+    </RelativeLayout>
+</RelativeLayout>

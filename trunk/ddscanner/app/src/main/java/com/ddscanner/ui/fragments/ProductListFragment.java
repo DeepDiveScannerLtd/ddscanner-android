@@ -2,6 +2,7 @@ package com.ddscanner.ui.fragments;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -26,12 +27,14 @@ import java.util.HashMap;
 /**
  * Created by lashket on 23.12.15.
  */
-public class ProductListFragment extends Fragment {
+public class ProductListFragment extends Fragment implements View.OnClickListener {
 
     private RecyclerView rc;
     private RelativeLayout please;
     private ProductListAdapter productListAdapter;
     private Button btnGoToMap;
+    private ViewPager viewPager;
+    private FloatingActionButton mapListFAB;
 
 
     @Override
@@ -40,17 +43,10 @@ public class ProductListFragment extends Fragment {
         View view = inflater.inflate(R.layout.product_list_fragment, container, false);
         rc = (RecyclerView) view.findViewById(R.id.cv);
         please = (RelativeLayout) view.findViewById(R.id.please);
-        btnGoToMap = (Button) view.findViewById(R.id.btn_back_to_map);
-        btnGoToMap.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CityActivity.placeViewPager.setCurrentItem(0);
-                CityActivity.tabLayout.setupWithViewPager(CityActivity.placeViewPager);
-            }
-        });
+        mapListFAB = (FloatingActionButton) view.findViewById(R.id.map_list_fab);
+        mapListFAB.setOnClickListener(this);
         rc.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-     //   linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         rc.setLayoutManager(linearLayoutManager);
         rc.setItemAnimator(new DefaultItemAnimator());
         return view;
@@ -74,4 +70,16 @@ public class ProductListFragment extends Fragment {
 
     }
 
+    public void setViewPager(ViewPager viewPager) {
+        this.viewPager = viewPager;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.map_list_fab:
+                viewPager.setCurrentItem(0, false);
+                break;
+        }
+    }
 }

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.percent.PercentRelativeLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -28,7 +29,7 @@ import java.util.List;
 /**
  * Created by lashket on 20.4.16.
  */
-public class MainActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener {
+public class MainActivity extends FragmentActivity implements ViewPager.OnPageChangeListener {
 
     private TabLayout toolbarTabLayout;
     private ViewPager mainViewPager;

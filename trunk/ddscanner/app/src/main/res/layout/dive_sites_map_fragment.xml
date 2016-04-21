@@ -1,24 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <RelativeLayout
+    <com.google.android.gms.maps.MapView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/mapView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    <fragment
-        android:id="@+id/mapFragment"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-        <ImageView
-            android:layout_width="38dp"
-            android:layout_height="38dp"
-            android:padding="10dp"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/background_map_tools"
-            android:src="@drawable/ic_my_location"/>
+        android:layout_height="match_parent" />
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -31,7 +21,7 @@
                 android:layout_height="38dp"
                 android:padding="10dp"
                 android:layout_alignParentRight="true"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:background="@drawable/background_map_tools"
                 android:src="@drawable/ic_zoom_plus"/>
             <ImageView
@@ -41,9 +31,26 @@
                 android:layout_height="38dp"
                 android:padding="10dp"
                 android:layout_alignParentRight="true"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:background="@drawable/background_map_tools"
                 android:src="@drawable/ic_zoom_minus"/>
+            <ImageView
+                android:layout_below="@+id/zoom_minus"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:padding="10dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="23dp"
+                android:background="@drawable/background_map_tools"
+                android:src="@drawable/ic_my_location"/>
         </RelativeLayout>
-    </RelativeLayout>
-</LinearLayout>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/map_list_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_acb_list"
+        app:backgroundTint="@color/white"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="14dp"/>
+</RelativeLayout>

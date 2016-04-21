@@ -1,23 +1,15 @@
 package com.ddscanner.ui.managers;
 
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.DDScannerApplication;
@@ -26,10 +18,7 @@ import com.ddscanner.entities.DiveSpot;
 import com.ddscanner.entities.DivespotsWrapper;
 import com.ddscanner.entities.request.DiveSpotsRequestMap;
 import com.ddscanner.rest.RestClient;
-import com.ddscanner.ui.activities.CityActivity;
-import com.ddscanner.ui.activities.DivePlaceActivity;
-import com.ddscanner.ui.adapters.PlacesPagerAdapter;
-import com.ddscanner.ui.views.TransformationRoundImage;
+import com.ddscanner.ui.adapters.MapListPagerAdapter;
 import com.ddscanner.utils.EventTrackerHelper;
 import com.ddscanner.utils.LogUtils;
 import com.google.android.gms.maps.CameraUpdate;
@@ -50,8 +39,6 @@ import com.google.maps.android.clustering.algo.GridBasedAlgorithm;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
 import com.google.maps.android.ui.SquareTextView;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -59,9 +46,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import okhttp3.ResponseBody;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
-import retrofit.mime.TypedByteArray;
 import retrofit2.Call;
 import retrofit2.Callback;
 
@@ -77,28 +61,25 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
     private DivespotsWrapper divespotsWrapper;
     private ArrayList<DiveSpot> diveSpots = new ArrayList<>();
     private HashMap<LatLng, DiveSpot> diveSpotsMap = new HashMap<>();
-    private PlacesPagerAdapter placesPagerAdapter;
     private Drawable clusterBackgroundDrawable;
-    // filter
+
     private String currents;
     private String level;
     private String object;
     private int rating = -1;
     private String visibility;
-    private HashMap<Marker, Bitmap> markerBitmapCache = new HashMap<>();
-    private TextView toolbarTitle;
 
-    private InfoWindowRefresher infoWindowRefresher;
+    private MapListPagerAdapter mapListPagerAdapter;
+
     private boolean isCanMakeRequest = false;
 
     private ProgressBar progressBar;
     private RelativeLayout toast;
 
-    public DiveSpotsClusterManager(Context context, GoogleMap googleMap, PlacesPagerAdapter placesPagerAdapter, RelativeLayout toast, ProgressBar progressBar, TextView toolbarTitle) {
+    public DiveSpotsClusterManager(Context context, GoogleMap googleMap, MapListPagerAdapter mapListPagerAdapter, RelativeLayout toast, ProgressBar progressBar) {
         super(context, googleMap);
         this.context = context;
         this.googleMap = googleMap;
-        this.placesPagerAdapter = placesPagerAdapter;
         this.clusterBackgroundDrawable = ContextCompat.getDrawable(context, R.drawable.ic_number);
         this.clusterIconGenerator = new IconGenerator(context);
         this.clusterIconGenerator.setContentView(this.makeSquareTextView(context));
@@ -106,16 +87,14 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         this.clusterIconGenerator.setBackground(clusterBackgroundDrawable);
         this.toast = toast;
         this.progressBar = progressBar;
-        this.toolbarTitle = toolbarTitle;
-
+        this.mapListPagerAdapter = mapListPagerAdapter;
         setAlgorithm(new GridBasedAlgorithm<DiveSpot>());
         setRenderer(new IconRenderer(context, googleMap, this));
         setOnClusterClickListener(this);
-        getMarkerCollection().setOnInfoWindowAdapter(new InfoWindowAdapter(context));
         if (checkArea(googleMap.getProjection().getVisibleRegion().latLngBounds.southwest, googleMap.getProjection().getVisibleRegion().latLngBounds.northeast)) {
             requestCityProducts();
         } else {
-           showToast();
+            showToast();
         }
     }
 
@@ -154,23 +133,20 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
 
         LatLng southwest = googleMap.getProjection().getVisibleRegion().latLngBounds.southwest;
         LatLng northeast = googleMap.getProjection().getVisibleRegion().latLngBounds.northeast;
-        placesPagerAdapter.populateDiveSpotsList(changeListToListFragment(diveSpots));
-        if (checkArea(southwest,northeast)) {
+        mapListPagerAdapter.populateDiveSpotsList(changeListToListFragment(diveSpots));
+        if (checkArea(southwest, northeast)) {
             if (isCanMakeRequest) {
                 if (southwest.latitude <= diveSpotsRequestMap.getSouthWestLat() ||
                         southwest.longitude <= diveSpotsRequestMap.getSouthWestLng() ||
                         northeast.latitude >= diveSpotsRequestMap.getNorthEastLat() ||
                         northeast.longitude >= diveSpotsRequestMap.getNorthEastLng()) {
                     requestCityProducts();
-                    if (!toolbarTitle.getText().toString().equals("DDSCANNER")) {
-                        toolbarTitle.setText("DDScanner");
-                    }
                 }
             } else {
                 requestCityProducts();
             }
         } else {
-          showToast();
+            showToast();
         }
     }
 
@@ -185,25 +161,12 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
             put(EventTrackerHelper.PARAM_MARKER_CLICK_TYPE, "dive_site");
             put(EventTrackerHelper.PARAM_MARKER_CLICK_PLACE_ID, String.valueOf(diveSpotsMap.get(marker.getPosition()).getId()));
         }});
-        marker.showInfoWindow();
         lastClickedMarker = marker;
         Projection projection = googleMap.getProjection();
         Point mapCenteringPoint = projection.toScreenLocation(marker.getPosition());
         mapCenteringPoint.y = mapCenteringPoint.y - DDScannerApplication.getInstance().getResources().getDimensionPixelSize(R.dimen.info_window_height) / 2;
         googleMap.animateCamera(CameraUpdateFactory.newLatLng(projection.fromScreenLocation(mapCenteringPoint)), CAMERA_ANIMATION_DURATION, null);
         return true;
-    }
-
-    @Override
-    public void onInfoWindowClick(final Marker marker) {
-        Intent i = new Intent(context, DivePlaceActivity.class);
-        i.putExtra(InfoWindowAdapter.PRODUCT, String.valueOf(diveSpotsMap.get(marker.getPosition()).getId()));
-        AppsFlyerLib.getInstance().trackEvent(context, EventTrackerHelper
-                .EVENT_INFOWINDOW_CLICK, new HashMap<String, Object>() {{
-            put(EventTrackerHelper.PARAM_INFOWINDOW_CLICK_TYPE, "dive_site");
-            put(EventTrackerHelper.PARAM_INFOWINDOW_CLICK_PLACE_ID, String.valueOf(diveSpotsMap.get(marker.getPosition()).getId()));
-        }});
-        context.startActivity(i);
     }
 
     @Override
@@ -250,7 +213,6 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
             LogUtils.i(TAG, "addNewDiveSpot diveSpot.getPosition() == null");
         } else {
             addItem(diveSpot);
-
             diveSpotsMap.put(diveSpot.getPosition(), diveSpot);
             diveSpots.add(diveSpot);
         }
@@ -258,7 +220,6 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
 
     private void removeDiveSpot(DiveSpot diveSpot) {
         removeItem(diveSpot);
-
         diveSpotsMap.remove(new LatLng(Double.valueOf(diveSpot.getLat()), Double.valueOf(diveSpot.getLng())));
         diveSpots.remove(diveSpot);
     }
@@ -277,7 +238,6 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         this.rating = rating;
         this.visibility = visibility;
     }
-
 
 
     public void requestCityProducts() {
@@ -323,18 +283,10 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
                         LogUtils.i(TAG, "response body is " + responseString);
                         divespotsWrapper = new Gson().fromJson(responseString, DivespotsWrapper.class);
                         updateDiveSpots((ArrayList<DiveSpot>) divespotsWrapper.getDiveSpots());
-                        placesPagerAdapter.populateDiveSpotsList(changeListToListFragment((ArrayList<DiveSpot>)divespotsWrapper.getDiveSpots()));
+                        mapListPagerAdapter.populateDiveSpotsList(changeListToListFragment((ArrayList<DiveSpot>) divespotsWrapper.getDiveSpots()));
                         hidePb();
                     } else {
-                        // TODO Handle errors
-//                        if (error.getKind().equals(RetrofitError.Kind.NETWORK)) {
-//                            Toast.makeText(DDScannerApplication.getInstance(), "Please check your internet connection", Toast.LENGTH_SHORT).show();
-//                        } else if (error.getKind().equals(RetrofitError.Kind.HTTP)) {
-//                            Toast.makeText(DDScannerApplication.getInstance(), "Server is not responsible, please try later", Toast.LENGTH_SHORT).show();
-//                        }
                         hidePb();
-//               String json =  new String(((TypedByteArray)error.getResponse().getBody()).getBytes());
-                        //      System.out.println("failure" + json.toString());
                     }
                 }
 
@@ -366,7 +318,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
             try {
                 marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
                 if (lastClickedMarker != null && lastClickedMarker.getPosition().equals(marker.getPosition()) && lastClickedMarker.isInfoWindowShown()) {
-                    marker.showInfoWindow();
+                    //      marker.showInfoWindow();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -393,93 +345,6 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
             return true;
         }
         return false;
-    }
-
-
-    private class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
-
-        public static final String PRODUCT = "PRODUCT";
-
-        private Context mContext;
-
-        public InfoWindowAdapter(Context context) {
-            this.mContext = context;
-        }
-
-        @Override
-        public View getInfoWindow(Marker marker) {
-            LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View view = inflater.inflate(R.layout.ds_info_window, null);
-            DiveSpot diveSpot = diveSpotsMap.get(marker.getPosition());
-            Bitmap bitmap = markerBitmapCache.get(marker);
-            if (bitmap == null) {
-                infoWindowRefresher = new InfoWindowRefresher(marker);
-                if (diveSpot.getImages() != null) {
-                    LogUtils.i(TAG, "getInfoWindow image=" + diveSpot.getImages().get(0));
-                    Picasso.with(mContext).load(diveSpot.getImages().get(0)).resize(70, 70).centerCrop().transform(new TransformationRoundImage(4,0)).into(infoWindowRefresher);
-                }
-            } else {
-                ImageView photo = (ImageView) view.findViewById(R.id.popup_photo);
-                photo.setAlpha(1f);
-                photo.setImageBitmap(bitmap);
-            }
-            TextView reviews = ((TextView) view.findViewById(R.id.reviews));
-            reviews.setText(diveSpot.getReviews() + " reviews");
-            TextView description = ((TextView) view.findViewById(R.id.description_popup));
-            TextView title = ((TextView) view.findViewById(R.id.popup_product_name));
-            title.setText(diveSpot.getName());
-            description.setText(diveSpot.getDescription());
-            // from = ((TextView)view.findViewById(R.id.price1));
-            LinearLayout stars = (LinearLayout) view.findViewById(R.id.stars);
-            stars.removeAllViews();
-            for (int i = 0; i < diveSpot.getRating(); i++) {
-                ImageView iv = new ImageView(mContext);
-                iv.setImageResource(R.drawable.ic_flag_full_small);
-                iv.setPadding(1, 0, 0, 0);
-                stars.addView(iv);
-            }
-            for (int i = 0; i < 5 - diveSpot.getRating(); i++) {
-                ImageView iv = new ImageView(mContext);
-                iv.setImageResource(R.drawable.ic_flag_empty_small);
-                iv.setPadding(1, 0, 0, 0);
-                stars.addView(iv);
-            }
-            return view;
-        }
-
-        @Override
-        public View getInfoContents(Marker marker) {
-            return null;
-        }
-
-    }
-
-    private class InfoWindowRefresher implements Target {
-        private Marker markerToRefresh;
-
-        private InfoWindowRefresher(Marker markerToRefresh) {
-            this.markerToRefresh = markerToRefresh;
-        }
-
-        @Override
-        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-            LogUtils.i(TAG, "InfoWindowRefresher onSuccess markerToRefresh=" + markerToRefresh + " markerToRefresh.isInfoWindowShown()=" + markerToRefresh.isInfoWindowShown());
-            if (markerToRefresh != null && markerToRefresh.isInfoWindowShown()) {
-                markerBitmapCache.put(markerToRefresh, bitmap);
-//                markerToRefresh.hideInfoWindow();
-                markerToRefresh.showInfoWindow();
-            }
-        }
-
-        @Override
-        public void onBitmapFailed(Drawable errorDrawable) {
-            LogUtils.i(getClass().getSimpleName(), "Error loading thumbnail!");
-        }
-
-        @Override
-        public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-        }
     }
 
 }
