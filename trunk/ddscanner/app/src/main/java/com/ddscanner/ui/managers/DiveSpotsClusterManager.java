@@ -19,6 +19,7 @@ import com.ddscanner.entities.DivespotsWrapper;
 import com.ddscanner.entities.request.DiveSpotsRequestMap;
 import com.ddscanner.events.MarkerClickEvent;
 import com.ddscanner.events.OnMapClickEvent;
+import com.ddscanner.events.PlaceChoosedEvent;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.services.GPSTracker;
 import com.ddscanner.ui.adapters.MapListPagerAdapter;
@@ -44,6 +45,7 @@ import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
 import com.google.maps.android.ui.SquareTextView;
 import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -103,6 +105,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         } else {
             showToast();
         }
+        DDScannerApplication.bus.register(this);
     }
 
     private void showToast() {
@@ -378,6 +381,11 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         } else {
             gpsTracker.showSettingsAlert();
         }
+    }
+
+    @Subscribe
+    public void moveCameraByChosedLocation(PlaceChoosedEvent event) {
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(event.getLatLngBounds(),0));
     }
 
 }
