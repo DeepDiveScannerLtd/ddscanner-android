@@ -35,6 +35,7 @@
                 android:background="@drawable/background_map_tools"
                 android:src="@drawable/ic_zoom_minus"/>
             <ImageView
+                android:id="@+id/go_to_my_location"
                 android:layout_below="@+id/zoom_minus"
                 android:layout_width="38dp"
                 android:layout_height="38dp"
@@ -44,13 +45,64 @@
                 android:background="@drawable/background_map_tools"
                 android:src="@drawable/ic_my_location"/>
         </RelativeLayout>
+    <RelativeLayout
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/map_list_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
         android:src="@drawable/ic_acb_list"
         app:backgroundTint="@color/white"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
         android:layout_margin="14dp"/>
+        <RelativeLayout
+            android:id="@+id/dive_spot_info_layout"
+            android:layout_below="@+id/map_list_fab"
+            android:visibility="gone"
+            android:orientation="vertical" android:layout_width="match_parent"
+            android:layout_height="110dp"
+            android:background="@drawable/iw_card_wreck">
+
+            <TextView
+                android:id="@+id/dive_spot_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:lines="1"
+                android:ellipsize="end"
+                android:text="Racha yai wrecks fds fds fds fsdf sdf sd ds"
+                android:layout_marginRight="30dp"
+                android:textColor="@color/white"
+                android:textSize="22sp"
+                android:layout_marginLeft="22dp"
+                android:layout_marginTop="20dp"/>
+
+            <LinearLayout
+                android:id="@+id/rating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="22dp"
+                android:layout_below="@+id/dive_spot_title"
+                android:gravity="center_vertical|center_horizontal"
+                android:layout_marginTop="3dp"
+                android:orientation="horizontal"/>
+
+            <TextView
+                android:layout_below="@+id/rating"
+                android:layout_marginTop="3dp"
+                android:layout_marginLeft="22dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:text="Wreck"/>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_iw_arrow"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="16dp"/>
+
+        </RelativeLayout>
+    </RelativeLayout>
 </RelativeLayout>

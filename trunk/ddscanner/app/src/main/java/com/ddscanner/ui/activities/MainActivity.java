@@ -47,6 +47,7 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
 
     private void setUi() {
         toolbarTabLayout.setupWithViewPager(mainViewPager);
+        mainViewPager.setOffscreenPageLimit(3);
         mainViewPager.setOnPageChangeListener(this);
     }
 
@@ -115,4 +116,8 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
 
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 }

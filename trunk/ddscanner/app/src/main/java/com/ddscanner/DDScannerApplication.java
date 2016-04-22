@@ -8,6 +8,7 @@ import com.crashlytics.android.Crashlytics;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.facebook.FacebookSdk;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.squareup.otto.Bus;
 import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 
@@ -21,7 +22,7 @@ public class DDScannerApplication extends Application {
     // Note: Your consumer key and secret should be obfuscated in your source code before shipping.
     public static final String TWITTER_KEY = "tT7PhwjwXb8dEXbhQzI529VR4";
     public static final String TWITTER_SECRET = "C4wijpAOBWWwUVsmtyoMEhWUQD5P6BFulUDTVQGQmrJI32BlaT";
-
+    public static Bus bus = new Bus();
 
 
     private static DDScannerApplication instance;
@@ -38,7 +39,6 @@ public class DDScannerApplication extends Application {
         FacebookSdk.sdkInitialize(this);
         instance = this;
         Fresco.initialize(this);
-
     }
 
     protected void attachBaseContext(Context base) {
