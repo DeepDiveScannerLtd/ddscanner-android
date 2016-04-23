@@ -99,4 +99,9 @@
         <item name="android:layout_marginTop">10dp</item>
         <item name="android:layout_marginBottom">10dp</item>
     </style>
+
+    <style name="Color1SwitchStyle">
+        <item name="colorControlActivated">@color/orange</item>
+    </style>
+
 </resources>
