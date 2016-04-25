@@ -14,6 +14,7 @@ import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -31,9 +32,12 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.rey.material.widget.Spinner;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import okhttp3.ResponseBody;
@@ -49,16 +53,10 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
 
     private static final String TAG = FilterActivity.class.getSimpleName();
 
-    private RadioGroup rgLevel;
-    private RadioGroup rgCurrents;
-    private RadioGroup rgVisibility;
-    private RadioGroup rgObject;
     private Toolbar toolbar;
     private FiltersResponseEntity filters = new FiltersResponseEntity();
-    private Button button;
-    private ProgressDialog progressDialog;
-    private int padding = 40;
-
+    private Spinner objectSpinner;
+    private Spinner levelSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstance) {
@@ -69,48 +67,28 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
         findViews();
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_actionbar_back);
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage(getApplicationContext().getResources().getString(R.string.pleaseWait));
-        progressDialog.show();
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_close);
+        getSupportActionBar().setTitle("Filter");
         request();
-        progressDialog.dismiss();
-        button.setOnClickListener(this);
-        if (Build.VERSION.SDK_INT < 17) {
-            padding = 60;
-        }
     }
 
     private void findViews() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        rgCurrents = (RadioGroup) findViewById(R.id.rg_currents);
-        rgLevel = (RadioGroup) findViewById(R.id.rg_level);
-        rgVisibility = (RadioGroup) findViewById(R.id.rg_visibility);
-        rgObject = (RadioGroup) findViewById(R.id.rg_object);
-        button = (Button) findViewById(R.id.apply_filter);
+        objectSpinner = (Spinner) findViewById(R.id.object_spinner);
+        levelSpinner = (Spinner) findViewById(R.id.level_spinner);
     }
 
 
-    private void setFilerGroup(RadioGroup radioGroup, Map<String, String> currents, String tag) {
-        ImageView divider = new ImageView(this);
-        divider.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.divider));
-        divider.setPadding(0, 16, 0, 0);
-        LinearLayout.LayoutParams layoutParams = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT, RadioGroup.LayoutParams.WRAP_CONTENT);
-        for (Map.Entry<String, String> entry : currents.entrySet()) {
-            RadioButton radioButton = new RadioButton(this);
-            radioButton.setButtonDrawable(R.drawable.bg_radio_button);
-            radioButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
-            radioButton.setPadding(padding,0,0,0);
-            layoutParams.topMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics());
-            layoutParams.bottomMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics());
-            radioButton.setTag(entry.getKey());
-            radioButton.setText(entry.getValue());
-            radioButton.setTypeface(Typeface.SANS_SERIF);
-            radioGroup.addView(radioButton, 0, layoutParams);
+    private void setFilerGroup(Spinner spinner, Map<String, String> values, String tag) {
+        List<String> objects = new ArrayList<String>();
+        for (Map.Entry<String, String> entry : values.entrySet()) {
+            objects.add(entry.getValue());
             if (entry.getKey().equals(tag)) {
-                radioGroup.check(radioButton.getId());
+
             }
         }
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.spinner_item, objects);
+        spinner.setAdapter(adapter);
     }
 
 
@@ -118,7 +96,7 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
     public void onClick(View v) {
         Map <String, Object> eventValues = new HashMap<String, Object>();
         Intent data = new Intent();
-        int selectedRadioButtonId = rgCurrents.getCheckedRadioButtonId();
+      /*  int selectedRadioButtonId = rgCurrents.getCheckedRadioButtonId();
         if (selectedRadioButtonId != -1) {
             data.putExtra(DiveSpotsRequestMap.KEY_CURRENTS, findViewById(selectedRadioButtonId).getTag().toString());
             SharedPreferenceHelper.setCurrents(findViewById(selectedRadioButtonId).getTag().toString());
@@ -142,14 +120,7 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
             SharedPreferenceHelper.setObject(findViewById(selectedRadioButtonId).getTag().toString());
             eventValues.put(DiveSpotsRequestMap.KEY_OBJECT, findViewById(selectedRadioButtonId).getTag().toString());
         }
-//        selectedRadioButtonId = rgCurrents.getCheckedRadioButtonId();
-//        if (selectedRadioButtonId != -1) {
-//            data.putExtra(DiveSpotsRequestMap.KEY_CURRENTS, findViewById(selectedRadioButtonId).getTag().toString());
-//        }
-//        selectedRadioButtonId = rgCurrents.getCheckedRadioButtonId();
-//        if (selectedRadioButtonId != -1) {
-//            data.putExtra(DiveSpotsRequestMap.KEY_CURRENTS, findViewById(selectedRadioButtonId).getTag().toString());
-//        }
+*/
         AppsFlyerLib.getInstance().trackEvent(getApplicationContext(),
                 EventTrackerHelper.EVENT_FILTER_APPLIED, eventValues);
         setResult(RESULT_OK, data);
@@ -200,10 +171,8 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
 
                     Log.i(TAG, responseString);
 
-                    setFilerGroup(rgCurrents, filters.getCurrents(), SharedPreferenceHelper.getCurrents());
-                    setFilerGroup(rgVisibility, filters.getVisibility(), SharedPreferenceHelper.getVisibility());
-                    setFilerGroup(rgLevel, filters.getLevel(), SharedPreferenceHelper.getLevel());
-                    setFilerGroup(rgObject, filters.getObject(), SharedPreferenceHelper.getObject());
+                    setFilerGroup(objectSpinner, filters.getObject(), SharedPreferenceHelper.getCurrents());
+                    setFilerGroup(levelSpinner, filters.getLevel(), SharedPreferenceHelper.getCurrents());
                 } else {
                     // TODO Handle errors
                 }
@@ -225,7 +194,6 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
                 onBackPressed();
                 return true;
             case R.id.reset_filters:
-                resetFilters();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -238,22 +206,8 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
         return true;
     }
 
-    private void resetFilters() {
-
-        clearFilterSharedPrefences();
-
-        rgCurrents.clearCheck();
-        rgLevel.clearCheck();
-        rgObject.clearCheck();
-        rgVisibility.clearCheck();
-        AppsFlyerLib.getInstance().trackEvent(getApplicationContext(),
-                EventTrackerHelper.EVENT_FILTER_RESET, new HashMap<String, Object>());
-    }
-
     private void clearFilterSharedPrefences() {
         SharedPreferenceHelper.setObject("");
-        SharedPreferenceHelper.setCurrents("");
-        SharedPreferenceHelper.setVisibility("");
         SharedPreferenceHelper.setLevel("");
     }
 

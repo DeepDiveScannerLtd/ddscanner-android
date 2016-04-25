@@ -63,5 +63,6 @@
     <string name="feedback_title">Gongratulations!</string>
     <string name="filter_only_best_rated">Only best rated</string>
     <string name="filters_filters">Filters</string>
+    <string name="btn_save">SAVE</string>
 
 </resources>

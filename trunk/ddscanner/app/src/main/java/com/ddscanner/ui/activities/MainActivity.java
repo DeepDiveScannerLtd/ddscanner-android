@@ -131,6 +131,10 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
             case R.id.search_location_menu_button:
                 openSearchLocationWindow();
                 break;
+            case R.id.filter_menu_button:
+                Intent intent = new Intent(MainActivity.this, FilterActivity.class);
+                startActivity(intent);
+                break;
         }
     }
 
