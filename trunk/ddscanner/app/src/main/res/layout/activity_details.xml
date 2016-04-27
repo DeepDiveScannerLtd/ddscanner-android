@@ -44,6 +44,7 @@
                 android:id="@+id/viewPagerIndicator"
                 android:layout_width="match_parent"
                 android:layout_height="35dp"
+                app:layout_collapseMode="parallax"
                 android:layout_gravity="bottom"
                 android:layout_marginTop="5dp"
                 android:gravity="center">

@@ -17,6 +17,7 @@ import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.R;
 import com.ddscanner.entities.DiveSpot;
 import com.ddscanner.ui.activities.DivePlaceActivity;
+import com.ddscanner.ui.activities.DiveSpotDetailsActivity;
 import com.ddscanner.ui.views.TransformationRoundImage;
 import com.ddscanner.utils.EventTrackerHelper;
 import com.squareup.picasso.Callback;
@@ -116,7 +117,8 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
                     EventTrackerHelper.EVENT_DIVE_SITES_LIST_ITEM_CLICK, new HashMap<String, Object>() {{
                         put(EventTrackerHelper.PARAM_DIVE_SITES_LIST_ITEM_CLICK, divespots.get(getPosition()).getId());
                     }});
-            context.startActivity(i);
+          //  context.startActivity(i);
+            DiveSpotDetailsActivity.show(context, String.valueOf(divespots.get(getPosition()).getId()));
         }
     }
 

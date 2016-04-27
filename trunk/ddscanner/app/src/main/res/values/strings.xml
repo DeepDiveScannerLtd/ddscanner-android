@@ -50,6 +50,7 @@
     <string name="details_currents">Currents</string>
     <string name="details_level">Diver level</string>
     <string name="details_description">Description</string>
+    <string name="details_access">Access</string>
     <string name="details_btn_book_now">Contact Dive Centers</string>
 
     <string name="facebook_app_id">1691716511044593</string>
@@ -64,5 +65,11 @@
     <string name="filter_only_best_rated">Only best rated</string>
     <string name="filters_filters">Filters</string>
     <string name="btn_save">SAVE</string>
+    <string name="object_characteristic">Object</string>
+    <string name="photos_title">Photos</string>
+    <string name="btn_yes">YES</string>
+    <string name="btn_no">NO</string>
+    <string name="the_information_is_valid">The information is valid?</string>
+    <string name="tap_on_star_to_review">Tap on star to review</string>
 
 </resources>

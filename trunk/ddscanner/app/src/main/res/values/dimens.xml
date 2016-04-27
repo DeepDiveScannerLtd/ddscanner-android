@@ -18,4 +18,6 @@
     <dimen name="add_ds_char_height">55dp</dimen>
     <dimen name="add_ds_char_width">63dp</dimen>
 
+    <dimen name="rc_photos_dimen">0px</dimen>
+
 </resources>

@@ -105,6 +105,10 @@
             android:screenOrientation="portrait">
         </activity>
         <activity
+            android:name=".ui.activities.DiveSpotDetailsActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
             android:name=".ui.activities.SearchSealifeActivity"
             android:screenOrientation="portrait">
         </activity>
