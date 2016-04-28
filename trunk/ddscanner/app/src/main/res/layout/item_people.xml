@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="58dp"
+    >
+    <ImageView
+        android:id="@+id/user_avatar"
+        android:layout_width="65dp"
+        android:layout_height="57dp"
+        android:src="@drawable/avatar_checkin"
+        android:scaleType="center"/>
+    <LinearLayout
+        android:id="@+id/user_data"
+        android:layout_toRightOf="@+id/user_avatar"
+        android:layout_width="wrap_content"
+        android:layout_height="57dp"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Andrei lashkevich"
+            android:textSize="16sp"
+            android:textColor="@color/black_text"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="159reviews, 31 likes"
+            android:textColor="#a3a3a3"
+            android:layout_marginTop="1dp"
+            android:textSize="13sp"/>
+    </LinearLayout>
+    <ImageView
+        android:layout_toRightOf="@+id/user_avatar"
+        android:layout_below="@+id/user_data"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="centerCrop"
+        android:src="@drawable/divider" />
+</RelativeLayout>

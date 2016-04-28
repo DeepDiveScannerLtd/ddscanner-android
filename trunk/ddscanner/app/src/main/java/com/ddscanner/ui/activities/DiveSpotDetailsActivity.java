@@ -37,6 +37,7 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.rey.material.widget.ProgressView;
@@ -52,13 +53,14 @@ import retrofit2.Call;
 /**
  * Created by lashket on 26.4.16.
  */
-public class DiveSpotDetailsActivity extends AppCompatActivity {
+public class DiveSpotDetailsActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String EXTRA_ID = "ID";
 
     private DivespotDetails divespotDetails;
     private ProgressDialog progressDialog;
     private String productId;
+    private LatLng diveSpotCoordinates;
 
     /*Ui*/
     private TextView diveSpotName;
@@ -74,6 +76,12 @@ public class DiveSpotDetailsActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private AppBarLayout appBarLayout;
+    private LinearLayout mapLayout;
+    private TextView object;
+    private TextView level;
+    private TextView depth;
+    private TextView visibility;
+    private TextView currents;
 
 
 
@@ -102,12 +110,19 @@ public class DiveSpotDetailsActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         appBarLayout = (AppBarLayout) findViewById(R.id.app_bar_layout);
+        mapLayout = (LinearLayout) findViewById(R.id.map_layout);
+        mapLayout.setOnClickListener(this);
+        object = (TextView) findViewById(R.id.object);
+        level = (TextView) findViewById(R.id.level);
+        depth = (TextView) findViewById(R.id.depth);
+        visibility = (TextView) findViewById(R.id.visibility);
+        currents = (TextView) findViewById(R.id.currents);
     }
 
     private void toolbarSettings() {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_actionbar_back);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);
         getSupportActionBar().setTitle("");
         collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
         collapsingToolbarLayout.setStatusBarScrimColor(getResources().getColor(android.R.color.transparent));
@@ -116,6 +131,11 @@ public class DiveSpotDetailsActivity extends AppCompatActivity {
 
     private void setUi() {
         final DiveSpotFull diveSpot = divespotDetails.getDivespot();
+        object.setText(diveSpot.getObject());
+        level.setText(diveSpot.getLevel());
+        depth.setText(diveSpot.getDepth());
+        visibility.setText(diveSpot.getVisibility());
+        currents.setText(diveSpot.getCurrents());
         Picasso.with(this).load(diveSpot.getDiveSpotPathMedium() + diveSpot.getImages().get(0)).into(diveSpotMainPhoto, new ImageLoadedCallback(progressBar) {
             @Override
             public void onSuccess() {
@@ -169,9 +189,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity {
         mapFragment.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap googleMap) {
-                googleMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds))
-                        .position(new LatLng(diveSpot.getLat(), diveSpot.getLng())));
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(diveSpot.getLat(), diveSpot.getLng()), 7.0f));
+                workWithMap(googleMap);
             }
         });
         progressBarFull.setVisibility(View.GONE);
@@ -179,6 +197,41 @@ public class DiveSpotDetailsActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Handling map click events
+     * @author Andrei Lashkevich
+     * @param googleMap
+     */
+    private void workWithMap(GoogleMap googleMap) {
+        googleMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds))
+                .position(diveSpotCoordinates));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(diveSpotCoordinates, 7.0f));
+        googleMap.getUiSettings().setAllGesturesEnabled(false);
+        googleMap.getUiSettings().setMapToolbarEnabled(false);
+        googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                Intent intent = new Intent(DiveSpotDetailsActivity.this, ShowDsLocationActivity.class);
+                intent.putExtra("LATLNG", diveSpotCoordinates);
+                startActivity(intent);
+            }
+        });
+        googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                Intent intent = new Intent(DiveSpotDetailsActivity.this, ShowDsLocationActivity.class);
+                intent.putExtra("LATLNG", diveSpotCoordinates);
+                startActivity(intent);
+                return false;
+            }
+        });
+    }
+
+    /**
+     * Request for getting data about dive spot
+     * @author Andrei Lashkevich
+     * @param productId
+     */
     private void requestProductDetails(String productId) {
         Call<ResponseBody> call = RestClient.getServiceInstance().getDiveSpotById(productId);
         call.enqueue(new retrofit2.Callback<ResponseBody>() {
@@ -193,6 +246,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity {
                     }
                     LogUtils.i("response body is " + responseString);
                     divespotDetails = new Gson().fromJson(responseString, DivespotDetails.class);
+                    diveSpotCoordinates = new LatLng(divespotDetails.getDivespot().getLat(), divespotDetails.getDivespot().getLng());
                     setUi();
                 } else {
 
@@ -250,4 +304,14 @@ public class DiveSpotDetailsActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.map_layout:
+                Intent intent = new Intent(DiveSpotDetailsActivity.this, ShowDsLocationActivity.class);
+                intent.putExtra("LATLNG", new LatLng(divespotDetails.getDivespot().getLat(), divespotDetails.getDivespot().getLng()));
+                startActivity(intent);
+                break;
+        }
+    }
 }

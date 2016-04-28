@@ -3,10 +3,8 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
     <include layout="@layout/view_toolbar" />
-    <fragment
-        android:clickable="false"
-        android:id="@+id/google_map_fragment"
-        class="com.google.android.gms.maps.MapFragment"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/peoples_rc"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="wrap_content"/>
 </LinearLayout>

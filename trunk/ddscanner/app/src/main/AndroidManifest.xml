@@ -75,6 +75,10 @@
             android:screenOrientation="portrait">
         </activity>
         <activity
+            android:name=".ui.activities.ShowDsLocationActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
             android:name=".ui.activities.DiveCentersActivity"
             android:screenOrientation="portrait">
         </activity>

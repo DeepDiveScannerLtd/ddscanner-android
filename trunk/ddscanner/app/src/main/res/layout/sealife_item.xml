@@ -11,7 +11,7 @@
         android:src="@drawable/ds_sl_photo"/>
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/sealife_name"
-        android:background="@drawable/layerlist_sealife_item"
+        android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:text="Murena"
