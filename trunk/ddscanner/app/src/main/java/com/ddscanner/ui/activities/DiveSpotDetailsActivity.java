@@ -15,6 +15,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -84,6 +85,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private TextView visibility;
     private TextView currents;
     private RelativeLayout checkInPeoples;
+    private TextView showMore;
 
 
 
@@ -126,6 +128,8 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         currents = (TextView) findViewById(R.id.currents);
         checkInPeoples = (RelativeLayout) findViewById(R.id.check_in_peoples);
         checkInPeoples.setOnClickListener(this);
+        showMore = (TextView) findViewById(R.id.showmore);
+        showMore.setOnClickListener(this);
     }
 
     /**
@@ -182,6 +186,11 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         });
         diveSpotName.setText(diveSpot.getName());
         diveSpotDescription.setText(diveSpot.getDescription());
+        if (diveSpotDescription.getLineCount() > 3) {
+            diveSpotDescription.setMaxLines(3);
+            diveSpotDescription.setEllipsize(TextUtils.TruncateAt.END);
+            showMore.setVisibility(View.VISIBLE);
+        }
         for (int k = 0; k < diveSpot.getRating(); k++) {
             ImageView iv = new ImageView(this);
             iv.setImageResource(R.drawable.ic_ds_star_full);
@@ -340,6 +349,11 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 break;
             case R.id.check_in_peoples:
                 CheckInPeoplesActivity.show(DiveSpotDetailsActivity.this);
+                break;
+            case R.id.showmore:
+                showMore.setVisibility(View.GONE);
+                diveSpotDescription.setMaxLines(10000);
+                diveSpotDescription.setEllipsize(null);
                 break;
         }
     }

@@ -77,7 +77,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:visibility="gone">
+                android:visibility="visible">
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
@@ -112,14 +112,28 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
-                    android:padding="15dp"
+                    android:paddingLeft="15dp"
+                    android:paddingTop="15dp"
+                    android:paddingRight="15dp"
                     android:textColor="@color/black_text"
                     android:textSize="15sp"
                     android:visibility="visible" />
-
+                <TextView
+                    android:id="@+id/showmore"
+                    android:paddingLeft="15dp"
+                    android:paddingTop="5dp"
+                    android:layout_width="match_parent"
+                    android:background="@color/white"
+                    android:textColor="@color/primary"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:text="Show more"/>
                 <ImageView
+                    android:paddingTop="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:scaleType="centerCrop"
                     android:src="@drawable/divider" />
 
                 <RelativeLayout
@@ -204,11 +218,13 @@
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:scaleType="centerCrop"
                     android:src="@drawable/divider" />
 
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:scaleType="centerCrop"
                     android:layout_marginTop="10dp"
                     android:src="@drawable/divider" />
 
