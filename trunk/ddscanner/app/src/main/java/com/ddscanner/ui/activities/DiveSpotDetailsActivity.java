@@ -3,6 +3,7 @@ package com.ddscanner.ui.activities;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.DimenRes;
@@ -10,7 +11,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatDrawableManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -64,6 +67,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private ProgressDialog progressDialog;
     private String productId;
     private LatLng diveSpotCoordinates;
+    private boolean isCheckedIn = false;
 
     /*Ui*/
     private TextView diveSpotName;
@@ -88,6 +92,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private RelativeLayout checkInPeoples;
     private TextView showMore;
     private RatingBar ratingBar;
+    private FloatingActionButton btnCheckIn;
 
 
 
@@ -130,6 +135,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         checkInPeoples = (RelativeLayout) findViewById(R.id.check_in_peoples);
         showMore = (TextView) findViewById(R.id.showmore);
         ratingBar = (RatingBar) findViewById(R.id.rating_bar);
+        btnCheckIn = (FloatingActionButton) findViewById(R.id.fab_checkin);
     }
 
     /**
@@ -153,6 +159,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
      */
 
     private void setUi() {
+        btnCheckIn.setOnClickListener(this);
         ratingBar.setOnRatingBarChangeListener(this);
         checkInPeoples.setOnClickListener(this);
         showMore.setOnClickListener(this);
@@ -358,8 +365,38 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 diveSpotDescription.setMaxLines(10000);
                 diveSpotDescription.setEllipsize(null);
                 break;
+            case R.id.fab_checkin:
+                if (isCheckedIn) {
+                    checkOut();
+                } else {
+                    checkIn();
+                }
+                break;
         }
     }
+
+    /**
+     * Sending request when try to check in in dive spot and change FAB style
+     * @author Andrei Lashkevich
+     */
+
+    private void checkIn() {
+        btnCheckIn.setImageDrawable(AppCompatDrawableManager.get().getDrawable(this, R.drawable.ic_acb_pin_checked));
+        btnCheckIn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.orange)));
+        isCheckedIn = true;
+    }
+
+    /**
+     * Sending request when try to check out in dive spot and change FAB style
+     * @author Andrei Lashkevich
+     */
+
+    private void checkOut() {
+        btnCheckIn.setImageDrawable(AppCompatDrawableManager.get().getDrawable(this, R.drawable.ic_acb_pin));
+        btnCheckIn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
+        isCheckedIn = false;
+    }
+
 
     @Override
     public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
