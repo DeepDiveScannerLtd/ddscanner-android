@@ -72,5 +72,8 @@
     <string name="tap_on_star_to_review">Tap on star to review</string>
     <string name="diveSpot">Dive Spot</string>
     <string name="people">People</string>
+    <string name="add_photos">Add photos</string>
+    <string name="photos">Photos</string>
+    <string name="tap_a_flag_to_rate">Tap a flag to rate</string>
 
 </resources>

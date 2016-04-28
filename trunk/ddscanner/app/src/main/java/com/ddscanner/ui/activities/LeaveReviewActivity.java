@@ -4,16 +4,23 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -24,6 +31,7 @@ import com.ddscanner.R;
 import com.ddscanner.entities.Comment;
 import com.ddscanner.entities.request.SendReviewRequest;
 import com.ddscanner.rest.RestClient;
+import com.ddscanner.ui.adapters.AddPhotoToDsListAdapter;
 import com.ddscanner.utils.EventTrackerHelper;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.gson.Gson;
@@ -32,7 +40,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import okhttp3.ResponseBody;
@@ -43,7 +53,9 @@ import retrofit2.Response;
 /**
  * Created by lashket on 12.3.16.
  */
-public class LeaveReviewActivity extends AppCompatActivity {
+public class LeaveReviewActivity extends AppCompatActivity implements View.OnClickListener {
+
+    private static final int RC_PICK_PHOTO = 9001;
 
     private static final String TAG = LeaveReviewActivity.class.getSimpleName();
     private static final String ID = "ID";
@@ -59,6 +71,10 @@ public class LeaveReviewActivity extends AppCompatActivity {
     private float rating;
     private ProgressDialog progressDialog;
     private TextView symbolNumberLeft;
+    private ImageButton btnAddPhoto;
+    private RecyclerView photos_rc;
+    private List<String> imageUris = new ArrayList<String>();
+    private TextView addPhotoTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +84,7 @@ public class LeaveReviewActivity extends AppCompatActivity {
         rating = getIntent().getExtras().getFloat(RATING);
         findViews();
         toolbarSettings();
+        setRcSettings();
         setProgressDialog();
 
         text.addTextChangedListener(new TextWatcher() {
@@ -98,12 +115,23 @@ public class LeaveReviewActivity extends AppCompatActivity {
         ratingBar = (RatingBar) findViewById(R.id.rating_bar);
         ratingBar.setRating(rating);
         symbolNumberLeft = (TextView) findViewById(R.id.left_number);
+        photos_rc = (RecyclerView) findViewById(R.id.photos_rc);
+        btnAddPhoto = (ImageButton) findViewById(R.id.btn_add_photo);
+        addPhotoTitle = (TextView) findViewById(R.id.add_photo_title);
+        btnAddPhoto.setOnClickListener(this);
+    }
 
+    private void setRcSettings() {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(LeaveReviewActivity.this);
+        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        photos_rc.setNestedScrollingEnabled(false);
+        photos_rc.setHasFixedSize(false);
+        photos_rc.setLayoutManager(layoutManager);
     }
 
     private void toolbarSettings() {
         setSupportActionBar(toolbar);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_actionbar_back);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("New review");
     }
@@ -201,18 +229,6 @@ public class LeaveReviewActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == RC_LOGIN) {
-            if (resultCode == RESULT_OK) {
-                sendReview();
-            }
-            if (resultCode == RESULT_CANCELED) {
-                Log.i(TAG, "Error with login");
-                progressDialog.dismiss();
-            }
-        }
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -251,5 +267,54 @@ public class LeaveReviewActivity extends AppCompatActivity {
             return false;
         }
         return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_LOGIN) {
+            if (resultCode == RESULT_OK) {
+                sendReview();
+            }
+            if (resultCode == RESULT_CANCELED) {
+                Log.i(TAG, "Error with login");
+                progressDialog.dismiss();
+            }
+        }
+        if (requestCode == RC_PICK_PHOTO) {
+            if (resultCode == RESULT_OK) {
+                Uri uri = data.getData();
+                imageUris.add(getRealPathFromURI(LeaveReviewActivity.this, uri));
+                photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris, LeaveReviewActivity.this, addPhotoTitle));
+                Log.i(TAG, getRealPathFromURI(LeaveReviewActivity.this, uri));
+            }
+        }
+    }
+
+    public String getRealPathFromURI(Context context, Uri contentUri) {
+        Cursor cursor = null;
+        try {
+            String[] proj = { MediaStore.Images.Media.DATA };
+            cursor = context.getContentResolver().query(contentUri,  proj, null, null, null);
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_add_photo:
+                Intent i = new Intent(Intent.ACTION_PICK,
+                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                i.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                startActivityForResult(i, RC_PICK_PHOTO);
+                break;
+        }
     }
 }
