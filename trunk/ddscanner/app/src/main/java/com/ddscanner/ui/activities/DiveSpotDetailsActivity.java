@@ -20,6 +20,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -55,7 +56,7 @@ import retrofit2.Call;
 /**
  * Created by lashket on 26.4.16.
  */
-public class DiveSpotDetailsActivity extends AppCompatActivity implements View.OnClickListener {
+public class DiveSpotDetailsActivity extends AppCompatActivity implements View.OnClickListener, RatingBar.OnRatingBarChangeListener {
 
     private static final String EXTRA_ID = "ID";
 
@@ -86,6 +87,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private TextView currents;
     private RelativeLayout checkInPeoples;
     private TextView showMore;
+    private RatingBar ratingBar;
 
 
 
@@ -120,16 +122,14 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         appBarLayout = (AppBarLayout) findViewById(R.id.app_bar_layout);
         mapLayout = (LinearLayout) findViewById(R.id.map_layout);
-        mapLayout.setOnClickListener(this);
         object = (TextView) findViewById(R.id.object);
         level = (TextView) findViewById(R.id.level);
         depth = (TextView) findViewById(R.id.depth);
         visibility = (TextView) findViewById(R.id.visibility);
         currents = (TextView) findViewById(R.id.currents);
         checkInPeoples = (RelativeLayout) findViewById(R.id.check_in_peoples);
-        checkInPeoples.setOnClickListener(this);
         showMore = (TextView) findViewById(R.id.showmore);
-        showMore.setOnClickListener(this);
+        ratingBar = (RatingBar) findViewById(R.id.rating_bar);
     }
 
     /**
@@ -153,6 +153,9 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
      */
 
     private void setUi() {
+        ratingBar.setOnRatingBarChangeListener(this);
+        checkInPeoples.setOnClickListener(this);
+        showMore.setOnClickListener(this);
         final DiveSpotFull diveSpot = divespotDetails.getDivespot();
         object.setText(diveSpot.getObject());
         level.setText(diveSpot.getLevel());
@@ -207,7 +210,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         photosRecyclerView.setLayoutManager(new GridLayoutManager(DiveSpotDetailsActivity.this, 4));
      //   photosRecyclerView.addItemDecoration(new ItemOffsetDecoration(DiveSpotDetailsActivity.this, R.dimen.rc_photos_dimen));
         photosRecyclerView.setAdapter(new DiveSpotsPhotosAdapter((ArrayList<String>) diveSpot.getImages(),
-                diveSpot.getDiveSpotPathSmall(), DiveSpotDetailsActivity.this));
+                diveSpot.getDiveSpotPathMedium(), DiveSpotDetailsActivity.this));
         LinearLayoutManager layoutManager = new LinearLayoutManager(DiveSpotDetailsActivity.this);
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         sealifeRecyclerview.setNestedScrollingEnabled(false);
@@ -356,5 +359,10 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 diveSpotDescription.setEllipsize(null);
                 break;
         }
+    }
+
+    @Override
+    public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+        LeaveReviewActivity.show(DiveSpotDetailsActivity.this, String.valueOf(divespotDetails.getDivespot().getId()), rating);
     }
 }

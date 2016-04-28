@@ -102,10 +102,15 @@
         <activity
             android:name=".ui.activities.SealifeDetails"
             android:screenOrientation="portrait" />
-        <activity android:name=".ui.activities.LeaveReviewActivity"
+        <activity
+            android:name=".ui.activities.LeaveReviewActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible|adjustResize"
             >
+        </activity>
+        <activity
+            android:name=".ui.activities.ShowImageActivity"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".ui.activities.DiveCenterDetailsActivity"

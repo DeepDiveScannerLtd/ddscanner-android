@@ -2,6 +2,7 @@ package com.ddscanner.ui.activities;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -45,6 +46,8 @@ import retrofit2.Response;
 public class LeaveReviewActivity extends AppCompatActivity {
 
     private static final String TAG = LeaveReviewActivity.class.getSimpleName();
+    private static final String ID = "ID";
+    private static final String RATING = "RATING";
     private static final int RC_LOGIN = 8001;
     private static final int COMMENT_MAX_LENGTH = 250;
 
@@ -53,6 +56,7 @@ public class LeaveReviewActivity extends AppCompatActivity {
     private String diveSpotId;
     private EditText text;
     private RatingBar ratingBar;
+    private float rating;
     private ProgressDialog progressDialog;
     private TextView symbolNumberLeft;
 
@@ -60,7 +64,8 @@ public class LeaveReviewActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_leave_review);
-        diveSpotId = getIntent().getStringExtra("id");
+        diveSpotId = getIntent().getStringExtra(ID);
+        rating = getIntent().getExtras().getFloat(RATING);
         findViews();
         toolbarSettings();
         setProgressDialog();
@@ -91,6 +96,7 @@ public class LeaveReviewActivity extends AppCompatActivity {
         text = (EditText) findViewById(R.id.review_text);
         text.setTag("comment");
         ratingBar = (RatingBar) findViewById(R.id.rating_bar);
+        ratingBar.setRating(rating);
         symbolNumberLeft = (TextView) findViewById(R.id.left_number);
 
     }
@@ -106,6 +112,13 @@ public class LeaveReviewActivity extends AppCompatActivity {
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage(getApplicationContext().getResources().getString(R.string.pleaseWait));
         progressDialog.setCancelable(false);
+    }
+
+    public static void show(Context context, String id, float rating) {
+        Intent intent = new Intent(context, LeaveReviewActivity.class);
+        intent.putExtra(ID, id);
+        intent.putExtra(RATING, rating);
+        context.startActivity(intent);
     }
 
     private void sendReview() {

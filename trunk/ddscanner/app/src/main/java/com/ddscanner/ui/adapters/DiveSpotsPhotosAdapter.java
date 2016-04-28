@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ddscanner.R;
+import com.ddscanner.ui.activities.ShowImageActivity;
 import com.ddscanner.ui.views.TransformationRoundImage;
 import com.squareup.picasso.Picasso;
 
@@ -19,9 +20,9 @@ import java.util.ArrayList;
  */
 public class DiveSpotsPhotosAdapter extends RecyclerView.Adapter<DiveSpotsPhotosAdapter.DiveSpotsPhotosAdapterViewHolder> {
 
-    private ArrayList<String> photos;
-    private String path;
-    private Context context;
+    public static ArrayList<String> photos;
+    public static String path;
+    public static Context context;
 
     public DiveSpotsPhotosAdapter(ArrayList<String> photos, String path, Context context) {
         this.photos = photos;
@@ -56,7 +57,7 @@ public class DiveSpotsPhotosAdapter extends RecyclerView.Adapter<DiveSpotsPhotos
         return photos.size();
     }
 
-    public static class DiveSpotsPhotosAdapterViewHolder extends RecyclerView.ViewHolder {
+    public static class DiveSpotsPhotosAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         protected ImageView photo;
         protected TextView morePhotos;
@@ -64,9 +65,16 @@ public class DiveSpotsPhotosAdapter extends RecyclerView.Adapter<DiveSpotsPhotos
         public DiveSpotsPhotosAdapterViewHolder(View v) {
             super(v);
             photo = (ImageView) v.findViewById(R.id.image);
+            photo.setOnClickListener(this);
             morePhotos = (TextView) v.findViewById(R.id.number_of_more_images);
         }
 
+        @Override
+        public void onClick(View v) {
+            if (photos.size() < 8 && getPosition()!= 7) {
+                ShowImageActivity.show(context, path + photos.get(getPosition()));
+            }
+        }
     }
 
 }
