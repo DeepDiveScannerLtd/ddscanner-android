@@ -71,13 +71,13 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
         productListViewHolder.stars.removeAllViews();
         for (int k = 0; k < divespot.getRating(); k++) {
             ImageView iv = new ImageView(conText);
-            iv.setImageResource(R.drawable.ic_iw_star_full);
+            iv.setImageResource(R.drawable.ic_list_star_full);
             iv.setPadding(0,0,5,0);
             productListViewHolder.stars.addView(iv);
         }
         for (int k = 0; k < 5 - divespot.getRating(); k++) {
             ImageView iv = new ImageView(conText);
-            iv.setImageResource(R.drawable.ic_iw_star_empty);
+            iv.setImageResource(R.drawable.ic_list_star_empty);
             iv.setPadding(0,0,5,0);
             productListViewHolder.stars.addView(iv);
         }
