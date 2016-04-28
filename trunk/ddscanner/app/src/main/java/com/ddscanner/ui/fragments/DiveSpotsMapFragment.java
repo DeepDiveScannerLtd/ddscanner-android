@@ -21,6 +21,7 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.events.MarkerClickEvent;
 import com.ddscanner.events.OnMapClickEvent;
+import com.ddscanner.ui.activities.DiveSpotDetailsActivity;
 import com.ddscanner.ui.adapters.MapListPagerAdapter;
 import com.ddscanner.ui.managers.DiveSpotsClusterManager;
 import com.google.android.gms.maps.GoogleMap;
@@ -51,6 +52,7 @@ public class DiveSpotsMapFragment extends Fragment implements View.OnClickListen
     private ImageView zoomIn;
     private ImageView zoomOut;
     private ImageView goToMyLocation;
+    private Long lastDiveSpotId;
 
     private MapListPagerAdapter mapListPagerAdapter;
     private View v;
@@ -83,6 +85,7 @@ public class DiveSpotsMapFragment extends Fragment implements View.OnClickListen
         zoomIn.setOnClickListener(this);
         zoomOut.setOnClickListener(this);
         goToMyLocation.setOnClickListener(this);
+        diveSpotInfo.setOnClickListener(this);
         return v;
     }
 
@@ -126,6 +129,9 @@ public class DiveSpotsMapFragment extends Fragment implements View.OnClickListen
             case R.id.go_to_my_location:
                 diveSpotsClusterManager.goToMyLocation();
                 break;
+            case R.id.dive_spot_info_layout:
+                DiveSpotDetailsActivity.show(getActivity(), String.valueOf(lastDiveSpotId));
+                break;
         }
     }
 
@@ -143,6 +149,7 @@ public class DiveSpotsMapFragment extends Fragment implements View.OnClickListen
                     }
                 });
         diveSpotName.setText(event.getDiveSpot().getName());
+        lastDiveSpotId = event.getDiveSpot().getId();
 //        rating.removeAllViews();
     /*    for (int k = 0; k < event.getDiveSpot().getRating(); k++) {
             ImageView iv = new ImageView(context);
