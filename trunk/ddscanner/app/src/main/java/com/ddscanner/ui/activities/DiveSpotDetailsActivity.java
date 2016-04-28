@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ddscanner.R;
@@ -82,6 +83,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private TextView depth;
     private TextView visibility;
     private TextView currents;
+    private RelativeLayout checkInPeoples;
 
 
 
@@ -95,6 +97,11 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         requestProductDetails(productId);
 
     }
+
+    /**
+     * Find views in activity
+     * @author Andrei Lashkevich
+     */
 
     private void findViews() {
         diveSpotName = (TextView) findViewById(R.id.dive_spot_name);
@@ -117,7 +124,14 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         depth = (TextView) findViewById(R.id.depth);
         visibility = (TextView) findViewById(R.id.visibility);
         currents = (TextView) findViewById(R.id.currents);
+        checkInPeoples = (RelativeLayout) findViewById(R.id.check_in_peoples);
+        checkInPeoples.setOnClickListener(this);
     }
+
+    /**
+     * Create toolbar ui
+     * @author Andrei Lashkevich
+     */
 
     private void toolbarSettings() {
         setSupportActionBar(toolbar);
@@ -128,6 +142,11 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         collapsingToolbarLayout.setStatusBarScrimColor(getResources().getColor(android.R.color.transparent));
       //  collapsingToolbarLayout.setCollapsedTitleTextColor(getResources().getColor(android.R.color.transparent));
     }
+
+    /**
+     * Set ui data at current activity
+     * @author Andrei Lashkevich
+     */
 
     private void setUi() {
         final DiveSpotFull diveSpot = divespotDetails.getDivespot();
@@ -260,6 +279,13 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         });
     }
 
+    /**
+     * Show current activity from another place of app
+     * @author Andrei Lashkevich
+     * @param context
+     * @param id
+     */
+
     public static void show(Context context, String id) {
         Intent intent = new Intent(context, DiveSpotDetailsActivity.class);
         intent.putExtra(EXTRA_ID, id);
@@ -311,6 +337,9 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 Intent intent = new Intent(DiveSpotDetailsActivity.this, ShowDsLocationActivity.class);
                 intent.putExtra("LATLNG", new LatLng(divespotDetails.getDivespot().getLat(), divespotDetails.getDivespot().getLng()));
                 startActivity(intent);
+                break;
+            case R.id.check_in_peoples:
+                CheckInPeoplesActivity.show(DiveSpotDetailsActivity.this);
                 break;
         }
     }

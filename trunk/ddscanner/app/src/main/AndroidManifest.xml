@@ -71,6 +71,9 @@
             android:name=".ui.activities.FilterActivity"
             android:screenOrientation="portrait">
         </activity>
+        <activity android:name=".ui.activities.CheckInPeoplesActivity"
+            android:screenOrientation="portrait">
+        </activity>
         <activity android:name=".ui.activities.ReviewsActivity"
             android:screenOrientation="portrait">
         </activity>

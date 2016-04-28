@@ -123,6 +123,7 @@
                     android:src="@drawable/divider" />
 
                 <RelativeLayout
+                    android:id="@+id/check_in_peoples"
                     android:layout_width="match_parent"
                     android:layout_height="58dp"
                     android:background="@color/white">
