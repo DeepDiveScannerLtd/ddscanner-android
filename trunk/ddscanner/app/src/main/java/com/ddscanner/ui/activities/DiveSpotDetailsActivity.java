@@ -195,12 +195,17 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             }
         });
         diveSpotName.setText(diveSpot.getName());
-        diveSpotDescription.setText(diveSpot.getDescription());
-        if (diveSpotDescription.getLineCount() > 3) {
-            diveSpotDescription.setMaxLines(3);
-            diveSpotDescription.setEllipsize(TextUtils.TruncateAt.END);
-            showMore.setVisibility(View.VISIBLE);
-        }
+        diveSpotDescription.post(new Runnable() {
+            @Override
+            public void run() {
+                diveSpotDescription.setText(diveSpot.getDescription());
+                if (diveSpotDescription.getLineCount() > 3) {
+                    diveSpotDescription.setMaxLines(3);
+                    diveSpotDescription.setEllipsize(TextUtils.TruncateAt.END);
+                    showMore.setVisibility(View.VISIBLE);
+                }
+            }
+        });
         for (int k = 0; k < diveSpot.getRating(); k++) {
             ImageView iv = new ImageView(this);
             iv.setImageResource(R.drawable.ic_ds_star_full);
