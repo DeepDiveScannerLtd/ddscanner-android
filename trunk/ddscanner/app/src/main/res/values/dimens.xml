@@ -19,5 +19,5 @@
     <dimen name="add_ds_char_width">63dp</dimen>
 
     <dimen name="rc_photos_dimen">0px</dimen>
-
+    <dimen name="margin_betweens_blocks">15dp</dimen>
 </resources>

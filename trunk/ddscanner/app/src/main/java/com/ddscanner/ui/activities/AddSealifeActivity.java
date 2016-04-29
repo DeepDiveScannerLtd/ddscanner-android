@@ -10,15 +10,31 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.CardView;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Display;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 
 import com.ddscanner.R;
+import com.ddscanner.entities.request.CreateSealifeRequest;
+import com.ddscanner.rest.RestClient;
 import com.ddscanner.utils.Helpers;
+import com.ddscanner.utils.SharedPreferenceHelper;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import okhttp3.ResponseBody;
+import retrofit.mime.TypedFile;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by lashket on 8.4.16.
@@ -28,10 +44,17 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
 
 
     private static final int RC_PICK_PHOTO = 1001;
-    private CardView addPhoto;
+    private Helpers helpers = new Helpers();
+    private Uri filePath;
+
+
+    private RelativeLayout addPhoto;
     private RelativeLayout centerLayout;
     private AppCompatImageButton btnDelete;
-    private Helpers helpers = new Helpers();
+    private Button btnSaveSealife;
+
+    private Map<String, View> errorsMap = new HashMap<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,8 +66,9 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
     private void findViews() {
         btnDelete = (AppCompatImageButton) findViewById(R.id.delete_photo);
         centerLayout = (RelativeLayout) findViewById(R.id.add_photo_center_layout);
-        addPhoto = (CardView) findViewById(R.id.add_photo_layout);
-
+        addPhoto = (RelativeLayout) findViewById(R.id.add_photo_layout);
+        btnSaveSealife = (Button) findViewById(R.id.btn_save_sealife);
+        btnSaveSealife.setOnClickListener(this);
         addPhoto.setOnClickListener(this);
         btnDelete.setOnClickListener(this);
     }
@@ -54,6 +78,7 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_PICK_PHOTO && resultCode == RESULT_OK) {
             Uri uri = data.getData();
+            filePath = uri;
             setBackImage(helpers.getRealPathFromURI(this, uri));
         }
     }
@@ -103,6 +128,49 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
                 centerLayout.setVisibility(View.VISIBLE);
                 addPhoto.setOnClickListener(this);
                 break;
+            case R.id.btn_save_sealife:
+                createRequestBody();
+                break;
         }
+    }
+
+    private void createRequestBody() {
+        TypedFile file = new TypedFile("image/jpeg", new File(helpers.getRealPathFromURI(this, filePath)));
+        CreateSealifeRequest createSealifeRequest = new CreateSealifeRequest();
+        createSealifeRequest.setDepth("1");
+        createSealifeRequest.setDistribution("21");
+        createSealifeRequest.setHabitat("43242300");
+        createSealifeRequest.setImage(file);
+        createSealifeRequest.setLength("123");
+       // createSealifeRequest.setScClass("ff");
+        createSealifeRequest.setOrder("fdsf");
+        createSealifeRequest.setWeight("321");
+        createSealifeRequest.setName("evvgeniy");
+        createSealifeRequest.setScName("zhukovets");
+        createSealifeRequest.setToken(SharedPreferenceHelper.getToken());
+        createSealifeRequest.setSocial(SharedPreferenceHelper.getSn());
+        sendRequestToAddSealife(createSealifeRequest);
+    }
+
+    private void sendRequestToAddSealife(final CreateSealifeRequest createSealifeRequest) {
+        Call<ResponseBody> call = RestClient.getServiceInstance().addSealife(createSealifeRequest);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                String responseString = "";
+                try {
+                    String error = response.errorBody().string();
+                    Log.i("TAG", error);
+                    Log.i("TAG", createSealifeRequest.getToken());
+                    Log.i("TAG", createSealifeRequest.getSocial());
+                } catch (IOException e) {
+
+                }
+            }
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.i("ERROR", "dsa");
+            }
+        });
     }
 }

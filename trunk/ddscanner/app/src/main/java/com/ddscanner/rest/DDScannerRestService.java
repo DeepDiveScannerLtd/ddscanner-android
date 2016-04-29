@@ -1,6 +1,7 @@
 package com.ddscanner.rest;
 
 
+import com.ddscanner.entities.request.CreateSealifeRequest;
 import com.ddscanner.entities.request.RegisterRequest;
 import com.ddscanner.entities.request.SendReviewRequest;
 
@@ -39,5 +40,8 @@ public interface DDScannerRestService {
 
     @POST("/diving/identify")
     Call<ResponseBody> identifyGcmToken(@Body String token);
+
+    @POST("/diving/sealife")
+    Call<ResponseBody> addSealife(@Body CreateSealifeRequest createSealifeRequest);
 
 }

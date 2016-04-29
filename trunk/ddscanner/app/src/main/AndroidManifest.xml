@@ -55,11 +55,11 @@
         <activity
             android:name=".ui.activities.SplashActivity"
             android:screenOrientation="portrait">
-            <intent-filter>
+      <!--      <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            </intent-filter> -->
         </activity>
         <activity android:name=".ui.activities.AddDiveSpotActivity"
             android:screenOrientation="portrait">
@@ -92,6 +92,11 @@
         <activity
             android:name=".ui.activities.AddSealifeActivity"
             android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".ui.activities.CityActivity"
