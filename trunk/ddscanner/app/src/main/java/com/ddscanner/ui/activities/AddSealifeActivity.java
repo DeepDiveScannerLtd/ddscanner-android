@@ -8,14 +8,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatImageButton;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 
 import com.ddscanner.R;
@@ -24,6 +22,7 @@ import com.ddscanner.rest.RestClient;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.rey.material.widget.EditText;
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -121,24 +120,23 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
         if (requestCode == RC_PICK_PHOTO && resultCode == RESULT_OK) {
             Uri uri = data.getData();
             filePath = uri;
-            setBackImage(helpers.getRealPathFromURI(this, uri));
+            setBackImage(uri);
         }
     }
 
     /**
      * Change background image in layout add photo
      * @author Andrei Lashkevich
-     * @param path
+     * @param uri
      */
 
-    private void setBackImage(String path) {
+    private void setBackImage(Uri uri) {
         Display display = getWindowManager().getDefaultDisplay();
         DisplayMetrics outMetrics = new DisplayMetrics();
         display.getMetrics(outMetrics);
         float density = getResources().getDisplayMetrics().density;
         float dpWidth = outMetrics.widthPixels / density;
-        path = "file://" + path;
-        Picasso.with(this).load(path).resize(Math.round(dpWidth), 230).centerCrop().into(new Target() {
+        Picasso.with(this).load(uri).memoryPolicy(MemoryPolicy.NO_CACHE).resize(Math.round(dpWidth), 230).centerCrop().into(new Target() {
             @Override
             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
                 BitmapDrawable ob = new BitmapDrawable(getResources(), bitmap);
@@ -150,12 +148,12 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
 
             @Override
             public void onBitmapFailed(Drawable errorDrawable) {
-
+                Log.i(TAG, "onBitmapFailed");
             }
 
             @Override
             public void onPrepareLoad(Drawable placeHolderDrawable) {
-
+                Log.i(TAG, "onPrepareLoad");
             }
         });
     }
