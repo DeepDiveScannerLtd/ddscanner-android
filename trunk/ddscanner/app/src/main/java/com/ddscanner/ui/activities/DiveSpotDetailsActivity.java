@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.DimenRes;
@@ -19,6 +20,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -223,9 +225,8 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             iv.setPadding(0,0,5,0);
             rating.addView(iv);
         }
-
-        photosRecyclerView.setLayoutManager(new GridLayoutManager(DiveSpotDetailsActivity.this, 4));
-     //   photosRecyclerView.addItemDecoration(new ItemOffsetDecoration(DiveSpotDetailsActivity.this, R.dimen.rc_photos_dimen));
+         photosRecyclerView.setLayoutManager(new GridLayoutManager(DiveSpotDetailsActivity.this,4));
+        photosRecyclerView.addItemDecoration(new GridSpacingItemDecoration(4));
         photosRecyclerView.setAdapter(new DiveSpotsPhotosAdapter((ArrayList<String>) diveSpot.getImages(),
                 diveSpot.getDiveSpotPathMedium(), DiveSpotDetailsActivity.this));
         LinearLayoutManager layoutManager = new LinearLayoutManager(DiveSpotDetailsActivity.this);
@@ -243,6 +244,13 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         progressBarFull.setVisibility(View.GONE);
         informationLayout.setVisibility(View.VISIBLE);
 
+    }
+
+    public static float convertDpToPixel(float dp, Context context){
+        Resources resources = context.getResources();
+        DisplayMetrics metrics = resources.getDisplayMetrics();
+        float px = dp * ((float)metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+        return px;
     }
 
     /**
@@ -339,26 +347,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         }
     }
 
-    public class ItemOffsetDecoration extends RecyclerView.ItemDecoration {
-
-        private int mItemOffset;
-
-        public ItemOffsetDecoration(int itemOffset) {
-            mItemOffset = itemOffset;
-        }
-
-        public ItemOffsetDecoration(@NonNull Context context, @DimenRes int itemOffsetId) {
-            this(context.getResources().getDimensionPixelSize(itemOffsetId));
-        }
-
-        @Override
-        public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
-                                   RecyclerView.State state) {
-            super.getItemOffsets(outRect, view, parent, state);
-            outRect.set(mItemOffset, mItemOffset, mItemOffset, mItemOffset);
-        }
-    }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -420,4 +408,22 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
         LeaveReviewActivity.show(DiveSpotDetailsActivity.this, String.valueOf(divespotDetails.getDivespot().getId()), rating);
     }
+
+    public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
+
+        private int spanCount;
+
+        public GridSpacingItemDecoration(int spanCount) {
+            this.spanCount = spanCount;
+        }
+
+        @Override
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+            int position = parent.getChildAdapterPosition(view);
+                if (position >= spanCount) {
+                    outRect.top = Math.round(convertDpToPixel(Float.valueOf(10), DiveSpotDetailsActivity.this));
+                }
+        }
+    }
+
 }

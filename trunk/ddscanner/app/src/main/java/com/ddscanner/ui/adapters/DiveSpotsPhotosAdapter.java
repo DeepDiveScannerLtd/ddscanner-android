@@ -71,9 +71,9 @@ public class DiveSpotsPhotosAdapter extends RecyclerView.Adapter<DiveSpotsPhotos
 
         @Override
         public void onClick(View v) {
-            if (photos.size() < 8 && getPosition()!= 7) {
+          //  if (photos.size() < 8 && getPosition()!= 7) {
                 ShowImageActivity.show(context, path + photos.get(getPosition()));
-            }
+          //  }
         }
     }
 
