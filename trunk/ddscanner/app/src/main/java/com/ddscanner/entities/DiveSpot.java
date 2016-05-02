@@ -23,6 +23,15 @@ public class DiveSpot implements Serializable, ClusterItem {
     private List<String> images;
     private LatLng latLng;
     private String reviews;
+    private String image;
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
 
     public String getReviews() {
         return reviews;

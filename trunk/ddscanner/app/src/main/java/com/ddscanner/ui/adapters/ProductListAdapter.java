@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,12 +32,14 @@ import java.util.HashMap;
  */
 public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.ProductListViewHolder>{
 
-    public static ArrayList<DiveSpot> divespots;
-    private Context conText;
+    private static final String TAG = ProductListAdapter.class.getSimpleName();
 
-    public ProductListAdapter(ArrayList<DiveSpot> divespots, Context conText) {
+    public static ArrayList<DiveSpot> divespots;
+    private Context context;
+
+    public ProductListAdapter(ArrayList<DiveSpot> divespots, Context context) {
         this.divespots = divespots;
-        this.conText = conText;
+        this.context = context;
     }
 
     @Override
@@ -52,9 +55,9 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
     public void onBindViewHolder(ProductListViewHolder productListViewHolder, int i) {
         DiveSpot divespot = new DiveSpot();
         divespot = divespots.get(i);
-        productListViewHolder.progressBar.getIndeterminateDrawable().setColorFilter(conText.getResources().getColor(R.color.primary), PorterDuff.Mode.MULTIPLY);
-        if (divespot.getImages() != null) {
-            Picasso.with(conText).load(divespot.getImages().get(0)).resize(130, 130).centerCrop().transform(new TransformationRoundImage(2,0)).into(productListViewHolder.imageView, new ImageLoadedCallback(productListViewHolder.progressBar) {
+        productListViewHolder.progressBar.getIndeterminateDrawable().setColorFilter(context.getResources().getColor(R.color.primary), PorterDuff.Mode.MULTIPLY);
+        if (divespot.getImage() != null) {
+            Picasso.with(context).load(divespot.getImage()).resize(130, 130).centerCrop().transform(new TransformationRoundImage(2,0)).into(productListViewHolder.imageView, new ImageLoadedCallback(productListViewHolder.progressBar) {
                 @Override
                 public void onSuccess() {
                     if (this.progressBar != null) {
@@ -63,20 +66,20 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
                 }
             });
         } else {
-            productListViewHolder.imageView.setImageDrawable(ContextCompat.getDrawable(conText, R.drawable.list_photo_default));
+            productListViewHolder.imageView.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.list_photo_default));
         }
         if(divespot.getName() != null) {
              productListViewHolder.title.setText(divespot.getName());
         }
         productListViewHolder.stars.removeAllViews();
         for (int k = 0; k < divespot.getRating(); k++) {
-            ImageView iv = new ImageView(conText);
+            ImageView iv = new ImageView(context);
             iv.setImageResource(R.drawable.ic_list_star_full);
             iv.setPadding(0,0,5,0);
             productListViewHolder.stars.addView(iv);
         }
         for (int k = 0; k < 5 - divespot.getRating(); k++) {
-            ImageView iv = new ImageView(conText);
+            ImageView iv = new ImageView(context);
             iv.setImageResource(R.drawable.ic_list_star_empty);
             iv.setPadding(0,0,5,0);
             productListViewHolder.stars.addView(iv);
