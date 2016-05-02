@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.Spanned;
@@ -38,6 +39,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
     private static final String TAG = ReviewsListAdapter.class.getSimpleName();
     private ArrayList<Comment> comments;
     private Context context;
+    private boolean isAdapterSet = false;
 
     public ReviewsListAdapter(ArrayList<Comment> comments, Context context) {
         this.comments = comments;
@@ -55,6 +57,14 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
 
     @Override
     public void onBindViewHolder(final ReviewsListViewHolder reviewsListViewHolder, int i) {
+            LinearLayoutManager layoutManager = new LinearLayoutManager(context);
+            layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+            reviewsListViewHolder.photos.setNestedScrollingEnabled(false);
+            reviewsListViewHolder.photos.setHasFixedSize(false);
+            reviewsListViewHolder.photos.setLayoutManager(layoutManager);
+            reviewsListViewHolder.photos.setAdapter(new ReviewPhotosAdapter());
+            isAdapterSet = true;
+
       /*  final Comment comment = comments.get(i);
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
@@ -99,6 +109,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         private LinearLayout rating;
         private TextView user_name;
         private TextView user_review;
+        private RecyclerView photos;
 
         public ReviewsListViewHolder(View v) {
             super(v);
@@ -106,6 +117,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
             rating = (LinearLayout) v.findViewById(R.id.stars);
             user_name = (TextView) v.findViewById(R.id.user_name);
             user_review = (TextView) v.findViewById(R.id.review);
+            photos = (RecyclerView) v.findViewById(R.id.review_photos_rc);
         }
     }
 
