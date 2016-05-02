@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
@@ -22,6 +23,7 @@ import com.ddscanner.entities.request.CreateSealifeRequest;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.SharedPreferenceHelper;
+import com.rey.material.widget.EditText;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -41,7 +43,7 @@ import retrofit2.Response;
  */
 public class AddSealifeActivity extends AppCompatActivity implements View.OnClickListener{
 
-
+    private static final String TAG = AddSealifeActivity.class.getSimpleName();
 
     private static final int RC_PICK_PHOTO = 1001;
     private Helpers helpers = new Helpers();
@@ -52,6 +54,17 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
     private RelativeLayout centerLayout;
     private AppCompatImageButton btnDelete;
     private Button btnSaveSealife;
+    private Toolbar toolbar;
+    private EditText name;
+    private EditText habitat;
+    private EditText distribution;
+    private EditText weight;
+    private EditText length;
+    private EditText scClass;
+    private EditText scName;
+    private EditText depth;
+    private EditText order;
+
 
     private Map<String, View> errorsMap = new HashMap<>();
 
@@ -61,16 +74,45 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_sealife);
         findViews();
+        setUi();
     }
+
+    /**
+     * Find views in current activity_add_sealife
+     * @author Andrei Lashkevich
+     */
 
     private void findViews() {
         btnDelete = (AppCompatImageButton) findViewById(R.id.delete_photo);
         centerLayout = (RelativeLayout) findViewById(R.id.add_photo_center_layout);
         addPhoto = (RelativeLayout) findViewById(R.id.add_photo_layout);
         btnSaveSealife = (Button) findViewById(R.id.btn_save_sealife);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        name = (EditText) findViewById(R.id.name);
+        habitat = (EditText) findViewById(R.id.habitat);
+        distribution = (EditText) findViewById(R.id.distribution);
+        weight = (EditText) findViewById(R.id.weight);
+        length = (EditText) findViewById(R.id.length);
+        scClass = (EditText) findViewById(R.id.scClass);
+        scName = (EditText) findViewById(R.id.scName);
+        depth = (EditText) findViewById(R.id.depth);
+        order = (EditText) findViewById(R.id.order);
+    }
+
+    /**
+     * Set UI settings
+     * @author Andrei Lashkevich
+     */
+
+
+    private void setUi() {
         btnSaveSealife.setOnClickListener(this);
         addPhoto.setOnClickListener(this);
         btnDelete.setOnClickListener(this);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(R.string.add_sealife);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -82,6 +124,12 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
             setBackImage(helpers.getRealPathFromURI(this, uri));
         }
     }
+
+    /**
+     * Change background image in layout add photo
+     * @author Andrei Lashkevich
+     * @param path
+     */
 
     private void setBackImage(String path) {
         Display display = getWindowManager().getDefaultDisplay();
@@ -134,42 +182,49 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
+    /**
+     * Put data to request body
+     * @author Andrei Lashkevich
+     */
+
     private void createRequestBody() {
-        TypedFile file = new TypedFile("image/jpeg", new File(helpers.getRealPathFromURI(this, filePath)));
+        TypedFile file = new TypedFile("image/png", new File(filePath.getPath()));
         CreateSealifeRequest createSealifeRequest = new CreateSealifeRequest();
-        createSealifeRequest.setDepth("1");
-        createSealifeRequest.setDistribution("21");
-        createSealifeRequest.setHabitat("43242300");
+        createSealifeRequest.setDepth(depth.getText().toString());
+        createSealifeRequest.setDistribution(distribution.getText().toString());
+        createSealifeRequest.setHabitat(habitat.getText().toString());
         createSealifeRequest.setImage(file);
-        createSealifeRequest.setLength("123");
+        createSealifeRequest.setLength(length.getText().toString());
        // createSealifeRequest.setScClass("ff");
-        createSealifeRequest.setOrder("fdsf");
-        createSealifeRequest.setWeight("321");
-        createSealifeRequest.setName("evvgeniy");
-        createSealifeRequest.setScName("zhukovets");
+        createSealifeRequest.setOrder(order.getText().toString());
+        createSealifeRequest.setWeight(weight.getText().toString());
+        createSealifeRequest.setName(name.getText().toString());
+        createSealifeRequest.setScName(scName.getText().toString());
         createSealifeRequest.setToken(SharedPreferenceHelper.getToken());
         createSealifeRequest.setSocial(SharedPreferenceHelper.getSn());
         sendRequestToAddSealife(createSealifeRequest);
     }
+
+    /**
+     * Make request to server for adding sealife
+     * @author Andrei Lashkevich
+     * @param createSealifeRequest
+     */
 
     private void sendRequestToAddSealife(final CreateSealifeRequest createSealifeRequest) {
         Call<ResponseBody> call = RestClient.getServiceInstance().addSealife(createSealifeRequest);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                String responseString = "";
                 try {
                     String error = response.errorBody().string();
                     Log.i("TAG", error);
-                    Log.i("TAG", createSealifeRequest.getToken());
-                    Log.i("TAG", createSealifeRequest.getSocial());
                 } catch (IOException e) {
 
                 }
             }
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.i("ERROR", "dsa");
             }
         });
     }

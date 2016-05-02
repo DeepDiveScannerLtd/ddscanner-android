@@ -75,5 +75,16 @@
     <string name="add_photos">Add photos</string>
     <string name="photos">Photos</string>
     <string name="tap_a_flag_to_rate">Tap a flag to rate</string>
+    <string name="add_sealife">Add Sealife</string>
+    <string name="name">Name</string>
+    <string name="habitat">Habitat</string>
+    <string name="distribution">Distribution</string>
+    <string name="add_photo">Add photo</string>
+    <string name="length">Length</string>
+    <string name="weight">Weight</string>
+    <string name="depth">Depth</string>
+    <string name="sc_name">Sc name</string>
+    <string name="order">Order</string>
+    <string name="scclass">Class</string>
 
 </resources>

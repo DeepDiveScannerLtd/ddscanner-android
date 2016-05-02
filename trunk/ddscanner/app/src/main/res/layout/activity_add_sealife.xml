@@ -6,7 +6,13 @@
     android:orientation="vertical">
 
     <include layout="@layout/view_toolbar" />
-
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
     <RelativeLayout
         android:id="@+id/add_photo_layout"
         android:background="@color/white"
@@ -41,7 +47,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/ic_add"
-                android:text="Add photo"
+                android:text="@string/add_photo"
                 android:textSize="17sp" />
         </RelativeLayout>
     </RelativeLayout>
@@ -56,26 +62,194 @@
         android:layout_height="wrap_content"
         android:src="@drawable/divider"
         android:scaleType="centerCrop"/>
-    <ScrollView
-        android:background="@color/white"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+
         <LinearLayout
+            android:background="@color/white"
+            android:paddingLeft="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
             <com.rey.material.widget.EditText
-                android:hint="Name"
-                app:et_inputId="@+id/name"
+                android:id="@+id/name"
+                android:hint="@string/name"
+                android:textColorHint="#b2b2b2"
+                app:et_labelTextSize="8sp"
+                app:et_labelTextColor="#b2b2b2"
+                android:textSize="15sp"
+                app:et_dividerHeight="0dp"
+                app:et_dividerColor="@android:color/transparent"
+                app:et_dividerCompoundPadding="true"
+                android:padding="10dp"
                 app:et_labelEnable="true"
-                app:et_supportMode="helperWithError"
                 android:layout_width="match_parent"
-                android:layout_height="56dp"/>
+                android:layout_height="wrap_content"/>
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/divider"
+                android:scaleType="centerCrop"
+                android:layout_marginLeft="10dp"/>
+            <com.rey.material.widget.EditText
+                android:id="@+id/habitat"
+                android:hint="@string/habitat"
+                android:textColorHint="#b2b2b2"
+                app:et_labelTextSize="8sp"
+                app:et_labelTextColor="#b2b2b2"
+                android:textSize="15sp"
+                app:et_dividerHeight="0dp"
+                app:et_dividerColor="@android:color/transparent"
+                app:et_dividerCompoundPadding="true"
+                android:padding="10dp"
+                app:et_labelEnable="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/divider"
+                android:scaleType="centerCrop"
+                android:layout_marginLeft="10dp"/>
+            <com.rey.material.widget.EditText
+                android:hint="@string/distribution"
+                android:textColorHint="#b2b2b2"
+                app:et_labelTextSize="8sp"
+                app:et_labelTextColor="#b2b2b2"
+                android:textSize="15sp"
+                app:et_dividerHeight="0dp"
+                app:et_dividerColor="@android:color/transparent"
+                app:et_dividerCompoundPadding="true"
+                android:id="@+id/distribution"
+                android:padding="10dp"
+                app:et_labelEnable="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/divider"
+                android:scaleType="centerCrop"
+                android:layout_marginLeft="10dp"/>
+            <com.rey.material.widget.EditText
+                android:hint="@string/length"
+                android:textColorHint="#b2b2b2"
+                app:et_labelTextSize="8sp"
+                app:et_labelTextColor="#b2b2b2"
+                android:textSize="15sp"
+                app:et_dividerHeight="0dp"
+                app:et_dividerColor="@android:color/transparent"
+                app:et_dividerCompoundPadding="true"
+                android:id="@+id/length"
+                android:padding="10dp"
+                app:et_labelEnable="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/divider"
+                android:layout_marginLeft="10dp"
+                android:scaleType="centerCrop"/>
+            <com.rey.material.widget.EditText
+                android:hint="@string/weight"
+                android:textColorHint="#b2b2b2"
+                app:et_labelTextSize="8sp"
+                app:et_labelTextColor="#b2b2b2"
+                android:textSize="15sp"
+                app:et_dividerHeight="0dp"
+                app:et_dividerColor="@android:color/transparent"
+                app:et_dividerCompoundPadding="true"
+                android:id="@+id/weight"
+                android:padding="10dp"
+                app:et_labelEnable="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/divider"
+                android:layout_marginLeft="10dp"
+                android:scaleType="centerCrop"/>
+            <com.rey.material.widget.EditText
+                android:hint="@string/depth"
+                android:textColorHint="#b2b2b2"
+                app:et_labelTextSize="8sp"
+                app:et_labelTextColor="#b2b2b2"
+                android:textSize="15sp"
+                app:et_dividerHeight="0dp"
+                app:et_dividerColor="@android:color/transparent"
+                app:et_dividerCompoundPadding="true"
+                android:id="@+id/depth"
+                android:padding="10dp"
+                app:et_labelEnable="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:src="@drawable/divider"
+                android:scaleType="centerCrop"/>
+            <com.rey.material.widget.EditText
+                android:hint="@string/sc_name"
+                android:textColorHint="#b2b2b2"
+                app:et_labelTextSize="8sp"
+                app:et_labelTextColor="#b2b2b2"
+                android:textSize="15sp"
+                app:et_dividerHeight="0dp"
+                app:et_dividerColor="@android:color/transparent"
+                app:et_dividerCompoundPadding="true"
+                android:id="@+id/scName"
+                android:padding="10dp"
+                app:et_labelEnable="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:src="@drawable/divider"
+                android:scaleType="centerCrop"/>
+            <com.rey.material.widget.EditText
+                android:hint="@string/order"
+                android:textColorHint="#b2b2b2"
+                app:et_labelTextSize="8sp"
+                app:et_labelTextColor="#b2b2b2"
+                android:textSize="15sp"
+                app:et_dividerHeight="0dp"
+                app:et_dividerColor="@android:color/transparent"
+                app:et_dividerCompoundPadding="true"
+                android:id="@+id/order"
+                android:padding="10dp"
+                app:et_labelEnable="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:src="@drawable/divider"
+                android:scaleType="centerCrop"/>
+            <com.rey.material.widget.EditText
+                android:hint="@string/scclass"
+                android:textColorHint="#b2b2b2"
+                app:et_labelTextSize="8sp"
+                app:et_labelTextColor="#b2b2b2"
+                android:textSize="15sp"
+                app:et_dividerHeight="0dp"
+                app:et_dividerColor="@android:color/transparent"
+                app:et_dividerCompoundPadding="true"
+                android:id="@+id/scClass"
+                android:padding="10dp"
+                app:et_labelEnable="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
             <Button
                 android:id="@+id/btn_save_sealife"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 />
+        </LinearLayout>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

@@ -123,5 +123,19 @@
         <item name="android:textColor">@color/black_text</item>
     </style>
 
+   <!-- <style name="SealifeInputs">
+        <item name="app:et_dividerHeight">0dp</item>
+        <item name="app:et_dividerColor">@android:color/transparent</item>
+        <item name="app:et_labelTextSize">8sp</item>
+        <item name="app:et_labelTextColor">#b2b2b2</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/black_text</item>
+        <item name="android:textColorHint">#b2b2b2</item>
+        <item name="android:padding">10dp</item>
+        <item name="app:et_labelEnable">true</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style> -->
+
 
 </resources>
