@@ -20,6 +20,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -28,6 +29,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ddscanner.R;
+import com.ddscanner.entities.Comment;
 import com.ddscanner.entities.DiveSpot;
 import com.ddscanner.entities.DiveSpotFull;
 import com.ddscanner.entities.DivespotDetails;
@@ -93,6 +95,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private TextView showMore;
     private RatingBar ratingBar;
     private FloatingActionButton btnCheckIn;
+    private Button showAllReviews;
 
 
 
@@ -136,6 +139,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         showMore = (TextView) findViewById(R.id.showmore);
         ratingBar = (RatingBar) findViewById(R.id.rating_bar);
         btnCheckIn = (FloatingActionButton) findViewById(R.id.fab_checkin);
+        showAllReviews = (Button) findViewById(R.id.btn_show_all_reviews);
     }
 
     /**
@@ -163,6 +167,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         ratingBar.setOnRatingBarChangeListener(this);
         checkInPeoples.setOnClickListener(this);
         showMore.setOnClickListener(this);
+        showAllReviews.setOnClickListener(this);
         final DiveSpotFull diveSpot = divespotDetails.getDivespot();
         object.setText(diveSpot.getObject());
         level.setText(diveSpot.getLevel());
@@ -376,6 +381,14 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 } else {
                     checkIn();
                 }
+                break;
+            case R.id.btn_show_all_reviews:
+                Intent reviewsIntent = new Intent(DiveSpotDetailsActivity.this, ReviewsActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("COMMENTS", (ArrayList<Comment>) divespotDetails.getComments());
+                bundle.putString("DIVESPOTID", String.valueOf(divespotDetails.getDivespot().getId()));
+                reviewsIntent.putExtras(bundle);
+                startActivityForResult(reviewsIntent, 9001);
                 break;
         }
     }

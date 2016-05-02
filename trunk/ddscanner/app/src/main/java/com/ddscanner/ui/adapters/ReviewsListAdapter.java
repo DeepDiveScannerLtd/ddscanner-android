@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.appsflyer.AppsFlyerLib;
@@ -54,7 +55,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
 
     @Override
     public void onBindViewHolder(final ReviewsListViewHolder reviewsListViewHolder, int i) {
-        final Comment comment = comments.get(i);
+      /*  final Comment comment = comments.get(i);
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -67,15 +68,27 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         reviewsListViewHolder.user_name.setText(comment.getUser().getName());
         reviewsListViewHolder.user_name.setOnClickListener(onClickListener);
         reviewsListViewHolder.user_avatar.setOnClickListener(onClickListener);
-        reviewsListViewHolder.rating.setText(comment.getRating());
         Picasso.with(context).load(comment.getUser().getPicture()).resize(41,41).centerCrop().into(reviewsListViewHolder.user_avatar);
-        Log.i(TAG, "Try showing content");
+        reviewsListViewHolder.rating.removeAllViews();
+        for (int k = 0; k < Integer.parseInt(comment.getRating()); k++) {
+            ImageView iv = new ImageView(context);
+            iv.setImageResource(R.drawable.ic_list_star_full);
+            iv.setPadding(0,0,5,0);
+            reviewsListViewHolder.rating.addView(iv);
+        }
+        for (int k = 0; k < 5 - Integer.parseInt(comment.getRating()); k++) {
+            ImageView iv = new ImageView(context);
+            iv.setImageResource(R.drawable.ic_list_star_empty);
+            iv.setPadding(0,0,5,0);
+            reviewsListViewHolder.rating.addView(iv);
+        }
+        Log.i(TAG, "Try showing content");*/
     }
 
     @Override
     public int getItemCount() {
         if (comments == null) {
-            return 0;
+            return 5;
         }
         return comments.size();
     }
@@ -83,14 +96,14 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
     public static class ReviewsListViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView user_avatar;
-        private TextView rating;
+        private LinearLayout rating;
         private TextView user_name;
         private TextView user_review;
 
         public ReviewsListViewHolder(View v) {
             super(v);
             user_avatar = (ImageView) v.findViewById(R.id.user_avatar);
-            rating = (TextView) v.findViewById(R.id.rating);
+            rating = (LinearLayout) v.findViewById(R.id.stars);
             user_name = (TextView) v.findViewById(R.id.user_name);
             user_review = (TextView) v.findViewById(R.id.review);
         }
