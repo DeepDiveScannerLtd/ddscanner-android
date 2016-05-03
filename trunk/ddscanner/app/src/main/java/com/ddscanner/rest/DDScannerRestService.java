@@ -6,8 +6,8 @@ import com.ddscanner.entities.request.SendReviewRequest;
 
 import java.util.Map;
 
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
-import retrofit.mime.TypedFile;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -44,18 +44,19 @@ public interface DDScannerRestService {
 
     @POST("/diving/sealife")
     @Multipart
-    Call<ResponseBody> addSealife(@Part("name") String name,
-                                  @Part("distribution") String distribution,
-                                  @Part("habitat") String habitat,
-                                  @Part("image") TypedFile image,
-                                  @Part("scName") String scName,
-                                  @Part("length") String length,
-                                  @Part("weight") String weight,
-                                  @Part("depth") String depth,
-                                  @Part("order") String order,
-                                  @Part("scClass") String scClass,
-                                  @Part("token") String token,
-                                  @Part("social") String social,
-                                  @Part("secret") String secret);
+    Call<ResponseBody> addSealife(
+            @Part("name") RequestBody name,
+            @Part("distribution") RequestBody distribution,
+            @Part("habitat") RequestBody habitat,
+            @Part("image") RequestBody image,
+            @Part("scName") RequestBody scName,
+            @Part("length") RequestBody length,
+            @Part("weight") RequestBody weight,
+            @Part("depth") RequestBody depth,
+            @Part("order") RequestBody order,
+            @Part("class") RequestBody sealifeClass,
+            @Part("token") RequestBody token,
+            @Part("social") RequestBody sn,
+            @Part("secret") RequestBody secret);
 
 }

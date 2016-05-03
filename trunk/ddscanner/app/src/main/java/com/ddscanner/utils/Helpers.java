@@ -9,7 +9,7 @@ import android.provider.MediaStore;
  * Created by lashket on 9.4.16.
  */
 public class Helpers {
-    public String getRealPathFromURI(Context context, Uri contentUri) {
+    public static String getRealPathFromURI(Context context, Uri contentUri) {
         Cursor cursor = null;
         try {
             String[] proj = { MediaStore.Images.Media.DATA };
