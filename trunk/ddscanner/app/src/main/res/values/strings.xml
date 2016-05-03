@@ -89,5 +89,8 @@
     <string name="reviews">Reviews</string>
     <string name="thanks_for_your_answer">Thanks for your answer!</string>
     <string name="dive_spots">DIVE SPOTS</string>
+    <string name="check_in">CHECK IN</string>
+    <string name="added">ADDED</string>
+    <string name="edited">EDITED</string>
 
 </resources>
