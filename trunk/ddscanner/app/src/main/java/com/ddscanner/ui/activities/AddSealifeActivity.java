@@ -201,8 +201,8 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
         createSealifeRequest.setWeight(weight.getText().toString());
         createSealifeRequest.setName(name.getText().toString());
         createSealifeRequest.setScName(scName.getText().toString());
-        createSealifeRequest.setToken(SharedPreferenceHelper.getToken());
-        createSealifeRequest.setSocial(SharedPreferenceHelper.getSn());
+        createSealifeRequest.setToken("CAAYCm3GzkZCEBAA0363cAYR53x0R9ux0f2ulRFyhFX2TxdZBJfdpiYlWiPmZBA0sjnJN5ZBGlfof7DAjkZC3QGAu5Y57V3kqWeSHDwAgdMJftounmb6XZAKZBcpWlZB7r2zqIPgp24kzIEAfKPZCfOVhUwwuewfRqP1dIWxKaGyoNMOeVcNO6hES7QoKe2S0buW6MUq6AJzsJN9RpwsJfq3hsWiZCaSa5bSEJHYZCaKWAZB89wZDZD");
+        createSealifeRequest.setSocial("fb");
         sendRequestToAddSealife(createSealifeRequest, filePath);
     }
 
