@@ -186,21 +186,21 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
      */
 
     private void createRequestBody() {
-        TypedFile file = new TypedFile("image/png", new File(filePath.getPath()));
+        TypedFile file = new TypedFile("image/jpeg", new File(helpers.getRealPathFromURI(this, filePath)));
         CreateSealifeRequest createSealifeRequest = new CreateSealifeRequest();
         createSealifeRequest.setDepth(depth.getText().toString());
         createSealifeRequest.setDistribution(distribution.getText().toString());
         createSealifeRequest.setHabitat(habitat.getText().toString());
-        createSealifeRequest.setImage(file);
+//        createSealifeRequest.setImage(file);
         createSealifeRequest.setLength(length.getText().toString());
        // createSealifeRequest.setScClass("ff");
         createSealifeRequest.setOrder(order.getText().toString());
         createSealifeRequest.setWeight(weight.getText().toString());
         createSealifeRequest.setName(name.getText().toString());
         createSealifeRequest.setScName(scName.getText().toString());
-        createSealifeRequest.setToken(SharedPreferenceHelper.getToken());
-        createSealifeRequest.setSocial(SharedPreferenceHelper.getSn());
-        sendRequestToAddSealife(createSealifeRequest);
+        createSealifeRequest.setToken("CAAYCm3GzkZCEBAA0363cAYR53x0R9ux0f2ulRFyhFX2TxdZBJfdpiYlWiPmZBA0sjnJN5ZBGlfof7DAjkZC3QGAu5Y57V3kqWeSHDwAgdMJftounmb6XZAKZBcpWlZB7r2zqIPgp24kzIEAfKPZCfOVhUwwuewfRqP1dIWxKaGyoNMOeVcNO6hES7QoKe2S0buW6MUq6AJzsJN9RpwsJfq3hsWiZCaSa5bSEJHYZCaKWAZB89wZDZD");
+        createSealifeRequest.setSocial("fb");
+        sendRequestToAddSealife(createSealifeRequest, file);
     }
 
     /**
@@ -209,20 +209,47 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
      * @param createSealifeRequest
      */
 
-    private void sendRequestToAddSealife(final CreateSealifeRequest createSealifeRequest) {
-        Call<ResponseBody> call = RestClient.getServiceInstance().addSealife(createSealifeRequest);
+    private void sendRequestToAddSealife(final CreateSealifeRequest createSealifeRequest, final TypedFile imageFile) {
+        Call<ResponseBody> call = RestClient.getServiceInstance()
+                .addSealife(createSealifeRequest.getName(),
+                        createSealifeRequest.getDistribution(),
+                        createSealifeRequest.getHabitat(),
+                        imageFile,
+                        createSealifeRequest.getScName(),
+                        createSealifeRequest.getLength(),
+                        createSealifeRequest.getWeight(),
+                        createSealifeRequest.getDepth(),
+                        createSealifeRequest.getOrder(),
+                        "cc",
+                        createSealifeRequest.getToken(),
+                        createSealifeRequest.getSocial(),
+                        null);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                try {
-                    String error = response.errorBody().string();
-                    Log.i("TAG", error);
-                } catch (IOException e) {
+                Log.i(TAG, imageFile.mimeType());
+                Log.i(TAG, imageFile.fileName());
+                Log.i(TAG, createSealifeRequest.getSocial());
+                Log.i(TAG, imageFile.file().getPath());
+                Log.i(TAG, String.valueOf(imageFile.length()));
+               if (response.errorBody() != null) {
+                   try {
+                       Log.i(TAG, response.errorBody().string());
+                   } catch (IOException e) {
 
-                }
+                   }
+               }
+                if (response.body() != null) {
+                   try {
+                       Log.i(TAG, response.body().string());
+                   } catch (IOException e) {
+
+                   }
+               }
             }
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.i(TAG, t.getMessage().toString());
             }
         });
     }
