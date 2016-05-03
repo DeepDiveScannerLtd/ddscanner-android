@@ -186,12 +186,12 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
      */
 
     private void createRequestBody() {
-        TypedFile file = new TypedFile("image/png", new File(filePath.getPath()));
+        TypedFile file = new TypedFile("application/octet-stream", new File(filePath.getPath()));
         CreateSealifeRequest createSealifeRequest = new CreateSealifeRequest();
         createSealifeRequest.setDepth(depth.getText().toString());
         createSealifeRequest.setDistribution(distribution.getText().toString());
         createSealifeRequest.setHabitat(habitat.getText().toString());
-        createSealifeRequest.setImage(file);
+//        createSealifeRequest.setImage(file);
         createSealifeRequest.setLength(length.getText().toString());
        // createSealifeRequest.setScClass("ff");
         createSealifeRequest.setOrder(order.getText().toString());
@@ -200,7 +200,7 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
         createSealifeRequest.setScName(scName.getText().toString());
         createSealifeRequest.setToken(SharedPreferenceHelper.getToken());
         createSealifeRequest.setSocial(SharedPreferenceHelper.getSn());
-        sendRequestToAddSealife(createSealifeRequest);
+        sendRequestToAddSealife(createSealifeRequest, file);
     }
 
     /**
@@ -209,14 +209,14 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
      * @param createSealifeRequest
      */
 
-    private void sendRequestToAddSealife(final CreateSealifeRequest createSealifeRequest) {
-        Call<ResponseBody> call = RestClient.getServiceInstance().addSealife(createSealifeRequest);
+    private void sendRequestToAddSealife(final CreateSealifeRequest createSealifeRequest, TypedFile imageFile) {
+        Call<ResponseBody> call = RestClient.getServiceInstance().addSealife(createSealifeRequest.getName(), createSealifeRequest.getDistribution(), createSealifeRequest.getHabitat(), imageFile, createSealifeRequest.getScName(), createSealifeRequest.getLength(), createSealifeRequest.getWeight(), createSealifeRequest.getDepth(), createSealifeRequest.getOrder(), "cc", createSealifeRequest.getToken(), "fb", null);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 try {
                     String error = response.errorBody().string();
-                    Log.i("TAG", error);
+                    Log.i(TAG, error);
                 } catch (IOException e) {
 
                 }

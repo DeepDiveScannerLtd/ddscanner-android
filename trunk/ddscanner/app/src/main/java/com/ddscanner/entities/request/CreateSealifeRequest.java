@@ -1,7 +1,5 @@
 package com.ddscanner.entities.request;
 
-import retrofit.mime.TypedFile;
-
 /**
  * Created by lashket on 29.4.16.
  */
@@ -16,7 +14,7 @@ public class CreateSealifeRequest {
     private String scName;
     private String order;
    // private String scClass;
-    private TypedFile image;
+//    private TypedFile image;
     private String token;
     private String social;
 
@@ -36,13 +34,13 @@ public class CreateSealifeRequest {
         this.social = social;
     }
 
-    public TypedFile getImage() {
-        return image;
-    }
-
-    public void setImage(TypedFile image) {
-        this.image = image;
-    }
+//    public TypedFile getImage() {
+//        return image;
+//    }
+//
+//    public void setImage(TypedFile image) {
+//        this.image = image;
+//    }
 
     public String getName() {
         return name;
