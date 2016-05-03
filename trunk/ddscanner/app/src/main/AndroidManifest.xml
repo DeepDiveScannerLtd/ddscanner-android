@@ -38,11 +38,6 @@
         <activity
             android:name=".ui.activities.MainActivity"
             android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name="com.facebook.FacebookActivity"
             android:configChanges=
@@ -97,6 +92,11 @@
         <activity
             android:name=".ui.activities.AddSealifeActivity"
             android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".ui.activities.CityActivity"

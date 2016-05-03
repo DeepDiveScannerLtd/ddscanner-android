@@ -6,6 +6,7 @@ import com.ddscanner.entities.request.SendReviewRequest;
 
 import java.util.Map;
 
+import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -48,13 +49,13 @@ public interface DDScannerRestService {
             @Part("name") RequestBody name,
             @Part("distribution") RequestBody distribution,
             @Part("habitat") RequestBody habitat,
-            @Part("image") RequestBody image,
+            @Part MultipartBody.Part image,
             @Part("scName") RequestBody scName,
             @Part("length") RequestBody length,
             @Part("weight") RequestBody weight,
             @Part("depth") RequestBody depth,
             @Part("order") RequestBody order,
-            @Part("class") RequestBody sealifeClass,
+            @Part("scClass") RequestBody sealifeClass,
             @Part("token") RequestBody token,
             @Part("social") RequestBody sn,
             @Part("secret") RequestBody secret);

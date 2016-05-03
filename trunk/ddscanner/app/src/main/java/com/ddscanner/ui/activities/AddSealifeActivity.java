@@ -28,10 +28,12 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -214,29 +216,41 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
      */
 
     private void sendRequestToAddSealife(final CreateSealifeRequest createSealifeRequest, Uri imageFileUri) {
+        File file = new File(Helpers.getRealPathFromURI(this, imageFileUri));
+        RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
+        MultipartBody.Part body = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
         Call<ResponseBody> call = RestClient.getServiceInstance().addSealife(
                 RequestBody.create(MediaType.parse("multipart/form-data"), createSealifeRequest.getName()),
                 RequestBody.create(MediaType.parse("multipart/form-data"), createSealifeRequest.getDistribution()),
                 RequestBody.create(MediaType.parse("multipart/form-data"), createSealifeRequest.getHabitat()),
-                RequestBody.create(MediaType.parse("image/jpeg"), new File(Helpers.getRealPathFromURI(this, imageFileUri))),
+              //  RequestBody.create(MediaType.parse("image/*"), new File(Helpers.getRealPathFromURI(this, imageFileUri))),
+                body,
                 RequestBody.create(MediaType.parse("multipart/form-data"), createSealifeRequest.getScName()),
                 RequestBody.create(MediaType.parse("multipart/form-data"), createSealifeRequest.getLength()),
                 RequestBody.create(MediaType.parse("multipart/form-data"), createSealifeRequest.getWeight()),
                 RequestBody.create(MediaType.parse("multipart/form-data"), createSealifeRequest.getDepth()),
                 RequestBody.create(MediaType.parse("multipart/form-data"), createSealifeRequest.getOrder()),
-                RequestBody.create(MediaType.parse("multipart/form-data"), ""),
+                RequestBody.create(MediaType.parse("multipart/form-data"), "asa"),
                 RequestBody.create(MediaType.parse("multipart/form-data"), createSealifeRequest.getToken()),
                 RequestBody.create(MediaType.parse("multipart/form-data"), "fb"),
                 null);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-//                try {
-//                    String error = response.errorBody().string();
-                    Log.i(TAG, response.message());
-//                } catch (IOException e) {
-//
-//                }
+                if(response.body() != null) {
+                    try {
+                        Log.i(TAG, response.body().string());
+                    } catch (IOException e) {
+
+                    }
+                }
+                if(response.errorBody() != null) {
+                    try {
+                        Log.i(TAG, response.errorBody().string());
+                    } catch (IOException e) {
+
+                    }
+                }
             }
 
             @Override
