@@ -20,6 +20,7 @@ import com.ddscanner.R;
 import com.ddscanner.entities.request.CreateSealifeRequest;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.utils.Helpers;
+import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.rey.material.widget.EditText;
 import com.squareup.picasso.MemoryPolicy;
@@ -27,12 +28,12 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
-import retrofit.mime.TypedFile;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -40,12 +41,11 @@ import retrofit2.Response;
 /**
  * Created by lashket on 8.4.16.
  */
-public class AddSealifeActivity extends AppCompatActivity implements View.OnClickListener{
+public class AddSealifeActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = AddSealifeActivity.class.getSimpleName();
 
     private static final int RC_PICK_PHOTO = 1001;
-    private Helpers helpers = new Helpers();
     private Uri filePath;
 
 
@@ -78,6 +78,7 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
 
     /**
      * Find views in current activity_add_sealife
+     *
      * @author Andrei Lashkevich
      */
 
@@ -100,6 +101,7 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
 
     /**
      * Set UI settings
+     *
      * @author Andrei Lashkevich
      */
 
@@ -126,8 +128,9 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
 
     /**
      * Change background image in layout add photo
-     * @author Andrei Lashkevich
+     *
      * @param uri
+     * @author Andrei Lashkevich
      */
 
     private void setBackImage(Uri uri) {
@@ -182,47 +185,63 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
 
     /**
      * Put data to request body
+     *
      * @author Andrei Lashkevich
      */
 
     private void createRequestBody() {
-        TypedFile file = new TypedFile("application/octet-stream", new File(filePath.getPath()));
         CreateSealifeRequest createSealifeRequest = new CreateSealifeRequest();
         createSealifeRequest.setDepth(depth.getText().toString());
         createSealifeRequest.setDistribution(distribution.getText().toString());
         createSealifeRequest.setHabitat(habitat.getText().toString());
 //        createSealifeRequest.setImage(file);
         createSealifeRequest.setLength(length.getText().toString());
-       // createSealifeRequest.setScClass("ff");
+        // createSealifeRequest.setScClass("ff");
         createSealifeRequest.setOrder(order.getText().toString());
         createSealifeRequest.setWeight(weight.getText().toString());
         createSealifeRequest.setName(name.getText().toString());
         createSealifeRequest.setScName(scName.getText().toString());
         createSealifeRequest.setToken(SharedPreferenceHelper.getToken());
         createSealifeRequest.setSocial(SharedPreferenceHelper.getSn());
-        sendRequestToAddSealife(createSealifeRequest, file);
+        sendRequestToAddSealife(createSealifeRequest, filePath);
     }
 
     /**
      * Make request to server for adding sealife
-     * @author Andrei Lashkevich
+     *
      * @param createSealifeRequest
+     * @author Andrei Lashkevich
      */
 
-    private void sendRequestToAddSealife(final CreateSealifeRequest createSealifeRequest, TypedFile imageFile) {
-        Call<ResponseBody> call = RestClient.getServiceInstance().addSealife(createSealifeRequest.getName(), createSealifeRequest.getDistribution(), createSealifeRequest.getHabitat(), imageFile, createSealifeRequest.getScName(), createSealifeRequest.getLength(), createSealifeRequest.getWeight(), createSealifeRequest.getDepth(), createSealifeRequest.getOrder(), "cc", createSealifeRequest.getToken(), "fb", null);
+    private void sendRequestToAddSealife(final CreateSealifeRequest createSealifeRequest, Uri imageFileUri) {
+        Call<ResponseBody> call = RestClient.getServiceInstance().addSealife(
+                RequestBody.create(MediaType.parse("multipart/form-data"), createSealifeRequest.getName()),
+                RequestBody.create(MediaType.parse("multipart/form-data"), createSealifeRequest.getDistribution()),
+                RequestBody.create(MediaType.parse("multipart/form-data"), createSealifeRequest.getHabitat()),
+                RequestBody.create(MediaType.parse("image/jpeg"), new File(Helpers.getRealPathFromURI(this, imageFileUri))),
+                RequestBody.create(MediaType.parse("multipart/form-data"), createSealifeRequest.getScName()),
+                RequestBody.create(MediaType.parse("multipart/form-data"), createSealifeRequest.getLength()),
+                RequestBody.create(MediaType.parse("multipart/form-data"), createSealifeRequest.getWeight()),
+                RequestBody.create(MediaType.parse("multipart/form-data"), createSealifeRequest.getDepth()),
+                RequestBody.create(MediaType.parse("multipart/form-data"), createSealifeRequest.getOrder()),
+                RequestBody.create(MediaType.parse("multipart/form-data"), ""),
+                RequestBody.create(MediaType.parse("multipart/form-data"), createSealifeRequest.getToken()),
+                RequestBody.create(MediaType.parse("multipart/form-data"), "fb"),
+                null);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                try {
-                    String error = response.errorBody().string();
-                    Log.i(TAG, error);
-                } catch (IOException e) {
-
-                }
+//                try {
+//                    String error = response.errorBody().string();
+                    Log.i(TAG, response.message());
+//                } catch (IOException e) {
+//
+//                }
             }
+
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
+                LogUtils.e(TAG, t.getMessage());
             }
         });
     }
