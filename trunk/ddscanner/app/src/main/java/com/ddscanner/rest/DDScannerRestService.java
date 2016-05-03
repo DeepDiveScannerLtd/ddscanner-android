@@ -44,6 +44,18 @@ public interface DDScannerRestService {
 
     @POST("/diving/sealife")
     @Multipart
-    Call<ResponseBody> addSealife(@Part("name") String name, @Part("distribution") String distribution, @Part("habitat") String habitat, @Part("image") TypedFile image, @Part("scName") String scName, @Part("length") String length, @Part("weight") String weight, @Part("depth") String depth, @Part("order") String order, @Part("class") String sealifeClass, @Part("token") String token, @Part("social") String sn, @Part("secret") String secret);
+    Call<ResponseBody> addSealife(@Part("name") String name,
+                                  @Part("distribution") String distribution,
+                                  @Part("habitat") String habitat,
+                                  @Part("image") TypedFile image,
+                                  @Part("scName") String scName,
+                                  @Part("length") String length,
+                                  @Part("weight") String weight,
+                                  @Part("depth") String depth,
+                                  @Part("order") String order,
+                                  @Part("scClass") String scClass,
+                                  @Part("token") String token,
+                                  @Part("social") String social,
+                                  @Part("secret") String secret);
 
 }
