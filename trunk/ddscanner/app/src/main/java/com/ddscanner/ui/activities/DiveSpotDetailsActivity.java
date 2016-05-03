@@ -98,6 +98,11 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private RatingBar ratingBar;
     private FloatingActionButton btnCheckIn;
     private Button showAllReviews;
+    private LinearLayout isInfoValidLayout;
+    private LinearLayout thanksLayout;
+    private Button btnDsDetailsIsValid;
+    private Button btnDsDetailsIsInvalid;
+    private ImageView thanksClose;
 
 
 
@@ -142,6 +147,11 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         ratingBar = (RatingBar) findViewById(R.id.rating_bar);
         btnCheckIn = (FloatingActionButton) findViewById(R.id.fab_checkin);
         showAllReviews = (Button) findViewById(R.id.btn_show_all_reviews);
+        isInfoValidLayout = (LinearLayout) findViewById(R.id.is_info_valid_layout);
+        thanksLayout = (LinearLayout) findViewById(R.id.thanks_layout);
+        btnDsDetailsIsValid = (Button) findViewById(R.id.yes_button);
+        btnDsDetailsIsInvalid = (Button) findViewById(R.id.no_button);
+        thanksClose = (ImageView) findViewById(R.id.thank_close);
     }
 
     /**
@@ -165,6 +175,9 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
      */
 
     private void setUi() {
+        thanksClose.setOnClickListener(this);
+        btnDsDetailsIsInvalid.setOnClickListener(this);
+        btnDsDetailsIsValid.setOnClickListener(this);
         btnCheckIn.setOnClickListener(this);
         ratingBar.setOnRatingBarChangeListener(this);
         checkInPeoples.setOnClickListener(this);
@@ -377,6 +390,13 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 bundle.putString("DIVESPOTID", String.valueOf(divespotDetails.getDivespot().getId()));
                 reviewsIntent.putExtras(bundle);
                 startActivityForResult(reviewsIntent, 9001);
+                break;
+            case R.id.yes_button:
+                isInfoValidLayout.setVisibility(View.GONE);
+                thanksLayout.setVisibility(View.VISIBLE);
+                break;
+            case R.id.thank_close:
+                thanksLayout.setVisibility(View.GONE);
                 break;
         }
     }

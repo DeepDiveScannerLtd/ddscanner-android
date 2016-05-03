@@ -495,49 +495,98 @@
                     android:layout_height="wrap_content"
                     android:src="@drawable/divider" />
 
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:src="@drawable/divider" />
-
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="55dp"
-                    android:background="@color/white"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="20dp"
-                        android:gravity="center"
-                        android:text="@string/the_information_is_valid"
-                        android:textColor="@color/black_text"
-                        android:textSize="15sp" />
-
-                    <Button
-                        android:id="@+id/yes_button"
-                        android:layout_width="59dp"
-                        android:layout_height="34dp"
-                        android:layout_marginLeft="24dp"
-                        android:background="@drawable/border_button_orange_2px"
-                        android:text="@string/btn_yes" />
-
-                    <Button
-                        android:id="@+id/no_button"
-                        android:layout_width="59dp"
-                        android:layout_height="34dp"
-                        android:layout_marginLeft="12dp"
-                        android:background="@drawable/border_button_gray_2px"
-                        android:text="@string/btn_no" />
-                </LinearLayout>
-
-                <ImageView
+                    android:id="@+id/is_info_valid_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/divider" />
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:src="@drawable/divider" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="55dp"
+                        android:background="@color/white"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="20dp"
+                            android:gravity="center"
+                            android:text="@string/the_information_is_valid"
+                            android:textColor="@color/black_text"
+                            android:textSize="15sp" />
+
+                        <Button
+                            android:id="@+id/yes_button"
+                            android:layout_width="59dp"
+                            android:layout_height="34dp"
+                            android:layout_marginLeft="24dp"
+                            android:background="@drawable/border_button_orange_2px"
+                            android:text="@string/btn_yes" />
+
+                        <Button
+                            android:id="@+id/no_button"
+                            android:layout_width="59dp"
+                            android:layout_height="34dp"
+                            android:layout_marginLeft="12dp"
+                            android:background="@drawable/border_button_gray_2px"
+                            android:text="@string/btn_no" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/divider" />
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/thanks_layout"
+                    android:visibility="gone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:src="@drawable/divider" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="55dp"
+                        android:background="@color/orange"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_centerInParent="true"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/black_text"
+                            android:textSize="15sp"
+                            android:text="@string/thanks_for_your_answer"/>
+                        <ImageView
+                            android:id="@+id/thank_close"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="15dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/ic_ds_close"
+                            android:scaleType="centerCrop"/>
+                    </RelativeLayout>
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/divider" />
+                </LinearLayout>
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
