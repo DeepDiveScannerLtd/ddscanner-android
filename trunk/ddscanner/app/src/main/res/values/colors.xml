@@ -54,4 +54,6 @@
 
     <color name="gray_bg">#f6f6f6</color>
 
+    <color name="error">#d50001</color>
+
 </resources>

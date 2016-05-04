@@ -90,6 +90,15 @@
                 android:src="@drawable/divider"
                 android:scaleType="centerCrop"
                 android:layout_marginLeft="10dp"/>
+            <TextView
+                android:id="@+id/name_error"
+                android:visibility="gone"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="4dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:textColor="@color/error"/>
             <com.rey.material.widget.EditText
                 android:id="@+id/habitat"
                 android:hint="@string/habitat"
@@ -110,6 +119,15 @@
                 android:src="@drawable/divider"
                 android:scaleType="centerCrop"
                 android:layout_marginLeft="10dp"/>
+            <TextView
+                android:id="@+id/habitat_error"
+                android:visibility="gone"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="4dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:textColor="@color/error"/>
             <com.rey.material.widget.EditText
                 android:hint="@string/distribution"
                 android:textColorHint="#b2b2b2"
@@ -130,6 +148,15 @@
                 android:src="@drawable/divider"
                 android:scaleType="centerCrop"
                 android:layout_marginLeft="10dp"/>
+            <TextView
+                android:id="@+id/distribution_error"
+                android:visibility="gone"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="4dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:textColor="@color/error"/>
             <com.rey.material.widget.EditText
                 android:hint="@string/length"
                 android:textColorHint="#b2b2b2"

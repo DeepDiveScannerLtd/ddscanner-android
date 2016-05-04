@@ -15,6 +15,7 @@ import android.view.Display;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.ddscanner.R;
 import com.ddscanner.entities.request.CreateSealifeRequest;
@@ -22,6 +23,9 @@ import com.ddscanner.rest.RestClient;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.rey.material.widget.EditText;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
@@ -65,9 +69,12 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
     private EditText scName;
     private EditText depth;
     private EditText order;
+    private TextView name_error;
+    private TextView habitat_error;
+    private TextView distribution_error;
 
 
-    private Map<String, View> errorsMap = new HashMap<>();
+    private Map<String, TextView> errorsMap = new HashMap<>();
 
 
     @Override
@@ -76,11 +83,11 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
         setContentView(R.layout.activity_add_sealife);
         findViews();
         setUi();
+        makeErrorsMap();
     }
 
     /**
      * Find views in current activity_add_sealife
-     *
      * @author Andrei Lashkevich
      */
 
@@ -99,11 +106,13 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
         scName = (EditText) findViewById(R.id.scName);
         depth = (EditText) findViewById(R.id.depth);
         order = (EditText) findViewById(R.id.order);
+        name_error = (TextView) findViewById(R.id.name_error);
+        habitat_error = (TextView) findViewById(R.id.habitat_error);
+        distribution_error = (TextView) findViewById(R.id.distribution_error);
     }
 
     /**
      * Set UI settings
-     *
      * @author Andrei Lashkevich
      */
 
@@ -246,6 +255,8 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
                 }
                 if(response.errorBody() != null) {
                     try {
+                        String error = response.errorBody().string();
+                        handleErrors(error);
                         Log.i(TAG, response.errorBody().string());
                     } catch (IOException e) {
 
@@ -259,4 +270,38 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
             }
         });
     }
+
+    /**
+     * Create map to store errors textViews with their keys
+     * @author Andrei Lashkevich
+     */
+
+    private void makeErrorsMap() {
+        errorsMap.put("name", name_error);
+        errorsMap.put("distribution", distribution_error);
+        errorsMap.put("habitat", habitat_error);
+    }
+
+    /**
+     * Handling errors. Show error message if error goes from server.
+     * @author Andrei Lashkevich
+     * @param errors JSON string with errors
+     */
+
+    private void handleErrors(String errors) {
+        JsonObject jsonObject = new JsonParser().parse(errors).getAsJsonObject();
+        for (Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) {
+            if(!entry.getKey().equals("")) {
+                if (errorsMap.get(entry.getKey()) != null) {
+                    String key = entry.getKey();
+                    String value = entry.getValue().toString();
+                    value = value.replace("[", "");
+                    value = value.replace("]", "");
+                    errorsMap.get(key).setVisibility(View.VISIBLE);
+                    errorsMap.get(key).setText(value);
+                }
+            }
+        }
+    }
+
 }
