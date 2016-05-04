@@ -95,5 +95,6 @@
     <string name="edit">EDIT</string>
     <string name="max_depth_meters">Max depth (meters)</string>
     <string name="location">Location</string>
+    <string name="add_manually">ADD MANUALLY</string>
 
 </resources>

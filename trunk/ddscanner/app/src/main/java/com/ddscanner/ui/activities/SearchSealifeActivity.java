@@ -62,7 +62,7 @@ public class SearchSealifeActivity extends AppCompatActivity implements SearchVi
         addManually.setOnClickListener(this);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_actionbar_back);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         mModels = new ArrayList<>();

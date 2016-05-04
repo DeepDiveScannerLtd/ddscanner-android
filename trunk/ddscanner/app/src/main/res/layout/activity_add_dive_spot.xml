@@ -315,7 +315,7 @@
                 android:textSize="15sp"
                 android:textColor="@color/black_text"
                 android:text="@string/btn_save"
-                android:background="@color/orange"
+                android:background="@drawable/border_button_orange_2px"
                />
         </LinearLayout>
     </ScrollView>
