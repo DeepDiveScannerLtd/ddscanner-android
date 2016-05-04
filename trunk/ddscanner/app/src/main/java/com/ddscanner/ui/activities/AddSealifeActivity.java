@@ -51,6 +51,7 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
 
     private static final String TAG = AddSealifeActivity.class.getSimpleName();
 
+    private static final int RC_LOGIN = 8001;
     private static final int RC_PICK_PHOTO = 1001;
     private Uri filePath;
 
@@ -212,8 +213,12 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
         createSealifeRequest.setWeight(weight.getText().toString());
         createSealifeRequest.setName(name.getText().toString());
         createSealifeRequest.setScName(scName.getText().toString());
-        createSealifeRequest.setToken("CAAYCm3GzkZCEBAA0363cAYR53x0R9ux0f2ulRFyhFX2TxdZBJfdpiYlWiPmZBA0sjnJN5ZBGlfof7DAjkZC3QGAu5Y57V3kqWeSHDwAgdMJftounmb6XZAKZBcpWlZB7r2zqIPgp24kzIEAfKPZCfOVhUwwuewfRqP1dIWxKaGyoNMOeVcNO6hES7QoKe2S0buW6MUq6AJzsJN9RpwsJfq3hsWiZCaSa5bSEJHYZCaKWAZB89wZDZD");
-        createSealifeRequest.setSocial("fb");
+        createSealifeRequest.setToken(SharedPreferenceHelper.getToken());
+        createSealifeRequest.setSocial(SharedPreferenceHelper.getSn());
+        if (SharedPreferenceHelper.getSn().equals("tw")) {
+            createSealifeRequest.setSecret(SharedPreferenceHelper.getSecret());
+        }
+        createSealifeRequest.setScClass(scClass.getText().toString());
         sendRequestToAddSealife(createSealifeRequest, filePath);
     }
 
@@ -225,6 +230,10 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
      */
 
     private void sendRequestToAddSealife(final CreateSealifeRequest createSealifeRequest, Uri imageFileUri) {
+        String secret = null;
+        if (createSealifeRequest.getSocial() != null && createSealifeRequest.getSocial().equals("tw")) {
+            secret = SharedPreferenceHelper.getSecret();
+        }
         File file = new File(Helpers.getRealPathFromURI(this, imageFileUri));
         RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
         MultipartBody.Part body = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
@@ -242,7 +251,7 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
                 RequestBody.create(MediaType.parse("multipart/form-data"), "asa"),
                 RequestBody.create(MediaType.parse("multipart/form-data"), createSealifeRequest.getToken()),
                 RequestBody.create(MediaType.parse("multipart/form-data"), "fb"),
-                null);
+                RequestBody.create(MediaType.parse("multipart/form-data"), createSealifeRequest.getSecret()));
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -256,7 +265,7 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
                 if(response.errorBody() != null) {
                     try {
                         String error = response.errorBody().string();
-                        handleErrors(error);
+                        handleErrors(error, response.raw().code());
                         Log.i(TAG, response.errorBody().string());
                     } catch (IOException e) {
 
@@ -288,7 +297,12 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
      * @param errors JSON string with errors
      */
 
-    private void handleErrors(String errors) {
+    private void handleErrors(String errors, int error_number) {
+        if (error_number == 400) {
+            Intent intent = new Intent(AddSealifeActivity.this, SocialNetworks.class);
+            startActivityForResult(intent, RC_LOGIN);
+            return;
+        }
         JsonObject jsonObject = new JsonParser().parse(errors).getAsJsonObject();
         for (Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) {
             if(!entry.getKey().equals("")) {

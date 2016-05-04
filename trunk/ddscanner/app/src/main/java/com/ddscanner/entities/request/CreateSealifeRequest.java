@@ -13,10 +13,28 @@ public class CreateSealifeRequest {
     private String depth;
     private String scName;
     private String order;
-   // private String scClass;
+
+    public String getScClass() {
+        return scClass;
+    }
+
+    public void setScClass(String scClass) {
+        this.scClass = scClass;
+    }
+
+    public String getSecret() {
+        return secret;
+    }
+
+    public void setSecret(String secret) {
+        this.secret = secret;
+    }
+
+    private String scClass;
 //    private TypedFile image;
     private String token;
     private String social;
+    private String secret;
 
     public String getToken() {
         return token;
