@@ -145,6 +145,11 @@
                 android:textSize="10sp"
                 android:textColor="#616161"/>
         </LinearLayout>
+        <ImageView
+            android:layout_marginTop="10dp"
+            android:layout_width="1px"
+            android:background="#d1d1d1"
+            android:layout_height="27dp" />
         <LinearLayout
             android:orientation="vertical"
             android:gravity="center"
@@ -165,6 +170,11 @@
                 android:textSize="10sp"
                 android:textColor="#616161"/>
         </LinearLayout>
+        <ImageView
+            android:layout_marginTop="10dp"
+            android:layout_width="1px"
+            android:background="#d1d1d1"
+            android:layout_height="27dp" />
         <LinearLayout
             android:orientation="vertical"
             android:gravity="center"
