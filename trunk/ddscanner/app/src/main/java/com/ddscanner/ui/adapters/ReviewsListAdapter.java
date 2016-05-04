@@ -22,9 +22,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.appsflyer.AppsFlyerLib;
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.Comment;
+import com.ddscanner.events.MarkerClickEvent;
+import com.ddscanner.events.ShowUserDialogEvent;
 import com.ddscanner.ui.activities.ProfileActivity;
+import com.ddscanner.ui.dialogs.ProfileDialog;
 import com.ddscanner.utils.EventTrackerHelper;
 import com.squareup.picasso.Picasso;
 
@@ -38,8 +42,9 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
 
     private static final String TAG = ReviewsListAdapter.class.getSimpleName();
     private ArrayList<Comment> comments;
-    private Context context;
+    private static Context context;
     private boolean isAdapterSet = false;
+    private static ProfileDialog profileDialog = new ProfileDialog();
 
     public ReviewsListAdapter(ArrayList<Comment> comments, Context context) {
         this.comments = comments;
@@ -103,7 +108,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         return comments.size();
     }
 
-    public static class ReviewsListViewHolder extends RecyclerView.ViewHolder {
+    public static class ReviewsListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         private ImageView user_avatar;
         private LinearLayout rating;
@@ -118,6 +123,13 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
             user_name = (TextView) v.findViewById(R.id.user_name);
             user_review = (TextView) v.findViewById(R.id.review);
             photos = (RecyclerView) v.findViewById(R.id.review_photos_rc);
+
+            user_avatar.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            DDScannerApplication.bus.post(new ShowUserDialogEvent());
         }
     }
 

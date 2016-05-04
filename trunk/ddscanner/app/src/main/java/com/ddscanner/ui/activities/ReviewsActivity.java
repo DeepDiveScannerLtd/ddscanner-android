@@ -25,11 +25,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.appsflyer.AppsFlyerLib;
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.Comment;
+import com.ddscanner.events.ShowUserDialogEvent;
 import com.ddscanner.ui.adapters.ReviewsListAdapter;
+import com.ddscanner.ui.dialogs.ProfileDialog;
 import com.ddscanner.ui.views.TransformationRoundImage;
 import com.ddscanner.utils.EventTrackerHelper;
+import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -135,5 +139,23 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
                 startActivityForResult(intent, 9001);
                 break;
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        DDScannerApplication.bus.register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        DDScannerApplication.bus.unregister(this);
+    }
+
+    @Subscribe
+    public void showDialog(ShowUserDialogEvent event) {
+        ProfileDialog profileDialog = new ProfileDialog();
+        profileDialog.show(getFragmentManager(),"");
     }
 }
