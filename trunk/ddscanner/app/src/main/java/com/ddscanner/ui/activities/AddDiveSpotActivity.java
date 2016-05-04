@@ -27,6 +27,7 @@ import com.ddscanner.ui.adapters.AddPhotoToDsListAdapter;
 import com.ddscanner.ui.adapters.SealifeListAdapter;
 import com.ddscanner.ui.managers.SealifeLinearLayoutManager;
 import com.google.android.gms.maps.model.LatLng;
+import com.rey.material.widget.Spinner;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,9 +51,10 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     private RecyclerView photos_rc;
     private TextView addPhotoTitle;
     private TextView locationTitle;
+    private Spinner levelSpinner;
 
     private List<String> imageUris = new ArrayList<String>();
-
+    private String[] data = {"dsa", "dsadsa", "dsada"};
 
     private AppCompatSpinner visibilitySpinner;
 
@@ -72,10 +74,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void setSpinnerData() {
-        String[] data = {"one", "two", "three", "four", "five"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, data);
-        adapter.setDropDownViewResource(android.support.v7.appcompat.R.layout.support_simple_spinner_dropdown_item);
-        visibilitySpinner.setAdapter(adapter);
+
     }
 
     private void setRcSettings() {
@@ -88,16 +87,15 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
 
     private void findViews() {
         btnAddSealife = (ImageView) findViewById(R.id.btn_add_sealife);
-        locationTitle = (TextView) findViewById(R.id.characteristic_location_title);
-        visibilitySpinner = (AppCompatSpinner) findViewById(R.id.characteristic_visibility_spinner);
         addPhotoTitle = (TextView) findViewById(R.id.add_photo_title);
         photos_rc = (RecyclerView) findViewById(R.id.photos_rc);
         photos_rc.setItemAnimator(new DefaultItemAnimator());
         btnAddPhoto = (ImageButton) findViewById(R.id.btn_add_photo);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        pickLocation = (RelativeLayout) findViewById(R.id.characteristic_location);
-
-        pickLocation.setOnClickListener(this);
+        levelSpinner = (Spinner) findViewById(R.id.level_spinner);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.spinner_item, data);
+        levelSpinner.setAdapter(adapter);
+//        pickLocation.setOnClickListener(this);
         btnAddPhoto.setOnClickListener(this);
         btnAddSealife.setOnClickListener(this);
 
@@ -138,11 +136,11 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                 i.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
                 startActivityForResult(i, RC_PICK_PHOTO);
                 break;
-            case R.id.characteristic_location:
+      /*      case R.id.characteristic_location:
                 Intent intent = new Intent(AddDiveSpotActivity.this, PickLocationActivity.class);
                 startActivityForResult(intent, RC_PICK_LOCATION);
                // PickLocationActivity.show(AddDiveSpotActivity.this);
-                break;
+                break;*/
             case R.id.btn_add_sealife:
                 Intent sealifeIntent = new Intent(AddDiveSpotActivity.this, SearchSealifeActivity.class);
                 startActivityForResult(sealifeIntent, 1000);

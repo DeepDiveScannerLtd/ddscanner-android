@@ -1,5 +1,6 @@
 package com.ddscanner.ui.activities;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -114,7 +115,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         toolbarSettings();
         productId = getIntent().getStringExtra(EXTRA_ID);
         requestProductDetails(productId);
-
     }
 
     /**
@@ -167,6 +167,10 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
         collapsingToolbarLayout.setStatusBarScrimColor(getResources().getColor(android.R.color.transparent));
       //  collapsingToolbarLayout.setCollapsedTitleTextColor(getResources().getColor(android.R.color.transparent));
+    }
+
+    private void setDialogUI() {
+
     }
 
     /**
@@ -394,6 +398,9 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             case R.id.yes_button:
                 isInfoValidLayout.setVisibility(View.GONE);
                 thanksLayout.setVisibility(View.VISIBLE);
+                break;
+            case R.id.no_button:
+                AddDiveSpotActivity.show(this);
                 break;
             case R.id.thank_close:
                 thanksLayout.setVisibility(View.GONE);

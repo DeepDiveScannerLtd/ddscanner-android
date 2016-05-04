@@ -43,6 +43,8 @@
         <item name="android:gravity">center_vertical</item>
         <item name="android:textColorHint">#B2B2B2</item>
         <item name="android:background">@android:color/transparent</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">55dp</item>
     </style>
     
     <style name="AddSealifeEditText">
@@ -136,6 +138,12 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
     </style> -->
-
+    <style name="DividerStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:scaleType">centerCrop</item>
+        <item name="android:src">@drawable/divider</item>
+        <item name="android:layout_marginLeft">65dp</item>
+    </style>
 
 </resources>

@@ -92,5 +92,8 @@
     <string name="check_in">CHECK IN</string>
     <string name="added">ADDED</string>
     <string name="edited">EDITED</string>
+    <string name="edit">EDIT</string>
+    <string name="max_depth_meters">Max depth (meters)</string>
+    <string name="location">Location</string>
 
 </resources>
