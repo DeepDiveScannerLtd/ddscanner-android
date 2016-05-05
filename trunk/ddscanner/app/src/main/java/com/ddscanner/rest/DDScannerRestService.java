@@ -9,6 +9,7 @@ import java.util.Map;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
+import retrofit.mime.MultipartTypedOutput;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -59,5 +60,11 @@ public interface DDScannerRestService {
             @Part("token") RequestBody token,
             @Part("social") RequestBody sn,
             @Part("secret") RequestBody secret);
+
+    @POST("diving/divespot")
+    Call<ResponseBody> addDiveSpot(
+            @Body MultipartTypedOutput multipartTypedOutput
+            );
+
 
 }

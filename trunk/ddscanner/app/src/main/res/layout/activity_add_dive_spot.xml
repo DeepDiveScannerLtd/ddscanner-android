@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:background="#fbfbfb">
 
-<include layout="@layout/view_toolbar"/>
+    <include layout="@layout/view_toolbar"/>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -79,6 +79,7 @@
                 android:background="@color/white">
 
                 <LinearLayout
+                    android:id="@+id/location_layout"
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
                     android:background="@color/white"
@@ -88,10 +89,11 @@
                         style="@style/CharacteristicsDiveSpotListIcons"
                         android:src="@drawable/ic_addds_location" />
 
-                    <android.support.v7.widget.AppCompatEditText
+                    <TextView
                         android:id="@+id/location"
                         style="@style/AddDsCharTitleStyle"
-                        android:hint="@string/location" />
+                        android:text="@string/location"
+                        android:textColor="#b2b2b2"/>
                 </LinearLayout>
 
                 <ImageView style="@style/DividerStyle" />
@@ -303,7 +305,7 @@
             </RelativeLayout>
             <ImageView
                 style="@style/DividerStyle"
-                 />
+                />
             <Button
                 android:id="@+id/button_create"
                 android:layout_width="match_parent"
@@ -316,7 +318,7 @@
                 android:textColor="@color/black_text"
                 android:text="@string/btn_save"
                 android:background="@drawable/border_button_orange_2px"
-               />
+                />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

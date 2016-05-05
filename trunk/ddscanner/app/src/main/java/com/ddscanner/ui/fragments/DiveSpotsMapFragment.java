@@ -21,6 +21,7 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.events.MarkerClickEvent;
 import com.ddscanner.events.OnMapClickEvent;
+import com.ddscanner.ui.activities.AddDiveSpotActivity;
 import com.ddscanner.ui.activities.DiveSpotDetailsActivity;
 import com.ddscanner.ui.adapters.MapListPagerAdapter;
 import com.ddscanner.ui.managers.DiveSpotsClusterManager;
@@ -45,6 +46,7 @@ public class DiveSpotsMapFragment extends Fragment implements View.OnClickListen
     private ProgressBar progressBar;
     private ViewPager mapListViewPager;
     private FloatingActionButton mapListFAB;
+    private FloatingActionButton addDsFab;
     private RelativeLayout diveSpotInfo;
     private TextView diveSpotName;
     private LinearLayout rating;
@@ -68,6 +70,8 @@ public class DiveSpotsMapFragment extends Fragment implements View.OnClickListen
         zoomOut = (ImageView) v.findViewById(R.id.zoom_minus);
         goToMyLocation = (ImageView) v.findViewById(R.id.go_to_my_location);
         mapListFAB = (FloatingActionButton) v.findViewById(R.id.map_list_fab);
+        addDsFab = (FloatingActionButton) v.findViewById(R.id.add_ds_fab);
+        addDsFab.setOnClickListener(this);
         mapListFAB.setOnClickListener(this);
         mMapView = (MapView) v.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
@@ -131,6 +135,9 @@ public class DiveSpotsMapFragment extends Fragment implements View.OnClickListen
                 break;
             case R.id.dive_spot_info_layout:
                 DiveSpotDetailsActivity.show(getActivity(), String.valueOf(lastDiveSpotId));
+                break;
+            case  R.id.add_ds_fab:
+                AddDiveSpotActivity.show(getActivity());
                 break;
         }
     }

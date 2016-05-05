@@ -53,9 +53,17 @@
         android:id="@+id/map_list_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentLeft="true"
         android:src="@drawable/ic_acb_list"
         app:backgroundTint="@color/white"
+        android:layout_margin="14dp"/>
+        <android.support.design.widget.FloatingActionButton
+        android:id="@+id/add_ds_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/ic_acb_plus"
+        app:backgroundTint="@color/orange"
         android:layout_margin="14dp"/>
         <RelativeLayout
             android:id="@+id/dive_spot_info_layout"
