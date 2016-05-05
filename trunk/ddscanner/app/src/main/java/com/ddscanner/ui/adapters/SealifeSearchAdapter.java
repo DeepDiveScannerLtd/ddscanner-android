@@ -9,7 +9,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ddscanner.R;
-import com.ddscanner.entities.ExampleModel;
+import com.ddscanner.entities.Sealife;
+import com.ddscanner.entities.Sealife;
 
 import org.w3c.dom.Text;
 
@@ -21,12 +22,12 @@ import java.util.List;
  */
 public class SealifeSearchAdapter extends RecyclerView.Adapter<SealifeSearchAdapter.SearchListViewHolder> {
     private final LayoutInflater mInflater;
-    private final List<ExampleModel> mModels;
+    private final List<Sealife> mModels;
     private TextView results;
     private RelativeLayout notFounLayout;
     private RecyclerView rcList;
 
-    public SealifeSearchAdapter(Context context, List<ExampleModel> models) {
+    public SealifeSearchAdapter(Context context, List<Sealife> models) {
         mInflater = LayoutInflater.from(context);
         mModels = new ArrayList<>(models);
     }
@@ -39,7 +40,7 @@ public class SealifeSearchAdapter extends RecyclerView.Adapter<SealifeSearchAdap
 
     @Override
     public void onBindViewHolder(SearchListViewHolder holder, int position) {
-        final ExampleModel model = mModels.get(position);
+        final Sealife model = mModels.get(position);
         holder.bind(model);
     }
 
@@ -48,33 +49,33 @@ public class SealifeSearchAdapter extends RecyclerView.Adapter<SealifeSearchAdap
         return mModels.size();
     }
 
-    public void animateTo(List<ExampleModel> models) {
+    public void animateTo(List<Sealife> models) {
         applyAndAnimateRemovals(models);
         applyAndAnimateAdditions(models);
         applyAndAnimateMovedItems(models);
     }
 
-    private void applyAndAnimateRemovals(List<ExampleModel> newModels) {
+    private void applyAndAnimateRemovals(List<Sealife> newModels) {
         for (int i = mModels.size() - 1; i >= 0; i--) {
-            final ExampleModel model = mModels.get(i);
+            final Sealife model = mModels.get(i);
             if (!newModels.contains(model)) {
                 removeItem(i);
             }
         }
     }
 
-    private void applyAndAnimateAdditions(List<ExampleModel> newModels) {
+    private void applyAndAnimateAdditions(List<Sealife> newModels) {
         for (int i = 0, count = newModels.size(); i < count; i++) {
-            final ExampleModel model = newModels.get(i);
+            final Sealife model = newModels.get(i);
             if (!mModels.contains(model)) {
                 addItem(i, model);
             }
         }
     }
 
-    private void applyAndAnimateMovedItems(List<ExampleModel> newModels) {
+    private void applyAndAnimateMovedItems(List<Sealife> newModels) {
         for (int toPosition = newModels.size() - 1; toPosition >= 0; toPosition--) {
-            final ExampleModel model = newModels.get(toPosition);
+            final Sealife model = newModels.get(toPosition);
             final int fromPosition = mModels.indexOf(model);
             if (fromPosition >= 0 && fromPosition != toPosition) {
                 moveItem(fromPosition, toPosition);
@@ -82,19 +83,19 @@ public class SealifeSearchAdapter extends RecyclerView.Adapter<SealifeSearchAdap
         }
     }
 
-    public ExampleModel removeItem(int position) {
-        final ExampleModel model = mModels.remove(position);
+    public Sealife removeItem(int position) {
+        final Sealife model = mModels.remove(position);
         notifyItemRemoved(position);
         return model;
     }
 
-    public void addItem(int position, ExampleModel model) {
+    public void addItem(int position, Sealife model) {
         mModels.add(position, model);
         notifyItemInserted(position);
     }
 
     public void moveItem(int fromPosition, int toPosition) {
-        final ExampleModel model = mModels.remove(fromPosition);
+        final Sealife model = mModels.remove(fromPosition);
         mModels.add(toPosition, model);
         notifyItemMoved(fromPosition, toPosition);
     }
@@ -109,8 +110,8 @@ public class SealifeSearchAdapter extends RecyclerView.Adapter<SealifeSearchAdap
             tvText = (TextView) itemView.findViewById(R.id.tvText);
         }
 
-        public void bind(ExampleModel model) {
-            tvText.setText(model.getText());
+        public void bind(Sealife model) {
+            tvText.setText(model.getName());
         }
     }
     

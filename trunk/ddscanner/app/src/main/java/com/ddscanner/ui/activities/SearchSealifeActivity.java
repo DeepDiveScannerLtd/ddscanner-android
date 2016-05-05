@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,11 +17,21 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ddscanner.R;
-import com.ddscanner.entities.ExampleModel;
+import com.ddscanner.entities.Sealife;
+import com.ddscanner.entities.Sealife;
+import com.ddscanner.entities.SealifeResponseEntity;
+import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.SealifeSearchAdapter;
+import com.google.gson.Gson;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by lashket on 7.4.16.
@@ -33,10 +44,14 @@ public class SearchSealifeActivity extends AppCompatActivity implements SearchVi
     private RecyclerView mRecyclerView;
     private SealifeSearchAdapter mAdapter;
     private TextView results;
-    private List<ExampleModel> mModels;
     private RelativeLayout notFoundLayout;
     private TextView textNotFound;
     private Button addManually;
+
+
+    private List<Sealife> sealifes = new ArrayList<>();
+    private SealifeResponseEntity sealifeResponseEntity = new SealifeResponseEntity();
+
     private static final String[] MOVIES = new String[]{
             "Octopus",
             "Huyopus",
@@ -63,20 +78,9 @@ public class SearchSealifeActivity extends AppCompatActivity implements SearchVi
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);
+        getAllSealifes();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        mModels = new ArrayList<>();
-
-        for (String movie : MOVIES) {
-            mModels.add(new ExampleModel(movie));
-        }
-
-        if (!mModels.isEmpty()) {
-            mRecyclerView.setVisibility(View.VISIBLE);
-        }
-
-        mAdapter = new SealifeSearchAdapter(this, mModels);
-        mRecyclerView.setAdapter(mAdapter);
     }
 
     @Override
@@ -91,7 +95,7 @@ public class SearchSealifeActivity extends AppCompatActivity implements SearchVi
 
     @Override
     public boolean onQueryTextChange(String query) {
-        final List<ExampleModel> filteredModelList = filter(mModels, query);
+        final List<Sealife> filteredModelList = filter(sealifes, query);
         mAdapter.animateTo(filteredModelList);
         mRecyclerView.scrollToPosition(0);
         return true;
@@ -102,12 +106,12 @@ public class SearchSealifeActivity extends AppCompatActivity implements SearchVi
         return false;
     }
 
-    private List<ExampleModel> filter(List<ExampleModel> models, String query) {
+    private List<Sealife> filter(List<Sealife> models, String query) {
         query = query.toLowerCase();
 
-        final List<ExampleModel> filteredModelList = new ArrayList<>();
-        for (ExampleModel model : models) {
-            final String text = model.getText().toLowerCase();
+        final List<Sealife> filteredModelList = new ArrayList<>();
+        for (Sealife model : models) {
+            final String text = model.getName().toLowerCase();
             if (text.contains(query)) {
                 filteredModelList.add(model);
             }
@@ -132,4 +136,35 @@ public class SearchSealifeActivity extends AppCompatActivity implements SearchVi
                 break;
         }
     }
+
+    private void getAllSealifes() {
+        Call<ResponseBody> call = RestClient.getServiceInstance().getSealifes();
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    String responseString = "";
+                    try {
+                        responseString = response.body().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    sealifeResponseEntity = new Gson().fromJson(responseString, SealifeResponseEntity.class);
+                    sealifes = sealifeResponseEntity.getSealifes();
+
+                        mRecyclerView.setVisibility(View.VISIBLE);
+
+
+                    mAdapter = new SealifeSearchAdapter(SearchSealifeActivity.this, sealifes);
+                    mRecyclerView.setAdapter(mAdapter);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
+    }
+
 }

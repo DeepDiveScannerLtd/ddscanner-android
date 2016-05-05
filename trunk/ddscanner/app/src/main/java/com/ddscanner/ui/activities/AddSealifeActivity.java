@@ -251,7 +251,7 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
                 RequestBody.create(MediaType.parse("multipart/form-data"), "asa"),
                 RequestBody.create(MediaType.parse("multipart/form-data"), createSealifeRequest.getToken()),
                 RequestBody.create(MediaType.parse("multipart/form-data"), "fb"),
-                RequestBody.create(MediaType.parse("multipart/form-data"), createSealifeRequest.getSecret()));
+                null);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -306,6 +306,11 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
         JsonObject jsonObject = new JsonParser().parse(errors).getAsJsonObject();
         for (Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) {
             if(!entry.getKey().equals("")) {
+                if (entry.getKey().equals("token")) {
+                    Intent intent = new Intent(AddSealifeActivity.this, SocialNetworks.class);
+                    startActivityForResult(intent, RC_LOGIN);
+                    return;
+                }
                 if (errorsMap.get(entry.getKey()) != null) {
                     String key = entry.getKey();
                     String value = entry.getValue().toString();
