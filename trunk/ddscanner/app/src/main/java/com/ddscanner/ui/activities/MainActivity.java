@@ -23,11 +23,16 @@ import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.events.PlaceChoosedEvent;
+import com.ddscanner.rest.RestClient;
+import com.ddscanner.services.RegistrationIntentService;
 import com.ddscanner.ui.adapters.MainActivityPagerAdapter;
 import com.ddscanner.ui.fragments.MapListFragment;
 import com.ddscanner.ui.fragments.NotificationsFragment;
 import com.ddscanner.ui.fragments.ProfileFragment;
 import com.ddscanner.utils.EventTrackerHelper;
+import com.ddscanner.utils.SharedPreferenceHelper;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
@@ -37,12 +42,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+
 /**
  * Created by lashket on 20.4.16.
  */
 public class MainActivity extends FragmentActivity implements ViewPager.OnPageChangeListener, View.OnClickListener {
 
     private static final int REQUEST_CODE_PLACE_AUTOCOMPLETE = 1000;
+    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
     private TabLayout toolbarTabLayout;
     private ViewPager mainViewPager;
@@ -58,6 +67,7 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
         setupViewPager(mainViewPager);
         setUi();
         setupTabLayout();
+        playServices();
     }
 
     private void setUi() {
@@ -176,5 +186,42 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
         } catch (GooglePlayServicesNotAvailableException e) {
 
         }
+    }
+
+    public static void checkGcm() {
+        Call<ResponseBody> call = RestClient.getServiceInstance().identifyGcmToken(SharedPreferenceHelper.getGcmId());
+        call.enqueue(new retrofit2.Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+
+        });
+    }
+
+    public void playServices() {
+        if (checkPlayServices()) {
+            Intent intent = new Intent(this, RegistrationIntentService.class);
+            startService(intent);
+        }
+    }
+
+    private boolean checkPlayServices() {
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (apiAvailability.isUserResolvableError(resultCode)) {
+                apiAvailability.getErrorDialog(this, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST).show();
+            } else {
+                finish();
+            }
+            return false;
+        }
+        return true;
     }
 }
