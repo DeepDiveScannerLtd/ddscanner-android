@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="42dp"
+    android:background="@color/white"
+    android:gravity="center_vertical">
+    <ImageView
+        android:id="@+id/delete_item"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:src="@drawable/ic_addds_delete"/>
+    <TextView
+        android:id="@+id/sealife_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:lines="1"
+        android:ellipsize="end"
+        android:textColor="@color/black_text"
+        android:layout_marginLeft="13dp"
+        android:textSize="16sp"
+        />
+</LinearLayout>

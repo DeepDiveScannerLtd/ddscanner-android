@@ -78,12 +78,12 @@ public class PickLocationActivity extends AppCompatActivity implements GoogleMap
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         googleMap = mapFragment.getMap();
         googleMap.setOnCameraChangeListener(this);
-        googleMap.getUiSettings().setZoomControlsEnabled(true);
+        googleMap.getUiSettings().setZoomControlsEnabled(false);
     }
 
     private void toolbarSettings() {
         setSupportActionBar(toolbar);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_actionbar_back);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Pick location");
     }

@@ -4,6 +4,7 @@ package com.ddscanner.rest;
 import com.ddscanner.entities.request.RegisterRequest;
 import com.ddscanner.entities.request.SendReviewRequest;
 
+import java.util.List;
 import java.util.Map;
 
 import okhttp3.MultipartBody;
@@ -62,9 +63,26 @@ public interface DDScannerRestService {
             @Part("secret") RequestBody secret);
 
     @POST("diving/divespot")
+    @Multipart
     Call<ResponseBody> addDiveSpot(
-            @Body MultipartTypedOutput multipartTypedOutput
+            @Part("name") RequestBody name,
+            @Part("lat") RequestBody lat,
+            @Part("lng") RequestBody lng,
+            @Part("depth") RequestBody depth,
+            @Part("visibility") RequestBody visibility,
+            @Part("currents") RequestBody currents,
+            @Part("level") RequestBody level,
+            @Part("object") RequestBody object,
+            @Part("access") RequestBody access,
+            @Part("description") RequestBody description,
+            @Part List<MultipartBody.Part> sealife,
+            @Part List<MultipartBody.Part> image,
+            @Part("token") RequestBody token,
+            @Part("social") RequestBody sn,
+            @Part("secret") RequestBody secret
             );
 
+    @GET("diving/sealife")
+    Call<ResponseBody> getSealifes();
 
 }

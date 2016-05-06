@@ -1,6 +1,7 @@
 package com.ddscanner.ui.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,9 +9,11 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.Sealife;
 import com.ddscanner.entities.Sealife;
+import com.ddscanner.events.SealifeChoosedEvent;
 
 import org.w3c.dom.Text;
 
@@ -22,14 +25,16 @@ import java.util.List;
  */
 public class SealifeSearchAdapter extends RecyclerView.Adapter<SealifeSearchAdapter.SearchListViewHolder> {
     private final LayoutInflater mInflater;
-    private final List<Sealife> mModels;
+    private static List<Sealife> mModels;
     private TextView results;
     private RelativeLayout notFounLayout;
     private RecyclerView rcList;
+    private static Context context;
 
     public SealifeSearchAdapter(Context context, List<Sealife> models) {
         mInflater = LayoutInflater.from(context);
         mModels = new ArrayList<>(models);
+        this.context = context;
     }
 
     @Override
@@ -100,7 +105,7 @@ public class SealifeSearchAdapter extends RecyclerView.Adapter<SealifeSearchAdap
         notifyItemMoved(fromPosition, toPosition);
     }
 
-    public class SearchListViewHolder extends RecyclerView.ViewHolder {
+    public class SearchListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         private final TextView tvText;
 
@@ -108,10 +113,16 @@ public class SealifeSearchAdapter extends RecyclerView.Adapter<SealifeSearchAdap
             super(itemView);
 
             tvText = (TextView) itemView.findViewById(R.id.tvText);
+            tvText.setOnClickListener(this);
         }
 
         public void bind(Sealife model) {
             tvText.setText(model.getName());
+        }
+
+        @Override
+        public void onClick(View v) {
+            DDScannerApplication.bus.post(new SealifeChoosedEvent(mModels.get(getPosition())));
         }
     }
     

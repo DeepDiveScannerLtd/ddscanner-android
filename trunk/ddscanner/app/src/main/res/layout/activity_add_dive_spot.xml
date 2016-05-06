@@ -277,23 +277,26 @@
                 android:layout_below="@+id/characteristics_layout"
                 android:layout_width="match_parent"
                 android:background="@color/white"
-                android:layout_height="100dp">
+                android:layout_height="wrap_content">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
                     android:layout_marginTop="15dp"
                     android:fontFamily="sans-serif-medium"
-                    android:text="SEALIFE"
+                    android:text="@string/sealife"
                     android:textColor="@color/black_text"
                     android:textSize="15sp" />
                 <TextView
+                    android:id="@+id/add_sealife_text"
+                    android:layout_marginTop="90dp"
+                    android:layout_marginBottom="10dp"
                     android:layout_centerInParent="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="14sp"
                     android:textColor="#b2b2b2"
-                    android:text="Add sealife"/>
+                    android:text="@string/add_sealife"/>
                 <ImageView
                     android:id="@+id/btn_add_sealife"
                     android:layout_width="wrap_content"
@@ -302,6 +305,14 @@
                     android:layout_marginRight="10dp"
                     android:layout_marginTop="15dp"
                     android:src="@drawable/ic_plus_addds" />
+                <android.support.v7.widget.RecyclerView
+                    android:visibility="visible"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_below="@+id/btn_add_sealife"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/sealifes_rc"/>
             </RelativeLayout>
             <ImageView
                 style="@style/DividerStyle"
