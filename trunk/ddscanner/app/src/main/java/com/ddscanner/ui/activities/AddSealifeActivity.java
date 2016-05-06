@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
@@ -314,8 +315,8 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
                 if (errorsMap.get(entry.getKey()) != null) {
                     String key = entry.getKey();
                     String value = entry.getValue().toString();
-                    value = value.replace("[", "");
-                    value = value.replace("]", "");
+                    value = value.replace("[\"", "");
+                    value = value.replace("\"]", "");
                     errorsMap.get(key).setVisibility(View.VISIBLE);
                     errorsMap.get(key).setText(value);
                 }
@@ -323,4 +324,13 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

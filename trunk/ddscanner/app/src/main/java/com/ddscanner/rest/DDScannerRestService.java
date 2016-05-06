@@ -13,12 +13,14 @@ import okhttp3.ResponseBody;
 import retrofit.mime.MultipartTypedOutput;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
 
 public interface DDScannerRestService {
@@ -84,5 +86,20 @@ public interface DDScannerRestService {
 
     @GET("diving/sealife")
     Call<ResponseBody> getSealifes();
+
+    @POST("diving/divespot/{id}/checkin")
+    @Multipart
+    Call<ResponseBody> checkIn(
+      @Path("id") String id,
+      @Part("social") RequestBody social,
+      @Part("token") RequestBody token
+    );
+
+    @DELETE("diving/divespot/{id}/checkin")
+    Call<ResponseBody> checkOut(
+            @Path("id") String id,
+            @Query("social") String social,
+            @Query("token") String token
+    );
 
 }

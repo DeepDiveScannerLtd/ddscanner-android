@@ -41,6 +41,7 @@ import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.DiveSpotsPhotosAdapter;
 import com.ddscanner.ui.adapters.SealifeListAdapter;
 import com.ddscanner.utils.LogUtils;
+import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -58,8 +59,11 @@ import com.squareup.picasso.Picasso;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.Response;
 
 /**
  * Created by lashket on 26.4.16.
@@ -414,9 +418,29 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
      */
 
     private void checkIn() {
-        btnCheckIn.setImageDrawable(AppCompatDrawableManager.get().getDrawable(this, R.drawable.ic_acb_pin_checked));
-        btnCheckIn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.orange)));
-        isCheckedIn = true;
+        Call<ResponseBody> call = RestClient.getServiceInstance().checkIn(
+                String.valueOf(divespotDetails.getDivespot().getId()),
+                RequestBody.create(MediaType.parse("multipart/form-data"),
+                        SharedPreferenceHelper.getSn()),
+                RequestBody.create(MediaType.parse("multipart/form-data"),
+                        SharedPreferenceHelper.getToken())
+                );
+        call.enqueue(new retrofit2.Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.raw().code() == 200) {
+                    btnCheckIn.setImageDrawable(AppCompatDrawableManager.get().getDrawable(
+                            DiveSpotDetailsActivity.this, R.drawable.ic_acb_pin_checked));
+                    btnCheckIn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.orange)));
+                    isCheckedIn = true;
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
     }
 
     /**
@@ -425,9 +449,30 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
      */
 
     private void checkOut() {
-        btnCheckIn.setImageDrawable(AppCompatDrawableManager.get().getDrawable(this, R.drawable.ic_acb_pin));
-        btnCheckIn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
-        isCheckedIn = false;
+        Call<ResponseBody> call = RestClient.getServiceInstance().checkOut(
+                String.valueOf(divespotDetails.getDivespot().getId()),
+              /*  RequestBody.create(MediaType.parse("multipart/form-data"),
+                        SharedPreferenceHelper.getSn()),
+                RequestBody.create(MediaType.parse("multipart/form-data"),
+                        SharedPreferenceHelper.getToken())*/
+                SharedPreferenceHelper.getSn(),
+                SharedPreferenceHelper.getToken()
+        );
+        call.enqueue(new retrofit2.Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.raw().code() == 200) {
+                    btnCheckIn.setImageDrawable(AppCompatDrawableManager.get().getDrawable(DiveSpotDetailsActivity.this, R.drawable.ic_acb_pin));
+                    btnCheckIn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
+                    isCheckedIn = false;
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
     }
 
 
