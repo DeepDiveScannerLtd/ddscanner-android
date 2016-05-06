@@ -10,7 +10,7 @@
     <RelativeLayout
         android:id="@+id/not_found_layout"
         android:layout_below="@+id/top"
-        android:visibility="visible"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
