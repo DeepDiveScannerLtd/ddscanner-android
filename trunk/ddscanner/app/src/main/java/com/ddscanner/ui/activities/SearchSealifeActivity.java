@@ -16,13 +16,16 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.Sealife;
 import com.ddscanner.entities.Sealife;
 import com.ddscanner.entities.SealifeResponseEntity;
+import com.ddscanner.events.SealifeChoosedEvent;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.SealifeSearchAdapter;
 import com.google.gson.Gson;
+import com.squareup.otto.Subscribe;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -165,6 +168,32 @@ public class SearchSealifeActivity extends AppCompatActivity implements SearchVi
 
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        DDScannerApplication.bus.register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        DDScannerApplication.bus.unregister(this);
+    }
+
+    @Subscribe
+    public void setResult(SealifeChoosedEvent event) {
+        Intent intent = new Intent();
+        intent.putExtra("SEALIFE", event.getSealife());
+        setResult(RESULT_OK, intent);
+        finish();
     }
 
 }

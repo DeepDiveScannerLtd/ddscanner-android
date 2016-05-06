@@ -20,8 +20,10 @@ import android.widget.TextView;
 
 import com.ddscanner.R;
 import com.ddscanner.entities.FiltersResponseEntity;
+import com.ddscanner.entities.Sealife;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.AddPhotoToDsListAdapter;
+import com.ddscanner.ui.adapters.SealifeListAddingDiveSpotAdapter;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.android.gms.maps.model.LatLng;
@@ -37,10 +39,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
-import retrofit.mime.MultipartTypedOutput;
-import retrofit.mime.TypedFile;
-import retrofit.mime.TypedString;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -50,6 +52,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     private static final String TAG = AddDiveSpotActivity.class.getSimpleName();
     private static final int RC_PICK_PHOTO = 9001;
     private static final int RC_PICK_LOCATION = 8001;
+    private static final int RC_PICK_SEALIFE = 7001;
 
     private ImageButton btnAddPhoto;
     private ImageView btnAddSealife;
@@ -61,6 +64,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     private RecyclerView photos_rc;
     private TextView addPhotoTitle;
     private TextView locationTitle;
+    private TextView addSealifeTitle;
     private Spinner levelSpinner;
     private Spinner currentsSpinner;
     private Spinner objectSpinner;
@@ -69,10 +73,17 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     private EditText depth;
     private EditText description;
     private Button btnSave;
+    private RecyclerView sealifesRc;
+    private SealifeListAddingDiveSpotAdapter sealifeListAddingDiveSpotAdapter;
 
     private Helpers helpers = new Helpers();
     private List<String> imageUris = new ArrayList<String>();
+    private List<Sealife> sealifes = new ArrayList<>();
     private FiltersResponseEntity filters;
+
+    private RequestBody requestName, requestLat, requestLng, requestDepth, requestVisibility,
+                        requestCurrents, requestLevel, requestObject, requestAccess,
+                        requestDescription, requestSocial, requestToken;
 
     public static void show(Context context) {
         Intent intent = new Intent(context, AddDiveSpotActivity.class);
@@ -89,9 +100,9 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     }
 
 
-
     /**
      * Find views in current activity_add_dive_spot
+     *
      * @author Andrei Lashkevich
      */
 
@@ -111,10 +122,13 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         pickLocation = (LinearLayout) findViewById(R.id.location_layout);
         locationTitle = (TextView) findViewById(R.id.location);
         btnSave = (Button) findViewById(R.id.button_create);
+        sealifesRc = (RecyclerView) findViewById(R.id.sealifes_rc);
+        addSealifeTitle = (TextView) findViewById(R.id.add_sealife_text);
     }
 
     /**
      * Set UI settings for activity views
+     *
      * @author Andrei Lashkevich
      */
 
@@ -123,13 +137,21 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         pickLocation.setOnClickListener(this);
         btnAddPhoto.setOnClickListener(this);
         btnAddSealife.setOnClickListener(this);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(AddDiveSpotActivity.this);
-        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
 
         /* Recycler view with images settings*/
+        LinearLayoutManager layoutManager = new LinearLayoutManager(AddDiveSpotActivity.this);
+        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         photos_rc.setNestedScrollingEnabled(false);
         photos_rc.setHasFixedSize(false);
         photos_rc.setLayoutManager(layoutManager);
+
+        /* Recycler view with sealifes settings*/
+        LinearLayoutManager sealifeLayoutManager = new LinearLayoutManager(
+                AddDiveSpotActivity.this);
+        sealifeLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        sealifesRc.setNestedScrollingEnabled(false);
+        sealifesRc.setHasFixedSize(false);
+        sealifesRc.setLayoutManager(sealifeLayoutManager);
 
         /*Toolbar settings*/
         setSupportActionBar(toolbar);
@@ -142,7 +164,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RC_PICK_LOCATION ) {
+        if (requestCode == RC_PICK_LOCATION) {
             if (resultCode == RESULT_OK) {
                 this.diveSpotLocation = data.getParcelableExtra("LATLNG");
                 locationTitle.setTextColor(getResources().getColor(R.color.black_text));
@@ -152,8 +174,18 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
             if (resultCode == RESULT_OK) {
                 Uri uri = data.getData();
                 imageUris.add(helpers.getRealPathFromURI(AddDiveSpotActivity.this, uri));
-                photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris, AddDiveSpotActivity.this, addPhotoTitle));
+                photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris,
+                        AddDiveSpotActivity.this, addPhotoTitle));
                 Log.i(TAG, helpers.getRealPathFromURI(AddDiveSpotActivity.this, uri));
+            }
+        }
+        if (requestCode == RC_PICK_SEALIFE) {
+            if (resultCode == RESULT_OK) {
+                Sealife sealife =(Sealife) data.getSerializableExtra("SEALIFE");
+                sealifes.add(sealife);
+                sealifeListAddingDiveSpotAdapter = new SealifeListAddingDiveSpotAdapter(
+                        (ArrayList<Sealife>) sealifes, this, addSealifeTitle);
+                sealifesRc.setAdapter(sealifeListAddingDiveSpotAdapter);
             }
         }
     }
@@ -225,39 +257,26 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void createAddDiveSpotRequest() {
-        MultipartTypedOutput request = new MultipartTypedOutput();
-        request.addPart("name", new TypedString(name.getText().toString()));
-        request.addPart("depth", new TypedString(depth.getText().toString()));
-        request.addPart("description", new TypedString(description.getText().toString()));
-        request.addPart("currents", new TypedString("strong"));
-        request.addPart("object", new TypedString("wreck"));
-        request.addPart("level", new TypedString("cave diver"));
-        request.addPart("token", new TypedString(SharedPreferenceHelper.getToken()));
-        request.addPart("social", new TypedString(SharedPreferenceHelper.getSn()));
-
-        Log.i(TAG, request.toString());
+        List<MultipartBody.Part> sealife = new ArrayList<>();
+        sealife.add(MultipartBody.Part.createFormData("sealife[]","1"));
+        sealife.add(MultipartBody.Part.createFormData("sealife[]","2"));
+     //   sealifes.add(RequestBody.create(MediaType.parse("multipart/form-data"), "2"));
+        List<MultipartBody.Part> images = new ArrayList<>();
         for (int i = 0; i < imageUris.size(); i++) {
-            request.addPart("images[]", new TypedFile("image/*", new File(imageUris.get(i))));
+            File image = new File(imageUris.get(i));
+            RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), image);
+            MultipartBody.Part part = MultipartBody.Part.createFormData("images[]", image.getName(), requestFile);
+            images.add(part);
         }
-        Call<ResponseBody> call = RestClient.getServiceInstance().addDiveSpot(request);
+        Call<ResponseBody> call = RestClient.getServiceInstance().addDiveSpot(
+                requestName, requestLat, requestLng, requestDepth, requestVisibility,
+                requestCurrents, requestLevel, requestObject, requestAccess, requestDescription,
+                sealife, images, requestToken, requestSocial, null
+                );
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if(response.body() != null) {
-                    try {
-                        Log.i(TAG, response.body().string());
-                    } catch (IOException e) {
 
-                    }
-                }
-                if(response.errorBody() != null) {
-                    try {
-                        String error = response.errorBody().string();
-                        Log.i(TAG, response.errorBody().string());
-                    } catch (IOException e) {
-
-                    }
-                }
             }
 
             @Override
@@ -277,18 +296,43 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                 startActivityForResult(i, RC_PICK_PHOTO);
                 break;
             case R.id.location_layout:
-                Intent intent = new Intent(AddDiveSpotActivity.this, PickLocationActivity.class);
+                Intent intent = new Intent(AddDiveSpotActivity.this,
+                        PickLocationActivity.class);
                 startActivityForResult(intent, RC_PICK_LOCATION);
                 PickLocationActivity.show(AddDiveSpotActivity.this);
                 break;
             case R.id.btn_add_sealife:
-                Intent sealifeIntent = new Intent(AddDiveSpotActivity.this, SearchSealifeActivity.class);
-                startActivityForResult(sealifeIntent, 1000);
+                Intent sealifeIntent = new Intent(AddDiveSpotActivity.this,
+                        SearchSealifeActivity.class);
+                startActivityForResult(sealifeIntent, RC_PICK_SEALIFE);
                 break;
             case R.id.button_create:
-                createAddDiveSpotRequest();
+                createRequestBodyies();
                 break;
         }
+    }
+
+    private void createRequestBodyies() {
+        requestName = RequestBody.create(MediaType.parse("multipart/form-data"),
+                name.getText().toString());
+        requestDepth = RequestBody.create(MediaType.parse("multipart/form-data"),
+                depth.getText().toString());
+        requestLat = RequestBody.create(MediaType.parse("multipart/form-data"),
+                String.valueOf(diveSpotLocation.latitude));
+        requestLng = RequestBody.create(MediaType.parse("multipart/form-data"),
+                String.valueOf(diveSpotLocation.longitude));
+        requestAccess = RequestBody.create(MediaType.parse("multipart/form-data"), "boat");
+        requestObject = RequestBody.create(MediaType.parse("multipart/form-data"), "reef");
+        requestVisibility = RequestBody.create(MediaType.parse("multipart/form-data"), "good");
+        requestCurrents = RequestBody.create(MediaType.parse("multipart/form-data"), "strong");
+        requestLevel = RequestBody.create(MediaType.parse("multipart/form-data"), "master");
+        requestSocial = RequestBody.create(MediaType.parse("multipart/form-data"),
+                SharedPreferenceHelper.getSn());
+        requestToken = RequestBody.create(MediaType.parse("multipart/form-data"),
+                SharedPreferenceHelper.getToken());
+        requestDescription = RequestBody.create(MediaType.parse("multipart/form-data"),
+                description.getText().toString());
+        createAddDiveSpotRequest();
     }
 
 }
