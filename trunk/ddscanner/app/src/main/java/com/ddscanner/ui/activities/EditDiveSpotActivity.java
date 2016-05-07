@@ -31,15 +31,19 @@ import com.ddscanner.ui.adapters.AddPhotoToDsListAdapter;
 import com.ddscanner.ui.adapters.SealifeListAddingDiveSpotAdapter;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
+import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.rey.material.widget.ProgressView;
 import com.rey.material.widget.Spinner;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -85,13 +89,17 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
     private List<String> imageUris = new ArrayList<String>();
     private List<Sealife> sealifes = new ArrayList<>();
     private List<String> images_del = new ArrayList<>();
+    private List<MultipartBody.Part> sealifeRequest = new ArrayList<>();
+    private List<MultipartBody.Part> deletedImages = new ArrayList<>();
+    private List<MultipartBody.Part> newImages = new ArrayList<>();
     private FiltersResponseEntity filters;
     private DivespotDetails divespotDetails;
     private DiveSpotFull diveSpot;
+    private AddPhotoToDsListAdapter addPhotoToDsListAdapter;
 
     private RequestBody requestName, requestLat, requestLng, requestDepth, requestVisibility,
             requestCurrents, requestLevel, requestObject, requestAccess,
-            requestDescription, requestSocial, requestToken;
+            requestDescription, requestSocial, requestToken, requestType;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -147,6 +155,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
         photos_rc.setNestedScrollingEnabled(false);
         photos_rc.setHasFixedSize(false);
         photos_rc.setLayoutManager(layoutManager);
+        photos_rc.setAdapter(addPhotoToDsListAdapter);
 
         /* Recycler view with sealifes settings*/
         LinearLayoutManager sealifeLayoutManager = new LinearLayoutManager(
@@ -192,7 +201,8 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
                     divespotDetails = new Gson().fromJson(responseString, DivespotDetails.class);
                     diveSpot = divespotDetails.getDivespot();
                     sealifes = divespotDetails.getSealifes();
-                    imageUris = diveSpot.getImages();
+                    imageUris = changeImageAddresses(diveSpot.getImages());
+                    addPhotoToDsListAdapter = new AddPhotoToDsListAdapter(imageUris, EditDiveSpotActivity.this, addPhotoTitle);
                     diveSpotLocation = new LatLng(divespotDetails.getDivespot().getLat(),
                             divespotDetails.getDivespot().getLng());
                     setUi();
@@ -205,6 +215,13 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
 
             }
         });
+    }
+
+    private List<String> changeImageAddresses(List<String> images) {
+        for (int i = 0; i <images.size(); i++) {
+            images.set(i, diveSpot.getDiveSpotPathSmall() + images.get(i));
+        }
+        return images;
     }
 
     @Override
@@ -228,10 +245,24 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
                 startActivityForResult(sealifeIntent, RC_PICK_SEALIFE);
                 break;
             case R.id.button_create:
-              //  createRequestBodyies();
+                createRequestBodyies();
                 break;
         }
     }
+
+    private List<String> removeAdressPart() {
+        List<String> deletedImages = new ArrayList<>();
+        if (addPhotoToDsListAdapter.getListOfDeletedImages() == null) {
+           return null;
+        }
+        deletedImages = addPhotoToDsListAdapter.getListOfDeletedImages();
+        for (int i = 0; i < deletedImages.size(); i++) {
+            deletedImages.set(i, deletedImages.get(i).replace(diveSpot.getDiveSpotPathSmall(), ""));
+        }
+        return deletedImages;
+    }
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -265,11 +296,81 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
             if (resultCode == RESULT_OK) {
                 Sealife sealife =(Sealife) data.getSerializableExtra("SEALIFE");
                 sealifeListAddingDiveSpotAdapter.add(sealife);
-                /*sealifeListAddingDiveSpotAdapter = new SealifeListAddingDiveSpotAdapter(
-                        (ArrayList<Sealife>) sealifes, this, addSealifeTitle);
-                sealifesRc.setAdapter(sealifeListAddingDiveSpotAdapter);*/
+                Log.i(TAG, sealifeListAddingDiveSpotAdapter.getSealifes().get(0).getName());
             }
         }
+    }
+
+    private void createRequestBodyies() {
+        requestName = RequestBody.create(MediaType.parse("multipart/form-data"),
+                name.getText().toString());
+        requestDepth = RequestBody.create(MediaType.parse("multipart/form-data"),
+                depth.getText().toString());
+        requestLat = RequestBody.create(MediaType.parse("multipart/form-data"),
+                String.valueOf(diveSpotLocation.latitude));
+        requestLng = RequestBody.create(MediaType.parse("multipart/form-data"),
+                String.valueOf(diveSpotLocation.longitude));
+        requestAccess = RequestBody.create(MediaType.parse("multipart/form-data"), "boat");
+        requestObject = RequestBody.create(MediaType.parse("multipart/form-data"), "reef");
+        requestVisibility = RequestBody.create(MediaType.parse("multipart/form-data"), "good");
+        requestCurrents = RequestBody.create(MediaType.parse("multipart/form-data"), "strong");
+        requestLevel = RequestBody.create(MediaType.parse("multipart/form-data"), "master");
+        requestSocial = RequestBody.create(MediaType.parse("multipart/form-data"),
+                SharedPreferenceHelper.getSn());
+        requestToken = RequestBody.create(MediaType.parse("multipart/form-data"),
+                SharedPreferenceHelper.getToken());
+        requestDescription = RequestBody.create(MediaType.parse("multipart/form-data"),
+                description.getText().toString());
+        requestType = RequestBody.create(MediaType.parse("multipart/form-data"), "PUT");
+
+
+
+        sealifeRequest = new ArrayList<>();
+        for (int i = 0; i < sealifes.size(); i++) {
+            sealifeRequest.add(MultipartBody.Part.createFormData("sealife[]", sealifes.get(i).getId()));
+        }
+
+        if (addPhotoToDsListAdapter.getNewFilesUrisList() == null) {
+            newImages = null;
+        } else {
+            for (int i = 0; i < addPhotoToDsListAdapter.getNewFilesUrisList().size(); i++) {
+                File image = new File(addPhotoToDsListAdapter.getNewFilesUrisList().get(i));
+                RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), image);
+                MultipartBody.Part part = MultipartBody.Part.createFormData("images_new[]", image.getName(),
+                        requestFile);
+                newImages.add(part);
+            }
+        }
+
+        if (addPhotoToDsListAdapter.getListOfDeletedImages() == null) {
+            deletedImages = null;
+        } else {
+            for (int i = 0; i < addPhotoToDsListAdapter.getListOfDeletedImages().size(); i++) {
+                deletedImages.add(MultipartBody.Part.createFormData("images_del[]", addPhotoToDsListAdapter.getListOfDeletedImages().get(i)));
+            }
+        }
+
+        createAddDiveSpotRequest();
+
+    }
+
+    private void createAddDiveSpotRequest() {
+        Call<ResponseBody> call = RestClient.getServiceInstance().updateDiveSpot(requestType,
+                requestName, requestLat, requestLng, requestDepth, requestVisibility,
+                requestCurrents, requestLevel, requestObject, requestAccess, requestDescription,
+                 sealifeRequest, newImages, deletedImages, requestToken, requestSocial, null
+        );
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
     }
 
 }

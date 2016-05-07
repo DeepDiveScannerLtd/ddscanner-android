@@ -65,6 +65,10 @@ public class SealifeListAddingDiveSpotAdapter extends RecyclerView.Adapter<Seali
         notifyDataSetChanged();
     }
 
+    public List<Sealife> getSealifes() {
+        return this.sealifes;
+    }
+
     public class SealifeListAddingDivespotViewHolder extends RecyclerView.ViewHolder{
 
         protected ImageView ic_delete;
