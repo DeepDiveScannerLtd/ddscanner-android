@@ -266,7 +266,8 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         for (int i = 0; i < imageUris.size(); i++) {
             File image = new File(imageUris.get(i));
             RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), image);
-            MultipartBody.Part part = MultipartBody.Part.createFormData("images[]", image.getName(), requestFile);
+            MultipartBody.Part part = MultipartBody.Part.createFormData("images[]", image.getName(),
+                    requestFile);
             images.add(part);
         }
         Call<ResponseBody> call = RestClient.getServiceInstance().addDiveSpot(
@@ -300,7 +301,6 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                 Intent intent = new Intent(AddDiveSpotActivity.this,
                         PickLocationActivity.class);
                 startActivityForResult(intent, RC_PICK_LOCATION);
-                PickLocationActivity.show(AddDiveSpotActivity.this);
                 break;
             case R.id.btn_add_sealife:
                 Intent sealifeIntent = new Intent(AddDiveSpotActivity.this,

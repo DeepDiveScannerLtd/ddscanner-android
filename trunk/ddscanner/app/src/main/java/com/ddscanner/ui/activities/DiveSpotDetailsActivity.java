@@ -405,7 +405,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 thanksLayout.setVisibility(View.VISIBLE);
                 break;
             case R.id.no_button:
-                AddDiveSpotActivity.show(this);
+                EditDiveSpotActivity.show(this, String.valueOf(divespotDetails.getDivespot().getId()));
                 break;
             case R.id.thank_close:
                 thanksLayout.setVisibility(View.GONE);

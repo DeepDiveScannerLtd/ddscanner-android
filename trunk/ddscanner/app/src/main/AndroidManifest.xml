@@ -98,6 +98,8 @@
             android:name=".ui.activities.AddSealifeActivity"
             android:screenOrientation="portrait">
         </activity>
+        <activity android:name=".ui.activities.EditDiveSpotActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.activities.CityActivity"
             android:screenOrientation="portrait" />

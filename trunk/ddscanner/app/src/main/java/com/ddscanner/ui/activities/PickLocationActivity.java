@@ -53,6 +53,7 @@ public class PickLocationActivity extends AppCompatActivity implements GoogleMap
     private LatLng pickedLatLng;
     private ChangeDataInTextView changeDataInTextView;
     private FloatingActionButton applyLocation;
+    private LatLng startLocation;
 
     public static void show(Context context) {
         Intent intent = new Intent(context, PickLocationActivity.class);
@@ -64,6 +65,7 @@ public class PickLocationActivity extends AppCompatActivity implements GoogleMap
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pick_ds_location);
         geocoder = new Geocoder(this, Locale.ENGLISH);
+        startLocation = getIntent().getParcelableExtra("LATLNG");
         findViews();
         toolbarSettings();
         mapSettings();
@@ -79,6 +81,9 @@ public class PickLocationActivity extends AppCompatActivity implements GoogleMap
         googleMap = mapFragment.getMap();
         googleMap.setOnCameraChangeListener(this);
         googleMap.getUiSettings().setZoomControlsEnabled(false);
+        if (startLocation != null) {
+            googleMap.moveCamera(CameraUpdateFactory.newLatLng(startLocation));
+        }
     }
 
     private void toolbarSettings() {
@@ -164,7 +169,7 @@ public class PickLocationActivity extends AppCompatActivity implements GoogleMap
                 Intent returnIntent = new Intent();
                 returnIntent.putExtra("LATLNG", pickedLatLng);
                 setResult(Activity.RESULT_OK, returnIntent);
-                finish();
+                onBackPressed();
                 break;
         }
     }

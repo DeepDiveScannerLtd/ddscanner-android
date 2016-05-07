@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ddscanner.R;
+import com.ddscanner.entities.Sealife;
 import com.ddscanner.ui.activities.AddDiveSpotActivity;
 import com.squareup.picasso.Picasso;
 
@@ -25,6 +26,7 @@ public class AddPhotoToDsListAdapter extends RecyclerView.Adapter<AddPhotoToDsLi
     private static final String TAG = AddPhotoToDsListAdapter.class.getSimpleName();
     private Context context;
     private List<String> uris;
+    private List<String> deletedImages;
     private TextView textView;
 
     public AddPhotoToDsListAdapter(List<String> uris, Context context, TextView textView) {
@@ -43,6 +45,7 @@ public class AddPhotoToDsListAdapter extends RecyclerView.Adapter<AddPhotoToDsLi
 
     @Override
     public void onBindViewHolder(PhotoListViewHolder holder, final int position) {
+
         Log.i(TAG, uris.get(position));
         String path = "file://" + uris.get(position);
         File f = new File(uris.get(position));

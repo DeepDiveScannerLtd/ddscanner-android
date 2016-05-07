@@ -97,5 +97,6 @@
     <string name="location">Location</string>
     <string name="add_manually">ADD MANUALLY</string>
     <string name="sealife">SEALIFE</string>
+    <string name="edit_dive_spot">Edit dive spot</string>
 
 </resources>

@@ -18,6 +18,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -102,4 +103,28 @@ public interface DDScannerRestService {
             @Query("token") String token
     );
 
+    @POST("diving/divespot/{id}")
+    @Multipart
+    Call<ResponseBody> updateDiveSpot(
+            @Part("_method") RequestBody _method,
+            @Part("name") RequestBody name,
+            @Part("lat") RequestBody lat,
+            @Part("lng") RequestBody lng,
+            @Part("depth") RequestBody depth,
+            @Part("visibility") RequestBody visibility,
+            @Part("currents") RequestBody currents,
+            @Part("level") RequestBody level,
+            @Part("object") RequestBody object,
+            @Part("access") RequestBody access,
+            @Part("description") RequestBody description,
+            @Part List<MultipartBody.Part> sealife,
+            @Part List<MultipartBody.Part> image_del,
+            @Part List<MultipartBody.Part> image_new,
+            @Part("token") RequestBody token,
+            @Part("social") RequestBody sn,
+            @Part("secret") RequestBody secret
+    );
+
+    @GET("diving/divespot/{id}/edit")
+    Call<ResponseBody> getDiveSpotForEdit(@Path("id") String id);
 }

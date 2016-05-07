@@ -12,6 +12,7 @@ import com.ddscanner.R;
 import com.ddscanner.entities.Sealife;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by lashket on 6.5.16.
@@ -57,6 +58,11 @@ public class SealifeListAddingDiveSpotAdapter extends RecyclerView.Adapter<Seali
             title.setVisibility(View.VISIBLE);
         }
         return sealifes.size();
+    }
+
+    public void add(Sealife sealife) {
+        sealifes.add(sealife);
+        notifyDataSetChanged();
     }
 
     public class SealifeListAddingDivespotViewHolder extends RecyclerView.ViewHolder{
