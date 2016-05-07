@@ -98,5 +98,9 @@
     <string name="add_manually">ADD MANUALLY</string>
     <string name="sealife">SEALIFE</string>
     <string name="edit_dive_spot">Edit dive spot</string>
+    <string name="edit_profile">Edit profile</string>
+    <string name="created">Created</string>
+    <string name="edited_low">Edited</string>
+    <string name="favourites">Favourites</string>
 
 </resources>
