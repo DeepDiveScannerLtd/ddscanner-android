@@ -25,15 +25,23 @@ import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.Comment;
+import com.ddscanner.entities.request.RegisterRequest;
 import com.ddscanner.events.MarkerClickEvent;
 import com.ddscanner.events.ShowUserDialogEvent;
+import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.activities.ProfileActivity;
 import com.ddscanner.ui.dialogs.ProfileDialog;
 import com.ddscanner.utils.EventTrackerHelper;
+import com.ddscanner.utils.SharedPreferenceHelper;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by lashket on 12.3.16.
@@ -41,14 +49,17 @@ import java.util.HashMap;
 public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.ReviewsListViewHolder> {
 
     private static final String TAG = ReviewsListAdapter.class.getSimpleName();
-    private ArrayList<Comment> comments;
+    private  static ArrayList<Comment> comments;
     private static Context context;
     private boolean isAdapterSet = false;
     private static ProfileDialog profileDialog = new ProfileDialog();
+    private static RegisterRequest registerRequest;
 
     public ReviewsListAdapter(ArrayList<Comment> comments, Context context) {
         this.comments = comments;
         this.context = context;
+        registerRequest.setSocial(SharedPreferenceHelper.getSn());
+        registerRequest.setToken(SharedPreferenceHelper.getToken());
     }
 
     @Override
@@ -129,7 +140,47 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
 
         @Override
         public void onClick(View v) {
-            DDScannerApplication.bus.post(new ShowUserDialogEvent());
+            switch (v.getId()) {
+                case R.id.user_avatar:
+                    DDScannerApplication.bus.post(new ShowUserDialogEvent());
+                    break;
+            }
+        }
+
+        private void likeComment() {
+            Call<ResponseBody> call = RestClient.getServiceInstance().likeComment(
+                    comments.get(getPosition()).getId(),
+                    registerRequest
+            );
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                }
+            });
+        }
+
+        private void dislikeComment() {
+            Call<ResponseBody> call = RestClient.getServiceInstance().likeComment(
+                    comments.get(getPosition()).getId(),
+                    registerRequest
+            );
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                }
+            });
         }
     }
 

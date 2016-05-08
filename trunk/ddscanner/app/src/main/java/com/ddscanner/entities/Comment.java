@@ -9,6 +9,15 @@ public class Comment implements Serializable {
     private String comment;
     private User user;
     private String rating;
+    private String id;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getRating() {
         return rating;
