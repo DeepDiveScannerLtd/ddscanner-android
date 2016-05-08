@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.AppCompatDrawableManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -126,6 +127,13 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         private TextView user_name;
         private TextView user_review;
         private RecyclerView photos;
+        private LinearLayout like;
+        private LinearLayout dislike;
+        private TextView likesCount;
+        private TextView dislikesCount;
+        private ImageView likeImage;
+        private ImageView dislikeImage;
+
 
         public ReviewsListViewHolder(View v) {
             super(v);
@@ -134,8 +142,16 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
             user_name = (TextView) v.findViewById(R.id.user_name);
             user_review = (TextView) v.findViewById(R.id.review);
             photos = (RecyclerView) v.findViewById(R.id.review_photos_rc);
+            like = (LinearLayout) v.findViewById(R.id.like_layout);
+            dislike = (LinearLayout) v.findViewById(R.id.dislike_layout);
+            likesCount = (TextView) v.findViewById(R.id.likes_count);
+            dislikesCount = (TextView) v.findViewById(R.id.dislikes_count);
+            likeImage = (ImageView) v.findViewById(R.id.likes_image);
+            dislikeImage = (ImageView) v.findViewById(R.id.dislikes_image);
 
             user_avatar.setOnClickListener(this);
+            like.setOnClickListener(this);
+            dislike.setOnClickListener(this);
         }
 
         @Override
@@ -143,6 +159,12 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
             switch (v.getId()) {
                 case R.id.user_avatar:
                     DDScannerApplication.bus.post(new ShowUserDialogEvent());
+                    break;
+                case R.id.like_layout:
+                    likeComment();
+                    break;
+                case R.id.dislike_layout:
+                    dislikeComment();
                     break;
             }
         }
@@ -155,7 +177,13 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
             call.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
+                    if (response.isSuccessful()) {
+                        if (response.raw().code() == 200) {
+                            likeImage.setImageDrawable(AppCompatDrawableManager.get().getDrawable(
+                                    context, R.drawable.ic_like_review
+                            ));
+                        }
+                    }
                 }
 
                 @Override
@@ -173,7 +201,13 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
             call.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
+                    if (response.isSuccessful()) {
+                        if (response.raw().code() == 200) {
+                            likeImage.setImageDrawable(AppCompatDrawableManager.get().getDrawable(
+                                    context, R.drawable.ic_review_dislike
+                            ));
+                        }
+                    }
                 }
 
                 @Override
