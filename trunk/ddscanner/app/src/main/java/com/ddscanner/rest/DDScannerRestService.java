@@ -127,4 +127,16 @@ public interface DDScannerRestService {
 
     @GET("diving/divespot/{id}/edit")
     Call<ResponseBody> getDiveSpotForEdit(@Path("id") String id);
+
+    @POST("diving/divespot/comment/{id}/dislike")
+    Call<ResponseBody> dislikeComment(
+      @Path("id") String id,
+      @Body RegisterRequest registerRequest
+    );
+
+    @POST("diving/divespot/comment/{id}/like")
+    Call<ResponseBody> likeComment(
+      @Path("id") String id,
+      @Body RegisterRequest registerRequest
+    );
 }
