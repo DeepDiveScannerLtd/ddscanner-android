@@ -157,8 +157,8 @@ public class DiveSpotsMapFragment extends Fragment implements View.OnClickListen
                 });
         diveSpotName.setText(event.getDiveSpot().getName());
         lastDiveSpotId = event.getDiveSpot().getId();
-//        rating.removeAllViews();
-    /*    for (int k = 0; k < event.getDiveSpot().getRating(); k++) {
+        rating.removeAllViews();
+        for (int k = 0; k < event.getDiveSpot().getRating(); k++) {
             ImageView iv = new ImageView(context);
             iv.setImageResource(R.drawable.ic_iw_star_full);
             iv.setPadding(0,0,5,0);
@@ -169,7 +169,7 @@ public class DiveSpotsMapFragment extends Fragment implements View.OnClickListen
             iv.setImageResource(R.drawable.ic_iw_star_empty);
             iv.setPadding(0,0,5,0);
             rating.addView(iv);
-        }*/
+        }
     }
 
     @Subscribe
