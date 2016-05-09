@@ -355,8 +355,8 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
     }
 
     private void createAddDiveSpotRequest() {
-        Call<ResponseBody> call = RestClient.getServiceInstance().updateDiveSpot(requestType,
-                requestName, requestLat, requestLng, requestDepth, requestVisibility,
+        Call<ResponseBody> call = RestClient.getServiceInstance().updateDiveSpot(
+                diveSpotId, requestType, requestName, requestLat, requestLng, requestDepth, requestVisibility,
                 requestCurrents, requestLevel, requestObject, requestAccess, requestDescription,
                  sealifeRequest, newImages, deletedImages, requestToken, requestSocial, null
         );

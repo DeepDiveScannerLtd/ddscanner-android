@@ -106,6 +106,7 @@ public interface DDScannerRestService {
     @POST("diving/divespot/{id}")
     @Multipart
     Call<ResponseBody> updateDiveSpot(
+            @Path("id") String id,
             @Part("_method") RequestBody _method,
             @Part("name") RequestBody name,
             @Part("lat") RequestBody lat,
