@@ -104,5 +104,8 @@
     <string name="favourites">Favourites</string>
     <string name="full_name">Full name</string>
     <string name="about">About</string>
+    <string name="write_review">Write review</string>
+    <string name="show_all">Show all reviews (</string>
+    <string name="skobka">)</string>
 
 </resources>

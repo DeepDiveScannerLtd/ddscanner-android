@@ -193,6 +193,11 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         showMore.setOnClickListener(this);
         showAllReviews.setOnClickListener(this);
         final DiveSpotFull diveSpot = divespotDetails.getDivespot();
+        if (divespotDetails.getComments() != null) {
+            showAllReviews.setText(getString(R.string.show_all) + String.valueOf(divespotDetails.getComments().size()) + getString(R.string.skobka));
+        } else {
+            showAllReviews.setText(R.string.write_review);
+        }
         object.setText(diveSpot.getObject());
         level.setText(diveSpot.getLevel());
         depth.setText(diveSpot.getDepth());
@@ -393,12 +398,19 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 }
                 break;
             case R.id.btn_show_all_reviews:
-                Intent reviewsIntent = new Intent(DiveSpotDetailsActivity.this, ReviewsActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("COMMENTS", (ArrayList<Comment>) divespotDetails.getComments());
-                bundle.putString("DIVESPOTID", String.valueOf(divespotDetails.getDivespot().getId()));
-                reviewsIntent.putExtras(bundle);
-                startActivityForResult(reviewsIntent, 9001);
+                if (divespotDetails.getComments() != null) {
+                    Intent reviewsIntent = new Intent(DiveSpotDetailsActivity.this,
+                            ReviewsActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("COMMENTS",
+                            (ArrayList<Comment>) divespotDetails.getComments());
+                    bundle.putString("DIVESPOTID",
+                            String.valueOf(divespotDetails.getDivespot().getId()));
+                    reviewsIntent.putExtras(bundle);
+                    startActivityForResult(reviewsIntent, 9001);
+                    return;
+                }
+                LeaveReviewActivity.show(this, String.valueOf(divespotDetails.getDivespot().getId()), 0);
                 break;
             case R.id.yes_button:
                 isInfoValidLayout.setVisibility(View.GONE);
