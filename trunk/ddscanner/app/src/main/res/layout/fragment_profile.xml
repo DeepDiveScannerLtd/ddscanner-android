@@ -240,6 +240,7 @@
             android:layout_marginTop="10dp"
             style="@style/DividerStyleFull"/>
         <LinearLayout
+            android:id="@+id/edit_profile"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="55dp">

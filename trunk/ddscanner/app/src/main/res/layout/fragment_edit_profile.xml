@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_height="130dp"
+        android:background="@color/white">
+        <LinearLayout
+            android:layout_width="47dp"
+            android:layout_height="47dp"
+            android:gravity="center"
+            android:background="@drawable/shape_gray_oval">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_attach_camera"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginLeft="46dp"
+            android:layout_marginRight="46dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:gravity="center"
+            android:background="@drawable/shape_gray_oval">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="47dp"
+            android:layout_height="47dp"
+            android:gravity="center"
+            android:background="@drawable/shape_gray_oval">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_attach_gallery"/>
+        </LinearLayout>
+    </LinearLayout>
+    <ImageView
+        style="@style/DividerStyleFull" />
+    <ImageView
+        android:layout_marginTop="15dp"
+        style="@style/DividerStyleFull" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/white">
+        <LinearLayout
+            android:paddingTop="10dp"
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_height="wrap_content"
+            android:minHeight="70dp">
+
+            <ImageView
+                android:layout_marginTop="3dp"
+                android:layout_height="wrap_content"
+                style="@style/CharacteristicsDiveSpotListIcons"
+                android:src="@drawable/ic_profile_user"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_height="wrap_content"
+                    style="@style/AddDsCharTitleStyle"
+                    android:text="@string/full_name"/>
+                <EditText
+                    android:background="@android:color/transparent"
+                    android:text=""
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"/>
+            </LinearLayout>
+
+        </LinearLayout>
+        <ImageView
+            style="@style/DividerStyle" />
+        <LinearLayout
+            android:paddingTop="10dp"
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_height="wrap_content"
+            android:minHeight="70dp">
+
+            <ImageView
+                android:layout_marginTop="3dp"
+                android:layout_height="wrap_content"
+                style="@style/CharacteristicsDiveSpotListIcons"
+                android:src="@drawable/ic_profile_about"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_height="wrap_content"
+                    style="@style/AddDsCharTitleStyle"
+                    android:text="@string/about"/>
+                <EditText
+                    android:background="@android:color/transparent"
+                    android:text=""
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"/>
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+    <ImageView
+        style="@style/DividerStyleFull" />
+</LinearLayout>

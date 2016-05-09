@@ -102,5 +102,7 @@
     <string name="created">Created</string>
     <string name="edited_low">Edited</string>
     <string name="favourites">Favourites</string>
+    <string name="full_name">Full name</string>
+    <string name="about">About</string>
 
 </resources>
