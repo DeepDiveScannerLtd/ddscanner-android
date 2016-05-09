@@ -17,6 +17,7 @@ import com.ddscanner.R;
 import com.ddscanner.entities.DiveSpot;
 import com.ddscanner.entities.DivespotsWrapper;
 import com.ddscanner.entities.request.DiveSpotsRequestMap;
+import com.ddscanner.events.CloseInfoWindowEvent;
 import com.ddscanner.events.MarkerClickEvent;
 import com.ddscanner.events.OnMapClickEvent;
 import com.ddscanner.events.PlaceChoosedEvent;
@@ -109,6 +110,8 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
     }
 
     private void showToast() {
+        lastClickedMarker = null;
+        DDScannerApplication.bus.post(new CloseInfoWindowEvent());
         toast.setVisibility(View.VISIBLE);
         android.os.Handler handler = new android.os.Handler();
         handler.postDelayed(new Runnable() {

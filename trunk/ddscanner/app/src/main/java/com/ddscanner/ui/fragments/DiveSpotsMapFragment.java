@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.events.CloseInfoWindowEvent;
 import com.ddscanner.events.MarkerClickEvent;
 import com.ddscanner.events.OnMapClickEvent;
 import com.ddscanner.ui.activities.AddDiveSpotActivity;
@@ -172,6 +173,21 @@ public class DiveSpotsMapFragment extends Fragment implements View.OnClickListen
             iv.setPadding(0,0,5,0);
             rating.addView(iv);
         }
+    }
+
+    @Subscribe
+    public void dismissInfoWindowWhenCameraZoomingOut(CloseInfoWindowEvent event) {
+        diveSpotInfo.animate()
+                .translationY(diveSpotInfo.getHeight())
+                .alpha(0.0f)
+                .setDuration(300)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        diveSpotInfo.setVisibility(View.GONE);
+                    }
+                });
     }
 
     @Subscribe
