@@ -32,6 +32,7 @@ import com.ddscanner.events.ShowUserDialogEvent;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.activities.ProfileActivity;
 import com.ddscanner.ui.dialogs.ProfileDialog;
+import com.ddscanner.ui.views.TransformationRoundImage;
 import com.ddscanner.utils.EventTrackerHelper;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.squareup.picasso.Picasso;
@@ -50,11 +51,11 @@ import retrofit2.Response;
 public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.ReviewsListViewHolder> {
 
     private static final String TAG = ReviewsListAdapter.class.getSimpleName();
-    private  static ArrayList<Comment> comments;
+    private static ArrayList<Comment> comments;
     private static Context context;
     private boolean isAdapterSet = false;
     private static ProfileDialog profileDialog = new ProfileDialog();
-    private static RegisterRequest registerRequest;
+    private static RegisterRequest registerRequest = new RegisterRequest();
 
     public ReviewsListAdapter(ArrayList<Comment> comments, Context context) {
         this.comments = comments;
@@ -74,53 +75,43 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
 
     @Override
     public void onBindViewHolder(final ReviewsListViewHolder reviewsListViewHolder, int i) {
-            LinearLayoutManager layoutManager = new LinearLayoutManager(context);
-            layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-            reviewsListViewHolder.photos.setNestedScrollingEnabled(false);
-            reviewsListViewHolder.photos.setHasFixedSize(false);
-            reviewsListViewHolder.photos.setLayoutManager(layoutManager);
-            reviewsListViewHolder.photos.setAdapter(new ReviewPhotosAdapter());
-            isAdapterSet = true;
+        LinearLayoutManager layoutManager = new LinearLayoutManager(context);
+        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        reviewsListViewHolder.photos.setNestedScrollingEnabled(false);
+        reviewsListViewHolder.photos.setHasFixedSize(false);
+        reviewsListViewHolder.photos.setLayoutManager(layoutManager);
+        reviewsListViewHolder.photos.setAdapter(new ReviewPhotosAdapter());
+        reviewsListViewHolder.user_name.setText(comments.get(i).getUser().getName());
+        reviewsListViewHolder.user_review.setText(comments.get(i).getComment());
+        isAdapterSet = true;
 
-      /*  final Comment comment = comments.get(i);
-        View.OnClickListener onClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ProfileActivity.show(context, comment.getUser());
-                AppsFlyerLib.getInstance().trackEvent(context,
-                        EventTrackerHelper.EVENT_REVIEW_USER_PROFILE_CLICK, new HashMap<String, Object>());
-            }
-        };
-        reviewsListViewHolder.user_review.setText(comment.getComment());
-        reviewsListViewHolder.user_name.setText(comment.getUser().getName());
-        reviewsListViewHolder.user_name.setOnClickListener(onClickListener);
-        reviewsListViewHolder.user_avatar.setOnClickListener(onClickListener);
-        Picasso.with(context).load(comment.getUser().getPicture()).resize(41,41).centerCrop().into(reviewsListViewHolder.user_avatar);
+        Picasso.with(context).load(comments.get(i).getUser().getPicture()).resize(40,40).
+                transform(new TransformationRoundImage(50,0)).centerCrop().
+                into(reviewsListViewHolder.user_avatar);
         reviewsListViewHolder.rating.removeAllViews();
-        for (int k = 0; k < Integer.parseInt(comment.getRating()); k++) {
+        for (int k = 0; k < Integer.parseInt(comments.get(i).getRating()); k++) {
             ImageView iv = new ImageView(context);
             iv.setImageResource(R.drawable.ic_list_star_full);
             iv.setPadding(0,0,5,0);
             reviewsListViewHolder.rating.addView(iv);
         }
-        for (int k = 0; k < 5 - Integer.parseInt(comment.getRating()); k++) {
+        for (int k = 0; k < 5 - Integer.parseInt(comments.get(i).getRating()); k++) {
             ImageView iv = new ImageView(context);
             iv.setImageResource(R.drawable.ic_list_star_empty);
             iv.setPadding(0,0,5,0);
             reviewsListViewHolder.rating.addView(iv);
         }
-        Log.i(TAG, "Try showing content");*/
     }
 
     @Override
     public int getItemCount() {
         if (comments == null) {
-            return 5;
+            return 0;
         }
         return comments.size();
     }
 
-    public static class ReviewsListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public static class ReviewsListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private ImageView user_avatar;
         private LinearLayout rating;
@@ -133,6 +124,9 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         private TextView dislikesCount;
         private ImageView likeImage;
         private ImageView dislikeImage;
+        private LinearLayout stars;
+        private boolean isLiked = false;
+        private boolean isDisliked = false;
 
 
         public ReviewsListViewHolder(View v) {
@@ -161,12 +155,45 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
                     DDScannerApplication.bus.post(new ShowUserDialogEvent());
                     break;
                 case R.id.like_layout:
-                    likeComment();
+                    if (!isLiked) {
+                        likeComment();
+                    }
                     break;
                 case R.id.dislike_layout:
-                    dislikeComment();
+                    if (!isDisliked) {
+                        dislikeComment();
+                    }
                     break;
             }
+        }
+
+        private void likeUi() {
+            if (isDisliked) {
+                dislikeImage.setImageDrawable(AppCompatDrawableManager.get().getDrawable(
+                        context, R.drawable.ic_review_dislike_empty
+                ));
+                dislikesCount.setText(String.valueOf(Integer.parseInt(dislikesCount.getText().toString()) - 1));
+                isDisliked = false;
+            }
+            likeImage.setImageDrawable(AppCompatDrawableManager.get().getDrawable(
+                    context, R.drawable.ic_like_review
+            ));
+            likesCount.setText(String.valueOf(Integer.parseInt(likesCount.getText().toString()) + 1));
+            isLiked = true;
+        }
+
+        private void dislikeUi() {
+            if (isLiked) {
+                likeImage.setImageDrawable(AppCompatDrawableManager.get().getDrawable(
+                        context, R.drawable.ic_review_like_empty
+                ));
+                likesCount.setText(String.valueOf(Integer.parseInt(likesCount.getText().toString()) - 1));
+                isLiked = false;
+            }
+            dislikeImage.setImageDrawable(AppCompatDrawableManager.get()
+                    .getDrawable(context, R.drawable.ic_review_dislike));
+            dislikesCount.setText(String.valueOf(Integer.parseInt(dislikesCount.getText().toString()) + 1));
+            isDisliked = true;
         }
 
         private void likeComment() {
@@ -179,33 +206,30 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                     if (response.isSuccessful()) {
                         if (response.raw().code() == 200) {
-                            likeImage.setImageDrawable(AppCompatDrawableManager.get().getDrawable(
-                                    context, R.drawable.ic_like_review
-                            ));
+                           likeUi();
                         }
                     }
                 }
 
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
-
+                    Log.i(TAG, "failure");
                 }
             });
         }
 
         private void dislikeComment() {
-            Call<ResponseBody> call = RestClient.getServiceInstance().likeComment(
+            Call<ResponseBody> call = RestClient.getServiceInstance().dislikeComment(
                     comments.get(getPosition()).getId(),
                     registerRequest
             );
+            Log.i(TAG, comments.get(getPosition()).getId());
             call.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                     if (response.isSuccessful()) {
                         if (response.raw().code() == 200) {
-                            likeImage.setImageDrawable(AppCompatDrawableManager.get().getDrawable(
-                                    context, R.drawable.ic_review_dislike
-                            ));
+                            dislikeUi();
                         }
                     }
                 }
