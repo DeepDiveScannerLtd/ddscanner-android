@@ -2,6 +2,7 @@ package com.ddscanner.ui.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,10 +28,11 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_profile, container, false);
         editProfile = (LinearLayout) v.findViewById(R.id.edit_profile);
-
+        editProfile.setOnClickListener(this);
 
         return v;
     }
+
 
     @Override
     public void onClick(View v) {
