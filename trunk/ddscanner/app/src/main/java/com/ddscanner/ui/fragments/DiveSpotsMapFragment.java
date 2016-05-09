@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.UiThread;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -65,7 +66,7 @@ public class DiveSpotsMapFragment extends Fragment implements View.OnClickListen
         v = inflater.inflate(R.layout.dive_sites_map_fragment, container, false);
         diveSpotInfo = (RelativeLayout) v.findViewById(R.id.dive_spot_info_layout);
         diveSpotName = (TextView) v.findViewById(R.id.dive_spot_title);
-        rating = (LinearLayout) v.findViewById(R.id.stars);
+        rating = (LinearLayout) v.findViewById(R.id.rating);
         zoomIn = (ImageView) v.findViewById(R.id.zoom_plus);
         zoomOut = (ImageView) v.findViewById(R.id.zoom_minus);
         goToMyLocation = (ImageView) v.findViewById(R.id.go_to_my_location);
@@ -142,6 +143,7 @@ public class DiveSpotsMapFragment extends Fragment implements View.OnClickListen
         }
     }
 
+    @UiThread
     @Subscribe
     public void getDiveSpotInfow(MarkerClickEvent event) {
         diveSpotInfo.animate()
