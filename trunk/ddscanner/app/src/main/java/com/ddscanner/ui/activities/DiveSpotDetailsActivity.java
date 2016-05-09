@@ -419,6 +419,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
      */
 
     private void checkIn() {
+        checkinUi();
         Call<ResponseBody> call = RestClient.getServiceInstance().checkIn(
                 String.valueOf(divespotDetails.getDivespot().getId()),
                 RequestBody.create(MediaType.parse("multipart/form-data"),
@@ -429,11 +430,8 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         call.enqueue(new retrofit2.Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.raw().code() == 200) {
-                    btnCheckIn.setImageDrawable(AppCompatDrawableManager.get().getDrawable(
-                            DiveSpotDetailsActivity.this, R.drawable.ic_acb_pin_checked));
-                    btnCheckIn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.orange)));
-                    isCheckedIn = true;
+                if (response.raw().code() != 200) {
+                    checkoutUi();
                 }
             }
 
@@ -444,28 +442,36 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         });
     }
 
+    private void checkinUi() {
+        btnCheckIn.setImageDrawable(AppCompatDrawableManager.get().getDrawable(
+                DiveSpotDetailsActivity.this, R.drawable.ic_acb_pin_checked));
+        btnCheckIn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.orange)));
+        isCheckedIn = true;
+    }
+
+    private void checkoutUi() {
+        btnCheckIn.setImageDrawable(AppCompatDrawableManager.get().getDrawable(DiveSpotDetailsActivity.this, R.drawable.ic_acb_pin));
+        btnCheckIn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
+        isCheckedIn = false;
+    }
+
     /**
      * Sending request when try to check out in dive spot and change FAB style
      * @author Andrei Lashkevich
      */
 
     private void checkOut() {
+        checkoutUi();
         Call<ResponseBody> call = RestClient.getServiceInstance().checkOut(
                 String.valueOf(divespotDetails.getDivespot().getId()),
-              /*  RequestBody.create(MediaType.parse("multipart/form-data"),
-                        SharedPreferenceHelper.getSn()),
-                RequestBody.create(MediaType.parse("multipart/form-data"),
-                        SharedPreferenceHelper.getToken())*/
                 SharedPreferenceHelper.getSn(),
                 SharedPreferenceHelper.getToken()
         );
         call.enqueue(new retrofit2.Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.raw().code() == 200) {
-                    btnCheckIn.setImageDrawable(AppCompatDrawableManager.get().getDrawable(DiveSpotDetailsActivity.this, R.drawable.ic_acb_pin));
-                    btnCheckIn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
-                    isCheckedIn = false;
+                if (response.raw().code() != 200) {
+                    checkinUi();
                 }
             }
 
