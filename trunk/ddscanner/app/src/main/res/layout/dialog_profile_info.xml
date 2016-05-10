@@ -211,10 +211,12 @@
         android:src="@drawable/divider"
         android:layout_marginTop="17dp"/>
     <LinearLayout
+        android:id="@+id/link"
         android:layout_width="match_parent"
         android:layout_height="53dp"
         android:background="#f6f6f6">
         <TextView
+            android:id="@+id/linkText"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="OPEN ON FACEBOOK"

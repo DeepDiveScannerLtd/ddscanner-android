@@ -34,7 +34,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     private Button logout;
     private String social;
     private String id;
-    private User user = new User();
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,7 +150,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
     public static void show(Context context, User user) {
         Intent intent = new Intent(context, ProfileActivity.class);
-        intent.putExtra("USER", user);
+      //  intent.put("USER", user);
         context.startActivity(intent);
     }
 
