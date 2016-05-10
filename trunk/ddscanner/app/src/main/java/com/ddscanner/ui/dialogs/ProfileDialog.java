@@ -34,6 +34,7 @@ public class ProfileDialog extends DialogFragment implements View.OnClickListene
     private ImageView avatar;
     private TextView link;
     private LinearLayout open;
+    private ImageView closeDialog;
 
     @Override
     public void onAttach(Activity activity) {
@@ -65,6 +66,7 @@ public class ProfileDialog extends DialogFragment implements View.OnClickListene
         avatar = (ImageView) v.findViewById(R.id.userAvatar);
         link = (TextView) v.findViewById(R.id.linkText);
         open = (LinearLayout) v.findViewById(R.id.link);
+        closeDialog = (ImageView) v.findViewById(R.id.close_dialog);
 
         name.setText(user.getName());
         comments.setText(user.getCountComment());
@@ -78,6 +80,7 @@ public class ProfileDialog extends DialogFragment implements View.OnClickListene
         Picasso.with(context).load(user.getPicture()).resize(80,80).centerCrop()
                 .transform(new TransformationRoundImage(50,0)).into(avatar);
         open.setOnClickListener(this);
+        closeDialog.setOnClickListener(this);
 
         switch (user.getType()) {
             case "fb":
@@ -97,6 +100,9 @@ public class ProfileDialog extends DialogFragment implements View.OnClickListene
         switch (v.getId()) {
             case R.id.link:
                 openLink(user.getSocialId(), user.getType());
+                break;
+            case R.id.close_dialog:
+                getDialog().dismiss();
                 break;
         }
     }

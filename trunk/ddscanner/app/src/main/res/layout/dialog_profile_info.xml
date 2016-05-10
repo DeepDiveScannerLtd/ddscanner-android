@@ -4,6 +4,7 @@
     android:layout_height="wrap_content"
     android:background="@color/white">
     <ImageView
+        android:id="@+id/close_dialog"
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:layout_gravity="right"
