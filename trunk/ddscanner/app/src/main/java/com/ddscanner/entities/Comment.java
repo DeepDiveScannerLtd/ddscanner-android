@@ -8,7 +8,6 @@ import java.util.List;
  */
 public class Comment implements Serializable {
     private String comment;
-    private User user;
     private String rating;
     private String id;
     private List<String> images;
