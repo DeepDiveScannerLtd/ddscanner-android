@@ -1,13 +1,81 @@
 package com.ddscanner.entities;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.io.Serializable;
 
 /**
  * Created by lashket on 10.3.16.
  */
-public class User implements Serializable{
+public class User implements Serializable, Parcelable{
 
+    private String name;
+    private String picture;
+    private String link;
+    private String type;
+    private String socialId;
+    private String username;
+    private String about;
+    private String countLike;
+    private String countDislike;
+    private String countCheckin;
+    private String countEdit;
+    private String countAdd;
+    private String countComment;
     private String id;
+    
+    protected User(Parcel in) {
+        name = in.readString();
+        picture = in.readString();
+        link = in.readString();
+        type = in.readString();
+        socialId = in.readString();
+        username = in.readString();
+        about = in.readString();
+        countLike = in.readString();
+        countDislike = in.readString();
+        countCheckin = in.readString();
+        countEdit = in.readString();
+        countAdd = in.readString();
+        countComment = in.readString();
+        id = in.readString();
+    }
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(android.os.Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(android.os.Parcel dest, int flags) {
+        dest.writeString(name);
+        dest.writeString(picture);
+        dest.writeString(link);
+        dest.writeString(type);
+        dest.writeString(socialId);
+        dest.writeString(username);
+        dest.writeString(about);
+        dest.writeString(countLike);
+        dest.writeString(countDislike);
+        dest.writeString(countCheckin);
+        dest.writeString(countEdit);
+        dest.writeString(countAdd);
+        dest.writeString(countComment);
+        dest.writeString(id);
+    }
 
     public String getSocialId() {
         return socialId;
@@ -80,20 +148,6 @@ public class User implements Serializable{
     public void setCountComment(String countComment) {
         this.countComment = countComment;
     }
-
-    private String name;
-    private String picture;
-    private String link;
-    private String type;
-    private String socialId;
-    private String username;
-    private String about;
-    private String countLike;
-    private String countDislike;
-    private String countCheckin;
-    private String countEdit;
-    private String countAdd;
-    private String countComment;
 
     public String getType() {
         return type;
