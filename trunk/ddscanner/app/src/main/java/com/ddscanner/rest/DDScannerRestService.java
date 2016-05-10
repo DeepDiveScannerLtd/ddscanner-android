@@ -42,6 +42,24 @@ public interface DDScannerRestService {
     @POST("/diving/register")
     Call<ResponseBody> registerUser(@Body RegisterRequest registerRequest);
 
+    @POST("/diving/divespot/{id}/validation")
+    Call<ResponseBody> divespotValidation(
+            @Path("id") String id,
+            @Body RegisterRequest registerRequest
+            );
+
+    @POST("/diving/divespot/{id}/favorite")
+    Call<ResponseBody> addDiveSpotToFavourites(
+            @Path("id") String id,
+            @Body RegisterRequest registerRequest
+            );
+
+    @DELETE("/diving/divespot/{id}/favorite")
+    Call<ResponseBody> deleteDiveSpotFromFavourites(
+            @Path("id") String id,
+            @Body RegisterRequest registerRequest
+            );
+
     @POST("/diving/comment")
     Call<ResponseBody> addCOmmentToDiveSpot(@Body SendReviewRequest sendReviewRequest);
 

@@ -38,6 +38,7 @@ import com.ddscanner.entities.DiveSpot;
 import com.ddscanner.entities.DiveSpotFull;
 import com.ddscanner.entities.DivespotDetails;
 import com.ddscanner.entities.Sealife;
+import com.ddscanner.entities.request.RegisterRequest;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.DiveSpotsPhotosAdapter;
 import com.ddscanner.ui.adapters.SealifeListAdapter;
@@ -525,6 +526,31 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                     outRect.top = Math.round(convertDpToPixel(Float.valueOf(10), DiveSpotDetailsActivity.this));
                 }
         }
+    }
+
+    private void diveSpotValidation() {
+        RegisterRequest registerRequest = new RegisterRequest();
+        if (SharedPreferenceHelper.getIsUserLogined()) {
+            registerRequest.setSocial(SharedPreferenceHelper.getSn());
+            registerRequest.setToken(SharedPreferenceHelper.getToken());
+            if (SharedPreferenceHelper.getSn().equals("tw")) {
+                registerRequest.setSecret(SharedPreferenceHelper.getSecret());
+            }
+        }
+        Call<ResponseBody> call = RestClient.getServiceInstance()
+                .divespotValidation(String.valueOf(divespotDetails.getDivespot().getId()),
+                        registerRequest);
+        call.enqueue(new retrofit2.Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
     }
 
 }
