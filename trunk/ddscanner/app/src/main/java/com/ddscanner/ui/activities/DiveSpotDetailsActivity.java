@@ -80,6 +80,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private String productId;
     private LatLng diveSpotCoordinates;
     private boolean isCheckedIn = false;
+    private DiveSpotFull diveSpot;
 
     /*Ui*/
     private TextView diveSpotName;
@@ -111,6 +112,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private Button btnDsDetailsIsValid;
     private Button btnDsDetailsIsInvalid;
     private ImageView thanksClose;
+    private RelativeLayout creatorLayout;
 
 
 
@@ -159,6 +161,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         btnDsDetailsIsValid = (Button) findViewById(R.id.yes_button);
         btnDsDetailsIsInvalid = (Button) findViewById(R.id.no_button);
         thanksClose = (ImageView) findViewById(R.id.thank_close);
+        creatorLayout = (RelativeLayout) findViewById(R.id.creatorLayout);
     }
 
     /**
@@ -194,7 +197,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         checkInPeoples.setOnClickListener(this);
         showMore.setOnClickListener(this);
         showAllReviews.setOnClickListener(this);
-        final DiveSpotFull diveSpot = divespotDetails.getDivespot();
+        diveSpot = divespotDetails.getDivespot();
         if (divespotDetails.getComments() != null) {
             showAllReviews.setText(getString(R.string.show_all) + String.valueOf(divespotDetails.getComments().size()) + getString(R.string.skobka));
         } else {
@@ -270,6 +273,9 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 workWithMap(googleMap);
             }
         });
+        if (diveSpot.getCreator() == null) {
+            creatorLayout.setVisibility(View.GONE);
+        }
         progressBarFull.setVisibility(View.GONE);
         informationLayout.setVisibility(View.VISIBLE);
 
