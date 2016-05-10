@@ -529,6 +529,23 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     }
 
     private void diveSpotValidation() {
+        Call<ResponseBody> call = RestClient.getServiceInstance()
+                .divespotValidation(String.valueOf(divespotDetails.getDivespot().getId()),
+                        getRegisterRequest());
+        call.enqueue(new retrofit2.Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private RegisterRequest getRegisterRequest() {
         RegisterRequest registerRequest = new RegisterRequest();
         if (SharedPreferenceHelper.getIsUserLogined()) {
             registerRequest.setSocial(SharedPreferenceHelper.getSn());
@@ -537,20 +554,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 registerRequest.setSecret(SharedPreferenceHelper.getSecret());
             }
         }
-        Call<ResponseBody> call = RestClient.getServiceInstance()
-                .divespotValidation(String.valueOf(divespotDetails.getDivespot().getId()),
-                        registerRequest);
-        call.enqueue(new retrofit2.Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-            }
-        });
+        return registerRequest;
     }
 
 }
