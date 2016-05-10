@@ -26,6 +26,33 @@ public class DiveSpotFull {
     private String sealifePathOrigin;
     private String object;
 
+    public User getCreator() {
+        return creator;
+    }
+
+    public void setCreator(User creator) {
+        this.creator = creator;
+    }
+
+    public List<String> getCommentImages() {
+        return commentImages;
+    }
+
+    public void setCommentImages(List<String> commentImages) {
+        this.commentImages = commentImages;
+    }
+
+    public void setLat(float lat) {
+        this.lat = lat;
+    }
+
+    public void setLng(float lng) {
+        this.lng = lng;
+    }
+
+    private User creator;
+    private List<String> commentImages;
+
     public String getObject() {
         return object;
     }

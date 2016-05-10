@@ -10,8 +10,28 @@ public class DivespotDetails {
     private List<Comment> comments;
     private DiveSpotFull divespot;
     private List<Sealife> sealifes;
+    private List<User> checkins;
+    private List<User> editors;
 
+    public void setDivespot(DiveSpotFull divespot) {
+        this.divespot = divespot;
+    }
 
+    public List<User> getCheckins() {
+        return checkins;
+    }
+
+    public void setCheckins(List<User> checkins) {
+        this.checkins = checkins;
+    }
+
+    public List<User> getEditors() {
+        return editors;
+    }
+
+    public void setEditors(List<User> editors) {
+        this.editors = editors;
+    }
 
     public List<Comment> getComments() {
         return comments;
