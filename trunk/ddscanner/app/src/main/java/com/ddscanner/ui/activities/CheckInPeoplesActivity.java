@@ -11,7 +11,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.ddscanner.R;
+import com.ddscanner.entities.User;
 import com.ddscanner.ui.adapters.UserListAdapter;
+
+import java.util.ArrayList;
 
 /**
  * Created by lashket on 28.4.16.
@@ -69,8 +72,9 @@ public class CheckInPeoplesActivity extends AppCompatActivity {
      * @param context
      */
 
-    public static void show(Context context) {
+    public static void show(Context context, ArrayList<User> users) {
         Intent intent = new Intent(context, CheckInPeoplesActivity.class);
+        intent.putParcelableArrayListExtra("USERS", users);
         context.startActivity(intent);
     }
 

@@ -112,6 +112,11 @@
         <item name="cpd_strokeSize">2dp</item>
     </style>
 
+    <style name="CustomDialog" parent="@android:style/Theme.Holo.Light" >
+        <item name="android:windowBackground">@null</item>
+        <item name="android:windowIsFloating">true</item>
+    </style>
+
     <style name="CharacteristicsDiveSpotListIcons">
         <item name="android:layout_width">65dp</item>
         <item name="android:layout_height">match_parent</item>

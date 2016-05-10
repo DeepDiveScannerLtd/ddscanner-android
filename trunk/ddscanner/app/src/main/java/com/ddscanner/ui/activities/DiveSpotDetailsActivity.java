@@ -38,6 +38,7 @@ import com.ddscanner.entities.DiveSpot;
 import com.ddscanner.entities.DiveSpotFull;
 import com.ddscanner.entities.DivespotDetails;
 import com.ddscanner.entities.Sealife;
+import com.ddscanner.entities.User;
 import com.ddscanner.entities.request.RegisterRequest;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.DiveSpotsPhotosAdapter;
@@ -384,7 +385,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 startActivity(intent);
                 break;
             case R.id.check_in_peoples:
-                CheckInPeoplesActivity.show(DiveSpotDetailsActivity.this);
+                CheckInPeoplesActivity.show(DiveSpotDetailsActivity.this, (ArrayList<User>) divespotDetails.getCheckins());
                 break;
             case R.id.showmore:
                 showMore.setVisibility(View.GONE);

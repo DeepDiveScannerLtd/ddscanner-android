@@ -28,6 +28,7 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_comment_reviews"/>
             <TextView
+                android:id="@+id/comments"
                 android:layout_marginTop="1dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -37,6 +38,7 @@
                 android:text="200"/>
         </LinearLayout>
         <ImageView
+            android:id="@+id/userAvatar"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:src="@drawable/avatar_profilecard"/>
@@ -52,6 +54,7 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_like_review"/>
             <TextView
+                android:id="@+id/likes"
                 android:layout_marginTop="1dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -62,6 +65,7 @@
         </LinearLayout>
     </LinearLayout>
     <TextView
+        android:id="@+id/name"
         android:layout_marginTop="9dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -73,6 +77,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
     <LinearLayout
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:orientation="horizontal"
         android:gravity="center"
@@ -87,6 +92,7 @@
             android:text="expert"/>
     </LinearLayout>
     <TextView
+        android:id="@+id/about"
         android:gravity="center"
         android:layout_marginTop="9dp"
         android:layout_marginLeft="20dp"
@@ -131,6 +137,7 @@
             android:layout_width="95dp"
             android:layout_height="47dp">
             <TextView
+                android:id="@+id/checkIn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="890"
@@ -156,6 +163,7 @@
             android:layout_width="95dp"
             android:layout_height="47dp">
             <TextView
+                android:id="@+id/added"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="20"
@@ -181,6 +189,7 @@
             android:layout_width="95dp"
             android:layout_height="47dp">
             <TextView
+                android:id="@+id/edited"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="55"

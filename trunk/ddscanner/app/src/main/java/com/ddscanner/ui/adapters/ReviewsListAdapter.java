@@ -152,7 +152,9 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.user_avatar:
-                    DDScannerApplication.bus.post(new ShowUserDialogEvent());
+                    DDScannerApplication.bus.post(new ShowUserDialogEvent(
+                            comments.get(getAdapterPosition()).getUser())
+                    );
                     break;
                 case R.id.like_layout:
                     if (!isLiked) {

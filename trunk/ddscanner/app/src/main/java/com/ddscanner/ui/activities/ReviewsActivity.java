@@ -156,6 +156,9 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     @Subscribe
     public void showDialog(ShowUserDialogEvent event) {
         ProfileDialog profileDialog = new ProfileDialog();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("USER", event.getUser());
+        profileDialog.setArguments(bundle);
         profileDialog.show(getFragmentManager(),"");
     }
 }
