@@ -1,12 +1,16 @@
 package com.ddscanner.entities;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by lashket on 12.3.16.
  */
-public class Comment implements Serializable {
+public class Comment implements Serializable{
     private String comment;
     private String rating;
     private String id;
@@ -16,6 +20,14 @@ public class Comment implements Serializable {
     private String dislikes;
     private User user;
 
+  /*  protected Comment(Parcel in) {
+        comment = in.readString();
+        rating = in.readString();
+        id = in.readString();
+        images = in.readList(images, List.class.getClassLoader());
+        date = in.readString();
+    }
+*/
     public List<String> getImages() {
         return images;
     }

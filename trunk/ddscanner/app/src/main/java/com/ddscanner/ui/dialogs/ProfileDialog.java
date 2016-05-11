@@ -12,6 +12,7 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 import com.ddscanner.R;
 import com.ddscanner.entities.User;
 import com.ddscanner.ui.views.TransformationRoundImage;
+import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;
 
 public class ProfileDialog extends DialogFragment implements View.OnClickListener {
@@ -142,6 +144,8 @@ public class ProfileDialog extends DialogFragment implements View.OnClickListene
                 link.setText("Open on Google+");
                 break;
         }
+
+        getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
     }
 
     @Override
@@ -189,5 +193,21 @@ public class ProfileDialog extends DialogFragment implements View.OnClickListene
                 }
                 break;
         }
+    }
+
+    @Override
+    public void onStart()
+    {
+        super.onStart();
+
+        // safety check
+        if (getDialog() == null)
+            return;
+        int dialogWidth = Math.round(Helpers.convertDpToPixel(285, getActivity())); // specify a value here
+        int dialogHeight = LinearLayout.LayoutParams.WRAP_CONTENT; // specify a value here
+
+        getDialog().getWindow().setLayout(dialogWidth, dialogHeight);
+
+        // ... other stuff you want to do in your onStart() method
     }
 }

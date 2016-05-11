@@ -83,6 +83,8 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         reviewsListViewHolder.photos.setAdapter(new ReviewPhotosAdapter());
         reviewsListViewHolder.user_name.setText(comments.get(i).getUser().getName());
         reviewsListViewHolder.user_review.setText(comments.get(i).getComment());
+        reviewsListViewHolder.likesCount.setText(comments.get(i).getLikes());
+        reviewsListViewHolder.dislikesCount.setText(comments.get(i).getDislikes());
         isAdapterSet = true;
 
         Picasso.with(context).load(comments.get(i).getUser().getPicture()).resize(40,40).

@@ -166,10 +166,5 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
         fragmentTransaction.addToBackStack(null);
         DialogFragment dialogFragment = ProfileDialog.newInstance(event.getUser());
         dialogFragment.show(fragmentTransaction, "profile");
-        /*ProfileDialog profileDialog = new ProfileDialog();
-        Bundle bundle = new Bundle();
-        bundle.putParcelable("USER", event.getUser());
-        profileDialog.setArguments(bundle);
-        profileDialog.show(getFragmentManager(),"");*/
     }
 }
