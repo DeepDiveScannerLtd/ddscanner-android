@@ -283,8 +283,15 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         if (diveSpot.getCheckin()) {
             checkinUi();
         }
-        if (diveSpot.getValidation()) {
-            isInfoValidLayout.setVisibility(View.GONE);
+        if (diveSpot.getValidation() != null) {
+            if (!diveSpot.getValidation()) {
+                isInfoValidLayout.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        isInfoValidLayout.setVisibility(View.VISIBLE);
+                    }
+                });
+            }
         }
     }
 
@@ -437,6 +444,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 LeaveReviewActivity.show(this, String.valueOf(divespotDetails.getDivespot().getId()), 0);
                 break;
             case R.id.yes_button:
+                diveSpotValidation();
                 isInfoValidLayout.setVisibility(View.GONE);
                 thanksLayout.setVisibility(View.VISIBLE);
                 break;
