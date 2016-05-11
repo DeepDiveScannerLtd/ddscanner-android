@@ -98,9 +98,9 @@ public class DivePlaceActivity extends AppCompatActivity implements ViewPager.On
         reviews_rating.setOnClickListener(this);
         productImagesViewPager.setOnPageChangeListener(this);
         productId = getIntent().getStringExtra(PRODUCT);
-        requestProductDetails(getIntent().getStringExtra(PRODUCT));
+    //    requestProductDetails(getIntent().getStringExtra(PRODUCT));
     }
-
+/*
     private void requestProductDetails(String productId) {
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage(getApplicationContext().getResources().getString(R.string.pleaseWait));
@@ -143,7 +143,7 @@ public class DivePlaceActivity extends AppCompatActivity implements ViewPager.On
             }
         });
     }
-
+*/
     private void findViews() {
         productImagesViewPager = (ViewPager) findViewById(R.id.product_images);
         starsLayout = (LinearLayout) findViewById(R.id.stars);

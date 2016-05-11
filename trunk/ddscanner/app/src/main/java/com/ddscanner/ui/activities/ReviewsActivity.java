@@ -1,6 +1,9 @@
 package com.ddscanner.ui.activities;
 
 import android.app.Activity;
+import android.app.DialogFragment;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -155,10 +158,18 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
 
     @Subscribe
     public void showDialog(ShowUserDialogEvent event) {
-        ProfileDialog profileDialog = new ProfileDialog();
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        Fragment prev = getFragmentManager().findFragmentByTag("profile");
+        if (prev != null) {
+            fragmentTransaction.remove(prev);
+        }
+        fragmentTransaction.addToBackStack(null);
+        DialogFragment dialogFragment = ProfileDialog.newInstance(event.getUser());
+        dialogFragment.show(fragmentTransaction, "profile");
+        /*ProfileDialog profileDialog = new ProfileDialog();
         Bundle bundle = new Bundle();
         bundle.putParcelable("USER", event.getUser());
         profileDialog.setArguments(bundle);
-        profileDialog.show(getFragmentManager(),"");
+        profileDialog.show(getFragmentManager(),"");*/
     }
 }

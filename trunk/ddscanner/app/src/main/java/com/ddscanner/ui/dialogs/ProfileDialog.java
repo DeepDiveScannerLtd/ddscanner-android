@@ -7,9 +7,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -36,6 +38,22 @@ public class ProfileDialog extends DialogFragment implements View.OnClickListene
     private LinearLayout open;
     private ImageView closeDialog;
 
+    public static ProfileDialog newInstance(User user) {
+        ProfileDialog profileDialog = new ProfileDialog();
+        Bundle args = new Bundle();
+        args.putParcelable("USER", user);
+        profileDialog.setArguments(args);
+
+        return profileDialog;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        user = getArguments().getParcelable("USER");
+    }
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -43,16 +61,47 @@ public class ProfileDialog extends DialogFragment implements View.OnClickListene
     }
 
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-        user = savedInstanceState.getParcelable("USER");
-        View dialogView = inflater.inflate(R.layout.dialog_profile_info, null);
-        builder.setView(dialogView);
-        Dialog dialog = builder.create();
-        setUi(dialogView);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.dialog_profile_info, container,false);
+        setUi(v);
+        name = (TextView) v.findViewById(R.id.name);
+        comments = (TextView) v.findViewById(R.id.comments);
+        likes = (TextView) v.findViewById(R.id.likes);
+        checkins = (TextView) v.findViewById(R.id.checkIn);
+        added = (TextView) v.findViewById(R.id.added);
+        edited = (TextView) v.findViewById(R.id.edited);
+        about = (TextView) v.findViewById(R.id.about);
+        avatar = (ImageView) v.findViewById(R.id.userAvatar);
+        link = (TextView) v.findViewById(R.id.linkText);
+        open = (LinearLayout) v.findViewById(R.id.link);
+        closeDialog = (ImageView) v.findViewById(R.id.close_dialog);
 
-        return dialog;
+        name.setText(user.getName());
+        comments.setText(user.getCountComment());
+        likes.setText(user.getCountLike());
+        checkins.setText(user.getCountCheckin());
+        added.setText(user.getCountAdd());
+        edited.setText(user.getCountEdit());
+        if (user.getAbout() != null) {
+            about.setText(user.getAbout());
+        }
+        Picasso.with(context).load(user.getPicture()).resize(80,80).centerCrop()
+                .transform(new TransformationRoundImage(50,0)).into(avatar);
+        open.setOnClickListener(this);
+        closeDialog.setOnClickListener(this);
+
+        switch (user.getType()) {
+            case "fb":
+                link.setText("Open on facebook");
+                break;
+            case "tw":
+                link.setText("Open on twitter");
+                break;
+            case "go":
+                link.setText("Open on Google+");
+                break;
+        }
+        return v;
     }
 
     private void setUi(View v) {

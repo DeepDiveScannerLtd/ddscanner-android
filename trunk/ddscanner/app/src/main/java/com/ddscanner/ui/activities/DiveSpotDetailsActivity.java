@@ -61,6 +61,8 @@ import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -324,7 +326,15 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
      * @param productId
      */
     private void requestProductDetails(String productId) {
-        Call<ResponseBody> call = RestClient.getServiceInstance().getDiveSpotById(productId);
+        Map<String, String> map = new HashMap<>();
+        if (SharedPreferenceHelper.getIsUserLogined()) {
+            map.put("social", SharedPreferenceHelper.getSn());
+            map.put("token", SharedPreferenceHelper.getToken());
+            if (SharedPreferenceHelper.getSn().equals("tw")) {
+                map.put("secret",SharedPreferenceHelper.getSecret());
+            }
+        }
+        Call<ResponseBody> call = RestClient.getServiceInstance().getDiveSpotById(productId, map);
         call.enqueue(new retrofit2.Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
@@ -337,7 +347,8 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                     }
                     LogUtils.i("response body is " + responseString);
                     divespotDetails = new Gson().fromJson(responseString, DivespotDetails.class);
-                    diveSpotCoordinates = new LatLng(divespotDetails.getDivespot().getLat(), divespotDetails.getDivespot().getLng());
+                    diveSpotCoordinates = new LatLng(divespotDetails.getDivespot().getLat(),
+                            divespotDetails.getDivespot().getLng());
                     setUi();
                 } else {
 

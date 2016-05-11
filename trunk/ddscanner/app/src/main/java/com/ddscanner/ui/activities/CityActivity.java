@@ -288,7 +288,7 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
                 return true;
             case R.id.profile:
                 if (SharedPreferenceHelper.getIsUserLogined() && !SharedPreferenceHelper.getUserid().equals("")) {
-                    ProfileActivity.show(CityActivity.this, getUserData());
+                   // ProfileActivity.show(CityActivity.this, getUserData());
                 } else {
                     progressDialog.show();
                     SocialNetworks.show(CityActivity.this);
@@ -353,7 +353,7 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    private User getUserData() {
+   /* private User getUserData() {
         User user = new User();
         user.setId(SharedPreferenceHelper.getUserid());
         user.setPicture(SharedPreferenceHelper.getPhotolink());
@@ -361,7 +361,7 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
         user.setName(SharedPreferenceHelper.getUsername());
         user.setLink(SharedPreferenceHelper.getLink());
         return user;
-    }
+    }*/
 
     @Override
     public void onPageSelected(int position) {

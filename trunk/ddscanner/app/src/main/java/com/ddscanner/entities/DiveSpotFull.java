@@ -25,6 +25,8 @@ public class DiveSpotFull {
     private String sealifePathMedium;
     private String sealifePathOrigin;
     private String object;
+    private Boolean isCheckin;
+    private Boolean isValidation;
 
     public User getCreator() {
         return creator;

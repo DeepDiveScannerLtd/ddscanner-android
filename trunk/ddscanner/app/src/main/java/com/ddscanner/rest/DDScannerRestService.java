@@ -33,7 +33,7 @@ public interface DDScannerRestService {
     Call<ResponseBody> getDiveCenters(@QueryMap Map<String, String> map);
 
     @GET("/diving/divespot/{id}")
-    Call<ResponseBody> getDiveSpotById(@Path("id") String id);
+    Call<ResponseBody> getDiveSpotById(@Path("id") String id, @QueryMap Map<String, String> map);
 
     @Headers("Content-type: application/json")
     @GET("/diving/divespots")
