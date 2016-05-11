@@ -26,12 +26,12 @@ public class PlaceImageFragment extends Fragment {
         String imageUrl = getArguments().getString(IMAGE_URL);
 
         SimpleDraweeView imageView = (SimpleDraweeView) inflater.inflate(R.layout.fragment_image, container, false);
-        imageView.setOnClickListener(new View.OnClickListener() {
+      /*  imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ImageSliderActivity.show(getActivity(), (ArrayList<String>) DivePlaceActivity.getImages());
             }
-        });
+        });*/
         imageView.getHierarchy().setProgressBarImage(new CIrcleProgressBar());
         Uri uri = Uri.parse(imageUrl);
         imageView.setImageURI(uri);

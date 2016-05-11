@@ -31,6 +31,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     private ImageView close;
     private ArrayList<String> images;
     private Drawable drawable;
+    private int position;
 
 
     @Override
@@ -39,10 +40,10 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         setContentView(R.layout.activity_slider);
         findViews();
         images = (ArrayList<String>) getIntent().getSerializableExtra("IMAGES");
+        position = getIntent().getIntExtra("position", 0);
         viewPager.setOnPageChangeListener(this);
         sliderImagesAdapter = new SliderImagesAdapter(getFragmentManager(), images);
         viewPager.setAdapter(sliderImagesAdapter);
-        viewPager.setCurrentItem(0);
         close.setOnClickListener(this);
         setUi();
 
@@ -72,7 +73,8 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
 
             pager_indicator.addView(dots[i],  params);
         }
-        dots[0].setImageDrawable(getResources().getDrawable(R.drawable.selecteditem_dot));
+        dots[position].setImageDrawable(getResources().getDrawable(R.drawable.selecteditem_dot));
+        viewPager.setCurrentItem(position);
     }
 
     @Override
@@ -117,9 +119,10 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     }
 
 
-    public static void show(Context context, ArrayList<String> images) {
+    public static void show(Context context, ArrayList<String> images, int position) {
         Intent intent = new Intent(context, ImageSliderActivity.class);
         intent.putExtra("IMAGES", images);
+        intent.putExtra("position", position);
         context.startActivity(intent);
     }
 

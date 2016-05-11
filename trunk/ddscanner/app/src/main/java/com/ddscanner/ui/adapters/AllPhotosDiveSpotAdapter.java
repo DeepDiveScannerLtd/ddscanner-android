@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.ddscanner.R;
+import com.ddscanner.ui.activities.ImageSliderActivity;
 import com.ddscanner.ui.activities.ShowImageActivity;
 import com.squareup.picasso.Picasso;
 
@@ -57,7 +58,7 @@ public class AllPhotosDiveSpotAdapter extends RecyclerView.Adapter<AllPhotosDive
 
         @Override
         public void onClick(View v) {
-            ShowImageActivity.show(context, images.get(getAdapterPosition()));
+            ImageSliderActivity.show(context, images, getAdapterPosition());
         }
     }
 

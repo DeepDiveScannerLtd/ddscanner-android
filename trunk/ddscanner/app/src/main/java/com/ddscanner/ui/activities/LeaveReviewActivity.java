@@ -2,9 +2,12 @@ package com.ddscanner.ui.activities;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -75,6 +78,9 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
     private RecyclerView photos_rc;
     private List<String> imageUris = new ArrayList<String>();
     private TextView addPhotoTitle;
+    private AddPhotoToDsListAdapter addPhotoToDsListAdapter;
+    private List<String> imagesEncodedList = new ArrayList<>();
+    private String imageEncoded;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -283,10 +289,19 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
         }
         if (requestCode == RC_PICK_PHOTO) {
             if (resultCode == RESULT_OK) {
-                Uri uri = data.getData();
-                imageUris.add(getRealPathFromURI(LeaveReviewActivity.this, uri));
-                photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris, LeaveReviewActivity.this, addPhotoTitle));
-                Log.i(TAG, getRealPathFromURI(LeaveReviewActivity.this, uri));
+                Uri selectedImage = data.getData();
+                String[] filePathColumn = {MediaStore.Images.Media.DATA};
+
+                Cursor cursor = getContentResolver().query(
+                        selectedImage, filePathColumn, null, null, null);
+                cursor.moveToFirst();
+
+                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                String filePath = cursor.getString(columnIndex);
+                cursor.close();
+
+
+                Bitmap yourSelectedImage = BitmapFactory.decodeFile(filePath);
             }
         }
     }
@@ -310,10 +325,11 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_add_photo:
-                Intent i = new Intent(Intent.ACTION_PICK,
-                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                i.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-                startActivityForResult(i, RC_PICK_PHOTO);
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent, "Select picture"), RC_PICK_PHOTO);
                 break;
         }
     }
