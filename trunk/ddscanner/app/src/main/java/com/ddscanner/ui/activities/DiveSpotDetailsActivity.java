@@ -280,7 +280,12 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         }
         progressBarFull.setVisibility(View.GONE);
         informationLayout.setVisibility(View.VISIBLE);
-
+        if (diveSpot.getCheckin()) {
+            checkinUi();
+        }
+        if (diveSpot.getValidation()) {
+            isInfoValidLayout.setVisibility(View.GONE);
+        }
     }
 
     public static float convertDpToPixel(float dp, Context context){

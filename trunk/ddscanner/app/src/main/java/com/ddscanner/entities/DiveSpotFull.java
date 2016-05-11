@@ -26,6 +26,23 @@ public class DiveSpotFull {
     private String sealifePathOrigin;
     private String object;
     private Boolean isCheckin;
+
+    public Boolean getValidation() {
+        return isValidation;
+    }
+
+    public void setValidation(Boolean validation) {
+        isValidation = validation;
+    }
+
+    public Boolean getCheckin() {
+        return isCheckin;
+    }
+
+    public void setCheckin(Boolean checkin) {
+        isCheckin = checkin;
+    }
+
     private Boolean isValidation;
 
     public User getCreator() {
