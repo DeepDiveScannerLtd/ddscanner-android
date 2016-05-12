@@ -4,11 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".ui.activities.DivePlaceActivity">
 
-   <!-- <item
+    <item
         android:id="@+id/favorite"
         android:orderInCategory="100"
         android:title="Profile"
         android:icon="@drawable/ic_actionbar_favorite_full"
-        app:showAsAction= "ifRoom"/> -->
+        app:showAsAction= "ifRoom"/>
 
 </menu>

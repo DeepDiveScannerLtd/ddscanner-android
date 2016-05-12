@@ -155,7 +155,7 @@
                         android:layout_height="57dp"
                         android:layout_toRightOf="@+id/ic_layout_check_in"
                         android:gravity="center"
-                        android:text="10 people check in here"
+                        android:text="No people check in here"
                         android:textColor="@color/primary"
                         android:textSize="15sp" />
 

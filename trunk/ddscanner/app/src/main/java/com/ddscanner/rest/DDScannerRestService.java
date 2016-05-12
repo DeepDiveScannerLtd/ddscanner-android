@@ -158,4 +158,13 @@ public interface DDScannerRestService {
       @Path("id") String id,
       @Body RegisterRequest registerRequest
     );
+
+    @GET("diving/divespot/{id}/checkins")
+    Call<ResponseBody> getCheckins(@Path("id") String id);
+
+    @GET("diving/divespot/{id}/editors")
+    Call<ResponseBody> getEditors(@Path("id") String id);
+
+    @GET("diving/divespot/{id}/comments")
+    Call<ResponseBody> getComments(@Path("id") String id);
 }

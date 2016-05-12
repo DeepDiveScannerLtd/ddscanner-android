@@ -115,6 +115,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private Button btnDsDetailsIsInvalid;
     private ImageView thanksClose;
     private RelativeLayout creatorLayout;
+    private TextView numberOfCheckinPeoplesHere;
 
 
 
@@ -164,6 +165,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         btnDsDetailsIsInvalid = (Button) findViewById(R.id.no_button);
         thanksClose = (ImageView) findViewById(R.id.thank_close);
         creatorLayout = (RelativeLayout) findViewById(R.id.creatorLayout);
+        numberOfCheckinPeoplesHere = (TextView) findViewById(R.id.number_of_checking_people);
     }
 
     /**
@@ -268,7 +270,10 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         sealifeRecyclerview.setNestedScrollingEnabled(false);
         sealifeRecyclerview.setHasFixedSize(false);
         sealifeRecyclerview.setLayoutManager(layoutManager);
-        sealifeRecyclerview.setAdapter(new SealifeListAdapter((ArrayList<Sealife>) divespotDetails.getSealifes(), this, diveSpot.getSealifePathSmall(), diveSpot.getSealifePathMedium()));
+        sealifeRecyclerview.setAdapter(new SealifeListAdapter(
+                (ArrayList<Sealife>) divespotDetails.getSealifes(),
+                this, diveSpot.getSealifePathSmall(),
+                diveSpot.getSealifePathMedium()));
         mapFragment.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap googleMap) {
@@ -292,6 +297,11 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                     }
                 });
             }
+        }
+        if (divespotDetails.getCheckins() != null) {
+            numberOfCheckinPeoplesHere.setText(
+                    String.valueOf(divespotDetails.getCheckins().size())
+                            + getString(R.string.peoples_checked_in_here));
         }
     }
 

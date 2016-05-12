@@ -107,5 +107,6 @@
     <string name="write_review">Write review</string>
     <string name="show_all">Show all reviews (</string>
     <string name="skobka">)</string>
+    <string name="peoples_checked_in_here"> people checked in here</string>
 
 </resources>

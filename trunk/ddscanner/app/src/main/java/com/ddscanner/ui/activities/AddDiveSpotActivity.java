@@ -278,7 +278,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
+                Log.i(TAG, "success");
             }
 
             @Override
