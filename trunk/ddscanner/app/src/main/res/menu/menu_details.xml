@@ -5,10 +5,18 @@
     tools:context=".ui.activities.DivePlaceActivity">
 
     <item
-        android:id="@+id/favorite"
         android:orderInCategory="100"
         android:title="Profile"
-        android:icon="@drawable/ic_actionbar_favorite_full"
-        app:showAsAction= "ifRoom"/>
+        android:icon="@drawable/ic_ac_more"
+        app:showAsAction= "ifRoom">
+        <menu>
+            <item
+
+                android:id="@+id/favorite"
+                android:orderInCategory="100"
+                android:title="Add to favorite"
+                app:showAsAction= "ifRoom"/>
+        </menu>
+    </item>
 
 </menu>

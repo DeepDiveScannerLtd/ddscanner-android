@@ -1,11 +1,15 @@
 package com.ddscanner.ui.activities;
 
+import android.app.DialogFragment;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.Rect;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -19,6 +23,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -37,9 +42,13 @@ import com.ddscanner.entities.DivespotDetails;
 import com.ddscanner.entities.Sealife;
 import com.ddscanner.entities.User;
 import com.ddscanner.entities.request.RegisterRequest;
+import com.ddscanner.events.ShowUserDialogEvent;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.DiveSpotsPhotosAdapter;
 import com.ddscanner.ui.adapters.SealifeListAdapter;
+import com.ddscanner.ui.dialogs.ProfileDialog;
+import com.ddscanner.ui.views.TransformationRoundImage;
+import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -111,6 +120,9 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private ImageView thanksClose;
     private RelativeLayout creatorLayout;
     private TextView numberOfCheckinPeoplesHere;
+    private TextView creatorName;
+    private ImageView creatorAvatar;
+    private Helpers helpers = new Helpers();
 
     private List<Comment> usersComments;
     private List<User> usersCheckins;
@@ -164,6 +176,8 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         thanksClose = (ImageView) findViewById(R.id.thank_close);
         creatorLayout = (RelativeLayout) findViewById(R.id.creatorLayout);
         numberOfCheckinPeoplesHere = (TextView) findViewById(R.id.number_of_checking_people);
+        creatorName = (TextView) findViewById(R.id.user_name);
+        creatorAvatar = (ImageView) findViewById(R.id.user_avatar);
     }
 
     /**
@@ -276,9 +290,13 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 workWithMap(googleMap);
             }
         });
-        if (diveSpot.getCreator() == null) {
-            creatorLayout.setVisibility(View.GONE);
+        if (diveSpot.getCreator() != null) {
+            creatorLayout.setVisibility(View.VISIBLE);
+            Picasso.with(this).load(diveSpot.getCreator().getPicture())
+                    .transform(new TransformationRoundImage(50,0)).into(creatorAvatar);
+            creatorLayout.setOnClickListener(this);
         }
+
         progressBarFull.setVisibility(View.GONE);
         informationLayout.setVisibility(View.VISIBLE);
         if (diveSpot.getCheckin()) {
@@ -480,6 +498,9 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             case R.id.thank_close:
                 thanksLayout.setVisibility(View.GONE);
                 break;
+            case R.id.creatorLayout:
+                helpers.showDialog(diveSpot.getCreator(), getFragmentManager());
+                break;
         }
     }
 
@@ -568,6 +589,9 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             case android.R.id.home:
                 onBackPressed();
                 return true;
+            case R.id.favorite:
+                addDiveSpotToFavorites();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -610,6 +634,26 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
      * Create register request body
      * @return
      */
+
+    private void addDiveSpotToFavorites() {
+        Call<ResponseBody> call = RestClient.getServiceInstance().addDiveSpotToFavourites(
+                String.valueOf(diveSpot.getId()),
+                getRegisterRequest()
+        );
+        call.enqueue(new retrofit2.Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    getCheckins();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
+    }
 
     private RegisterRequest getRegisterRequest() {
         RegisterRequest registerRequest = new RegisterRequest();
@@ -691,4 +735,11 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             }
         }
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_details, menu);
+        return true;
+    }
+
 }

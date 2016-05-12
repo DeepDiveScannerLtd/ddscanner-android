@@ -36,6 +36,7 @@ import com.ddscanner.ui.adapters.ReviewsListAdapter;
 import com.ddscanner.ui.dialogs.ProfileDialog;
 import com.ddscanner.ui.views.TransformationRoundImage;
 import com.ddscanner.utils.EventTrackerHelper;
+import com.ddscanner.utils.Helpers;
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 
@@ -54,6 +55,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     private FloatingActionButton leaveReview;
 
     private String diveSpotId;
+    private Helpers helpers = new Helpers();
 
     private boolean isHasNewComment = false;
 
@@ -157,14 +159,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
 
     @Subscribe
     public void showDialog(ShowUserDialogEvent event) {
-        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        Fragment prev = getFragmentManager().findFragmentByTag("profile");
-        if (prev != null) {
-            fragmentTransaction.remove(prev);
-        }
-        fragmentTransaction.addToBackStack(null);
-        DialogFragment dialogFragment = ProfileDialog.newInstance(event.getUser());
-        dialogFragment.show(fragmentTransaction, "profile");
+        helpers.showDialog(event.getUser(), getFragmentManager());
     }
 
     @Override
