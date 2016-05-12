@@ -1,5 +1,8 @@
 package com.ddscanner.ui.activities;
 
+import android.app.DialogFragment;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,9 +13,13 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.User;
+import com.ddscanner.events.ShowUserDialogEvent;
 import com.ddscanner.ui.adapters.UserListAdapter;
+import com.ddscanner.ui.dialogs.ProfileDialog;
+import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 
@@ -23,11 +30,13 @@ public class CheckInPeoplesActivity extends AppCompatActivity {
 
     private RecyclerView usersRecyclerView;
     private Toolbar toolbar;
+    private ArrayList<User> users;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_peoples_checkin);
+        users = getIntent().getParcelableArrayListExtra("USERS");
         findViews();
         setupToolbar();
         setUi();
@@ -63,7 +72,7 @@ public class CheckInPeoplesActivity extends AppCompatActivity {
     private void setUi() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         usersRecyclerView.setLayoutManager(linearLayoutManager);
-        usersRecyclerView.setAdapter(new UserListAdapter(this));
+        usersRecyclerView.setAdapter(new UserListAdapter(this, users));
     }
 
     /**
@@ -87,4 +96,29 @@ public class CheckInPeoplesActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        DDScannerApplication.bus.register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        DDScannerApplication.bus.unregister(this);
+    }
+
+    @Subscribe
+    public void showDialog(ShowUserDialogEvent event) {
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        Fragment prev = getFragmentManager().findFragmentByTag("profile");
+        if (prev != null) {
+            fragmentTransaction.remove(prev);
+        }
+        fragmentTransaction.addToBackStack(null);
+        DialogFragment dialogFragment = ProfileDialog.newInstance(event.getUser());
+        dialogFragment.show(fragmentTransaction, "profile");
+    }
+
 }

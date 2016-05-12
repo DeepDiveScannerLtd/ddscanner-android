@@ -33,6 +33,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ddscanner.R;
+import com.ddscanner.entities.Checkins;
 import com.ddscanner.entities.Comment;
 import com.ddscanner.entities.DiveSpot;
 import com.ddscanner.entities.DiveSpotFull;
@@ -62,6 +63,7 @@ import com.squareup.picasso.Picasso;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import okhttp3.MediaType;
@@ -116,6 +118,9 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private ImageView thanksClose;
     private RelativeLayout creatorLayout;
     private TextView numberOfCheckinPeoplesHere;
+
+    private List<Comment> usersComments;
+    private List<User> usersCheckins;
 
 
 
@@ -198,12 +203,14 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         btnDsDetailsIsValid.setOnClickListener(this);
         btnCheckIn.setOnClickListener(this);
         ratingBar.setOnRatingBarChangeListener(this);
-        checkInPeoples.setOnClickListener(this);
+        //checkInPeoples.setOnClickListener(this);
         showMore.setOnClickListener(this);
         showAllReviews.setOnClickListener(this);
         diveSpot = divespotDetails.getDivespot();
         if (divespotDetails.getComments() != null) {
-            showAllReviews.setText(getString(R.string.show_all) + String.valueOf(divespotDetails.getComments().size()) + getString(R.string.skobka));
+            showAllReviews.setText(getString(R.string.show_all)
+                    + String.valueOf(divespotDetails.getComments().size())
+                    + getString(R.string.skobka));
         } else {
             showAllReviews.setText(R.string.write_review);
         }
@@ -299,10 +306,20 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             }
         }
         if (divespotDetails.getCheckins() != null) {
-            numberOfCheckinPeoplesHere.setText(
-                    String.valueOf(divespotDetails.getCheckins().size())
-                            + getString(R.string.peoples_checked_in_here));
+            usersCheckins = divespotDetails.getCheckins();
+            setCheckinsCountPeople(String.valueOf(usersCheckins.size()) + " " +
+            getString(R.string.peoples_checked_in_here), false);
         }
+    }
+
+    private void setCheckinsCountPeople(String count, boolean isNull) {
+        if (isNull) {
+            checkInPeoples.setOnClickListener(null);
+        } else {
+            checkInPeoples.setOnClickListener(this);
+        }
+        numberOfCheckinPeoplesHere.setText(count);
+
     }
 
     public static float convertDpToPixel(float dp, Context context){
@@ -424,7 +441,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 startActivity(intent);
                 break;
             case R.id.check_in_peoples:
-                CheckInPeoplesActivity.show(DiveSpotDetailsActivity.this, (ArrayList<User>) divespotDetails.getCheckins());
+                CheckInPeoplesActivity.show(DiveSpotDetailsActivity.this, (ArrayList<User>) usersCheckins);
                 break;
             case R.id.showmore:
                 showMore.setVisibility(View.GONE);
@@ -486,7 +503,9 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.raw().code() != 200) {
                     checkoutUi();
+                    return;
                 }
+                getCheckins();
             }
 
             @Override
@@ -526,7 +545,9 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.raw().code() != 200) {
                     checkinUi();
+                    return;
                 }
+                getCheckins();
             }
 
             @Override
@@ -586,6 +607,11 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         });
     }
 
+    /**
+     * Create register request body
+     * @return
+     */
+
     private RegisterRequest getRegisterRequest() {
         RegisterRequest registerRequest = new RegisterRequest();
         if (SharedPreferenceHelper.getIsUserLogined()) {
@@ -596,6 +622,38 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             }
         }
         return registerRequest;
+    }
+
+    private void getCheckins() {
+        Call<ResponseBody> call = RestClient.getServiceInstance().getCheckins(String.valueOf(diveSpot.getId()));
+        call.enqueue(new retrofit2.Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                String responseString = "";
+                if (response.isSuccessful()) {
+                    Checkins checkins = new Checkins();
+                    try {
+                        responseString = response.body().string();
+                        checkins = new Gson().fromJson(responseString, Checkins.class);
+                        if (checkins.getCheckins() != null) {
+                            usersCheckins = checkins.getCheckins();
+                            setCheckinsCountPeople(String.valueOf(usersCheckins.size()) + " " +
+                                    getString(R.string.peoples_checked_in_here), false);
+                        } else {
+                            setCheckinsCountPeople("No " +
+                                    getString(R.string.peoples_checked_in_here), true);
+                        }
+                    } catch (IOException e) {
+
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
     }
 
 }
