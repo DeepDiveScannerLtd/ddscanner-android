@@ -36,18 +36,23 @@ import com.ddscanner.entities.request.SendReviewRequest;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.AddPhotoToDsListAdapter;
 import com.ddscanner.utils.EventTrackerHelper;
+import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -81,6 +86,11 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
     private AddPhotoToDsListAdapter addPhotoToDsListAdapter;
     private List<String> imagesEncodedList = new ArrayList<>();
     private String imageEncoded;
+
+    private RequestBody requestId, requestComment, requestRating;
+    private RequestBody requessToken = null;
+    private RequestBody requestSocial = null;
+    private RequestBody requestSecret = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,7 +129,11 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
         text = (EditText) findViewById(R.id.review_text);
         text.setTag("comment");
         ratingBar = (RatingBar) findViewById(R.id.rating_bar);
-        ratingBar.setRating(rating);
+        if (rating > 0) {
+            ratingBar.setRating(rating);
+        } else {
+            ratingBar.setRating(1);
+        }
         symbolNumberLeft = (TextView) findViewById(R.id.left_number);
         photos_rc = (RecyclerView) findViewById(R.id.photos_rc);
         btnAddPhoto = (ImageButton) findViewById(R.id.btn_add_photo);
@@ -156,20 +170,40 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void sendReview() {
-        // AppsFlyerLib.getInstance().trackEvent(getApplicationContext(), "Send review clicked", );
-        Log.i(TAG, SharedPreferenceHelper.getSn());
-        Log.i(TAG, SharedPreferenceHelper.getToken());
-
-        SendReviewRequest sendReviewRequest = new SendReviewRequest();
-        sendReviewRequest.setRating(Math.round(ratingBar.getRating()));
-        sendReviewRequest.setDiveSpotId(diveSpotId);
-        sendReviewRequest.setSocial(SharedPreferenceHelper.getSn());
-        if (SharedPreferenceHelper.getSn().equals("tw")) {
-            sendReviewRequest.setSecret(SharedPreferenceHelper.getSecret());
+        List<MultipartBody.Part> images = new ArrayList<>();
+        for (int i = 0; i < imageUris.size(); i++) {
+            File image = new File(imageUris.get(i));
+            RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), image);
+            MultipartBody.Part part = MultipartBody.Part.createFormData("images[]", image.getName(),
+                    requestFile);
+            images.add(part);
         }
-        sendReviewRequest.setToken(SharedPreferenceHelper.getToken());
-        sendReviewRequest.setComment(text.getText().toString().trim());
-        Call<ResponseBody> call = RestClient.getServiceInstance().addCOmmentToDiveSpot(sendReviewRequest);
+
+        requestRating = RequestBody.create(MediaType.parse("multipart/form-data"),
+                String.valueOf(Math.round(ratingBar.getRating())));
+        requestId = RequestBody.create(MediaType.parse("multipart/form-data"), diveSpotId);
+        requestComment = RequestBody.create(MediaType.parse("multipart/form-data"),
+                text.getText().toString().trim());
+        if (SharedPreferenceHelper.getIsUserLogined()) {
+            requestSocial = RequestBody.create(MediaType.parse("multipart/form-data"),
+                    SharedPreferenceHelper.getSn());
+            requessToken = RequestBody.create(MediaType.parse("multipart/form-data"),
+                    SharedPreferenceHelper.getToken());
+            if (SharedPreferenceHelper.getSn().equals("tw")) {
+                requestSecret = RequestBody.create(MediaType.parse("multipart/form-data"),
+                        SharedPreferenceHelper.getSecret());
+            }
+        }
+
+        Call<ResponseBody> call = RestClient.getServiceInstance().addCommentToDiveSpot(
+                requestId,
+                requestComment,
+                requestRating,
+                images,
+                requessToken,
+                requestSocial,
+                requestSecret
+        );
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -181,11 +215,6 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
                         e.printStackTrace();
                     }
                     comment = new Gson().fromJson(responseString, Comment.class);
-                    Log.i(TAG, "Success leavenig comment\n Response string - " + responseString);
-
-                    Intent returnIntent = new Intent();
-                    returnIntent.putExtra("COMMENT", comment);
-                    setResult(Activity.RESULT_OK, returnIntent);
                     finish();
                     progressDialog.dismiss();
                 } else {
@@ -216,12 +245,6 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
                                 LinearLayout header = (LinearLayout) findViewById(R.id.message_layout);
                                 header.setBackgroundResource(R.drawable.error_border);
                                 errors = errors + entry.getValue() + "\n";
-                            }
-                            Toast toast = Toast.makeText(getApplicationContext(), errors, Toast.LENGTH_LONG);
-                            if (!errors.equals("")) {
-                                errors = errors.replace("[", "");
-                                errors = errors.replace("]", "");
-                                toast.show();
                             }
                         }
                     }
@@ -289,34 +312,10 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
         }
         if (requestCode == RC_PICK_PHOTO) {
             if (resultCode == RESULT_OK) {
-                Uri selectedImage = data.getData();
-                String[] filePathColumn = {MediaStore.Images.Media.DATA};
-
-                Cursor cursor = getContentResolver().query(
-                        selectedImage, filePathColumn, null, null, null);
-                cursor.moveToFirst();
-
-                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                String filePath = cursor.getString(columnIndex);
-                cursor.close();
-
-
-                Bitmap yourSelectedImage = BitmapFactory.decodeFile(filePath);
-            }
-        }
-    }
-
-    public String getRealPathFromURI(Context context, Uri contentUri) {
-        Cursor cursor = null;
-        try {
-            String[] proj = { MediaStore.Images.Media.DATA };
-            cursor = context.getContentResolver().query(contentUri,  proj, null, null, null);
-            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            cursor.moveToFirst();
-            return cursor.getString(column_index);
-        } finally {
-            if (cursor != null) {
-                cursor.close();
+                Uri uri = data.getData();
+                imageUris.add(Helpers.getRealPathFromURI(LeaveReviewActivity.this, uri));
+                photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris,
+                        LeaveReviewActivity.this, addPhotoTitle));
             }
         }
     }
@@ -325,11 +324,10 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_add_photo:
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, "Select picture"), RC_PICK_PHOTO);
+                Intent i = new Intent(Intent.ACTION_PICK,
+                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                i.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                startActivityForResult(i, RC_PICK_PHOTO);
                 break;
         }
     }

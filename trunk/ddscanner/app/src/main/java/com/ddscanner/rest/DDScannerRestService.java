@@ -60,8 +60,17 @@ public interface DDScannerRestService {
             @Body RegisterRequest registerRequest
             );
 
-    @POST("/diving/comment")
-    Call<ResponseBody> addCOmmentToDiveSpot(@Body SendReviewRequest sendReviewRequest);
+    @POST("/diving/divespot/comment")
+    @Multipart
+    Call<ResponseBody> addCommentToDiveSpot(
+            @Part("diveSpotId") RequestBody id,
+            @Part("comment") RequestBody comment,
+            @Part("rating") RequestBody rating,
+            @Part List<MultipartBody.Part> image,
+            @Part("token") RequestBody token,
+            @Part("social") RequestBody sn,
+            @Part("secret") RequestBody secret
+    );
 
     @POST("/diving/identify")
     Call<ResponseBody> identifyGcmToken(@Body String token);
