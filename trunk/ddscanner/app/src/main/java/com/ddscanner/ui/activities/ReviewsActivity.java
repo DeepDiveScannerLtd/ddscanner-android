@@ -55,6 +55,8 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
 
     private String diveSpotId;
 
+    private boolean isHasNewComment = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -122,6 +124,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
                 }
                 comments.add(0, comment);
                 commentsRc.setAdapter(new ReviewsListAdapter(comments, ReviewsActivity.this));
+                isHasNewComment = true;
             }
             if (resultCode == Activity.RESULT_CANCELED) {
                 //Write your code if there's no result
@@ -135,10 +138,6 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.fab_write_review:
                 Intent intent = new Intent(ReviewsActivity.this, LeaveReviewActivity.class);
                 intent.putExtra("id", diveSpotId);
-                AppsFlyerLib.getInstance().trackEvent(getApplicationContext(),
-                        EventTrackerHelper.EVENT_WRITE_REVIEW_CLICK, new HashMap<String, Object>() {{
-                            put(EventTrackerHelper.PARAM_WRITE_REVIEW_CLICK, diveSpotId );
-                        }});
                 startActivityForResult(intent, 9001);
                 break;
         }
@@ -166,5 +165,17 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
         fragmentTransaction.addToBackStack(null);
         DialogFragment dialogFragment = ProfileDialog.newInstance(event.getUser());
         dialogFragment.show(fragmentTransaction, "profile");
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent returnIntent = new Intent();
+        if (isHasNewComment) {
+            setResult(RESULT_OK, returnIntent);
+            finish();
+        } else {
+            setResult(RESULT_CANCELED, returnIntent);
+            finish();
+        }
     }
 }

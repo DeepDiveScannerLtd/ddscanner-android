@@ -1,6 +1,5 @@
 package com.ddscanner.ui.activities;
 
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -8,8 +7,6 @@ import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.support.annotation.DimenRes;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -27,7 +24,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -35,7 +31,7 @@ import android.widget.TextView;
 import com.ddscanner.R;
 import com.ddscanner.entities.Checkins;
 import com.ddscanner.entities.Comment;
-import com.ddscanner.entities.DiveSpot;
+import com.ddscanner.entities.Comments;
 import com.ddscanner.entities.DiveSpotFull;
 import com.ddscanner.entities.DivespotDetails;
 import com.ddscanner.entities.Sealife;
@@ -46,7 +42,6 @@ import com.ddscanner.ui.adapters.DiveSpotsPhotosAdapter;
 import com.ddscanner.ui.adapters.SealifeListAdapter;
 import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -72,12 +67,10 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 
-/**
- * Created by lashket on 26.4.16.
- */
 public class DiveSpotDetailsActivity extends AppCompatActivity implements View.OnClickListener, RatingBar.OnRatingBarChangeListener {
 
     private static final String EXTRA_ID = "ID";
+    private static final int RC_LEAVE_REVIEW_ACTIVITY = 1001;
 
     private DivespotDetails divespotDetails;
     private ProgressDialog progressDialog;
@@ -186,10 +179,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
         collapsingToolbarLayout.setStatusBarScrimColor(getResources().getColor(android.R.color.transparent));
       //  collapsingToolbarLayout.setCollapsedTitleTextColor(getResources().getColor(android.R.color.transparent));
-    }
-
-    private void setDialogUI() {
-
     }
 
     /**
@@ -322,6 +311,11 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
     }
 
+    private void setReviewsCount(String count) {
+        showAllReviews.setText(count);
+
+    }
+
     public static float convertDpToPixel(float dp, Context context){
         Resources resources = context.getResources();
         DisplayMetrics metrics = resources.getDisplayMetrics();
@@ -388,6 +382,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                     divespotDetails = new Gson().fromJson(responseString, DivespotDetails.class);
                     diveSpotCoordinates = new LatLng(divespotDetails.getDivespot().getLat(),
                             divespotDetails.getDivespot().getLng());
+                    usersComments = divespotDetails.getComments();
                     setUi();
                 } else {
 
@@ -468,7 +463,11 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                     startActivityForResult(reviewsIntent, 9001);
                     return;
                 }
-                LeaveReviewActivity.show(this, String.valueOf(divespotDetails.getDivespot().getId()), 0);
+                Intent leaveReviewIntent = new Intent(DiveSpotDetailsActivity.this,
+                        LeaveReviewActivity.class);
+                leaveReviewIntent.putExtra("DIVESPOTID", diveSpot.getId());
+                startActivityForResult(leaveReviewIntent, RC_LEAVE_REVIEW_ACTIVITY);
+                //LeaveReviewActivity.show(this, String.valueOf(divespotDetails.getDivespot().getId()), 0);
                 break;
             case R.id.yes_button:
                 diveSpotValidation();
@@ -656,4 +655,40 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         });
     }
 
+    private void getComments() {
+        Call<ResponseBody> call = RestClient.getServiceInstance()
+                .getComments(String.valueOf(diveSpot.getId()));
+        call.enqueue(new retrofit2.Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                String responseString = "";
+                if (response.isSuccessful()) {
+                    try {
+                        responseString = response.body().string();
+                        Comments comments = new Gson().fromJson(responseString, Comments.class);
+                        usersComments = comments.getComments();
+                        setReviewsCount(getString(R.string.show_all)
+                                + String.valueOf(usersComments.size())
+                                + getString(R.string.skobka));
+                    } catch (IOException e) {
+
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == RC_LEAVE_REVIEW_ACTIVITY) {
+            if (resultCode == RESULT_OK) {
+                getComments();
+            }
+        }
+    }
 }

@@ -215,6 +215,9 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
                         e.printStackTrace();
                     }
                     comment = new Gson().fromJson(responseString, Comment.class);
+                    Intent returnIntent = new Intent();
+                    returnIntent.putExtra("COMMENT", comment);
+                    setResult(Activity.RESULT_OK, returnIntent);
                     finish();
                     progressDialog.dismiss();
                 } else {
