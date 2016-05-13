@@ -49,7 +49,9 @@ public class DiveSpotPhotosActivity extends AppCompatActivity {
         bundle.putSerializable("diveSpotImages", diveSpotImages);
         diveSpotPhotosFragment.setArguments(bundle);
 
-        reviewsImages = addPathToAdress(reviewsImages, path);
+        if (reviewsImages != null) {
+            reviewsImages = addPathToAdress(reviewsImages, path);
+        }
 
         bundle = new Bundle();
         bundle.putSerializable("reviewsImages", reviewsImages);
@@ -69,10 +71,14 @@ public class DiveSpotPhotosActivity extends AppCompatActivity {
 
     private ArrayList<String> compareArrays(ArrayList<String> first, ArrayList<String> second) {
         ArrayList<String> allPhotos = new ArrayList<>();
-        allPhotos = (ArrayList<String>) first.clone();
-        for (int i = 0; i < second.size(); i++) {
-            allPhotos.add(second.get(i));
+        if (first != null) {
+            allPhotos = (ArrayList<String>) first.clone();
+            for (int i = 0; i < second.size(); i++) {
+                allPhotos.add(second.get(i));
+            }
+            return allPhotos;
         }
+        allPhotos =(ArrayList<String>) second.clone();
         return allPhotos;
     }
 
