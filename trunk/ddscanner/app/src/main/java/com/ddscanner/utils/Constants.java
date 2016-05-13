@@ -6,5 +6,6 @@ package com.ddscanner.utils;
 public class Constants {
 
     public static final String images = "http://";
+    public static final String DIVESPOTID = "ID";
 
 }

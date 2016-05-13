@@ -28,8 +28,8 @@ public class AddPhotoToDsListAdapter extends RecyclerView.Adapter<AddPhotoToDsLi
     private static final String TAG = AddPhotoToDsListAdapter.class.getSimpleName();
     private Context context;
     private List<String> uris;
-    private List<String> newImagesUriList = new ArrayList<>();
-    private List<String> deletedImages = new ArrayList<>();
+    private static List<String> newImagesUriList = new ArrayList<>();
+    private static List<String> deletedImages = new ArrayList<>();
     private TextView textView;
 
     public AddPhotoToDsListAdapter(List<String> uris, Context context, TextView textView) {
@@ -50,7 +50,7 @@ public class AddPhotoToDsListAdapter extends RecyclerView.Adapter<AddPhotoToDsLi
     public void onBindViewHolder(PhotoListViewHolder holder, final int position) {
         String path = uris.get(position);
         if (!uris.get(position).contains(Constants.images)) {
-            newImagesUriList.add(uris.get(position));
+            this.newImagesUriList.add(uris.get(position));
             path = "file://" + uris.get(position);
         }
         Picasso.with(context).load(path).resize(110, 80).centerCrop().into(holder.photo);
@@ -58,7 +58,7 @@ public class AddPhotoToDsListAdapter extends RecyclerView.Adapter<AddPhotoToDsLi
             @Override
             public void onClick(View v) {
                 if (uris.get(position).contains(Constants.images)) {
-                    deletedImages.add(uris.get(position));
+                   deletedImages.add(uris.get(position));
                 }
                 uris.remove(position);
                 notifyItemRemoved(position);
@@ -68,17 +68,17 @@ public class AddPhotoToDsListAdapter extends RecyclerView.Adapter<AddPhotoToDsLi
     }
 
     public List<String> getListOfDeletedImages() {
-        if (deletedImages.size() == 0) {
+        if (this.deletedImages.size() == 0) {
             return null;
         }
-        return deletedImages;
+        return this.deletedImages;
     }
 
     public List<String> getNewFilesUrisList() {
-        if (newImagesUriList.size() == 0) {
+        if (this.newImagesUriList.size() == 0) {
             return null;
         }
-        return newImagesUriList;
+        return this.newImagesUriList;
     }
 
     @Override

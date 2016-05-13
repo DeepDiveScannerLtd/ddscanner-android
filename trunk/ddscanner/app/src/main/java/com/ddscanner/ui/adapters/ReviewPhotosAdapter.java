@@ -21,6 +21,12 @@ public class ReviewPhotosAdapter extends RecyclerView.Adapter<ReviewPhotosAdapte
     public static String path;
     public static Context context;
 
+    public ReviewPhotosAdapter(ArrayList<String> photos, Context context, String path) {
+        this.photos = photos;
+        this.context = context;
+        this.path = path;
+    }
+
     @Override
     public ReviewPhotosAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.
@@ -35,14 +41,16 @@ public class ReviewPhotosAdapter extends RecyclerView.Adapter<ReviewPhotosAdapte
             holder.morePhotos.setText("+" + String.valueOf(8 - 4));
             holder.morePhotos.setVisibility(View.VISIBLE);
         }
+        Picasso.with(context).load(path + photos.get(position)).resize(60,60).centerCrop()
+                .transform(new TransformationRoundImage(2,0)).into(holder.photo);
     }
 
     @Override
     public int getItemCount() {
-     /*   if (photos.size() > 5) {
+        if (photos.size() > 5) {
             return 5;
-        }*/
-        return 8;
+        }
+        return photos.size();
     }
 
     public static class ReviewPhotosAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

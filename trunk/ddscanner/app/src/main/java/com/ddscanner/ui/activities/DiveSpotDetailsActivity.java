@@ -43,6 +43,7 @@ import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.DiveSpotsPhotosAdapter;
 import com.ddscanner.ui.adapters.SealifeListAdapter;
 import com.ddscanner.ui.views.TransformationRoundImage;
+import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
@@ -471,14 +472,15 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("COMMENTS",
                             (ArrayList<Comment>) divespotDetails.getComments());
-                    bundle.putString("DIVESPOTID",
+                    bundle.putString(Constants.DIVESPOTID,
                             String.valueOf(divespotDetails.getDivespot().getId()));
+                    bundle.putString("PATH", divespotDetails.getDivespot().getDiveSpotPathMedium());
                     reviewsIntent.putExtras(bundle);
                     startActivityForResult(reviewsIntent, 9001);
                 } else {
                     Intent leaveReviewIntent = new Intent(DiveSpotDetailsActivity.this,
                             LeaveReviewActivity.class);
-                    leaveReviewIntent.putExtra("ID", String.valueOf(diveSpot.getId()));
+                    leaveReviewIntent.putExtra(Constants.DIVESPOTID, String.valueOf(diveSpot.getId()));
                     startActivityForResult(leaveReviewIntent, RC_LEAVE_REVIEW_ACTIVITY);
                 }
                 //LeaveReviewActivity.show(this, String.valueOf(divespotDetails.getDivespot().getId()), 0);
@@ -576,7 +578,11 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
     @Override
     public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-        LeaveReviewActivity.show(DiveSpotDetailsActivity.this, String.valueOf(divespotDetails.getDivespot().getId()), rating);
+        Intent leaveReviewIntent = new Intent(DiveSpotDetailsActivity.this,
+                LeaveReviewActivity.class);
+        leaveReviewIntent.putExtra(Constants.DIVESPOTID, String.valueOf(diveSpot.getId()));
+        leaveReviewIntent.putExtra("RATING", rating);
+        startActivityForResult(leaveReviewIntent, RC_LEAVE_REVIEW_ACTIVITY);
     }
 
     @Override

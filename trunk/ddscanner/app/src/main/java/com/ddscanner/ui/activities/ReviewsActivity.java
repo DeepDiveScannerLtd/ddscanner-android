@@ -31,10 +31,12 @@ import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.Comment;
+import com.ddscanner.events.IsCommentLikedEvent;
 import com.ddscanner.events.ShowUserDialogEvent;
 import com.ddscanner.ui.adapters.ReviewsListAdapter;
 import com.ddscanner.ui.dialogs.ProfileDialog;
 import com.ddscanner.ui.views.TransformationRoundImage;
+import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.EventTrackerHelper;
 import com.ddscanner.utils.Helpers;
 import com.squareup.otto.Subscribe;
@@ -57,6 +59,8 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     private String diveSpotId;
     private Helpers helpers = new Helpers();
 
+    private String path;
+
     private boolean isHasNewComment = false;
 
     @Override
@@ -65,7 +69,8 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.activity_reviews);
         Bundle bundle = getIntent().getExtras();
         comments = (ArrayList<Comment>) bundle.getSerializable("COMMENTS");
-        diveSpotId = bundle.getString("DIVESPOTID");
+        diveSpotId = bundle.getString(Constants.DIVESPOTID);
+        path = bundle.getString("PATH");
         findViews();
         toolbarSettings();
         setContent();
@@ -88,17 +93,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     private void setContent() {
         commentsRc.setHasFixedSize(true);
         commentsRc.setLayoutManager(new LinearLayoutManager(this));
-        commentsRc.setAdapter(new ReviewsListAdapter(comments, ReviewsActivity.this));
-    }
-
-    public static void show(Context context, ArrayList<Comment> comments, String id) {
-        Intent intent = new Intent(context, ReviewsActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("COMMENTS", comments);
-        bundle.putString("DIVESPOTID", id);
-        intent.putExtras(bundle);
-        context.startActivity(intent);
-
+        commentsRc.setAdapter(new ReviewsListAdapter(comments, ReviewsActivity.this, path));
     }
 
     @Override
@@ -124,7 +119,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
                     comments = new ArrayList<Comment>();
                 }
                 comments.add(0, comment);
-                commentsRc.setAdapter(new ReviewsListAdapter(comments, ReviewsActivity.this));
+                commentsRc.setAdapter(new ReviewsListAdapter(comments, ReviewsActivity.this, path));
                 isHasNewComment = true;
             }
             if (resultCode == Activity.RESULT_CANCELED) {
@@ -138,7 +133,9 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
         switch (view.getId()) {
             case R.id.fab_write_review:
                 Intent intent = new Intent(ReviewsActivity.this, LeaveReviewActivity.class);
-                intent.putExtra("id", diveSpotId);
+                Bundle bundle = new Bundle();
+                bundle.putString(Constants.DIVESPOTID, diveSpotId);
+                intent.putExtras(bundle);
                 startActivityForResult(intent, 9001);
                 break;
         }
@@ -159,6 +156,11 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     @Subscribe
     public void showDialog(ShowUserDialogEvent event) {
         helpers.showDialog(event.getUser(), getFragmentManager());
+    }
+
+    @Subscribe
+    public void isCommentLiked(IsCommentLikedEvent event) {
+        isHasNewComment = true;
     }
 
     @Override

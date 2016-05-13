@@ -35,6 +35,7 @@ import com.ddscanner.entities.Comment;
 import com.ddscanner.entities.request.SendReviewRequest;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.AddPhotoToDsListAdapter;
+import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.EventTrackerHelper;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.SharedPreferenceHelper;
@@ -96,7 +97,8 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_leave_review);
-        diveSpotId = getIntent().getStringExtra(ID);
+        Bundle bundle = getIntent().getExtras();
+        diveSpotId = bundle.getString(Constants.DIVESPOTID);
         rating = getIntent().getExtras().getFloat(RATING);
         findViews();
         toolbarSettings();
@@ -164,7 +166,7 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
 
     public static void show(Context context, String id, float rating) {
         Intent intent = new Intent(context, LeaveReviewActivity.class);
-        intent.putExtra(ID, id);
+        intent.putExtra(Constants.DIVESPOTID, id);
         intent.putExtra(RATING, rating);
         context.startActivity(intent);
     }

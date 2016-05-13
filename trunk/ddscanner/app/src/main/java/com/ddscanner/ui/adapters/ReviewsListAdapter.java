@@ -27,6 +27,7 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.Comment;
 import com.ddscanner.entities.request.RegisterRequest;
+import com.ddscanner.events.IsCommentLikedEvent;
 import com.ddscanner.events.MarkerClickEvent;
 import com.ddscanner.events.ShowUserDialogEvent;
 import com.ddscanner.rest.RestClient;
@@ -53,11 +54,13 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
     private static final String TAG = ReviewsListAdapter.class.getSimpleName();
     private static ArrayList<Comment> comments;
     private static Context context;
+    private String path;
     private boolean isAdapterSet = false;
     private static ProfileDialog profileDialog = new ProfileDialog();
     private static RegisterRequest registerRequest = new RegisterRequest();
 
-    public ReviewsListAdapter(ArrayList<Comment> comments, Context context) {
+    public ReviewsListAdapter(ArrayList<Comment> comments, Context context, String path) {
+        this.path = path;
         this.comments = comments;
         this.context = context;
         registerRequest.setSocial(SharedPreferenceHelper.getSn());
@@ -75,12 +78,15 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
 
     @Override
     public void onBindViewHolder(final ReviewsListViewHolder reviewsListViewHolder, int i) {
-        LinearLayoutManager layoutManager = new LinearLayoutManager(context);
-        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        reviewsListViewHolder.photos.setNestedScrollingEnabled(false);
-        reviewsListViewHolder.photos.setHasFixedSize(false);
-        reviewsListViewHolder.photos.setLayoutManager(layoutManager);
-        reviewsListViewHolder.photos.setAdapter(new ReviewPhotosAdapter());
+        if (comments.get(i).getImages() != null) {
+            LinearLayoutManager layoutManager = new LinearLayoutManager(context);
+            layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+            reviewsListViewHolder.photos.setNestedScrollingEnabled(false);
+            reviewsListViewHolder.photos.setHasFixedSize(false);
+            reviewsListViewHolder.photos.setLayoutManager(layoutManager);
+            reviewsListViewHolder.photos.setAdapter(new ReviewPhotosAdapter(
+                    (ArrayList<String>) comments.get(i).getImages(), context, path));
+        }
         reviewsListViewHolder.user_name.setText(comments.get(i).getUser().getName());
         reviewsListViewHolder.user_review.setText(comments.get(i).getComment());
         reviewsListViewHolder.likesCount.setText(comments.get(i).getLikes());
@@ -210,6 +216,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                     if (response.isSuccessful()) {
                         if (response.raw().code() == 200) {
+                            DDScannerApplication.bus.post(new IsCommentLikedEvent());
                            likeUi();
                         }
                     }
@@ -233,6 +240,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                     if (response.isSuccessful()) {
                         if (response.raw().code() == 200) {
+                            DDScannerApplication.bus.post(new IsCommentLikedEvent());
                             dislikeUi();
                         }
                     }
