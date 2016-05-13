@@ -471,7 +471,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                             ReviewsActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("COMMENTS",
-                            (ArrayList<Comment>) divespotDetails.getComments());
+                            (ArrayList<Comment>) usersComments);
                     bundle.putString(Constants.DIVESPOTID,
                             String.valueOf(divespotDetails.getDivespot().getId()));
                     bundle.putString("PATH", divespotDetails.getDivespot().getDiveSpotPathMedium());
