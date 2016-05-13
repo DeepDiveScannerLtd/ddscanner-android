@@ -1,5 +1,6 @@
 package com.ddscanner.ui.activities;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -54,6 +55,8 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     private static final int RC_PICK_PHOTO = 9001;
     private static final int RC_PICK_LOCATION = 8001;
     private static final int RC_PICK_SEALIFE = 7001;
+
+    private ProgressDialog progressDialog = new ProgressDialog(this);
 
     private ImageButton btnAddPhoto;
     private ImageView btnAddSealife;
@@ -159,6 +162,9 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("New Divespot");
+
+        progressDialog.setTitle("Wait while dive spot adding");
+        progressDialog.setCancelable(false);
     }
 
 
@@ -258,6 +264,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void createAddDiveSpotRequest() {
+        progressDialog.show();
         List<MultipartBody.Part> sealife = new ArrayList<>();
         for (int i = 0; i < sealifes.size(); i++) {
             sealife.add(MultipartBody.Part.createFormData("sealife[]", sealifes.get(i).getId()));
@@ -279,11 +286,12 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 Log.i(TAG, "success");
+                progressDialog.dismiss();
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-
+                progressDialog.dismiss();
             }
         });
     }

@@ -120,7 +120,6 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
         if (requestCode == 9001) {
             if(resultCode == Activity.RESULT_OK){
                 Comment comment = (Comment)data.getSerializableExtra("COMMENT");
-                Log.i("ReviewsActivity", comment.getComment());
                 if (comments == null) {
                     comments = new ArrayList<Comment>();
                 }

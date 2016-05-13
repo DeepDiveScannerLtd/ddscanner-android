@@ -1,15 +1,11 @@
 package com.ddscanner.ui.activities;
 
-import android.app.DialogFragment;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.Rect;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -23,6 +19,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -42,11 +39,9 @@ import com.ddscanner.entities.DivespotDetails;
 import com.ddscanner.entities.Sealife;
 import com.ddscanner.entities.User;
 import com.ddscanner.entities.request.RegisterRequest;
-import com.ddscanner.events.ShowUserDialogEvent;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.DiveSpotsPhotosAdapter;
 import com.ddscanner.ui.adapters.SealifeListAdapter;
-import com.ddscanner.ui.dialogs.ProfileDialog;
 import com.ddscanner.ui.views.TransformationRoundImage;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
@@ -469,7 +464,8 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 }
                 break;
             case R.id.btn_show_all_reviews:
-                if (divespotDetails.getComments() != null) {
+                Log.i("TAG", "OK");
+                if (divespotDetails.getComments() != null || usersComments.size() > 0) {
                     Intent reviewsIntent = new Intent(DiveSpotDetailsActivity.this,
                             ReviewsActivity.class);
                     Bundle bundle = new Bundle();
@@ -479,12 +475,12 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                             String.valueOf(divespotDetails.getDivespot().getId()));
                     reviewsIntent.putExtras(bundle);
                     startActivityForResult(reviewsIntent, 9001);
-                    return;
+                } else {
+                    Intent leaveReviewIntent = new Intent(DiveSpotDetailsActivity.this,
+                            LeaveReviewActivity.class);
+                    leaveReviewIntent.putExtra("ID", String.valueOf(diveSpot.getId()));
+                    startActivityForResult(leaveReviewIntent, RC_LEAVE_REVIEW_ACTIVITY);
                 }
-                Intent leaveReviewIntent = new Intent(DiveSpotDetailsActivity.this,
-                        LeaveReviewActivity.class);
-                leaveReviewIntent.putExtra("DIVESPOTID", diveSpot.getId());
-                startActivityForResult(leaveReviewIntent, RC_LEAVE_REVIEW_ACTIVITY);
                 //LeaveReviewActivity.show(this, String.valueOf(divespotDetails.getDivespot().getId()), 0);
                 break;
             case R.id.yes_button:
@@ -730,6 +726,11 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == RC_LEAVE_REVIEW_ACTIVITY) {
+            if (resultCode == RESULT_OK) {
+                getComments();
+            }
+        }
+        if (requestCode == 9001) {
             if (resultCode == RESULT_OK) {
                 getComments();
             }
