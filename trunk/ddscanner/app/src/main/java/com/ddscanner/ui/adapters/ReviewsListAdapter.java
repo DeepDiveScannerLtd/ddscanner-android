@@ -3,6 +3,7 @@ package com.ddscanner.ui.adapters;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
+import android.media.Image;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatDrawableManager;
@@ -38,6 +39,8 @@ import com.ddscanner.utils.EventTrackerHelper;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.squareup.picasso.Picasso;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -49,7 +52,8 @@ import retrofit2.Response;
 /**
  * Created by lashket on 12.3.16.
  */
-public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.ReviewsListViewHolder> {
+public class ReviewsListAdapter
+        extends RecyclerView.Adapter<ReviewsListAdapter.ReviewsListViewHolder> {
 
     private static final String TAG = ReviewsListAdapter.class.getSimpleName();
     private static ArrayList<Comment> comments;
@@ -77,7 +81,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
     }
 
     @Override
-    public void onBindViewHolder(final ReviewsListViewHolder reviewsListViewHolder, int i) {
+    public void onBindViewHolder(final ReviewsListViewHolder reviewsListViewHolder,final int i) {
         if (comments.get(i).getImages() != null) {
             LinearLayoutManager layoutManager = new LinearLayoutManager(context);
             layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -87,26 +91,49 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
             reviewsListViewHolder.photos.setAdapter(new ReviewPhotosAdapter(
                     (ArrayList<String>) comments.get(i).getImages(), context, path));
         }
+
+        reviewsListViewHolder.like.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                likeComment(comments.get(i).getId(), reviewsListViewHolder.dislikeImage,
+                        reviewsListViewHolder.likeImage,
+                        reviewsListViewHolder.likesCount,
+                        reviewsListViewHolder.dislikesCount);
+            }
+        });
+
+        reviewsListViewHolder.dislike.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dislikeComment(comments.get(i).getId(), reviewsListViewHolder.dislikeImage,
+                        reviewsListViewHolder.likeImage,
+                        reviewsListViewHolder.likesCount,
+                        reviewsListViewHolder.dislikesCount);
+
+            }
+        });
+
+
         reviewsListViewHolder.user_name.setText(comments.get(i).getUser().getName());
         reviewsListViewHolder.user_review.setText(comments.get(i).getComment());
         reviewsListViewHolder.likesCount.setText(comments.get(i).getLikes());
         reviewsListViewHolder.dislikesCount.setText(comments.get(i).getDislikes());
         isAdapterSet = true;
 
-        Picasso.with(context).load(comments.get(i).getUser().getPicture()).resize(40,40).
-                transform(new TransformationRoundImage(50,0)).centerCrop().
+        Picasso.with(context).load(comments.get(i).getUser().getPicture()).resize(40, 40).
+                transform(new TransformationRoundImage(50, 0)).centerCrop().
                 into(reviewsListViewHolder.user_avatar);
         reviewsListViewHolder.rating.removeAllViews();
         for (int k = 0; k < Integer.parseInt(comments.get(i).getRating()); k++) {
             ImageView iv = new ImageView(context);
             iv.setImageResource(R.drawable.ic_list_star_full);
-            iv.setPadding(0,0,5,0);
+            iv.setPadding(0, 0, 5, 0);
             reviewsListViewHolder.rating.addView(iv);
         }
         for (int k = 0; k < 5 - Integer.parseInt(comments.get(i).getRating()); k++) {
             ImageView iv = new ImageView(context);
             iv.setImageResource(R.drawable.ic_list_star_empty);
-            iv.setPadding(0,0,5,0);
+            iv.setPadding(0, 0, 5, 0);
             reviewsListViewHolder.rating.addView(iv);
         }
     }
@@ -118,6 +145,80 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         }
         return comments.size();
     }
+
+    private void likeUi(ImageView dislikeImage, ImageView likeImage, TextView likesCount, TextView dislikesCount) {
+        dislikeImage.setImageDrawable(AppCompatDrawableManager.get().getDrawable(
+                context, R.drawable.ic_review_dislike_empty
+        ));
+        dislikesCount.setText(String.valueOf(Integer.parseInt(dislikesCount.getText().toString()) - 1));
+
+        likeImage.setImageDrawable(AppCompatDrawableManager.get().getDrawable(
+                context, R.drawable.ic_like_review
+        ));
+        likesCount.setText(String.valueOf(Integer.parseInt(likesCount.getText().toString()) + 1));
+    }
+
+    private void dislikeUi(ImageView dislikeImage, ImageView likeImage, TextView likesCount, TextView dislikesCount) {
+        likeImage.setImageDrawable(AppCompatDrawableManager.get().getDrawable(
+                context, R.drawable.ic_review_like_empty
+        ));
+        likesCount.setText(String.valueOf(Integer.parseInt(likesCount.getText().toString()) - 1));
+
+
+        dislikeImage.setImageDrawable(AppCompatDrawableManager.get()
+                .getDrawable(context, R.drawable.ic_review_dislike));
+        dislikesCount.setText(String.valueOf(Integer.parseInt(dislikesCount.getText().toString()) + 1));
+
+    }
+
+    private void likeComment(String id, final ImageView dislikeImage, final ImageView likeImage, final TextView likesCount, final TextView dislikesCount) {
+        Call<ResponseBody> call = RestClient.getServiceInstance().likeComment(
+                id,
+                registerRequest
+        );
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    if (response.raw().code() == 200) {
+                        DDScannerApplication.bus.post(new IsCommentLikedEvent());
+                         likeUi(dislikeImage, likeImage, likesCount, dislikesCount);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.i(TAG, "failure");
+            }
+        });
+    }
+
+    private void dislikeComment(String id, final ImageView dislikeImage,
+                                final ImageView likeImage,
+                                final TextView likesCount, final TextView dislikesCount) {
+        Call<ResponseBody> call = RestClient.getServiceInstance().dislikeComment(
+                id,
+                registerRequest
+        );
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    if (response.raw().code() == 200) {
+                        DDScannerApplication.bus.post(new IsCommentLikedEvent());
+                        dislikeUi(dislikeImage, likeImage, likesCount, dislikesCount);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
+    }
+
 
     public static class ReviewsListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
@@ -152,8 +253,6 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
             dislikeImage = (ImageView) v.findViewById(R.id.dislikes_image);
 
             user_avatar.setOnClickListener(this);
-            like.setOnClickListener(this);
-            dislike.setOnClickListener(this);
         }
 
         @Override
@@ -166,91 +265,13 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
                     break;
                 case R.id.like_layout:
                     if (!isLiked) {
-                        likeComment();
                     }
                     break;
                 case R.id.dislike_layout:
                     if (!isDisliked) {
-                        dislikeComment();
                     }
                     break;
             }
-        }
-
-        private void likeUi() {
-            if (isDisliked) {
-                dislikeImage.setImageDrawable(AppCompatDrawableManager.get().getDrawable(
-                        context, R.drawable.ic_review_dislike_empty
-                ));
-                dislikesCount.setText(String.valueOf(Integer.parseInt(dislikesCount.getText().toString()) - 1));
-                isDisliked = false;
-            }
-            likeImage.setImageDrawable(AppCompatDrawableManager.get().getDrawable(
-                    context, R.drawable.ic_like_review
-            ));
-            likesCount.setText(String.valueOf(Integer.parseInt(likesCount.getText().toString()) + 1));
-            isLiked = true;
-        }
-
-        private void dislikeUi() {
-            if (isLiked) {
-                likeImage.setImageDrawable(AppCompatDrawableManager.get().getDrawable(
-                        context, R.drawable.ic_review_like_empty
-                ));
-                likesCount.setText(String.valueOf(Integer.parseInt(likesCount.getText().toString()) - 1));
-                isLiked = false;
-            }
-            dislikeImage.setImageDrawable(AppCompatDrawableManager.get()
-                    .getDrawable(context, R.drawable.ic_review_dislike));
-            dislikesCount.setText(String.valueOf(Integer.parseInt(dislikesCount.getText().toString()) + 1));
-            isDisliked = true;
-        }
-
-        private void likeComment() {
-            Call<ResponseBody> call = RestClient.getServiceInstance().likeComment(
-                    comments.get(getPosition()).getId(),
-                    registerRequest
-            );
-            call.enqueue(new Callback<ResponseBody>() {
-                @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                    if (response.isSuccessful()) {
-                        if (response.raw().code() == 200) {
-                            DDScannerApplication.bus.post(new IsCommentLikedEvent());
-                           likeUi();
-                        }
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    Log.i(TAG, "failure");
-                }
-            });
-        }
-
-        private void dislikeComment() {
-            Call<ResponseBody> call = RestClient.getServiceInstance().dislikeComment(
-                    comments.get(getPosition()).getId(),
-                    registerRequest
-            );
-            Log.i(TAG, comments.get(getPosition()).getId());
-            call.enqueue(new Callback<ResponseBody>() {
-                @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                    if (response.isSuccessful()) {
-                        if (response.raw().code() == 200) {
-                            DDScannerApplication.bus.post(new IsCommentLikedEvent());
-                            dislikeUi();
-                        }
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-                }
-            });
         }
     }
 
