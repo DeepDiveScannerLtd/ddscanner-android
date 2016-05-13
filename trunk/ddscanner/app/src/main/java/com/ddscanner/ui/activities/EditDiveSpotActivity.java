@@ -1,5 +1,6 @@
 package com.ddscanner.ui.activities;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -96,10 +97,14 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
     private DivespotDetails divespotDetails;
     private DiveSpotFull diveSpot;
     private AddPhotoToDsListAdapter addPhotoToDsListAdapter;
+    private ProgressDialog progressDialog;
 
     private RequestBody requestName, requestLat, requestLng, requestDepth, requestVisibility,
             requestCurrents, requestLevel, requestObject, requestAccess,
-            requestDescription, requestSocial, requestToken, requestType;
+            requestDescription, requestType;
+    private RequestBody requestSecret = null;
+    private RequestBody requestSocial = null;
+    private RequestBody requestToken = null;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -117,6 +122,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
      */
 
     private void findViews() {
+        progressDialog = new ProgressDialog(this);
         name = (EditText) findViewById(R.id.name);
         depth = (EditText) findViewById(R.id.depth);
         description = (EditText) findViewById(R.id.description);
@@ -139,6 +145,9 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
     }
 
     private void setUi() {
+        progressDialog.setTitle("Please wait...");
+        progressDialog.setCancelable(false);
+
         btnSave.setOnClickListener(this);
         pickLocation.setOnClickListener(this);
         btnAddPhoto.setOnClickListener(this);
@@ -245,21 +254,20 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
                 startActivityForResult(sealifeIntent, RC_PICK_SEALIFE);
                 break;
             case R.id.button_create:
+                progressDialog.show();
                 createRequestBodyies();
                 break;
         }
     }
 
-    private List<String> removeAdressPart() {
-        List<String> deletedImages = new ArrayList<>();
-        if (addPhotoToDsListAdapter.getListOfDeletedImages() == null) {
-           return null;
+    private ArrayList<String> removeAdressPart(ArrayList<String> deleted) {
+
+        for (int i = 0; i <deleted.size(); i++ ) {
+            deleted.set(i, deleted.get(i).replace(diveSpot.getDiveSpotPathSmall(), ""
+            ));
         }
-        deletedImages = addPhotoToDsListAdapter.getListOfDeletedImages();
-        for (int i = 0; i < deletedImages.size(); i++) {
-            deletedImages.set(i, deletedImages.get(i).replace(diveSpot.getDiveSpotPathSmall(), ""));
-        }
-        return deletedImages;
+
+        return deleted;
     }
 
 
@@ -315,10 +323,16 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
         requestVisibility = RequestBody.create(MediaType.parse("multipart/form-data"), "good");
         requestCurrents = RequestBody.create(MediaType.parse("multipart/form-data"), "strong");
         requestLevel = RequestBody.create(MediaType.parse("multipart/form-data"), "master");
-        requestSocial = RequestBody.create(MediaType.parse("multipart/form-data"),
-                SharedPreferenceHelper.getSn());
-        requestToken = RequestBody.create(MediaType.parse("multipart/form-data"),
-                SharedPreferenceHelper.getToken());
+        if (SharedPreferenceHelper.getIsUserLogined()) {
+            requestSocial = RequestBody.create(MediaType.parse("multipart/form-data"),
+                    SharedPreferenceHelper.getSn());
+            requestToken = RequestBody.create(MediaType.parse("multipart/form-data"),
+                    SharedPreferenceHelper.getToken());
+            if (SharedPreferenceHelper.getSn().equals("tw")) {
+                requestSecret = RequestBody.create(MediaType.parse("multipart/form-data"),
+                        SharedPreferenceHelper.getSecret());
+            }
+        }
         requestDescription = RequestBody.create(MediaType.parse("multipart/form-data"),
                 description.getText().toString());
         requestType = RequestBody.create(MediaType.parse("multipart/form-data"), "PUT");
@@ -347,6 +361,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
         } else {
             ArrayList<String> deleted = new ArrayList<>();
             deleted = (ArrayList<String>)addPhotoToDsListAdapter.getListOfDeletedImages();
+            deleted = removeAdressPart(deleted);
             for (int i = 0; i < deleted.size(); i++) {
                 deletedImages.add(MultipartBody.Part.createFormData("images_del[]", deleted.get(i)));
             }
@@ -365,12 +380,12 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
+                progressDialog.dismiss();
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-
+                progressDialog.dismiss();
             }
         });
     }

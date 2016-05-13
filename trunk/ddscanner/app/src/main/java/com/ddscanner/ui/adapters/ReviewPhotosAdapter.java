@@ -9,17 +9,21 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ddscanner.R;
+import com.ddscanner.ui.activities.ImageSliderActivity;
 import com.ddscanner.ui.activities.ShowImageActivity;
 import com.ddscanner.ui.views.TransformationRoundImage;
+import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-public class ReviewPhotosAdapter extends RecyclerView.Adapter<ReviewPhotosAdapter.ReviewPhotosAdapterViewHolder> {
+public class ReviewPhotosAdapter
+        extends RecyclerView.Adapter<ReviewPhotosAdapter.ReviewPhotosAdapterViewHolder> {
 
     public static ArrayList<String> photos;
     public static String path;
     public static Context context;
+    public static Helpers helpers = new Helpers();
 
     public ReviewPhotosAdapter(ArrayList<String> photos, Context context, String path) {
         this.photos = photos;
@@ -53,20 +57,23 @@ public class ReviewPhotosAdapter extends RecyclerView.Adapter<ReviewPhotosAdapte
         return photos.size();
     }
 
-    public static class ReviewPhotosAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public static class ReviewPhotosAdapterViewHolder
+            extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         protected ImageView photo;
         protected TextView morePhotos;
 
         public ReviewPhotosAdapterViewHolder(View v) {
             super(v);
+            v.setOnClickListener(this);
             photo = (ImageView) v.findViewById(R.id.image);
             morePhotos = (TextView) v.findViewById(R.id.number_of_more_images);
         }
 
         @Override
         public void onClick(View v) {
-
+            ImageSliderActivity.show(context,
+                    helpers.compareImageWithPath(photos, path), getAdapterPosition());
         }
     }
 

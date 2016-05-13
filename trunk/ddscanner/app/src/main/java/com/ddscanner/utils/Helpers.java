@@ -15,6 +15,8 @@ import com.ddscanner.entities.User;
 import com.ddscanner.events.ShowUserDialogEvent;
 import com.ddscanner.ui.dialogs.ProfileDialog;
 
+import java.util.ArrayList;
+
 /**
  * Created by lashket on 9.4.16.
  */
@@ -50,5 +52,12 @@ public class Helpers {
         fragmentTransaction.addToBackStack(null);
         DialogFragment dialogFragment = ProfileDialog.newInstance(user);
         dialogFragment.show(fragmentTransaction, "profile");
+    }
+
+    public ArrayList<String> compareImageWithPath(ArrayList<String> images, String path) {
+        for (int i = 0; i <images.size(); i++) {
+            images.set(i, path + images.get(i));
+        }
+        return images;
     }
 }

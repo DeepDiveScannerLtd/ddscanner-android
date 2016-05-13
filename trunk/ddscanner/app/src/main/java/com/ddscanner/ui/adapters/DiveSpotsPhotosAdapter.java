@@ -24,11 +24,14 @@ public class DiveSpotsPhotosAdapter extends RecyclerView.Adapter<DiveSpotsPhotos
     public static ArrayList<String> photos;
     public static String path;
     public static Context context;
+    public static ArrayList<String> reviewsImages;
 
-    public DiveSpotsPhotosAdapter(ArrayList<String> photos, String path, Context context) {
+    public DiveSpotsPhotosAdapter(ArrayList<String> photos, String path,
+                                  Context context,ArrayList<String> reviewsImages) {
         this.photos = photos;
         this.path = path;
         this.context = context;
+        this.reviewsImages = reviewsImages;
     }
 
     @Override
@@ -74,7 +77,7 @@ public class DiveSpotsPhotosAdapter extends RecyclerView.Adapter<DiveSpotsPhotos
         public void onClick(View v) {
           //  if (photos.size() < 8 && getPosition()!= 7) {
                // ShowImageActivity.show(context, path + photos.get(getPosition()));
-            DiveSpotPhotosActivity.show(context, photos, path);
+            DiveSpotPhotosActivity.show(context, photos, path, reviewsImages);
           //  }
         }
     }

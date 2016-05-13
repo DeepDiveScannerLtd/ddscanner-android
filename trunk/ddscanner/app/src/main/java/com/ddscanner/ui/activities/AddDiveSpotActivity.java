@@ -56,7 +56,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     private static final int RC_PICK_LOCATION = 8001;
     private static final int RC_PICK_SEALIFE = 7001;
 
-    private ProgressDialog progressDialog = new ProgressDialog(this);
+    private ProgressDialog progressDialog;
 
     private ImageButton btnAddPhoto;
     private ImageView btnAddSealife;
@@ -137,6 +137,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
      */
 
     private void setUi() {
+        progressDialog = new ProgressDialog(this);
         btnSave.setOnClickListener(this);
         pickLocation.setOnClickListener(this);
         btnAddPhoto.setOnClickListener(this);

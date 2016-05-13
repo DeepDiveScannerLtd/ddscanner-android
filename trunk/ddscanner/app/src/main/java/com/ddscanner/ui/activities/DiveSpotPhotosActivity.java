@@ -25,8 +25,10 @@ public class DiveSpotPhotosActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private ViewPager photosViewPager;
     private Toolbar toolbar;
-    private ArrayList<String> images;
+    private ArrayList<String> diveSpotImages;
     private String path;
+    private ArrayList<String> reviewsImages;
+    private ArrayList<String> allPhotos;
 
     private DiveSpotAllPhotosFragment diveSpotAllPhotosFragment = new DiveSpotAllPhotosFragment();
     private DiveSpotPhotosFragment diveSpotPhotosFragment = new DiveSpotPhotosFragment();
@@ -36,15 +38,42 @@ public class DiveSpotPhotosActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_photos);
-        images =(ArrayList<String>) getIntent().getSerializableExtra("images");
+        diveSpotImages =(ArrayList<String>) getIntent().getSerializableExtra("images");
+        reviewsImages = (ArrayList<String>) getIntent().getSerializableExtra("reviewsImages");
+
         path = getIntent().getStringExtra("path");
+
+        diveSpotImages = addPathToAdress(diveSpotImages, path);
+
         Bundle bundle = new Bundle();
-        bundle.putSerializable("images", addPathToAdress(images, path));
+        bundle.putSerializable("diveSpotImages", diveSpotImages);
+        diveSpotPhotosFragment.setArguments(bundle);
+
+        reviewsImages = addPathToAdress(reviewsImages, path);
+
+        bundle = new Bundle();
+        bundle.putSerializable("reviewsImages", reviewsImages);
+        diveSpotReviewsPhoto.setArguments(bundle);
+
+        allPhotos = compareArrays(reviewsImages, diveSpotImages);
+
+        bundle = new Bundle();
+        bundle.putSerializable("images", allPhotos);
         diveSpotAllPhotosFragment.setArguments(bundle);
+
         findViews();
         setupViewPager();
         setUi();
         setUpTabLayout();
+    }
+
+    private ArrayList<String> compareArrays(ArrayList<String> first, ArrayList<String> second) {
+        ArrayList<String> allPhotos = new ArrayList<>();
+        allPhotos = (ArrayList<String>) first.clone();
+        for (int i = 0; i < second.size(); i++) {
+            allPhotos.add(second.get(i));
+        }
+        return allPhotos;
     }
 
     private void setUpTabLayout() {
@@ -63,8 +92,8 @@ public class DiveSpotPhotosActivity extends AppCompatActivity {
                 getSupportFragmentManager()
         );
         photosActivityPagerAdapter.addFragment(diveSpotAllPhotosFragment, "all");
-        photosActivityPagerAdapter.addFragment(new DiveSpotPhotosFragment(), "divespot");
-        photosActivityPagerAdapter.addFragment(new DiveSpotReviewsPhoto(), "reviews");
+        photosActivityPagerAdapter.addFragment(diveSpotPhotosFragment, "divespot");
+        photosActivityPagerAdapter.addFragment(diveSpotReviewsPhoto, "reviews");
         photosViewPager.setAdapter(photosActivityPagerAdapter);
     }
 
@@ -78,11 +107,12 @@ public class DiveSpotPhotosActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(R.string.photos);
     }
 
-    public static void show(Context context, ArrayList<String> images, String path) {
+    public static void show(Context context, ArrayList<String> images, String path, ArrayList<String> reviewsImages) {
         Intent intent = new Intent(context, DiveSpotPhotosActivity.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable("images", images);
         bundle.putString("path", path);
+        bundle.putSerializable("reviewsImages", reviewsImages);
         intent.putExtras(bundle);
         context.startActivity(intent);
     }

@@ -270,7 +270,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
          photosRecyclerView.setLayoutManager(new GridLayoutManager(DiveSpotDetailsActivity.this,4));
         photosRecyclerView.addItemDecoration(new GridSpacingItemDecoration(4));
         photosRecyclerView.setAdapter(new DiveSpotsPhotosAdapter((ArrayList<String>) diveSpot.getImages(),
-                diveSpot.getDiveSpotPathMedium(), DiveSpotDetailsActivity.this));
+                diveSpot.getDiveSpotPathMedium(), DiveSpotDetailsActivity.this, (ArrayList<String>) diveSpot.getCommentImages() ));
         LinearLayoutManager layoutManager = new LinearLayoutManager(DiveSpotDetailsActivity.this);
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         sealifeRecyclerview.setNestedScrollingEnabled(false);
