@@ -17,6 +17,8 @@ import com.ddscanner.events.ShowUserDialogEvent;
 import com.ddscanner.ui.dialogs.ProfileDialog;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by lashket on 9.4.16.
@@ -123,5 +125,20 @@ public class Helpers {
         allPhotos =(ArrayList<String>) second.clone();
         return allPhotos;
     }
+
+    /**
+     * CHange key-value params to value-keys to using this in spinners
+     * @param map
+     * @return
+     */
+
+    public Map<String, String> getMirrorOfHashMap(Map<String, String> map) {
+        Map<String, String> returnMap = new HashMap<>();
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            returnMap.put(entry.getValue(), entry.getKey());
+        }
+        return returnMap;
+    }
+
 
 }

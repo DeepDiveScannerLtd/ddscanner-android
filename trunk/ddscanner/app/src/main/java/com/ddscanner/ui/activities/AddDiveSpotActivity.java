@@ -332,8 +332,12 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         requestLng = RequestBody.create(MediaType.parse("multipart/form-data"),
                 String.valueOf(diveSpotLocation.longitude));
         requestAccess = RequestBody.create(MediaType.parse("multipart/form-data"), "boat");
-        requestObject = RequestBody.create(MediaType.parse("multipart/form-data"), "reef");
-        requestVisibility = RequestBody.create(MediaType.parse("multipart/form-data"), "good");
+        requestObject = RequestBody.create(MediaType.parse("multipart/form-data"),
+                helpers.getMirrorOfHashMap(filters.getObject())
+                        .get(objectSpinner.getSelectedItem().toString()));
+        requestVisibility = RequestBody.create(MediaType.parse("multipart/form-data"),
+                helpers.getMirrorOfHashMap(filters.getVisibility())
+                        .get(visibilitySpinner.getSelectedItem()));
         requestCurrents = RequestBody.create(MediaType.parse("multipart/form-data"), "strong");
         requestLevel = RequestBody.create(MediaType.parse("multipart/form-data"), "master");
         requestSocial = RequestBody.create(MediaType.parse("multipart/form-data"),
