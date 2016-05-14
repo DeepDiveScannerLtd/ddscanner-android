@@ -76,6 +76,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
     private static final String EXTRA_ID = "ID";
     private static final int RC_LEAVE_REVIEW_ACTIVITY = 1001;
+    private static final int RC_EDIT_DIVE_SPOT = 2001;
 
     private DivespotDetails divespotDetails;
     private ProgressDialog progressDialog;
@@ -480,10 +481,10 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 } else {
                     Intent leaveReviewIntent = new Intent(DiveSpotDetailsActivity.this,
                             LeaveReviewActivity.class);
-                    leaveReviewIntent.putExtra(Constants.DIVESPOTID, String.valueOf(diveSpot.getId()));
+                    leaveReviewIntent.putExtra(Constants.DIVESPOTID, String.valueOf(
+                            diveSpot.getId()));
                     startActivityForResult(leaveReviewIntent, RC_LEAVE_REVIEW_ACTIVITY);
                 }
-                //LeaveReviewActivity.show(this, String.valueOf(divespotDetails.getDivespot().getId()), 0);
                 break;
             case R.id.yes_button:
                 diveSpotValidation();
@@ -491,7 +492,9 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 thanksLayout.setVisibility(View.VISIBLE);
                 break;
             case R.id.no_button:
-                EditDiveSpotActivity.show(this, String.valueOf(divespotDetails.getDivespot().getId()));
+                Intent editDiveSpotIntent = new Intent(this, EditDiveSpotActivity.class);
+                editDiveSpotIntent.putExtra(Constants.DIVESPOTID, String.valueOf(diveSpot.getId()));
+                startActivityForResult(editDiveSpotIntent, RC_EDIT_DIVE_SPOT);
                 break;
             case R.id.thank_close:
                 thanksLayout.setVisibility(View.GONE);
@@ -740,6 +743,11 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             if (resultCode == RESULT_OK) {
                 getComments();
             }
+        }
+        if (requestCode == RC_EDIT_DIVE_SPOT && resultCode == RESULT_OK) {
+            Intent intent = getIntent();
+            startActivity(intent);
+            finish();
         }
     }
 

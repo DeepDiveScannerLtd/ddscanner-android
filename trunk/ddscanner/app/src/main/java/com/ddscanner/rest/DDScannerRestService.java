@@ -154,7 +154,7 @@ public interface DDScannerRestService {
     );
 
     @GET("diving/divespot/{id}/edit")
-    Call<ResponseBody> getDiveSpotForEdit(@Path("id") String id);
+    Call<ResponseBody> getDiveSpotForEdit(@Path("id") String id, @QueryMap Map<String, String> map);
 
     @POST("diving/divespot/comment/{id}/dislike")
     Call<ResponseBody> dislikeComment(

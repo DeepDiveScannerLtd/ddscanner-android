@@ -82,6 +82,22 @@ public class ReviewsListAdapter
 
     @Override
     public void onBindViewHolder(final ReviewsListViewHolder reviewsListViewHolder,final int i) {
+        boolean isLiked;
+        boolean isDisliked;
+        isLiked = comments.get(i).isLike();
+        isDisliked = comments.get(i).isDislike();
+        if (isLiked) {
+            likeUi(reviewsListViewHolder.dislikeImage,
+                    reviewsListViewHolder.likeImage,
+                    reviewsListViewHolder.likesCount,
+                    reviewsListViewHolder.dislikesCount);
+        }
+        if (isDisliked) {
+            dislikeUi(reviewsListViewHolder.dislikeImage,
+                    reviewsListViewHolder.likeImage,
+                    reviewsListViewHolder.likesCount,
+                    reviewsListViewHolder.dislikesCount);
+        }
         if (comments.get(i).getImages() != null) {
             LinearLayoutManager layoutManager = new LinearLayoutManager(context);
             layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);

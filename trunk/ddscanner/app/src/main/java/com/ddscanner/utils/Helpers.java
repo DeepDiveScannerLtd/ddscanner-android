@@ -12,6 +12,7 @@ import android.provider.MediaStore;
 import android.util.DisplayMetrics;
 
 import com.ddscanner.entities.User;
+import com.ddscanner.entities.request.RegisterRequest;
 import com.ddscanner.events.ShowUserDialogEvent;
 import com.ddscanner.ui.dialogs.ProfileDialog;
 
@@ -59,5 +60,19 @@ public class Helpers {
             images.set(i, path + images.get(i));
         }
         return images;
+    }
+
+    public RegisterRequest getRegisterRequest() {
+        RegisterRequest registerRequest = new RegisterRequest();
+        if (!SharedPreferenceHelper.getIsUserLogined()) {
+            return null;
+        }
+
+        registerRequest.setSocial(SharedPreferenceHelper.getSn());
+        registerRequest.setToken(SharedPreferenceHelper.getToken());
+        if (SharedPreferenceHelper.getSn().equals("tw")) {
+            registerRequest.setSecret(SharedPreferenceHelper.getSecret());
+        }
+        return registerRequest;
     }
 }

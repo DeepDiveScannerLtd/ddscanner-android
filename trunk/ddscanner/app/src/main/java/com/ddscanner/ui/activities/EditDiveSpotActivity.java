@@ -30,6 +30,7 @@ import com.ddscanner.entities.Sealife;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.AddPhotoToDsListAdapter;
 import com.ddscanner.ui.adapters.SealifeListAddingDiveSpotAdapter;
+import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
@@ -41,7 +42,9 @@ import com.rey.material.widget.Spinner;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -86,7 +89,6 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
     private ScrollView mainLayout;
     private ProgressView progressView;
 
-    private Helpers helpers = new Helpers();
     private List<String> imageUris = new ArrayList<String>();
     private List<Sealife> sealifes = new ArrayList<>();
     private List<String> images_del = new ArrayList<>();
@@ -98,6 +100,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
     private DiveSpotFull diveSpot;
     private AddPhotoToDsListAdapter addPhotoToDsListAdapter;
     private ProgressDialog progressDialog;
+    private Helpers helpers = new Helpers();
 
     private RequestBody requestName, requestLat, requestLng, requestDepth, requestVisibility,
             requestCurrents, requestLevel, requestObject, requestAccess,
@@ -110,7 +113,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_dive_spot);
-        diveSpotId = getIntent().getStringExtra("ID");
+        diveSpotId = getIntent().getStringExtra(Constants.DIVESPOTID);
         findViews();
         toolbarSettings();
         getDsInfoRequest();
@@ -143,6 +146,11 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
         mainLayout = (ScrollView) findViewById(R.id.main_layout);
         progressView = (ProgressView) findViewById(R.id.progressBarFull);
     }
+
+    /**
+     * Change data and settings of current activity views
+     * @author Andrei Lashkevich
+     */
 
     private void setUi() {
         progressDialog.setTitle("Please wait...");
@@ -181,6 +189,11 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
         mainLayout.setVisibility(View.VISIBLE);
     }
 
+    /**
+     * Change title and adding back icon to toolbar
+     * @author Andrei Lashkevich
+     */
+
     private void toolbarSettings() {
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);
@@ -194,8 +207,17 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
         context.startActivity(intent);
     }
 
+    /**
+     * Get dive spot information according last modification by current user
+     * @author Andrei Lashkevich
+     */
+
     private void getDsInfoRequest() {
-        Call<ResponseBody> call = RestClient.getServiceInstance().getDiveSpotForEdit(diveSpotId);
+        Map<String, String> map = new HashMap<>();
+        map.put("social", SharedPreferenceHelper.getSn());
+        map.put("token", SharedPreferenceHelper.getToken());
+        Call<ResponseBody> call = RestClient.getServiceInstance().getDiveSpotForEdit(
+                diveSpotId, map);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -225,6 +247,13 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
             }
         });
     }
+
+    /**
+     * Add path to images to name to have a full address of image for future work with this
+     * @author Andrei Lashkevich
+     * @param images
+     * @return images
+     */
 
     private List<String> changeImageAddresses(List<String> images) {
         for (int i = 0; i <images.size(); i++) {
@@ -259,6 +288,13 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
                 break;
         }
     }
+
+    /**
+     * Remove adress part from image URL for creating list of deleted images names
+     * @author Andrei Lashkevich
+     * @param deleted
+     * @return
+     */
 
     private ArrayList<String> removeAdressPart(ArrayList<String> deleted) {
 
@@ -373,14 +409,18 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
 
     private void createAddDiveSpotRequest() {
         Call<ResponseBody> call = RestClient.getServiceInstance().updateDiveSpot(
-                diveSpotId, requestType, requestName, requestLat, requestLng, requestDepth, requestVisibility,
-                requestCurrents, requestLevel, requestObject, requestAccess, requestDescription,
-                 sealifeRequest, newImages, deletedImages, requestToken, requestSocial, null
+                diveSpotId, requestType, requestName, requestLat, requestLng, requestDepth,
+                requestVisibility, requestCurrents, requestLevel, requestObject, requestAccess,
+                requestDescription, sealifeRequest, newImages, deletedImages, requestToken,
+                requestSocial, requestSecret
         );
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 progressDialog.dismiss();
+                Intent intent = new Intent();
+                setResult(RESULT_OK, intent);
+                finish();
             }
 
             @Override

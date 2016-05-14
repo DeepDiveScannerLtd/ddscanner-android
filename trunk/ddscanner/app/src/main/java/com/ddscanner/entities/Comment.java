@@ -19,15 +19,33 @@ public class Comment implements Serializable{
     private String likes;
     private String dislikes;
     private User user;
+    private boolean isLike;
+    private boolean isDislike;
 
-  /*  protected Comment(Parcel in) {
-        comment = in.readString();
-        rating = in.readString();
-        id = in.readString();
-        images = in.readList(images, List.class.getClassLoader());
-        date = in.readString();
+    public boolean isLike() {
+        return isLike;
     }
-*/
+
+    public void setLike(boolean like) {
+        isLike = like;
+    }
+
+    public boolean isDislike() {
+        return isDislike;
+    }
+
+    public void setDislike(boolean dislike) {
+        isDislike = dislike;
+    }
+
+    /*  protected Comment(Parcel in) {
+            comment = in.readString();
+            rating = in.readString();
+            id = in.readString();
+            images = in.readList(images, List.class.getClassLoader());
+            date = in.readString();
+        }
+    */
     public List<String> getImages() {
         return images;
     }
