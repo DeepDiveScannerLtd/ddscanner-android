@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -28,6 +29,9 @@ public class ProfileDialog extends DialogFragment implements View.OnClickListene
     private Context context;
     private User user;
 
+     private String FACEBOOK_URL;
+     private  String FACEBOOK_PAGE_ID;
+
     private TextView name;
     private TextView comments;
     private TextView likes;
@@ -45,15 +49,15 @@ public class ProfileDialog extends DialogFragment implements View.OnClickListene
         Bundle args = new Bundle();
         args.putParcelable("USER", user);
         profileDialog.setArguments(args);
-
         return profileDialog;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         user = getArguments().getParcelable("USER");
+        FACEBOOK_URL = "https://www.facebook.com/" + user.getSocialId();
+        FACEBOOK_PAGE_ID = user.getSocialId();
     }
 
     @Override
@@ -184,14 +188,25 @@ public class ProfileDialog extends DialogFragment implements View.OnClickListene
                 }
                 break;
             case "fb":
-                try {
-                    Intent intent1 = new Intent(Intent.ACTION_VIEW, Uri.parse("fb://facewebmodal/f?href=" + userName));
-                    startActivity(intent1);
-
-                }catch(Exception e){
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com/" + userName)));
-                }
+                Intent facebookIntent = new Intent(Intent.ACTION_VIEW);
+                String facebookUrl = getFacebookPageURL(getActivity());
+                facebookIntent.setData(Uri.parse(facebookUrl));
+                startActivity(facebookIntent);
                 break;
+        }
+    }
+
+    public String getFacebookPageURL(Context context) {
+        PackageManager packageManager = context.getPackageManager();
+        try {
+            int versionCode = packageManager.getPackageInfo("com.facebook.katana", 0).versionCode;
+            if (versionCode >= 3002850) { //newer versions of fb app
+                return "fb://facewebmodal/f?href=" + FACEBOOK_URL;
+            } else { //older versions of fb app
+                return "fb://page/" + FACEBOOK_PAGE_ID;
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            return FACEBOOK_URL; //normal web url
         }
     }
 
