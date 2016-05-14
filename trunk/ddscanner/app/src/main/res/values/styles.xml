@@ -46,7 +46,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">55dp</item>
     </style>
-    
+
     <style name="AddSealifeEditText">
         <item name="android:layout_height">56dp</item>
         <item name="android:layout_width">match_parent</item>
@@ -55,13 +55,13 @@
         <item name="android:textSize">16sp</item>
         <item name="android:gravity">center_vertical</item>
     </style>
-    
+
     <style name="AddDsSpinner" parent="Base.Widget.AppCompat.Spinner">
 
     </style>
 
     <style name="AddDsIconsStyle">
-     <!--   <item name="android:layout_marginLeft">@dimen/add_ds_margin_left</item>
+        <!--   <item name="android:layout_marginLeft">@dimen/add_ds_margin_left</item>
         <item name="android:layout_marginRight">@dimen/add_ds_margin_right_icon</item> -->
         <item name="android:layout_height">@dimen/add_ds_char_height</item>
         <item name="android:layout_width">@dimen/add_ds_char_width</item>
@@ -87,8 +87,7 @@
         <item name="tabTextAppearance">@style/customTabText</item>
     </style>
 
-    <style name="ToolbarTabLayout" parent="Widget.Design.TabLayout">
-    </style>
+    <style name="ToolbarTabLayout" parent="Widget.Design.TabLayout"></style>
 
     <style name="SelectedTabStyle">
         <item name="android:color">#2e80a0</item>
@@ -117,7 +116,7 @@
         <item name="cpd_strokeSize">2dp</item>
     </style>
 
-    <style name="CustomDialog" parent="@android:style/Theme.Holo.Light" >
+    <style name="CustomDialog" parent="@android:style/Theme.Holo.Light">
         <item name="android:windowBackground">@null</item>
         <item name="android:windowIsFloating">true</item>
     </style>
@@ -144,7 +143,7 @@
         <item name="android:layout_marginLeft">7dp</item>
     </style>
 
-   <!-- <style name="SealifeInputs">
+    <!-- <style name="SealifeInputs">
         <item name="app:et_dividerHeight">0dp</item>
         <item name="app:et_dividerColor">@android:color/transparent</item>
         <item name="app:et_labelTextSize">8sp</item>
@@ -164,11 +163,16 @@
         <item name="android:src">@drawable/divider</item>
         <item name="android:layout_marginLeft">65dp</item>
     </style>
+
     <style name="DividerStyleFull">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:scaleType">centerCrop</item>
         <item name="android:src">@drawable/divider</item>
     </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 </resources>

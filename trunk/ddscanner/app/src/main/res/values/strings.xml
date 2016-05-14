@@ -41,7 +41,6 @@
     <string name="serverNotResp">Server is not responsible, please try again later</string>
 
 
-
     <!-- Details layout -->
     <string name="sealifePlace">Sealife</string>
     <string name="details_reviews">reviews</string>
@@ -108,5 +107,6 @@
     <string name="show_all">Show all reviews (</string>
     <string name="skobka">)</string>
     <string name="peoples_checked_in_here"> people checked in here</string>
+    <string name="title_activity_main2">Main2Activity</string>
 
 </resources>

@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
     <include layout="@layout/view_toolbar"/>
     <android.support.design.widget.TabLayout
         android:id="@+id/photos_tab_layout"
@@ -12,10 +15,20 @@
         style="@style/tabLayout"
         android:background="@color/white"
         app:tabMode="fixed"/>
+    </android.support.design.widget.AppBarLayout>
     <android.support.v4.view.ViewPager
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_marginLeft="4dp"
         android:layout_marginTop="7dp"
         android:id="@+id/photos_view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-</LinearLayout>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_add_photo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:backgroundTint="@color/orange"
+        android:src="@drawable/ic_acb_plus"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="20dp"/>
+</android.support.design.widget.CoordinatorLayout>

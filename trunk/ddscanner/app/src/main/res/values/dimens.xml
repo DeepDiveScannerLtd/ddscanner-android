@@ -20,4 +20,5 @@
 
     <dimen name="rc_photos_dimen">0px</dimen>
     <dimen name="margin_betweens_blocks">15dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
 </resources>
