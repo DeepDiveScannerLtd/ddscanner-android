@@ -14,6 +14,7 @@ import com.ddscanner.ui.adapters.PhotosActivityPagerAdapter;
 import com.ddscanner.ui.fragments.DiveSpotAllPhotosFragment;
 import com.ddscanner.ui.fragments.DiveSpotPhotosFragment;
 import com.ddscanner.ui.fragments.DiveSpotReviewsPhoto;
+import com.ddscanner.utils.Helpers;
 
 import java.util.ArrayList;
 
@@ -29,6 +30,7 @@ public class DiveSpotPhotosActivity extends AppCompatActivity {
     private String path;
     private ArrayList<String> reviewsImages;
     private ArrayList<String> allPhotos;
+    private Helpers helpers = new Helpers();
 
     private DiveSpotAllPhotosFragment diveSpotAllPhotosFragment = new DiveSpotAllPhotosFragment();
     private DiveSpotPhotosFragment diveSpotPhotosFragment = new DiveSpotPhotosFragment();
@@ -57,7 +59,7 @@ public class DiveSpotPhotosActivity extends AppCompatActivity {
         bundle.putSerializable("reviewsImages", reviewsImages);
         diveSpotReviewsPhoto.setArguments(bundle);
 
-        allPhotos = compareArrays(reviewsImages, diveSpotImages);
+        allPhotos = helpers.compareArrays(reviewsImages, diveSpotImages);
 
         bundle = new Bundle();
         bundle.putSerializable("images", allPhotos);
@@ -67,19 +69,6 @@ public class DiveSpotPhotosActivity extends AppCompatActivity {
         setupViewPager();
         setUi();
         setUpTabLayout();
-    }
-
-    private ArrayList<String> compareArrays(ArrayList<String> first, ArrayList<String> second) {
-        ArrayList<String> allPhotos = new ArrayList<>();
-        if (first != null) {
-            allPhotos = (ArrayList<String>) first.clone();
-            for (int i = 0; i < second.size(); i++) {
-                allPhotos.add(second.get(i));
-            }
-            return allPhotos;
-        }
-        allPhotos =(ArrayList<String>) second.clone();
-        return allPhotos;
     }
 
     private void setUpTabLayout() {

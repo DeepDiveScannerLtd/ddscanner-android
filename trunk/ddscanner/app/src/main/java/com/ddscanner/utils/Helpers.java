@@ -22,6 +22,14 @@ import java.util.ArrayList;
  * Created by lashket on 9.4.16.
  */
 public class Helpers {
+
+    /**
+     * Method to get real path of file by URI
+     * @param context
+     * @param contentUri
+     * @return Path to image
+     */
+
     public static String getRealPathFromURI(Context context, Uri contentUri) {
         Cursor cursor = null;
         try {
@@ -37,12 +45,25 @@ public class Helpers {
         }
     }
 
+    /**
+     * COnverting dp to pixels size
+     * @param dp
+     * @param context
+     * @return dp value in pixels size
+     */
+
     public static float convertDpToPixel(float dp, Context context){
         Resources resources = context.getResources();
         DisplayMetrics metrics = resources.getDisplayMetrics();
         float px = dp * ((float)metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
         return px;
     }
+
+    /**
+     * Show dialog with user information
+     * @param user
+     * @param fragmentManager
+     */
 
     public void showDialog(User user, FragmentManager fragmentManager) {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -54,6 +75,13 @@ public class Helpers {
         DialogFragment dialogFragment = ProfileDialog.newInstance(user);
         dialogFragment.show(fragmentTransaction, "profile");
     }
+
+    /**
+     * Add path to name of image
+     * @param images
+     * @param path
+     * @return full URL's array
+     */
 
     public ArrayList<String> compareImageWithPath(ArrayList<String> images, String path) {
         for (int i = 0; i <images.size(); i++) {
@@ -75,4 +103,25 @@ public class Helpers {
         }
         return registerRequest;
     }
+
+    /**
+     * Comparing two arrays to third
+     * @param first
+     * @param second
+     * @return compared array
+     */
+
+    public ArrayList<String> compareArrays(ArrayList<String> first, ArrayList<String> second) {
+        ArrayList<String> allPhotos = new ArrayList<>();
+        if (first != null) {
+            allPhotos = (ArrayList<String>) first.clone();
+            for (int i = 0; i < second.size(); i++) {
+                allPhotos.add(second.get(i));
+            }
+            return allPhotos;
+        }
+        allPhotos =(ArrayList<String>) second.clone();
+        return allPhotos;
+    }
+
 }
