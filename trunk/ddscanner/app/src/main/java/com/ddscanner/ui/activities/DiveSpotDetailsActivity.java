@@ -621,7 +621,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private void diveSpotValidation() {
         Call<ResponseBody> call = RestClient.getServiceInstance()
                 .divespotValidation(String.valueOf(divespotDetails.getDivespot().getId()),
-                        getRegisterRequest());
+                        helpers.getRegisterRequest());
         call.enqueue(new retrofit2.Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -635,15 +635,10 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         });
     }
 
-    /**
-     * Create register request body
-     * @return
-     */
-
     private void addDiveSpotToFavorites() {
         Call<ResponseBody> call = RestClient.getServiceInstance().addDiveSpotToFavourites(
                 String.valueOf(diveSpot.getId()),
-                getRegisterRequest()
+                helpers.getRegisterRequest()
         );
         call.enqueue(new retrofit2.Callback<ResponseBody>() {
             @Override
@@ -658,18 +653,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
             }
         });
-    }
-
-    private RegisterRequest getRegisterRequest() {
-        RegisterRequest registerRequest = new RegisterRequest();
-        if (SharedPreferenceHelper.getIsUserLogined()) {
-            registerRequest.setSocial(SharedPreferenceHelper.getSn());
-            registerRequest.setToken(SharedPreferenceHelper.getToken());
-            if (SharedPreferenceHelper.getSn().equals("tw")) {
-                registerRequest.setSecret(SharedPreferenceHelper.getSecret());
-            }
-        }
-        return registerRequest;
     }
 
     private void getCheckins() {

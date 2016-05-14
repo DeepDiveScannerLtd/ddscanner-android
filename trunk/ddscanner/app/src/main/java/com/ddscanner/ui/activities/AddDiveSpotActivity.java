@@ -337,9 +337,13 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                         .get(objectSpinner.getSelectedItem().toString()));
         requestVisibility = RequestBody.create(MediaType.parse("multipart/form-data"),
                 helpers.getMirrorOfHashMap(filters.getVisibility())
-                        .get(visibilitySpinner.getSelectedItem()));
-        requestCurrents = RequestBody.create(MediaType.parse("multipart/form-data"), "strong");
-        requestLevel = RequestBody.create(MediaType.parse("multipart/form-data"), "master");
+                        .get(visibilitySpinner.getSelectedItem().toString()));
+        requestCurrents = RequestBody.create(MediaType.parse("multipart/form-data"),
+                helpers.getMirrorOfHashMap(filters.getCurrents())
+                        .get(currentsSpinner.getSelectedItem().toString()));
+        requestLevel = RequestBody.create(MediaType.parse("multipart/form-data"),
+                helpers.getMirrorOfHashMap(filters.getLevel())
+                        .get(levelSpinner.getSelectedItem().toString()));
         requestSocial = RequestBody.create(MediaType.parse("multipart/form-data"),
                 SharedPreferenceHelper.getSn());
         requestToken = RequestBody.create(MediaType.parse("multipart/form-data"),

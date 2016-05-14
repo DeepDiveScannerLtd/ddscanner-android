@@ -30,6 +30,7 @@ public class Helpers {
      * @param context
      * @param contentUri
      * @return Path to image
+     * @author Andrei Lashkevich
      */
 
     public static String getRealPathFromURI(Context context, Uri contentUri) {
@@ -52,6 +53,7 @@ public class Helpers {
      * @param dp
      * @param context
      * @return dp value in pixels size
+     * @author Andrei Lashkevich
      */
 
     public static float convertDpToPixel(float dp, Context context){
@@ -65,6 +67,7 @@ public class Helpers {
      * Show dialog with user information
      * @param user
      * @param fragmentManager
+     * @author Andrei Lashkevich
      */
 
     public void showDialog(User user, FragmentManager fragmentManager) {
@@ -83,6 +86,7 @@ public class Helpers {
      * @param images
      * @param path
      * @return full URL's array
+     * @author Andrei Lashkevich
      */
 
     public ArrayList<String> compareImageWithPath(ArrayList<String> images, String path) {
@@ -111,6 +115,7 @@ public class Helpers {
      * @param first
      * @param second
      * @return compared array
+     * @author Andrei Lashkevich
      */
 
     public ArrayList<String> compareArrays(ArrayList<String> first, ArrayList<String> second) {
@@ -129,7 +134,8 @@ public class Helpers {
     /**
      * CHange key-value params to value-keys to using this in spinners
      * @param map
-     * @return
+     * @return mirror map
+     * @author Andrei Lashkevich
      */
 
     public Map<String, String> getMirrorOfHashMap(Map<String, String> map) {
