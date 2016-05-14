@@ -8,6 +8,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
 import com.ddscanner.R;
 import com.ddscanner.ui.adapters.PhotosActivityPagerAdapter;
@@ -45,14 +46,14 @@ public class DiveSpotPhotosActivity extends AppCompatActivity {
 
         path = getIntent().getStringExtra("path");
 
-        diveSpotImages = addPathToAdress(diveSpotImages, path);
+        diveSpotImages = helpers.compareImageWithPath(diveSpotImages, path);
 
         Bundle bundle = new Bundle();
         bundle.putSerializable("diveSpotImages", diveSpotImages);
         diveSpotPhotosFragment.setArguments(bundle);
 
         if (reviewsImages != null) {
-            reviewsImages = addPathToAdress(reviewsImages, path);
+            reviewsImages = helpers.compareImageWithPath(reviewsImages, path);
         }
 
         bundle = new Bundle();
@@ -112,10 +113,13 @@ public class DiveSpotPhotosActivity extends AppCompatActivity {
         context.startActivity(intent);
     }
 
-    private ArrayList<String> addPathToAdress(ArrayList<String> images, String path) {
-        for (int i = 0; i < images.size(); i++) {
-            images.set(i, path + images.get(i));
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                break;
         }
-        return images;
+        return super.onOptionsItemSelected(item);
     }
 }
