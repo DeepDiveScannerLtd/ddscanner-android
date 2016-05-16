@@ -4,13 +4,18 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.design.widget.TabLayout;
 import android.support.percent.PercentRelativeLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -22,10 +27,14 @@ import android.widget.RelativeLayout;
 import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.events.ChooseProfileFragmentViewEvent;
+import com.ddscanner.events.GetPhotoFromCameraEvent;
 import com.ddscanner.events.PlaceChoosedEvent;
+import com.ddscanner.events.TakePhotoFromCameraEvent;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.services.RegistrationIntentService;
 import com.ddscanner.ui.adapters.MainActivityPagerAdapter;
+import com.ddscanner.ui.fragments.EditProfileFragment;
 import com.ddscanner.ui.fragments.MapListFragment;
 import com.ddscanner.ui.fragments.NotificationsFragment;
 import com.ddscanner.ui.fragments.ProfileFragment;
@@ -37,8 +46,12 @@ import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+import com.squareup.otto.Subscribe;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -52,12 +65,21 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
 
     private static final int REQUEST_CODE_PLACE_AUTOCOMPLETE = 1000;
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+    static final int REQUEST_IMAGE_CAPTURE = 1;
+    private Uri capturedImageUri;
 
     private TabLayout toolbarTabLayout;
     private ViewPager mainViewPager;
     private PercentRelativeLayout menuItemsLayout;
     private ImageView searchLocationBtn;
     private ImageView btnFilter;
+    private MainActivityPagerAdapter adapter;
+    private ImageView imageView;
+
+    private MapListFragment mapListFragment = new MapListFragment();
+    private NotificationsFragment notificationsFragment = new NotificationsFragment();
+    private ProfileFragment profileFragment = new ProfileFragment();
+    private EditProfileFragment editProfileFragment = new EditProfileFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,10 +116,10 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        MainActivityPagerAdapter adapter = new MainActivityPagerAdapter(getSupportFragmentManager());
+        adapter = new MainActivityPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new MapListFragment(), "mapl/list");
         adapter.addFragment(new NotificationsFragment(), "notifications");
-        adapter.addFragment(new ProfileFragment(), "profile");
+        adapter.addFragment(profileFragment, "profile");
         viewPager.setAdapter(adapter);
     }
 
@@ -161,17 +183,15 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case REQUEST_CODE_PLACE_AUTOCOMPLETE:
-                if (resultCode == RESULT_OK) {
-                    final Place place = PlaceAutocomplete.getPlace(this, data);
-                    AppsFlyerLib.getInstance().trackEvent(getApplicationContext(),
-                            EventTrackerHelper.EVENT_PLACE_SEARCH_CHOSEN, new HashMap<String, Object>() {{
-                                put(EventTrackerHelper.PARAM_PLACE_SEARCH_CHOSEN, place.getLatLng().toString());
-                            }});
-                    DDScannerApplication.bus.post(new PlaceChoosedEvent(place.getViewport()));
-                }
-                break;
+        profileFragment.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_PLACE_AUTOCOMPLETE) {
+            if (resultCode == RESULT_OK) {
+                final Place place = PlaceAutocomplete.getPlace(this, data);
+                DDScannerApplication.bus.post(new PlaceChoosedEvent(place.getViewport()));
+            }
+        }
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            profileFragment.setImage(capturedImageUri);
         }
     }
 
@@ -223,5 +243,39 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
             return false;
         }
         return true;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        DDScannerApplication.bus.register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        DDScannerApplication.bus.unregister(this);
+    }
+
+    @Subscribe
+    public void changeProfileFragmentView(TakePhotoFromCameraEvent event) {
+        dispatchTakePictureIntent();
+    }
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+
+//folder stuff
+        File imagesFolder = new File(Environment.getExternalStorageDirectory(), "MyImages");
+        imagesFolder.mkdirs();
+
+        File image = new File(imagesFolder, "QR_" + timeStamp + ".png");
+        capturedImageUri = Uri.fromFile(image);
+
+        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, capturedImageUri);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        }
     }
 }
