@@ -4,10 +4,13 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Fragment;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.UiThread;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.AppCompatDrawableManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,6 +37,9 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by lashket on 19.4.16.
  */
@@ -57,6 +63,10 @@ public class DiveSpotsMapFragment extends Fragment implements View.OnClickListen
     private ImageView zoomOut;
     private ImageView goToMyLocation;
     private Long lastDiveSpotId;
+    private RelativeLayout mainLayout;
+    private TextView object;
+
+    private Map<String, Drawable> map = new HashMap<>();
 
     private MapListPagerAdapter mapListPagerAdapter;
     private View v;
@@ -64,15 +74,25 @@ public class DiveSpotsMapFragment extends Fragment implements View.OnClickListen
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
        // super.onCreateView(inflater, container, savedInstanceState);
+        map.put("wreck", AppCompatDrawableManager.get().getDrawable(getActivity(),
+                R.drawable.iw_card_wreck, false));
+        map.put("cave", AppCompatDrawableManager.get().getDrawable(getActivity(),
+                R.drawable.iw_card_cave, false));
+        map.put("reef", AppCompatDrawableManager.get().getDrawable(getActivity(),
+                R.drawable.iw_card_reef, false));
+        map.put("other", AppCompatDrawableManager.get().getDrawable(getActivity(),
+                R.drawable.iw_card_other, false));
         v = inflater.inflate(R.layout.dive_sites_map_fragment, container, false);
         diveSpotInfo = (RelativeLayout) v.findViewById(R.id.dive_spot_info_layout);
         diveSpotName = (TextView) v.findViewById(R.id.dive_spot_title);
         rating = (LinearLayout) v.findViewById(R.id.rating);
         zoomIn = (ImageView) v.findViewById(R.id.zoom_plus);
         zoomOut = (ImageView) v.findViewById(R.id.zoom_minus);
+        object = (TextView) v.findViewById(R.id.divespot_type);
         goToMyLocation = (ImageView) v.findViewById(R.id.go_to_my_location);
         mapListFAB = (FloatingActionButton) v.findViewById(R.id.map_list_fab);
         addDsFab = (FloatingActionButton) v.findViewById(R.id.add_ds_fab);
+        mainLayout = (RelativeLayout) v.findViewById(R.id.main_layout);
         addDsFab.setOnClickListener(this);
         mapListFAB.setOnClickListener(this);
         mMapView = (MapView) v.findViewById(R.id.mapView);
@@ -160,6 +180,13 @@ public class DiveSpotsMapFragment extends Fragment implements View.OnClickListen
                 });
         diveSpotName.setText(event.getDiveSpot().getName());
         lastDiveSpotId = event.getDiveSpot().getId();
+        if (event.getDiveSpot().getObject() != null) {
+            object.setText(event.getDiveSpot().getObject());
+            mainLayout.setBackgroundDrawable(map.get(event.getDiveSpot().getObject()));
+        } else {
+            object.setText("Other");
+            mainLayout.setBackgroundDrawable(map.get("other"));
+        }
         rating.removeAllViews();
         for (int k = 0; k < event.getDiveSpot().getRating(); k++) {
             ImageView iv = new ImageView(context);
