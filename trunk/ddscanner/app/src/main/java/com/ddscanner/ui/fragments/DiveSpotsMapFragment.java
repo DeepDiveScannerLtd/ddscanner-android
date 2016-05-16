@@ -180,13 +180,13 @@ public class DiveSpotsMapFragment extends Fragment implements View.OnClickListen
                 });
         diveSpotName.setText(event.getDiveSpot().getName());
         lastDiveSpotId = event.getDiveSpot().getId();
-        if (event.getDiveSpot().getObject() != null) {
+     /*   if (event.getDiveSpot().getObject() != null) {
             object.setText(event.getDiveSpot().getObject());
             mainLayout.setBackgroundDrawable(map.get(event.getDiveSpot().getObject()));
         } else {
             object.setText("Other");
             mainLayout.setBackgroundDrawable(map.get("other"));
-        }
+        }*/
         rating.removeAllViews();
         for (int k = 0; k < event.getDiveSpot().getRating(); k++) {
             ImageView iv = new ImageView(context);
