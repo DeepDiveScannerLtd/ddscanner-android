@@ -123,8 +123,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
     private List<Comment> usersComments;
     private List<User> usersCheckins;
-
-
+    private List<User> editors;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -398,6 +397,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                     diveSpotCoordinates = new LatLng(divespotDetails.getDivespot().getLat(),
                             divespotDetails.getDivespot().getLng());
                     usersComments = divespotDetails.getComments();
+                    editors = divespotDetails.getEditors();
                     setUi();
                 } else {
 
@@ -467,7 +467,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 break;
             case R.id.btn_show_all_reviews:
                 Log.i("TAG", "OK");
-                if (divespotDetails.getComments() != null || usersComments.size() > 0) {
+                if (divespotDetails.getComments() != null || usersComments != null) {
                     Intent reviewsIntent = new Intent(DiveSpotDetailsActivity.this,
                             ReviewsActivity.class);
                     Bundle bundle = new Bundle();

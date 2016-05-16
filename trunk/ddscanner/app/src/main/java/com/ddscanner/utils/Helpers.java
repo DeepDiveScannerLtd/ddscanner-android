@@ -5,16 +5,23 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.DisplayMetrics;
+import android.view.View;
+import android.widget.TextView;
 
 import com.ddscanner.entities.User;
 import com.ddscanner.entities.request.RegisterRequest;
 import com.ddscanner.events.ShowUserDialogEvent;
+import com.ddscanner.ui.activities.SocialNetworks;
 import com.ddscanner.ui.dialogs.ProfileDialog;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -132,7 +139,7 @@ public class Helpers {
     }
 
     /**
-     * CHange key-value params to value-keys to using this in spinners
+     * Change key-value params to value-keys to using this in spinners
      * @param map
      * @return mirror map
      * @author Andrei Lashkevich
@@ -146,5 +153,52 @@ public class Helpers {
         return returnMap;
     }
 
+    /**
+     * Handling errors and showing this in textviews
+     * @param context
+     * @param errorsMap
+     * @param errors
+     * @param number
+     */
 
+    public void erroHandling(Context context, Map<String,TextView> errorsMap, String errors, int number) {
+        JsonObject jsonObject = new JsonParser().parse(errors).getAsJsonObject();
+        for (Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) {
+            if(!entry.getKey().equals("")) {
+                if (entry.getKey().equals("token")) {
+                    return;
+                }
+                if (errorsMap.get(entry.getKey()) != null) {
+                    String key = entry.getKey();
+                    String value = entry.getValue().toString();
+                    value = value.replace("[\"", "");
+                    value = value.replace("\"]", "");
+                    errorsMap.get(key).setVisibility(View.VISIBLE);
+                    errorsMap.get(key).setText(value);
+                }
+            }
+        }
+    }
+
+    /**
+     * Check if error caused by login
+     * @param errors
+     * @param errNumber
+     * @return
+     */
+
+    public boolean isErrorCausedByLogin(String errors, int errNumber) {
+        if (errNumber == 400) {
+            return true;
+        }
+        JsonObject jsonObject = new JsonParser().parse(errors).getAsJsonObject();
+        for (Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) {
+            if(!entry.getKey().equals("")) {
+                if (entry.getKey().equals("token")) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }

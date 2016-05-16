@@ -89,7 +89,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         super(context, googleMap);
         this.context = context;
         this.googleMap = googleMap;
-        this.clusterBackgroundDrawable = ContextCompat.getDrawable(context, R.drawable.ic_number);
+        this.clusterBackgroundDrawable = ContextCompat.getDrawable(context, R.drawable.pin_circle_1);
         this.clusterIconGenerator = new IconGenerator(context);
         this.clusterIconGenerator.setContentView(this.makeSquareTextView(context));
         this.clusterIconGenerator.setTextAppearance(com.google.maps.android.R.style.ClusterIcon_TextAppearance);

@@ -335,6 +335,8 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         requestObject = RequestBody.create(MediaType.parse("multipart/form-data"),
                 helpers.getMirrorOfHashMap(filters.getObject())
                         .get(objectSpinner.getSelectedItem().toString()));
+        Log.i("Selected", helpers.getMirrorOfHashMap(filters.getVisibility())
+                .get(visibilitySpinner.getSelectedItem().toString()));
         requestVisibility = RequestBody.create(MediaType.parse("multipart/form-data"),
                 helpers.getMirrorOfHashMap(filters.getVisibility())
                         .get(visibilitySpinner.getSelectedItem().toString()));

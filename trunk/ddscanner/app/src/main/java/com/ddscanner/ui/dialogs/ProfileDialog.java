@@ -67,7 +67,8 @@ public class ProfileDialog extends DialogFragment implements View.OnClickListene
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater,
+                             ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.dialog_profile_info, container,false);
         setUi(v);
         name = (TextView) v.findViewById(R.id.name);
@@ -181,10 +182,11 @@ public class ProfileDialog extends DialogFragment implements View.OnClickListene
                 try {
                     Intent intent = new Intent(Intent.ACTION_VIEW);
                     intent.setData(Uri.parse("https://plus.google.com/" + userName));
-                    intent.setPackage("com.google.android.apps.plus"); // don't open the browser, make sure it opens in Google+ app
+                    intent.setPackage("com.google.android.apps.plus");
                     startActivity(intent);
                 } catch (Exception e) {
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://plus.google.com/" + userName)));
+                    startActivity(new Intent(
+                            Intent.ACTION_VIEW, Uri.parse("https://plus.google.com/" + userName)));
                 }
                 break;
             case "fb":
@@ -196,17 +198,24 @@ public class ProfileDialog extends DialogFragment implements View.OnClickListene
         }
     }
 
+    /**
+     * Check version of facebook app. According this create uri to open this
+     * @param context
+     * @return facebook URL to open app correctly
+     * @author Andrei Lashkevich
+     */
+
     public String getFacebookPageURL(Context context) {
         PackageManager packageManager = context.getPackageManager();
         try {
             int versionCode = packageManager.getPackageInfo("com.facebook.katana", 0).versionCode;
-            if (versionCode >= 3002850) { //newer versions of fb app
+            if (versionCode >= 3002850) {
                 return "fb://facewebmodal/f?href=" + FACEBOOK_URL;
-            } else { //older versions of fb app
+            } else {
                 return "fb://page/" + FACEBOOK_PAGE_ID;
             }
         } catch (PackageManager.NameNotFoundException e) {
-            return FACEBOOK_URL; //normal web url
+            return FACEBOOK_URL;
         }
     }
 
@@ -214,15 +223,10 @@ public class ProfileDialog extends DialogFragment implements View.OnClickListene
     public void onStart()
     {
         super.onStart();
-
-        // safety check
         if (getDialog() == null)
             return;
-        int dialogWidth = Math.round(Helpers.convertDpToPixel(285, getActivity())); // specify a value here
-        int dialogHeight = LinearLayout.LayoutParams.WRAP_CONTENT; // specify a value here
-
+        int dialogWidth = Math.round(Helpers.convertDpToPixel(285, getActivity()));
+        int dialogHeight = LinearLayout.LayoutParams.WRAP_CONTENT;
         getDialog().getWindow().setLayout(dialogWidth, dialogHeight);
-
-        // ... other stuff you want to do in your onStart() method
     }
 }
