@@ -21,6 +21,7 @@ public class SharedPreferenceHelper {
     private static final String PHOTOLINK = "PHOTOLINK";
     private static final String USERNAME = "USERNAME";
     private static final String LINK = "LINK";
+    private static final String USER_SERVER_ID = "USER_SERVER_ID";
 
 
     private static SharedPreferences prefs;
@@ -191,7 +192,21 @@ public class SharedPreferenceHelper {
         SharedPreferenceHelper.setUsername("");
         SharedPreferenceHelper.setToken("");
         SharedPreferenceHelper.setLink("");
+        SharedPreferenceHelper.setUserServerId("");
+        SharedPreferenceHelper.setSecret("");
         SharedPreferenceHelper.setIsUserSignedIn(false);
+    }
+
+    public static void setUserServerId(String id) {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        Editor editor = prefs.edit();
+        editor.putString(USER_SERVER_ID, id);
+        editor.commit();
+    }
+
+    public static String getUserServerId() {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        return prefs.getString(USER_SERVER_ID, "");
     }
 
 }

@@ -92,6 +92,7 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
     private RequestBody requessToken = null;
     private RequestBody requestSocial = null;
     private RequestBody requestSecret = null;
+    private Helpers helpers = new Helpers();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -318,7 +319,7 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
         if (requestCode == RC_PICK_PHOTO) {
             if (resultCode == RESULT_OK) {
                 Uri uri = data.getData();
-                imageUris.add(Helpers.getRealPathFromURI(LeaveReviewActivity.this, uri));
+                imageUris.add(helpers.getRealPathFromURI(LeaveReviewActivity.this, uri));
                 photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris,
                         LeaveReviewActivity.this, addPhotoTitle));
             }

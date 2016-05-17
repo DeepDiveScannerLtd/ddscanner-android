@@ -289,7 +289,9 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         if (diveSpot.getCreator() != null) {
             creatorLayout.setVisibility(View.VISIBLE);
             Picasso.with(this).load(diveSpot.getCreator().getPicture())
-                    .transform(new TransformationRoundImage(50,0)).into(creatorAvatar);
+                    .resize(60,60)
+                    .centerCrop()
+                    .transform(new TransformationRoundImage(100,0)).into(creatorAvatar);
             creatorLayout.setOnClickListener(this);
         }
 

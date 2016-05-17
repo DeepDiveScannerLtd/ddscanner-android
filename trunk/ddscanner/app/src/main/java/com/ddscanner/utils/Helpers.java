@@ -40,7 +40,7 @@ public class Helpers {
      * @author Andrei Lashkevich
      */
 
-    public static String getRealPathFromURI(Context context, Uri contentUri) {
+    public String getRealPathFromURI(Context context, Uri contentUri) {
         Cursor cursor = null;
         try {
             String[] proj = { MediaStore.Images.Media.DATA };
@@ -63,7 +63,7 @@ public class Helpers {
      * @author Andrei Lashkevich
      */
 
-    public static float convertDpToPixel(float dp, Context context){
+    public float convertDpToPixel(float dp, Context context){
         Resources resources = context.getResources();
         DisplayMetrics metrics = resources.getDisplayMetrics();
         float px = dp * ((float)metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);

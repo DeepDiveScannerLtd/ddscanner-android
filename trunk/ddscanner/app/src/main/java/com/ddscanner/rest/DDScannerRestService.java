@@ -176,4 +176,21 @@ public interface DDScannerRestService {
 
     @GET("diving/divespot/{id}/comments")
     Call<ResponseBody> getComments(@Path("id") String id);
+
+    @GET("diving/user/{id}")
+    Call<ResponseBody> getUserInfo(@Path("id") String id);
+
+    @POST("diving/user/{id}")
+    @Multipart
+    Call<ResponseBody> updateUserById(
+            @Path("id") String id,
+            @Part("_method") RequestBody _method,
+            @Part MultipartBody.Part image,
+            @Part("name") RequestBody name,
+            @Part("username") RequestBody username,
+            @Part("about") RequestBody about,
+            @Part("token") RequestBody token,
+            @Part("social") RequestBody sn,
+            @Part("secret") RequestBody secret
+    );
 }

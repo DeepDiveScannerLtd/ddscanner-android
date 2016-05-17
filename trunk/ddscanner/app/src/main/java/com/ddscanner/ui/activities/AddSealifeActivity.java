@@ -74,7 +74,7 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
     private TextView name_error;
     private TextView habitat_error;
     private TextView distribution_error;
-
+    private Helpers helpers = new Helpers();
 
     private Map<String, TextView> errorsMap = new HashMap<>();
 
@@ -235,7 +235,7 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
         if (createSealifeRequest.getSocial() != null && createSealifeRequest.getSocial().equals("tw")) {
             secret = SharedPreferenceHelper.getSecret();
         }
-        File file = new File(Helpers.getRealPathFromURI(this, imageFileUri));
+        File file = new File(helpers.getRealPathFromURI(this, imageFileUri));
         RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
         MultipartBody.Part body = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
         Call<ResponseBody> call = RestClient.getServiceInstance().addSealife(

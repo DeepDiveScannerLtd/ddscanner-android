@@ -301,6 +301,7 @@ public class SocialNetworks extends AppCompatActivity implements GoogleApiClient
                     SharedPreferenceHelper.setPhotolink(selfProfile.getPicture());
                     SharedPreferenceHelper.setUsername(selfProfile.getName());
                     SharedPreferenceHelper.setLink(selfProfile.getLink());
+                    SharedPreferenceHelper.setUserServerId(selfProfile.getId());
                     Intent returnIntent = new Intent();
                     setResult(Activity.RESULT_OK, returnIntent);
                     AppsFlyerLib.getInstance().trackEvent(getApplicationContext(), EventTrackerHelper

@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
 <ScrollView
@@ -14,7 +16,7 @@
     android:layout_height="match_parent">
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:background="@color/white">
         <ImageView
@@ -25,7 +27,6 @@
             android:src="@drawable/avatar_profile_default"/>
         <TextView
             android:id="@+id/user_name"
-            android:text="Jason statham"
             android:layout_marginTop="10dp"
             android:textSize="18sp"
             android:gravity="center"
@@ -33,6 +34,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/black_text"/>
         <LinearLayout
+            android:visibility="gone"
             android:layout_marginTop="7dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -52,7 +54,10 @@
                 android:textColor="#ed1b24"/>
         </LinearLayout>
         <TextView
+            android:id="@+id/user_about"
+            android:visibility="gone"
             android:layout_marginTop="7dp"
+            android:layout_marginBottom="7dp"
             android:layout_marginLeft="43dp"
             android:layout_marginRight="43dp"
             android:layout_width="match_parent"
@@ -60,9 +65,9 @@
             android:gravity="center"
             android:textColor="#616161"
             android:textSize="13sp"
-            android:text="Cdc Issues Health Alert Notivce For travelers To Usa From Hon"/>
+            />
         <LinearLayout
-            android:layout_marginTop="25dp"
+            android:layout_marginBottom="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -250,6 +255,7 @@
             android:layout_marginTop="10dp"
             style="@style/DividerStyleFull"/>
         <LinearLayout
+            android:background="?attr/selectableItemBackground"
             android:id="@+id/edit_profile"
             android:orientation="horizontal"
             android:layout_width="match_parent"
@@ -272,6 +278,8 @@
         <ImageView
             style="@style/DividerStyleFull"/>
         <LinearLayout
+            android:id="@+id/logout"
+            android:background="?attr/selectableItemBackground"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="55dp">
@@ -334,6 +342,7 @@
                 android:gravity="center"
                 android:background="@drawable/shape_gray_oval">
                 <ImageView
+                    android:id="@+id/pick_photo_from_gallery"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_attach_gallery"/>
@@ -370,6 +379,8 @@
                         style="@style/AddDsCharTitleStyle"
                         android:text="@string/full_name"/>
                     <EditText
+                        android:hint="Full name"
+                        android:id="@+id/fullName"
                         android:background="@android:color/transparent"
                         android:text=""
                         android:layout_width="wrap_content"
@@ -401,8 +412,10 @@
                         style="@style/AddDsCharTitleStyle"
                         android:text="@string/about"/>
                     <EditText
+                        android:id="@+id/aboutEdit"
                         android:background="@android:color/transparent"
                         android:text=""
+                        android:hint="About"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="14sp"/>
@@ -413,19 +426,23 @@
         <ImageView
             style="@style/DividerStyleFull" />
         <Button
+            android:id="@+id/button_save"
             android:layout_margin="20dp"
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:background="@drawable/border_button_orange_2px"
             android:text="@string/save_changes"
             />
-        <Button
+        <com.rey.material.widget.Button
+            android:id="@+id/cancel_button"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:background="@drawable/border_button_white_2px"
             android:text="@string/cancel"
+            app:rd_rippleType="touch"
+            app:rd_backgroundColor="@color/gray"
             />
     </LinearLayout>
     </LinearLayout>
