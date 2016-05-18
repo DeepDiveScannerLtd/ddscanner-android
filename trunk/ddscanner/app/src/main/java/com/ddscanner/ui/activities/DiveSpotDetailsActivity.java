@@ -468,11 +468,10 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 if (isCheckedIn) {
                     checkOut();
                 } else {
-                    checkIn();
+                    showCheckInDialog();
                 }
                 break;
             case R.id.btn_show_all_reviews:
-                Log.i("TAG", "OK");
                 if (divespotDetails.getComments() != null || usersComments != null) {
                     Intent reviewsIntent = new Intent(DiveSpotDetailsActivity.this,
                             ReviewsActivity.class);
@@ -498,7 +497,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 thanksLayout.setVisibility(View.VISIBLE);
                 break;
             case R.id.no_button:
-                showDialog();
+                showEditDiveSpotDialog();
                 break;
             case R.id.thank_close:
                 thanksLayout.setVisibility(View.GONE);
@@ -509,23 +508,19 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         }
     }
 
-    private void showDialog() {
+    private void showEditDiveSpotDialog() {
        MaterialDialog.Builder dialog = new MaterialDialog.Builder(this)
-               .title("Edit")
-               .content("Do you want to edit this dive spot yourself?")
-               .positiveText("Yes")
+               .title(R.string.edit)
+               .content(R.string.question_edit_dive_spot)
+               .positiveText(R.string.btn_yes)
                .positiveColor(getResources().getColor(R.color.primary))
                .negativeColor(getResources().getColor(R.color.primary))
-               .negativeText("No, just vote")
+               .negativeText(R.string.no_just_vote_answer)
                .onPositive(new MaterialDialog.SingleButtonCallback() {
                    @Override
                    public void onClick(@NonNull MaterialDialog dialog,
                                        @NonNull DialogAction which) {
-                       Intent editDiveSpotIntent = new Intent(DiveSpotDetailsActivity.this,
-                               EditDiveSpotActivity.class);
-                       editDiveSpotIntent
-                               .putExtra(Constants.DIVESPOTID, String.valueOf(diveSpot.getId()));
-                       startActivityForResult(editDiveSpotIntent, RC_EDIT_DIVE_SPOT);
+                       checkIn();
                    }
                })
                .onNegative(new MaterialDialog.SingleButtonCallback() {
@@ -538,6 +533,35 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
               dialog.show();
     }
 
+
+    private void showCheckInDialog() {
+        MaterialDialog.Builder dialog = new MaterialDialog.Builder(this)
+                .title(R.string.dialog_title_check_in)
+                .content(R.string.dialog_check_in_content)
+                .positiveText(R.string.ok)
+                .positiveColor(getResources().getColor(R.color.primary))
+                .negativeColor(getResources().getColor(R.color.primary))
+                .negativeText(R.string.dialog_cancel)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog,
+                                        @NonNull DialogAction which) {
+                        Intent editDiveSpotIntent = new Intent(DiveSpotDetailsActivity.this,
+                                EditDiveSpotActivity.class);
+                        editDiveSpotIntent
+                                .putExtra(Constants.DIVESPOTID, String.valueOf(diveSpot.getId()));
+                        startActivityForResult(editDiveSpotIntent, RC_EDIT_DIVE_SPOT);
+                    }
+                })
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog,
+                                        @NonNull DialogAction which) {
+                        dialog.dismiss();
+                    }
+                });
+        dialog.show();
+    }
     /**
      * Sending request when try to check in in dive spot and change FAB style
      * @author Andrei Lashkevich
