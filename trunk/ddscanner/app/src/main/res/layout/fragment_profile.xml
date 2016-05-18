@@ -149,7 +149,7 @@
                     style="@style/CharacteristicsDiveSpotListTitle"
                     android:text="Check in"/>
                 <TextView
-                    android:id="@+id/depth"
+                    android:id="@+id/checkin_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/depth_title"
@@ -180,6 +180,7 @@
                     style="@style/CharacteristicsDiveSpotListTitle"
                     android:text="@string/created"/>
                 <TextView
+                    android:id="@+id/added_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/depth_title"
@@ -210,6 +211,7 @@
                     style="@style/CharacteristicsDiveSpotListTitle"
                     android:text="@string/edited_low"/>
                 <TextView
+                    android:id="@+id/edited_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/depth_title"
@@ -240,6 +242,7 @@
                     style="@style/CharacteristicsDiveSpotListTitle"
                     android:text="@string/favourites"/>
                 <TextView
+                    android:id="@+id/favourites_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/depth_title"

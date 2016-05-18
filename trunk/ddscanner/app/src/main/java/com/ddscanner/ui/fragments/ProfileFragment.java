@@ -66,6 +66,10 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     private Button saveChanges;
     private TextView userFullName;
     private TextView userAbout;
+    private TextView checkInCount;
+    private TextView favouriteCount;
+    private TextView addedCount;
+    private TextView editedCount;
     private ImageView pickPhotoFromGallery;
 
     private RequestBody requestSecret = null;
@@ -103,6 +107,10 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     }
 
     private void findViews(View v) {
+        checkInCount = (TextView) v.findViewById(R.id.checkin_count);
+        addedCount = (TextView) v.findViewById(R.id.added_count);
+        favouriteCount = (TextView) v.findViewById(R.id.favourites_count);
+        editedCount = (TextView) v.findViewById(R.id.edited_count);
         aboutLayout = (ScrollView) v.findViewById(R.id.about);
         editLayout = (LinearLayout) v.findViewById(R.id.editProfile);
         editProfile = (LinearLayout) v.findViewById(R.id.edit_profile);
@@ -224,6 +232,10 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             userAbout.setText(user.getAbout());
         }
         userFullName.setText(user.getName());
+        addedCount.setText(user.getCountAdd());
+        editedCount.setText(user.getCountEdit());
+        favouriteCount.setText(user.getCountFavorite());
+        checkInCount.setText(user.getCountCheckin());
     }
 
     @Override
