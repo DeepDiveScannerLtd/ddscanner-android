@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.ddscanner.R;
@@ -33,6 +34,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.rey.material.widget.ProgressView;
 import com.rey.material.widget.Spinner;
 
 import java.io.File;
@@ -79,6 +81,9 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     private Button btnSave;
     private RecyclerView sealifesRc;
     private SealifeListAddingDiveSpotAdapter sealifeListAddingDiveSpotAdapter;
+    private ScrollView mainLayout;
+    private ProgressView progressView;
+
 
     private Helpers helpers = new Helpers();
     private List<String> imageUris = new ArrayList<String>();
@@ -128,6 +133,8 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         btnSave = (Button) findViewById(R.id.button_create);
         sealifesRc = (RecyclerView) findViewById(R.id.sealifes_rc);
         addSealifeTitle = (TextView) findViewById(R.id.add_sealife_text);
+        mainLayout = (ScrollView) findViewById(R.id.main_layout);
+        progressView = (ProgressView) findViewById(R.id.progressBarFull);
     }
 
     /**
@@ -164,8 +171,12 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("New Divespot");
 
-        progressDialog.setTitle("Wait while dive spot adding");
+        progressDialog.setMessage("Wait while dive spot adding");
         progressDialog.setCancelable(false);
+
+        progressView.stop();
+        progressView.setVisibility(View.GONE);
+        mainLayout.setVisibility(View.VISIBLE);
     }
 
 

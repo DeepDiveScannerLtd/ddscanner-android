@@ -520,7 +520,11 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                    @Override
                    public void onClick(@NonNull MaterialDialog dialog,
                                        @NonNull DialogAction which) {
-                       checkIn();
+                       Intent editDiveSpotIntent = new Intent(DiveSpotDetailsActivity.this,
+                               EditDiveSpotActivity.class);
+                       editDiveSpotIntent
+                               .putExtra(Constants.DIVESPOTID, String.valueOf(diveSpot.getId()));
+                       startActivityForResult(editDiveSpotIntent, RC_EDIT_DIVE_SPOT);
                    }
                })
                .onNegative(new MaterialDialog.SingleButtonCallback() {
@@ -546,11 +550,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog,
                                         @NonNull DialogAction which) {
-                        Intent editDiveSpotIntent = new Intent(DiveSpotDetailsActivity.this,
-                                EditDiveSpotActivity.class);
-                        editDiveSpotIntent
-                                .putExtra(Constants.DIVESPOTID, String.valueOf(diveSpot.getId()));
-                        startActivityForResult(editDiveSpotIntent, RC_EDIT_DIVE_SPOT);
+                        checkIn();
                     }
                 })
                 .onNegative(new MaterialDialog.SingleButtonCallback() {

@@ -113,7 +113,7 @@
     <string name="question_edit_dive_spot">Do you want to edit this dive spot yourself?</string>
     <string name="no_just_vote_answer">No, just vote</string>
     <string name="dialog_title_check_in">Check in</string>
-    <string name="dialog_check_in_content">Do you really want to check in? \n This spot will be show in your profile</string>
+    <string name="dialog_check_in_content">Do you really want to check in? This spot will be show in your profile</string>
     <string name="dialog_check_in_no">OK</string>
     <string name="dialog_cancel">CANCEL</string>
     <string name="ok">OK</string>

@@ -421,10 +421,13 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                progressDialog.dismiss();
-                Intent intent = new Intent();
-                setResult(RESULT_OK, intent);
-                finish();
+                if (response.raw().code() == 200) {
+                    addPhotoToDsListAdapter.clearNewFilesUrisList();
+                    progressDialog.dismiss();
+                    Intent intent = new Intent();
+                    setResult(RESULT_OK, intent);
+                    finish();
+                }
             }
 
             @Override

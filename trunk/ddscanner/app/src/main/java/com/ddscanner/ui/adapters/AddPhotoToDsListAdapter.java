@@ -81,6 +81,10 @@ public class AddPhotoToDsListAdapter extends RecyclerView.Adapter<AddPhotoToDsLi
         return this.newImagesUriList;
     }
 
+    public void clearNewFilesUrisList() {
+        newImagesUriList = new ArrayList<>();
+    }
+
     @Override
     public int getItemCount() {
         if (uris.size() > 0) {
