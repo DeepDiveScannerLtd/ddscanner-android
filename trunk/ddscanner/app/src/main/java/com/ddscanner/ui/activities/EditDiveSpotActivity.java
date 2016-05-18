@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.R;
 import com.ddscanner.entities.DiveSpot;
 import com.ddscanner.entities.DiveSpotFull;
@@ -88,6 +89,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
     private SealifeListAddingDiveSpotAdapter sealifeListAddingDiveSpotAdapter;
     private ScrollView mainLayout;
     private ProgressView progressView;
+    private MaterialDialog progressDialogUpload;
 
     private List<String> imageUris = new ArrayList<String>();
     private List<Sealife> sealifes = new ArrayList<>();
@@ -125,6 +127,10 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
      */
 
     private void findViews() {
+        progressDialogUpload = new MaterialDialog.Builder(this)
+                .content("Please wait...").progress(true, 0)
+                .contentColor(getResources().getColor(R.color.black_text))
+                .widgetColor(getResources().getColor(R.color.primary)).build();
         progressDialog = new ProgressDialog(this);
         name = (EditText) findViewById(R.id.name);
         depth = (EditText) findViewById(R.id.depth);
@@ -287,7 +293,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
                 startActivityForResult(sealifeIntent, RC_PICK_SEALIFE);
                 break;
             case R.id.button_create:
-                progressDialog.show();
+                progressDialogUpload.show();
                 createRequestBodyies();
                 break;
         }
@@ -423,16 +429,17 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.raw().code() == 200) {
                     addPhotoToDsListAdapter.clearNewFilesUrisList();
-                    progressDialog.dismiss();
                     Intent intent = new Intent();
                     setResult(RESULT_OK, intent);
                     finish();
+                    return;
                 }
+                progressDialogUpload.dismiss();
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                progressDialog.dismiss();
+                progressDialogUpload.dismiss();
             }
         });
     }

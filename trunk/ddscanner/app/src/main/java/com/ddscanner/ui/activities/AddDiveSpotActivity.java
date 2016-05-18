@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.R;
 import com.ddscanner.entities.FiltersResponseEntity;
 import com.ddscanner.entities.Sealife;
@@ -83,6 +84,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     private SealifeListAddingDiveSpotAdapter sealifeListAddingDiveSpotAdapter;
     private ScrollView mainLayout;
     private ProgressView progressView;
+    private MaterialDialog progressDialogUpload;
 
 
     private Helpers helpers = new Helpers();
@@ -144,6 +146,10 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
      */
 
     private void setUi() {
+        progressDialogUpload = new MaterialDialog.Builder(this)
+                .content("Please wait...").progress(true, 0)
+                .contentColor(getResources().getColor(R.color.black_text))
+                .widgetColor(getResources().getColor(R.color.primary)).build();
         progressDialog = new ProgressDialog(this);
         btnSave.setOnClickListener(this);
         pickLocation.setOnClickListener(this);
@@ -276,7 +282,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void createAddDiveSpotRequest() {
-        progressDialog.show();
+        progressDialogUpload.show();
         List<MultipartBody.Part> sealife = new ArrayList<>();
         for (int i = 0; i < sealifes.size(); i++) {
             sealife.add(MultipartBody.Part.createFormData("sealife[]", sealifes.get(i).getId()));
@@ -298,12 +304,12 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 Log.i(TAG, "success");
-                progressDialog.dismiss();
+                progressDialogUpload.dismiss();
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                progressDialog.dismiss();
+                progressDialogUpload.dismiss();
             }
         });
     }
