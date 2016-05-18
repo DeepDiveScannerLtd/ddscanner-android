@@ -229,14 +229,18 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
                         e.printStackTrace();
                     }
                     LogUtils.i("response body is " + responseString);
-                    divespotDetails = new Gson().fromJson(responseString, DivespotDetails.class);
-                    diveSpot = divespotDetails.getDivespot();
-                    sealifes = divespotDetails.getSealifes();
-                    imageUris = changeImageAddresses(diveSpot.getImages());
-                    addPhotoToDsListAdapter = new AddPhotoToDsListAdapter(imageUris, EditDiveSpotActivity.this, addPhotoTitle);
-                    diveSpotLocation = new LatLng(divespotDetails.getDivespot().getLat(),
-                            divespotDetails.getDivespot().getLng());
-                    setUi();
+                    if (response.raw().code() == 200) {
+                        divespotDetails = new Gson().fromJson(responseString, DivespotDetails.class);
+                        diveSpot = divespotDetails.getDivespot();
+                        sealifes = divespotDetails.getSealifes();
+                        imageUris = changeImageAddresses(diveSpot.getImages());
+                        addPhotoToDsListAdapter = new AddPhotoToDsListAdapter(imageUris, EditDiveSpotActivity.this, addPhotoTitle);
+                        diveSpotLocation = new LatLng(divespotDetails.getDivespot().getLat(),
+                                divespotDetails.getDivespot().getLng());
+                        setUi();
+                    } else {
+                        if (helpers.isErrorCausedByLogin(responseString, 400));
+                    }
                 }
 
             }

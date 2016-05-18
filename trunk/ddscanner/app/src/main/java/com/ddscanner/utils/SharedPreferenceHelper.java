@@ -134,7 +134,11 @@ public class SharedPreferenceHelper {
     public static void setIsUserSignedIn(Boolean isUserSignedIn) {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         Editor editor = prefs.edit();
-        editor.putString("ISLOGINED", "1");
+        if (isUserSignedIn) {
+            editor.putString("ISLOGINED", "1");
+        } else {
+            editor.putString("ISLOGINED", "0");
+        }
         System.out.println("LOGINED");
         editor.commit();
     }

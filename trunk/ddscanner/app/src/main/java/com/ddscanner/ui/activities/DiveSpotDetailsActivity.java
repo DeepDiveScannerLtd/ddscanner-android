@@ -7,6 +7,7 @@ import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -23,6 +24,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -30,6 +32,8 @@ import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.R;
 import com.ddscanner.entities.Checkins;
 import com.ddscanner.entities.Comment;
@@ -494,9 +498,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 thanksLayout.setVisibility(View.VISIBLE);
                 break;
             case R.id.no_button:
-                Intent editDiveSpotIntent = new Intent(this, EditDiveSpotActivity.class);
-                editDiveSpotIntent.putExtra(Constants.DIVESPOTID, String.valueOf(diveSpot.getId()));
-                startActivityForResult(editDiveSpotIntent, RC_EDIT_DIVE_SPOT);
+                showDialog();
                 break;
             case R.id.thank_close:
                 thanksLayout.setVisibility(View.GONE);
@@ -505,6 +507,35 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 helpers.showDialog(diveSpot.getCreator(), getFragmentManager());
                 break;
         }
+    }
+
+    private void showDialog() {
+       MaterialDialog.Builder dialog = new MaterialDialog.Builder(this)
+               .title("Edit")
+               .content("Do you want to edit this dive spot yourself?")
+               .positiveText("Yes")
+               .positiveColor(getResources().getColor(R.color.primary))
+               .negativeColor(getResources().getColor(R.color.primary))
+               .negativeText("No, just vote")
+               .onPositive(new MaterialDialog.SingleButtonCallback() {
+                   @Override
+                   public void onClick(@NonNull MaterialDialog dialog,
+                                       @NonNull DialogAction which) {
+                       Intent editDiveSpotIntent = new Intent(DiveSpotDetailsActivity.this,
+                               EditDiveSpotActivity.class);
+                       editDiveSpotIntent
+                               .putExtra(Constants.DIVESPOTID, String.valueOf(diveSpot.getId()));
+                       startActivityForResult(editDiveSpotIntent, RC_EDIT_DIVE_SPOT);
+                   }
+               })
+               .onNegative(new MaterialDialog.SingleButtonCallback() {
+                   @Override
+                   public void onClick(@NonNull MaterialDialog dialog,
+                                       @NonNull DialogAction which) {
+                       dialog.dismiss();
+                   }
+               });
+              dialog.show();
     }
 
     /**

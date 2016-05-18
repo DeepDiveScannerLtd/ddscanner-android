@@ -15,6 +15,7 @@ import android.support.percent.PercentRelativeLayout;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -53,9 +54,12 @@ import retrofit2.Call;
  */
 public class MainActivity extends FragmentActivity implements ViewPager.OnPageChangeListener, View.OnClickListener {
 
+    private static final String TAG = MainActivity.class.getName();
+
     private static final int REQUEST_CODE_PLACE_AUTOCOMPLETE = 1000;
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private static final int RC_PICK_PHOTO = 8000;
+    private static final int RC_LOGIN = 7000;
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private Uri capturedImageUri;
 
@@ -76,6 +80,7 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setBackgroundDrawable(null);
         setContentView(R.layout.activity_main);
         findViews();
         setupViewPager(mainViewPager);
@@ -147,6 +152,12 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
                         }
                     });
         }
+        Log.i(TAG,String.valueOf(SharedPreferenceHelper.getIsUserLogined()));
+        Log.i(TAG,String.valueOf(SharedPreferenceHelper.getToken()));
+        if (position == 2 && !SharedPreferenceHelper.getIsUserLogined()) {
+            Intent intent = new Intent(MainActivity.this, SocialNetworks.class);
+            startActivityForResult(intent, RC_LOGIN);
+        }
     }
 
     @Override
@@ -188,6 +199,9 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
         if (requestCode == RC_PICK_PHOTO && resultCode == RESULT_OK) {
             Uri uri = data.getData();
             profileFragment.setImage(uri);
+        }
+        if (requestCode == RC_LOGIN && resultCode == RESULT_OK) {
+            mainViewPager.setCurrentItem(2);
         }
     }
 

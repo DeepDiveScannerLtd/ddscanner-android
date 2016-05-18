@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ddscanner.R;
+import com.ddscanner.ui.activities.SocialNetworks;
+import com.ddscanner.utils.SharedPreferenceHelper;
 
 /**
  * Created by lashket on 20.4.16.

@@ -96,7 +96,9 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         saveChanges.setOnClickListener(this);
         pickPhotoFromGallery.setOnClickListener(this);
         logout.setOnClickListener(this);
-        getUserDataRequest(SharedPreferenceHelper.getUserServerId());
+        if (SharedPreferenceHelper.getIsUserLogined()) {
+            getUserDataRequest(SharedPreferenceHelper.getUserServerId());
+        }
         return v;
     }
 
@@ -228,7 +230,9 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     public void setUserVisibleHint(final boolean visible) {
         super.setUserVisibleHint(visible);
         if (visible) {
-
+            if (SharedPreferenceHelper.getIsUserLogined()) {
+                getUserDataRequest(SharedPreferenceHelper.getUserServerId());
+            }
         }
     }
 
