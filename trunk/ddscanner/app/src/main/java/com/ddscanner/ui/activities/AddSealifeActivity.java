@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.R;
 import com.ddscanner.entities.request.CreateSealifeRequest;
 import com.ddscanner.rest.RestClient;
@@ -75,8 +76,23 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
     private TextView habitat_error;
     private TextView distribution_error;
     private Helpers helpers = new Helpers();
+    private MaterialDialog progressDialogUpload;
 
     private Map<String, TextView> errorsMap = new HashMap<>();
+
+    private RequestBody requestName;
+    private RequestBody requestLength;
+    private RequestBody requestWeight;
+    private RequestBody requestDepth;
+    private RequestBody requestScname;
+    private RequestBody requestOrder;
+    private RequestBody requestClass;
+    private RequestBody requestDistribution;
+    private RequestBody requestHabitat;
+
+    private RequestBody requestSecret = null;
+    private RequestBody requestSocial = null;
+    private RequestBody requestToken = null;
 
 
     @Override
@@ -120,6 +136,10 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
 
 
     private void setUi() {
+        progressDialogUpload = new MaterialDialog.Builder(this)
+                .content("Please wait...").progress(true, 0)
+                .contentColor(getResources().getColor(R.color.black_text))
+                .widgetColor(getResources().getColor(R.color.primary)).build();
         btnSaveSealife.setOnClickListener(this);
         addPhoto.setOnClickListener(this);
         btnDelete.setOnClickListener(this);
@@ -203,67 +223,64 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
      */
 
     private void createRequestBody() {
-        CreateSealifeRequest createSealifeRequest = new CreateSealifeRequest();
-        createSealifeRequest.setDepth(depth.getText().toString());
-        createSealifeRequest.setDistribution(distribution.getText().toString());
-        createSealifeRequest.setHabitat(habitat.getText().toString());
-//        createSealifeRequest.setImage(file);
-        createSealifeRequest.setLength(length.getText().toString());
-        // createSealifeRequest.setScClass("ff");
-        createSealifeRequest.setOrder(order.getText().toString());
-        createSealifeRequest.setWeight(weight.getText().toString());
-        createSealifeRequest.setName(name.getText().toString());
-        createSealifeRequest.setScName(scName.getText().toString());
-        createSealifeRequest.setToken(SharedPreferenceHelper.getToken());
-        createSealifeRequest.setSocial(SharedPreferenceHelper.getSn());
-        if (SharedPreferenceHelper.getSn().equals("tw")) {
-            createSealifeRequest.setSecret(SharedPreferenceHelper.getSecret());
+        progressDialogUpload.show();
+        requestName = RequestBody.create(MediaType.parse("multipart/form-data"),
+                name.getText().toString());
+        requestLength = RequestBody.create(MediaType.parse("multipart/form-data"),
+                length.getText().toString());
+        requestWeight = RequestBody.create(MediaType.parse("multipart/form-data"),
+                weight.getText().toString());
+        requestDepth = RequestBody.create(MediaType.parse("multipart/form-data"),
+                depth.getText().toString());
+        requestScname = RequestBody.create(MediaType.parse("multipart/form-data"),
+                scName.getText().toString());
+        requestOrder = RequestBody.create(MediaType.parse("multipart/form-data"),
+                order.getText().toString());
+        requestClass = RequestBody.create(MediaType.parse("multipart/form-data"),
+                scClass.getText().toString());
+        requestDistribution = RequestBody.create(MediaType.parse("multipart/form-data"),
+                distribution.getText().toString());
+        requestHabitat = RequestBody.create(MediaType.parse("multipart/form-data"),
+                habitat.getText().toString());
+        if (SharedPreferenceHelper.getIsUserLogined()) {
+            requestSocial = RequestBody.create(MediaType.parse("multipart/form-data"),
+                    SharedPreferenceHelper.getSn());
+            requestToken = RequestBody.create(MediaType.parse("multipart/form-data"),
+                    SharedPreferenceHelper.getToken());
+            if (SharedPreferenceHelper.getSn().equals("tw")) {
+                requestSecret = RequestBody.create(MediaType.parse("multipart/form-data"),
+                        SharedPreferenceHelper.getSecret());
+            }
         }
-        createSealifeRequest.setScClass(scClass.getText().toString());
-        sendRequestToAddSealife(createSealifeRequest, filePath);
+        sendRequestToAddSealife(filePath);
     }
 
     /**
      * Make request to server for adding sealife
-     *
-     * @param createSealifeRequest
      * @author Andrei Lashkevich
      */
 
-    private void sendRequestToAddSealife(final CreateSealifeRequest createSealifeRequest, Uri imageFileUri) {
-        String secret = null;
-        if (createSealifeRequest.getSocial() != null && createSealifeRequest.getSocial().equals("tw")) {
-            secret = SharedPreferenceHelper.getSecret();
-        }
+    private void sendRequestToAddSealife(Uri imageFileUri) {
         File file = new File(helpers.getRealPathFromURI(this, imageFileUri));
         RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
         MultipartBody.Part body = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
         Call<ResponseBody> call = RestClient.getServiceInstance().addSealife(
-                RequestBody.create(MediaType.parse("multipart/form-data"), createSealifeRequest.getName()),
-                RequestBody.create(MediaType.parse("multipart/form-data"), createSealifeRequest.getDistribution()),
-                RequestBody.create(MediaType.parse("multipart/form-data"), createSealifeRequest.getHabitat()),
-              //  RequestBody.create(MediaType.parse("image/*"), new File(Helpers.getRealPathFromURI(this, imageFileUri))),
-                body,
-                RequestBody.create(MediaType.parse("multipart/form-data"), createSealifeRequest.getScName()),
-                RequestBody.create(MediaType.parse("multipart/form-data"), createSealifeRequest.getLength()),
-                RequestBody.create(MediaType.parse("multipart/form-data"), createSealifeRequest.getWeight()),
-                RequestBody.create(MediaType.parse("multipart/form-data"), createSealifeRequest.getDepth()),
-                RequestBody.create(MediaType.parse("multipart/form-data"), createSealifeRequest.getOrder()),
-                RequestBody.create(MediaType.parse("multipart/form-data"), "asa"),
-                RequestBody.create(MediaType.parse("multipart/form-data"), createSealifeRequest.getToken()),
-                RequestBody.create(MediaType.parse("multipart/form-data"), "fb"),
-                null);
+                requestName, requestDistribution, requestHabitat, body, requestScname,
+                requestLength, requestWeight, requestDepth, requestOrder, requestClass,
+                requestToken, requestSocial, requestSecret);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if(response.body() != null) {
                     try {
                         Log.i(TAG, response.body().string());
+                        progressDialogUpload.dismiss();
                     } catch (IOException e) {
 
                     }
                 }
                 if(response.errorBody() != null) {
+                    progressDialogUpload.dismiss();
                     try {
                         String error = response.errorBody().string();
                         handleErrors(error, response.raw().code());
