@@ -20,7 +20,6 @@ import com.ddscanner.R;
 import com.ddscanner.entities.DiveCenter;
 import com.ddscanner.entities.DiveSpot;
 import com.ddscanner.ui.activities.DiveCenterDetailsActivity;
-import com.ddscanner.ui.activities.DivePlaceActivity;
 import com.ddscanner.utils.EventTrackerHelper;
 import com.squareup.picasso.Picasso;
 

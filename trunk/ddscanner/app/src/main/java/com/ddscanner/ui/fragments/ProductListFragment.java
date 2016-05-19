@@ -12,17 +12,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
-import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.R;
 import com.ddscanner.entities.DiveSpot;
-import com.ddscanner.ui.activities.CityActivity;
 import com.ddscanner.ui.adapters.ProductListAdapter;
-import com.ddscanner.utils.EventTrackerHelper;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Created by lashket on 23.12.15.

@@ -1,8 +1,10 @@
 package com.ddscanner.ui.fragments;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +23,7 @@ import com.ddscanner.events.ChangePageOfMainViewPagerEvent;
 import com.ddscanner.events.PickPhotoFromGallery;
 import com.ddscanner.events.TakePhotoFromCameraEvent;
 import com.ddscanner.rest.RestClient;
+import com.ddscanner.ui.activities.UsersDivespotListSwipableActivity;
 import com.ddscanner.ui.views.TransformationRoundImage;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.SharedPreferenceHelper;
@@ -44,7 +47,8 @@ import retrofit2.Response;
 /**
  * Created by lashket on 20.4.16.
  */
-public class ProfileFragment extends Fragment implements View.OnClickListener {
+public class ProfileFragment extends Fragment
+        implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
@@ -71,6 +75,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     private TextView addedCount;
     private TextView editedCount;
     private ImageView pickPhotoFromGallery;
+    private LinearLayout showAllCheckins;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     private RequestBody requestSecret = null;
     private RequestBody requestSocial = null;
@@ -100,6 +106,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         saveChanges.setOnClickListener(this);
         pickPhotoFromGallery.setOnClickListener(this);
         logout.setOnClickListener(this);
+        showAllCheckins.setOnClickListener(this);
         if (SharedPreferenceHelper.getIsUserLogined()) {
             getUserDataRequest(SharedPreferenceHelper.getUserServerId());
         }
@@ -128,6 +135,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         userAbout = (TextView) v.findViewById(R.id.user_about);
         pickPhotoFromGallery = (ImageView) v.findViewById(R.id.pick_photo_from_gallery);
         logout = (LinearLayout) v.findViewById(R.id.logout);
+        showAllCheckins = (LinearLayout) v.findViewById(R.id.checkins_activity);
     }
 
     @Override
@@ -157,6 +165,10 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             case R.id.logout:
                 SharedPreferenceHelper.logout();
                 DDScannerApplication.bus.post(new ChangePageOfMainViewPagerEvent(0));
+                break;
+            case R.id.checkins_activity:
+                Intent intent = new Intent(getContext(), UsersDivespotListSwipableActivity.class);
+                getContext().startActivity(intent);
                 break;
         }
     }
@@ -236,7 +248,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         editedCount.setText(user.getCountEdit());
         favouriteCount.setText(user.getCountFavorite());
         checkInCount.setText(user.getCountCheckin());
-    }
+   }
 
     @Override
     public void setUserVisibleHint(final boolean visible) {
@@ -320,4 +332,9 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
     }
 
+    @Override
+    public void onRefresh() {
+        getUserDataRequest(SharedPreferenceHelper.getUserServerId());
+        swipeRefreshLayout.setRefreshing(false);
+    }
 }

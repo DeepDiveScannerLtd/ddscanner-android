@@ -1,48 +1,30 @@
 package com.ddscanner.ui.adapters;
 
-import android.animation.ObjectAnimator;
 import android.content.Context;
-import android.content.Intent;
-import android.media.Image;
-import android.net.Uri;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatDrawableManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
-import android.text.Spanned;
-import android.text.TextUtils;
-import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.Comment;
 import com.ddscanner.entities.request.RegisterRequest;
 import com.ddscanner.events.IsCommentLikedEvent;
-import com.ddscanner.events.MarkerClickEvent;
 import com.ddscanner.events.ShowUserDialogEvent;
 import com.ddscanner.rest.RestClient;
-import com.ddscanner.ui.activities.ProfileActivity;
 import com.ddscanner.ui.dialogs.ProfileDialog;
 import com.ddscanner.ui.views.TransformationRoundImage;
-import com.ddscanner.utils.EventTrackerHelper;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.squareup.picasso.Picasso;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;

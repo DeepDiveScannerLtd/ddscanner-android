@@ -26,10 +26,12 @@
         android:layout_height="match_parent"
         android:background="#ed1b24"
         android:weightSum="3">
-        <Button
+        <TextView
+            android:id="@+id/delete"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="DELETE"
+            android:gravity="center"
             android:background="@android:color/transparent"
             android:textColor="@color/white"
             android:fontFamily="sans-serif-medium"

@@ -111,19 +111,10 @@
             android:name=".ui.activities.DiveCentersActivity"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".ui.activities.ProfileActivity"
-            android:screenOrientation="portrait"></activity>
-        <activity
             android:name=".ui.activities.AddSealifeActivity"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.activities.EditDiveSpotActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activities.CityActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activities.DivePlaceActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activities.SealifeDetails"

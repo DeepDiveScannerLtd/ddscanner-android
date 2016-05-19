@@ -35,14 +35,14 @@ public class SwipableDiveSpotListAdapter
     private Context context;
 
 
-  /*  public SwipableDiveSpotListAdapter(ArrayList<DiveSpot> divespots, Context context) {
+    public SwipableDiveSpotListAdapter(ArrayList<DiveSpot> divespots, Context context) {
         this.divespots = divespots;
         this.context = context;
-    }*/
+    }
 
 
     @Override
-    public SwipableDiveSpotListViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+    public SwipableDiveSpotListViewHolder onCreateViewHolder(ViewGroup viewGroup, int position) {
         View itemView = LayoutInflater.
                 from(viewGroup.getContext()).
                 inflate(R.layout.item_product_swipable, viewGroup, false);
@@ -51,9 +51,9 @@ public class SwipableDiveSpotListAdapter
     }
 
     @Override
-    public void onBindViewHolder(SwipableDiveSpotListViewHolder swipableDiveSpotListViewHolder, int i) {
-     /*   DiveSpot divespot = new DiveSpot();
-        divespot = divespots.get(i);
+    public void onBindViewHolder(final SwipableDiveSpotListViewHolder swipableDiveSpotListViewHolder, final int position) {
+        DiveSpot divespot = new DiveSpot();
+        divespot = divespots.get(position);
         swipableDiveSpotListViewHolder.progressBar.getIndeterminateDrawable().
                 setColorFilter(context.getResources().getColor(R.color.primary),
                         PorterDuff.Mode.MULTIPLY);
@@ -89,7 +89,7 @@ public class SwipableDiveSpotListAdapter
             iv.setPadding(0,0,5,0);
             swipableDiveSpotListViewHolder.stars.addView(iv);
         }
-*/
+
 
         swipableDiveSpotListViewHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.PullOut);
 
@@ -127,12 +127,24 @@ public class SwipableDiveSpotListAdapter
                 //when user's hand released.
             }
         });
+
+        swipableDiveSpotListViewHolder.delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mItemManger.removeShownLayouts(swipableDiveSpotListViewHolder.swipeLayout);
+                divespots.remove(position);
+                notifyItemRemoved(position);
+                notifyItemRangeChanged(position, divespots.size());
+                mItemManger.closeAllItems();
+            }
+        });
+
+        mItemManger.bindView(swipableDiveSpotListViewHolder.itemView, position);
     }
 
     @Override
     public int getItemCount() {
-//        if (divespots == null) { return 0;
-        return 10;
+        return divespots.size();
     }
 
     @Override
@@ -140,25 +152,33 @@ public class SwipableDiveSpotListAdapter
         return R.id.swipe;
     }
 
-    public static class SwipableDiveSpotListViewHolder extends RecyclerView.ViewHolder {
+    public static class SwipableDiveSpotListViewHolder extends RecyclerView.ViewHolder
+                                                        implements View.OnClickListener{
         SwipeLayout swipeLayout;
         protected ImageView imageView;
         protected TextView title;
         protected LinearLayout stars;
         protected ProgressBar progressBar;
         public Button mButton;
+        private TextView delete;
 
 
-        public SwipableDiveSpotListViewHolder(View v) {
-            super(v);
-            swipeLayout = (SwipeLayout) v.findViewById(R.id.swipe);
-            imageView = (ImageView) v.findViewById(R.id.product_logo);
-            title = (TextView) v.findViewById(R.id.product_title);
-            stars = (LinearLayout) v.findViewById(R.id.stars);
-            progressBar = (ProgressBar) v.findViewById(R.id.progressBar);
-            mButton = (Button) v.findViewById(android.R.id.button1);
+        public SwipableDiveSpotListViewHolder(View itemView) {
+            super(itemView);
+            swipeLayout = (SwipeLayout) itemView.findViewById(R.id.swipe);
+            imageView = (ImageView) itemView.findViewById(R.id.product_logo);
+            title = (TextView) itemView.findViewById(R.id.product_title);
+            stars = (LinearLayout) itemView.findViewById(R.id.stars);
+            progressBar = (ProgressBar) itemView.findViewById(R.id.progressBar);
+            mButton = (Button) itemView.findViewById(android.R.id.button1);
+            delete = (TextView) itemView.findViewById(R.id.delete);
+
         }
 
+        @Override
+        public void onClick(View v) {
+
+        }
     }
 
 

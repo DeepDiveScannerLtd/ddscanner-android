@@ -245,7 +245,6 @@ public class SocialNetworks extends AppCompatActivity
                         e.printStackTrace();
                     }
                     Log.i(TAG, responseString);
-                    SharedPreferenceHelper.setIsUserSignedIn(true);
                     SharedPreferenceHelper.setToken(userData.getToken());
                     SharedPreferenceHelper.setSn(userData.getSocial());
                     if (userData.getSocial().equals("tw")) {
@@ -258,6 +257,7 @@ public class SocialNetworks extends AppCompatActivity
                   //  SharedPreferenceHelper.setUsername(selfProfile.getName());
                   //  SharedPreferenceHelper.setLink(selfProfile.getLink());
                     SharedPreferenceHelper.setUserServerId(selfProfile.getId());
+                    SharedPreferenceHelper.setIsUserSignedIn(true);
                     Intent returnIntent = new Intent();
                     setResult(Activity.RESULT_OK, returnIntent);
                     finish();

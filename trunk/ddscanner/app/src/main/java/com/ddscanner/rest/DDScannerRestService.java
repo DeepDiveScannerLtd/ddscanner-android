@@ -194,4 +194,7 @@ public interface DDScannerRestService {
             @Part("social") RequestBody sn,
             @Part("secret") RequestBody secret
     );
+
+    @GET("diving/user/{id}/divespot/checkins")
+    Call<ResponseBody> getUsersCheckins(@Path("id") String id, @QueryMap Map<String, String> map);
 }

@@ -1,11 +1,9 @@
 package com.ddscanner.ui.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,18 +12,14 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.R;
 import com.ddscanner.entities.DiveSpot;
-import com.ddscanner.ui.activities.DivePlaceActivity;
 import com.ddscanner.ui.activities.DiveSpotDetailsActivity;
 import com.ddscanner.ui.views.TransformationRoundImage;
-import com.ddscanner.utils.EventTrackerHelper;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Created by lashket on 23.12.15.
@@ -122,8 +116,6 @@ public class ProductListAdapter
 
         @Override
         public void onClick(View v) {
-            Intent i = new Intent(context, DivePlaceActivity.class);
-            i.putExtra(PRODUCT, String.valueOf(divespots.get(getPosition()).getId()));
             DiveSpotDetailsActivity
                     .show(context, String.valueOf(divespots.get(getPosition()).getId()));
         }

@@ -8,12 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ddscanner.R;
-import com.ddscanner.ui.activities.DivePlaceActivity;
-import com.ddscanner.ui.activities.ImageSliderActivity;
 import com.ddscanner.ui.views.CIrcleProgressBar;
 import com.facebook.drawee.view.SimpleDraweeView;
-
-import java.util.ArrayList;
 
 /**
  * Created by Vitaly on 28.11.2015.
@@ -26,12 +22,7 @@ public class PlaceImageFragment extends Fragment {
         String imageUrl = getArguments().getString(IMAGE_URL);
 
         SimpleDraweeView imageView = (SimpleDraweeView) inflater.inflate(R.layout.fragment_image, container, false);
-      /*  imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ImageSliderActivity.show(getActivity(), (ArrayList<String>) DivePlaceActivity.getImages());
-            }
-        });*/
+
         imageView.getHierarchy().setProgressBarImage(new CIrcleProgressBar());
         Uri uri = Uri.parse(imageUrl);
         imageView.setImageURI(uri);

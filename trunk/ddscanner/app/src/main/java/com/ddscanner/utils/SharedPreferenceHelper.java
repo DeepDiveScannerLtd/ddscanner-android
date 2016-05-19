@@ -39,42 +39,6 @@ public class SharedPreferenceHelper {
         return prefs.getString(USER_APP_ID,"");
     }
 
-    public static void setLink(String value) {
-        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
-        Editor editor = prefs.edit();
-        editor.putString(LINK, value);
-        editor.commit();
-    }
-
-    public static String getLink() {
-        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
-        return prefs.getString(LINK, "");
-    }
-
-    public static void setUsername(String value) {
-        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
-        Editor editor = prefs.edit();
-        editor.putString(USERNAME, value);
-        editor.commit();
-    }
-
-    public static String getUsername() {
-        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
-        return prefs.getString(USERNAME, "");
-    }
-
-    public static void setUserid(String value) {
-        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
-        Editor editor = prefs.edit();
-        editor.putString(USERID, value);
-        editor.commit();
-    }
-
-    public static String getUserid() {
-        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
-        return prefs.getString(USERID, "");
-    }
-
     public static void setPhotolink(String value) {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         Editor editor = prefs.edit();
@@ -205,10 +169,7 @@ public class SharedPreferenceHelper {
     }
 
     public static void logout() {
-        SharedPreferenceHelper.setUserid("");
-        SharedPreferenceHelper.setUsername("");
         SharedPreferenceHelper.setToken("");
-        SharedPreferenceHelper.setLink("");
         SharedPreferenceHelper.setUserServerId("");
         SharedPreferenceHelper.setSecret("");
         SharedPreferenceHelper.setIsUserSignedIn(false);
