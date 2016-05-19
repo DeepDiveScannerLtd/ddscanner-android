@@ -15,12 +15,14 @@ import android.support.percent.PercentRelativeLayout;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.entities.request.IdentifyRequest;
 import com.ddscanner.events.ChangePageOfMainViewPagerEvent;
 import com.ddscanner.events.PickPhotoFromGallery;
 import com.ddscanner.events.PlaceChoosedEvent;
@@ -45,6 +47,7 @@ import com.squareup.otto.Subscribe;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.UUID;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -87,6 +90,7 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
         setUi();
         setupTabLayout();
         playServices();
+        identifyUser();
     }
 
     private void setUi() {
@@ -103,6 +107,19 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
         menuItemsLayout = (PercentRelativeLayout) findViewById(R.id.menu_items_layout);
         searchLocationBtn = (ImageView) findViewById(R.id.search_location_menu_button);
         btnFilter = (ImageView) findViewById(R.id.filter_menu_button);
+    }
+
+    private String getUserUniqueId() {
+        final TelephonyManager tm = (TelephonyManager) getBaseContext().getSystemService(Context.TELEPHONY_SERVICE);
+
+        final String tmDevice, tmSerial, androidId;
+        tmDevice = "" + tm.getDeviceId();
+        tmSerial = "" + tm.getSimSerialNumber();
+        androidId = "" + android.provider.Settings.Secure.getString(getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
+
+        UUID deviceUuid = new UUID(androidId.hashCode(), ((long)tmDevice.hashCode() << 32) | tmSerial.hashCode());
+        String deviceId = deviceUuid.toString();
+        return deviceId;
     }
 
     private void setupTabLayout() {
@@ -218,8 +235,9 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
         }
     }
 
-    public static void checkGcm() {
-        Call<ResponseBody> call = RestClient.getServiceInstance().identifyGcmToken(SharedPreferenceHelper.getGcmId());
+    public void identifyUser() {
+        Call<ResponseBody> call = RestClient.getServiceInstance()
+                .identify(getUserIdentifyData());
         call.enqueue(new retrofit2.Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
@@ -232,6 +250,20 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
             }
 
         });
+    }
+
+    private IdentifyRequest getUserIdentifyData() {
+        IdentifyRequest identifyRequest = new IdentifyRequest();
+        identifyRequest.setAppId(getUserUniqueId());
+        if(SharedPreferenceHelper.getIsUserLogined()) {
+            identifyRequest.setSocial(SharedPreferenceHelper.getSn());
+            identifyRequest.setToken(SharedPreferenceHelper.getToken());
+            if (SharedPreferenceHelper.getSn().equals("tw")) {
+                identifyRequest.setSecret(SharedPreferenceHelper.getSecret());
+            }
+        }
+        identifyRequest.setGcmId(SharedPreferenceHelper.getGcmId());
+        return  identifyRequest;
     }
 
     public void playServices() {

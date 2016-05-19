@@ -1,6 +1,7 @@
 package com.ddscanner.rest;
 
 
+import com.ddscanner.entities.request.IdentifyRequest;
 import com.ddscanner.entities.request.RegisterRequest;
 import com.ddscanner.entities.request.SendReviewRequest;
 
@@ -73,7 +74,7 @@ public interface DDScannerRestService {
     );
 
     @POST("/diving/identify")
-    Call<ResponseBody> identifyGcmToken(@Body String token);
+    Call<ResponseBody> identify(@Body IdentifyRequest identifyRequest);
 
     @POST("/diving/sealife")
     @Multipart
