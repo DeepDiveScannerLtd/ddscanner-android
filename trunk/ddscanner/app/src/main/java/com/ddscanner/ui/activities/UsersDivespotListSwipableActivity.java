@@ -73,7 +73,7 @@ public class UsersDivespotListSwipableActivity extends AppCompatActivity {
             }
         });
         swipableDiveSpotListAdapter = new SwipableDiveSpotListAdapter(
-                (ArrayList<DiveSpot>) diveSpots, this);
+                (ArrayList<DiveSpot>) diveSpots, this, true);
         swipableDiveSpotListAdapter.setMode(Attributes.Mode.Single);
 
         rc.setAdapter(swipableDiveSpotListAdapter);

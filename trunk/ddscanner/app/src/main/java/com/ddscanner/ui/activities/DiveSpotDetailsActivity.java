@@ -613,10 +613,9 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
     private void checkOut() {
         checkoutUi();
-        Call<ResponseBody> call = RestClient.getServiceInstance().checkOut(
+        Call<ResponseBody> call = RestClient.getServiceInstance().checkOutUser(
                 String.valueOf(divespotDetails.getDivespot().getId()),
-                SharedPreferenceHelper.getSn(),
-                SharedPreferenceHelper.getToken()
+                helpers.getUserQuryMapRequest()
         );
         call.enqueue(new retrofit2.Callback<ResponseBody>() {
             @Override

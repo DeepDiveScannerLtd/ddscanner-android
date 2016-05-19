@@ -18,11 +18,17 @@ import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 import com.ddscanner.R;
 import com.ddscanner.entities.DiveSpot;
+import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.views.TransformationRoundImage;
+import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Response;
 
 /**
  * Created by lashket on 18.5.16.
@@ -33,11 +39,15 @@ public class SwipableDiveSpotListAdapter
     private static final String TAG = SwipableDiveSpotListAdapter.class.getSimpleName();
     public static ArrayList<DiveSpot> divespots;
     private Context context;
+    private boolean isCheckins = true;
+    private Helpers helpers = new Helpers();
 
 
-    public SwipableDiveSpotListAdapter(ArrayList<DiveSpot> divespots, Context context) {
+    public SwipableDiveSpotListAdapter(ArrayList<DiveSpot> divespots, Context context,
+                                       boolean isCheckins) {
         this.divespots = divespots;
         this.context = context;
+        this.isCheckins = isCheckins;
     }
 
 
@@ -131,6 +141,9 @@ public class SwipableDiveSpotListAdapter
         swipableDiveSpotListViewHolder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (isCheckins) {
+                    checkOut(String.valueOf(divespots.get(position).getId()));
+                }
                 mItemManger.removeShownLayouts(swipableDiveSpotListViewHolder.swipeLayout);
                 divespots.remove(position);
                 notifyItemRemoved(position);
@@ -150,6 +163,26 @@ public class SwipableDiveSpotListAdapter
     @Override
     public int getSwipeLayoutResourceId(int position) {
         return R.id.swipe;
+    }
+
+    private void checkOut(String id) {
+        Call<ResponseBody> call = RestClient.getServiceInstance()
+                .checkOutUser(id, helpers.getUserQuryMapRequest());
+        call.enqueue(new retrofit2.Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private void removeFromFavorites(String id) {
+
     }
 
     public static class SwipableDiveSpotListViewHolder extends RecyclerView.ViewHolder

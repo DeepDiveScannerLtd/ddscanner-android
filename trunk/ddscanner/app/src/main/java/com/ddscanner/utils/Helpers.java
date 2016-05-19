@@ -225,4 +225,18 @@ public class Helpers {
         return false;
     }
 
+    public Map<String, String> getUserQuryMapRequest() {
+        Map<String, String> map = new HashMap<>();
+        if (SharedPreferenceHelper.getIsUserLogined()) {
+            map.put("social", SharedPreferenceHelper.getSn());
+            map.put("token", SharedPreferenceHelper.getToken());
+            if (SharedPreferenceHelper.getSn().equals("tw")) {
+                map.put("secret",SharedPreferenceHelper.getSecret());
+            }
+        } else {
+            return null;
+        }
+        return map;
+    }
+
 }
