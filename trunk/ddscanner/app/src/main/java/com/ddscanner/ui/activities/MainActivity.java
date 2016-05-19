@@ -119,6 +119,7 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
 
         UUID deviceUuid = new UUID(androidId.hashCode(), ((long)tmDevice.hashCode() << 32) | tmSerial.hashCode());
         String deviceId = deviceUuid.toString();
+        SharedPreferenceHelper.setUserAppId(deviceId);
         return deviceId;
     }
 

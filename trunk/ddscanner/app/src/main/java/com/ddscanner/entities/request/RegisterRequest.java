@@ -8,6 +8,15 @@ public class RegisterRequest {
     private String social;
     private String token;
     private String secret;
+    private String gcmId;
+
+    public String getGcmId() {
+        return gcmId;
+    }
+
+    public void setGcmId(String gcmId) {
+        this.gcmId = gcmId;
+    }
 
     public String getAppId() {
         return appId;

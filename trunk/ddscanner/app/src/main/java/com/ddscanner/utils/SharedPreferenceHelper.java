@@ -22,9 +22,22 @@ public class SharedPreferenceHelper {
     private static final String USERNAME = "USERNAME";
     private static final String LINK = "LINK";
     private static final String USER_SERVER_ID = "USER_SERVER_ID";
+    private static final String USER_APP_ID = "USER_APP_ID";
 
 
     private static SharedPreferences prefs;
+
+    public static void setUserAppId(String appId) {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        Editor editor = prefs.edit();
+        editor.putString(USER_APP_ID, appId);
+        editor.commit();
+    }
+
+    public static String getUserAppId() {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        return prefs.getString(USER_APP_ID,"");
+    }
 
     public static void setLink(String value) {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
@@ -212,5 +225,7 @@ public class SharedPreferenceHelper {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         return prefs.getString(USER_SERVER_ID, "");
     }
+
+
 
 }

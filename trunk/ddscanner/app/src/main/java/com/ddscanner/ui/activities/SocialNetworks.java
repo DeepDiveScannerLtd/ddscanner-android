@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -11,7 +12,6 @@ import android.widget.Button;
 
 import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.R;
-import com.ddscanner.entities.DivespotDetails;
 import com.ddscanner.entities.RegisterResponse;
 import com.ddscanner.entities.request.RegisterRequest;
 import com.ddscanner.rest.RestClient;
@@ -33,8 +33,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
 import com.google.gson.Gson;
 import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.Callback;
@@ -52,15 +50,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 import okhttp3.ResponseBody;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
-import retrofit.mime.TypedByteArray;
 import retrofit2.Call;
 
-/**
- * Created by lashket on 24.2.16.
- */
-public class SocialNetworks extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
+public class SocialNetworks extends AppCompatActivity
+        implements GoogleApiClient.OnConnectionFailedListener {
 
     private static final int RC_SIGN_IN = 0;
 
@@ -76,7 +69,6 @@ public class SocialNetworks extends AppCompatActivity implements GoogleApiClient
     private SignInButton googleSignIn;
     private Button signIn;
     private GoogleApiClient mGoogleApiClient;
-    private String appId;
     private com.ddscanner.entities.User selfProfile;
     private RegisterResponse registerResponse = new RegisterResponse();
 
@@ -91,19 +83,15 @@ public class SocialNetworks extends AppCompatActivity implements GoogleApiClient
         setContentView(R.layout.activity_social_login);
         AppsFlyerLib.getInstance().trackEvent(getApplicationContext(),
                 EventTrackerHelper.EVENT_SIGN_IN_OPENED, new HashMap<String, Object>());
-        appId = SharedPreferenceHelper.getGcmId();
         /*TWITTER*/
         twitterCustomBtn = (Button) findViewById(R.id.twitter_custom);
         loginButton = (TwitterLoginButton) findViewById(R.id.twitter_login_button);
         loginButton.setCallback(new Callback<TwitterSession>() {
             @Override
             public void success(Result<TwitterSession> result) {
-
                 TwitterSession session = result.data;
-                // TODO: Remove toast and use the TwitterSession's userID
-                String msg = "@" + session.getUserName() + " logged in! (#" + session.getUserId() + ")";
-                //  Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
-                Twitter.getApiClient(session).getAccountService().verifyCredentials(true, false, new Callback<User>() {
+                Twitter.getApiClient(session).getAccountService()
+                        .verifyCredentials(true, false, new Callback<User>() {
                     @Override
                     public void success(Result<User> result) {
                         SharedPreferenceHelper.setIsUserSignedIn(true);
@@ -120,7 +108,8 @@ public class SocialNetworks extends AppCompatActivity implements GoogleApiClient
                         .EVENT_SIGN_IN_BTN_CLICK, new HashMap<String, Object>() {{
                     put(EventTrackerHelper.PARAM_SIGN_IN_BTN_CLICK, "twitter");
                 }});
-                sendRegisterRequest(putTokensToMap(appId, "tw", authToken.token, authToken.secret));
+                sendRegisterRequest(putTokensToMap(SharedPreferenceHelper.getUserAppId(),
+                        "tw", authToken.token, authToken.secret));
             }
 
             @Override
@@ -151,7 +140,8 @@ public class SocialNetworks extends AppCompatActivity implements GoogleApiClient
             }
         });
         /*Google plus*/
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        GoogleSignInOptions gso = new GoogleSignInOptions
+                .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken("195706914618-ist9f8ins485k2gglbomgdp4l2pn57iq.apps.googleusercontent.com")
                 .requestEmail()
                 .build();
@@ -171,22 +161,17 @@ public class SocialNetworks extends AppCompatActivity implements GoogleApiClient
 
     private void fbLogin() {
         callbackManager = CallbackManager.Factory.create();
-        LoginManager.getInstance().logInWithReadPermissions(SocialNetworks.this, Arrays.asList("email", "public_profile"));
-        LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+        LoginManager.getInstance().logInWithReadPermissions(SocialNetworks.this,
+                Arrays.asList("email", "public_profile"));
+        LoginManager.getInstance().registerCallback(callbackManager,
+                new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(final LoginResult loginResult) {
                 GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
                     @Override
                     public void onCompleted(JSONObject object, GraphResponse response) {
-                        Log.i(TAG, loginResult.getAccessToken().toString());
-                        String result = String.valueOf(object);
-                        System.out.println(result);
-                        Log.i(TAG, "FB - " + loginResult.getAccessToken().getToken());
-                        AppsFlyerLib.getInstance().trackEvent(getApplicationContext(), EventTrackerHelper
-                                .EVENT_SIGN_IN_BTN_CLICK, new HashMap<String, Object>() {{
-                            put(EventTrackerHelper.PARAM_SIGN_IN_BTN_CLICK, "facebook");
-                        }});
-                        sendRegisterRequest(putTokensToMap(appId, "fb", loginResult.getAccessToken().getToken()));
+                        sendRegisterRequest(putTokensToMap(SharedPreferenceHelper.getUserAppId(),
+                                "fb", loginResult.getAccessToken().getToken()));
 
                     }
                 }).executeAsync();
@@ -210,32 +195,8 @@ public class SocialNetworks extends AppCompatActivity implements GoogleApiClient
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
-    private void signOut() {
-        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
-                new ResultCallback<Status>() {
-                    @Override
-                    public void onResult(Status status) {
-                        // [START_EXCLUDE]
-                        Log.i(TAG, "Logout");
-                        // [END_EXCLUDE]
-                    }
-                });
-    }
-
-    private void revokeAccess() {
-        Auth.GoogleSignInApi.revokeAccess(mGoogleApiClient).setResultCallback(
-                new ResultCallback<Status>() {
-                    @Override
-                    public void onResult(Status status) {
-                        // [START_EXCLUDE]
-                        Log.i(TAG, "revoking");
-                        // [END_EXCLUDE]
-                    }
-                });
-    }
-
     @Override
-    public void onConnectionFailed(ConnectionResult result) {
+    public void onConnectionFailed(@NonNull ConnectionResult result) {
 
     }
 
@@ -251,13 +212,8 @@ public class SocialNetworks extends AppCompatActivity implements GoogleApiClient
             if (result.isSuccess()) {
                 GoogleSignInAccount acct = result.getSignInAccount();
                 String idToken = acct.getIdToken();
-                Log.d(TAG, "idToken:" + idToken);
-                AppsFlyerLib.getInstance().trackEvent(getApplicationContext(), EventTrackerHelper
-                        .EVENT_SIGN_IN_BTN_CLICK, new HashMap<String, Object>() {{
-                    put(EventTrackerHelper.PARAM_SIGN_IN_BTN_CLICK, "google");
-                }});
-                sendRegisterRequest(putTokensToMap(appId, "go", idToken));
-                // TODO(user): send token to server and validate server-side
+                sendRegisterRequest(putTokensToMap(SharedPreferenceHelper.getUserAppId(),
+                        "go", idToken));
             }
         } else {
             callbackManager.onActivityResult(requestCode, resultCode, data);
@@ -269,7 +225,6 @@ public class SocialNetworks extends AppCompatActivity implements GoogleApiClient
         registerRequest.setAppId(args[0]);
         registerRequest.setSocial(args[1]);
         registerRequest.setToken(args[2]);
-
         if (args.length == 4) {
             registerRequest.setSecret(args[3]);
         }
@@ -280,7 +235,8 @@ public class SocialNetworks extends AppCompatActivity implements GoogleApiClient
         Call<ResponseBody> call = RestClient.getServiceInstance().registerUser(userData);
         call.enqueue(new retrofit2.Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+            public void onResponse(Call<ResponseBody> call,
+                                   retrofit2.Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
                     String responseString = "";
                     try {
