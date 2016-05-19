@@ -11,14 +11,23 @@ public class IdentifyRequest {
     private String secret;
     private String lat;
     private String lng;
-    private String gcmId;
+    private String push;
+    private String type;
 
-    public String getGcmId() {
-        return gcmId;
+    public String getType() {
+        return type;
     }
 
-    public void setGcmId(String gcmId) {
-        this.gcmId = gcmId;
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getpush() {
+        return push;
+    }
+
+    public void setpush(String push) {
+        this.push = push;
     }
 
     public String getAppId() {

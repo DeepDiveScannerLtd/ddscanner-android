@@ -108,7 +108,9 @@ public class Helpers {
     public RegisterRequest getRegisterRequest() {
         RegisterRequest registerRequest = new RegisterRequest();
         if (!SharedPreferenceHelper.getIsUserLogined()) {
-            return null;
+            registerRequest.setAppId(SharedPreferenceHelper.getUserAppId());
+            registerRequest.setpush(SharedPreferenceHelper.getGcmId());
+            return registerRequest;
         }
 
         registerRequest.setSocial(SharedPreferenceHelper.getSn());
@@ -116,6 +118,8 @@ public class Helpers {
         if (SharedPreferenceHelper.getSn().equals("tw")) {
             registerRequest.setSecret(SharedPreferenceHelper.getSecret());
         }
+        registerRequest.setAppId(SharedPreferenceHelper.getUserAppId());
+        registerRequest.setpush(SharedPreferenceHelper.getGcmId());
         return registerRequest;
     }
 

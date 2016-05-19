@@ -8,14 +8,14 @@ public class RegisterRequest {
     private String social;
     private String token;
     private String secret;
-    private String gcmId;
+    private String push;
 
-    public String getGcmId() {
-        return gcmId;
+    public String getpush() {
+        return push;
     }
 
-    public void setGcmId(String gcmId) {
-        this.gcmId = gcmId;
+    public void setpush(String push) {
+        this.push = push;
     }
 
     public String getAppId() {

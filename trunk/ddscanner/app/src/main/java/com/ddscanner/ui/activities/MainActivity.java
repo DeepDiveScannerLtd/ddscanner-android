@@ -2,14 +2,19 @@ package com.ddscanner.ui.activities;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.support.design.widget.TabLayout;
 import android.support.percent.PercentRelativeLayout;
 import android.support.v4.app.FragmentActivity;
@@ -31,6 +36,7 @@ import com.ddscanner.events.PickPhotoFromGallery;
 import com.ddscanner.events.PlaceChoosedEvent;
 import com.ddscanner.events.TakePhotoFromCameraEvent;
 import com.ddscanner.rest.RestClient;
+import com.ddscanner.services.GPSTracker;
 import com.ddscanner.services.RegistrationIntentService;
 import com.ddscanner.ui.adapters.MainActivityPagerAdapter;
 import com.ddscanner.ui.fragments.EditProfileFragment;
@@ -69,6 +75,7 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
     private static final int RC_LOGIN = 7000;
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private Uri capturedImageUri;
+    private LocationManager locationManager;
 
     private TabLayout toolbarTabLayout;
     private ViewPager mainViewPager;
@@ -97,6 +104,7 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
     }
 
     private void startActivity() {
+        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         getWindow().setBackgroundDrawable(null);
         setContentView(R.layout.activity_main);
         findViews();
@@ -104,7 +112,19 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
         setUi();
         setupTabLayout();
         playServices();
-        identifyUser();
+        if (checkIsProvidersEnabled()) {
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    GPSTracker tracker = new GPSTracker(MainActivity.this);
+                    identifyUser(String.valueOf(tracker.getLatitude()),
+                            String.valueOf(tracker.getLongitude()));
+                }
+            }, 1000);
+        } else {
+            showAlertDialogLocationSettings();
+        }
     }
 
     private void setUi() {
@@ -237,6 +257,22 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
         if (requestCode == RC_LOGIN && resultCode == RESULT_OK) {
             mainViewPager.setCurrentItem(2);
         }
+
+        if (requestCode == 1) {
+            if (checkIsProvidersEnabled()) {
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        GPSTracker tracker = new GPSTracker(MainActivity.this);
+                        identifyUser(String.valueOf(tracker.getLatitude()),
+                                String.valueOf(tracker.getLongitude()));
+                    }
+                }, 1000);
+            } else {
+                showAlertDialogLocationSettings();
+            }
+        }
     }
 
     private void openSearchLocationWindow() {
@@ -252,9 +288,9 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
         }
     }
 
-    public void identifyUser() {
+    public void identifyUser(String lat, String lng) {
         Call<ResponseBody> call = RestClient.getServiceInstance()
-                .identify(getUserIdentifyData());
+                .identify(getUserIdentifyData(lat, lng));
         call.enqueue(new retrofit2.Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
@@ -269,7 +305,7 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
         });
     }
 
-    private IdentifyRequest getUserIdentifyData() {
+    private IdentifyRequest getUserIdentifyData(String lat, String lng) {
         IdentifyRequest identifyRequest = new IdentifyRequest();
         identifyRequest.setAppId(getUserUniqueId());
         if(SharedPreferenceHelper.getIsUserLogined()) {
@@ -279,7 +315,12 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
                 identifyRequest.setSecret(SharedPreferenceHelper.getSecret());
             }
         }
-        identifyRequest.setGcmId(SharedPreferenceHelper.getGcmId());
+        identifyRequest.setpush(SharedPreferenceHelper.getGcmId());
+        if (lat != null && lng != null) {
+            identifyRequest.setLat(lat);
+            identifyRequest.setLng(lng);
+        }
+        identifyRequest.setType("android");
         return  identifyRequest;
     }
 
@@ -316,6 +357,60 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
         DDScannerApplication.bus.unregister(this);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+    }
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        File imagesFolder = new File(Environment.getExternalStorageDirectory(), "MyImages");
+        imagesFolder.mkdirs();
+        File image = new File(imagesFolder, "QR_" + timeStamp + ".png");
+        capturedImageUri = Uri.fromFile(image);
+        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, capturedImageUri);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        }
+    }
+
+    private void showAlertDialogLocationSettings() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(
+                "To work with ddscanner you must enable location service. Do you want to do this?")
+                .setCancelable(false)
+                .setPositiveButton("Yes",
+                        new DialogInterface.OnClickListener() {
+
+                            public void onClick(DialogInterface dialog, int id) {
+                                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                startActivityForResult(intent, 1);
+                                dialog.dismiss();
+                            }
+                        })
+                .setNegativeButton("No",
+                        new DialogInterface.OnClickListener() {
+
+                            public void onClick(DialogInterface dialog,
+                                                int id) {
+                                dialog.cancel();
+                            }
+                        });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    private boolean checkIsProvidersEnabled() {
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) &&
+                !locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     @Subscribe
     public void changeProfileFragmentView(TakePhotoFromCameraEvent event) {
         dispatchTakePictureIntent();
@@ -337,18 +432,5 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
     @Subscribe
     public void internetConnectionClosed(InternetConnectionClosedEvent event) {
         InternetClosedActivity.show(this);
-    }
-
-    private void dispatchTakePictureIntent() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        File imagesFolder = new File(Environment.getExternalStorageDirectory(), "MyImages");
-        imagesFolder.mkdirs();
-        File image = new File(imagesFolder, "QR_" + timeStamp + ".png");
-        capturedImageUri = Uri.fromFile(image);
-        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, capturedImageUri);
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-        }
     }
 }

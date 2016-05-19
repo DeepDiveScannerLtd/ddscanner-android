@@ -43,10 +43,6 @@ public class SplashActivity extends Activity {
 
         setContentView(R.layout.activity_splash);
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-       /* if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) &&
-                !locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-           showAlertDialog();
-        }*/
         showMainActivity();
     }
 

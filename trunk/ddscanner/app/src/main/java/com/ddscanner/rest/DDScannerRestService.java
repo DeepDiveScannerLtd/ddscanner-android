@@ -40,7 +40,7 @@ public interface DDScannerRestService {
     @GET("/diving/divespots")
     Call<ResponseBody> getDivespots(@QueryMap Map<String, Object> map);
 
-    @POST("/diving/register")
+    @POST("/diving/login")
     Call<ResponseBody> registerUser(@Body RegisterRequest registerRequest);
 
     @POST("/diving/divespot/{id}/validation")
