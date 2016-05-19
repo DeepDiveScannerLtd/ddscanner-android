@@ -176,6 +176,9 @@ public class ProfileFragment extends Fragment
     @Override
     public void onResume() {
         super.onResume();
+        if (SharedPreferenceHelper.getIsUserLogined()) {
+            getUserDataRequest(SharedPreferenceHelper.getUserServerId());
+        }
         DDScannerApplication.bus.register(this);
         if (!getUserVisibleHint())
         {
