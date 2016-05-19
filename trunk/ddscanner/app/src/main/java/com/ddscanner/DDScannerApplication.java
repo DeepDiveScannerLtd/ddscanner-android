@@ -2,9 +2,11 @@ package com.ddscanner;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.support.multidex.MultiDex;
 
 import com.crashlytics.android.Crashlytics;
+import com.ddscanner.ui.activities.InternetClosedActivity;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.facebook.FacebookSdk;
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -23,7 +25,7 @@ public class DDScannerApplication extends Application {
     public static final String TWITTER_KEY = "tT7PhwjwXb8dEXbhQzI529VR4";
     public static final String TWITTER_SECRET = "C4wijpAOBWWwUVsmtyoMEhWUQD5P6BFulUDTVQGQmrJI32BlaT";
     public static Bus bus = new Bus();
-
+    public static boolean isErrorActivityShown = false;
 
     private static DDScannerApplication instance;
 
@@ -44,6 +46,19 @@ public class DDScannerApplication extends Application {
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         MultiDex.install(this);
+    }
+
+    public static void showErrorActivity(Context context) {
+        if (!isErrorActivityShown) {
+            Intent error = new Intent(context, InternetClosedActivity.class);
+            error.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(error);
+            isErrorActivityShown = true;
+        }
+    }
+
+    public static void errorActivityIsFinished() {
+        isErrorActivityShown = false;
     }
 
 }

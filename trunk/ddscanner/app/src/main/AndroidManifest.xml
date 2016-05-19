@@ -21,8 +21,8 @@
 
     <permission android:name="com.ddscanner.permission.C2D_MESSAGE" />
 
-    <android:uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <android:uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
         android:name=".DDScannerApplication"
@@ -39,14 +39,18 @@
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
         </receiver>
-
+        <receiver android:name=".services.NetworkLisetener" >
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
+            </intent-filter>
+        </receiver>
         <activity
             android:name=".ui.activities.MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
+                <data android:scheme="com.ddscanner" />
+                <action android:name="android.intent.action.VIEW" />
             </intent-filter>
         </activity>
         <activity
@@ -68,17 +72,19 @@
             android:screenOrientation="portrait" >
 
         </activity>
+
+        <activity android:name=".ui.activities.InternetClosedActivity"
+            android:screenOrientation="portrait"
+            />
+
         <activity
             android:name=".ui.activities.SplashActivity"
             android:screenOrientation="portrait">
-
-            <!--
-                <intent-filter>
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            -->
         </activity>
         <activity
             android:name=".ui.activities.AddDiveSpotActivity"

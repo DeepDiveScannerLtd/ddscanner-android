@@ -327,7 +327,7 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public static void checkGcm() {
-        Call<ResponseBody> call = RestClient.getServiceInstance().identifyGcmToken(SharedPreferenceHelper.getGcmId());
+       /* Call<ResponseBody> call = RestClient.getServiceInstance().identifyGcmToken(SharedPreferenceHelper.getGcmId());
         call.enqueue(new retrofit2.Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
@@ -339,7 +339,7 @@ public class CityActivity extends AppCompatActivity implements View.OnClickListe
 
             }
 
-        });
+        });*/
     }
 
    @Override

@@ -7,6 +7,7 @@
     <color name="secondary">#1565C0</color>
     <color name="primary_dark">#074E69</color>
     <color name="primary_light">#C8E6C9</color>
+    <color name="empty_buttons">#2e80a0</color>
 
     <color name="green_100">#C8E6C9</color>
     <color name="green_600">#43A047</color>

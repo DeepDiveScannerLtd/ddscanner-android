@@ -18,12 +18,15 @@ import android.support.v4.view.ViewPager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.request.IdentifyRequest;
 import com.ddscanner.events.ChangePageOfMainViewPagerEvent;
+import com.ddscanner.events.InternerConnectionOpenedEvent;
+import com.ddscanner.events.InternetConnectionClosedEvent;
 import com.ddscanner.events.PickPhotoFromGallery;
 import com.ddscanner.events.PlaceChoosedEvent;
 import com.ddscanner.events.TakePhotoFromCameraEvent;
@@ -34,6 +37,7 @@ import com.ddscanner.ui.fragments.EditProfileFragment;
 import com.ddscanner.ui.fragments.MapListFragment;
 import com.ddscanner.ui.fragments.NotificationsFragment;
 import com.ddscanner.ui.fragments.ProfileFragment;
+import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.android.gms.common.ConnectionResult;
@@ -74,6 +78,8 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
     private MainActivityPagerAdapter adapter;
     private ImageView imageView;
     private Helpers helpers = new Helpers();
+    private boolean isHasInternetConnection;
+    private boolean isHasLocation;
 
     private MapListFragment mapListFragment = new MapListFragment();
     private NotificationsFragment notificationsFragment = new NotificationsFragment();
@@ -83,6 +89,14 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        isHasInternetConnection = getIntent().getBooleanExtra(Constants.IS_HAS_INTERNET, false);
+        startActivity();
+        if (!isHasInternetConnection) {
+            InternetClosedActivity.show(this);
+        }
+    }
+
+    private void startActivity() {
         getWindow().setBackgroundDrawable(null);
         setContentView(R.layout.activity_main);
         findViews();
@@ -138,8 +152,10 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
         viewPager.setAdapter(adapter);
     }
 
-    public static void show(Context context) {
+    public static void show(Context context, boolean isHasInternet, boolean isHasLocation) {
         Intent intent = new Intent(context, MainActivity.class);
+        intent.putExtra(Constants.IS_HAS_INTERNET, isHasInternet);
+        intent.putExtra(Constants.IS_LOCATION, isHasLocation);
         context.startActivity(intent);
     }
 
@@ -318,17 +334,18 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
         mainViewPager.setCurrentItem(event.getPage());
     }
 
+    @Subscribe
+    public void internetConnectionClosed(InternetConnectionClosedEvent event) {
+        InternetClosedActivity.show(this);
+    }
+
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-
-//folder stuff
         File imagesFolder = new File(Environment.getExternalStorageDirectory(), "MyImages");
         imagesFolder.mkdirs();
-
         File image = new File(imagesFolder, "QR_" + timeStamp + ".png");
         capturedImageUri = Uri.fromFile(image);
-
         takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, capturedImageUri);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
