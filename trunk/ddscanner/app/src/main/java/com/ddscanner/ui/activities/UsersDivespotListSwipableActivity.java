@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.transition.Explode;
+import android.view.MenuItem;
 import android.view.Window;
 
 import com.daimajia.swipe.util.Attributes;
@@ -170,6 +171,16 @@ public class UsersDivespotListSwipableActivity extends AppCompatActivity {
         Intent intent = new Intent(context, UsersDivespotListSwipableActivity.class);
         intent.putExtra("ISCHECKINS", isCheckins);
         context.startActivity(intent);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
