@@ -201,4 +201,11 @@ public interface DDScannerRestService {
     @DELETE("diving/divespot/{id}/favorites")
     Call<ResponseBody> removeSpotFromFavorites( @Path("id") String id,
                                      @QueryMap Map<String, String> map);
+
+    @GET("diving/user/{id}/divespot/added")
+    Call<ResponseBody> getUsersAdded(@Path("id") String id, @QueryMap Map<String, String> map);
+
+    @GET("diving/user/{id}/divespot/edited")
+    Call<ResponseBody> getUsersEdited(@Path("id") String id, @QueryMap Map<String, String> map);
+
 }
