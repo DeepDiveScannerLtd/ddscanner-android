@@ -1,5 +1,7 @@
 package com.ddscanner.ui.activities;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -7,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.ddscanner.R;
 import com.ddscanner.entities.DiveSpot;
@@ -17,6 +20,7 @@ import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.gson.Gson;
+import com.rey.material.widget.ProgressView;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -37,6 +41,7 @@ public class DiveSpotsListActivity extends AppCompatActivity {
     private List<DiveSpot> diveSpots = new ArrayList<>();
     private boolean isAdded = false;
     private Helpers helpers = new Helpers();
+    private ProgressView progressBarFull;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,7 +59,7 @@ public class DiveSpotsListActivity extends AppCompatActivity {
     private void findViews() {
         rc = (RecyclerView) findViewById(R.id.divespots_rc);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-
+        progressBarFull = (ProgressView) findViewById(R.id.progressBar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Dive spots");
@@ -66,6 +71,8 @@ public class DiveSpotsListActivity extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         rc.setLayoutManager(linearLayoutManager);
         rc.setAdapter(new ProductListAdapter((ArrayList<DiveSpot>) diveSpots, this));
+        progressBarFull.setVisibility(View.GONE);
+        rc.setVisibility(View.VISIBLE);
     }
 
     private void getAddedList() {
@@ -144,6 +151,11 @@ public class DiveSpotsListActivity extends AppCompatActivity {
         finish();
     }
 
+    public static void show(Context context, boolean isAdded) {
+        Intent intent = new Intent(context, DiveSpotsListActivity.class);
+        intent.putExtra("ISADDED", isAdded);
+        context.startActivity(intent);
+    }
 }
 
 

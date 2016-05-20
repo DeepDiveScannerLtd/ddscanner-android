@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.transition.Explode;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 
 import com.daimajia.swipe.util.Attributes;
@@ -22,6 +23,7 @@ import com.ddscanner.ui.adapters.SwipableDiveSpotListAdapter;
 import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.gson.Gson;
+import com.rey.material.widget.ProgressView;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -44,6 +46,7 @@ public class UsersDivespotListSwipableActivity extends AppCompatActivity {
     private SwipableDiveSpotListAdapter swipableDiveSpotListAdapter;
     private List<DiveSpot> diveSpots = new ArrayList<>();
     private boolean isCheckin = false;
+    private ProgressView progressBarFull;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,7 +65,7 @@ public class UsersDivespotListSwipableActivity extends AppCompatActivity {
     private void findViews() {
         rc = (RecyclerView) findViewById(R.id.divespots_rc);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-
+        progressBarFull = (ProgressView) findViewById(R.id.progressBar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Dive spots");
@@ -90,6 +93,8 @@ public class UsersDivespotListSwipableActivity extends AppCompatActivity {
         swipableDiveSpotListAdapter.setMode(Attributes.Mode.Single);
 
         rc.setAdapter(swipableDiveSpotListAdapter);
+        progressBarFull.setVisibility(View.GONE);
+        rc.setVisibility(View.VISIBLE);
     }
 
     private void getListOfDiveSPotsCheckins() {

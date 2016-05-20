@@ -72,7 +72,8 @@
             android:screenOrientation="portrait" >
 
         </activity>
-
+        <activity android:name=".ui.activities.DiveSpotsListActivity"
+            android:screenOrientation="portrait"/>
         <activity android:name=".ui.activities.InternetClosedActivity"
             android:screenOrientation="portrait"
             />

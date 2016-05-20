@@ -24,6 +24,7 @@ import com.ddscanner.events.ChangePageOfMainViewPagerEvent;
 import com.ddscanner.events.PickPhotoFromGallery;
 import com.ddscanner.events.TakePhotoFromCameraEvent;
 import com.ddscanner.rest.RestClient;
+import com.ddscanner.ui.activities.DiveSpotsListActivity;
 import com.ddscanner.ui.activities.UsersDivespotListSwipableActivity;
 import com.ddscanner.ui.views.TransformationRoundImage;
 import com.ddscanner.utils.Helpers;
@@ -78,6 +79,8 @@ public class ProfileFragment extends Fragment
     private ImageView pickPhotoFromGallery;
     private LinearLayout showAllCheckins;
     private LinearLayout showAllFavorites;
+    private LinearLayout showAllAdded;
+    private LinearLayout showAllEdited;
     private SwipeRefreshLayout swipeRefreshLayout;
 
     private RequestBody requestSecret = null;
@@ -138,6 +141,8 @@ public class ProfileFragment extends Fragment
         logout = (LinearLayout) v.findViewById(R.id.logout);
         showAllCheckins = (LinearLayout) v.findViewById(R.id.checkins_activity);
         showAllFavorites = (LinearLayout) v.findViewById(R.id.favorites_activity);
+        showAllAdded = (LinearLayout) v.findViewById(R.id.created_activity);
+        showAllEdited = (LinearLayout) v.findViewById(R.id.edited_activity);
     }
 
     @Override
@@ -178,6 +183,12 @@ public class ProfileFragment extends Fragment
                 break;
             case R.id.favorites_activity:
                 UsersDivespotListSwipableActivity.show(getContext(), false);
+                break;
+            case R.id.edited_activity:
+                DiveSpotsListActivity.show(getContext(), false);
+                break;
+            case R.id.created_activity:
+                DiveSpotsListActivity.show(getContext(), true);
                 break;
         }
     }
@@ -267,6 +278,14 @@ public class ProfileFragment extends Fragment
         showAllFavorites.setOnClickListener(this);
         if (Integer.parseInt(user.getCountFavorite()) == 0) {
             showAllFavorites.setOnClickListener(null);
+        }
+        showAllEdited.setOnClickListener(this);
+        if (Integer.parseInt(user.getCountEdit()) == 0) {
+            showAllEdited.setOnClickListener(null);
+        }
+        showAllAdded.setOnClickListener(this);
+        if (Integer.parseInt(user.getCountAdd()) == 0) {
+            showAllAdded.setOnClickListener(null);
         }
    }
 
