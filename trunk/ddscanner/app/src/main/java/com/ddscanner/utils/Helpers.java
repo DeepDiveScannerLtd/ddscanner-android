@@ -16,6 +16,8 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.ddscanner.R;
 import com.ddscanner.entities.User;
 import com.ddscanner.entities.request.RegisterRequest;
 import com.ddscanner.events.ShowUserDialogEvent;
@@ -237,6 +239,16 @@ public class Helpers {
             return null;
         }
         return map;
+    }
+
+    public MaterialDialog getMaterialDialog(Context context) {
+        MaterialDialog materialDialog;
+        materialDialog = new MaterialDialog.Builder(context)
+                .cancelable(false)
+                .content("Please wait...").progress(true, 0)
+                .contentColor(context.getResources().getColor(R.color.black_text))
+                .widgetColor(context.getResources().getColor(R.color.primary)).build();
+        return materialDialog;
     }
 
 }

@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.User;
@@ -91,6 +92,7 @@ public class ProfileFragment extends Fragment
     private RequestBody name = null;
     private RequestBody requestType = null;
     private MultipartBody.Part image = null;
+    private MaterialDialog materialDialog;
 
     private Uri uri = null;
 
@@ -114,6 +116,7 @@ public class ProfileFragment extends Fragment
         if (SharedPreferenceHelper.getIsUserLogined()) {
             getUserDataRequest(SharedPreferenceHelper.getUserServerId());
         }
+        materialDialog = helpers.getMaterialDialog(getContext());
         return v;
     }
 
@@ -175,11 +178,7 @@ public class ProfileFragment extends Fragment
                 break;
             case R.id.checkins_activity:
                 Intent intent = new Intent(getContext(), UsersDivespotListSwipableActivity.class);
-                intent.putExtra("ISCHECKIN", true);
-                if (android.os.Build.VERSION.SDK_INT >= 21) {
-                    getContext().startActivity(intent,
-                            ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
-                }
+                UsersDivespotListSwipableActivity.show(getContext(), true);
                 break;
             case R.id.favorites_activity:
                 UsersDivespotListSwipableActivity.show(getContext(), false);
@@ -276,7 +275,8 @@ public class ProfileFragment extends Fragment
             showAllCheckins.setOnClickListener(null);
         }
         showAllFavorites.setOnClickListener(this);
-        if (Integer.parseInt(user.getCountFavorite()) == 0) {
+
+        if (user.getCountFavorite() == null ||Integer.parseInt(user.getCountFavorite()) == 0) {
             showAllFavorites.setOnClickListener(null);
         }
         showAllEdited.setOnClickListener(this);
@@ -300,6 +300,7 @@ public class ProfileFragment extends Fragment
     }
 
     private void createUpdateRequest() {
+        materialDialog.show();
         if (!aboutEdit.equals(user.getAbout()) && !aboutEdit.getText().toString().equals("")) {
             about = RequestBody.create(MediaType.parse("multipart/form-data"),
                     aboutEdit.getText().toString());
@@ -354,6 +355,7 @@ public class ProfileFragment extends Fragment
                             changeUi(user);
                             aboutLayout.setVisibility(View.VISIBLE);
                             editLayout.setVisibility(View.GONE);
+                            materialDialog.dismiss();
                         } catch (IOException e) {
 
                         } catch (JSONException e) {
