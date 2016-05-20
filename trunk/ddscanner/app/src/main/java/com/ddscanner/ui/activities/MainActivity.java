@@ -2,9 +2,8 @@ package com.ddscanner.ui.activities;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.app.ActivityOptions;
 import android.app.AlertDialog;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -18,19 +17,16 @@ import android.provider.Settings;
 import android.support.design.widget.TabLayout;
 import android.support.percent.PercentRelativeLayout;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.request.IdentifyRequest;
 import com.ddscanner.events.ChangePageOfMainViewPagerEvent;
-import com.ddscanner.events.InternerConnectionOpenedEvent;
 import com.ddscanner.events.InternetConnectionClosedEvent;
 import com.ddscanner.events.PickPhotoFromGallery;
 import com.ddscanner.events.PlaceChoosedEvent;
@@ -125,6 +121,7 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
         } else {
             showAlertDialogLocationSettings();
         }
+
     }
 
     private void setUi() {

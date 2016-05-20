@@ -24,6 +24,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -694,7 +695,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private void addDiveSpotToFavorites() {
         Call<ResponseBody> call = RestClient.getServiceInstance().addDiveSpotToFavourites(
                 String.valueOf(diveSpot.getId()),
-                helpers.getRegisterRequest()
+                helpers.getUserQuryMapRequest()
         );
         call.enqueue(new retrofit2.Callback<ResponseBody>() {
             @Override

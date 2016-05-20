@@ -1,5 +1,6 @@
 package com.ddscanner.ui.fragments;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -76,6 +77,7 @@ public class ProfileFragment extends Fragment
     private TextView editedCount;
     private ImageView pickPhotoFromGallery;
     private LinearLayout showAllCheckins;
+    private LinearLayout showAllFavorites;
     private SwipeRefreshLayout swipeRefreshLayout;
 
     private RequestBody requestSecret = null;
@@ -106,7 +108,6 @@ public class ProfileFragment extends Fragment
         saveChanges.setOnClickListener(this);
         pickPhotoFromGallery.setOnClickListener(this);
         logout.setOnClickListener(this);
-        showAllCheckins.setOnClickListener(this);
         if (SharedPreferenceHelper.getIsUserLogined()) {
             getUserDataRequest(SharedPreferenceHelper.getUserServerId());
         }
@@ -136,6 +137,7 @@ public class ProfileFragment extends Fragment
         pickPhotoFromGallery = (ImageView) v.findViewById(R.id.pick_photo_from_gallery);
         logout = (LinearLayout) v.findViewById(R.id.logout);
         showAllCheckins = (LinearLayout) v.findViewById(R.id.checkins_activity);
+        showAllFavorites = (LinearLayout) v.findViewById(R.id.favorites_activity);
     }
 
     @Override
@@ -168,7 +170,14 @@ public class ProfileFragment extends Fragment
                 break;
             case R.id.checkins_activity:
                 Intent intent = new Intent(getContext(), UsersDivespotListSwipableActivity.class);
-                getContext().startActivity(intent);
+                intent.putExtra("ISCHECKIN", true);
+                if (android.os.Build.VERSION.SDK_INT >= 21) {
+                    getContext().startActivity(intent,
+                            ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
+                }
+                break;
+            case R.id.favorites_activity:
+                UsersDivespotListSwipableActivity.show(getContext(), false);
                 break;
         }
     }
@@ -251,6 +260,14 @@ public class ProfileFragment extends Fragment
         editedCount.setText(user.getCountEdit());
         favouriteCount.setText(user.getCountFavorite());
         checkInCount.setText(user.getCountCheckin());
+        showAllCheckins.setOnClickListener(this);
+        if (Integer.parseInt(user.getCountCheckin()) == 0) {
+            showAllCheckins.setOnClickListener(null);
+        }
+        showAllFavorites.setOnClickListener(this);
+        if (Integer.parseInt(user.getCountFavorite()) == 0) {
+            showAllFavorites.setOnClickListener(null);
+        }
    }
 
     @Override

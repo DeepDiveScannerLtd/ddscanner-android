@@ -22,6 +22,7 @@
             android:layout_height="match_parent">
 
             <ImageView
+                android:transitionName="image"
                 android:fitsSystemWindows="true"
                 android:id="@+id/main_photo"
                 android:layout_width="match_parent"

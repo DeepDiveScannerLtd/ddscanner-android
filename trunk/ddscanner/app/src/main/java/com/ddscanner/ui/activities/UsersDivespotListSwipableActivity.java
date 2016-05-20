@@ -1,11 +1,16 @@
 package com.ddscanner.ui.activities;
 
+import android.app.ActivityOptions;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.transition.Explode;
+import android.view.Window;
 
 import com.daimajia.swipe.util.Attributes;
 import com.ddscanner.R;
@@ -37,13 +42,20 @@ public class UsersDivespotListSwipableActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private SwipableDiveSpotListAdapter swipableDiveSpotListAdapter;
     private List<DiveSpot> diveSpots = new ArrayList<>();
+    private boolean isCheckin = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         setContentView(R.layout.activity_users_dive_spots);
+        isCheckin = getIntent().getBooleanExtra("ISCHECKIN", false);
         findViews();
-        getListOfDiveSPotsCheckins();
+        if (isCheckin) {
+            getListOfDiveSPotsCheckins();
+        } else {
+            getListOfDiveSPotsFavorites();
+        }
     }
 
     private void findViews() {
@@ -72,8 +84,8 @@ public class UsersDivespotListSwipableActivity extends AppCompatActivity {
                 super.onScrolled(recyclerView, dx, dy);
             }
         });
-        swipableDiveSpotListAdapter = new SwipableDiveSpotListAdapter(
-                (ArrayList<DiveSpot>) diveSpots, this, true);
+            swipableDiveSpotListAdapter = new SwipableDiveSpotListAdapter(this,
+                    (ArrayList<DiveSpot>) diveSpots, this, isCheckin);
         swipableDiveSpotListAdapter.setMode(Attributes.Mode.Single);
 
         rc.setAdapter(swipableDiveSpotListAdapter);
@@ -116,5 +128,54 @@ public class UsersDivespotListSwipableActivity extends AppCompatActivity {
             }
         });
     }
+    private void getListOfDiveSPotsFavorites() {
+        Map<String, String> map = new HashMap<>();
+        if (SharedPreferenceHelper.getIsUserLogined()) {
+            map.put("social", SharedPreferenceHelper.getSn());
+            map.put("token", SharedPreferenceHelper.getToken());
+            if (SharedPreferenceHelper.getSn().equals("tw")) {
+                map.put("secret",SharedPreferenceHelper.getSecret());
+            }
+        }
+        Call<ResponseBody> call = RestClient.getServiceInstance().getUsersFavorites(
+                SharedPreferenceHelper.getUserServerId(), map);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    String responseString = "";
+                    try {
+                        responseString = response.body().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    LogUtils.i("response body is " + responseString);
+                    DivespotsWrapper divespotsWrapper = new Gson()
+                            .fromJson(responseString, DivespotsWrapper.class);
+                    diveSpots = divespotsWrapper.getDiveSpots();
+                    setUi();
+                } else {
 
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
+    }
+
+    public static void show(Context context, boolean isCheckins) {
+        Intent intent = new Intent(context, UsersDivespotListSwipableActivity.class);
+        intent.putExtra("ISCHECKINS", isCheckins);
+        context.startActivity(intent);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        swipableDiveSpotListAdapter = null;
+        finish();
+    }
 }

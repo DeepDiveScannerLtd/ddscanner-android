@@ -52,7 +52,7 @@ public interface DDScannerRestService {
     @POST("/diving/divespot/{id}/favorite")
     Call<ResponseBody> addDiveSpotToFavourites(
             @Path("id") String id,
-            @Body RegisterRequest registerRequest
+            @QueryMap Map<String, String> map
             );
 
     @DELETE("/diving/divespot/{id}/favorite")
@@ -194,4 +194,11 @@ public interface DDScannerRestService {
 
     @GET("diving/user/{id}/divespot/checkins")
     Call<ResponseBody> getUsersCheckins(@Path("id") String id, @QueryMap Map<String, String> map);
+
+    @GET("diving/user/{id}/divespot/favorites")
+    Call<ResponseBody> getUsersFavorites(@Path("id") String id, @QueryMap Map<String, String> map);
+
+    @DELETE("diving/divespot/{id}/favorites")
+    Call<ResponseBody> removeSpotFromFavorites( @Path("id") String id,
+                                     @QueryMap Map<String, String> map);
 }

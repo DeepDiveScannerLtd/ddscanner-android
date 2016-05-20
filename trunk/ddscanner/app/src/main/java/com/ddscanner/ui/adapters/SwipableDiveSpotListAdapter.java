@@ -1,8 +1,14 @@
 package com.ddscanner.ui.adapters;
 
+import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.PorterDuff;
+import android.os.Build;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +25,7 @@ import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 import com.ddscanner.R;
 import com.ddscanner.entities.DiveSpot;
 import com.ddscanner.rest.RestClient;
+import com.ddscanner.ui.activities.DiveSpotDetailsActivity;
 import com.ddscanner.ui.views.TransformationRoundImage;
 import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Callback;
@@ -41,14 +48,18 @@ public class SwipableDiveSpotListAdapter
     private Context context;
     private boolean isCheckins = true;
     private Helpers helpers = new Helpers();
+    private static AppCompatActivity mActivity;
 
 
-    public SwipableDiveSpotListAdapter(ArrayList<DiveSpot> divespots, Context context,
+    public SwipableDiveSpotListAdapter(AppCompatActivity activity,ArrayList<DiveSpot> divespots, Context context,
                                        boolean isCheckins) {
         this.divespots = divespots;
         this.context = context;
         this.isCheckins = isCheckins;
+        mActivity = activity;
+
     }
+
 
 
     @Override
@@ -143,6 +154,8 @@ public class SwipableDiveSpotListAdapter
             public void onClick(View v) {
                 if (isCheckins) {
                     checkOut(String.valueOf(divespots.get(position).getId()));
+                } else {
+                    removeFromFavorites(String.valueOf(divespots.get(position).getId()));
                 }
                 mItemManger.removeShownLayouts(swipableDiveSpotListViewHolder.swipeLayout);
                 divespots.remove(position);
@@ -182,7 +195,19 @@ public class SwipableDiveSpotListAdapter
     }
 
     private void removeFromFavorites(String id) {
+        Call<ResponseBody> call = RestClient.getServiceInstance()
+                .removeSpotFromFavorites(id, helpers.getUserQuryMapRequest());
+        call.enqueue(new retrofit2.Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
     }
 
     public static class SwipableDiveSpotListViewHolder extends RecyclerView.ViewHolder
@@ -194,10 +219,13 @@ public class SwipableDiveSpotListAdapter
         protected ProgressBar progressBar;
         public Button mButton;
         private TextView delete;
+        private Context mContext;
 
 
         public SwipableDiveSpotListViewHolder(View itemView) {
             super(itemView);
+            mContext = itemView.getContext();
+          //  itemView.setOnClickListener(this);
             swipeLayout = (SwipeLayout) itemView.findViewById(R.id.swipe);
             imageView = (ImageView) itemView.findViewById(R.id.product_logo);
             title = (TextView) itemView.findViewById(R.id.product_title);
@@ -210,7 +238,8 @@ public class SwipableDiveSpotListAdapter
 
         @Override
         public void onClick(View v) {
-
+            DiveSpotDetailsActivity
+                    .show(mContext, String.valueOf(divespots.get(getPosition()).getId()));
         }
     }
 

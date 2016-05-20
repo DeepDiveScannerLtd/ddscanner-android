@@ -227,6 +227,7 @@
         <ImageView
             style="@style/DividerStyle"/>
         <LinearLayout
+            android:id="@+id/favorites_activity"
             android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="45dp"

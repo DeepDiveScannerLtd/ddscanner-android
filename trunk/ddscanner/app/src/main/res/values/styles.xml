@@ -8,6 +8,7 @@
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
         <item name="android:actionMenuTextColor">@color/orange</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:windowContentTransitions">true</item>
     </style>
 
     <style name="editTextSub" parent="Widget.AppCompat.EditText">

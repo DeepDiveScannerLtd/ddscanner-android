@@ -2,10 +2,13 @@ package com.ddscanner.ui.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 
 import com.ddscanner.DDScannerApplication;
@@ -27,11 +30,21 @@ public class InternetClosedActivity extends AppCompatActivity implements View.On
         setContentView(R.layout.activity_no_internet);
         Button btnRefresh = (Button) findViewById(R.id.btn_retry);
         btnRefresh.setOnClickListener(this);
+
+        Window w = getWindow();
+        w.setFlags(
+                WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION,
+                WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+        w.setFlags(
+                WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
+                WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
     }
 
     @Override
     public void onClick(View v) {
-        onBackPressed();
+        if (helpers.hasConnection(this)) {
+            onBackPressed();
+        }
     }
 
     @Override

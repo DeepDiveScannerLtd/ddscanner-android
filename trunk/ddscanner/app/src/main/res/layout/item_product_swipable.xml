@@ -46,6 +46,7 @@
         android:background="@color/white">
 
         <ImageView
+            android:transitionName="image"
             android:id="@+id/product_logo"
             android:layout_width="55dp"
             android:layout_height="55dp"
