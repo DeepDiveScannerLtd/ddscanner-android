@@ -207,4 +207,7 @@ public interface DDScannerRestService {
     @GET("diving/user/{id}/divespot/edited")
     Call<ResponseBody> getUsersEdited(@Path("id") String id, @QueryMap Map<String, String> map);
 
+    @POST("diving/logout")
+    Call<ResponseBody> logout(@Body RegisterRequest registerRequest);
+
 }

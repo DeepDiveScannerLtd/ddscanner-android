@@ -173,8 +173,8 @@ public class ProfileFragment extends Fragment
                 DDScannerApplication.bus.post(new PickPhotoFromGallery());
                 break;
             case R.id.logout:
-                SharedPreferenceHelper.logout();
-                DDScannerApplication.bus.post(new ChangePageOfMainViewPagerEvent(0));
+                materialDialog.show();
+                logout();
                 break;
             case R.id.checkins_activity:
                 Intent intent = new Intent(getContext(), UsersDivespotListSwipableActivity.class);
@@ -378,4 +378,25 @@ public class ProfileFragment extends Fragment
         getUserDataRequest(SharedPreferenceHelper.getUserServerId());
         swipeRefreshLayout.setRefreshing(false);
     }
+
+    private void logout() {
+        Call<ResponseBody> call = RestClient.getServiceInstance()
+                .logout(helpers.getRegisterRequest());
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.raw().code() == 200) {
+                    SharedPreferenceHelper.logout();
+                    DDScannerApplication.bus.post(new ChangePageOfMainViewPagerEvent(0));
+                    materialDialog.dismiss();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    materialDialog.dismiss();
+            }
+        });
+    }
+
 }

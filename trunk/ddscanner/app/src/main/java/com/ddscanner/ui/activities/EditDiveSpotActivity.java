@@ -216,11 +216,9 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
      */
 
     private void getDsInfoRequest() {
-        Map<String, String> map = new HashMap<>();
-        map.put("social", SharedPreferenceHelper.getSn());
-        map.put("token", SharedPreferenceHelper.getToken());
+
         Call<ResponseBody> call = RestClient.getServiceInstance().getDiveSpotForEdit(
-                diveSpotId, map);
+                diveSpotId, helpers.getUserQuryMapRequest());
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

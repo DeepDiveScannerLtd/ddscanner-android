@@ -168,7 +168,7 @@ public class UsersDivespotListSwipableActivity extends AppCompatActivity {
 
     public static void show(Context context, boolean isCheckins) {
         Intent intent = new Intent(context, UsersDivespotListSwipableActivity.class);
-        intent.putExtra("ISCHECKINS", isCheckins);
+        intent.putExtra("ISCHECKIN", isCheckins);
         context.startActivity(intent);
     }
 
