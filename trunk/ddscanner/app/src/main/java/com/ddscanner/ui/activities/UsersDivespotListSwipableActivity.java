@@ -84,8 +84,8 @@ public class UsersDivespotListSwipableActivity extends AppCompatActivity {
         rc.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         rc.setLayoutManager(linearLayoutManager);
-            swipableDiveSpotListAdapter = new SwipableDiveSpotListAdapter(this,
-                    (ArrayList<DiveSpot>) diveSpots, this, isCheckin);
+        swipableDiveSpotListAdapter = new SwipableDiveSpotListAdapter(this,
+                (ArrayList<DiveSpot>) diveSpots, this, isCheckin);
         rc.setAdapter(swipableDiveSpotListAdapter);
         initSwipe();
         progressBarFull.setVisibility(View.GONE);
@@ -98,7 +98,7 @@ public class UsersDivespotListSwipableActivity extends AppCompatActivity {
             map.put("social", SharedPreferenceHelper.getSn());
             map.put("token", SharedPreferenceHelper.getToken());
             if (SharedPreferenceHelper.getSn().equals("tw")) {
-                map.put("secret",SharedPreferenceHelper.getSecret());
+                map.put("secret", SharedPreferenceHelper.getSecret());
             }
         }
         Call<ResponseBody> call = RestClient.getServiceInstance().getUsersCheckins(
@@ -129,13 +129,14 @@ public class UsersDivespotListSwipableActivity extends AppCompatActivity {
             }
         });
     }
+
     private void getListOfDiveSPotsFavorites() {
         Map<String, String> map = new HashMap<>();
         if (SharedPreferenceHelper.getIsUserLogined()) {
             map.put("social", SharedPreferenceHelper.getSn());
             map.put("token", SharedPreferenceHelper.getToken());
             if (SharedPreferenceHelper.getSn().equals("tw")) {
-                map.put("secret",SharedPreferenceHelper.getSecret());
+                map.put("secret", SharedPreferenceHelper.getSecret());
             }
         }
         Call<ResponseBody> call = RestClient.getServiceInstance().getUsersFavorites(
@@ -204,16 +205,16 @@ public class UsersDivespotListSwipableActivity extends AppCompatActivity {
                 DiveSpot diveSpot = new DiveSpot();
                 diveSpot = diveSpots.get(viewHolder.getAdapterPosition());
 
-                    Snackbar snackbar = Snackbar
-                            .make(rc, "PHOTO REMOVED", Snackbar.LENGTH_LONG)
-                            .setAction("UNDO", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
+                Snackbar snackbar = Snackbar
+                        .make(rc, "Divespot deleted", Snackbar.LENGTH_LONG)
+                        .setAction("UNDO", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
 
-                                }
-                            });
-                    snackbar.show();
-                }
+                            }
+                        });
+                snackbar.show();
+            }
 
             @Override
             public void onChildDraw(Canvas c, RecyclerView recyclerView,
@@ -224,21 +225,18 @@ public class UsersDivespotListSwipableActivity extends AppCompatActivity {
                 float height = (float) itemView.getBottom() - (float) itemView.getTop();
                 float width = height / 3;
                 Paint p = new Paint();
-                if(dX > 0){
-                    p.setColor(Color.parseColor("#388E3C"));
-                    RectF background = new RectF((float) itemView.getLeft(), (float) itemView.getTop(), dX,(float) itemView.getBottom());
-                    c.drawRect(background,p);
-                    icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_ac_back);
-                    RectF icon_dest = new RectF((float) itemView.getLeft() + width ,(float) itemView.getTop() + width,(float) itemView.getLeft()+ 2*width,(float)itemView.getBottom() - width);
-                    c.drawBitmap(icon,null,icon_dest,p);
-                } else {
-                    p.setColor(Color.parseColor("#D32F2F"));
-                    RectF background = new RectF((float) itemView.getRight() + dX, (float) itemView.getTop(),(float) itemView.getRight(), (float) itemView.getBottom());
-                    c.drawRect(background,p);
-                    icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_ac_back);
-                    RectF icon_dest = new RectF((float) itemView.getRight() - 2*width ,(float) itemView.getTop() + width,(float) itemView.getRight() - width,(float)itemView.getBottom() - width);
-                    c.drawBitmap(icon,null,icon_dest,p);
-                }  super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+                p.setColor(Color.parseColor("#D32F2F"));
+                RectF background = new RectF((float) itemView.getRight() + dX,
+                        (float) itemView.getTop(), (float) itemView.getRight(),
+                        (float) itemView.getBottom());
+                c.drawRect(background, p);
+                icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_ac_back);
+                RectF icon_dest = new RectF((float) itemView.getRight() - 2 * width,
+                        (float) itemView.getTop() + width, (float) itemView.getRight() - width,
+                        (float) itemView.getBottom() - width);
+                c.drawBitmap(icon, null, icon_dest, p);
+                super.onChildDraw(c, recyclerView, viewHolder, dX,
+                        dY, actionState, isCurrentlyActive);
             }
         };
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);

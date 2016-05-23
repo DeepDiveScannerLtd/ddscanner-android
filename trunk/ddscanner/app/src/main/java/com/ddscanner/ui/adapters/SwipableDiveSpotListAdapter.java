@@ -71,6 +71,19 @@ public class SwipableDiveSpotListAdapter
 
     }
 
+    public void removeItem(int position, boolean isCheckin) {
+        divespots.remove(position);
+        notifyItemRemoved(position);
+        if (isCheckin) {
+            checkOut(String.valueOf(divespots.get(position).getId()));
+        }
+    }
+
+    public void undoItem(DiveSpot diveSpot, int position) {
+        divespots.add(position, diveSpot);
+        notifyItemInserted(position);
+    }
+
     @Override
     public void onBindViewHolder(final SwipableDiveSpotListViewHolder swipableDiveSpotListViewHolder, final int position) {
         DiveSpot divespot = new DiveSpot();
