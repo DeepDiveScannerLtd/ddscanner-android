@@ -4,6 +4,7 @@ package com.ddscanner.rest;
 import com.ddscanner.entities.request.IdentifyRequest;
 import com.ddscanner.entities.request.RegisterRequest;
 import com.ddscanner.entities.request.SendReviewRequest;
+import com.ddscanner.entities.request.ValidationReguest;
 
 import java.util.List;
 import java.util.Map;
@@ -46,7 +47,7 @@ public interface DDScannerRestService {
     @POST("/diving/divespot/{id}/validation")
     Call<ResponseBody> divespotValidation(
             @Path("id") String id,
-            @Body RegisterRequest registerRequest
+            @Body ValidationReguest validationReguest
             );
 
     @POST("/diving/divespot/{id}/favorite")

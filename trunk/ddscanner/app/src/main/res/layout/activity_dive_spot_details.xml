@@ -480,6 +480,7 @@
 
 
                 <RelativeLayout
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="140dp"
                     android:background="@color/white">
@@ -522,24 +523,27 @@
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:layout_marginLeft="20dp"
+                            android:layout_marginRight="24dp"
+                            android:layout_weight="2"
                             android:gravity="center"
                             android:text="@string/the_information_is_valid"
                             android:textColor="@color/black_text"
                             android:textSize="15sp" />
 
                         <Button
+                            android:layout_weight="1"
                             android:id="@+id/yes_button"
                             android:layout_width="59dp"
                             android:layout_height="34dp"
-                            android:layout_marginLeft="24dp"
+                            android:layout_marginRight="12dp"
                             android:background="@drawable/border_button_orange_2px"
                             android:text="@string/btn_yes" />
 
                         <Button
+                            android:layout_weight="1"
                             android:id="@+id/no_button"
                             android:layout_width="59dp"
                             android:layout_height="34dp"
-                            android:layout_marginLeft="12dp"
                             android:background="@drawable/border_button_gray_2px"
                             android:text="@string/btn_no" />
                     </LinearLayout>

@@ -44,6 +44,7 @@ import com.ddscanner.entities.DivespotDetails;
 import com.ddscanner.entities.Sealife;
 import com.ddscanner.entities.User;
 import com.ddscanner.entities.request.RegisterRequest;
+import com.ddscanner.entities.request.ValidationReguest;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.DiveSpotsPhotosAdapter;
 import com.ddscanner.ui.adapters.SealifeListAdapter;
@@ -493,7 +494,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 }
                 break;
             case R.id.yes_button:
-                diveSpotValidation();
+                diveSpotValidation(true);
                 isInfoValidLayout.setVisibility(View.GONE);
                 thanksLayout.setVisibility(View.VISIBLE);
                 break;
@@ -672,10 +673,18 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         }
     }
 
-    private void diveSpotValidation() {
+    private void diveSpotValidation(boolean isValid) {
+        ValidationReguest validationReguest = new ValidationReguest();
+        validationReguest.setAppId(helpers.getRegisterRequest().getAppId());
+        validationReguest.setToken(helpers.getRegisterRequest().getToken());
+        validationReguest.setSocial(helpers.getRegisterRequest().getSocial());
+        if (SharedPreferenceHelper.getSn().equals("tw")) {
+            validationReguest.setSecret(helpers.getRegisterRequest().getSecret());
+        }
+        validationReguest.setValid(isValid);
         Call<ResponseBody> call = RestClient.getServiceInstance()
                 .divespotValidation(String.valueOf(divespotDetails.getDivespot().getId()),
-                        helpers.getRegisterRequest());
+                        validationReguest);
         call.enqueue(new retrofit2.Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
