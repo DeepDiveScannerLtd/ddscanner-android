@@ -273,7 +273,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             rating.addView(iv);
         }
          photosRecyclerView.setLayoutManager(new GridLayoutManager(DiveSpotDetailsActivity.this,4));
-        photosRecyclerView.addItemDecoration(new GridSpacingItemDecoration(4));
+  //      photosRecyclerView.addItemDecoration(new GridSpacingItemDecoration(4));
         photosRecyclerView.setAdapter(new DiveSpotsPhotosAdapter((ArrayList<String>) diveSpot.getImages(),
                 diveSpot.getDiveSpotPathMedium(), DiveSpotDetailsActivity.this, (ArrayList<String>) diveSpot.getCommentImages() ));
         LinearLayoutManager layoutManager = new LinearLayoutManager(DiveSpotDetailsActivity.this);
@@ -572,10 +572,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         checkinUi();
         Call<ResponseBody> call = RestClient.getServiceInstance().checkIn(
                 String.valueOf(divespotDetails.getDivespot().getId()),
-                RequestBody.create(MediaType.parse("multipart/form-data"),
-                        SharedPreferenceHelper.getSn()),
-                RequestBody.create(MediaType.parse("multipart/form-data"),
-                        SharedPreferenceHelper.getToken())
+                helpers.getRegisterRequest()
                 );
         call.enqueue(new retrofit2.Callback<ResponseBody>() {
             @Override

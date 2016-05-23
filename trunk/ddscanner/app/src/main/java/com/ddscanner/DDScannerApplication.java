@@ -26,6 +26,7 @@ public class DDScannerApplication extends Application {
     public static final String TWITTER_SECRET = "C4wijpAOBWWwUVsmtyoMEhWUQD5P6BFulUDTVQGQmrJI32BlaT";
     public static Bus bus = new Bus();
     public static boolean isErrorActivityShown = false;
+    private static boolean activityVisible = true;
 
     private static DDScannerApplication instance;
 
@@ -59,6 +60,18 @@ public class DDScannerApplication extends Application {
 
     public static void errorActivityIsFinished() {
         isErrorActivityShown = false;
+    }
+
+    public static boolean isActivityVisible() {
+        return activityVisible;
+    }
+
+    public static void activityResumed() {
+        activityVisible = true;
+    }
+
+    public static void activityPaused() {
+        activityVisible = false;
     }
 
 }

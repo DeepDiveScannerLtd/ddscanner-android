@@ -41,7 +41,7 @@ import retrofit2.Response;
  * Created by lashket on 18.5.16.
  */
 public class SwipableDiveSpotListAdapter
-        extends RecyclerSwipeAdapter<SwipableDiveSpotListAdapter.SwipableDiveSpotListViewHolder> {
+        extends RecyclerView.Adapter<SwipableDiveSpotListAdapter.SwipableDiveSpotListViewHolder> {
 
     private static final String TAG = SwipableDiveSpotListAdapter.class.getSimpleName();
     public static ArrayList<DiveSpot> divespots;
@@ -112,70 +112,12 @@ public class SwipableDiveSpotListAdapter
         }
 
 
-        swipableDiveSpotListViewHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.PullOut);
 
-        swipableDiveSpotListViewHolder.swipeLayout.addDrag(SwipeLayout.DragEdge.Right,
-                swipableDiveSpotListViewHolder.swipeLayout.findViewById(R.id.bottom_wrapper1));
-
-        swipableDiveSpotListViewHolder.swipeLayout.addSwipeListener(new SwipeLayout.SwipeListener() {
-            @Override
-            public void onClose(SwipeLayout layout) {
-                //when the SurfaceView totally cover the BottomView.
-            }
-
-            @Override
-            public void onUpdate(SwipeLayout layout, int leftOffset, int topOffset) {
-                //you are swiping.
-            }
-
-            @Override
-            public void onStartOpen(SwipeLayout layout) {
-
-            }
-
-            @Override
-            public void onOpen(SwipeLayout layout) {
-                //when the BottomView totally show.
-            }
-
-            @Override
-            public void onStartClose(SwipeLayout layout) {
-
-            }
-
-            @Override
-            public void onHandRelease(SwipeLayout layout, float xvel, float yvel) {
-                //when user's hand released.
-            }
-        });
-
-        swipableDiveSpotListViewHolder.delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (isCheckins) {
-                    checkOut(String.valueOf(divespots.get(position).getId()));
-                } else {
-                    removeFromFavorites(String.valueOf(divespots.get(position).getId()));
-                }
-                mItemManger.removeShownLayouts(swipableDiveSpotListViewHolder.swipeLayout);
-                divespots.remove(position);
-                notifyItemRemoved(position);
-                notifyItemRangeChanged(position, divespots.size());
-                mItemManger.closeAllItems();
-            }
-        });
-
-        mItemManger.bindView(swipableDiveSpotListViewHolder.itemView, position);
     }
 
     @Override
     public int getItemCount() {
         return divespots.size();
-    }
-
-    @Override
-    public int getSwipeLayoutResourceId(int position) {
-        return R.id.swipe;
     }
 
     private void checkOut(String id) {
@@ -212,7 +154,6 @@ public class SwipableDiveSpotListAdapter
 
     public static class SwipableDiveSpotListViewHolder extends RecyclerView.ViewHolder
                                                         implements View.OnClickListener{
-        SwipeLayout swipeLayout;
         protected ImageView imageView;
         protected TextView title;
         protected LinearLayout stars;
@@ -226,7 +167,6 @@ public class SwipableDiveSpotListAdapter
             super(itemView);
             mContext = itemView.getContext();
           //  itemView.setOnClickListener(this);
-            swipeLayout = (SwipeLayout) itemView.findViewById(R.id.swipe);
             imageView = (ImageView) itemView.findViewById(R.id.product_logo);
             title = (TextView) itemView.findViewById(R.id.product_title);
             stars = (LinearLayout) itemView.findViewById(R.id.stars);

@@ -252,10 +252,6 @@ public class SocialNetworks extends AppCompatActivity
                     }
                     registerResponse = new Gson().fromJson(responseString, RegisterResponse.class);
                     selfProfile = registerResponse.getUser();
-                  //  SharedPreferenceHelper.setUserid(selfProfile.getId());
-                 //   SharedPreferenceHelper.setPhotolink(selfProfile.getPicture());
-                  //  SharedPreferenceHelper.setUsername(selfProfile.getName());
-                  //  SharedPreferenceHelper.setLink(selfProfile.getLink());
                     SharedPreferenceHelper.setUserServerId(selfProfile.getId());
                     SharedPreferenceHelper.setIsUserSignedIn(true);
                     Intent returnIntent = new Intent();

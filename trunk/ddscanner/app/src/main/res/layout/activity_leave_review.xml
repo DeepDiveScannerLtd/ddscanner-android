@@ -64,7 +64,6 @@
             android:numStars="5"/>
     </FrameLayout>
     <LinearLayout
-        android:layout_below="@+id/header"
         android:id="@+id/message_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -102,7 +101,6 @@
             android:textColorHint="#9f9f9f"
             android:background="@android:color/transparent"
             android:scrollbars="vertical"
-            android:autoText="true"
             />
         <TextView
             android:layout_marginTop="10dp"
@@ -113,7 +111,6 @@
             android:textColor="#9f9f9f"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             android:text="symbols left"/>
         </RelativeLayout>
     </LinearLayout>

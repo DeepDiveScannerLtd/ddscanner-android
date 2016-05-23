@@ -89,31 +89,31 @@
         </activity>
         <activity
             android:name=".ui.activities.AddDiveSpotActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.activities.PickLocationActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.activities.DiveSpotPhotosActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activities.FilterActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.activities.CheckInPeoplesActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.activities.ReviewsActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.activities.ShowDsLocationActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.activities.DiveCentersActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.activities.AddSealifeActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.activities.EditDiveSpotActivity"
             android:screenOrientation="portrait" />
@@ -123,19 +123,19 @@
         <activity
             android:name=".ui.activities.LeaveReviewActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize"></activity>
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".ui.activities.ShowImageActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.activities.DiveCenterDetailsActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.activities.DiveSpotDetailsActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.activities.SearchSealifeActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.activities.ImageSliderActivity"
             android:screenOrientation="portrait" />

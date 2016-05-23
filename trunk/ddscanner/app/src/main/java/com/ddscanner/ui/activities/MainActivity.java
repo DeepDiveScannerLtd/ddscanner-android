@@ -355,9 +355,15 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        DDScannerApplication.activityPaused();
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
-
+        DDScannerApplication.activityResumed();
     }
 
     private void dispatchTakePictureIntent() {

@@ -117,12 +117,10 @@ public interface DDScannerRestService {
     Call<ResponseBody> getSealifes();
 
     @POST("diving/divespot/{id}/checkin")
-    @Multipart
     Call<ResponseBody> checkIn(
       @Path("id") String id,
-      @Part("social") RequestBody social,
-      @Part("token") RequestBody token
-    );
+      @Body RegisterRequest registerRequest
+      );
 
     @DELETE("diving/divespot/{id}/checkin")
     Call<ResponseBody> checkOutUser( @Path("id") String id,

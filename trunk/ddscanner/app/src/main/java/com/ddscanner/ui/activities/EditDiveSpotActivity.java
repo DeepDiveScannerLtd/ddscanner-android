@@ -127,10 +127,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
      */
 
     private void findViews() {
-        progressDialogUpload = new MaterialDialog.Builder(this)
-                .content("Please wait...").progress(true, 0)
-                .contentColor(getResources().getColor(R.color.black_text))
-                .widgetColor(getResources().getColor(R.color.primary)).build();
+        progressDialogUpload = helpers.getMaterialDialog(this);
         progressDialog = new ProgressDialog(this);
         name = (EditText) findViewById(R.id.name);
         depth = (EditText) findViewById(R.id.depth);
