@@ -11,6 +11,7 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -200,7 +201,19 @@ public class UsersDivespotListSwipableActivity extends AppCompatActivity {
 
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-            }
+                DiveSpot diveSpot = new DiveSpot();
+                diveSpot = diveSpots.get(viewHolder.getAdapterPosition());
+
+                    Snackbar snackbar = Snackbar
+                            .make(rc, "PHOTO REMOVED", Snackbar.LENGTH_LONG)
+                            .setAction("UNDO", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+
+                                }
+                            });
+                    snackbar.show();
+                }
 
             @Override
             public void onChildDraw(Canvas c, RecyclerView recyclerView,

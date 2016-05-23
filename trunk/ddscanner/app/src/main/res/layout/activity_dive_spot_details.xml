@@ -535,7 +535,7 @@
                             android:id="@+id/yes_button"
                             android:layout_width="59dp"
                             android:layout_height="34dp"
-                            android:layout_marginRight="12dp"
+                            android:layout_marginRight="8dp"
                             android:background="@drawable/border_button_orange_2px"
                             android:text="@string/btn_yes" />
 
@@ -544,6 +544,7 @@
                             android:id="@+id/no_button"
                             android:layout_width="59dp"
                             android:layout_height="34dp"
+                            android:layout_marginRight="4dp"
                             android:background="@drawable/border_button_gray_2px"
                             android:text="@string/btn_no" />
                     </LinearLayout>

@@ -48,6 +48,8 @@ import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.squareup.otto.Subscribe;
 
 import java.io.File;
@@ -264,6 +266,10 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
                         GPSTracker tracker = new GPSTracker(MainActivity.this);
                         identifyUser(String.valueOf(tracker.getLatitude()),
                                 String.valueOf(tracker.getLongitude()));
+                        DDScannerApplication.bus.post(new PlaceChoosedEvent(new LatLngBounds(
+                                new LatLng(tracker.getLatitude() - 1, tracker.getLongitude() - 1),
+                                new LatLng(tracker.getLatitude() + 1, tracker.getLongitude() + 1)
+                        )));
                     }
                 }, 1000);
             } else {

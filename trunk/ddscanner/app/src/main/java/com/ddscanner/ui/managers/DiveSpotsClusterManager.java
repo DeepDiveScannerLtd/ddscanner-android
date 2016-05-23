@@ -1,6 +1,7 @@
 package com.ddscanner.ui.managers;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
@@ -34,6 +35,8 @@ import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -107,6 +110,15 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
             showToast();
         }
         DDScannerApplication.bus.register(this);
+        GPSTracker tracker = new GPSTracker(context);
+        moveCamera(new LatLngBounds(
+                new LatLng(tracker.getLatitude() - 1, tracker.getLongitude() - 1),
+                new LatLng(tracker.getLatitude() + 1, tracker.getLongitude() + 1)
+        ));
+    }
+
+    private void moveCamera(LatLngBounds latLngBounds) {
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds,0));
     }
 
     private void showToast() {
