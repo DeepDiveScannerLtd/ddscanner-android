@@ -95,6 +95,11 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
     private ScrollView mainLayout;
     private ProgressView progressView;
     private MaterialDialog progressDialogUpload;
+    private TextView error_name;
+    private TextView error_location;
+    private TextView error_description;
+    private TextView error_depth;
+
 
     private List<String> imageUris = new ArrayList<String>();
     private List<Sealife> sealifes = new ArrayList<>();
@@ -108,6 +113,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
     private AddPhotoToDsListAdapter addPhotoToDsListAdapter;
     private ProgressDialog progressDialog;
     private Helpers helpers = new Helpers();
+    private Map<String, TextView> errorsMap = new HashMap<>();
 
     private RequestBody requestName, requestLat, requestLng, requestDepth, requestVisibility,
             requestCurrents, requestLevel, requestObject, requestAccess,
@@ -154,6 +160,10 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
         addSealifeTitle = (TextView) findViewById(R.id.add_sealife_text);
         mainLayout = (ScrollView) findViewById(R.id.main_layout);
         progressView = (ProgressView) findViewById(R.id.progressBarFull);
+        error_depth = (TextView) findViewById(R.id.error_depth);
+        error_description = (TextView) findViewById(R.id.error_description);
+        error_location = (TextView) findViewById(R.id.error_location);
+        error_name = (TextView) findViewById(R.id.error_name);
     }
 
     /**
@@ -435,6 +445,15 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
                     finish();
                     return;
                 }
+                if (response.errorBody() != null) {
+                    try {
+                        String error = response.errorBody().string();
+                        helpers.errorHandling(EditDiveSpotActivity.this, errorsMap,error);
+                        Log.i(TAG, response.errorBody().string());
+                    } catch (IOException e) {
+
+                    }
+                }
                 progressDialogUpload.dismiss();
             }
 
@@ -509,6 +528,13 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
         }
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.spinner_item, objects);
         spinner.setAdapter(adapter);
+    }
+
+    private void makeErrorsMap() {
+        errorsMap.put("depth", error_depth);
+        errorsMap.put("name", error_name);
+        errorsMap.put("description", error_description);
+        errorsMap.put("location", error_location);
     }
 
     @Override
