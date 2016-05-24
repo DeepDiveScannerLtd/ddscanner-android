@@ -605,6 +605,8 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                             checkoutUi();
                             return;
                         }
+                }
+                if (response.isSuccessful()) {
                     getCheckins();
                 }
             }
