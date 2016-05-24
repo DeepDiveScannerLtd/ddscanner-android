@@ -76,6 +76,8 @@ public class SwipableDiveSpotListAdapter
         notifyItemRemoved(position);
         if (isCheckin) {
             checkOut(String.valueOf(divespots.get(position).getId()));
+        } else {
+            removeFromFavorites(String.valueOf(divespots.get(position).getId()));
         }
     }
 
@@ -84,6 +86,8 @@ public class SwipableDiveSpotListAdapter
         notifyItemInserted(position);
         if (isCheckin) {
             checkIn(String.valueOf(divespots.get(position).getId()));
+        } else {
+            addToFavorites(String.valueOf(divespots.get(position).getId()));
         }
     }
 
@@ -154,6 +158,21 @@ public class SwipableDiveSpotListAdapter
     private void checkIn(String id) {
         Call<ResponseBody> call = RestClient.getServiceInstance()
                 .checkIn(id, helpers.getRegisterRequest());
+        call.enqueue(new retrofit2.Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
+    }
+    private void addToFavorites(String id) {
+        Call<ResponseBody> call = RestClient.getServiceInstance()
+                .addDiveSpotToFavourites(id, helpers.getUserQuryMapRequest());
         call.enqueue(new retrofit2.Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

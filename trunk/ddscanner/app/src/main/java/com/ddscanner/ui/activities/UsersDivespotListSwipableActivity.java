@@ -204,14 +204,14 @@ public class UsersDivespotListSwipableActivity extends AppCompatActivity {
             public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction) {
                 final int position = viewHolder.getAdapterPosition();
                 final DiveSpot diveSpot = diveSpots.get(viewHolder.getAdapterPosition());
-                swipableDiveSpotListAdapter.removeItem(viewHolder.getAdapterPosition(), true);
+                swipableDiveSpotListAdapter.removeItem(viewHolder.getAdapterPosition(), isCheckin);
                 Snackbar snackbar = Snackbar
                         .make(rc, "Divespot deleted", Snackbar.LENGTH_LONG)
                         .setAction("UNDO", new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
                                 swipableDiveSpotListAdapter.undoItem(diveSpot,
-                                        position, true);
+                                        position, isCheckin);
                             }
                         });
                 snackbar.show();
