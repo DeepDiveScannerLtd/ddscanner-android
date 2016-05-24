@@ -245,7 +245,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
                                 divespotDetails.getDivespot().getLng());
                         setUi();
                     } else {
-                        if (helpers.isErrorCausedByLogin(responseString, 400));
+
                     }
                 }
 

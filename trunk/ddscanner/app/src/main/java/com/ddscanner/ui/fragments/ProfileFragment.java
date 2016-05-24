@@ -392,6 +392,7 @@ public class ProfileFragment extends Fragment
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.raw().code() == 200) {
+                    aboutLayout.setVisibility(View.GONE);
                     SharedPreferenceHelper.logout();
                     DDScannerApplication.bus.post(new ChangePageOfMainViewPagerEvent(0));
                     materialDialog.dismiss();
