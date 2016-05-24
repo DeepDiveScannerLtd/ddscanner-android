@@ -1,12 +1,10 @@
 package com.ddscanner.ui.fragments;
 
-import android.app.ActivityOptions;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -256,6 +254,9 @@ public class ProfileFragment extends Fragment
     }
 
     private void changeUi(User user) {
+        if (getContext() == null) {
+            return;
+        }
         Picasso.with(getContext()).load(user.getPicture())
                 .resize(Math.round(helpers.convertDpToPixel(100,getContext())),
                         Math.round(helpers.convertDpToPixel(100,getContext()))).centerCrop()
