@@ -21,9 +21,11 @@ import com.ddscanner.R;
 import com.ddscanner.entities.User;
 import com.ddscanner.events.ChangePageOfMainViewPagerEvent;
 import com.ddscanner.events.PickPhotoFromGallery;
+import com.ddscanner.events.ShowLoginActivityIntent;
 import com.ddscanner.events.TakePhotoFromCameraEvent;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.activities.DiveSpotsListActivity;
+import com.ddscanner.ui.activities.SocialNetworks;
 import com.ddscanner.ui.activities.UsersDivespotListSwipableActivity;
 import com.ddscanner.ui.views.TransformationRoundImage;
 import com.ddscanner.utils.Helpers;
@@ -226,6 +228,7 @@ public class ProfileFragment extends Fragment
                     String responseString = "";
                     if (response.raw().code() == 200) {
                         try {
+                            aboutLayout.setVisibility(View.VISIBLE);
                             responseString = response.body().string();
                             JSONObject jsonObject = new JSONObject(responseString);
                             responseString = jsonObject.getString("user");
@@ -236,6 +239,9 @@ public class ProfileFragment extends Fragment
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+                    if (response.raw().code() == 422) {
+                        DDScannerApplication.bus.post(new ShowLoginActivityIntent());
+                    }
                     }
                 }
             }
@@ -346,6 +352,7 @@ public class ProfileFragment extends Fragment
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
                     String responseString = "";
+                    materialDialog.dismiss();
                     if (response.raw().code() == 200) {
                         try {
                             responseString = response.body().string();
@@ -356,7 +363,6 @@ public class ProfileFragment extends Fragment
                             changeUi(user);
                             aboutLayout.setVisibility(View.VISIBLE);
                             editLayout.setVisibility(View.GONE);
-                            materialDialog.dismiss();
                         } catch (IOException e) {
 
                         } catch (JSONException e) {
@@ -368,7 +374,7 @@ public class ProfileFragment extends Fragment
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-
+                materialDialog.dismiss();
             }
         });
 
@@ -387,6 +393,7 @@ public class ProfileFragment extends Fragment
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.raw().code() == 200) {
+                    aboutLayout.setVisibility(View.GONE);
                     SharedPreferenceHelper.logout();
                     DDScannerApplication.bus.post(new ChangePageOfMainViewPagerEvent(0));
                     materialDialog.dismiss();

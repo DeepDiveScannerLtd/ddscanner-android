@@ -83,6 +83,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private static final String EXTRA_ID = "ID";
     private static final int RC_LEAVE_REVIEW_ACTIVITY = 1001;
     private static final int RC_EDIT_DIVE_SPOT = 2001;
+    private static final int RC_LOGIN = 2000;
 
     private DivespotDetails divespotDetails;
     private ProgressDialog progressDialog;
@@ -125,7 +126,14 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private TextView numberOfCheckinPeoplesHere;
     private TextView creatorName;
     private ImageView creatorAvatar;
+    private MaterialDialog materialDialog;
     private Helpers helpers = new Helpers();
+
+    private boolean isCLickedFavorite = false;
+    private boolean isClickedCHeckin = false;
+    private boolean isClickedYesValidation = false;
+    private boolean isClickedNoValidation = false;
+
 
     private List<Comment> usersComments;
     private List<User> usersCheckins;
@@ -203,6 +211,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
      */
 
     private void setUi() {
+        materialDialog = helpers.getMaterialDialog(this);
         thanksClose.setOnClickListener(this);
         btnDsDetailsIsInvalid.setOnClickListener(this);
         btnDsDetailsIsValid.setOnClickListener(this);
@@ -533,6 +542,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                    @Override
                    public void onClick(@NonNull MaterialDialog dialog,
                                        @NonNull DialogAction which) {
+                       diveSpotValidation(false);
                        dialog.dismiss();
                    }
                });
@@ -578,11 +588,27 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         call.enqueue(new retrofit2.Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.raw().code() != 200) {
-                    checkoutUi();
-                    return;
+                if (!response.isSuccessful()) {
+                    if (response.raw().code() == 422) {
+                        String error = "";
+                        try {
+                            error = response.errorBody().string();
+                            if (helpers.checkIsErrorByLogin(error)) {
+                                isClickedCHeckin = true;
+                                showLoginActivity();
+                                return;
+                            }
+                        } catch (IOException e) {
+                        }
+                    }
+                        if (response.raw().code() != 200) {
+                            checkoutUi();
+                            return;
+                        }
                 }
-                getCheckins();
+                if (response.isSuccessful()) {
+                    getCheckins();
+                }
             }
 
             @Override
@@ -673,7 +699,8 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         }
     }
 
-    private void diveSpotValidation(boolean isValid) {
+    private void diveSpotValidation(final boolean isValid) {
+        materialDialog.show();
         ValidationReguest validationReguest = new ValidationReguest();
         validationReguest.setAppId(helpers.getRegisterRequest().getAppId());
         validationReguest.setToken(helpers.getRegisterRequest().getToken());
@@ -688,7 +715,27 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         call.enqueue(new retrofit2.Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
+                materialDialog.dismiss();
+                if (!response.isSuccessful()) {
+                    if (response.raw().code() == 422) {
+                        String error = "";
+                        try {
+                            error = response.errorBody().string();
+                            if (helpers.checkIsErrorByLogin(error)) {
+                                if (isValid) {
+                                    isClickedYesValidation = true;
+                                    isClickedNoValidation = false;
+                                } else {
+                                    isClickedNoValidation = true;
+                                    isClickedYesValidation = false;
+                                }
+                                showLoginActivity();
+                                return;
+                            }
+                        } catch (IOException e) {
+                        }
+                    }
+                }
             }
 
             @Override
@@ -706,8 +753,19 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         call.enqueue(new retrofit2.Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    getCheckins();
+                if (!response.isSuccessful()) {
+                    if (response.raw().code() == 422) {
+                        String error = "";
+                        try {
+                            error = response.errorBody().string();
+                            if (helpers.checkIsErrorByLogin(error)) {
+                                isCLickedFavorite = true;
+                                showLoginActivity();
+                                return;
+                            }
+                        } catch (IOException e) {
+                        }
+                    }
                 }
             }
 
@@ -795,12 +853,46 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             startActivity(intent);
             finish();
         }
+        if (requestCode == RC_LOGIN) {
+            if (resultCode == RESULT_OK) {
+                if (isClickedCHeckin) {
+                    checkIn();
+                    isClickedCHeckin = false;
+                }
+                if (isCLickedFavorite) {
+                    addDiveSpotToFavorites();
+                    isCLickedFavorite = false;
+                }
+                if (isClickedNoValidation) {
+                    diveSpotValidation(false);
+                }
+                if (isClickedYesValidation) {
+                    diveSpotValidation(true);
+                }
+            } else {
+                if (isClickedCHeckin || isCLickedFavorite) {
+                    checkoutUi();
+                    isCLickedFavorite = false;
+                    isClickedCHeckin = false;
+                }
+                if (isClickedYesValidation || isClickedNoValidation) {
+                    isInfoValidLayout.setVisibility(View.VISIBLE);
+                    thanksLayout.setVisibility(View.GONE);
+                }
+            }
+
+        }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_details, menu);
         return true;
+    }
+
+    private void showLoginActivity() {
+        Intent intent = new Intent(this, SocialNetworks.class);
+        startActivityForResult(intent, RC_LOGIN);
     }
 
 }

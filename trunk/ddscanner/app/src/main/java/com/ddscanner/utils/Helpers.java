@@ -12,6 +12,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.TextView;
@@ -166,10 +167,10 @@ public class Helpers {
      * @param context
      * @param errorsMap
      * @param errors
-     * @param number
      */
 
-    public void erroHandling(Context context, Map<String,TextView> errorsMap, String errors, int number) {
+    public void errorHandling( Context context,
+                             Map<String,TextView> errorsMap, String errors) {
         JsonObject jsonObject = new JsonParser().parse(errors).getAsJsonObject();
         for (Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) {
             if(!entry.getKey().equals("")) {
@@ -188,24 +189,9 @@ public class Helpers {
         }
     }
 
-    /**
-     * Check if error caused by login
-     * @param errors
-     * @param errNumber
-     * @return
-     */
-
-    public boolean isErrorCausedByLogin(String errors, int errNumber) {
-        if (errNumber == 400) {
+    public boolean checkIsErrorByLogin(String errors) {
+        if (errors.contains("token") || errors.contains("social") || errors.contains("secret")) {
             return true;
-        }
-        JsonObject jsonObject = new JsonParser().parse(errors).getAsJsonObject();
-        for (Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) {
-            if(!entry.getKey().equals("")) {
-                if (entry.getKey().equals("token")) {
-                    return true;
-                }
-            }
         }
         return false;
     }

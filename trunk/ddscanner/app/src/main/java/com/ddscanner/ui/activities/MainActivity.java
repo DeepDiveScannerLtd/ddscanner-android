@@ -31,6 +31,7 @@ import com.ddscanner.events.ChangePageOfMainViewPagerEvent;
 import com.ddscanner.events.InternetConnectionClosedEvent;
 import com.ddscanner.events.PickPhotoFromGallery;
 import com.ddscanner.events.PlaceChoosedEvent;
+import com.ddscanner.events.ShowLoginActivityIntent;
 import com.ddscanner.events.TakePhotoFromCameraEvent;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.services.GPSTracker;
@@ -244,6 +245,11 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         profileFragment.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 2001) {
+            if (resultCode == RESULT_OK) {
+
+            }
+        }
         if (requestCode == REQUEST_CODE_PLACE_AUTOCOMPLETE) {
             materialDialog.dismiss();
             if (resultCode == RESULT_OK) {
@@ -446,5 +452,11 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
     @Subscribe
     public void internetConnectionClosed(InternetConnectionClosedEvent event) {
         InternetClosedActivity.show(this);
+    }
+
+    @Subscribe
+    public void showLoginActivity(ShowLoginActivityIntent event) {
+        Intent intent = new Intent(MainActivity.this, SocialNetworks.class);
+        startActivityForResult(intent, RC_LOGIN);
     }
 }

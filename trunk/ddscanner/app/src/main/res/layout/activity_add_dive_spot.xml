@@ -22,7 +22,7 @@
 
     <ScrollView
         android:id="@+id/main_layout"
-        android:visibility="gone"
+        android:visibility="visible"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -108,8 +108,10 @@
                         android:text="@string/location"
                         android:textColor="#b2b2b2"/>
                 </LinearLayout>
-
                 <ImageView style="@style/DividerStyle" />
+                <TextView
+                    android:id="@+id/error_location"
+                    style="@style/ValidationErrorTextView" />
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
@@ -127,6 +129,9 @@
                 </LinearLayout>
 
                 <ImageView style="@style/DividerStyle" />
+                <TextView
+                    android:id="@+id/error_name"
+                    style="@style/ValidationErrorTextView" />
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
@@ -144,6 +149,9 @@
                 </LinearLayout>
 
                 <ImageView style="@style/DividerStyle" />
+                <TextView
+                    android:id="@+id/error_depth"
+                    style="@style/ValidationErrorTextView" />
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
@@ -274,6 +282,9 @@
                         style="@style/AddDsCharTitleStyle"
                         android:hint="@string/description" />
                 </LinearLayout>
+                <TextView
+                    android:id="@+id/error_description"
+                    style="@style/ValidationErrorTextView" />
             </LinearLayout>
             <ImageView
                 android:layout_width="match_parent"
