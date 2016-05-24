@@ -202,6 +202,7 @@ public class UsersDivespotListSwipableActivity extends AppCompatActivity {
 
             @Override
             public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction) {
+                final int position = viewHolder.getAdapterPosition();
                 final DiveSpot diveSpot = diveSpots.get(viewHolder.getAdapterPosition());
                 swipableDiveSpotListAdapter.removeItem(viewHolder.getAdapterPosition(), true);
                 Snackbar snackbar = Snackbar
@@ -210,7 +211,7 @@ public class UsersDivespotListSwipableActivity extends AppCompatActivity {
                             @Override
                             public void onClick(View view) {
                                 swipableDiveSpotListAdapter.undoItem(diveSpot,
-                                        viewHolder.getAdapterPosition());
+                                        position, true);
                             }
                         });
                 snackbar.show();
@@ -230,7 +231,7 @@ public class UsersDivespotListSwipableActivity extends AppCompatActivity {
                         (float) itemView.getTop(), (float) itemView.getRight(),
                         (float) itemView.getBottom());
                 c.drawRect(background, p);
-                icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_ac_back);
+                icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_delete_newsealife);
                 RectF icon_dest = new RectF((float) itemView.getRight() - 2 * width,
                         (float) itemView.getTop() + width, (float) itemView.getRight() - width,
                         (float) itemView.getBottom() - width);

@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -37,6 +38,9 @@ import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.rey.material.widget.ProgressView;
 import com.rey.material.widget.Spinner;
 
@@ -119,6 +123,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
         findViews();
         toolbarSettings();
         getDsInfoRequest();
+        loadFiltersDataRequest();
     }
 
     /**
@@ -437,6 +442,72 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
                 progressDialogUpload.dismiss();
             }
         });
+    }
+
+    private void loadFiltersDataRequest() {
+
+        Call<ResponseBody> call = RestClient.getServiceInstance().getFilters();
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    String responseString = "";
+                    try {
+                        responseString = response.body().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    filters = new FiltersResponseEntity();
+
+                    JsonParser parser = new JsonParser();
+                    JsonObject jsonObject = parser.parse(responseString).getAsJsonObject();
+                    JsonObject currentsJsonObject = jsonObject.getAsJsonObject("currents");
+                    for (Map.Entry<String, JsonElement> elementEntry : currentsJsonObject.entrySet()) {
+                        filters.getCurrents().put(elementEntry.getKey(), elementEntry.getValue().getAsString());
+                    }
+                    JsonObject levelJsonObject = jsonObject.getAsJsonObject("level");
+                    for (Map.Entry<String, JsonElement> elementEntry : levelJsonObject.entrySet()) {
+                        filters.getLevel().put(elementEntry.getKey(), elementEntry.getValue().getAsString());
+                    }
+                    JsonObject objectJsonObject = jsonObject.getAsJsonObject("object");
+                    for (Map.Entry<String, JsonElement> elementEntry : objectJsonObject.entrySet()) {
+                        filters.getObject().put(elementEntry.getKey(), elementEntry.getValue().getAsString());
+                    }
+                    JsonObject visibilityJsonObject = jsonObject.getAsJsonObject("visibility");
+                    for (Map.Entry<String, JsonElement> elementEntry : visibilityJsonObject.entrySet()) {
+                        filters.getVisibility().put(elementEntry.getKey(), elementEntry.getValue().getAsString());
+                    }
+                    Gson gson = new Gson();
+                    filters.setRating(gson.fromJson(jsonObject.get("rating").getAsJsonArray(), int[].class));
+
+                    Log.i(TAG, responseString);
+
+                    setSpinnerValues(objectSpinner, filters.getObject(), "");
+                    setSpinnerValues(levelSpinner, filters.getLevel(), "");
+                    setSpinnerValues(currentsSpinner, filters.getCurrents(), "");
+                    setSpinnerValues(visibilitySpinner, filters.getVisibility(), "");
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // TODO Handle errors
+            }
+        });
+    }
+
+    private void setSpinnerValues(Spinner spinner, Map<String, String> values, String tag) {
+        List<String> objects = new ArrayList<String>();
+        for (Map.Entry<String, String> entry : values.entrySet()) {
+            objects.add(entry.getValue());
+            if (entry.getKey().equals(tag)) {
+
+            }
+        }
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.spinner_item, objects);
+        spinner.setAdapter(adapter);
     }
 
 }

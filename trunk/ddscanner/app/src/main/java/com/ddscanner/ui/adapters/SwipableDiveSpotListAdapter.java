@@ -79,9 +79,12 @@ public class SwipableDiveSpotListAdapter
         }
     }
 
-    public void undoItem(DiveSpot diveSpot, int position) {
+    public void undoItem(DiveSpot diveSpot, int position, boolean isCheckin) {
         divespots.add(position, diveSpot);
         notifyItemInserted(position);
+        if (isCheckin) {
+            checkIn(String.valueOf(divespots.get(position).getId()));
+        }
     }
 
     @Override
@@ -136,6 +139,21 @@ public class SwipableDiveSpotListAdapter
     private void checkOut(String id) {
         Call<ResponseBody> call = RestClient.getServiceInstance()
                 .checkOutUser(id, helpers.getUserQuryMapRequest());
+        call.enqueue(new retrofit2.Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
+    }
+    private void checkIn(String id) {
+        Call<ResponseBody> call = RestClient.getServiceInstance()
+                .checkIn(id, helpers.getRegisterRequest());
         call.enqueue(new retrofit2.Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
