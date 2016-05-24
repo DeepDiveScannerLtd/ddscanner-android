@@ -19,6 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.request.CreateSealifeRequest;
 import com.ddscanner.rest.RestClient;
@@ -349,5 +350,20 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        DDScannerApplication.activityPaused();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        DDScannerApplication.activityResumed();
+        if (!helpers.hasConnection(this)) {
+            DDScannerApplication.showErrorActivity(this);
+        }
     }
 }

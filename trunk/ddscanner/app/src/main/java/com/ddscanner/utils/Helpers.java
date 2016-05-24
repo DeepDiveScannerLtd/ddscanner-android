@@ -185,12 +185,26 @@ public class Helpers {
         }
     }
 
+    /**
+     * Check if error caused by login
+     * @param errors
+     * @return checking Error causing
+     * @author Andrei Lashkevich
+     */
+
     public boolean checkIsErrorByLogin(String errors) {
         if (errors.contains("token") || errors.contains("social") || errors.contains("secret")) {
             return true;
         }
         return false;
     }
+
+    /**
+     * Check if has internet connection
+     * @param context
+     * @return
+     * @author Andrei Lashkevich
+     */
 
     public boolean hasConnection(final Context context) {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);

@@ -22,6 +22,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.FiltersResponseEntity;
 import com.ddscanner.entities.Sealife;
@@ -41,6 +42,7 @@ import com.rey.material.widget.Spinner;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -85,16 +87,23 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     private ScrollView mainLayout;
     private ProgressView progressView;
     private MaterialDialog progressDialogUpload;
+    private TextView error_name;
+    private TextView error_location;
+    private TextView error_description;
+    private TextView error_depth;
 
 
     private Helpers helpers = new Helpers();
     private List<String> imageUris = new ArrayList<String>();
     private List<Sealife> sealifes = new ArrayList<>();
+    private Map<String, TextView> errorsMap = new HashMap<>();
     private FiltersResponseEntity filters;
 
-    private RequestBody requestName, requestLat, requestLng, requestDepth, requestVisibility,
-                        requestCurrents, requestLevel, requestObject, requestAccess,
-                        requestDescription, requestSocial, requestToken;
+    private RequestBody requestName = null, requestLat = null, requestLng = null,
+            requestDepth = null, requestVisibility = null, requestCurrents = null,
+            requestLevel = null, requestObject = null, requestAccess = null,
+            requestDescription = null, requestSocial = null, requestToken = null,
+            requestSecret = null;
 
     public static void show(Context context) {
         Intent intent = new Intent(context, AddDiveSpotActivity.class);
@@ -108,6 +117,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         findViews();
         setUi();
         loadFiltersDataRequest();
+        makeErrorsMap();
     }
 
 
@@ -137,6 +147,10 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         addSealifeTitle = (TextView) findViewById(R.id.add_sealife_text);
         mainLayout = (ScrollView) findViewById(R.id.main_layout);
         progressView = (ProgressView) findViewById(R.id.progressBarFull);
+        error_depth = (TextView) findViewById(R.id.error_depth);
+        error_description = (TextView) findViewById(R.id.error_description);
+        error_location = (TextView) findViewById(R.id.error_location);
+        error_name = (TextView) findViewById(R.id.error_name);
     }
 
     /**
@@ -285,23 +299,36 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
             sealife.add(MultipartBody.Part.createFormData("sealife[]", sealifes.get(i).getId()));
         }
         List<MultipartBody.Part> images = new ArrayList<>();
-        for (int i = 0; i < imageUris.size(); i++) {
-            File image = new File(imageUris.get(i));
-            RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), image);
-            MultipartBody.Part part = MultipartBody.Part.createFormData("images[]", image.getName(),
-                    requestFile);
-            images.add(part);
+        if (imageUris.size() > 0) {
+            for (int i = 0; i < imageUris.size(); i++) {
+                File image = new File(imageUris.get(i));
+                RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), image);
+                MultipartBody.Part part = MultipartBody.Part.createFormData("images[]",
+                        image.getName(), requestFile);
+                images.add(part);
+            }
+        } else {
+            images = null;
         }
         Call<ResponseBody> call = RestClient.getServiceInstance().addDiveSpot(
                 requestName, requestLat, requestLng, requestDepth, requestVisibility,
                 requestCurrents, requestLevel, requestObject, requestAccess, requestDescription,
-                sealife, images, requestToken, requestSocial, null
+                sealife, images, requestToken, requestSocial, requestSecret
                 );
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 Log.i(TAG, "success");
                 progressDialogUpload.dismiss();
+                if (response.errorBody() != null) {
+                    try {
+                        String error = response.errorBody().string();
+                        helpers.errorHandling(AddDiveSpotActivity.this, errorsMap,error);
+                        Log.i(TAG, response.errorBody().string());
+                    } catch (IOException e) {
+
+                    }
+                }
             }
 
             @Override
@@ -360,10 +387,16 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         requestLevel = RequestBody.create(MediaType.parse("multipart/form-data"),
                 helpers.getMirrorOfHashMap(filters.getLevel())
                         .get(levelSpinner.getSelectedItem().toString()));
-        requestSocial = RequestBody.create(MediaType.parse("multipart/form-data"),
-                SharedPreferenceHelper.getSn());
-        requestToken = RequestBody.create(MediaType.parse("multipart/form-data"),
-                SharedPreferenceHelper.getToken());
+        if (SharedPreferenceHelper.getIsUserLogined()) {
+            requestSocial = RequestBody.create(MediaType.parse("multipart/form-data"),
+                    SharedPreferenceHelper.getSn());
+            requestToken = RequestBody.create(MediaType.parse("multipart/form-data"),
+                    SharedPreferenceHelper.getToken());
+            if (SharedPreferenceHelper.getSn().equals("tw")) {
+                requestSecret = RequestBody.create(MediaType.parse("multipart/form-data"),
+                        SharedPreferenceHelper.getSecret());
+            }
+        }
         requestDescription = RequestBody.create(MediaType.parse("multipart/form-data"),
                 description.getText().toString());
         createAddDiveSpotRequest();
@@ -378,4 +411,27 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         }
         return super.onOptionsItemSelected(item);
     }
+
+    private void makeErrorsMap() {
+        errorsMap.put("depth", error_depth);
+        errorsMap.put("name", error_name);
+        errorsMap.put("description", error_description);
+        errorsMap.put("location", error_location);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        DDScannerApplication.activityPaused();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        DDScannerApplication.activityResumed();
+        if (!helpers.hasConnection(this)) {
+            DDScannerApplication.showErrorActivity(this);
+        }
+    }
+
 }

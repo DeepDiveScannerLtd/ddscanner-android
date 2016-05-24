@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import com.ddscanner.R;
 import com.ddscanner.ui.activities.DiveSpotPhotosActivity;
-import com.ddscanner.ui.activities.ShowImageActivity;
 import com.ddscanner.ui.views.TransformationRoundImage;
 import com.squareup.picasso.Picasso;
 
@@ -75,10 +74,7 @@ public class DiveSpotsPhotosAdapter extends RecyclerView.Adapter<DiveSpotsPhotos
 
         @Override
         public void onClick(View v) {
-          //  if (photos.size() < 8 && getPosition()!= 7) {
-               // ShowImageActivity.show(context, path + photos.get(getPosition()));
             DiveSpotPhotosActivity.show(context, photos, path, reviewsImages);
-          //  }
         }
     }
 

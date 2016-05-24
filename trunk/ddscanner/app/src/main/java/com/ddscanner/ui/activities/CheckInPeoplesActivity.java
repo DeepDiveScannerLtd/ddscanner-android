@@ -19,6 +19,7 @@ import com.ddscanner.entities.User;
 import com.ddscanner.events.ShowUserDialogEvent;
 import com.ddscanner.ui.adapters.UserListAdapter;
 import com.ddscanner.ui.dialogs.ProfileDialog;
+import com.ddscanner.utils.Helpers;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
@@ -31,6 +32,7 @@ public class CheckInPeoplesActivity extends AppCompatActivity {
     private RecyclerView usersRecyclerView;
     private Toolbar toolbar;
     private ArrayList<User> users;
+    private Helpers helpers = new Helpers();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -119,6 +121,21 @@ public class CheckInPeoplesActivity extends AppCompatActivity {
         fragmentTransaction.addToBackStack(null);
         DialogFragment dialogFragment = ProfileDialog.newInstance(event.getUser());
         dialogFragment.show(fragmentTransaction, "profile");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        DDScannerApplication.activityPaused();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        DDScannerApplication.activityResumed();
+        if (!helpers.hasConnection(this)) {
+            DDScannerApplication.showErrorActivity(this);
+        }
     }
 
 }

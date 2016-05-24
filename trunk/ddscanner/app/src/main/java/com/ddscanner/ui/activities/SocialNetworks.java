@@ -11,11 +11,13 @@ import android.view.View;
 import android.widget.Button;
 
 import com.appsflyer.AppsFlyerLib;
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.RegisterResponse;
 import com.ddscanner.entities.request.RegisterRequest;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.utils.EventTrackerHelper;
+import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -71,6 +73,7 @@ public class SocialNetworks extends AppCompatActivity
     private GoogleApiClient mGoogleApiClient;
     private com.ddscanner.entities.User selfProfile;
     private RegisterResponse registerResponse = new RegisterResponse();
+    private Helpers helpers = new Helpers();
 
     public static void show(Context context) {
         Intent intent = new Intent(context, SocialNetworks.class);
@@ -286,4 +289,19 @@ public class SocialNetworks extends AppCompatActivity
         finish();
     }
 
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        DDScannerApplication.activityPaused();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        DDScannerApplication.activityResumed();
+        if (!helpers.hasConnection(this)) {
+            DDScannerApplication.showErrorActivity(this);
+        }
+    }
 }

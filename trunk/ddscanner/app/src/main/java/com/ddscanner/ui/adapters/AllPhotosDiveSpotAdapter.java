@@ -9,7 +9,6 @@ import android.widget.ImageView;
 
 import com.ddscanner.R;
 import com.ddscanner.ui.activities.ImageSliderActivity;
-import com.ddscanner.ui.activities.ShowImageActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;

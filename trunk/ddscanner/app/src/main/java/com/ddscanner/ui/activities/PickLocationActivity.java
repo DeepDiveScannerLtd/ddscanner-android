@@ -16,7 +16,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.utils.Helpers;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
@@ -54,6 +56,7 @@ public class PickLocationActivity extends AppCompatActivity implements GoogleMap
     private ChangeDataInTextView changeDataInTextView;
     private FloatingActionButton applyLocation;
     private LatLng startLocation;
+    private Helpers helpers = new Helpers();
 
     public static void show(Context context) {
         Intent intent = new Intent(context, PickLocationActivity.class);
@@ -200,6 +203,21 @@ public class PickLocationActivity extends AppCompatActivity implements GoogleMap
             if (s != null) {
                 placeName.setText(s);
             }
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        DDScannerApplication.activityPaused();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        DDScannerApplication.activityResumed();
+        if (!helpers.hasConnection(this)) {
+            DDScannerApplication.showErrorActivity(this);
         }
     }
 

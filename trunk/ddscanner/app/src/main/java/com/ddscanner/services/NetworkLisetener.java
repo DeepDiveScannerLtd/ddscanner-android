@@ -22,12 +22,13 @@ public class NetworkLisetener extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (helpers.hasConnection(context)) {
-            DDScannerApplication.bus.post(new InternerConnectionOpenedEvent());
-        } else {
-         DDScannerApplication.showErrorActivity(context);
+        if (DDScannerApplication.isActivityVisible()) {
+            if (helpers.hasConnection(context)) {
+                DDScannerApplication.bus.post(new InternerConnectionOpenedEvent());
+            } else {
+                DDScannerApplication.showErrorActivity(context);
+            }
         }
     }
-
 
 }

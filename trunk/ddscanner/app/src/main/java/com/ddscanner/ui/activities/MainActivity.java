@@ -381,6 +381,9 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
     protected void onResume() {
         super.onResume();
         DDScannerApplication.activityResumed();
+        if (!helpers.hasConnection(this)) {
+            DDScannerApplication.showErrorActivity(this);
+        }
     }
 
     private void dispatchTakePictureIntent() {

@@ -35,6 +35,7 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.Checkins;
 import com.ddscanner.entities.Comment;
@@ -893,6 +894,21 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private void showLoginActivity() {
         Intent intent = new Intent(this, SocialNetworks.class);
         startActivityForResult(intent, RC_LOGIN);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        DDScannerApplication.activityPaused();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        DDScannerApplication.activityResumed();
+        if (!helpers.hasConnection(this)) {
+            DDScannerApplication.showErrorActivity(this);
+        }
     }
 
 }
