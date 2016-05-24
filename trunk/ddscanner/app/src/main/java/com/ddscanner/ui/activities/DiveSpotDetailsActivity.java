@@ -126,10 +126,14 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private TextView numberOfCheckinPeoplesHere;
     private TextView creatorName;
     private ImageView creatorAvatar;
+    private MaterialDialog materialDialog;
     private Helpers helpers = new Helpers();
 
     private boolean isCLickedFavorite = false;
     private boolean isClickedCHeckin = false;
+    private boolean isClickedYesValidation = false;
+    private boolean isClickedNoValidation = false;
+
 
     private List<Comment> usersComments;
     private List<User> usersCheckins;
@@ -207,6 +211,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
      */
 
     private void setUi() {
+        materialDialog = helpers.getMaterialDialog(this);
         thanksClose.setOnClickListener(this);
         btnDsDetailsIsInvalid.setOnClickListener(this);
         btnDsDetailsIsValid.setOnClickListener(this);
@@ -537,6 +542,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                    @Override
                    public void onClick(@NonNull MaterialDialog dialog,
                                        @NonNull DialogAction which) {
+                       diveSpotValidation(false);
                        dialog.dismiss();
                    }
                });
@@ -691,7 +697,8 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         }
     }
 
-    private void diveSpotValidation(boolean isValid) {
+    private void diveSpotValidation(final boolean isValid) {
+        materialDialog.show();
         ValidationReguest validationReguest = new ValidationReguest();
         validationReguest.setAppId(helpers.getRegisterRequest().getAppId());
         validationReguest.setToken(helpers.getRegisterRequest().getToken());
@@ -706,7 +713,27 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         call.enqueue(new retrofit2.Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
+                materialDialog.dismiss();
+                if (!response.isSuccessful()) {
+                    if (response.raw().code() == 422) {
+                        String error = "";
+                        try {
+                            error = response.errorBody().string();
+                            if (helpers.checkIsErrorByLogin(error)) {
+                                if (isValid) {
+                                    isClickedYesValidation = true;
+                                    isClickedNoValidation = false;
+                                } else {
+                                    isClickedNoValidation = true;
+                                    isClickedYesValidation = false;
+                                }
+                                showLoginActivity();
+                                return;
+                            }
+                        } catch (IOException e) {
+                        }
+                    }
+                }
             }
 
             @Override
@@ -834,10 +861,22 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                     addDiveSpotToFavorites();
                     isCLickedFavorite = false;
                 }
+                if (isClickedNoValidation) {
+                    diveSpotValidation(false);
+                }
+                if (isClickedYesValidation) {
+                    diveSpotValidation(true);
+                }
             } else {
-                checkoutUi();
-                isCLickedFavorite = false;
-                isClickedCHeckin = false;
+                if (isClickedCHeckin || isCLickedFavorite) {
+                    checkoutUi();
+                    isCLickedFavorite = false;
+                    isClickedCHeckin = false;
+                }
+                if (isClickedYesValidation || isClickedNoValidation) {
+                    isInfoValidLayout.setVisibility(View.VISIBLE);
+                    thanksLayout.setVisibility(View.GONE);
+                }
             }
 
         }
