@@ -70,4 +70,20 @@ public class InternetClosedActivity extends AppCompatActivity implements View.On
         DDScannerApplication.errorActivityIsFinished();
         finish();
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        DDScannerApplication.activityPaused();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        DDScannerApplication.activityResumed();
+        if (!helpers.hasConnection(this)) {
+            DDScannerApplication.showErrorActivity(this);
+        }
+    }
+
 }

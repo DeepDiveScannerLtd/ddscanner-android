@@ -12,8 +12,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.ui.adapters.SliderImagesAdapter;
+import com.ddscanner.utils.Helpers;
 
 import java.util.ArrayList;
 
@@ -32,6 +34,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     private ArrayList<String> images;
     private Drawable drawable;
     private int position;
+    private Helpers helpers = new Helpers();
 
 
     @Override
@@ -131,5 +134,19 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     public void onPageScrollStateChanged(int state) {
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        DDScannerApplication.activityPaused();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        DDScannerApplication.activityResumed();
+        if (!helpers.hasConnection(this)) {
+            DDScannerApplication.showErrorActivity(this);
+        }
+    }
 
 }

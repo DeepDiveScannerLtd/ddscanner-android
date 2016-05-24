@@ -13,11 +13,13 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.appsflyer.AppsFlyerLib;
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.DiveCentersResponseEntity;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.DiveCentersPagerAdapter;
 import com.ddscanner.utils.EventTrackerHelper;
+import com.ddscanner.utils.Helpers;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 
@@ -40,6 +42,7 @@ public class DiveCentersActivity extends AppCompatActivity implements ViewPager.
     private DiveCentersPagerAdapter diveCentersPagerAdapter;
     private LatLng latLng;
     private String dsName;
+    private Helpers helpers = new Helpers();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -126,5 +129,20 @@ public class DiveCentersActivity extends AppCompatActivity implements ViewPager.
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         Log.i(TAG, "Starting");
 
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        DDScannerApplication.activityPaused();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        DDScannerApplication.activityResumed();
+        if (!helpers.hasConnection(this)) {
+            DDScannerApplication.showErrorActivity(this);
+        }
     }
 }

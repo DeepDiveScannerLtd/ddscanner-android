@@ -17,9 +17,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.appsflyer.AppsFlyerLib;
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.DiveCenter;
 import com.ddscanner.utils.EventTrackerHelper;
+import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;
 
 import java.io.Serializable;
@@ -40,6 +42,7 @@ public class DiveCenterDetailsActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private LinearLayout stars;
     private String path;
+    private Helpers helpers = new Helpers();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,6 +159,21 @@ public class DiveCenterDetailsActivity extends AppCompatActivity {
         intent.putExtra("DC", diveCenter);
         intent.putExtra("PATH", path);
         context.startActivity(intent);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        DDScannerApplication.activityPaused();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        DDScannerApplication.activityResumed();
+        if (!helpers.hasConnection(this)) {
+            DDScannerApplication.showErrorActivity(this);
+        }
     }
 
 }

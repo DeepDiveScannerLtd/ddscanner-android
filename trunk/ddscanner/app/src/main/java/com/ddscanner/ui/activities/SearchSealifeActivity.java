@@ -24,6 +24,7 @@ import com.ddscanner.entities.SealifeResponseEntity;
 import com.ddscanner.events.SealifeChoosedEvent;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.SealifeSearchAdapter;
+import com.ddscanner.utils.Helpers;
 import com.google.gson.Gson;
 import com.squareup.otto.Subscribe;
 
@@ -50,23 +51,11 @@ public class SearchSealifeActivity extends AppCompatActivity implements SearchVi
     private RelativeLayout notFoundLayout;
     private TextView textNotFound;
     private Button addManually;
+    private Helpers helpers = new Helpers();
 
 
     private List<Sealife> sealifes = new ArrayList<>();
     private SealifeResponseEntity sealifeResponseEntity = new SealifeResponseEntity();
-
-    private static final String[] MOVIES = new String[]{
-            "Octopus",
-            "Huyopus",
-            "Baracuda",
-            "Evgeniy",
-            "AXAXAXAXAXAXAX",
-            "FUck",
-            "Belarus",
-            "Very frog",
-            "Carilna"
-    };
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -171,9 +160,18 @@ public class SearchSealifeActivity extends AppCompatActivity implements SearchVi
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    protected void onPause() {
+        super.onPause();
+        DDScannerApplication.activityPaused();
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        DDScannerApplication.activityResumed();
+        if (!helpers.hasConnection(this)) {
+            DDScannerApplication.showErrorActivity(this);
+        }
     }
 
     @Override

@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.appsflyer.AppsFlyerLib;
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.services.GPSTracker;
 import com.ddscanner.ui.views.DDProgressBarView;
@@ -58,7 +59,7 @@ public class SplashActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1 ) {
+        if (requestCode == 1) {
             if (checkIsProvidersEnabled()) {
                 showMainActivity();
             } else {
@@ -104,5 +105,20 @@ public class SplashActivity extends Activity {
                         });
         AlertDialog alert = builder.create();
         alert.show();
-}
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        DDScannerApplication.activityPaused();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        DDScannerApplication.activityResumed();
+        if (!helpers.hasConnection(this)) {
+            DDScannerApplication.showErrorActivity(this);
+        }
+    }
 }

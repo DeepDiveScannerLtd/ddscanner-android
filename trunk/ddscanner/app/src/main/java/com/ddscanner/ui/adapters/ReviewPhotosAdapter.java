@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import com.ddscanner.R;
 import com.ddscanner.ui.activities.ImageSliderActivity;
-import com.ddscanner.ui.activities.ShowImageActivity;
 import com.ddscanner.ui.views.TransformationRoundImage;
 import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;

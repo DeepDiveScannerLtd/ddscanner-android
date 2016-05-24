@@ -22,11 +22,13 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.appsflyer.AppsFlyerLib;
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.FiltersResponseEntity;
 import com.ddscanner.entities.request.DiveSpotsRequestMap;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.utils.EventTrackerHelper;
+import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -57,6 +59,7 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
     private FiltersResponseEntity filters = new FiltersResponseEntity();
     private Spinner objectSpinner;
     private Spinner levelSpinner;
+    private Helpers helpers = new Helpers();
 
     @Override
     protected void onCreate(Bundle savedInstance) {
@@ -209,6 +212,21 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
     private void clearFilterSharedPrefences() {
         SharedPreferenceHelper.setObject("");
         SharedPreferenceHelper.setLevel("");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        DDScannerApplication.activityPaused();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        DDScannerApplication.activityResumed();
+        if (!helpers.hasConnection(this)) {
+            DDScannerApplication.showErrorActivity(this);
+        }
     }
 
 }

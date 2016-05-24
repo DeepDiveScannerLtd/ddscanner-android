@@ -23,11 +23,13 @@ import android.view.View;
 import android.view.Window;
 
 import com.daimajia.swipe.util.Attributes;
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.DiveSpot;
 import com.ddscanner.entities.DivespotsWrapper;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.SwipableDiveSpotListAdapter;
+import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.gson.Gson;
@@ -55,6 +57,7 @@ public class UsersDivespotListSwipableActivity extends AppCompatActivity {
     private List<DiveSpot> diveSpots = new ArrayList<>();
     private boolean isCheckin = false;
     private ProgressView progressBarFull;
+    private Helpers helpers = new Helpers();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -242,6 +245,21 @@ public class UsersDivespotListSwipableActivity extends AppCompatActivity {
         };
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
         itemTouchHelper.attachToRecyclerView(rc);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        DDScannerApplication.activityPaused();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        DDScannerApplication.activityResumed();
+        if (!helpers.hasConnection(this)) {
+            DDScannerApplication.showErrorActivity(this);
+        }
     }
 
 }

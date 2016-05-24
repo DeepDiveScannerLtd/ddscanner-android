@@ -23,8 +23,10 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.Sealife;
+import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -45,6 +47,7 @@ public class SealifeDetails extends AppCompatActivity {
     private Toolbar toolbar;
     private ImageView backgroundImage;
     private ProgressBar progressBar;
+    private Helpers helpers = new Helpers();
 
     public static void show(Context context, Sealife sealife, String pathMedium) {
         Intent intent = new Intent(context, SealifeDetails.class);
@@ -207,5 +210,20 @@ public class SealifeDetails extends AppCompatActivity {
             return null;
         }
     }*/
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        DDScannerApplication.activityPaused();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        DDScannerApplication.activityResumed();
+        if (!helpers.hasConnection(this)) {
+            DDScannerApplication.showErrorActivity(this);
+        }
+    }
 
 }
