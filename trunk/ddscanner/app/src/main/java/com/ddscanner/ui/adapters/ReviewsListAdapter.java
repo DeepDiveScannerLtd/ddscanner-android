@@ -34,8 +34,7 @@ import retrofit2.Response;
 /**
  * Created by lashket on 12.3.16.
  */
-public class ReviewsListAdapter
-        extends RecyclerView.Adapter<ReviewsListAdapter.ReviewsListViewHolder> {
+public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.ReviewsListViewHolder> {
 
     private static final String TAG = ReviewsListAdapter.class.getSimpleName();
     private static ArrayList<Comment> comments;
@@ -63,11 +62,11 @@ public class ReviewsListAdapter
     }
 
     @Override
-    public void onBindViewHolder(final ReviewsListViewHolder reviewsListViewHolder,final int i) {
+    public void onBindViewHolder(final ReviewsListViewHolder reviewsListViewHolder, int i) {
         boolean isLiked;
         boolean isDisliked;
-        isLiked = comments.get(i).isLike();
-        isDisliked = comments.get(i).isDislike();
+        isLiked = comments.get(reviewsListViewHolder.getAdapterPosition()).isLike();
+        isDisliked = comments.get(reviewsListViewHolder.getAdapterPosition()).isDislike();
         if (isLiked) {
             likeUi(reviewsListViewHolder.dislikeImage,
                     reviewsListViewHolder.likeImage,
@@ -80,20 +79,22 @@ public class ReviewsListAdapter
                     reviewsListViewHolder.likesCount,
                     reviewsListViewHolder.dislikesCount);
         }
-        if (comments.get(i).getImages() != null) {
+        if (comments.get(reviewsListViewHolder.getAdapterPosition()).getImages() != null) {
             LinearLayoutManager layoutManager = new LinearLayoutManager(context);
             layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
             reviewsListViewHolder.photos.setNestedScrollingEnabled(false);
             reviewsListViewHolder.photos.setHasFixedSize(false);
             reviewsListViewHolder.photos.setLayoutManager(layoutManager);
             reviewsListViewHolder.photos.setAdapter(new ReviewPhotosAdapter(
-                    (ArrayList<String>) comments.get(i).getImages(), context, path));
+                    (ArrayList<String>) comments.get(reviewsListViewHolder.getAdapterPosition()).getImages(), context, path));
+        } else {
+            reviewsListViewHolder.photos.setAdapter(null);
         }
 
         reviewsListViewHolder.like.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                likeComment(comments.get(i).getId(), reviewsListViewHolder.dislikeImage,
+                likeComment(comments.get(reviewsListViewHolder.getAdapterPosition()).getId(), reviewsListViewHolder.dislikeImage,
                         reviewsListViewHolder.likeImage,
                         reviewsListViewHolder.likesCount,
                         reviewsListViewHolder.dislikesCount);
@@ -103,7 +104,7 @@ public class ReviewsListAdapter
         reviewsListViewHolder.dislike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dislikeComment(comments.get(i).getId(), reviewsListViewHolder.dislikeImage,
+                dislikeComment(comments.get(reviewsListViewHolder.getAdapterPosition()).getId(), reviewsListViewHolder.dislikeImage,
                         reviewsListViewHolder.likeImage,
                         reviewsListViewHolder.likesCount,
                         reviewsListViewHolder.dislikesCount);
@@ -112,23 +113,23 @@ public class ReviewsListAdapter
         });
 
 
-        reviewsListViewHolder.user_name.setText(comments.get(i).getUser().getName());
-        reviewsListViewHolder.user_review.setText(comments.get(i).getComment());
-        reviewsListViewHolder.likesCount.setText(comments.get(i).getLikes());
-        reviewsListViewHolder.dislikesCount.setText(comments.get(i).getDislikes());
+        reviewsListViewHolder.user_name.setText(comments.get(reviewsListViewHolder.getAdapterPosition()).getUser().getName());
+        reviewsListViewHolder.user_review.setText(comments.get(reviewsListViewHolder.getAdapterPosition()).getComment());
+        reviewsListViewHolder.likesCount.setText(comments.get(reviewsListViewHolder.getAdapterPosition()).getLikes());
+        reviewsListViewHolder.dislikesCount.setText(comments.get(reviewsListViewHolder.getAdapterPosition()).getDislikes());
         isAdapterSet = true;
 
-        Picasso.with(context).load(comments.get(i).getUser().getPicture()).resize(40, 40).
+        Picasso.with(context).load(comments.get(reviewsListViewHolder.getAdapterPosition()).getUser().getPicture()).resize(40, 40).
                 transform(new TransformationRoundImage(50, 0)).centerCrop().
                 into(reviewsListViewHolder.user_avatar);
         reviewsListViewHolder.rating.removeAllViews();
-        for (int k = 0; k < Integer.parseInt(comments.get(i).getRating()); k++) {
+        for (int k = 0; k < Integer.parseInt(comments.get(reviewsListViewHolder.getAdapterPosition()).getRating()); k++) {
             ImageView iv = new ImageView(context);
             iv.setImageResource(R.drawable.ic_list_star_full);
             iv.setPadding(0, 0, 5, 0);
             reviewsListViewHolder.rating.addView(iv);
         }
-        for (int k = 0; k < 5 - Integer.parseInt(comments.get(i).getRating()); k++) {
+        for (int k = 0; k < 5 - Integer.parseInt(comments.get(reviewsListViewHolder.getAdapterPosition()).getRating()); k++) {
             ImageView iv = new ImageView(context);
             iv.setImageResource(R.drawable.ic_list_star_empty);
             iv.setPadding(0, 0, 5, 0);

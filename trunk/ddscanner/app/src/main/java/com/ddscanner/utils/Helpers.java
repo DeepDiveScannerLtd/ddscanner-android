@@ -5,14 +5,12 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.TextView;
@@ -21,8 +19,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.R;
 import com.ddscanner.entities.User;
 import com.ddscanner.entities.request.RegisterRequest;
-import com.ddscanner.events.ShowUserDialogEvent;
-import com.ddscanner.ui.activities.SocialNetworks;
 import com.ddscanner.ui.dialogs.ProfileDialog;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -101,8 +97,8 @@ public class Helpers {
      * @author Andrei Lashkevich
      */
 
-    public ArrayList<String> compareImageWithPath(ArrayList<String> images, String path) {
-        for (int i = 0; i <images.size(); i++) {
+    public ArrayList<String> appendImageWithPath(ArrayList<String> images, String path) {
+        for (int i = 0; i < images.size(); i++) {
             images.set(i, path + images.get(i));
         }
         return images;

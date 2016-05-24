@@ -3,7 +3,6 @@ package com.ddscanner.ui.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -47,14 +46,14 @@ public class DiveSpotPhotosActivity extends AppCompatActivity {
 
         path = getIntent().getStringExtra("path");
 
-        diveSpotImages = helpers.compareImageWithPath(diveSpotImages, path);
+        diveSpotImages = helpers.appendImageWithPath(diveSpotImages, path);
 
         Bundle bundle = new Bundle();
         bundle.putSerializable("diveSpotImages", diveSpotImages);
         diveSpotPhotosFragment.setArguments(bundle);
 
         if (reviewsImages != null) {
-            reviewsImages = helpers.compareImageWithPath(reviewsImages, path);
+            reviewsImages = helpers.appendImageWithPath(reviewsImages, path);
         }
 
         bundle = new Bundle();

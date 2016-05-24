@@ -72,7 +72,7 @@ public class ReviewPhotosAdapter
         @Override
         public void onClick(View v) {
             ImageSliderActivity.show(context,
-                    helpers.compareImageWithPath(photos, path), getAdapterPosition());
+                    helpers.appendImageWithPath(photos, path), getAdapterPosition());
         }
     }
 
