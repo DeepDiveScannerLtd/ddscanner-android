@@ -14,6 +14,7 @@ import android.support.v7.widget.AppCompatDrawableManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -65,6 +66,7 @@ public class DiveSpotsMapFragment extends Fragment implements View.OnClickListen
     private Long lastDiveSpotId;
     private RelativeLayout mainLayout;
     private TextView object;
+    private RelativeLayout mapControlLayout;
 
     private Map<String, Drawable> map = new HashMap<>();
 
@@ -112,6 +114,7 @@ public class DiveSpotsMapFragment extends Fragment implements View.OnClickListen
         zoomOut.setOnClickListener(this);
         goToMyLocation.setOnClickListener(this);
         diveSpotInfo.setOnClickListener(this);
+        mapControlLayout = (RelativeLayout) v.findViewById(R.id.map_control_layout);
         return v;
     }
 
@@ -167,6 +170,9 @@ public class DiveSpotsMapFragment extends Fragment implements View.OnClickListen
     @UiThread
     @Subscribe
     public void getDiveSpotInfow(MarkerClickEvent event) {
+        mapControlLayout.animate().translationY(-diveSpotInfo.getHeight());
+        addDsFab.animate().translationY(-diveSpotInfo.getHeight());
+        mapListFAB.animate().translationY(-diveSpotInfo.getHeight());
         diveSpotInfo.animate()
                 .translationY(0)
                 .alpha(1.0f)
@@ -180,13 +186,6 @@ public class DiveSpotsMapFragment extends Fragment implements View.OnClickListen
                 });
         diveSpotName.setText(event.getDiveSpot().getName());
         lastDiveSpotId = event.getDiveSpot().getId();
-     /*   if (event.getDiveSpot().getObject() != null) {
-            object.setText(event.getDiveSpot().getObject());
-            mainLayout.setBackgroundDrawable(map.get(event.getDiveSpot().getObject()));
-        } else {
-            object.setText("Other");
-            mainLayout.setBackgroundDrawable(map.get("other"));
-        }*/
         rating.removeAllViews();
         for (int k = 0; k < event.getDiveSpot().getRating(); k++) {
             ImageView iv = new ImageView(context);
@@ -204,6 +203,9 @@ public class DiveSpotsMapFragment extends Fragment implements View.OnClickListen
 
     @Subscribe
     public void dismissInfoWindowWhenCameraZoomingOut(CloseInfoWindowEvent event) {
+        mapControlLayout.animate().translationY(0);
+        addDsFab.animate().translationY(0);
+        mapListFAB.animate().translationY(0);
         diveSpotInfo.animate()
                 .translationY(diveSpotInfo.getHeight())
                 .alpha(0.0f)
@@ -220,6 +222,9 @@ public class DiveSpotsMapFragment extends Fragment implements View.OnClickListen
     @Subscribe
     public void hideDiveSpotinfo(OnMapClickEvent event) {
         event.getMarker().setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
+        mapControlLayout.animate().translationY(0);
+        addDsFab.animate().translationY(0);
+        mapListFAB.animate().translationY(0);
         diveSpotInfo.animate()
                 .translationY(diveSpotInfo.getHeight())
                 .alpha(0.0f)

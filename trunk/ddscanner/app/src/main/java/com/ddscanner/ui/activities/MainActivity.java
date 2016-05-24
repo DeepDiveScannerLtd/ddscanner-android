@@ -23,6 +23,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.request.IdentifyRequest;
@@ -85,6 +86,7 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
     private Helpers helpers = new Helpers();
     private boolean isHasInternetConnection;
     private boolean isHasLocation;
+    private MaterialDialog materialDialog;
 
     private MapListFragment mapListFragment = new MapListFragment();
     private NotificationsFragment notificationsFragment = new NotificationsFragment();
@@ -135,6 +137,7 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
     }
 
     private void findViews() {
+        materialDialog = helpers.getMaterialDialog(this);
         toolbarTabLayout = (TabLayout) findViewById(R.id.toolbar_tablayout);
         mainViewPager = (ViewPager) findViewById(R.id.main_viewpager);
         menuItemsLayout = (PercentRelativeLayout) findViewById(R.id.menu_items_layout);
@@ -217,6 +220,7 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.search_location_menu_button:
+                materialDialog.show();
                 openSearchLocationWindow();
                 break;
             case R.id.filter_menu_button:
@@ -241,6 +245,7 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
         super.onActivityResult(requestCode, resultCode, data);
         profileFragment.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_PLACE_AUTOCOMPLETE) {
+            materialDialog.dismiss();
             if (resultCode == RESULT_OK) {
                 final Place place = PlaceAutocomplete.getPlace(this, data);
                 DDScannerApplication.bus.post(new PlaceChoosedEvent(place.getViewport()));
