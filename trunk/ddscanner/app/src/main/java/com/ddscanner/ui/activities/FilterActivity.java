@@ -42,6 +42,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import fr.ganfra.materialspinner.MaterialSpinner;
 import okhttp3.ResponseBody;
 import retrofit.mime.TypedByteArray;
 import retrofit2.Call;
@@ -57,7 +58,8 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
 
     private Toolbar toolbar;
     private FiltersResponseEntity filters = new FiltersResponseEntity();
-    private Spinner objectSpinner;
+  //  private Spinner objectSpinner;
+    private MaterialSpinner objectSpinner;
     private Spinner levelSpinner;
     private Helpers helpers = new Helpers();
 
@@ -77,12 +79,12 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
 
     private void findViews() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        objectSpinner = (Spinner) findViewById(R.id.object_spinner);
+        objectSpinner = (MaterialSpinner) findViewById(R.id.object_spinner);
         levelSpinner = (Spinner) findViewById(R.id.level_spinner);
     }
 
 
-    private void setFilerGroup(Spinner spinner, Map<String, String> values, String tag) {
+    private void setFilerGroup(MaterialSpinner spinner, Map<String, String> values, String tag) {
         List<String> objects = new ArrayList<String>();
         for (Map.Entry<String, String> entry : values.entrySet()) {
             objects.add(entry.getValue());
@@ -175,7 +177,7 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
                     Log.i(TAG, responseString);
 
                     setFilerGroup(objectSpinner, filters.getObject(), SharedPreferenceHelper.getCurrents());
-                    setFilerGroup(levelSpinner, filters.getLevel(), SharedPreferenceHelper.getCurrents());
+                  //  setFilerGroup(levelSpinner, filters.getLevel(), SharedPreferenceHelper.getCurrents());
                 } else {
                     // TODO Handle errors
                 }

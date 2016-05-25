@@ -376,10 +376,20 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
         requestLng = RequestBody.create(MediaType.parse("multipart/form-data"),
                 String.valueOf(diveSpotLocation.longitude));
         requestAccess = RequestBody.create(MediaType.parse("multipart/form-data"), "boat");
-        requestObject = RequestBody.create(MediaType.parse("multipart/form-data"), "reef");
-        requestVisibility = RequestBody.create(MediaType.parse("multipart/form-data"), "good");
-        requestCurrents = RequestBody.create(MediaType.parse("multipart/form-data"), "strong");
-        requestLevel = RequestBody.create(MediaType.parse("multipart/form-data"), "master");
+        requestObject = RequestBody.create(MediaType.parse("multipart/form-data"),
+                helpers.getMirrorOfHashMap(filters.getObject())
+                        .get(objectSpinner.getSelectedItem().toString()));
+        Log.i("Selected", helpers.getMirrorOfHashMap(filters.getVisibility())
+                .get(visibilitySpinner.getSelectedItem().toString()));
+        requestVisibility = RequestBody.create(MediaType.parse("multipart/form-data"),
+                helpers.getMirrorOfHashMap(filters.getVisibility())
+                        .get(visibilitySpinner.getSelectedItem().toString()));
+        requestCurrents = RequestBody.create(MediaType.parse("multipart/form-data"),
+                helpers.getMirrorOfHashMap(filters.getCurrents())
+                        .get(currentsSpinner.getSelectedItem().toString()));
+        requestLevel = RequestBody.create(MediaType.parse("multipart/form-data"),
+                helpers.getMirrorOfHashMap(filters.getLevel())
+                        .get(levelSpinner.getSelectedItem().toString()));
         if (SharedPreferenceHelper.getIsUserLogined()) {
             requestSocial = RequestBody.create(MediaType.parse("multipart/form-data"),
                     SharedPreferenceHelper.getSn());

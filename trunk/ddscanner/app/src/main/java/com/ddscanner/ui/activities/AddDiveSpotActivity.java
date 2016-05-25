@@ -24,6 +24,7 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.entities.DivespotsWrapper;
 import com.ddscanner.entities.FiltersResponseEntity;
 import com.ddscanner.entities.Sealife;
 import com.ddscanner.rest.RestClient;
@@ -320,6 +321,23 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 Log.i(TAG, "success");
                 progressDialogUpload.dismiss();
+                if (response.isSuccessful()) {
+                    if (response.raw().code() == 200) {
+                        String responseString = "";
+                        try {
+                            responseString = response.body().string();
+                            DivespotsWrapper divespotsWrapper = new DivespotsWrapper();
+                            divespotsWrapper = new Gson().fromJson(responseString,
+                                    DivespotsWrapper.class);
+                            DiveSpotDetailsActivity.show(AddDiveSpotActivity.this, String
+                                    .valueOf(divespotsWrapper.getDiveSpots().get(0).getId()));
+                            finish();
+                        } catch (IOException e) {
+
+                        }
+
+                    }
+                }
                 if (response.errorBody() != null) {
                     try {
                         String error = response.errorBody().string();

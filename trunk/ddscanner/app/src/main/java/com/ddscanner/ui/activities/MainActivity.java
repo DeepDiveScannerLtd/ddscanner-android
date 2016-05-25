@@ -29,6 +29,7 @@ import com.ddscanner.R;
 import com.ddscanner.entities.request.IdentifyRequest;
 import com.ddscanner.events.ChangePageOfMainViewPagerEvent;
 import com.ddscanner.events.InternetConnectionClosedEvent;
+import com.ddscanner.events.OpenAddDsActivityAfterLogin;
 import com.ddscanner.events.PickPhotoFromGallery;
 import com.ddscanner.events.PlaceChoosedEvent;
 import com.ddscanner.events.ShowLoginActivityIntent;
@@ -88,6 +89,7 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
     private boolean isHasInternetConnection;
     private boolean isHasLocation;
     private MaterialDialog materialDialog;
+    private boolean isTryToOpenAddDiveSpotActivity = false;
 
     private MapListFragment mapListFragment = new MapListFragment();
     private NotificationsFragment notificationsFragment = new NotificationsFragment();
@@ -264,8 +266,17 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
             Uri uri = data.getData();
             profileFragment.setImage(uri);
         }
-        if (requestCode == RC_LOGIN && resultCode == RESULT_OK) {
-            mainViewPager.setCurrentItem(2);
+        if (requestCode == RC_LOGIN) {
+            if (resultCode == RESULT_OK) {
+                if (isTryToOpenAddDiveSpotActivity) {
+                    AddDiveSpotActivity.show(this);
+                    isTryToOpenAddDiveSpotActivity = false;
+                    return;
+                }
+                mainViewPager.setCurrentItem(2);
+            } else {
+                isTryToOpenAddDiveSpotActivity = false;
+            }
         }
 
         if (requestCode == 1) {
@@ -462,4 +473,12 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
         Intent intent = new Intent(MainActivity.this, SocialNetworks.class);
         startActivityForResult(intent, RC_LOGIN);
     }
+
+    @Subscribe
+    public void openLoginWindowToAdd(OpenAddDsActivityAfterLogin event) {
+        isTryToOpenAddDiveSpotActivity = true;
+        Intent intent = new Intent(MainActivity.this, SocialNetworks.class);
+        startActivityForResult(intent, RC_LOGIN);
+    }
+
 }
