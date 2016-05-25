@@ -1,291 +1,319 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <include layout="@layout/view_toolbar" />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-    <RelativeLayout
-        android:id="@+id/add_photo_layout"
-        android:background="@color/white"
-        android:layout_width="match_parent"
-        android:layout_height="230dp">
 
-        <android.support.v7.widget.AppCompatImageButton
-            android:id="@+id/delete_photo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:layout_margin="10dp"
-            android:background="@drawable/ic_delete_newsealife"
-            android:visibility="gone" />
-
-        <RelativeLayout
-            android:id="@+id/add_photo_center_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true">
-
-            <ImageView
-                android:id="@+id/ic_add"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:src="@drawable/ic_plus_addds" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/ic_add"
-                android:text="@string/add_photo"
-                android:textSize="17sp" />
-        </RelativeLayout>
-    </RelativeLayout>
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:src="@drawable/divider"
-        android:scaleType="centerCrop"/>
-    <ImageView
-        android:layout_marginTop="@dimen/margin_betweens_blocks"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:src="@drawable/divider"
-        android:scaleType="centerCrop"/>
-
-        <LinearLayout
-            android:background="@color/white"
-            android:paddingLeft="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <com.rey.material.widget.EditText
-                android:id="@+id/name"
-                android:hint="@string/name"
-                android:textColorHint="#b2b2b2"
-                app:et_labelTextSize="8sp"
-                app:et_labelTextColor="#b2b2b2"
-                android:textSize="15sp"
-                app:et_dividerHeight="0dp"
-                app:et_dividerColor="@android:color/transparent"
-                app:et_dividerCompoundPadding="true"
-                android:padding="10dp"
-                app:et_labelEnable="true"
+            <RelativeLayout
+                android:id="@+id/add_photo_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="230dp"
+                android:background="@color/white">
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/delete_photo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/ic_delete_newsealife"
+                    android:visibility="gone" />
+
+                <RelativeLayout
+                    android:id="@+id/add_photo_center_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true">
+
+                    <ImageView
+                        android:id="@+id/ic_add"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:src="@drawable/ic_plus_addds" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/ic_add"
+                        android:text="@string/add_photo"
+                        android:textSize="17sp" />
+                </RelativeLayout>
+            </RelativeLayout>
+
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:src="@drawable/divider"
                 android:scaleType="centerCrop"
-                android:layout_marginLeft="10dp"/>
-            <TextView
-                android:id="@+id/name_error"
-                android:visibility="gone"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="4dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="12sp"
-                android:textColor="@color/error"/>
-            <com.rey.material.widget.EditText
-                android:id="@+id/habitat"
-                android:hint="@string/habitat"
-                android:textColorHint="#b2b2b2"
-                app:et_labelTextSize="8sp"
-                app:et_labelTextColor="#b2b2b2"
-                android:textSize="15sp"
-                app:et_dividerHeight="0dp"
-                app:et_dividerColor="@android:color/transparent"
-                app:et_dividerCompoundPadding="true"
-                android:padding="10dp"
-                app:et_labelEnable="true"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:src="@drawable/divider"
-                android:scaleType="centerCrop"
-                android:layout_marginLeft="10dp"/>
-            <TextView
-                android:id="@+id/habitat_error"
-                android:visibility="gone"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="4dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="12sp"
-                android:textColor="@color/error"/>
-            <com.rey.material.widget.EditText
-                android:hint="@string/distribution"
-                android:textColorHint="#b2b2b2"
-                app:et_labelTextSize="8sp"
-                app:et_labelTextColor="#b2b2b2"
-                android:textSize="15sp"
-                app:et_dividerHeight="0dp"
-                app:et_dividerColor="@android:color/transparent"
-                app:et_dividerCompoundPadding="true"
-                android:id="@+id/distribution"
-                android:padding="10dp"
-                app:et_labelEnable="true"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:src="@drawable/divider"
-                android:scaleType="centerCrop"
-                android:layout_marginLeft="10dp"/>
-            <TextView
-                android:id="@+id/distribution_error"
-                android:visibility="gone"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="4dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="12sp"
-                android:textColor="@color/error"/>
-            <com.rey.material.widget.EditText
-                android:hint="@string/length"
-                android:textColorHint="#b2b2b2"
-                app:et_labelTextSize="8sp"
-                app:et_labelTextColor="#b2b2b2"
-                android:textSize="15sp"
-                app:et_dividerHeight="0dp"
-                app:et_dividerColor="@android:color/transparent"
-                app:et_dividerCompoundPadding="true"
-                android:id="@+id/length"
-                android:padding="10dp"
-                app:et_labelEnable="true"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:src="@drawable/divider"
-                android:layout_marginLeft="10dp"
-                android:scaleType="centerCrop"/>
-            <com.rey.material.widget.EditText
-                android:hint="@string/weight"
-                android:textColorHint="#b2b2b2"
-                app:et_labelTextSize="8sp"
-                app:et_labelTextColor="#b2b2b2"
-                android:textSize="15sp"
-                app:et_dividerHeight="0dp"
-                app:et_dividerColor="@android:color/transparent"
-                app:et_dividerCompoundPadding="true"
-                android:id="@+id/weight"
-                android:padding="10dp"
-                app:et_labelEnable="true"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:src="@drawable/divider"
-                android:layout_marginLeft="10dp"
-                android:scaleType="centerCrop"/>
-            <com.rey.material.widget.EditText
-                android:hint="@string/depth"
-                android:textColorHint="#b2b2b2"
-                app:et_labelTextSize="8sp"
-                app:et_labelTextColor="#b2b2b2"
-                android:textSize="15sp"
-                app:et_dividerHeight="0dp"
-                app:et_dividerColor="@android:color/transparent"
-                app:et_dividerCompoundPadding="true"
-                android:id="@+id/depth"
-                android:padding="10dp"
-                app:et_labelEnable="true"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:src="@drawable/divider"
-                android:scaleType="centerCrop"/>
-            <com.rey.material.widget.EditText
-                android:hint="@string/sc_name"
-                android:textColorHint="#b2b2b2"
-                app:et_labelTextSize="8sp"
-                app:et_labelTextColor="#b2b2b2"
-                android:textSize="15sp"
-                app:et_dividerHeight="0dp"
-                app:et_dividerColor="@android:color/transparent"
-                app:et_dividerCompoundPadding="true"
-                android:id="@+id/scName"
-                android:padding="10dp"
-                app:et_labelEnable="true"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:src="@drawable/divider"
-                android:scaleType="centerCrop"/>
-            <com.rey.material.widget.EditText
-                android:hint="@string/order"
-                android:textColorHint="#b2b2b2"
-                app:et_labelTextSize="8sp"
-                app:et_labelTextColor="#b2b2b2"
-                android:textSize="15sp"
-                app:et_dividerHeight="0dp"
-                app:et_dividerColor="@android:color/transparent"
-                app:et_dividerCompoundPadding="true"
-                android:id="@+id/order"
-                android:padding="10dp"
-                app:et_labelEnable="true"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:src="@drawable/divider"
-                android:scaleType="centerCrop"/>
-            <com.rey.material.widget.EditText
-                android:hint="@string/scclass"
-                android:textColorHint="#b2b2b2"
-                app:et_labelTextSize="8sp"
-                app:et_labelTextColor="#b2b2b2"
-                android:textSize="15sp"
-                app:et_dividerHeight="0dp"
-                app:et_dividerColor="@android:color/transparent"
-                app:et_dividerCompoundPadding="true"
-                android:id="@+id/scClass"
-                android:padding="10dp"
-                app:et_labelEnable="true"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:src="@drawable/divider" />
 
-        </LinearLayout>
+            <TextView
+                android:id="@+id/error_image"
+                style="@style/ValidationErrorTextView" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_betweens_blocks"
+                android:scaleType="centerCrop"
+                android:src="@drawable/divider" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:paddingLeft="10dp">
+
+                <com.rey.material.widget.EditText
+                    android:id="@+id/name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/name"
+                    android:padding="10dp"
+                    android:textColorHint="#b2b2b2"
+                    android:textSize="15sp"
+                    app:et_dividerColor="@android:color/transparent"
+                    app:et_dividerCompoundPadding="true"
+                    app:et_dividerHeight="0dp"
+                    app:et_labelEnable="true"
+                    app:et_labelTextColor="#b2b2b2"
+                    app:et_labelTextSize="8sp" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/divider" />
+
+                <TextView
+                    android:id="@+id/name_error"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="4dp"
+                    android:textColor="@color/error"
+                    android:textSize="12sp"
+                    android:visibility="gone" />
+
+                <com.rey.material.widget.EditText
+                    android:id="@+id/habitat"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/habitat"
+                    android:padding="10dp"
+                    android:textColorHint="#b2b2b2"
+                    android:textSize="15sp"
+                    app:et_dividerColor="@android:color/transparent"
+                    app:et_dividerCompoundPadding="true"
+                    app:et_dividerHeight="0dp"
+                    app:et_labelEnable="true"
+                    app:et_labelTextColor="#b2b2b2"
+                    app:et_labelTextSize="8sp" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/divider" />
+
+                <TextView
+                    android:id="@+id/habitat_error"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="4dp"
+                    android:textColor="@color/error"
+                    android:textSize="12sp"
+                    android:visibility="gone" />
+
+                <com.rey.material.widget.EditText
+                    android:id="@+id/distribution"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/distribution"
+                    android:padding="10dp"
+                    android:textColorHint="#b2b2b2"
+                    android:textSize="15sp"
+                    app:et_dividerColor="@android:color/transparent"
+                    app:et_dividerCompoundPadding="true"
+                    app:et_dividerHeight="0dp"
+                    app:et_labelEnable="true"
+                    app:et_labelTextColor="#b2b2b2"
+                    app:et_labelTextSize="8sp" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/divider" />
+
+                <TextView
+                    android:id="@+id/distribution_error"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="4dp"
+                    android:textColor="@color/error"
+                    android:textSize="12sp"
+                    android:visibility="gone" />
+
+                <com.rey.material.widget.EditText
+                    android:id="@+id/length"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/length"
+                    android:padding="10dp"
+                    android:textColorHint="#b2b2b2"
+                    android:textSize="15sp"
+                    app:et_dividerColor="@android:color/transparent"
+                    app:et_dividerCompoundPadding="true"
+                    app:et_dividerHeight="0dp"
+                    app:et_labelEnable="true"
+                    app:et_labelTextColor="#b2b2b2"
+                    app:et_labelTextSize="8sp" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/divider" />
+
+                <com.rey.material.widget.EditText
+                    android:id="@+id/weight"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/weight"
+                    android:padding="10dp"
+                    android:textColorHint="#b2b2b2"
+                    android:textSize="15sp"
+                    app:et_dividerColor="@android:color/transparent"
+                    app:et_dividerCompoundPadding="true"
+                    app:et_dividerHeight="0dp"
+                    app:et_labelEnable="true"
+                    app:et_labelTextColor="#b2b2b2"
+                    app:et_labelTextSize="8sp" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/divider" />
+
+                <com.rey.material.widget.EditText
+                    android:id="@+id/depth"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/depth"
+                    android:padding="10dp"
+                    android:textColorHint="#b2b2b2"
+                    android:textSize="15sp"
+                    app:et_dividerColor="@android:color/transparent"
+                    app:et_dividerCompoundPadding="true"
+                    app:et_dividerHeight="0dp"
+                    app:et_labelEnable="true"
+                    app:et_labelTextColor="#b2b2b2"
+                    app:et_labelTextSize="8sp" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/divider" />
+
+                <com.rey.material.widget.EditText
+                    android:id="@+id/scName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/sc_name"
+                    android:padding="10dp"
+                    android:textColorHint="#b2b2b2"
+                    android:textSize="15sp"
+                    app:et_dividerColor="@android:color/transparent"
+                    app:et_dividerCompoundPadding="true"
+                    app:et_dividerHeight="0dp"
+                    app:et_labelEnable="true"
+                    app:et_labelTextColor="#b2b2b2"
+                    app:et_labelTextSize="8sp" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/divider" />
+
+                <com.rey.material.widget.EditText
+                    android:id="@+id/order"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/order"
+                    android:padding="10dp"
+                    android:textColorHint="#b2b2b2"
+                    android:textSize="15sp"
+                    app:et_dividerColor="@android:color/transparent"
+                    app:et_dividerCompoundPadding="true"
+                    app:et_dividerHeight="0dp"
+                    app:et_labelEnable="true"
+                    app:et_labelTextColor="#b2b2b2"
+                    app:et_labelTextSize="8sp" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/divider" />
+
+                <com.rey.material.widget.EditText
+                    android:id="@+id/scClass"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/scclass"
+                    android:padding="10dp"
+                    android:textColorHint="#b2b2b2"
+                    android:textSize="15sp"
+                    app:et_dividerColor="@android:color/transparent"
+                    app:et_dividerCompoundPadding="true"
+                    app:et_dividerHeight="0dp"
+                    app:et_labelEnable="true"
+                    app:et_labelTextColor="#b2b2b2"
+                    app:et_labelTextSize="8sp" />
+
+            </LinearLayout>
+
             <Button
                 android:id="@+id/btn_save_sealife"
                 android:layout_width="match_parent"
                 android:layout_height="38dp"
-                android:layout_marginTop="30dp"
-                android:layout_marginRight="20dp"
                 android:layout_marginBottom="30dp"
                 android:layout_marginLeft="20dp"
-                android:textSize="15sp"
-                android:textColor="@color/black_text"
-                android:text="@string/btn_save"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="30dp"
                 android:background="@drawable/border_button_orange_2px"
-                />
+                android:text="@string/btn_save"
+                android:textColor="@color/black_text"
+                android:textSize="15sp" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

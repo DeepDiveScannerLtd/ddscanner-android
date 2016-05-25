@@ -76,6 +76,7 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
     private TextView name_error;
     private TextView habitat_error;
     private TextView distribution_error;
+    private TextView image_error;
     private Helpers helpers = new Helpers();
     private MaterialDialog progressDialogUpload;
 
@@ -128,6 +129,7 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
         name_error = (TextView) findViewById(R.id.name_error);
         habitat_error = (TextView) findViewById(R.id.habitat_error);
         distribution_error = (TextView) findViewById(R.id.distribution_error);
+        image_error = (TextView) findViewById(R.id.error_image);
     }
 
     /**
@@ -262,9 +264,12 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
      */
 
     private void sendRequestToAddSealife(Uri imageFileUri) {
-        File file = new File(helpers.getRealPathFromURI(this, imageFileUri));
-        RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
-        MultipartBody.Part body = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
+        MultipartBody.Part body = null;
+        if (imageFileUri != null) {
+            File file = new File(helpers.getRealPathFromURI(this, imageFileUri));
+            RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
+            body = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
+        }
         Call<ResponseBody> call = RestClient.getServiceInstance().addSealife(
                 requestName, requestDistribution, requestHabitat, body, requestScname,
                 requestLength, requestWeight, requestDepth, requestOrder, requestClass,
@@ -308,6 +313,7 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
         errorsMap.put("name", name_error);
         errorsMap.put("distribution", distribution_error);
         errorsMap.put("habitat", habitat_error);
+        errorsMap.put("image", image_error);
     }
 
     /**
