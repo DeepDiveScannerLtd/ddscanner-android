@@ -204,4 +204,17 @@ public class SearchSealifeActivity extends AppCompatActivity implements SearchVi
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_ADD_SEALIFE) {
+            if (resultCode == RESULT_OK) {
+                Sealife sealife = (Sealife) data.getSerializableExtra("SEALIFE");
+                Intent intent = new Intent();
+                intent.putExtra("SEALIFE", sealife);
+                setResult(RESULT_OK, intent);
+                finish();
+            }
+        }
+    }
 }

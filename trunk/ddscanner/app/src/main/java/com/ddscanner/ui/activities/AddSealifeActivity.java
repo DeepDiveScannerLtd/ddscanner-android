@@ -21,11 +21,13 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.entities.Sealife;
 import com.ddscanner.entities.request.CreateSealifeRequest;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
+import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -33,6 +35,9 @@ import com.rey.material.widget.EditText;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -279,6 +284,19 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if(response.body() != null) {
                     try {
+                        String responseString = "";
+                        responseString = response.body().string();
+                        try {
+                            JSONObject jsonObject = new JSONObject(responseString);
+                            responseString = jsonObject.getString("sealife");
+                            Sealife sealife = new Gson().fromJson(responseString, Sealife.class);
+                            Intent intent = new Intent();
+                            intent.putExtra("SEALIFE", sealife);
+                            finish();
+                            setResult(RESULT_OK, intent);
+                        } catch (JSONException e) {
+
+                        }
                         Log.i(TAG, response.body().string());
                         progressDialogUpload.dismiss();
                     } catch (IOException e) {
