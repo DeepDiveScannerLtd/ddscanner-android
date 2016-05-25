@@ -210,4 +210,7 @@ public interface DDScannerRestService {
     @POST("diving/logout")
     Call<ResponseBody> logout(@Body RegisterRequest registerRequest);
 
+    @GET("diving/user/{id}/notifications")
+    Call<ResponseBody> getNotifications(@Path("id") String id, @QueryMap Map<String, String> map);
+
 }
