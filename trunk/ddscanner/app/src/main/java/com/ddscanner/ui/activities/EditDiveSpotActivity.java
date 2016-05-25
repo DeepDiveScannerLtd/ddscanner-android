@@ -5,6 +5,7 @@ import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -48,6 +49,7 @@ import com.rey.material.widget.Spinner;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -291,9 +293,10 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_add_photo:
-                Intent i = new Intent(Intent.ACTION_PICK,
-                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                i.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    i.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                }
                 startActivityForResult(i, RC_PICK_PHOTO);
                 break;
             case R.id.location_layout:
@@ -360,10 +363,12 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
                         ClipData.Item item = clipData.getItemAt(i);
                         Uri uri = item.getUri();
                         imageUris.add(helpers.getRealPathFromURI(EditDiveSpotActivity.this, uri));
-                        photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris,
-                                EditDiveSpotActivity.this, addPhotoTitle));
-                        Log.i(TAG, helpers.getRealPathFromURI(EditDiveSpotActivity.this, uri));
                     }
+                    photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris, EditDiveSpotActivity.this, addPhotoTitle));
+                } else {
+                    Uri uri = data.getData();
+                    imageUris.add(helpers.getRealPathFromURI(EditDiveSpotActivity.this, uri));
+                    photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris, EditDiveSpotActivity.this, addPhotoTitle));
                 }
             }
         }

@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -320,9 +321,12 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
                         ClipData.Item item = clipData.getItemAt(i);
                         Uri uri = item.getUri();
                         imageUris.add(helpers.getRealPathFromURI(LeaveReviewActivity.this, uri));
-                        photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris,
-                                LeaveReviewActivity.this, addPhotoTitle));
                     }
+                    photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris, LeaveReviewActivity.this, addPhotoTitle));
+                } else {
+                    Uri uri = data.getData();
+                    imageUris.add(helpers.getRealPathFromURI(LeaveReviewActivity.this, uri));
+                    photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris, LeaveReviewActivity.this, addPhotoTitle));
                 }
             }
         }
@@ -334,7 +338,9 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
             case R.id.btn_add_photo:
                 Intent i = new Intent(Intent.ACTION_PICK,
                         android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                i.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    i.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                }
                 startActivityForResult(i, RC_PICK_PHOTO);
                 break;
         }

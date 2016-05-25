@@ -1,9 +1,7 @@
 package com.ddscanner.ui.adapters;
 
 import android.content.Context;
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,12 +9,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ddscanner.R;
-import com.ddscanner.entities.Sealife;
-import com.ddscanner.ui.activities.AddDiveSpotActivity;
 import com.ddscanner.utils.Constants;
 import com.squareup.picasso.Picasso;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,22 +42,22 @@ public class AddPhotoToDsListAdapter extends RecyclerView.Adapter<AddPhotoToDsLi
     }
 
     @Override
-    public void onBindViewHolder(PhotoListViewHolder holder, final int position) {
-        String path = uris.get(position);
-        if (!uris.get(position).contains(Constants.images)) {
-            this.newImagesUriList.add(uris.get(position));
-            path = "file://" + uris.get(position);
+    public void onBindViewHolder(final PhotoListViewHolder holder, final int position) {
+        String path = uris.get(holder.getAdapterPosition());
+        if (!uris.get(holder.getAdapterPosition()).contains(Constants.images)) {
+            this.newImagesUriList.add(uris.get(holder.getAdapterPosition()));
+            path = "file://" + uris.get(holder.getAdapterPosition());
         }
         Picasso.with(context).load(path).resize(110, 80).centerCrop().into(holder.photo);
         holder.icDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (uris.get(position).contains(Constants.images)) {
-                   deletedImages.add(uris.get(position));
+                if (uris.get(holder.getAdapterPosition()).contains(Constants.images)) {
+                   deletedImages.add(uris.get(holder.getAdapterPosition()));
                 }
-                uris.remove(position);
-                notifyItemRemoved(position);
-                notifyItemRangeChanged(position, uris.size());
+                uris.remove(holder.getAdapterPosition());
+                notifyItemRemoved(holder.getAdapterPosition());
+                notifyItemRangeChanged(holder.getAdapterPosition(), uris.size());
             }
         });
     }
