@@ -78,24 +78,25 @@
         android:layout_height="wrap_content"
         android:paddingBottom="10dp"
         android:background="@color/white">
-        <fr.ganfra.materialspinner.MaterialSpinner
+        <com.rey.material.widget.Spinner
             android:id="@+id/object_spinner"
-            android:layout_width="fill_parent"
+            style="@style/Material.Widget.Spinner"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:ms_multiline="false"
-            app:ms_hint="hint"
-            app:ms_enableFloatingLabel="false"
-            app:ms_enableErrorLabel="false"
-            app:ms_floatingLabelText="floating label"
-            app:ms_errorColor="@color/error"
-            app:ms_typeface="typeface.ttf"
-            app:ms_thickness="2dp"
-            app:ms_hintColor="@color/black_text"
-            app:ms_arrowColor="@android:color/transparent"
-            app:ms_arrowSize="0dp"
-            app:ms_alignLabels="false"
-            app:ms_floatingLabelColor="@color/primary"/>
-        <ImageView
+            android:gravity="center_vertical"
+            app:rd_style="@style/Material.Drawable.Ripple.Wave"
+            app:spn_label="Level"
+            app:spn_labelEnable="true"
+            app:spn_labelTextColor="@color/black_text"
+            app:spn_labelTextSize="16sp"
+            app:spn_popupItemAnimation="@null"
+            app:spn_dividerColor="@android:color/transparent"
+            app:spn_arrowColor="@android:color/transparent"
+            android:popupBackground="@color/white"
+            android:dropDownWidth="150dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"/>
+            <ImageView
             android:id="@+id/divider"
             android:layout_marginLeft="20dp"
             android:scaleType="centerCrop"
