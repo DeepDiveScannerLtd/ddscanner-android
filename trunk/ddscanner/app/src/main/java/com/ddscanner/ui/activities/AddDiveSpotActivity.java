@@ -92,6 +92,8 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     private TextView error_location;
     private TextView error_description;
     private TextView error_depth;
+    private TextView error_sealife;
+    private TextView error_images;
 
 
     private Helpers helpers = new Helpers();
@@ -152,6 +154,8 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         error_description = (TextView) findViewById(R.id.error_description);
         error_location = (TextView) findViewById(R.id.error_location);
         error_name = (TextView) findViewById(R.id.error_name);
+        error_images = (TextView) findViewById(R.id.error_images);
+        error_sealife = (TextView) findViewById(R.id.error_sealife);
     }
 
     /**
@@ -296,8 +300,12 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     private void createAddDiveSpotRequest() {
         progressDialogUpload.show();
         List<MultipartBody.Part> sealife = new ArrayList<>();
-        for (int i = 0; i < sealifes.size(); i++) {
-            sealife.add(MultipartBody.Part.createFormData("sealife[]", sealifes.get(i).getId()));
+        if (sealifes.size() > 0) {
+            for (int i = 0; i < sealifes.size(); i++) {
+                sealife.add(MultipartBody.Part.createFormData("sealife[]", sealifes.get(i).getId()));
+            }
+        } else {
+            sealifes = null;
         }
         List<MultipartBody.Part> images = new ArrayList<>();
         if (imageUris.size() > 0) {
@@ -386,10 +394,12 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                 name.getText().toString());
         requestDepth = RequestBody.create(MediaType.parse("multipart/form-data"),
                 depth.getText().toString());
-        requestLat = RequestBody.create(MediaType.parse("multipart/form-data"),
-                String.valueOf(diveSpotLocation.latitude));
-        requestLng = RequestBody.create(MediaType.parse("multipart/form-data"),
-                String.valueOf(diveSpotLocation.longitude));
+        if (diveSpotLocation != null) {
+            requestLat = RequestBody.create(MediaType.parse("multipart/form-data"),
+                    String.valueOf(diveSpotLocation.latitude));
+            requestLng = RequestBody.create(MediaType.parse("multipart/form-data"),
+                    String.valueOf(diveSpotLocation.longitude));
+        }
         requestAccess = RequestBody.create(MediaType.parse("multipart/form-data"), "boat");
         requestObject = RequestBody.create(MediaType.parse("multipart/form-data"),
                 helpers.getMirrorOfHashMap(filters.getObject())
@@ -435,6 +445,8 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         errorsMap.put("name", error_name);
         errorsMap.put("description", error_description);
         errorsMap.put("location", error_location);
+        errorsMap.put("images", error_images);
+        errorsMap.put("sealife", error_sealife);
     }
 
     @Override

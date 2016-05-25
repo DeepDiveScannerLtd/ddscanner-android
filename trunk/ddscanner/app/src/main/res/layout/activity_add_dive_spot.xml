@@ -22,7 +22,7 @@
 
     <ScrollView
         android:id="@+id/main_layout"
-        android:visibility="gone"
+        android:visibility="visible"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -77,7 +77,9 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/divider"
                 android:scaleType="centerCrop"/>
-
+            <TextView
+                android:id="@+id/error_images"
+                style="@style/ValidationErrorTextView" />
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -342,6 +344,9 @@
             <ImageView
                 style="@style/DividerStyle"
                 />
+            <TextView
+                android:id="@+id/error_sealife"
+                style="@style/ValidationErrorTextView" />
             <Button
                 android:id="@+id/button_create"
                 android:layout_width="match_parent"

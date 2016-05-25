@@ -173,6 +173,10 @@ public class Helpers {
                 if (entry.getKey().equals("token")) {
                     return;
                 }
+                if (entry.getKey().equals("lat") || entry.getKey().equals("lng")) {
+                    errorsMap.get("location").setVisibility(View.VISIBLE);
+                    errorsMap.get("location").setText("Please choose location");
+                }
                 if (errorsMap.get(entry.getKey()) != null) {
                     String key = entry.getKey();
                     String value = entry.getValue().toString();
