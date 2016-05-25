@@ -99,6 +99,8 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
     private TextView error_location;
     private TextView error_description;
     private TextView error_depth;
+    private TextView error_sealife;
+    private TextView error_images;
 
 
     private List<String> imageUris = new ArrayList<String>();
@@ -131,6 +133,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
         toolbarSettings();
         getDsInfoRequest();
         loadFiltersDataRequest();
+        makeErrorsMap();
     }
 
     /**
@@ -164,6 +167,8 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
         error_description = (TextView) findViewById(R.id.error_description);
         error_location = (TextView) findViewById(R.id.error_location);
         error_name = (TextView) findViewById(R.id.error_name);
+        error_images = (TextView) findViewById(R.id.error_images);
+        error_sealife = (TextView) findViewById(R.id.error_sealife);
     }
 
     /**
@@ -545,6 +550,8 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
         errorsMap.put("name", error_name);
         errorsMap.put("description", error_description);
         errorsMap.put("location", error_location);
+        errorsMap.put("images", error_images);
+        errorsMap.put("sealife", error_sealife);
     }
 
     @Override
