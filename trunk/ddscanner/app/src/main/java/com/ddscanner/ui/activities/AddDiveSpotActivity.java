@@ -84,7 +84,8 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     private EditText description;
     private Button btnSave;
     private RecyclerView sealifesRc;
-    private SealifeListAddingDiveSpotAdapter sealifeListAddingDiveSpotAdapter;
+    private SealifeListAddingDiveSpotAdapter sealifeListAddingDiveSpotAdapter = null;
+    private AddPhotoToDsListAdapter addPhotoToDsListAdapter = null;
     private ScrollView mainLayout;
     private ProgressView progressView;
     private MaterialDialog progressDialogUpload;
@@ -215,8 +216,9 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
             if (resultCode == RESULT_OK) {
                 Uri uri = data.getData();
                 imageUris.add(helpers.getRealPathFromURI(AddDiveSpotActivity.this, uri));
-                photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris,
-                        AddDiveSpotActivity.this, addPhotoTitle));
+                addPhotoToDsListAdapter = new AddPhotoToDsListAdapter(imageUris,
+                        AddDiveSpotActivity.this, addPhotoTitle);
+                photos_rc.setAdapter(addPhotoToDsListAdapter);
                 Log.i(TAG, helpers.getRealPathFromURI(AddDiveSpotActivity.this, uri));
             }
         }
@@ -300,6 +302,10 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     private void createAddDiveSpotRequest() {
         progressDialogUpload.show();
         List<MultipartBody.Part> sealife = new ArrayList<>();
+        if (sealifeListAddingDiveSpotAdapter != null &&
+                sealifeListAddingDiveSpotAdapter.getSealifes() != null) {
+            sealifes = sealifeListAddingDiveSpotAdapter.getSealifes();
+        }
         if (sealifes.size() > 0) {
             for (int i = 0; i < sealifes.size(); i++) {
                 sealife.add(MultipartBody.Part.createFormData("sealife[]", sealifes.get(i).getId()));
@@ -308,6 +314,10 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
             sealifes = null;
         }
         List<MultipartBody.Part> images = new ArrayList<>();
+        if (addPhotoToDsListAdapter != null &&
+                addPhotoToDsListAdapter.getNewFilesUrisList()!= null) {
+            imageUris = addPhotoToDsListAdapter.getNewFilesUrisList();
+        }
         if (imageUris.size() > 0) {
             for (int i = 0; i < imageUris.size(); i++) {
                 File image = new File(imageUris.get(i));
