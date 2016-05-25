@@ -22,7 +22,7 @@ public abstract class RestClient {
                 public Response intercept(Chain chain) throws IOException {
                     Request request = chain.request();
                     request = request.newBuilder()
-                            .addHeader("Accept", "application/vnd.trizeri.v1+json")
+                            .addHeader("Accept", "application/vnd.trizeri.v1+json") // dev
                             .addHeader("Content-Type", "application/json;charset=utf-8")
                             .build();
                     Response response = chain.proceed(request);
@@ -40,7 +40,8 @@ public abstract class RestClient {
             OkHttpClient client = builder.build();
 
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl("http://ddsapi.ilave.pro")
+//                    .baseUrl("http://api.ddscanner.com")
+                    .baseUrl("http://ddsapi.ilave.pro") // dev
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(client)
                     .build();

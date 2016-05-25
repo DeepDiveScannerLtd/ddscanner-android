@@ -5,6 +5,7 @@ import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -99,7 +100,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
 
 
     private Helpers helpers = new Helpers();
-    private List<String> imageUris = new ArrayList<String>();
+    private List<String> imageUris = new ArrayList<>();
     private List<Sealife> sealifes = new ArrayList<>();
     private Map<String, TextView> errorsMap = new HashMap<>();
     private FiltersResponseEntity filters;
@@ -221,10 +222,12 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                         ClipData.Item item = clipData.getItemAt(i);
                         Uri uri = item.getUri();
                         imageUris.add(helpers.getRealPathFromURI(AddDiveSpotActivity.this, uri));
-                        photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris,
-                                AddDiveSpotActivity.this, addPhotoTitle));
-                        Log.i(TAG, helpers.getRealPathFromURI(AddDiveSpotActivity.this, uri));
                     }
+                    photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris, AddDiveSpotActivity.this, addPhotoTitle));
+                } else {
+                    Uri uri = data.getData();
+                    imageUris.add(helpers.getRealPathFromURI(AddDiveSpotActivity.this, uri));
+                    photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris, AddDiveSpotActivity.this, addPhotoTitle));
                 }
             }
         }
@@ -384,10 +387,23 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_add_photo:
-                Intent i = new Intent(Intent.ACTION_PICK,
-                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                i.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                // Method 1
+                // Pros: works fine
+                // Cons: does not work if opened app does not support EXTRA_ALLOW_MULTIPLE; api 18+
+                Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    i.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                }
                 startActivityForResult(i, RC_PICK_PHOTO);
+
+                // Method 2
+                // Pros: works on any device (?)
+                // Cons: returned uri may appear non-convertable to absolute path depending on the app that user will use for choosing. For example Google Draive may return uri for image that is not yet downloaded to device
+//                Intent i = new Intent();
+//                i.setType("image/*");
+//                i.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+//                i.setAction(Intent.ACTION_GET_CONTENT);
+//                startActivityForResult(Intent.createChooser(i,"Select Picture"), RC_PICK_PHOTO);
                 break;
             case R.id.location_layout:
                 Intent intent = new Intent(AddDiveSpotActivity.this,
