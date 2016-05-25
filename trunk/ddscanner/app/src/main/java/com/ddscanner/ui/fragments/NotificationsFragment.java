@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.Activity;
 import com.ddscanner.entities.Notification;
@@ -82,6 +83,34 @@ public class NotificationsFragment extends Fragment {
         tabLayout.setupWithViewPager(photosViewPager);
         photosViewPager.setOffscreenPageLimit(2);
         setUpTabLayout();
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (SharedPreferenceHelper.getIsUserLogined()) {
+            getUserNotifications();
+        }
+        DDScannerApplication.bus.register(this);
+        if (!getUserVisibleHint())
+        {
+            return;
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        DDScannerApplication.bus.unregister(this);
+    }
+
+    @Override
+    public void setUserVisibleHint(final boolean visible) {
+        super.setUserVisibleHint(visible);
+        if (visible) {
+            if (SharedPreferenceHelper.getIsUserLogined()) {
+                getUserNotifications();
+            }
+        }
     }
 
     private void getUserNotifications() {
