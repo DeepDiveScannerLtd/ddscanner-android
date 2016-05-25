@@ -1,6 +1,7 @@
 package com.ddscanner.ui.activities;
 
 import android.app.ProgressDialog;
+import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -208,11 +209,17 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         }
         if (requestCode == RC_PICK_PHOTO) {
             if (resultCode == RESULT_OK) {
-                Uri uri = data.getData();
-                imageUris.add(helpers.getRealPathFromURI(AddDiveSpotActivity.this, uri));
-                photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris,
-                        AddDiveSpotActivity.this, addPhotoTitle));
-                Log.i(TAG, helpers.getRealPathFromURI(AddDiveSpotActivity.this, uri));
+                ClipData clipData = data.getClipData();
+                if (clipData != null) {
+                    for (int i = 0; i < clipData.getItemCount(); i++) {
+                        ClipData.Item item = clipData.getItemAt(i);
+                        Uri uri = item.getUri();
+                        imageUris.add(helpers.getRealPathFromURI(AddDiveSpotActivity.this, uri));
+                        photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris,
+                                AddDiveSpotActivity.this, addPhotoTitle));
+                        Log.i(TAG, helpers.getRealPathFromURI(AddDiveSpotActivity.this, uri));
+                    }
+                }
             }
         }
         if (requestCode == RC_PICK_SEALIFE) {
