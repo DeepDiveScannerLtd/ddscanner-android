@@ -170,7 +170,9 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
 
     }
 
-    private void likeComment(String id, final ImageView dislikeImage, final ImageView likeImage, final TextView likesCount, final TextView dislikesCount) {
+    private void likeComment(String id, final ImageView dislikeImage,
+                             final ImageView likeImage,
+                             final TextView likesCount, final TextView dislikesCount) {
         Call<ResponseBody> call = RestClient.getServiceInstance().likeComment(
                 id,
                 registerRequest

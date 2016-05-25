@@ -290,8 +290,8 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
                             Sealife sealife = new Gson().fromJson(responseString, Sealife.class);
                             Intent intent = new Intent();
                             intent.putExtra("SEALIFE", sealife);
-                            finish();
                             setResult(RESULT_OK, intent);
+                            finish();
                         } catch (JSONException e) {
 
                         }
