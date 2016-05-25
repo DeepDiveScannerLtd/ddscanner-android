@@ -42,6 +42,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import fr.ganfra.materialspinner.MaterialSpinner;
 import okhttp3.ResponseBody;
 import retrofit.mime.TypedByteArray;
 import retrofit2.Call;

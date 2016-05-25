@@ -25,6 +25,7 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.entities.DivespotsWrapper;
 import com.ddscanner.entities.FiltersResponseEntity;
 import com.ddscanner.entities.Sealife;
 import com.ddscanner.rest.RestClient;
@@ -84,7 +85,8 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     private EditText description;
     private Button btnSave;
     private RecyclerView sealifesRc;
-    private SealifeListAddingDiveSpotAdapter sealifeListAddingDiveSpotAdapter;
+    private SealifeListAddingDiveSpotAdapter sealifeListAddingDiveSpotAdapter = null;
+    private AddPhotoToDsListAdapter addPhotoToDsListAdapter = null;
     private ScrollView mainLayout;
     private ProgressView progressView;
     private MaterialDialog progressDialogUpload;
@@ -92,6 +94,8 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     private TextView error_location;
     private TextView error_description;
     private TextView error_depth;
+    private TextView error_sealife;
+    private TextView error_images;
 
 
     private Helpers helpers = new Helpers();
@@ -152,6 +156,8 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         error_description = (TextView) findViewById(R.id.error_description);
         error_location = (TextView) findViewById(R.id.error_location);
         error_name = (TextView) findViewById(R.id.error_name);
+        error_images = (TextView) findViewById(R.id.error_images);
+        error_sealife = (TextView) findViewById(R.id.error_sealife);
     }
 
     /**
@@ -302,10 +308,22 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     private void createAddDiveSpotRequest() {
         progressDialogUpload.show();
         List<MultipartBody.Part> sealife = new ArrayList<>();
-        for (int i = 0; i < sealifes.size(); i++) {
-            sealife.add(MultipartBody.Part.createFormData("sealife[]", sealifes.get(i).getId()));
+        if (sealifeListAddingDiveSpotAdapter != null &&
+                sealifeListAddingDiveSpotAdapter.getSealifes() != null) {
+            sealifes = sealifeListAddingDiveSpotAdapter.getSealifes();
+        }
+        if (sealifes.size() > 0) {
+            for (int i = 0; i < sealifes.size(); i++) {
+                sealife.add(MultipartBody.Part.createFormData("sealife[]", sealifes.get(i).getId()));
+            }
+        } else {
+            sealifes = null;
         }
         List<MultipartBody.Part> images = new ArrayList<>();
+        if (addPhotoToDsListAdapter != null &&
+                addPhotoToDsListAdapter.getNewFilesUrisList()!= null) {
+            imageUris = addPhotoToDsListAdapter.getNewFilesUrisList();
+        }
         if (imageUris.size() > 0) {
             for (int i = 0; i < imageUris.size(); i++) {
                 File image = new File(imageUris.get(i));
@@ -327,6 +345,23 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 Log.i(TAG, "success");
                 progressDialogUpload.dismiss();
+                if (response.isSuccessful()) {
+                    if (response.raw().code() == 200) {
+                        String responseString = "";
+                        try {
+                            responseString = response.body().string();
+                            DivespotsWrapper divespotsWrapper = new DivespotsWrapper();
+                            divespotsWrapper = new Gson().fromJson(responseString,
+                                    DivespotsWrapper.class);
+                            DiveSpotDetailsActivity.show(AddDiveSpotActivity.this, String
+                                    .valueOf(divespotsWrapper.getDiveSpots().get(0).getId()));
+                            finish();
+                        } catch (IOException e) {
+
+                        }
+
+                    }
+                }
                 if (response.errorBody() != null) {
                     try {
                         String error = response.errorBody().string();
@@ -375,10 +410,12 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                 name.getText().toString());
         requestDepth = RequestBody.create(MediaType.parse("multipart/form-data"),
                 depth.getText().toString());
-        requestLat = RequestBody.create(MediaType.parse("multipart/form-data"),
-                String.valueOf(diveSpotLocation.latitude));
-        requestLng = RequestBody.create(MediaType.parse("multipart/form-data"),
-                String.valueOf(diveSpotLocation.longitude));
+        if (diveSpotLocation != null) {
+            requestLat = RequestBody.create(MediaType.parse("multipart/form-data"),
+                    String.valueOf(diveSpotLocation.latitude));
+            requestLng = RequestBody.create(MediaType.parse("multipart/form-data"),
+                    String.valueOf(diveSpotLocation.longitude));
+        }
         requestAccess = RequestBody.create(MediaType.parse("multipart/form-data"), "boat");
         requestObject = RequestBody.create(MediaType.parse("multipart/form-data"),
                 helpers.getMirrorOfHashMap(filters.getObject())
@@ -424,6 +461,8 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         errorsMap.put("name", error_name);
         errorsMap.put("description", error_description);
         errorsMap.put("location", error_location);
+        errorsMap.put("images", error_images);
+        errorsMap.put("sealife", error_sealife);
     }
 
     @Override

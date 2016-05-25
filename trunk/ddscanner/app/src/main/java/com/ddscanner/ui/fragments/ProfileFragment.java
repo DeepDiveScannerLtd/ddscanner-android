@@ -244,6 +244,15 @@ public class ProfileFragment extends Fragment
                     }
                     }
                 }
+                if (response.errorBody() != null) {
+                    try {
+                    if (helpers.checkIsErrorByLogin(response.errorBody().string())) {
+                            SharedPreferenceHelper.logout();
+                        }
+                    } catch (IOException e) {
+
+                    }
+                }
             }
 
             @Override

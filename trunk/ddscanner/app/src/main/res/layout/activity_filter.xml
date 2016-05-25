@@ -72,41 +72,14 @@
         android:layout_height="wrap_content"
         android:src="@drawable/divider"/>
 
-    <RelativeLayout
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="10dp"
         android:background="@color/white">
         <com.rey.material.widget.Spinner
             android:id="@+id/object_spinner"
-            style="@style/Material.Widget.Spinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            app:rd_style="@style/Material.Drawable.Ripple.Wave"
-            app:spn_label="Object"
-            app:spn_labelEnable="true"
-            app:spn_labelPadding="0dp"
-            app:spn_labelTextColor="@color/black_text"
-            app:spn_arrowColor="@android:color/transparent"
-            app:spn_labelTextSize="16sp"
-            app:spn_popupItemAnimation="@null"
-            app:spn_dividerColor="@android:color/transparent"
-            android:popupBackground="@color/white"
-            android:dropDownWidth="150dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="10dp"/>
-        <ImageView
-            android:id="@+id/divider"
-            android:layout_below="@+id/object_spinner"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:src="@drawable/divider"/>
-        <com.rey.material.widget.Spinner
-            android:id="@+id/level_spinner"
-            android:layout_below="@+id/divider"
             style="@style/Material.Widget.Spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -123,7 +96,32 @@
             android:dropDownWidth="150dp"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="10dp"/>
-    </RelativeLayout>
+            <ImageView
+            android:id="@+id/divider"
+            android:layout_marginLeft="20dp"
+            android:scaleType="centerCrop"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/divider"/>
+        <com.rey.material.widget.Spinner
+            android:id="@+id/level_spinner"
+            style="@style/Material.Widget.Spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            app:rd_style="@style/Material.Drawable.Ripple.Wave"
+            app:spn_label="Level"
+            app:spn_labelEnable="true"
+            app:spn_labelTextColor="@color/black_text"
+            app:spn_labelTextSize="16sp"
+            app:spn_popupItemAnimation="@null"
+            app:spn_dividerColor="@android:color/transparent"
+            app:spn_arrowColor="@android:color/transparent"
+            android:popupBackground="@color/white"
+            android:dropDownWidth="150dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"/>
+    </LinearLayout>
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

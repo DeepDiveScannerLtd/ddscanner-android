@@ -72,13 +72,14 @@ public class SwipableDiveSpotListAdapter
     }
 
     public void removeItem(int position, boolean isCheckin) {
-        divespots.remove(position);
-        notifyItemRemoved(position);
         if (isCheckin) {
             checkOut(String.valueOf(divespots.get(position).getId()));
         } else {
             removeFromFavorites(String.valueOf(divespots.get(position).getId()));
         }
+        divespots.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, divespots.size());
     }
 
     public void undoItem(DiveSpot diveSpot, int position, boolean isCheckin) {
@@ -137,7 +138,10 @@ public class SwipableDiveSpotListAdapter
 
     @Override
     public int getItemCount() {
-        return divespots.size();
+        if (divespots != null) {
+            return divespots.size();
+        }
+        return 0;
     }
 
     private void checkOut(String id) {

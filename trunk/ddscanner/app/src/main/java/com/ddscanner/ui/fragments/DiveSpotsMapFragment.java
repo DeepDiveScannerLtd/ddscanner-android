@@ -27,10 +27,12 @@ import com.ddscanner.R;
 import com.ddscanner.events.CloseInfoWindowEvent;
 import com.ddscanner.events.MarkerClickEvent;
 import com.ddscanner.events.OnMapClickEvent;
+import com.ddscanner.events.OpenAddDsActivityAfterLogin;
 import com.ddscanner.ui.activities.AddDiveSpotActivity;
 import com.ddscanner.ui.activities.DiveSpotDetailsActivity;
 import com.ddscanner.ui.adapters.MapListPagerAdapter;
 import com.ddscanner.ui.managers.DiveSpotsClusterManager;
+import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -162,7 +164,11 @@ public class DiveSpotsMapFragment extends Fragment implements View.OnClickListen
                 DiveSpotDetailsActivity.show(getActivity(), String.valueOf(lastDiveSpotId));
                 break;
             case  R.id.add_ds_fab:
-                AddDiveSpotActivity.show(getActivity());
+                if (SharedPreferenceHelper.getIsUserLogined()) {
+                    AddDiveSpotActivity.show(getActivity());
+                } else {
+                    DDScannerApplication.bus.post(new OpenAddDsActivityAfterLogin());
+                }
                 break;
         }
     }

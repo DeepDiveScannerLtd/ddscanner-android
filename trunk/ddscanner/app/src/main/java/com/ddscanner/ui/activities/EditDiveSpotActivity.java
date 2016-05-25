@@ -94,6 +94,13 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
     private ScrollView mainLayout;
     private ProgressView progressView;
     private MaterialDialog progressDialogUpload;
+    private TextView error_name;
+    private TextView error_location;
+    private TextView error_description;
+    private TextView error_depth;
+    private TextView error_sealife;
+    private TextView error_images;
+
 
     private List<String> imageUris = new ArrayList<String>();
     private List<Sealife> sealifes = new ArrayList<>();
@@ -107,6 +114,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
     private AddPhotoToDsListAdapter addPhotoToDsListAdapter;
     private ProgressDialog progressDialog;
     private Helpers helpers = new Helpers();
+    private Map<String, TextView> errorsMap = new HashMap<>();
 
     private RequestBody requestName, requestLat, requestLng, requestDepth, requestVisibility,
             requestCurrents, requestLevel, requestObject, requestAccess,
@@ -124,6 +132,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
         toolbarSettings();
         getDsInfoRequest();
         loadFiltersDataRequest();
+        makeErrorsMap();
     }
 
     /**
@@ -153,6 +162,12 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
         addSealifeTitle = (TextView) findViewById(R.id.add_sealife_text);
         mainLayout = (ScrollView) findViewById(R.id.main_layout);
         progressView = (ProgressView) findViewById(R.id.progressBarFull);
+        error_depth = (TextView) findViewById(R.id.error_depth);
+        error_description = (TextView) findViewById(R.id.error_description);
+        error_location = (TextView) findViewById(R.id.error_location);
+        error_name = (TextView) findViewById(R.id.error_name);
+        error_images = (TextView) findViewById(R.id.error_images);
+        error_sealife = (TextView) findViewById(R.id.error_sealife);
     }
 
     /**
@@ -371,10 +386,20 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
         requestLng = RequestBody.create(MediaType.parse("multipart/form-data"),
                 String.valueOf(diveSpotLocation.longitude));
         requestAccess = RequestBody.create(MediaType.parse("multipart/form-data"), "boat");
-        requestObject = RequestBody.create(MediaType.parse("multipart/form-data"), "reef");
-        requestVisibility = RequestBody.create(MediaType.parse("multipart/form-data"), "good");
-        requestCurrents = RequestBody.create(MediaType.parse("multipart/form-data"), "strong");
-        requestLevel = RequestBody.create(MediaType.parse("multipart/form-data"), "master");
+        requestObject = RequestBody.create(MediaType.parse("multipart/form-data"),
+                helpers.getMirrorOfHashMap(filters.getObject())
+                        .get(objectSpinner.getSelectedItem().toString()));
+        Log.i("Selected", helpers.getMirrorOfHashMap(filters.getVisibility())
+                .get(visibilitySpinner.getSelectedItem().toString()));
+        requestVisibility = RequestBody.create(MediaType.parse("multipart/form-data"),
+                helpers.getMirrorOfHashMap(filters.getVisibility())
+                        .get(visibilitySpinner.getSelectedItem().toString()));
+        requestCurrents = RequestBody.create(MediaType.parse("multipart/form-data"),
+                helpers.getMirrorOfHashMap(filters.getCurrents())
+                        .get(currentsSpinner.getSelectedItem().toString()));
+        requestLevel = RequestBody.create(MediaType.parse("multipart/form-data"),
+                helpers.getMirrorOfHashMap(filters.getLevel())
+                        .get(levelSpinner.getSelectedItem().toString()));
         if (SharedPreferenceHelper.getIsUserLogined()) {
             requestSocial = RequestBody.create(MediaType.parse("multipart/form-data"),
                     SharedPreferenceHelper.getSn());
@@ -439,6 +464,15 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
                     setResult(RESULT_OK, intent);
                     finish();
                     return;
+                }
+                if (response.errorBody() != null) {
+                    try {
+                        String error = response.errorBody().string();
+                        helpers.errorHandling(EditDiveSpotActivity.this, errorsMap,error);
+                        Log.i(TAG, response.errorBody().string());
+                    } catch (IOException e) {
+
+                    }
                 }
                 progressDialogUpload.dismiss();
             }
@@ -514,6 +548,15 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
         }
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.spinner_item, objects);
         spinner.setAdapter(adapter);
+    }
+
+    private void makeErrorsMap() {
+        errorsMap.put("depth", error_depth);
+        errorsMap.put("name", error_name);
+        errorsMap.put("description", error_description);
+        errorsMap.put("location", error_location);
+        errorsMap.put("images", error_images);
+        errorsMap.put("sealife", error_sealife);
     }
 
     @Override
