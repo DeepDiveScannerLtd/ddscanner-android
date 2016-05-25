@@ -117,5 +117,12 @@
     <string name="dialog_check_in_no">OK</string>
     <string name="dialog_cancel">CANCEL</string>
     <string name="ok">OK</string>
+    
+    <!--<string name="user_made_checkin">%s also made a check in %s</string>-->
+    <!--<string name="divespot_was_changed">%s was changed</string>-->
+    <!--<string name="new_dive_spothas_been_added_near">New dive spot has been added near you %s</string>-->
+    <!--<string name="user_dislike_your_review">%s disliked your review %s</string>-->
+    <!--<string name="user_liked_your_review">%s liked your review %s</string>-->
+    <!--<string name="your_changes_accepted">You changes on the %s have been accepted</string>-->
 
 </resources>
