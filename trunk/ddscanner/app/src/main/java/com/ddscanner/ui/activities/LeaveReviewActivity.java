@@ -5,13 +5,9 @@ import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -33,7 +29,6 @@ import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.Comment;
-import com.ddscanner.entities.request.SendReviewRequest;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.AddPhotoToDsListAdapter;
 import com.ddscanner.utils.Constants;
@@ -319,10 +314,16 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
         }
         if (requestCode == RC_PICK_PHOTO) {
             if (resultCode == RESULT_OK) {
-                Uri uri = data.getData();
-                imageUris.add(helpers.getRealPathFromURI(LeaveReviewActivity.this, uri));
-                photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris,
-                        LeaveReviewActivity.this, addPhotoTitle));
+                ClipData clipData = data.getClipData();
+                if (clipData != null) {
+                    for (int i = 0; i < clipData.getItemCount(); i++) {
+                        ClipData.Item item = clipData.getItemAt(i);
+                        Uri uri = item.getUri();
+                        imageUris.add(helpers.getRealPathFromURI(LeaveReviewActivity.this, uri));
+                        photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris,
+                                LeaveReviewActivity.this, addPhotoTitle));
+                    }
+                }
             }
         }
     }

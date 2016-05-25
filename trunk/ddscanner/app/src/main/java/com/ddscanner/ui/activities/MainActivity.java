@@ -2,7 +2,6 @@ package com.ddscanner.ui.activities;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.app.ActivityOptions;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -454,7 +453,6 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
     public void pickPhotoFromGallery(PickPhotoFromGallery event) {
         Intent i = new Intent(Intent.ACTION_PICK,
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        i.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         startActivityForResult(i, RC_PICK_PHOTO);
     }
 

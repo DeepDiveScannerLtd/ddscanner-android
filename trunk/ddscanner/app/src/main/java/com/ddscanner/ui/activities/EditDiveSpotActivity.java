@@ -1,6 +1,7 @@
 package com.ddscanner.ui.activities;
 
 import android.app.ProgressDialog;
+import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -25,7 +26,6 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
-import com.ddscanner.entities.DiveSpot;
 import com.ddscanner.entities.DiveSpotFull;
 import com.ddscanner.entities.DivespotDetails;
 import com.ddscanner.entities.FiltersResponseEntity;
@@ -48,7 +48,6 @@ import com.rey.material.widget.Spinner;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -355,11 +354,17 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
         }
         if (requestCode == RC_PICK_PHOTO) {
             if (resultCode == RESULT_OK) {
-                Uri uri = data.getData();
-                imageUris.add(helpers.getRealPathFromURI(EditDiveSpotActivity.this, uri));
-                photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris,
-                        EditDiveSpotActivity.this, addPhotoTitle));
-                Log.i(TAG, helpers.getRealPathFromURI(EditDiveSpotActivity.this, uri));
+                ClipData clipData = data.getClipData();
+                if (clipData != null) {
+                    for (int i = 0; i < clipData.getItemCount(); i++) {
+                        ClipData.Item item = clipData.getItemAt(i);
+                        Uri uri = item.getUri();
+                        imageUris.add(helpers.getRealPathFromURI(EditDiveSpotActivity.this, uri));
+                        photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris,
+                                EditDiveSpotActivity.this, addPhotoTitle));
+                        Log.i(TAG, helpers.getRealPathFromURI(EditDiveSpotActivity.this, uri));
+                    }
+                }
             }
         }
         if (requestCode == RC_PICK_SEALIFE) {
