@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +39,8 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -83,6 +86,8 @@ public class ProfileFragment extends Fragment
     private LinearLayout showAllAdded;
     private LinearLayout showAllEdited;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private TextView error_name;
+    private TextView error_about;
     private boolean isClickedChosingPhotoButton = false;
 
     private RequestBody requestSecret = null;
@@ -94,6 +99,7 @@ public class ProfileFragment extends Fragment
     private RequestBody requestType = null;
     private MultipartBody.Part image = null;
     private MaterialDialog materialDialog;
+    private Map<String, TextView> errorsMap = new HashMap<>();
 
     private Uri uri = null;
 
@@ -118,6 +124,7 @@ public class ProfileFragment extends Fragment
             getUserDataRequest(SharedPreferenceHelper.getUserServerId());
         }
         materialDialog = helpers.getMaterialDialog(getContext());
+        createErrorsMap();
         return v;
     }
 
@@ -147,6 +154,9 @@ public class ProfileFragment extends Fragment
         showAllFavorites = (LinearLayout) v.findViewById(R.id.favorites_activity);
         showAllAdded = (LinearLayout) v.findViewById(R.id.created_activity);
         showAllEdited = (LinearLayout) v.findViewById(R.id.edited_activity);
+        error_about = (TextView) v.findViewById(R.id.error_about);
+        error_name = (TextView) v.findViewById(R.id.error_name);
+
     }
 
     @Override
@@ -397,6 +407,13 @@ public class ProfileFragment extends Fragment
                             if (helpers.checkIsErrorByLogin(response.errorBody().string())) {
                                 SharedPreferenceHelper.logout();
                                 DDScannerApplication.bus.post(new ShowLoginActivityIntent());
+                            }else {
+                                    try {
+                                        String error = response.errorBody().string();
+                                        helpers.errorHandling(getContext(), errorsMap,error);
+                                    } catch (IOException e) {
+
+                                    }
                             }
                         } catch (IOException e) {
 
@@ -439,6 +456,11 @@ public class ProfileFragment extends Fragment
                     materialDialog.dismiss();
             }
         });
+    }
+
+    private void createErrorsMap() {
+        errorsMap.put("name", error_name);
+        errorsMap.put("about",error_about);
     }
 
 }
