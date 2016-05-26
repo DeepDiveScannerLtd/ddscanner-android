@@ -399,9 +399,9 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        File imagesFolder = new File(Environment.getExternalStorageDirectory(), "MyImages");
+        File imagesFolder = new File(Environment.getExternalStorageDirectory(), "DDScanner");
         imagesFolder.mkdirs();
-        File image = new File(imagesFolder, "QR_" + timeStamp + ".png");
+        File image = new File(imagesFolder, "DDS_" + timeStamp + ".png");
         capturedImageUri = Uri.fromFile(image);
         takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, capturedImageUri);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {

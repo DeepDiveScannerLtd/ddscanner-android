@@ -46,6 +46,7 @@ import com.ddscanner.entities.Sealife;
 import com.ddscanner.entities.User;
 import com.ddscanner.entities.request.RegisterRequest;
 import com.ddscanner.entities.request.ValidationReguest;
+import com.ddscanner.events.OpenPhotosActivityEvent;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.DiveSpotsPhotosAdapter;
 import com.ddscanner.ui.adapters.SealifeListAdapter;
@@ -64,6 +65,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.rey.material.widget.ProgressView;
+import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -911,6 +913,25 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         if (!helpers.hasConnection(this)) {
             DDScannerApplication.showErrorActivity(this);
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        DDScannerApplication.bus.register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        DDScannerApplication.bus.unregister(this);
+    }
+
+    @Subscribe
+    public void openImagesActivity(OpenPhotosActivityEvent event) {
+        DiveSpotPhotosActivity.show(this, (ArrayList<String>) diveSpot.getImages(),
+                diveSpot.getDiveSpotPathMedium(), (ArrayList<String>) diveSpot.getCommentImages(),
+                String.valueOf(diveSpot.getId()));
     }
 
 }

@@ -3,6 +3,7 @@ package com.ddscanner.ui.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -40,6 +41,7 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
     private ArrayList<String> allPhotos;
     private Helpers helpers = new Helpers();
     private FloatingActionButton fabAddPhoto;
+    private String dsId;
 
     private DiveSpotAllPhotosFragment diveSpotAllPhotosFragment = new DiveSpotAllPhotosFragment();
     private DiveSpotPhotosFragment diveSpotPhotosFragment = new DiveSpotPhotosFragment();
@@ -54,6 +56,7 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
         reviewsImages = (ArrayList<String>) getIntent().getSerializableExtra("reviewsImages");
 
         path = getIntent().getStringExtra("path");
+        dsId = getIntent().getStringExtra("id");
 
         diveSpotImages = helpers.appendImagesWithPath(diveSpotImages, path);
 
@@ -113,12 +116,14 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
         getSupportActionBar().setTitle(R.string.photos);
     }
 
-    public static void show(Context context, ArrayList<String> images, String path, ArrayList<String> reviewsImages) {
+    public static void show(Context context, ArrayList<String> images, String path,
+                            ArrayList<String> reviewsImages, String id) {
         Intent intent = new Intent(context, DiveSpotPhotosActivity.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable("images", images);
         bundle.putString("path", path);
         bundle.putSerializable("reviewsImages", reviewsImages);
+        bundle.putString("id", id);
         intent.putExtras(bundle);
         context.startActivity(intent);
     }
@@ -155,6 +160,12 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
             if (resultCode == RESULT_OK) {
                 List<String> path = data.getStringArrayListExtra(MultiImageSelectorActivity
                         .EXTRA_RESULT);
+                Intent intent = new Intent(this, AddPhotosDoDiveSpotActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("IMAGES", (ArrayList<String>)path);
+                bundle.putString("id", dsId);
+                intent.putExtras(bundle);
+                startActivityForResult(intent, 10);
                 for (int i = 0; i < path.size(); i++) {
                     Log.i("ADDRESS", path.get(i));
                 }

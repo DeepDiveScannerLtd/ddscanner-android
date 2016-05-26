@@ -8,7 +8,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.events.OpenPhotosActivityEvent;
 import com.ddscanner.ui.activities.DiveSpotPhotosActivity;
 import com.ddscanner.ui.views.TransformationRoundImage;
 import com.squareup.picasso.Picasso;
@@ -74,7 +76,8 @@ public class DiveSpotsPhotosAdapter extends RecyclerView.Adapter<DiveSpotsPhotos
 
         @Override
         public void onClick(View v) {
-            DiveSpotPhotosActivity.show(context, photos, path, reviewsImages);
+//            DiveSpotPhotosActivity.show(context, photos, path, reviewsImages);
+            DDScannerApplication.bus.post(new OpenPhotosActivityEvent());
         }
     }
 

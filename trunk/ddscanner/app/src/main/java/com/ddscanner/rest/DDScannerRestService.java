@@ -213,4 +213,15 @@ public interface DDScannerRestService {
     @GET("diving/user/{id}/notifications")
     Call<ResponseBody> getNotifications(@Path("id") String id, @QueryMap Map<String, String> map);
 
+    @POST("diving/divespot/{id}/images")
+    @Multipart
+    Call<ResponseBody> addImagesToDiveSpot(
+            @Path("id") String id,
+            @Part("_method") RequestBody _method,
+            @Part List<MultipartBody.Part> images,
+            @Part("token") RequestBody token,
+            @Part("social") RequestBody sn,
+            @Part("secret") RequestBody secret
+    );
+
 }
