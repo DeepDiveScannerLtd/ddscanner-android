@@ -87,6 +87,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private static final int RC_LEAVE_REVIEW_ACTIVITY = 1001;
     private static final int RC_EDIT_DIVE_SPOT = 2001;
     private static final int RC_LOGIN = 2000;
+    private static final int RC_PHOTOS = 3001;
 
     private DivespotDetails divespotDetails;
     private ProgressDialog progressDialog;
@@ -853,6 +854,11 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 getComments();
             }
         }
+        if (requestCode == RC_PHOTOS && resultCode == RESULT_OK) {
+            Intent intent = getIntent();
+            startActivity(intent);
+            finish();
+        }
         if (requestCode == RC_EDIT_DIVE_SPOT && resultCode == RESULT_OK) {
             Intent intent = getIntent();
             startActivity(intent);
@@ -929,9 +935,17 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
     @Subscribe
     public void openImagesActivity(OpenPhotosActivityEvent event) {
-        DiveSpotPhotosActivity.show(this, (ArrayList<String>) diveSpot.getImages(),
-                diveSpot.getDiveSpotPathMedium(), (ArrayList<String>) diveSpot.getCommentImages(),
-                String.valueOf(diveSpot.getId()));
+//        DiveSpotPhotosActivity.show(this, (ArrayList<String>) diveSpot.getImages(),
+//                diveSpot.getDiveSpotPathMedium(), (ArrayList<String>) diveSpot.getCommentImages(),
+//                String.valueOf(diveSpot.getId()));
+        Intent intent = new Intent(this, DiveSpotPhotosActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("images", (ArrayList<String>)diveSpot.getImages());
+        bundle.putString("path", diveSpot.getDiveSpotPathMedium());
+        bundle.putSerializable("reviewsImages", (ArrayList<String>)diveSpot.getCommentImages());
+        bundle.putString("id", String.valueOf(diveSpot.getId()));
+        intent.putExtras(bundle);
+        startActivityForResult(intent, RC_PHOTOS);
     }
 
 }

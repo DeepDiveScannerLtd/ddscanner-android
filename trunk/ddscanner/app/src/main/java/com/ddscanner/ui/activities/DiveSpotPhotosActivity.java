@@ -20,6 +20,7 @@ import com.ddscanner.ui.fragments.DiveSpotAllPhotosFragment;
 import com.ddscanner.ui.fragments.DiveSpotPhotosFragment;
 import com.ddscanner.ui.fragments.DiveSpotReviewsPhoto;
 import com.ddscanner.utils.Helpers;
+import com.ddscanner.utils.SharedPreferenceHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -156,6 +157,12 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 10) {
+            if (resultCode == RESULT_OK) {
+                Intent intent = new Intent();
+                setResult(RESULT_OK, intent);
+            }
+        }
         if (requestCode == 1) {
             if (resultCode == RESULT_OK) {
                 List<String> path = data.getStringArrayListExtra(MultiImageSelectorActivity
@@ -171,14 +178,25 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
                 }
             }
         }
+        if (requestCode == 100) {
+            if (resultCode == RESULT_OK) {
+                MultiImageSelector.create(this)
+                        .start(this, 1);
+            }
+        }
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fab_add_photo:
-                MultiImageSelector.create(this)
-                        .start(this, 1);
+                if (!SharedPreferenceHelper.getIsUserLogined()) {
+                    Intent intent = new Intent(this, SocialNetworks.class);
+                    startActivityForResult(intent, 100);
+                } else {
+                    MultiImageSelector.create(this)
+                            .start(this, 1);
+                }
                 break;
         }
     }
