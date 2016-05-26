@@ -22,12 +22,15 @@ import android.widget.TextView;
 
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.DiveSpot;
+import com.ddscanner.events.ShowLoginActivityIntent;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.activities.DiveSpotDetailsActivity;
 import com.ddscanner.ui.views.TransformationRoundImage;
 import com.ddscanner.utils.Helpers;
+import com.ddscanner.utils.SharedPreferenceHelper;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -150,7 +153,10 @@ public class SwipableDiveSpotListAdapter
         call.enqueue(new retrofit2.Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
+                if (response.raw().code() == 422 || response.raw().code() == 404) {
+                    SharedPreferenceHelper.logout();
+                    DDScannerApplication.bus.post(new ShowLoginActivityIntent());
+                }
             }
 
             @Override
@@ -165,7 +171,10 @@ public class SwipableDiveSpotListAdapter
         call.enqueue(new retrofit2.Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
+                if (response.raw().code() == 422 || response.raw().code() == 404) {
+                    SharedPreferenceHelper.logout();
+                    DDScannerApplication.bus.post(new ShowLoginActivityIntent());
+                }
             }
 
             @Override
@@ -180,7 +189,10 @@ public class SwipableDiveSpotListAdapter
         call.enqueue(new retrofit2.Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
+                if (response.raw().code() == 422 || response.raw().code() == 404) {
+                    SharedPreferenceHelper.logout();
+                    DDScannerApplication.bus.post(new ShowLoginActivityIntent());
+                }
             }
 
             @Override
@@ -196,7 +208,10 @@ public class SwipableDiveSpotListAdapter
         call.enqueue(new retrofit2.Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
+                if (response.raw().code() == 422 || response.raw().code() == 404) {
+                    SharedPreferenceHelper.logout();
+                    DDScannerApplication.bus.post(new ShowLoginActivityIntent());
+                }
             }
 
             @Override
