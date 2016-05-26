@@ -26,6 +26,7 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.entities.DiveSpot;
 import com.ddscanner.entities.DivespotsWrapper;
 import com.ddscanner.entities.FiltersResponseEntity;
 import com.ddscanner.entities.Sealife;
@@ -42,6 +43,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.rey.material.widget.ProgressView;
 import com.rey.material.widget.Spinner;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -354,11 +358,15 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                         String responseString = "";
                         try {
                             responseString = response.body().string();
-                            DivespotsWrapper divespotsWrapper = new DivespotsWrapper();
-                            divespotsWrapper = new Gson().fromJson(responseString,
-                                    DivespotsWrapper.class);
+                            try {
+                                JSONObject jsonObject = new JSONObject(responseString);
+                                responseString = jsonObject.getString("divespot");
+                            } catch (JSONException e) {
+
+                            }
+                            DiveSpot diveSpot = new Gson().fromJson(responseString, DiveSpot.class);
                             DiveSpotDetailsActivity.show(AddDiveSpotActivity.this, String
-                                    .valueOf(divespotsWrapper.getDiveSpots().get(0).getId()));
+                                    .valueOf(diveSpot.getId()));
                             finish();
                         } catch (IOException e) {
 

@@ -24,7 +24,12 @@ import com.ddscanner.ui.views.TransformationRoundImage;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.squareup.picasso.Picasso;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -85,8 +90,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
             reviewsListViewHolder.photos.setNestedScrollingEnabled(false);
             reviewsListViewHolder.photos.setHasFixedSize(false);
             reviewsListViewHolder.photos.setLayoutManager(layoutManager);
-            reviewsListViewHolder.photos.setAdapter(new ReviewPhotosAdapter(
-                    (ArrayList<String>) comments.get(reviewsListViewHolder.getAdapterPosition()).getImages(), context, path));
+            reviewsListViewHolder.photos.setAdapter(new ReviewPhotosAdapter((ArrayList<String>) comments.get(reviewsListViewHolder.getAdapterPosition()).getImages(), context, path));
         } else {
             reviewsListViewHolder.photos.setAdapter(null);
         }
@@ -170,7 +174,9 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
 
     }
 
-    private void likeComment(String id, final ImageView dislikeImage, final ImageView likeImage, final TextView likesCount, final TextView dislikesCount) {
+    private void likeComment(String id, final ImageView dislikeImage,
+                             final ImageView likeImage,
+                             final TextView likesCount, final TextView dislikesCount) {
         Call<ResponseBody> call = RestClient.getServiceInstance().likeComment(
                 id,
                 registerRequest

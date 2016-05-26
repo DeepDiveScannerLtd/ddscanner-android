@@ -46,6 +46,7 @@ import com.ddscanner.entities.Sealife;
 import com.ddscanner.entities.User;
 import com.ddscanner.entities.request.RegisterRequest;
 import com.ddscanner.entities.request.ValidationReguest;
+import com.ddscanner.events.OpenPhotosActivityEvent;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.DiveSpotsPhotosAdapter;
 import com.ddscanner.ui.adapters.SealifeListAdapter;
@@ -64,6 +65,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.rey.material.widget.ProgressView;
+import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -85,6 +87,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private static final int RC_LEAVE_REVIEW_ACTIVITY = 1001;
     private static final int RC_EDIT_DIVE_SPOT = 2001;
     private static final int RC_LOGIN = 2000;
+    private static final int RC_PHOTOS = 3001;
 
     private DivespotDetails divespotDetails;
     private ProgressDialog progressDialog;
@@ -234,13 +237,15 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         depth.setText(diveSpot.getDepth());
         visibility.setText(diveSpot.getVisibility());
         currents.setText(diveSpot.getCurrents());
-        Picasso.with(this).load(diveSpot.getDiveSpotPathMedium() + diveSpot.getImages().get(0)).into(diveSpotMainPhoto, new ImageLoadedCallback(progressBar) {
-            @Override
-            public void onSuccess() {
-                super.onSuccess();
-                progressBar.setVisibility(View.GONE);
-            }
-        });
+        if (diveSpot.getImages() != null && !diveSpot.getImages().isEmpty()) {
+            Picasso.with(this).load(diveSpot.getDiveSpotPathMedium() + diveSpot.getImages().get(0)).into(diveSpotMainPhoto, new ImageLoadedCallback(progressBar) {
+                @Override
+                public void onSuccess() {
+                    super.onSuccess();
+                    progressBar.setVisibility(View.GONE);
+                }
+            });
+        }
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             boolean isShow = false;
             int scrollRange = -1;
@@ -849,6 +854,11 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 getComments();
             }
         }
+        if (requestCode == RC_PHOTOS && resultCode == RESULT_OK) {
+            Intent intent = getIntent();
+            startActivity(intent);
+            finish();
+        }
         if (requestCode == RC_EDIT_DIVE_SPOT && resultCode == RESULT_OK) {
             Intent intent = getIntent();
             startActivity(intent);
@@ -909,6 +919,33 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         if (!helpers.hasConnection(this)) {
             DDScannerApplication.showErrorActivity(this);
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        DDScannerApplication.bus.register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        DDScannerApplication.bus.unregister(this);
+    }
+
+    @Subscribe
+    public void openImagesActivity(OpenPhotosActivityEvent event) {
+//        DiveSpotPhotosActivity.show(this, (ArrayList<String>) diveSpot.getImages(),
+//                diveSpot.getDiveSpotPathMedium(), (ArrayList<String>) diveSpot.getCommentImages(),
+//                String.valueOf(diveSpot.getId()));
+        Intent intent = new Intent(this, DiveSpotPhotosActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("images", (ArrayList<String>)diveSpot.getImages());
+        bundle.putString("path", diveSpot.getDiveSpotPathMedium());
+        bundle.putSerializable("reviewsImages", (ArrayList<String>)diveSpot.getCommentImages());
+        bundle.putString("id", String.valueOf(diveSpot.getId()));
+        intent.putExtras(bundle);
+        startActivityForResult(intent, RC_PHOTOS);
     }
 
 }

@@ -44,7 +44,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         findViews();
         images = (ArrayList<String>) getIntent().getSerializableExtra("IMAGES");
         position = getIntent().getIntExtra("position", 0);
-        viewPager.setOnPageChangeListener(this);
+        viewPager.addOnPageChangeListener(this);
         sliderImagesAdapter = new SliderImagesAdapter(getFragmentManager(), images);
         viewPager.setAdapter(sliderImagesAdapter);
         close.setOnClickListener(this);

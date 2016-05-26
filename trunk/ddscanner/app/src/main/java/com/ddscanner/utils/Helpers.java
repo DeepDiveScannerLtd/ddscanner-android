@@ -97,7 +97,7 @@ public class Helpers {
      * @author Andrei Lashkevich
      */
 
-    public ArrayList<String> appendImageWithPath(ArrayList<String> images, String path) {
+    public ArrayList<String> appendImagesWithPath(ArrayList<String> images, String path) {
         for (int i = 0; i < images.size(); i++) {
             images.set(i, path + images.get(i));
         }
