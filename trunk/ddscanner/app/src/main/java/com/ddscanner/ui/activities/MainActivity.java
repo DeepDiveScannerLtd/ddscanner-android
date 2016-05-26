@@ -133,7 +133,7 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
     private void setUi() {
         toolbarTabLayout.setupWithViewPager(mainViewPager);
         mainViewPager.setOffscreenPageLimit(3);
-        mainViewPager.setOnPageChangeListener(this);
+        mainViewPager.addOnPageChangeListener(this);
         searchLocationBtn.setOnClickListener(this);
         btnFilter.setOnClickListener(this);
     }
