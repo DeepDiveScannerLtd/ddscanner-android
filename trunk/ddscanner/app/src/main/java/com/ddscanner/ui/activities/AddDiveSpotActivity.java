@@ -32,6 +32,7 @@ import com.ddscanner.entities.Sealife;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.AddPhotoToDsListAdapter;
 import com.ddscanner.ui.adapters.SealifeListAddingDiveSpotAdapter;
+import com.ddscanner.ui.adapters.SpinnerItemsAdapter;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.android.gms.maps.model.LatLng;
@@ -250,7 +251,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
 
             }
         }
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.spinner_item, objects);
+        ArrayAdapter<String> adapter = new SpinnerItemsAdapter(this, R.layout.spinner_item, objects);
         spinner.setAdapter(adapter);
     }
 

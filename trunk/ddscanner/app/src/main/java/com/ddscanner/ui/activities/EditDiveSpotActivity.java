@@ -34,6 +34,7 @@ import com.ddscanner.entities.Sealife;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.AddPhotoToDsListAdapter;
 import com.ddscanner.ui.adapters.SealifeListAddingDiveSpotAdapter;
+import com.ddscanner.ui.adapters.SpinnerItemsAdapter;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
@@ -544,14 +545,14 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
     }
 
     private void setSpinnerValues(Spinner spinner, Map<String, String> values, String tag) {
-        List<String> objects = new ArrayList<String>();
+        List<String> objects = new ArrayList<>();
         for (Map.Entry<String, String> entry : values.entrySet()) {
             objects.add(entry.getValue());
             if (entry.getKey().equals(tag)) {
 
             }
         }
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.spinner_item, objects);
+        ArrayAdapter<String> adapter = new SpinnerItemsAdapter(this, R.layout.spinner_drop_down_item, objects);
         spinner.setAdapter(adapter);
     }
 

@@ -52,7 +52,7 @@ public class MapListPagerAdapter extends FragmentStatePagerAdapter {
         switch (position) {
             case 0:
                 fragment = diveSpotsMapFragment;
-                diveSpotsMapFragment.setUI(toast, progressBar, context, this, viewPager);
+                diveSpotsMapFragment.setUI(toast, progressBar, this, viewPager);
                 break;
             case 1:
                 fragment = productListFragment;
