@@ -27,7 +27,7 @@ public class SliderImagesAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         Fragment fragment = new SLiderImagesFragment();
         Bundle args = new Bundle();
-        args.putString(PlaceImageFragment.IMAGE_URL,productsImages.get(position));
+        args.putString(SLiderImagesFragment.IMAGE_URL, productsImages.get(position));
         fragment.setArguments(args);
         return fragment;
     }

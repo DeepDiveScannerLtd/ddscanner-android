@@ -234,13 +234,15 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         depth.setText(diveSpot.getDepth());
         visibility.setText(diveSpot.getVisibility());
         currents.setText(diveSpot.getCurrents());
-        Picasso.with(this).load(diveSpot.getDiveSpotPathMedium() + diveSpot.getImages().get(0)).into(diveSpotMainPhoto, new ImageLoadedCallback(progressBar) {
-            @Override
-            public void onSuccess() {
-                super.onSuccess();
-                progressBar.setVisibility(View.GONE);
-            }
-        });
+        if (diveSpot.getImages() != null && !diveSpot.getImages().isEmpty()) {
+            Picasso.with(this).load(diveSpot.getDiveSpotPathMedium() + diveSpot.getImages().get(0)).into(diveSpotMainPhoto, new ImageLoadedCallback(progressBar) {
+                @Override
+                public void onSuccess() {
+                    super.onSuccess();
+                    progressBar.setVisibility(View.GONE);
+                }
+            });
+        }
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             boolean isShow = false;
             int scrollRange = -1;

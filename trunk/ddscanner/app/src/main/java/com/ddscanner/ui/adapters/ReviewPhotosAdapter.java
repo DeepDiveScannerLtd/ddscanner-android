@@ -1,7 +1,9 @@
 package com.ddscanner.ui.adapters;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,18 +18,22 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-public class ReviewPhotosAdapter
-        extends RecyclerView.Adapter<ReviewPhotosAdapter.ReviewPhotosAdapterViewHolder> {
+public class ReviewPhotosAdapter extends RecyclerView.Adapter<ReviewPhotosAdapter.ReviewPhotosAdapterViewHolder> {
 
-    public static ArrayList<String> photos;
-    public static String path;
-    public static Context context;
-    public static Helpers helpers = new Helpers();
+    private static final String TAG = ReviewPhotosAdapter.class.getName();
+
+    public ArrayList<String> photos;
+    public String reviewId;
+    public String path;
+    public Context context;
+    public Helpers helpers = new Helpers();
 
     public ReviewPhotosAdapter(ArrayList<String> photos, Context context, String path) {
         this.photos = photos;
         this.context = context;
         this.path = path;
+
+        helpers.appendImagesWithPath(photos, path);
     }
 
     @Override
@@ -44,7 +50,7 @@ public class ReviewPhotosAdapter
             holder.morePhotos.setText("+" + String.valueOf(8 - 4));
             holder.morePhotos.setVisibility(View.VISIBLE);
         }
-        Picasso.with(context).load(path + photos.get(position)).resize(60,60).centerCrop()
+        Picasso.with(context).load(photos.get(position)).resize(60,60).centerCrop()
                 .transform(new TransformationRoundImage(2,0)).into(holder.photo);
     }
 
@@ -56,8 +62,7 @@ public class ReviewPhotosAdapter
         return photos.size();
     }
 
-    public static class ReviewPhotosAdapterViewHolder
-            extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ReviewPhotosAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         protected ImageView photo;
         protected TextView morePhotos;
@@ -71,8 +76,7 @@ public class ReviewPhotosAdapter
 
         @Override
         public void onClick(View v) {
-            ImageSliderActivity.show(context,
-                    helpers.appendImageWithPath(photos, path), getAdapterPosition());
+            ImageSliderActivity.show(context, photos, getAdapterPosition());
         }
     }
 

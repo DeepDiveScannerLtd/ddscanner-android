@@ -46,14 +46,14 @@ public class DiveSpotPhotosActivity extends AppCompatActivity {
 
         path = getIntent().getStringExtra("path");
 
-        diveSpotImages = helpers.appendImageWithPath(diveSpotImages, path);
+        diveSpotImages = helpers.appendImagesWithPath(diveSpotImages, path);
 
         Bundle bundle = new Bundle();
         bundle.putSerializable("diveSpotImages", diveSpotImages);
         diveSpotPhotosFragment.setArguments(bundle);
 
         if (reviewsImages != null) {
-            reviewsImages = helpers.appendImageWithPath(reviewsImages, path);
+            reviewsImages = helpers.appendImagesWithPath(reviewsImages, path);
         }
 
         bundle = new Bundle();

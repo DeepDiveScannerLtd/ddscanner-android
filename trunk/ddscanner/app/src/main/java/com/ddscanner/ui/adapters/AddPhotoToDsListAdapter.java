@@ -44,9 +44,9 @@ public class AddPhotoToDsListAdapter extends RecyclerView.Adapter<AddPhotoToDsLi
     @Override
     public void onBindViewHolder(final PhotoListViewHolder holder, final int position) {
         String path = uris.get(holder.getAdapterPosition());
-        if (!uris.get(holder.getAdapterPosition()).contains(Constants.images)) {
-            this.newImagesUriList.add(uris.get(holder.getAdapterPosition()));
-            path = "file://" + uris.get(holder.getAdapterPosition());
+        if (!path.contains(Constants.images)) {
+            this.newImagesUriList.add(path);
+            path = "file://" + path;
         }
         Picasso.with(context).load(path).resize(110, 80).centerCrop().into(holder.photo);
         holder.icDelete.setOnClickListener(new View.OnClickListener() {
