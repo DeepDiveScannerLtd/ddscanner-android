@@ -34,11 +34,9 @@ public class SpinnerItemsAdapter extends ArrayAdapter<String> {
         view.setText(getItem(position));
 
         if (position == 0) {
-            view.setPadding(2 * view.getPaddingLeft(), 2 * view.getPaddingTop(),2 *  view.getPaddingRight(), view.getPaddingBottom());
+            view.setPadding(view.getPaddingLeft(), 2 * view.getPaddingTop(), view.getPaddingRight(), view.getPaddingBottom());
         } else if (position == getCount() - 1) {
-            view.setPadding(2 * view.getPaddingLeft(), view.getPaddingTop(), 2 * view.getPaddingRight(), 2 * view.getPaddingBottom());
-        } else {
-            view.setPadding(2 * view.getPaddingLeft(), view.getPaddingTop(),2 *  view.getPaddingRight(), view.getPaddingBottom());
+            view.setPadding(view.getPaddingLeft(), view.getPaddingTop(), view.getPaddingRight(), 2 * view.getPaddingBottom());
         }
         return view;
     }
