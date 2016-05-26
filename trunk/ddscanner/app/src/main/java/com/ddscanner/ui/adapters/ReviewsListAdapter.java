@@ -24,7 +24,12 @@ import com.ddscanner.ui.views.TransformationRoundImage;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.squareup.picasso.Picasso;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;

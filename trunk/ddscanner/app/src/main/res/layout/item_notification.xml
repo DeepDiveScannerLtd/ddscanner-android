@@ -12,9 +12,10 @@
         android:layout_height="match_parent">
         <ImageView
             android:id="@+id/image"
+            android:padding="12dp"
             android:layout_width="64dp"
             android:layout_height="64dp"
-            android:src="@drawable/notif_default_avatar"
+            android:src="@drawable/ic_notif_divespot"
             android:scaleType="center"/>
         <android.support.percent.PercentRelativeLayout
             android:id="@+id/content"
