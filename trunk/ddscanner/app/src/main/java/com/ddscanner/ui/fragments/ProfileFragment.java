@@ -83,6 +83,7 @@ public class ProfileFragment extends Fragment
     private LinearLayout showAllAdded;
     private LinearLayout showAllEdited;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private boolean isClickedChosingPhotoButton = false;
 
     private RequestBody requestSecret = null;
     private RequestBody requestSocial = null;
@@ -160,9 +161,11 @@ public class ProfileFragment extends Fragment
                 }
                 break;
             case R.id.capture_photo:
+                isClickedChosingPhotoButton = true;
                 DDScannerApplication.bus.post(new TakePhotoFromCameraEvent());
                 break;
             case R.id.cancel_button:
+                isClickedChosingPhotoButton = false;
                 aboutLayout.setVisibility(View.VISIBLE);
                 editLayout.setVisibility(View.GONE);
                 break;
@@ -170,6 +173,7 @@ public class ProfileFragment extends Fragment
                 createUpdateRequest();
                 break;
             case R.id.pick_photo_from_gallery:
+                isClickedChosingPhotoButton = true;
                 DDScannerApplication.bus.post(new PickPhotoFromGallery());
                 break;
             case R.id.logout:
@@ -196,7 +200,9 @@ public class ProfileFragment extends Fragment
     public void onResume() {
         super.onResume();
         if (SharedPreferenceHelper.getIsUserLogined()) {
-            getUserDataRequest(SharedPreferenceHelper.getUserServerId());
+            if (!isClickedChosingPhotoButton) {
+                getUserDataRequest(SharedPreferenceHelper.getUserServerId());
+            }
         }
         DDScannerApplication.bus.register(this);
         if (!getUserVisibleHint())
@@ -317,6 +323,7 @@ public class ProfileFragment extends Fragment
     }
 
     private void createUpdateRequest() {
+        isClickedChosingPhotoButton = false;
         materialDialog.show();
         if (!aboutEdit.equals(user.getAbout()) && !aboutEdit.getText().toString().equals("")) {
             about = RequestBody.create(MediaType.parse("multipart/form-data"),
