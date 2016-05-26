@@ -314,6 +314,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                     .centerCrop()
                     .transform(new TransformationRoundImage(100,0)).into(creatorAvatar);
             creatorLayout.setOnClickListener(this);
+            creatorName.setText(diveSpot.getCreator().getName());
         }
 
         progressBarFull.setVisibility(View.GONE);
