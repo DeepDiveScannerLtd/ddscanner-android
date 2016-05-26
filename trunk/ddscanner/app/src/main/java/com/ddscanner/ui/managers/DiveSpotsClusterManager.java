@@ -1,8 +1,6 @@
 package com.ddscanner.ui.managers;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
@@ -25,18 +23,14 @@ import com.ddscanner.events.PlaceChoosedEvent;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.services.GPSTracker;
 import com.ddscanner.ui.adapters.MapListPagerAdapter;
-import com.ddscanner.ui.fragments.DiveSpotsMapFragment;
 import com.ddscanner.utils.EventTrackerHelper;
 import com.ddscanner.utils.LogUtils;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
-import com.google.android.gms.maps.model.Circle;
-import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -48,7 +42,6 @@ import com.google.maps.android.clustering.algo.GridBasedAlgorithm;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
 import com.google.maps.android.ui.SquareTextView;
-import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import java.io.IOException;
@@ -387,15 +380,6 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
 
     public void mapZoomMinus() {
         googleMap.animateCamera(CameraUpdateFactory.zoomOut());
-    }
-
-    public void goToMyLocation() {
-        GPSTracker gpsTracker = new GPSTracker(context);
-        if (gpsTracker.canGetLocation()) {
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude()), 14.0f));
-        } else {
-            gpsTracker.showSettingsAlert();
-        }
     }
 
     @Subscribe

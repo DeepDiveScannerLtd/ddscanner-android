@@ -24,15 +24,20 @@ import com.ddscanner.events.CloseInfoWindowEvent;
 import com.ddscanner.events.MarkerClickEvent;
 import com.ddscanner.events.OnMapClickEvent;
 import com.ddscanner.events.OpenAddDsActivityAfterLogin;
+import com.ddscanner.services.GPSTracker;
 import com.ddscanner.ui.activities.AddDiveSpotActivity;
 import com.ddscanner.ui.activities.DiveSpotDetailsActivity;
 import com.ddscanner.ui.adapters.MapListPagerAdapter;
 import com.ddscanner.ui.managers.DiveSpotsClusterManager;
 import com.ddscanner.utils.SharedPreferenceHelper;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.squareup.otto.Subscribe;
 
 import java.util.HashMap;
@@ -63,6 +68,7 @@ public class DiveSpotsMapFragment extends Fragment implements View.OnClickListen
     private RelativeLayout mainLayout;
     private TextView object;
     private RelativeLayout mapControlLayout;
+    private Marker myLocationMarker;
 
     private Map<String, Drawable> map = new HashMap<>();
 
@@ -152,7 +158,7 @@ public class DiveSpotsMapFragment extends Fragment implements View.OnClickListen
                 diveSpotsClusterManager.mapZoomMinus();
                 break;
             case R.id.go_to_my_location:
-                diveSpotsClusterManager.goToMyLocation();
+                goToMyLocation();
                 break;
             case R.id.dive_spot_info_layout:
                 DiveSpotDetailsActivity.show(getActivity(), String.valueOf(lastDiveSpotId));
@@ -243,6 +249,23 @@ public class DiveSpotsMapFragment extends Fragment implements View.OnClickListen
         this.toast = toast;
         this.progressBar = progressBar;
         this.mapListViewPager = mapListViewPager;
+    }
+
+    public void goToMyLocation() {
+        GPSTracker gpsTracker = new GPSTracker(getActivity());
+        if (gpsTracker.canGetLocation()) {
+            LatLng myLocation = new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude());
+            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 14.0f));
+            if (myLocationMarker == null) {
+                myLocationMarker = mGoogleMap.addMarker(new MarkerOptions()
+                        .position(myLocation)
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.pin_me)));
+            } else {
+                myLocationMarker.setPosition(new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude()));
+            }
+        } else {
+            gpsTracker.showSettingsAlert();
+        }
     }
 
 }
