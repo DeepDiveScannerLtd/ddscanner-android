@@ -3,11 +3,14 @@ package com.ddscanner.ui.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
@@ -18,11 +21,15 @@ import com.ddscanner.ui.fragments.DiveSpotReviewsPhoto;
 import com.ddscanner.utils.Helpers;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import me.nereo.multi_image_selector.MultiImageSelector;
+import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 
 /**
  * Created by lashket on 11.5.16.
  */
-public class DiveSpotPhotosActivity extends AppCompatActivity {
+public class DiveSpotPhotosActivity extends AppCompatActivity implements View.OnClickListener {
 
     private TabLayout tabLayout;
     private ViewPager photosViewPager;
@@ -32,6 +39,7 @@ public class DiveSpotPhotosActivity extends AppCompatActivity {
     private ArrayList<String> reviewsImages;
     private ArrayList<String> allPhotos;
     private Helpers helpers = new Helpers();
+    private FloatingActionButton fabAddPhoto;
 
     private DiveSpotAllPhotosFragment diveSpotAllPhotosFragment = new DiveSpotAllPhotosFragment();
     private DiveSpotPhotosFragment diveSpotPhotosFragment = new DiveSpotPhotosFragment();
@@ -41,6 +49,7 @@ public class DiveSpotPhotosActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_photos);
+        findViews();
         diveSpotImages =(ArrayList<String>) getIntent().getSerializableExtra("images");
         reviewsImages = (ArrayList<String>) getIntent().getSerializableExtra("reviewsImages");
 
@@ -66,7 +75,6 @@ public class DiveSpotPhotosActivity extends AppCompatActivity {
         bundle.putSerializable("images", allPhotos);
         diveSpotAllPhotosFragment.setArguments(bundle);
 
-        findViews();
         setupViewPager();
         setUi();
         setUpTabLayout();
@@ -97,6 +105,8 @@ public class DiveSpotPhotosActivity extends AppCompatActivity {
         tabLayout = (TabLayout) findViewById(R.id.photos_tab_layout);
         photosViewPager = (ViewPager) findViewById(R.id.photos_view_pager);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        fabAddPhoto = (FloatingActionButton) findViewById(R.id.fab_add_photo);
+        fabAddPhoto.setOnClickListener(this);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);
@@ -117,7 +127,7 @@ public class DiveSpotPhotosActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                onBackPressed();
+                finish();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -137,4 +147,29 @@ public class DiveSpotPhotosActivity extends AppCompatActivity {
             DDScannerApplication.showErrorActivity(this);
         }
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK) {
+                List<String> path = data.getStringArrayListExtra(MultiImageSelectorActivity
+                        .EXTRA_RESULT);
+                for (int i = 0; i < path.size(); i++) {
+                    Log.i("ADDRESS", path.get(i));
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.fab_add_photo:
+                MultiImageSelector.create(this)
+                        .start(this, 1);
+                break;
+        }
+    }
+
 }

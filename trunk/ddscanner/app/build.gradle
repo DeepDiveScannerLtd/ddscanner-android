@@ -45,6 +45,7 @@ android {
 repositories {
     mavenCentral()
     maven { url 'https://maven.fabric.io/public' }
+    maven { url "https://jitpack.io" }
 }
 
 dependencies {
@@ -95,4 +96,5 @@ dependencies {
     compile 'com.afollestad.material-dialogs:core:0.8.5.9'
     compile 'com.daimajia.swipelayout:library:1.2.0@aar'
     compile 'com.github.ganfra:material-spinner:1.1.1'
+    compile 'com.github.lovetuzitong:MultiImageSelector:1.1'
 }
