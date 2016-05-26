@@ -380,6 +380,23 @@ public class ProfileFragment extends Fragment
                         }
                     }
                 }
+                if (response.errorBody() != null) {
+                    if (response.raw().code() == 404) {
+                        SharedPreferenceHelper.logout();
+                        DDScannerApplication.bus.post(new ShowLoginActivityIntent());
+                    }
+                    if (response.raw().code() == 422) {
+                        try {
+                            if (helpers.checkIsErrorByLogin(response.errorBody().string())) {
+                                SharedPreferenceHelper.logout();
+                                DDScannerApplication.bus.post(new ShowLoginActivityIntent());
+                            }
+                        } catch (IOException e) {
+
+                        }
+                    }
+                }
+
             }
 
             @Override
