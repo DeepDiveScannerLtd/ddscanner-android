@@ -12,4 +12,5 @@
     android:paddingBottom="?android:attr/listPreferredItemPaddingLeft"
     android:gravity="center_vertical"
     tools:text="abc"
+    android:fontFamily="@string/font_roboto_medium"
     android:background="?android:attr/activatedBackgroundIndicator" />

@@ -125,4 +125,8 @@
     <!--<string name="user_liked_your_review">%s liked your review %s</string>-->
     <!--<string name="your_changes_accepted">You changes on the %s have been accepted</string>-->
 
+    <string name="font_roboto_medium">sans-serif</string>
+    <string name="filter_object">Object</string>
+    <string name="filter_label">Level</string>
+
 </resources>

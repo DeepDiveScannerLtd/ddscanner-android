@@ -1,32 +1,22 @@
 package com.ddscanner.ui.activities;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 
 import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.FiltersResponseEntity;
-import com.ddscanner.entities.request.DiveSpotsRequestMap;
 import com.ddscanner.rest.RestClient;
+import com.ddscanner.ui.adapters.SpinnerItemsAdapter;
 import com.ddscanner.utils.EventTrackerHelper;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.SharedPreferenceHelper;
@@ -42,9 +32,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import fr.ganfra.materialspinner.MaterialSpinner;
 import okhttp3.ResponseBody;
-import retrofit.mime.TypedByteArray;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -91,14 +79,14 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
 
             }
         }
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.spinner_item, objects);
+        ArrayAdapter<String> adapter = new SpinnerItemsAdapter(this, R.layout.spinner_item, objects);
         spinner.setAdapter(adapter);
     }
 
 
     @Override
     public void onClick(View v) {
-        Map <String, Object> eventValues = new HashMap<String, Object>();
+        Map <String, Object> eventValues = new HashMap<>();
         Intent data = new Intent();
       /*  int selectedRadioButtonId = rgCurrents.getCheckedRadioButtonId();
         if (selectedRadioButtonId != -1) {

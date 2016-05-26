@@ -3,18 +3,14 @@ package com.ddscanner.ui.fragments;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Fragment;
-import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.UiThread;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.AppCompatDrawableManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -37,7 +33,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import java.util.HashMap;
@@ -52,7 +47,6 @@ public class DiveSpotsMapFragment extends Fragment implements View.OnClickListen
     private DiveSpotsClusterManager diveSpotsClusterManager;
     MapView mMapView;
 
-    private Context context;
     private RelativeLayout toast;
     private ProgressBar progressBar;
     private ViewPager mapListViewPager;
@@ -106,7 +100,7 @@ public class DiveSpotsMapFragment extends Fragment implements View.OnClickListen
             @Override
             public void onMapReady(GoogleMap googleMap) {
                 mGoogleMap = googleMap;
-                diveSpotsClusterManager = new DiveSpotsClusterManager(context, mGoogleMap, mapListPagerAdapter ,toast, progressBar);
+                diveSpotsClusterManager = new DiveSpotsClusterManager(getActivity(), mGoogleMap, mapListPagerAdapter ,toast, progressBar);
                 mGoogleMap.setOnMarkerClickListener(diveSpotsClusterManager);
                 mGoogleMap.setOnCameraChangeListener(diveSpotsClusterManager);
 
@@ -194,13 +188,13 @@ public class DiveSpotsMapFragment extends Fragment implements View.OnClickListen
         lastDiveSpotId = event.getDiveSpot().getId();
         rating.removeAllViews();
         for (int k = 0; k < event.getDiveSpot().getRating(); k++) {
-            ImageView iv = new ImageView(context);
+            ImageView iv = new ImageView(getActivity());
             iv.setImageResource(R.drawable.ic_iw_star_full);
             iv.setPadding(0,0,5,0);
             rating.addView(iv);
         }
         for (int k = 0; k < 5 - event.getDiveSpot().getRating(); k++) {
-            ImageView iv = new ImageView(context);
+            ImageView iv = new ImageView(getActivity());
             iv.setImageResource(R.drawable.ic_iw_star_empty);
             iv.setPadding(0,0,5,0);
             rating.addView(iv);
@@ -244,11 +238,10 @@ public class DiveSpotsMapFragment extends Fragment implements View.OnClickListen
                 });
     }
 
-    public void setUI(RelativeLayout toast, ProgressBar progressBar, Context context, MapListPagerAdapter mapListPagerAdapter, ViewPager mapListViewPager) {
+    public void setUI(RelativeLayout toast, ProgressBar progressBar, MapListPagerAdapter mapListPagerAdapter, ViewPager mapListViewPager) {
         this.mapListPagerAdapter = mapListPagerAdapter;
         this.toast = toast;
         this.progressBar = progressBar;
-        this.context = context;
         this.mapListViewPager = mapListViewPager;
     }
 

@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#fbfbfb"
     android:orientation="vertical">
 
     <include layout="@layout/view_toolbar" />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="70dp"
@@ -67,74 +68,79 @@
             android:textColor="#a3a3a3"
             android:textSize="16sp" />
     </LinearLayout>
+
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/divider"/>
+        android:src="@drawable/divider" />
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="10dp"
-        android:background="@color/white">
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:paddingBottom="10dp">
+
         <com.rey.material.widget.Spinner
             android:id="@+id/object_spinner"
             style="@style/Material.Widget.Spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:dropDownWidth="150dp"
             android:gravity="center_vertical"
+            android:popupBackground="@color/white"
             app:rd_style="@style/Material.Drawable.Ripple.Wave"
-            app:spn_label="Level"
+            app:spn_arrowColor="@android:color/transparent"
+            app:spn_dividerColor="@android:color/transparent"
+            app:spn_label="@string/filter_object"
             app:spn_labelEnable="true"
             app:spn_labelTextColor="@color/black_text"
             app:spn_labelTextSize="16sp"
-            app:spn_popupItemAnimation="@null"
-            app:spn_dividerColor="@android:color/transparent"
-            app:spn_arrowColor="@android:color/transparent"
-            android:popupBackground="@color/white"
-            android:dropDownWidth="150dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="10dp"/>
-            <ImageView
+            app:spn_popupItemAnimation="@null" />
+
+        <ImageView
             android:id="@+id/divider"
-            android:layout_marginLeft="20dp"
-            android:scaleType="centerCrop"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/divider"/>
+            android:layout_marginLeft="20dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/divider" />
+
         <com.rey.material.widget.Spinner
             android:id="@+id/level_spinner"
             style="@style/Material.Widget.Spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:dropDownWidth="150dp"
             android:gravity="center_vertical"
+            android:popupBackground="@color/white"
             app:rd_style="@style/Material.Drawable.Ripple.Wave"
-            app:spn_label="Level"
+            app:spn_arrowColor="@android:color/transparent"
+            app:spn_dividerColor="@android:color/transparent"
+            app:spn_label="@string/filter_label"
             app:spn_labelEnable="true"
             app:spn_labelTextColor="@color/black_text"
             app:spn_labelTextSize="16sp"
-            app:spn_popupItemAnimation="@null"
-            app:spn_dividerColor="@android:color/transparent"
-            app:spn_arrowColor="@android:color/transparent"
-            android:popupBackground="@color/white"
-            android:dropDownWidth="150dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="10dp"/>
+            app:spn_popupItemAnimation="@null" />
     </LinearLayout>
+
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/divider"/>
+        android:src="@drawable/divider" />
 
     <com.rey.material.widget.Button
         android:layout_width="match_parent"
         android:layout_height="45dp"
-        android:background="@color/orange"
-        android:text="@string/btn_save"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="20dp"
-        app:rd_style="@style/Material.Drawable.Ripple.Touch.MatchView"/>
+        android:background="@color/orange"
+        android:text="@string/btn_save"
+        app:rd_style="@style/Material.Drawable.Ripple.Touch.MatchView" />
 
 </LinearLayout>
