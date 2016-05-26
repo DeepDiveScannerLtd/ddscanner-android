@@ -54,6 +54,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import me.nereo.multi_image_selector.MultiImageSelector;
+import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -221,19 +223,23 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         }
         if (requestCode == RC_PICK_PHOTO) {
             if (resultCode == RESULT_OK) {
-                ClipData clipData = data.getClipData();
-                if (clipData != null) {
-                    for (int i = 0; i < clipData.getItemCount(); i++) {
-                        ClipData.Item item = clipData.getItemAt(i);
-                        Uri uri = item.getUri();
-                        imageUris.add(helpers.getRealPathFromURI(AddDiveSpotActivity.this, uri));
-                    }
-                    photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris, AddDiveSpotActivity.this, addPhotoTitle));
-                } else {
-                    Uri uri = data.getData();
-                    imageUris.add(helpers.getRealPathFromURI(AddDiveSpotActivity.this, uri));
-                    photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris, AddDiveSpotActivity.this, addPhotoTitle));
-                }
+//                ClipData clipData = data.getClipData();
+//                if (clipData != null) {
+//                    for (int i = 0; i < clipData.getItemCount(); i++) {
+//                        ClipData.Item item = clipData.getItemAt(i);
+//                        Uri uri = item.getUri();
+//                        imageUris.add(helpers.getRealPathFromURI(AddDiveSpotActivity.this, uri));
+//                    }
+//                    photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris, AddDiveSpotActivity.this, addPhotoTitle));
+//                } else {
+//                    Uri uri = data.getData();
+//                    imageUris.add(helpers.getRealPathFromURI(AddDiveSpotActivity.this, uri));
+//                    photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris, AddDiveSpotActivity.this, addPhotoTitle));
+//                }
+                imageUris = data.getStringArrayListExtra(MultiImageSelectorActivity
+                        .EXTRA_RESULT);
+                photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris,
+                        AddDiveSpotActivity.this, addPhotoTitle));
             }
         }
         if (requestCode == RC_PICK_SEALIFE) {
@@ -328,10 +334,10 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
             sealifes = null;
         }
         List<MultipartBody.Part> images = new ArrayList<>();
-        if (addPhotoToDsListAdapter != null &&
-                addPhotoToDsListAdapter.getNewFilesUrisList()!= null) {
-            imageUris = addPhotoToDsListAdapter.getNewFilesUrisList();
-        }
+//        if (addPhotoToDsListAdapter != null &&
+//                addPhotoToDsListAdapter.getNewFilesUrisList()!= null) {
+//            imageUris = addPhotoToDsListAdapter.getNewFilesUrisList();
+//        }
         if (imageUris.size() > 0) {
             for (int i = 0; i < imageUris.size(); i++) {
                 File image = new File(imageUris.get(i));
@@ -396,14 +402,16 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_add_photo:
+                MultiImageSelector.create(this)
+                        .start(this, RC_PICK_PHOTO);
                 // Method 1
                 // Pros: works fine
                 // Cons: does not work if opened app does not support EXTRA_ALLOW_MULTIPLE; api 18+
-                Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                    i.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-                }
-                startActivityForResult(i, RC_PICK_PHOTO);
+//                Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+//                    i.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+//                }
+//                startActivityForResult(i, RC_PICK_PHOTO);
 
                 // Method 2
                 // Pros: works on any device (?)
