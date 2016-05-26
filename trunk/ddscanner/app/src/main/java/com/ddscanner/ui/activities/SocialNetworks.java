@@ -107,10 +107,6 @@ public class SocialNetworks extends AppCompatActivity
                 });
                 TwitterAuthToken authToken = session.getAuthToken();
                 Log.i(TAG, session.getAuthToken().secret + "\n" + session.getAuthToken().token);
-                AppsFlyerLib.getInstance().trackEvent(getApplicationContext(), EventTrackerHelper
-                        .EVENT_SIGN_IN_BTN_CLICK, new HashMap<String, Object>() {{
-                    put(EventTrackerHelper.PARAM_SIGN_IN_BTN_CLICK, "twitter");
-                }});
                 sendRegisterRequest(putTokensToMap(SharedPreferenceHelper.getUserAppId(),
                         "tw", authToken.token, authToken.secret));
             }

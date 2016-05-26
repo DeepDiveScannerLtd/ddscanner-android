@@ -479,4 +479,13 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
         startActivityForResult(intent, RC_LOGIN);
     }
 
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+    }
+
+
 }

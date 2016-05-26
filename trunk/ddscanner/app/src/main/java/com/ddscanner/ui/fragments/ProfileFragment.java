@@ -243,7 +243,7 @@ public class ProfileFragment extends Fragment
                 }
                 if (response.raw().code() == 422 || response.raw().code() == 404) {
                     SharedPreferenceHelper.logout();
-                    DDScannerApplication.bus.post(new ShowLoginActivityIntent());
+                  //  DDScannerApplication.bus.post(new ShowLoginActivityIntent());
                 }
                 if (response.errorBody() != null) {
                     try {
