@@ -334,10 +334,6 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
             sealifes = null;
         }
         List<MultipartBody.Part> images = new ArrayList<>();
-//        if (addPhotoToDsListAdapter != null &&
-//                addPhotoToDsListAdapter.getNewFilesUrisList()!= null) {
-//            imageUris = addPhotoToDsListAdapter.getNewFilesUrisList();
-//        }
         if (imageUris.size() > 0) {
             for (int i = 0; i < imageUris.size(); i++) {
                 File image = new File(imageUris.get(i));

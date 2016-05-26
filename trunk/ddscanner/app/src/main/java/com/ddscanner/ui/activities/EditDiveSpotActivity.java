@@ -54,6 +54,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import me.nereo.multi_image_selector.MultiImageSelector;
+import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -294,11 +296,8 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_add_photo:
-                Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                    i.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-                }
-                startActivityForResult(i, RC_PICK_PHOTO);
+                MultiImageSelector.create(this)
+                        .start(this, RC_PICK_PHOTO);
                 break;
             case R.id.location_layout:
                 Intent intent = new Intent(EditDiveSpotActivity.this,
@@ -358,19 +357,10 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
         }
         if (requestCode == RC_PICK_PHOTO) {
             if (resultCode == RESULT_OK) {
-                ClipData clipData = data.getClipData();
-                if (clipData != null) {
-                    for (int i = 0; i < clipData.getItemCount(); i++) {
-                        ClipData.Item item = clipData.getItemAt(i);
-                        Uri uri = item.getUri();
-                        imageUris.add(helpers.getRealPathFromURI(EditDiveSpotActivity.this, uri));
-                    }
-                    photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris, EditDiveSpotActivity.this, addPhotoTitle));
-                } else {
-                    Uri uri = data.getData();
-                    imageUris.add(helpers.getRealPathFromURI(EditDiveSpotActivity.this, uri));
-                    photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris, EditDiveSpotActivity.this, addPhotoTitle));
-                }
+                imageUris = data.getStringArrayListExtra(MultiImageSelectorActivity
+                        .EXTRA_RESULT);
+                photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris,
+                        EditDiveSpotActivity.this, addPhotoTitle));
             }
         }
         if (requestCode == RC_PICK_SEALIFE) {
