@@ -11,5 +11,6 @@
     android:paddingTop="?android:attr/listPreferredItemPaddingLeft"
     android:paddingBottom="?android:attr/listPreferredItemPaddingLeft"
     android:gravity="center_vertical"
+    android:drawableRight="@drawable/dropdown_triangle"
     tools:text="abc"
     android:background="?android:attr/activatedBackgroundIndicator" />
