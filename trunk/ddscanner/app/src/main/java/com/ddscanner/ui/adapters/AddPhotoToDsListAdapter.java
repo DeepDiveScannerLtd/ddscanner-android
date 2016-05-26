@@ -23,8 +23,8 @@ public class AddPhotoToDsListAdapter extends RecyclerView.Adapter<AddPhotoToDsLi
     private static final String TAG = AddPhotoToDsListAdapter.class.getSimpleName();
     private Context context;
     private List<String> uris;
-    private static List<String> newImagesUriList = new ArrayList<>();
-    private static List<String> deletedImages = new ArrayList<>();
+    private List<String> newImagesUriList = new ArrayList<>();
+    private List<String> deletedImages = new ArrayList<>();
     private TextView textView;
 
     public AddPhotoToDsListAdapter(List<String> uris, Context context, TextView textView) {

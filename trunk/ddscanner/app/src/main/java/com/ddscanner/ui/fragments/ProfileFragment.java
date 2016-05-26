@@ -239,10 +239,11 @@ public class ProfileFragment extends Fragment
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                    if (response.raw().code() == 422) {
-                        DDScannerApplication.bus.post(new ShowLoginActivityIntent());
                     }
-                    }
+                }
+                if (response.raw().code() == 422) {
+                    SharedPreferenceHelper.logout();
+                    DDScannerApplication.bus.post(new ShowLoginActivityIntent());
                 }
                 if (response.errorBody() != null) {
                     try {

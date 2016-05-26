@@ -26,6 +26,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
@@ -48,6 +49,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import me.nereo.multi_image_selector.MultiImageSelector;
+import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -75,7 +78,7 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
     private EditText text;
     private RatingBar ratingBar;
     private float rating;
-    private ProgressDialog progressDialog;
+    private MaterialDialog materialDialog;
     private TextView symbolNumberLeft;
     private ImageButton btnAddPhoto;
     private RecyclerView photos_rc;
@@ -102,7 +105,8 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
         toolbarSettings();
         setRcSettings();
         setProgressDialog();
-
+        addPhotoToDsListAdapter = new AddPhotoToDsListAdapter
+                (imageUris, LeaveReviewActivity.this, addPhotoTitle);
         text.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -147,6 +151,7 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
         photos_rc.setNestedScrollingEnabled(false);
         photos_rc.setHasFixedSize(false);
         photos_rc.setLayoutManager(layoutManager);
+        photos_rc.setAdapter(addPhotoToDsListAdapter);
     }
 
     private void toolbarSettings() {
@@ -157,9 +162,7 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void setProgressDialog() {
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage(getApplicationContext().getResources().getString(R.string.pleaseWait));
-        progressDialog.setCancelable(false);
+        materialDialog = helpers.getMaterialDialog(this);
     }
 
     public static void show(Context context, String id, float rating) {
@@ -171,6 +174,7 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
 
     private void sendReview() {
         List<MultipartBody.Part> images = new ArrayList<>();
+      //  imageUris = addPhotoToDsListAdapter.getNewFilesUrisList();
         for (int i = 0; i < imageUris.size(); i++) {
             File image = new File(imageUris.get(i));
             RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), image);
@@ -219,9 +223,9 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
                     returnIntent.putExtra("COMMENT", comment);
                     setResult(Activity.RESULT_OK, returnIntent);
                     finish();
-                    progressDialog.dismiss();
+                    materialDialog.dismiss();
                 } else {
-                    progressDialog.dismiss();
+                    materialDialog.dismiss();
                     int httpResultCode = response.raw().code();
                     Log.i(TAG, response.raw().message());
                     String json = "";
@@ -274,7 +278,7 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
                             put(EventTrackerHelper.PARAM_SEND_REVIEW_CLICK, diveSpotId);
                         }});
                 if (checkText(text.getText().toString())) {
-                    progressDialog.show();
+                    materialDialog.show();
                     sendReview();
                 }
                 return true;
@@ -310,24 +314,28 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
             }
             if (resultCode == RESULT_CANCELED) {
                 Log.i(TAG, "Error with login");
-                progressDialog.dismiss();
+                materialDialog.dismiss();
             }
         }
         if (requestCode == RC_PICK_PHOTO) {
             if (resultCode == RESULT_OK) {
-                ClipData clipData = data.getClipData();
-                if (clipData != null) {
-                    for (int i = 0; i < clipData.getItemCount(); i++) {
-                        ClipData.Item item = clipData.getItemAt(i);
-                        Uri uri = item.getUri();
-                        imageUris.add(helpers.getRealPathFromURI(LeaveReviewActivity.this, uri));
-                    }
-                    photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris, LeaveReviewActivity.this, addPhotoTitle));
-                } else {
-                    Uri uri = data.getData();
-                    imageUris.add(helpers.getRealPathFromURI(LeaveReviewActivity.this, uri));
-                    photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris, LeaveReviewActivity.this, addPhotoTitle));
-                }
+                imageUris = data.getStringArrayListExtra(MultiImageSelectorActivity
+                        .EXTRA_RESULT);
+                photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris,
+                        LeaveReviewActivity.this, addPhotoTitle));
+//                ClipData clipData = data.getClipData();
+//                if (clipData != null) {
+//                    for (int i = 0; i < clipData.getItemCount(); i++) {
+//                        ClipData.Item item = clipData.getItemAt(i);
+//                        Uri uri = item.getUri();
+//                        imageUris.add(helpers.getRealPathFromURI(LeaveReviewActivity.this, uri));
+//                    }
+//                    photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris, LeaveReviewActivity.this, addPhotoTitle));
+//                } else {
+//                    Uri uri = data.getData();
+//                    imageUris.add(helpers.getRealPathFromURI(LeaveReviewActivity.this, uri));
+//                    photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris, LeaveReviewActivity.this, addPhotoTitle));
+//                }
             }
         }
     }
@@ -336,12 +344,14 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_add_photo:
-                Intent i = new Intent(Intent.ACTION_PICK,
-                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                    i.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-                }
-                startActivityForResult(i, RC_PICK_PHOTO);
+//                Intent i = new Intent(Intent.ACTION_PICK,
+//                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+//                    i.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+//                }
+//                startActivityForResult(i, RC_PICK_PHOTO);
+                MultiImageSelector.create(this)
+                        .start(this, RC_PICK_PHOTO);
                 break;
         }
     }
