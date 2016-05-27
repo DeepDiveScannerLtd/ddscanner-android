@@ -128,5 +128,7 @@
     <string name="font_roboto_medium">sans-serif</string>
     <string name="filter_object">Object</string>
     <string name="filter_label">Level</string>
+    <string name="creator">Creator</string>
+    <string name="editor">Editor</string>
 
 </resources>
