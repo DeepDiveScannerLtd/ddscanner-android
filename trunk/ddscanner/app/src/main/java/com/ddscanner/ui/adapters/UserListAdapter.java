@@ -23,7 +23,7 @@ import java.util.ArrayList;
 public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserListViewHolder> {
 
     private Context context;
-    private static ArrayList<User> userArrayList;
+    private ArrayList<User> userArrayList;
 
     public UserListAdapter(Context context, ArrayList<User> users) {
         userArrayList = users;
@@ -40,8 +40,8 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserLi
 
     @Override
     public void onBindViewHolder(UserListViewHolder holder, int position) {
-        Picasso.with(context).load(userArrayList.get(position).getPicture()).resize(35,35)
-                .centerCrop().transform(new TransformationRoundImage(50,0)).into(holder.userAvatar);
+        Picasso.with(context).load(userArrayList.get(position).getPicture()).resize(35, 35)
+                .centerCrop().transform(new TransformationRoundImage(50, 0)).into(holder.userAvatar);
         holder.userName.setText(userArrayList.get(position).getName());
         holder.info.setText(userArrayList.get(position).getCountComment() + " reviews, " +
                 userArrayList.get(position).getCountLike() + " likes");
@@ -52,7 +52,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserLi
         return userArrayList.size();
     }
 
-    public static class UserListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class UserListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private ImageView userAvatar;
         private TextView userName;
@@ -68,8 +68,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserLi
 
         @Override
         public void onClick(View v) {
-            DDScannerApplication.bus.post(new ShowUserDialogEvent(userArrayList
-                    .get(getAdapterPosition())));
+            DDScannerApplication.bus.post(new ShowUserDialogEvent(userArrayList.get(getAdapterPosition())));
         }
     }
 

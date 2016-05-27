@@ -3,7 +3,6 @@ package com.ddscanner.rest;
 
 import com.ddscanner.entities.request.IdentifyRequest;
 import com.ddscanner.entities.request.RegisterRequest;
-import com.ddscanner.entities.request.SendReviewRequest;
 import com.ddscanner.entities.request.ValidationReguest;
 
 import java.util.List;
@@ -12,7 +11,6 @@ import java.util.Map;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
-import retrofit.mime.MultipartTypedOutput;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -20,10 +18,8 @@ import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
-import retrofit2.http.PUT;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
-import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
 
 public interface DDScannerRestService {
@@ -168,9 +164,6 @@ public interface DDScannerRestService {
     @GET("diving/divespot/{id}/checkins")
     Call<ResponseBody> getCheckins(@Path("id") String id);
 
-    @GET("diving/divespot/{id}/editors")
-    Call<ResponseBody> getEditors(@Path("id") String id);
-
     @GET("diving/divespot/{id}/comments")
     Call<ResponseBody> getComments(@Path("id") String id);
 
@@ -223,5 +216,8 @@ public interface DDScannerRestService {
             @Part("social") RequestBody sn,
             @Part("secret") RequestBody secret
     );
+
+    @GET("/diving/divespot/{id}/editors")
+    Call<ResponseBody> getDiveSpotEditors(@Path("id") String id, @QueryMap Map<String, String> map);
 
 }

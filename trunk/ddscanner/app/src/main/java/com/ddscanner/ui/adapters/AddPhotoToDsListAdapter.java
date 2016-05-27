@@ -91,7 +91,7 @@ public class AddPhotoToDsListAdapter extends RecyclerView.Adapter<AddPhotoToDsLi
         return uris.size();
     }
 
-    public static class PhotoListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class PhotoListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         protected ImageView photo;
         protected ImageView icDelete;

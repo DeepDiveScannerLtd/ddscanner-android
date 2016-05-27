@@ -2,6 +2,7 @@ package com.ddscanner.ui.managers;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
@@ -51,9 +52,6 @@ import java.util.List;
 import java.util.Map;
 
 import okhttp3.ResponseBody;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
-import retrofit.mime.TypedByteArray;
 import retrofit2.Call;
 import retrofit2.Callback;
 
@@ -97,7 +95,9 @@ public class DiveCentersClusterManager extends ClusterManager<DiveCenter> implem
             addItem(diveCenter);
             diveCentersMap.put(diveCenter.getPosition(), diveCenter);
         }
-        diveSpotMarker = googleMap.addMarker(new MarkerOptions().position(diveSpotLatLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds)).title(diveSpotName));
+        // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
+//        diveSpotMarker = googleMap.addMarker(new MarkerOptions().position(diveSpotLatLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds)).title(diveSpotName));
+        diveSpotMarker = googleMap.addMarker(new MarkerOptions().position(diveSpotLatLng).icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_ds))).title(diveSpotName));
     }
 
     @Override
@@ -177,7 +177,9 @@ public class DiveCentersClusterManager extends ClusterManager<DiveCenter> implem
         protected void onClusterItemRendered(DiveCenter diveCenter, final Marker marker) {
             super.onClusterItemRendered(diveCenter, marker);
             try {
-                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_dc));
+                // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
+//                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_dc));
+                marker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_dc)));
                 if (lastClickedMarker != null && lastClickedMarker.getPosition().equals(marker.getPosition()) && lastClickedMarker.isInfoWindowShown()) {
                     marker.showInfoWindow();
                 }

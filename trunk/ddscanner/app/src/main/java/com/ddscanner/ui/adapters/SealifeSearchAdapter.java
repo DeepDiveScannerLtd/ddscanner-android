@@ -1,7 +1,6 @@
 package com.ddscanner.ui.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,10 +11,7 @@ import android.widget.TextView;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.Sealife;
-import com.ddscanner.entities.Sealife;
 import com.ddscanner.events.SealifeChoosedEvent;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +20,9 @@ import java.util.List;
  * Created by lashket on 7.4.16.
  */
 public class SealifeSearchAdapter extends RecyclerView.Adapter<SealifeSearchAdapter.SearchListViewHolder> {
+
     private final LayoutInflater mInflater;
-    private static List<Sealife> mModels;
+    private List<Sealife> mModels;
     private TextView results;
     private RelativeLayout notFounLayout;
     private RecyclerView rcList;

@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +25,6 @@ import com.ddscanner.events.ShowLoginActivityIntent;
 import com.ddscanner.events.TakePhotoFromCameraEvent;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.activities.DiveSpotsListActivity;
-import com.ddscanner.ui.activities.SocialNetworks;
 import com.ddscanner.ui.activities.UsersDivespotListSwipableActivity;
 import com.ddscanner.ui.views.TransformationRoundImage;
 import com.ddscanner.utils.Helpers;
@@ -249,6 +247,7 @@ public class ProfileFragment extends Fragment
                             JSONObject jsonObject = new JSONObject(responseString);
                             responseString = jsonObject.getString("user");
                             user = new Gson().fromJson(responseString, User.class);
+                            // TODO Server may respond error. For example {"message":"Social user not found","status_code":404}. In This case user will be null.
                             changeUi(user);
                         } catch (IOException e) {
 

@@ -1,11 +1,8 @@
 package com.ddscanner.ui.activities;
 
 import android.app.ProgressDialog;
-import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -27,7 +24,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.DiveSpot;
-import com.ddscanner.entities.DivespotsWrapper;
 import com.ddscanner.entities.FiltersResponseEntity;
 import com.ddscanner.entities.Sealife;
 import com.ddscanner.rest.RestClient;
@@ -35,6 +31,7 @@ import com.ddscanner.ui.adapters.AddPhotoToDsListAdapter;
 import com.ddscanner.ui.adapters.SealifeListAddingDiveSpotAdapter;
 import com.ddscanner.ui.adapters.SpinnerItemsAdapter;
 import com.ddscanner.utils.Helpers;
+import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
@@ -300,7 +297,9 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                         filters.getVisibility().put(elementEntry.getKey(), elementEntry.getValue().getAsString());
                     }
                     Gson gson = new Gson();
-                    filters.setRating(gson.fromJson(jsonObject.get("rating").getAsJsonArray(), int[].class));
+                    if (jsonObject.get("rating") != null) {
+                        filters.setRating(gson.fromJson(jsonObject.get("rating").getAsJsonArray(), int[].class));
+                    }
 
                     Log.i(TAG, responseString);
 
@@ -322,16 +321,13 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     private void createAddDiveSpotRequest() {
         progressDialogUpload.show();
         List<MultipartBody.Part> sealife = new ArrayList<>();
-        if (sealifeListAddingDiveSpotAdapter != null &&
-                sealifeListAddingDiveSpotAdapter.getSealifes() != null) {
+        if (sealifeListAddingDiveSpotAdapter != null && sealifeListAddingDiveSpotAdapter.getSealifes() != null) {
             sealifes = sealifeListAddingDiveSpotAdapter.getSealifes();
         }
         if (sealifes.size() > 0) {
             for (int i = 0; i < sealifes.size(); i++) {
                 sealife.add(MultipartBody.Part.createFormData("sealife[]", sealifes.get(i).getId()));
             }
-        } else {
-            sealifes = null;
         }
         List<MultipartBody.Part> images = new ArrayList<>();
         if (imageUris.size() > 0) {
@@ -379,10 +375,11 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                 if (response.errorBody() != null) {
                     try {
                         String error = response.errorBody().string();
+                        LogUtils.e(TAG, error);
                         helpers.errorHandling(AddDiveSpotActivity.this, errorsMap,error);
                         Log.i(TAG, response.errorBody().string());
                     } catch (IOException e) {
-
+                        e.printStackTrace();
                     }
                 }
             }

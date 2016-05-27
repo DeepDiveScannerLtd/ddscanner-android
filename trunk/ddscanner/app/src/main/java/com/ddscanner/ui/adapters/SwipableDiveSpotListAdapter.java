@@ -1,12 +1,7 @@
 package com.ddscanner.ui.adapters;
 
-import android.app.Activity;
-import android.app.ActivityOptions;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.PorterDuff;
-import android.os.Build;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -17,11 +12,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.daimajia.swipe.SwipeLayout;
-import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.DiveSpot;
@@ -47,7 +39,7 @@ public class SwipableDiveSpotListAdapter
         extends RecyclerView.Adapter<SwipableDiveSpotListAdapter.SwipableDiveSpotListViewHolder> {
 
     private static final String TAG = SwipableDiveSpotListAdapter.class.getSimpleName();
-    public static ArrayList<DiveSpot> divespots;
+    public ArrayList<DiveSpot> divespots;
     private Context context;
     private boolean isCheckins = true;
     private Helpers helpers = new Helpers();
@@ -62,8 +54,6 @@ public class SwipableDiveSpotListAdapter
         mActivity = activity;
 
     }
-
-
 
     @Override
     public SwipableDiveSpotListViewHolder onCreateViewHolder(ViewGroup viewGroup, int position) {
@@ -134,9 +124,6 @@ public class SwipableDiveSpotListAdapter
             iv.setPadding(0,0,5,0);
             swipableDiveSpotListViewHolder.stars.addView(iv);
         }
-
-
-
     }
 
     @Override
@@ -221,7 +208,7 @@ public class SwipableDiveSpotListAdapter
         });
     }
 
-    public static class SwipableDiveSpotListViewHolder extends RecyclerView.ViewHolder
+    public class SwipableDiveSpotListViewHolder extends RecyclerView.ViewHolder
                                                         implements View.OnClickListener{
         protected ImageView imageView;
         protected TextView title;
