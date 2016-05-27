@@ -8,7 +8,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.events.ImageDeletedEvent;
 import com.ddscanner.utils.Constants;
 import com.squareup.picasso.Picasso;
 
@@ -60,9 +62,10 @@ public class AddPhotoToDsListAdapter extends RecyclerView.Adapter<AddPhotoToDsLi
                 if (uris.get(holder.getAdapterPosition()).contains(Constants.images)) {
                    deletedImages.add(uris.get(holder.getAdapterPosition()));
                 }
-                uris.remove(holder.getAdapterPosition());
-                notifyItemRemoved(holder.getAdapterPosition());
-                notifyItemRangeChanged(holder.getAdapterPosition(), uris.size());
+                DDScannerApplication.bus.post(new ImageDeletedEvent(position));
+//                uris.remove(holder.getAdapterPosition());
+//                notifyItemRemoved(holder.getAdapterPosition());
+//                notifyItemRangeChanged(holder.getAdapterPosition(), uris.size());
             }
         });
     }

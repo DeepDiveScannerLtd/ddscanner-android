@@ -2,14 +2,14 @@ package com.ddscanner.events;
 
 public class ImageDeletedEvent {
 
-    private String address;
+    private int imageIndex;
 
-    public ImageDeletedEvent(String address) {
-        this.address = address;
+    public ImageDeletedEvent(int imageIndex) {
+        this.imageIndex = imageIndex;
     }
 
-    public String getAddress() {
-        return this.address;
+    public int getImageIndex() {
+        return this.imageIndex;
     }
 
 }

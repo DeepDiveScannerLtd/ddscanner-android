@@ -31,6 +31,7 @@ import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.Comment;
+import com.ddscanner.events.ImageDeletedEvent;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.AddPhotoToDsListAdapter;
 import com.ddscanner.utils.Constants;
@@ -41,6 +42,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.squareup.otto.Subscribe;
 
 import java.io.File;
 import java.io.IOException;
@@ -319,8 +321,8 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
         }
         if (requestCode == RC_PICK_PHOTO) {
             if (resultCode == RESULT_OK) {
-                imageUris = data.getStringArrayListExtra(MultiImageSelectorActivity
-                        .EXTRA_RESULT);
+                imageUris.addAll(data.getStringArrayListExtra(MultiImageSelectorActivity
+                        .EXTRA_RESULT));
                 photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris,
                         LeaveReviewActivity.this, addPhotoTitle));
 //                ClipData clipData = data.getClipData();
@@ -369,6 +371,25 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
         if (!helpers.hasConnection(this)) {
             DDScannerApplication.showErrorActivity(this);
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        DDScannerApplication.bus.register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        DDScannerApplication.bus.unregister(this);
+    }
+
+    @Subscribe
+    public void deleteImage(ImageDeletedEvent event) {
+        imageUris.remove(event.getImageIndex());
+        photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris,
+                LeaveReviewActivity.this, addPhotoTitle));
     }
 
 }
