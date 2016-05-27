@@ -142,9 +142,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
 
     /**
      * Find views in current activity_add_dive_spot
-     * @author Andrei Lashkevich
      */
-
     private void findViews() {
         progressDialogUpload = helpers.getMaterialDialog(this);
         progressDialog = new ProgressDialog(this);
@@ -177,9 +175,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
 
     /**
      * Change data and settings of current activity views
-     * @author Andrei Lashkevich
      */
-
     private void setUi() {
         progressDialog.setTitle("Please wait...");
         progressDialog.setCancelable(false);
@@ -219,9 +215,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
 
     /**
      * Change title and adding back icon to toolbar
-     * @author Andrei Lashkevich
      */
-
     private void toolbarSettings() {
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);
@@ -237,9 +231,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
 
     /**
      * Get dive spot information according last modification by current user
-     * @author Andrei Lashkevich
      */
-
     private void getDsInfoRequest() {
 
         Call<ResponseBody> call = RestClient.getServiceInstance().getDiveSpotForEdit(
@@ -280,7 +272,6 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
 
     /**
      * Add path to images to name to have a full address of image for future work with this
-     * @author Andrei Lashkevich
      * @param images
      * @return images
      */
@@ -319,11 +310,9 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
 
     /**
      * Remove adress part from image URL for creating list of deleted images names
-     * @author Andrei Lashkevich
      * @param deleted
      * @return
      */
-
     private ArrayList<String> removeAdressPart(ArrayList<String> deleted) {
 
         for (int i = 0; i <deleted.size(); i++ ) {
@@ -357,10 +346,12 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
         }
         if (requestCode == RC_PICK_PHOTO) {
             if (resultCode == RESULT_OK) {
-                imageUris = data.getStringArrayListExtra(MultiImageSelectorActivity
-                        .EXTRA_RESULT);
-                photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris,
-                        EditDiveSpotActivity.this, addPhotoTitle));
+                ArrayList<String> addedImages = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
+                if (addedImages != null) {
+                    imageUris.addAll(addedImages);
+                }
+                addPhotoToDsListAdapter = new AddPhotoToDsListAdapter(imageUris, EditDiveSpotActivity.this, addPhotoTitle);
+                photos_rc.setAdapter(addPhotoToDsListAdapter);
             }
         }
         if (requestCode == RC_PICK_SEALIFE) {
@@ -417,11 +408,12 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
             sealifeRequest.add(MultipartBody.Part.createFormData("sealife[]", sealifes.get(i).getId()));
         }
 
-        if (addPhotoToDsListAdapter.getNewFilesUrisList() == null) {
+        List<String> newFilesUrisList = addPhotoToDsListAdapter.getNewFilesUrisList();
+        if (newFilesUrisList == null) {
             newImages = null;
         } else {
-            for (int i = 0; i < addPhotoToDsListAdapter.getNewFilesUrisList().size(); i++) {
-                File image = new File(addPhotoToDsListAdapter.getNewFilesUrisList().get(i));
+            for (String newImageUri : newFilesUrisList) {
+                File image = new File(newImageUri);
                 RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), image);
                 MultipartBody.Part part = MultipartBody.Part.createFormData("images_new[]", image.getName(),
                         requestFile);
@@ -432,7 +424,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
         if (addPhotoToDsListAdapter.getListOfDeletedImages() == null) {
             deletedImages = null;
         } else {
-            ArrayList<String> deleted = new ArrayList<>();
+            ArrayList<String> deleted;
             deleted = (ArrayList<String>)addPhotoToDsListAdapter.getListOfDeletedImages();
             deleted = removeAdressPart(deleted);
             for (int i = 0; i < deleted.size(); i++) {
@@ -455,7 +447,6 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.raw().code() == 200) {
-                    addPhotoToDsListAdapter.clearNewFilesUrisList();
                     Intent intent = new Intent();
                     setResult(RESULT_OK, intent);
                     finish();
@@ -467,7 +458,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
                         helpers.errorHandling(EditDiveSpotActivity.this, errorsMap,error);
                         Log.i(TAG, response.errorBody().string());
                     } catch (IOException e) {
-
+                        e.printStackTrace();
                     }
                 }
                 progressDialogUpload.dismiss();

@@ -31,6 +31,12 @@ public class AddPhotoToDsListAdapter extends RecyclerView.Adapter<AddPhotoToDsLi
         this.context = context;
         this.uris = uris;
         this.textView = textView;
+
+        for (String uri : uris) {
+            if (!uri.contains(Constants.images)) {
+                this.newImagesUriList.add(uri);
+            }
+        }
     }
 
     @Override
@@ -45,7 +51,6 @@ public class AddPhotoToDsListAdapter extends RecyclerView.Adapter<AddPhotoToDsLi
     public void onBindViewHolder(final PhotoListViewHolder holder, final int position) {
         String path = uris.get(holder.getAdapterPosition());
         if (!path.contains(Constants.images)) {
-            this.newImagesUriList.add(path);
             path = "file://" + path;
         }
         Picasso.with(context).load(path).resize(110, 80).centerCrop().into(holder.photo);
@@ -74,10 +79,6 @@ public class AddPhotoToDsListAdapter extends RecyclerView.Adapter<AddPhotoToDsLi
             return null;
         }
         return this.newImagesUriList;
-    }
-
-    public void clearNewFilesUrisList() {
-        newImagesUriList = new ArrayList<>();
     }
 
     @Override
