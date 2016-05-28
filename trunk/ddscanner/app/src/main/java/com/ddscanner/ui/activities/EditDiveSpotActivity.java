@@ -28,6 +28,7 @@ import com.ddscanner.entities.DiveSpotFull;
 import com.ddscanner.entities.DivespotDetails;
 import com.ddscanner.entities.FiltersResponseEntity;
 import com.ddscanner.entities.Sealife;
+import com.ddscanner.events.ImageDeletedEvent;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.AddPhotoToDsListAdapter;
 import com.ddscanner.ui.adapters.SealifeListAddingDiveSpotAdapter;
@@ -43,6 +44,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.rey.material.widget.ProgressView;
 import com.rey.material.widget.Spinner;
+import com.squareup.otto.Subscribe;
 
 import java.io.File;
 import java.io.IOException;
@@ -558,6 +560,26 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
         if (!helpers.hasConnection(this)) {
             DDScannerApplication.showErrorActivity(this);
         }
+    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        DDScannerApplication.bus.register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        DDScannerApplication.bus.unregister(this);
+    }
+
+    @Subscribe
+    public void deleteImage(ImageDeletedEvent event) {
+        imageUris.remove(event.getImageIndex());
+        photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris,
+                EditDiveSpotActivity.this, addPhotoTitle));
     }
 
 }

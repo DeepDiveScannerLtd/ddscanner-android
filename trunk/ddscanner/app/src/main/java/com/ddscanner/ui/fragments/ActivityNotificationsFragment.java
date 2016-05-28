@@ -9,8 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ddscanner.R;
+import com.ddscanner.entities.Activity;
 import com.ddscanner.ui.adapters.ActivitiesListAdapter;
 import com.ddscanner.ui.adapters.NotificationsListAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by lashket on 25.5.16.
@@ -27,6 +31,9 @@ public class ActivityNotificationsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        List<Activity> activities = new ArrayList<>();
+         // activities = (ArrayList<Activity>)getArguments().getSerializable("NOTIF");
+
         View view = inflater.inflate(R.layout.fragmnet_activity_notifications, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.activity_rc);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
