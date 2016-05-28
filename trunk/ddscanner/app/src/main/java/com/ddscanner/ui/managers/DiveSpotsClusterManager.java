@@ -145,7 +145,9 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
     }
 
     private void showPb() {
-        progressBar.setVisibility(View.VISIBLE);
+        if (progressBar != null) {
+            progressBar.setVisibility(View.VISIBLE);
+        }
     }
 
     private void hidePb() {
