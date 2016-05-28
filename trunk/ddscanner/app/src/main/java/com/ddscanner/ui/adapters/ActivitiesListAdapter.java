@@ -18,6 +18,7 @@ import com.ddscanner.ui.activities.DiveSpotDetailsActivity;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -31,8 +32,9 @@ public class ActivitiesListAdapter
     private FragmentManager mFragmentManager;
     private List<Activity> activities;
 
-    public ActivitiesListAdapter(Context context/* FragmentManager fragmentManager*/) {
+    public ActivitiesListAdapter(Context context, ArrayList<Activity> activities) {
         this.context = context;
+        this.activities = activities;
 //        this.mFragmentManager = fragmentManager;
     }
 
@@ -46,7 +48,7 @@ public class ActivitiesListAdapter
 
     @Override
     public void onBindViewHolder(ActivitiesListViewHolder holder, int position) {
-        if (activities != null) {
+        if (activities != null && position < activities.size()) {
             Activity activity = activities.get(position);
             int color = context.getResources().getColor(R.color.primary);
             ForegroundColorSpan fcs = new ForegroundColorSpan(color);
@@ -81,7 +83,7 @@ public class ActivitiesListAdapter
 
     @Override
     public int getItemCount() {
-        return 10;
+        return activities.size();
     }
 
     public class ActivitiesListViewHolder extends RecyclerView.ViewHolder
