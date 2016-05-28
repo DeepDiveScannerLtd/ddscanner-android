@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
@@ -58,14 +59,15 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
 
     private static final String TAG = DiveSpotsClusterManager.class.getName();
     private static final int CAMERA_ANIMATION_DURATION = 300;
-    private final IconGenerator clusterIconGenerator;
+    private final IconGenerator clusterIconGenerator1Symbol;
+    private final IconGenerator clusterIconGenerator2Symbols;
+    private final IconGenerator clusterIconGenerator3Symbols;
     private Context context;
     private GoogleMap googleMap;
     private DiveSpotsRequestMap diveSpotsRequestMap = new DiveSpotsRequestMap();
     private DivespotsWrapper divespotsWrapper;
     private ArrayList<DiveSpot> diveSpots = new ArrayList<>();
     private HashMap<LatLng, DiveSpot> diveSpotsMap = new HashMap<>();
-    private Drawable clusterBackgroundDrawable;
 
     private String currents;
     private String level;
@@ -86,11 +88,25 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         super(context, googleMap);
         this.context = context;
         this.googleMap = googleMap;
-        this.clusterBackgroundDrawable = ContextCompat.getDrawable(context, R.drawable.pin_circle_1);
-        this.clusterIconGenerator = new IconGenerator(context);
-        this.clusterIconGenerator.setContentView(this.makeSquareTextView(context));
-        this.clusterIconGenerator.setTextAppearance(com.google.maps.android.R.style.ClusterIcon_TextAppearance);
-        this.clusterIconGenerator.setBackground(clusterBackgroundDrawable);
+
+        View clusterView;
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        clusterIconGenerator1Symbol = new IconGenerator(context);
+        clusterView = inflater.inflate(R.layout.cluster_view_1_symbol, null);
+        clusterView.findViewById(R.id.cluster_label).setId(com.google.maps.android.R.id.text);
+        clusterIconGenerator1Symbol.setContentView(clusterView);
+        clusterIconGenerator1Symbol.setBackground(null);
+        clusterIconGenerator2Symbols = new IconGenerator(context);
+        clusterView = inflater.inflate(R.layout.cluster_view_2_symbols, null);
+        clusterView.findViewById(R.id.cluster_label).setId(com.google.maps.android.R.id.text);
+        clusterIconGenerator2Symbols.setContentView(clusterView);
+        clusterIconGenerator2Symbols.setBackground(null);
+        clusterIconGenerator3Symbols = new IconGenerator(context);
+        clusterView = inflater.inflate(R.layout.cluster_view_3_symbols, null);
+        clusterView.findViewById(R.id.cluster_label).setId(com.google.maps.android.R.id.text);
+        clusterIconGenerator3Symbols.setContentView(clusterView);
+        clusterIconGenerator3Symbols.setBackground(null);
+
         this.toast = toast;
         this.progressBar = progressBar;
         this.mapListPagerAdapter = mapListPagerAdapter;
@@ -112,7 +128,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
     }
 
     private void moveCamera(LatLngBounds latLngBounds) {
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds,0));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 0));
     }
 
     private void showToast() {
@@ -149,7 +165,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
     @Override
     public void onMapClick(LatLng latLng) {
         if (lastClickedMarker != null) {
-           // lastClickedMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
+            // lastClickedMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
             DDScannerApplication.bus.post(new OnMapClickEvent(lastClickedMarker));
             lastClickedMarker = null;
         }
@@ -211,14 +227,6 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 0);
         googleMap.animateCamera(cu, CAMERA_ANIMATION_DURATION, null);
         return true;
-    }
-
-    private SquareTextView makeSquareTextView(Context context) {
-        SquareTextView squareTextView = new SquareTextView(context);
-        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        squareTextView.setLayoutParams(layoutParams);
-        squareTextView.setId(com.google.maps.android.R.id.text);
-        return squareTextView;
     }
 
     public void updateDiveSpots(ArrayList<DiveSpot> diveSpots) {
@@ -338,8 +346,27 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
 
         @Override
         protected void onBeforeClusterRendered(Cluster<DiveSpot> cluster, MarkerOptions markerOptions) {
+            BitmapDescriptor descriptor = null;
+
             int bucket = this.getBucket(cluster);
-            BitmapDescriptor descriptor = BitmapDescriptorFactory.fromBitmap(clusterIconGenerator.makeIcon(this.getClusterText(bucket)));
+            String clusterLabel = getClusterText(bucket);
+            int symbolsCount = clusterLabel.length();
+            switch (symbolsCount) {
+                case 0:
+                case 1:
+                    descriptor = BitmapDescriptorFactory.fromBitmap(clusterIconGenerator1Symbol.makeIcon(clusterLabel));
+                    break;
+                case 2:
+                    descriptor = BitmapDescriptorFactory.fromBitmap(clusterIconGenerator2Symbols.makeIcon(clusterLabel));
+                    break;
+                case 3:
+                    descriptor = BitmapDescriptorFactory.fromBitmap(clusterIconGenerator3Symbols.makeIcon(clusterLabel));
+                    break;
+                default:
+                    clusterLabel = "99+";
+                    descriptor = BitmapDescriptorFactory.fromBitmap(clusterIconGenerator3Symbols.makeIcon(clusterLabel));
+                    break;
+            }
 
             markerOptions.icon(descriptor);
         }
@@ -391,7 +418,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
 
     @Subscribe
     public void moveCameraByChosedLocation(PlaceChoosedEvent event) {
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(event.getLatLngBounds(),0));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(event.getLatLngBounds(), 0));
     }
 
 }
