@@ -1,6 +1,7 @@
 package com.ddscanner.ui.managers;
 
 import android.content.Context;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
@@ -183,10 +184,14 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
             return true;
         }
         if (lastClickedMarker != null) {
-            lastClickedMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
+            // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
+//                lastClickedMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
+            lastClickedMarker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_ds)));
         }
         lastClickedMarker = marker;
-        marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds_selected));
+        // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
+//                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds_selected));
+        marker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_ds_selected)));
         DDScannerApplication.bus.post(new MarkerClickEvent(diveSpotsMap.get(marker.getPosition())));
         AppsFlyerLib.getInstance().trackEvent(context, EventTrackerHelper
                 .EVENT_MARKER_CLICK, new HashMap<String, Object>() {{
@@ -343,7 +348,9 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         protected void onClusterItemRendered(DiveSpot diveSpot, final Marker marker) {
             super.onClusterItemRendered(diveSpot, marker);
             try {
-                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
+                // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
+//                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
+                marker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_ds)));
                 if (lastClickedMarker != null && lastClickedMarker.getPosition().equals(marker.getPosition()) && lastClickedMarker.isInfoWindowShown()) {
                     //      marker.showInfoWindow();
                 }

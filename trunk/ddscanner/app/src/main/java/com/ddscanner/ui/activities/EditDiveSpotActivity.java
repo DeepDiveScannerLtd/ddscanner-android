@@ -1,11 +1,8 @@
 package com.ddscanner.ui.activities;
 
 import android.app.ProgressDialog;
-import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -506,7 +503,9 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
                         filters.getVisibility().put(elementEntry.getKey(), elementEntry.getValue().getAsString());
                     }
                     Gson gson = new Gson();
-                    filters.setRating(gson.fromJson(jsonObject.get("rating").getAsJsonArray(), int[].class));
+                    if (jsonObject.get("rating") != null) {
+                        filters.setRating(gson.fromJson(jsonObject.get("rating").getAsJsonArray(), int[].class));
+                    }
 
                     Log.i(TAG, responseString);
 

@@ -29,7 +29,7 @@ public class ProductListAdapter
 
     private static final String TAG = ProductListAdapter.class.getSimpleName();
 
-    public static ArrayList<DiveSpot> divespots;
+    public ArrayList<DiveSpot> divespots;
     private Context context;
 
     public ProductListAdapter(ArrayList<DiveSpot> divespots, Context context) {
@@ -93,14 +93,14 @@ public class ProductListAdapter
         return divespots.size();
     }
 
-    public static class ProductListViewHolder extends RecyclerView.ViewHolder
+    public class ProductListViewHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener {
         protected ImageView imageView;
         protected TextView title;
         protected LinearLayout stars;
         protected ProgressBar progressBar;
         private int position;
-        private static Context context;
+        private Context context;
         private final String PRODUCT = "PRODUCT";
 
         public ProductListViewHolder(View v) {
@@ -143,7 +143,5 @@ public class ProductListAdapter
 
         }
     }
-
-
 
 }

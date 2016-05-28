@@ -23,10 +23,10 @@ import java.util.HashMap;
  */
 public class SealifeListAdapter extends RecyclerView.Adapter<SealifeListAdapter.SealifeListViewHolder>{
 
-    public static ArrayList<Sealife> sealifes;
+    public ArrayList<Sealife> sealifes;
     private Context context;
     private String pathSmall;
-    private static String pathMedium;
+    private String pathMedium;
 
     public SealifeListAdapter(ArrayList<Sealife> sealifes, Context context, String pathSmall, String pathMedium) {
         this.sealifes = sealifes;
@@ -57,10 +57,10 @@ public class SealifeListAdapter extends RecyclerView.Adapter<SealifeListAdapter.
     }
 
 
-    public static class SealifeListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class SealifeListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         protected ImageView sealifeLogo;
         protected TextView sealifeName;
-        private static Context context;
+        private Context context;
 
         public SealifeListViewHolder(View v) {
             super(v);

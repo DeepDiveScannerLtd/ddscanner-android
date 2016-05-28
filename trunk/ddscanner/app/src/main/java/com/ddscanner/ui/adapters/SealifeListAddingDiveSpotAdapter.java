@@ -20,7 +20,7 @@ import java.util.List;
 public class SealifeListAddingDiveSpotAdapter extends RecyclerView.Adapter<SealifeListAddingDiveSpotAdapter.SealifeListAddingDivespotViewHolder>{
 
     private Context context;
-    private static ArrayList<Sealife> sealifes;
+    private ArrayList<Sealife> sealifes;
     private TextView title;
 
     public SealifeListAddingDiveSpotAdapter(ArrayList<Sealife> sealifes, Context context, TextView title) {

@@ -1,5 +1,6 @@
 package com.ddscanner.ui.activities;
 
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -44,7 +45,10 @@ public class ShowDsLocationActivity extends AppCompatActivity {
         mapFragment.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap googleMap) {
-                googleMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds))
+                // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
+//                googleMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds))
+//                        .position(latLng));
+                googleMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ic_ds)))
                         .position(latLng));
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 7.0f));
             }

@@ -11,7 +11,6 @@ import android.widget.TextView;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.events.OpenPhotosActivityEvent;
-import com.ddscanner.ui.activities.DiveSpotPhotosActivity;
 import com.ddscanner.ui.views.TransformationRoundImage;
 import com.squareup.picasso.Picasso;
 
@@ -22,10 +21,10 @@ import java.util.ArrayList;
  */
 public class DiveSpotsPhotosAdapter extends RecyclerView.Adapter<DiveSpotsPhotosAdapter.DiveSpotsPhotosAdapterViewHolder> {
 
-    public static ArrayList<String> photos;
-    public static String path;
-    public static Context context;
-    public static ArrayList<String> reviewsImages;
+    public ArrayList<String> photos;
+    public String path;
+    public Context context;
+    public ArrayList<String> reviewsImages;
 
     public DiveSpotsPhotosAdapter(ArrayList<String> photos, String path,
                                   Context context,ArrayList<String> reviewsImages) {
@@ -62,7 +61,7 @@ public class DiveSpotsPhotosAdapter extends RecyclerView.Adapter<DiveSpotsPhotos
         return photos.size();
     }
 
-    public static class DiveSpotsPhotosAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class DiveSpotsPhotosAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         protected ImageView photo;
         protected TextView morePhotos;

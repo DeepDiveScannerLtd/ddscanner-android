@@ -24,12 +24,7 @@ import com.ddscanner.ui.views.TransformationRoundImage;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.squareup.picasso.Picasso;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -42,8 +37,8 @@ import retrofit2.Response;
 public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.ReviewsListViewHolder> {
 
     private static final String TAG = ReviewsListAdapter.class.getSimpleName();
-    private static ArrayList<Comment> comments;
-    private static Context context;
+    private ArrayList<Comment> comments;
+    private Context context;
     private String path;
     private boolean isAdapterSet = false;
     private static ProfileDialog profileDialog = new ProfileDialog();
@@ -225,7 +220,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
     }
 
 
-    public static class ReviewsListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ReviewsListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private ImageView user_avatar;
         private LinearLayout rating;

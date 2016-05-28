@@ -23,6 +23,7 @@ import com.ddscanner.ui.dialogs.ProfileDialog;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,6 +33,8 @@ import java.util.Map;
  * Created by lashket on 9.4.16.
  */
 public class Helpers {
+
+    private static final String TAG = Helpers.class.getName();
 
     /**
      * Method to get real path of file by URI
@@ -164,28 +167,31 @@ public class Helpers {
      * @param errorsMap
      * @param errors
      */
-
-    public void errorHandling( Context context,
-                             Map<String,TextView> errorsMap, String errors) {
-        JsonObject jsonObject = new JsonParser().parse(errors).getAsJsonObject();
-        for (Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) {
-            if(!entry.getKey().equals("")) {
-                if (entry.getKey().equals("token")) {
-                    return;
-                }
-                if (entry.getKey().equals("lat") || entry.getKey().equals("lng")) {
-                    errorsMap.get("location").setVisibility(View.VISIBLE);
-                    errorsMap.get("location").setText("Please choose location");
-                }
-                if (errorsMap.get(entry.getKey()) != null) {
-                    String key = entry.getKey();
-                    String value = entry.getValue().toString();
-                    value = value.replace("[\"", "");
-                    value = value.replace("\"]", "");
-                    errorsMap.get(key).setVisibility(View.VISIBLE);
-                    errorsMap.get(key).setText(value);
+    public void errorHandling(Context context, Map<String,TextView> errorsMap, String errors) {
+        try {
+            JsonObject jsonObject = new JsonParser().parse(errors).getAsJsonObject();
+            for (Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) {
+                if (!entry.getKey().equals("")) {
+                    if (entry.getKey().equals("token")) {
+                        return;
+                    }
+                    if (entry.getKey().equals("lat") || entry.getKey().equals("lng")) {
+                        errorsMap.get("location").setVisibility(View.VISIBLE);
+                        errorsMap.get("location").setText("Please choose location");
+                    }
+                    if (errorsMap.get(entry.getKey()) != null) {
+                        String key = entry.getKey();
+                        String value = entry.getValue().toString();
+                        value = value.replace("[\"", "");
+                        value = value.replace("\"]", "");
+                        errorsMap.get(key).setVisibility(View.VISIBLE);
+                        errorsMap.get(key).setText(value);
+                    }
                 }
             }
+        } catch (JsonSyntaxException exception) {
+            LogUtils.i(TAG, "errors: " + errors);
+            exception.printStackTrace();
         }
     }
 
@@ -195,7 +201,6 @@ public class Helpers {
      * @return checking Error causing
      * @author Andrei Lashkevich
      */
-
     public boolean checkIsErrorByLogin(String errors) {
         if (errors.contains("token") || errors.contains("social") || errors.contains("secret")) {
             return true;

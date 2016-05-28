@@ -3,6 +3,7 @@ package com.ddscanner.ui.fragments;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Fragment;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.UiThread;
@@ -227,7 +228,9 @@ public class DiveSpotsMapFragment extends Fragment implements View.OnClickListen
 
     @Subscribe
     public void hideDiveSpotinfo(OnMapClickEvent event) {
-        event.getMarker().setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
+        // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
+//                event.getMarker().setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
+        event.getMarker().setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.ic_ds)));
         mapControlLayout.animate().translationY(0);
         addDsFab.animate().translationY(0);
         mapListFAB.animate().translationY(0);
@@ -257,9 +260,13 @@ public class DiveSpotsMapFragment extends Fragment implements View.OnClickListen
             LatLng myLocation = new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude());
             mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 14.0f));
             if (myLocationMarker == null) {
+                // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
+//                myLocationMarker = mGoogleMap.addMarker(new MarkerOptions()
+//                        .position(myLocation)
+//                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.pin_me)));
                 myLocationMarker = mGoogleMap.addMarker(new MarkerOptions()
                         .position(myLocation)
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.pin_me)));
+                        .icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.pin_me))));
             } else {
                 myLocationMarker.setPosition(new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude()));
             }
