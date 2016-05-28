@@ -1,51 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:map="http://schemas.android.com/tools">
+    android:layout_height="match_parent">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="180dp"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:contentScrim="@color/primary"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            >
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-            <ImageView
-                android:transitionName="image"
-                android:fitsSystemWindows="true"
-                android:id="@+id/main_photo"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="180dp"
-                android:scaleType="centerCrop" />
+                android:layout_height="match_parent">
 
-            <com.rey.material.widget.ProgressView
-                android:id="@+id/progressBar"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_centerInParent="true"
-                app:pv_autostart="true"
-                app:pv_circular="true"
-                app:pv_progressMode="indeterminate"
-                app:pv_progressStyle="@style/CircularProgress" />
-        </RelativeLayout>
+                <ImageView
+                    android:id="@+id/main_photo"
+                    android:layout_width="match_parent"
+                    android:layout_height="180dp"
+                    android:fitsSystemWindows="true"
+                    android:scaleType="centerCrop"
+                    android:transitionName="image" />
+
+                <com.rey.material.widget.ProgressView
+                    android:id="@+id/progressBar"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_centerInParent="true"
+                    app:pv_autostart="true"
+                    app:pv_circular="true"
+                    app:pv_progressMode="indeterminate"
+                    app:pv_progressStyle="@style/CircularProgress" />
+            </RelativeLayout>
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin"
-                />
+                app:layout_collapseMode="pin" />
         </android.support.design.widget.CollapsingToolbarLayout>
 
     </android.support.design.widget.AppBarLayout>
@@ -79,13 +79,14 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:visibility="gone">
+
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
+                    android:layout_alignParentBottom="true"
                     android:background="@color/white"
                     android:gravity="center"
                     android:orientation="horizontal"
-                    android:layout_alignParentBottom="true"
                     android:paddingLeft="14dp">
 
                     <TextView
@@ -106,34 +107,34 @@
                         android:orientation="horizontal" />
                 </RelativeLayout>
 
-
-
                 <TextView
                     android:id="@+id/dive_place_description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
                     android:paddingLeft="15dp"
-                    android:paddingTop="15dp"
                     android:paddingRight="15dp"
+                    android:paddingTop="15dp"
                     android:textColor="@color/black_text"
                     android:textSize="15sp"
                     android:visibility="visible" />
+
                 <TextView
                     android:id="@+id/showmore"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
                     android:paddingLeft="15dp"
                     android:paddingTop="5dp"
-                    android:layout_width="match_parent"
-                    android:background="@color/white"
+                    android:text="Show more"
                     android:textColor="@color/primary"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:text="Show more"/>
+                    android:visibility="gone" />
+
                 <ImageView
-                    android:paddingTop="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
+                    android:paddingTop="10dp"
                     android:scaleType="centerCrop"
                     android:src="@drawable/divider" />
 
@@ -167,23 +168,41 @@
                         android:layout_centerVertical="true"
                         android:layout_marginRight="15dp"
                         android:src="@drawable/ic_arrow" />
-
-
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:id="@+id/creatorLayout"
-                    android:visibility="gone"
+                    android:id="@+id/creator"
                     android:layout_width="match_parent"
                     android:layout_height="58dp"
-                    android:background="@color/white">
+                    android:background="@color/white"
+                    android:visibility="gone" >
+
+                    <View
+                        android:id="@+id/anchor"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_centerVertical="true"/>
 
                     <ImageView
-                        android:id="@+id/user_avatar"
+                        android:id="@+id/creator_avatar"
                         android:layout_width="60dp"
+                        android:layout_height="match_parent"
+                        android:layout_centerVertical="true" />
+
+                    <TextView
+                        android:id="@+id/creator_name"
+                        style="@style/CharacteristicsDiveSpotListTitle"
+                        android:layout_toRightOf="@+id/creator_avatar"
+                        android:layout_above="@+id/anchor"
+                        tools:text="Ivan Ivanov" />
+
+                    <TextView
+                        android:id="@+id/creator_label"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:src="@drawable/ds_creator_avatar" />
+                        android:layout_below="@+id/anchor"
+                        android:layout_toRightOf="@+id/creator_avatar"
+                        android:text="@string/creator" />
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -191,32 +210,13 @@
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="15dp"
-                        android:src="@drawable/ic_ds_show" />
-
-                    <RelativeLayout
-                        android:id="@+id/user_info"
-                        android:layout_width="wrap_content"
-                        android:layout_height="57dp"
-                        android:layout_toRightOf="@+id/user_avatar"
-                        android:gravity="center_vertical">
-
-                        <TextView
-                            android:id="@+id/user_name"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Andrei Lashkevich"
-                            android:textColor="@color/black_text"
-                            android:textSize="16sp" />
-
-                        <TextView
-                            android:id="@+id/user_status"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/user_name"
-                            android:text="Creator"
-                            android:textSize="14sp" />
-                    </RelativeLayout>
+                        android:src="@drawable/ic_arrow" />
                 </RelativeLayout>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/editors"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
 
                 <ImageView
                     android:layout_width="match_parent"
@@ -227,8 +227,8 @@
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:scaleType="centerCrop"
                     android:layout_marginTop="10dp"
+                    android:scaleType="centerCrop"
                     android:src="@drawable/divider" />
 
                 <TextView
@@ -241,8 +241,6 @@
                     android:text="@string/photos_title"
                     android:textColor="@color/black_text"
                     android:textSize="16sp" />
-
-
 
 
                 <RelativeLayout
@@ -478,12 +476,11 @@
                     android:textSize="16sp" />
 
 
-
                 <RelativeLayout
-                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="140dp"
-                    android:background="@color/white">
+                    android:background="@color/white"
+                    android:visibility="gone">
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/sealife_rc"
@@ -501,10 +498,10 @@
 
                 <LinearLayout
                     android:id="@+id/is_info_valid_layout"
-                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
                     <ImageView
                         android:layout_width="match_parent"
@@ -531,20 +528,20 @@
                             android:textSize="15sp" />
 
                         <Button
-                            android:layout_weight="1"
                             android:id="@+id/yes_button"
                             android:layout_width="59dp"
                             android:layout_height="34dp"
                             android:layout_marginRight="8dp"
+                            android:layout_weight="1"
                             android:background="@drawable/border_button_orange_2px"
                             android:text="@string/btn_yes" />
 
                         <Button
-                            android:layout_weight="1"
                             android:id="@+id/no_button"
                             android:layout_width="59dp"
                             android:layout_height="34dp"
-                            android:layout_marginRight="4dp"
+                            android:layout_marginRight="16dp"
+                            android:layout_weight="1"
                             android:background="@drawable/border_button_gray_2px"
                             android:text="@string/btn_no" />
                     </LinearLayout>
@@ -554,12 +551,13 @@
                         android:layout_height="wrap_content"
                         android:src="@drawable/divider" />
                 </LinearLayout>
+
                 <LinearLayout
                     android:id="@+id/thanks_layout"
-                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
                     <ImageView
                         android:layout_width="match_parent"
@@ -573,22 +571,24 @@
                         android:background="@color/orange"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
+
                         <TextView
-                            android:layout_centerInParent="true"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:text="@string/thanks_for_your_answer"
                             android:textColor="@color/black_text"
-                            android:textSize="15sp"
-                            android:text="@string/thanks_for_your_answer"/>
+                            android:textSize="15sp" />
+
                         <ImageView
                             android:id="@+id/thank_close"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:padding="15dp"
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
-                            android:src="@drawable/ic_ds_close"
-                            android:scaleType="centerCrop"/>
+                            android:padding="15dp"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/ic_ds_close" />
                     </RelativeLayout>
 
                     <ImageView
@@ -596,61 +596,69 @@
                         android:layout_height="wrap_content"
                         android:src="@drawable/divider" />
                 </LinearLayout>
+
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:src="@drawable/divider" />
+
                 <LinearLayout
-                    android:background="@color/white"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@color/white"
                     android:orientation="vertical">
+
                     <RatingBar
                         android:id="@+id/rating_bar"
-                        android:layout_marginTop="19dp"
                         style="@style/CustomRatingBar"
-                        android:rating="0"
                         android:layout_width="wrap_content"
-                        android:layout_gravity="center_horizontal"
                         android:layout_height="31dp"
-                        android:stepSize="1.0"
-                        android:numStars="5"/>
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="19dp"
+                        android:numStars="5"
+                        android:rating="0"
+                        android:stepSize="1.0" />
+
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/tap_on_star_to_review"
-                        android:textSize="13sp"
-                        android:textColor="#bbbbbb"
                         android:layout_marginTop="11dp"
-                        android:gravity="center"/>
+                        android:gravity="center"
+                        android:text="@string/tap_on_star_to_review"
+                        android:textColor="#bbbbbb"
+                        android:textSize="13sp" />
+
                     <Button
                         android:id="@+id/btn_show_all_reviews"
                         android:layout_width="320dp"
                         android:layout_height="45dp"
-                        android:layout_marginTop="22dp"
+                        android:layout_gravity="center_horizontal"
                         android:layout_marginBottom="22dp"
+                        android:layout_marginTop="22dp"
+                        android:background="@drawable/border_button_blue_2px"
                         android:text="Show all reviews (7)"
                         android:textAllCaps="false"
                         android:textColor="@color/white"
-                        android:textSize="15sp"
-                        android:background="@drawable/border_button_blue_2px"
-                        android:layout_gravity="center_horizontal"/>
+                        android:textSize="15sp" />
+
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/divider"/>
+                        android:src="@drawable/divider" />
+
                     <LinearLayout
                         android:id="@+id/map_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
-                    <fragment
-                        android:clickable="false"
-                        android:id="@+id/google_map_fragment"
-                        class="com.google.android.gms.maps.MapFragment"
-                        android:layout_width="match_parent"
-                        map:clickable="false"
-                        android:layout_height="150dp"/>
+
+                        <fragment
+                            android:id="@+id/google_map_fragment"
+                            class="com.google.android.gms.maps.MapFragment"
+                            android:layout_width="match_parent"
+                            android:layout_height="150dp"
+                            android:clickable="false"
+                            tools:clickable="false" />
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
