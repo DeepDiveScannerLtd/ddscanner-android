@@ -276,13 +276,13 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 }
             }
         });
-        for (int k = 0; k < diveSpot.getRating(); k++) {
+        for (int k = 0; k < Math.round(diveSpot.getRating()); k++) {
             ImageView iv = new ImageView(this);
             iv.setImageResource(R.drawable.ic_ds_star_full);
             iv.setPadding(0,0,5,0);
             rating.addView(iv);
         }
-        for (int k = 0; k < 5 - diveSpot.getRating(); k++) {
+        for (int k = 0; k < 5 - Math.round(diveSpot.getRating()); k++) {
             ImageView iv = new ImageView(this);
             iv.setImageResource(R.drawable.ic_ds_star_empty);
             iv.setPadding(0,0,5,0);

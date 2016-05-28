@@ -257,7 +257,8 @@ public class ProfileFragment extends Fragment
                         }
                     }
                 }
-                if (response.raw().code() == 422 || response.raw().code() == 404) {
+                if (response.raw().code() == 422 || response.raw().code() == 404 ||
+                        response.raw().code() == 400) {
                     SharedPreferenceHelper.logout();
                   //  DDScannerApplication.bus.post(new ShowLoginActivityIntent());
                 }
@@ -283,42 +284,46 @@ public class ProfileFragment extends Fragment
         if (getContext() == null) {
             return;
         }
-        Picasso.with(getContext()).load(user.getPicture())
-                .resize(Math.round(helpers.convertDpToPixel(100,getContext())),
-                        Math.round(helpers.convertDpToPixel(100,getContext()))).centerCrop()
-                .transform(new TransformationRoundImage(100,0)).into(avatar);
-        userCommentsCount.setText(user.getCountComment());
-        userLikesCount.setText(user.getCountLike());
-        userDislikesCount.setText(user.getCountDislike());
-        Picasso.with(getContext()).load(user.getPicture())
-                .resize(Math.round(helpers.convertDpToPixel(80,getContext())),
-                        Math.round(helpers.convertDpToPixel(80,getContext()))).centerCrop()
-                .transform(new TransformationRoundImage(100,0)).into(newPhoto);
-        if (user.getAbout() != null) {
-            userAbout.setVisibility(View.VISIBLE);
-            userAbout.setText(user.getAbout());
-        }
-        userFullName.setText(user.getName());
-        addedCount.setText(user.getCountAdd());
-        editedCount.setText(user.getCountEdit());
-        favouriteCount.setText(user.getCountFavorite());
-        checkInCount.setText(user.getCountCheckin());
-        showAllCheckins.setOnClickListener(this);
-        if (Integer.parseInt(user.getCountCheckin()) == 0) {
-            showAllCheckins.setOnClickListener(null);
-        }
-        showAllFavorites.setOnClickListener(this);
+        if (user != null) {
+            Picasso.with(getContext()).load(user.getPicture())
+                    .resize(Math.round(helpers.convertDpToPixel(100, getContext())),
+                            Math.round(helpers.convertDpToPixel(100, getContext()))).centerCrop()
+                    .transform(new TransformationRoundImage(100, 0)).into(avatar);
+            userCommentsCount.setText(user.getCountComment());
+            userLikesCount.setText(user.getCountLike());
+            userDislikesCount.setText(user.getCountDislike());
+            Picasso.with(getContext()).load(user.getPicture())
+                    .resize(Math.round(helpers.convertDpToPixel(80, getContext())),
+                            Math.round(helpers.convertDpToPixel(80, getContext()))).centerCrop()
+                    .transform(new TransformationRoundImage(100, 0)).into(newPhoto);
+            if (user.getAbout() != null) {
+                userAbout.setVisibility(View.VISIBLE);
+                userAbout.setText(user.getAbout());
+            }
+            userFullName.setText(user.getName());
+            addedCount.setText(user.getCountAdd());
+            editedCount.setText(user.getCountEdit());
+            favouriteCount.setText(user.getCountFavorite());
+            checkInCount.setText(user.getCountCheckin());
+            showAllCheckins.setOnClickListener(this);
+            if (Integer.parseInt(user.getCountCheckin()) == 0) {
+                showAllCheckins.setOnClickListener(null);
+            }
+            showAllFavorites.setOnClickListener(this);
 
-        if (user.getCountFavorite() == null ||Integer.parseInt(user.getCountFavorite()) == 0) {
-            showAllFavorites.setOnClickListener(null);
-        }
-        showAllEdited.setOnClickListener(this);
-        if (Integer.parseInt(user.getCountEdit()) == 0) {
-            showAllEdited.setOnClickListener(null);
-        }
-        showAllAdded.setOnClickListener(this);
-        if (Integer.parseInt(user.getCountAdd()) == 0) {
-            showAllAdded.setOnClickListener(null);
+            if (user.getCountFavorite() == null || Integer.parseInt(user.getCountFavorite()) == 0) {
+                showAllFavorites.setOnClickListener(null);
+            }
+            showAllEdited.setOnClickListener(this);
+            if (Integer.parseInt(user.getCountEdit()) == 0) {
+                showAllEdited.setOnClickListener(null);
+            }
+            showAllAdded.setOnClickListener(this);
+            if (Integer.parseInt(user.getCountAdd()) == 0) {
+                showAllAdded.setOnClickListener(null);
+            }
+        } else {
+            SharedPreferenceHelper.logout();
         }
    }
 

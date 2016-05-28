@@ -16,7 +16,7 @@ public class DiveSpot implements Serializable, ClusterItem {
     private static final String TAG = DiveSpot.class.getName();
     private long id;
     private String name;
-    private int rating;
+    private float rating;
     private String description;
     private String lat;
     private String lng;
@@ -95,11 +95,11 @@ public class DiveSpot implements Serializable, ClusterItem {
         this.images = images;
     }
 
-    public int getRating() {
+    public float getRating() {
         return rating;
     }
 
-    public void setRating(int rating) {
+    public void setRating(float rating) {
         this.rating = rating;
     }
 

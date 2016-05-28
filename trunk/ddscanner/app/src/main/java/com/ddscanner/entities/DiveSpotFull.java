@@ -12,7 +12,7 @@ public class DiveSpotFull {
     private String description;
     private float lat;
     private float lng;
-    private int rating;
+    private float rating;
     private String depth;
     private String visibility;
     private String currents;
@@ -100,9 +100,9 @@ public class DiveSpotFull {
 
     public void setLng(Float lng) { this.lng = lng; }
 
-    public int getRating() { return rating; }
+    public float getRating() { return rating; }
 
-    public void setRating(int rating) { this.rating = rating; }
+    public void setRating(float rating) { this.rating = rating; }
 
     public String getDepth() { return depth; }
 

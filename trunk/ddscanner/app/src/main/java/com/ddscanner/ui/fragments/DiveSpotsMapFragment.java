@@ -193,13 +193,13 @@ public class DiveSpotsMapFragment extends Fragment implements View.OnClickListen
         diveSpotName.setText(event.getDiveSpot().getName());
         lastDiveSpotId = event.getDiveSpot().getId();
         rating.removeAllViews();
-        for (int k = 0; k < event.getDiveSpot().getRating(); k++) {
+        for (int k = 0; k < Math.round(event.getDiveSpot().getRating()); k++) {
             ImageView iv = new ImageView(getActivity());
             iv.setImageResource(R.drawable.ic_iw_star_full);
             iv.setPadding(0,0,5,0);
             rating.addView(iv);
         }
-        for (int k = 0; k < 5 - event.getDiveSpot().getRating(); k++) {
+        for (int k = 0; k < 5 - Math.round(event.getDiveSpot().getRating()); k++) {
             ImageView iv = new ImageView(getActivity());
             iv.setImageResource(R.drawable.ic_iw_star_empty);
             iv.setPadding(0,0,5,0);
