@@ -26,6 +26,7 @@ import com.ddscanner.R;
 import com.ddscanner.entities.DiveSpot;
 import com.ddscanner.entities.FiltersResponseEntity;
 import com.ddscanner.entities.Sealife;
+import com.ddscanner.events.ImageDeletedEvent;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.AddPhotoToDsListAdapter;
 import com.ddscanner.ui.adapters.SealifeListAddingDiveSpotAdapter;
@@ -40,6 +41,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.rey.material.widget.ProgressView;
 import com.rey.material.widget.Spinner;
+import com.squareup.otto.Subscribe;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -233,8 +235,8 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
 //                    imageUris.add(helpers.getRealPathFromURI(AddDiveSpotActivity.this, uri));
 //                    photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris, AddDiveSpotActivity.this, addPhotoTitle));
 //                }
-                imageUris = data.getStringArrayListExtra(MultiImageSelectorActivity
-                        .EXTRA_RESULT);
+                imageUris.addAll(data.getStringArrayListExtra(MultiImageSelectorActivity
+                        .EXTRA_RESULT));
                 photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris,
                         AddDiveSpotActivity.this, addPhotoTitle));
             }
@@ -504,6 +506,25 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         if (!helpers.hasConnection(this)) {
             DDScannerApplication.showErrorActivity(this);
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        DDScannerApplication.bus.register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        DDScannerApplication.bus.unregister(this);
+    }
+
+    @Subscribe
+    public void deleteImage(ImageDeletedEvent event) {
+        imageUris.remove(event.getImageIndex());
+        photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris,
+                AddDiveSpotActivity.this, addPhotoTitle));
     }
 
 }

@@ -485,10 +485,10 @@
 
 
                 <RelativeLayout
+                    android:visibility="visible"
                     android:layout_width="match_parent"
                     android:layout_height="140dp"
-                    android:background="@color/white"
-                    android:visibility="gone">
+                    android:background="@color/white">
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/sealife_rc"

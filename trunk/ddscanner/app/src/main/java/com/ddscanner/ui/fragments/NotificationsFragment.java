@@ -124,17 +124,17 @@ public class NotificationsFragment extends Fragment {
                     if (response.raw().code() == 200) {
                         try {
                             responseString = response.body().string();
-                            /*notifications = new Gson().fromJson(responseString, Notifications.class);
+                            notifications = new Gson().fromJson(responseString, Notifications.class);
                             activities = notifications.getActivities();
-                            notificationList = notifications.getNotifications();
-                            Bundle bundle = new Bundle();
-                            bundle.putSerializable("NOTIF", (ArrayList<Notification>) notificationList);
-                            allNotificationsFragment.setArguments(bundle);
-                            bundle = new Bundle();
+                            activityNotificationsFragment.addList((ArrayList<Activity>) activities);
+//                            notificationList = notifications.getNotifications();
+//                            Bundle bundle = new Bundle();
+//                            bundle.putSerializable("NOTIF", (ArrayList<Notification>) notificationList);
+//                            allNotificationsFragment.setArguments(bundle);
+                           /*  Bundle bundle = new Bundle();
                             bundle.putSerializable("NOTIF", (ArrayList<Activity>) activities);
-                            activityNotificationsFragment.setArguments(bundle);
+                            activityNotificationsFragment.setArguments(bundle);*/
 
-                           setupViewPager();*/
                         } catch (IOException e) {
 
                         }
