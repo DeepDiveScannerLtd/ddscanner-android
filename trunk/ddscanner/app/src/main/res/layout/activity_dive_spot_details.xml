@@ -50,7 +50,7 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v4.widget.NestedScrollView
+    <com.ddscanner.ui.views.FlingableNestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#fbfbfb"
@@ -175,13 +175,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="58dp"
                     android:background="@color/white"
-                    android:visibility="gone" >
+                    android:visibility="gone">
 
                     <View
                         android:id="@+id/anchor"
                         android:layout_width="0dp"
                         android:layout_height="0dp"
-                        android:layout_centerVertical="true"/>
+                        android:layout_centerVertical="true" />
 
                     <ImageView
                         android:id="@+id/creator_avatar"
@@ -192,8 +192,8 @@
                     <TextView
                         android:id="@+id/creator_name"
                         style="@style/CharacteristicsDiveSpotListTitle"
-                        android:layout_toRightOf="@+id/creator_avatar"
                         android:layout_above="@+id/anchor"
+                        android:layout_toRightOf="@+id/creator_avatar"
                         tools:text="Ivan Ivanov" />
 
                     <TextView
@@ -213,10 +213,18 @@
                         android:src="@drawable/ic_arrow" />
                 </RelativeLayout>
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/editors"
+                <RelativeLayout
+                    android:id="@+id/editors_wrapper"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:background="@color/white">
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/editors"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone" />
+                </RelativeLayout>
 
                 <ImageView
                     android:layout_width="match_parent"
@@ -663,7 +671,7 @@
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
-    </android.support.v4.widget.NestedScrollView>
+    </com.ddscanner.ui.views.FlingableNestedScrollView>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_checkin"

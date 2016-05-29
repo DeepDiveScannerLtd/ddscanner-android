@@ -1,5 +1,7 @@
 package com.ddscanner.ui.activities;
 
+import android.animation.Animator;
+import android.animation.ValueAnimator;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -24,6 +26,8 @@ import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -38,7 +42,6 @@ import com.ddscanner.R;
 import com.ddscanner.entities.Checkins;
 import com.ddscanner.entities.Comment;
 import com.ddscanner.entities.Comments;
-import com.ddscanner.entities.DiveSpotEditorsResponseEntity;
 import com.ddscanner.entities.DiveSpotFull;
 import com.ddscanner.entities.DivespotDetails;
 import com.ddscanner.entities.Sealife;
@@ -49,7 +52,6 @@ import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.DiveSpotsPhotosAdapter;
 import com.ddscanner.ui.adapters.EditorsListAdapter;
 import com.ddscanner.ui.adapters.SealifeListAdapter;
-import com.ddscanner.ui.views.TransformationRoundImage;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
@@ -79,6 +81,8 @@ import retrofit2.Call;
 import retrofit2.Response;
 
 public class DiveSpotDetailsActivity extends AppCompatActivity implements View.OnClickListener, RatingBar.OnRatingBarChangeListener {
+
+    private static final String TAG = DiveSpotDetailsActivity.class.getName();
 
     private static final String EXTRA_ID = "ID";
     private static final int RC_LEAVE_REVIEW_ACTIVITY = 1001;
@@ -127,6 +131,8 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private TextView numberOfCheckinPeoplesHere;
     private TextView creatorName;
     private ImageView creatorAvatar;
+
+    private RelativeLayout editorsWrapperView;
     private RecyclerView editorsRecyclerView;
     private MaterialDialog materialDialog;
     private Helpers helpers = new Helpers();
@@ -138,7 +144,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
     private List<Comment> usersComments;
     private List<User> usersCheckins;
-    private List<User> editors;
 
     private boolean editorsListExpanded;
 
@@ -214,6 +219,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         creatorName = (TextView) findViewById(R.id.creator_name);
         creatorAvatar = (ImageView) findViewById(R.id.creator_avatar);
         editorsRecyclerView = (RecyclerView) findViewById(R.id.editors);
+        editorsWrapperView = (RelativeLayout) findViewById(R.id.editors_wrapper);
     }
 
     /**
@@ -244,6 +250,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         btnDsDetailsIsInvalid.setOnClickListener(this);
         btnDsDetailsIsValid.setOnClickListener(this);
         btnCheckIn.setOnClickListener(this);
+        creatorLayout.setOnClickListener(this);
         ratingBar.setOnRatingBarChangeListener(this);
         //checkInPeoples.setOnClickListener(this);
         showMore.setOnClickListener(this);
@@ -331,15 +338,15 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 workWithMap(googleMap);
             }
         });
-        if (diveSpot.getCreator() != null) {
+//        if (diveSpot.getCreator() != null) {
             creatorLayout.setVisibility(View.VISIBLE);
-            Picasso.with(this).load(diveSpot.getCreator().getPicture())
-                    .resize(60, 60)
-                    .centerCrop()
-                    .transform(new TransformationRoundImage(100, 0)).into(creatorAvatar);
-            creatorLayout.setOnClickListener(this);
-            creatorName.setText(diveSpot.getCreator().getName());
-        }
+//            Picasso.with(this).load(diveSpot.getCreator().getPicture())
+//                    .resize(60, 60)
+//                    .centerCrop()
+//                    .transform(new TransformationRoundImage(100, 0)).into(creatorAvatar);
+//            creatorLayout.setOnClickListener(this);
+//            creatorName.setText(diveSpot.getCreator().getName());
+//        }
 
         progressBarFull.setVisibility(View.GONE);
         informationLayout.setVisibility(View.VISIBLE);
@@ -443,7 +450,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                     diveSpotCoordinates = new LatLng(divespotDetails.getDivespot().getLat(),
                             divespotDetails.getDivespot().getLng());
                     usersComments = divespotDetails.getComments();
-                    editors = divespotDetails.getEditors();
                     setUi();
                 } else {
 
@@ -514,7 +520,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             case R.id.creator:
 //                helpers.showDialog(diveSpot.getCreator(), getFragmentManager());
                 if (!editorsListExpanded) {
-                    requestEditors();
+                    showEditorsList();
                 } else {
                     hideEditorsList();
                 }
@@ -929,49 +935,96 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         startActivityForResult(intent, RC_PHOTOS);
     }
 
-    private void requestEditors() {
-        Map<String, String> map = new HashMap<>();
-        map.put("id", productId);
-        Call<ResponseBody> call = RestClient.getServiceInstance().getDiveSpotEditors(productId, map);
-        call.enqueue(new retrofit2.Callback<ResponseBody>() {
+    private void showEditorsList() {
+        editorsWrapperView.setVisibility(View.VISIBLE);
+        editorsRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        editorsRecyclerView.setAdapter(new EditorsListAdapter(this, divespotDetails.getEditors()));
+        editorsRecyclerView.setHasFixedSize(true);
+        final int viewHeight = (int) (getResources().getDimension(R.dimen.editor_item_height) * divespotDetails.getEditors().size());
+        ValueAnimator editorsAnimator = ValueAnimator.ofInt(0, viewHeight);
+        editorsAnimator.setDuration(300);
+        editorsAnimator.addListener(new Animator.AnimatorListener() {
             @Override
-            public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    String responseString = "";
-                    try {
-                        responseString = response.body().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    LogUtils.i("response body is " + responseString);
-                    DiveSpotEditorsResponseEntity responseEntity = new Gson().fromJson(responseString, DiveSpotEditorsResponseEntity.class);
-                    editors = responseEntity.getEditors();
-                    // TODO Implement
-                } else {
-                    showEditorsList();
-                }
+            public void onAnimationStart(Animator animator) {
+
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                // TODO Handle errors
+            public void onAnimationEnd(Animator animator) {
+                ViewGroup.LayoutParams lp = editorsWrapperView.getLayoutParams();
+                editorsWrapperView.getLayoutParams().height = viewHeight;
+                editorsWrapperView.setLayoutParams(lp);
+                editorsRecyclerView.getLayoutParams().height = viewHeight;
+                editorsRecyclerView.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
             }
         });
-    }
-
-    private void showEditorsList() {
-        // TODO Implement
-        editorsRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        photosRecyclerView.setAdapter(new EditorsListAdapter(this, editors));
-        photosRecyclerView.setHasFixedSize(true);
-        int viewHeight = (int) (getResources().getDimension(R.dimen.editor_item_height) * editors.size());
-        photosRecyclerView.getLayoutParams().height = viewHeight;
-        editorsRecyclerView.setVisibility(View.VISIBLE);
+        editorsAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                LogUtils.i(TAG, "onAnimationUpdate " + valueAnimator.getAnimatedValue());
+                ViewGroup.LayoutParams lp = editorsWrapperView.getLayoutParams();
+                lp.height = (int) valueAnimator.getAnimatedValue();
+                editorsWrapperView.setLayoutParams(lp);
+            }
+        });
+        editorsAnimator.setInterpolator(new AccelerateInterpolator());
+        editorsAnimator.start();
+        editorsRecyclerView.setNestedScrollingEnabled(false);
+        editorsListExpanded = true;
     }
 
     private void hideEditorsList() {
         // TODO Implement
-        editorsRecyclerView.setVisibility(View.GONE);
+        final int viewHeight = (int) (getResources().getDimension(R.dimen.editor_item_height) * divespotDetails.getEditors().size());
+        ValueAnimator editorsAnimator = ValueAnimator.ofInt(viewHeight, 0);
+        editorsAnimator.setDuration(300);
+        editorsAnimator.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                ViewGroup.LayoutParams lp = editorsWrapperView.getLayoutParams();
+                editorsWrapperView.getLayoutParams().height = 0;
+                editorsWrapperView.setLayoutParams(lp);
+                editorsRecyclerView.getLayoutParams().height = 0;
+                editorsRecyclerView.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
+            }
+        });
+        editorsAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                LogUtils.i(TAG, "onAnimationUpdate " + valueAnimator.getAnimatedValue());
+                ViewGroup.LayoutParams lp = editorsWrapperView.getLayoutParams();
+                lp.height = (int) valueAnimator.getAnimatedValue();
+                editorsWrapperView.setLayoutParams(lp);
+            }
+        });
+        editorsAnimator.setInterpolator(new AccelerateInterpolator());
+        editorsAnimator.start();
+        editorsListExpanded = false;
     }
 
     private class ImageLoadedCallback implements Callback {

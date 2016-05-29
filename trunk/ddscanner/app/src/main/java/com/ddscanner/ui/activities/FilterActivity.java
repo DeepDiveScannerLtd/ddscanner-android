@@ -158,8 +158,10 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
                     for (Map.Entry<String, JsonElement> elementEntry : visibilityJsonObject.entrySet()) {
                         filters.getVisibility().put(elementEntry.getKey(), elementEntry.getValue().getAsString());
                     }
-                    Gson gson = new Gson();
-                    filters.setRating(gson.fromJson(jsonObject.get("rating").getAsJsonArray(), int[].class));
+                    if (jsonObject.get("rating") != null) {
+                        Gson gson = new Gson();
+                        filters.setRating(gson.fromJson(jsonObject.get("rating").getAsJsonArray(), int[].class));
+                    }
 
                     Log.i(TAG, responseString);
 
