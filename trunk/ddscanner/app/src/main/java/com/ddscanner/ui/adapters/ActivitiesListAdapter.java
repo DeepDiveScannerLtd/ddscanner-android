@@ -75,7 +75,7 @@ public class ActivitiesListAdapter
                 String divespot = activity.getDiveSpot().getName();
                 text = String.format(text, divespot);
                 SpannableString spannableString = new SpannableString(text);
-                spannableString.setSpan(fcs, 0, divespot.length(), 0);
+                spannableString.setSpan(fcs, text.indexOf(divespot), text.lastIndexOf(divespot), 0);
                 holder.text.setText(spannableString);
             }
         }
@@ -83,7 +83,10 @@ public class ActivitiesListAdapter
 
     @Override
     public int getItemCount() {
-        return activities.size();
+        if (activities !=null) {
+            return activities.size();
+        }
+        return 0;
     }
 
     public class ActivitiesListViewHolder extends RecyclerView.ViewHolder

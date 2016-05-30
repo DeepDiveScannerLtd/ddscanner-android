@@ -159,7 +159,7 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
                         filters.getVisibility().put(elementEntry.getKey(), elementEntry.getValue().getAsString());
                     }
                     Gson gson = new Gson();
-                    filters.setRating(gson.fromJson(jsonObject.get("rating").getAsJsonArray(), int[].class));
+                  //  filters.setRating(gson.fromJson(jsonObject.get("rating").getAsJsonArray(), int[].class));
 
                     Log.i(TAG, responseString);
 

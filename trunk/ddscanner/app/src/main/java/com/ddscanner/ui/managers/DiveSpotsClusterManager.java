@@ -210,12 +210,9 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
 //                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds_selected));
         marker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_ds_selected)));
-        DDScannerApplication.bus.post(new MarkerClickEvent(diveSpotsMap.get(marker.getPosition())));
-        AppsFlyerLib.getInstance().trackEvent(context, EventTrackerHelper
-                .EVENT_MARKER_CLICK, new HashMap<String, Object>() {{
-            put(EventTrackerHelper.PARAM_MARKER_CLICK_TYPE, "dive_site");
-            put(EventTrackerHelper.PARAM_MARKER_CLICK_PLACE_ID, String.valueOf(diveSpotsMap.get(marker.getPosition()).getId()));
-        }});
+        if (diveSpotsMap.get(marker.getPosition())!= null) {
+            DDScannerApplication.bus.post(new MarkerClickEvent(diveSpotsMap.get(marker.getPosition())));
+        }
         return true;
     }
 

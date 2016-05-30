@@ -114,10 +114,10 @@ public class NotificationsListAdapter
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.content:
-                    createAction(getAdapterPosition(), false);
+                  //  createAction(getAdapterPosition(), false);
                     break;
                 case R.id.image:
-                    createAction(getAdapterPosition(), true);
+                  //  createAction(getAdapterPosition(), true);
                     break;
             }
         }

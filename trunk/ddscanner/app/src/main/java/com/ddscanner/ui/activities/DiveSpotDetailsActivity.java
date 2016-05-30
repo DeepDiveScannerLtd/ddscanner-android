@@ -550,6 +550,8 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                    public void onClick(@NonNull MaterialDialog dialog,
                                        @NonNull DialogAction which) {
                        diveSpotValidation(false);
+                       isInfoValidLayout.setVisibility(View.GONE);
+                       thanksLayout.setVisibility(View.VISIBLE);
                        dialog.dismiss();
                    }
                });
