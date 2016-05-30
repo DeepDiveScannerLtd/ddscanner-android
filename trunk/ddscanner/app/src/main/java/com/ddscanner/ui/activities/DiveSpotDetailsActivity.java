@@ -1,10 +1,13 @@
 package com.ddscanner.ui.activities;
 
+import android.animation.Animator;
+import android.animation.ValueAnimator;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
+import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -20,12 +23,11 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
+import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -44,13 +46,12 @@ import com.ddscanner.entities.DiveSpotFull;
 import com.ddscanner.entities.DivespotDetails;
 import com.ddscanner.entities.Sealife;
 import com.ddscanner.entities.User;
-import com.ddscanner.entities.request.RegisterRequest;
 import com.ddscanner.entities.request.ValidationReguest;
 import com.ddscanner.events.OpenPhotosActivityEvent;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.DiveSpotsPhotosAdapter;
+import com.ddscanner.ui.adapters.EditorsListAdapter;
 import com.ddscanner.ui.adapters.SealifeListAdapter;
-import com.ddscanner.ui.views.TransformationRoundImage;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
@@ -75,13 +76,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import okhttp3.MediaType;
-import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 
 public class DiveSpotDetailsActivity extends AppCompatActivity implements View.OnClickListener, RatingBar.OnRatingBarChangeListener {
+
+    private static final String TAG = DiveSpotDetailsActivity.class.getName();
 
     private static final String EXTRA_ID = "ID";
     private static final int RC_LEAVE_REVIEW_ACTIVITY = 1001;
@@ -130,6 +131,9 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private TextView numberOfCheckinPeoplesHere;
     private TextView creatorName;
     private ImageView creatorAvatar;
+
+    private RelativeLayout editorsWrapperView;
+    private RecyclerView editorsRecyclerView;
     private MaterialDialog materialDialog;
     private Helpers helpers = new Helpers();
 
@@ -138,10 +142,31 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private boolean isClickedYesValidation = false;
     private boolean isClickedNoValidation = false;
 
-
     private List<Comment> usersComments;
     private List<User> usersCheckins;
-    private List<User> editors;
+
+    private boolean editorsListExpanded;
+
+    public static float convertDpToPixel(float dp, Context context) {
+        Resources resources = context.getResources();
+        DisplayMetrics metrics = resources.getDisplayMetrics();
+        float px = dp * ((float) metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+        return px;
+    }
+
+    /**
+     * Show current activity from another place of app
+     *
+     * @param context
+     * @param id
+     * @author Andrei Lashkevich
+     */
+
+    public static void show(Context context, String id) {
+        Intent intent = new Intent(context, DiveSpotDetailsActivity.class);
+        intent.putExtra(EXTRA_ID, id);
+        context.startActivity(intent);
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -155,6 +180,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
     /**
      * Find views in activity
+     *
      * @author Andrei Lashkevich
      */
 
@@ -188,14 +214,17 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         btnDsDetailsIsValid = (Button) findViewById(R.id.yes_button);
         btnDsDetailsIsInvalid = (Button) findViewById(R.id.no_button);
         thanksClose = (ImageView) findViewById(R.id.thank_close);
-        creatorLayout = (RelativeLayout) findViewById(R.id.creatorLayout);
+        creatorLayout = (RelativeLayout) findViewById(R.id.creator);
         numberOfCheckinPeoplesHere = (TextView) findViewById(R.id.number_of_checking_people);
-        creatorName = (TextView) findViewById(R.id.user_name);
-        creatorAvatar = (ImageView) findViewById(R.id.user_avatar);
+        creatorName = (TextView) findViewById(R.id.creator_name);
+        creatorAvatar = (ImageView) findViewById(R.id.creator_avatar);
+        editorsRecyclerView = (RecyclerView) findViewById(R.id.editors);
+        editorsWrapperView = (RelativeLayout) findViewById(R.id.editors_wrapper);
     }
 
     /**
      * Create toolbar ui
+     *
      * @author Andrei Lashkevich
      */
 
@@ -206,11 +235,12 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         getSupportActionBar().setTitle("");
         collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
         collapsingToolbarLayout.setStatusBarScrimColor(getResources().getColor(android.R.color.transparent));
-      //  collapsingToolbarLayout.setCollapsedTitleTextColor(getResources().getColor(android.R.color.transparent));
+        //  collapsingToolbarLayout.setCollapsedTitleTextColor(getResources().getColor(android.R.color.transparent));
     }
 
     /**
      * Set ui data at current activity
+     *
      * @author Andrei Lashkevich
      */
 
@@ -220,6 +250,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         btnDsDetailsIsInvalid.setOnClickListener(this);
         btnDsDetailsIsValid.setOnClickListener(this);
         btnCheckIn.setOnClickListener(this);
+        creatorLayout.setOnClickListener(this);
         ratingBar.setOnRatingBarChangeListener(this);
         //checkInPeoples.setOnClickListener(this);
         showMore.setOnClickListener(this);
@@ -258,7 +289,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 if (scrollRange + verticalOffset == 0) {
                     collapsingToolbarLayout.setTitle(diveSpot.getName());
                     isShow = true;
-                } else if(isShow) {
+                } else if (isShow) {
                     collapsingToolbarLayout.setTitle("");
                     isShow = false;
                 }
@@ -279,19 +310,19 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         for (int k = 0; k < Math.round(diveSpot.getRating()); k++) {
             ImageView iv = new ImageView(this);
             iv.setImageResource(R.drawable.ic_ds_star_full);
-            iv.setPadding(0,0,5,0);
+            iv.setPadding(0, 0, 5, 0);
             rating.addView(iv);
         }
         for (int k = 0; k < 5 - Math.round(diveSpot.getRating()); k++) {
             ImageView iv = new ImageView(this);
             iv.setImageResource(R.drawable.ic_ds_star_empty);
-            iv.setPadding(0,0,5,0);
+            iv.setPadding(0, 0, 5, 0);
             rating.addView(iv);
         }
-         photosRecyclerView.setLayoutManager(new GridLayoutManager(DiveSpotDetailsActivity.this,4));
-  //      photosRecyclerView.addItemDecoration(new GridSpacingItemDecoration(4));
+        photosRecyclerView.setLayoutManager(new GridLayoutManager(DiveSpotDetailsActivity.this, 4));
+        //      photosRecyclerView.addItemDecoration(new GridSpacingItemDecoration(4));
         photosRecyclerView.setAdapter(new DiveSpotsPhotosAdapter((ArrayList<String>) diveSpot.getImages(),
-                diveSpot.getDiveSpotPathMedium(), DiveSpotDetailsActivity.this, (ArrayList<String>) diveSpot.getCommentImages() ));
+                diveSpot.getDiveSpotPathMedium(), DiveSpotDetailsActivity.this, (ArrayList<String>) diveSpot.getCommentImages()));
         LinearLayoutManager layoutManager = new LinearLayoutManager(DiveSpotDetailsActivity.this);
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         sealifeRecyclerview.setNestedScrollingEnabled(false);
@@ -307,15 +338,15 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 workWithMap(googleMap);
             }
         });
-        if (diveSpot.getCreator() != null) {
+//        if (diveSpot.getCreator() != null) {
             creatorLayout.setVisibility(View.VISIBLE);
-            Picasso.with(this).load(diveSpot.getCreator().getPicture())
-                    .resize(60,60)
-                    .centerCrop()
-                    .transform(new TransformationRoundImage(100,0)).into(creatorAvatar);
-            creatorLayout.setOnClickListener(this);
-            creatorName.setText(diveSpot.getCreator().getName());
-        }
+//            Picasso.with(this).load(diveSpot.getCreator().getPicture())
+//                    .resize(60, 60)
+//                    .centerCrop()
+//                    .transform(new TransformationRoundImage(100, 0)).into(creatorAvatar);
+//            creatorLayout.setOnClickListener(this);
+//            creatorName.setText(diveSpot.getCreator().getName());
+//        }
 
         progressBarFull.setVisibility(View.GONE);
         informationLayout.setVisibility(View.VISIBLE);
@@ -335,7 +366,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         if (divespotDetails.getCheckins() != null) {
             usersCheckins = divespotDetails.getCheckins();
             setCheckinsCountPeople(String.valueOf(usersCheckins.size()) + " " +
-            getString(R.string.peoples_checked_in_here), false);
+                    getString(R.string.peoples_checked_in_here), false);
         }
     }
 
@@ -354,20 +385,17 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
     }
 
-    public static float convertDpToPixel(float dp, Context context){
-        Resources resources = context.getResources();
-        DisplayMetrics metrics = resources.getDisplayMetrics();
-        float px = dp * ((float)metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
-        return px;
-    }
-
     /**
      * Handling map click events
-     * @author Andrei Lashkevich
+     *
      * @param googleMap
+     * @author Andrei Lashkevich
      */
     private void workWithMap(GoogleMap googleMap) {
-        googleMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds))
+        // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
+//        googleMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds))
+//                .position(diveSpotCoordinates));
+        googleMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ic_ds)))
                 .position(diveSpotCoordinates));
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(diveSpotCoordinates, 7.0f));
         googleMap.getUiSettings().setAllGesturesEnabled(false);
@@ -393,8 +421,9 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
     /**
      * Request for getting data about dive spot
-     * @author Andrei Lashkevich
+     *
      * @param productId
+     * @author Andrei Lashkevich
      */
     private void requestProductDetails(String productId) {
         Map<String, String> map = new HashMap<>();
@@ -402,7 +431,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             map.put("social", SharedPreferenceHelper.getSn());
             map.put("token", SharedPreferenceHelper.getToken());
             if (SharedPreferenceHelper.getSn().equals("tw")) {
-                map.put("secret",SharedPreferenceHelper.getSecret());
+                map.put("secret", SharedPreferenceHelper.getSecret());
             }
         }
         Call<ResponseBody> call = RestClient.getServiceInstance().getDiveSpotById(productId, map);
@@ -421,7 +450,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                     diveSpotCoordinates = new LatLng(divespotDetails.getDivespot().getLat(),
                             divespotDetails.getDivespot().getLng());
                     usersComments = divespotDetails.getComments();
-                    editors = divespotDetails.getEditors();
                     setUi();
                 } else {
 
@@ -433,37 +461,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 // TODO Handle errors
             }
         });
-    }
-
-    /**
-     * Show current activity from another place of app
-     * @author Andrei Lashkevich
-     * @param context
-     * @param id
-     */
-
-    public static void show(Context context, String id) {
-        Intent intent = new Intent(context, DiveSpotDetailsActivity.class);
-        intent.putExtra(EXTRA_ID, id);
-        context.startActivity(intent);
-    }
-
-    private class ImageLoadedCallback implements Callback {
-        ProgressView progressBar;
-
-        public ImageLoadedCallback(ProgressView progBar) {
-            progressBar = progBar;
-        }
-
-        @Override
-        public void onSuccess() {
-
-        }
-
-        @Override
-        public void onError() {
-
-        }
     }
 
     @Override
@@ -520,8 +517,13 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             case R.id.thank_close:
                 thanksLayout.setVisibility(View.GONE);
                 break;
-            case R.id.creatorLayout:
-                helpers.showDialog(diveSpot.getCreator(), getFragmentManager());
+            case R.id.creator:
+//                helpers.showDialog(diveSpot.getCreator(), getFragmentManager());
+                if (!editorsListExpanded) {
+                    showEditorsList();
+                } else {
+                    hideEditorsList();
+                }
                 break;
         }
     }
@@ -558,7 +560,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
               dialog.show();
     }
 
-
     private void showCheckInDialog() {
         MaterialDialog.Builder dialog = new MaterialDialog.Builder(this)
                 .title(R.string.dialog_title_check_in)
@@ -583,8 +584,10 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 });
         dialog.show();
     }
+
     /**
      * Sending request when try to check in in dive spot and change FAB style
+     *
      * @author Andrei Lashkevich
      */
 
@@ -593,7 +596,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         Call<ResponseBody> call = RestClient.getServiceInstance().checkIn(
                 String.valueOf(divespotDetails.getDivespot().getId()),
                 helpers.getRegisterRequest()
-                );
+        );
         call.enqueue(new retrofit2.Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -610,10 +613,10 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                         } catch (IOException e) {
                         }
                     }
-                        if (response.raw().code() != 200) {
-                            checkoutUi();
-                            return;
-                        }
+                    if (response.raw().code() != 200) {
+                        checkoutUi();
+                        return;
+                    }
                 }
                 if (response.isSuccessful()) {
                     getCheckins();
@@ -642,6 +645,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
     /**
      * Sending request when try to check out in dive spot and change FAB style
+     *
      * @author Andrei Lashkevich
      */
 
@@ -668,7 +672,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         });
     }
 
-
     @Override
     public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
         Intent leaveReviewIntent = new Intent(DiveSpotDetailsActivity.this,
@@ -689,23 +692,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 break;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
-
-        private int spanCount;
-
-        public GridSpacingItemDecoration(int spanCount) {
-            this.spanCount = spanCount;
-        }
-
-        @Override
-        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-            int position = parent.getChildAdapterPosition(view);
-                if (position >= spanCount) {
-                    outRect.top = Math.round(convertDpToPixel(Float.valueOf(10), DiveSpotDetailsActivity.this));
-                }
-        }
     }
 
     private void diveSpotValidation(final boolean isValid) {
@@ -943,12 +929,139 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 //                String.valueOf(diveSpot.getId()));
         Intent intent = new Intent(this, DiveSpotPhotosActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putSerializable("images", (ArrayList<String>)diveSpot.getImages());
+        bundle.putSerializable("images", (ArrayList<String>) diveSpot.getImages());
         bundle.putString("path", diveSpot.getDiveSpotPathMedium());
-        bundle.putSerializable("reviewsImages", (ArrayList<String>)diveSpot.getCommentImages());
+        bundle.putSerializable("reviewsImages", (ArrayList<String>) diveSpot.getCommentImages());
         bundle.putString("id", String.valueOf(diveSpot.getId()));
         intent.putExtras(bundle);
         startActivityForResult(intent, RC_PHOTOS);
+    }
+
+    private void showEditorsList() {
+        editorsWrapperView.setVisibility(View.VISIBLE);
+        editorsRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        editorsRecyclerView.setAdapter(new EditorsListAdapter(this, divespotDetails.getEditors()));
+        editorsRecyclerView.setHasFixedSize(true);
+        final int viewHeight = (int) (getResources().getDimension(R.dimen.editor_item_height) * divespotDetails.getEditors().size());
+        ValueAnimator editorsAnimator = ValueAnimator.ofInt(0, viewHeight);
+        editorsAnimator.setDuration(300);
+        editorsAnimator.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                ViewGroup.LayoutParams lp = editorsWrapperView.getLayoutParams();
+                editorsWrapperView.getLayoutParams().height = viewHeight;
+                editorsWrapperView.setLayoutParams(lp);
+                editorsRecyclerView.getLayoutParams().height = viewHeight;
+                editorsRecyclerView.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
+            }
+        });
+        editorsAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                LogUtils.i(TAG, "onAnimationUpdate " + valueAnimator.getAnimatedValue());
+                ViewGroup.LayoutParams lp = editorsWrapperView.getLayoutParams();
+                lp.height = (int) valueAnimator.getAnimatedValue();
+                editorsWrapperView.setLayoutParams(lp);
+            }
+        });
+        editorsAnimator.setInterpolator(new AccelerateInterpolator());
+        editorsAnimator.start();
+        editorsRecyclerView.setNestedScrollingEnabled(false);
+        editorsListExpanded = true;
+    }
+
+    private void hideEditorsList() {
+        // TODO Implement
+        final int viewHeight = (int) (getResources().getDimension(R.dimen.editor_item_height) * divespotDetails.getEditors().size());
+        ValueAnimator editorsAnimator = ValueAnimator.ofInt(viewHeight, 0);
+        editorsAnimator.setDuration(300);
+        editorsAnimator.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                ViewGroup.LayoutParams lp = editorsWrapperView.getLayoutParams();
+                editorsWrapperView.getLayoutParams().height = 0;
+                editorsWrapperView.setLayoutParams(lp);
+                editorsRecyclerView.getLayoutParams().height = 0;
+                editorsRecyclerView.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
+            }
+        });
+        editorsAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                LogUtils.i(TAG, "onAnimationUpdate " + valueAnimator.getAnimatedValue());
+                ViewGroup.LayoutParams lp = editorsWrapperView.getLayoutParams();
+                lp.height = (int) valueAnimator.getAnimatedValue();
+                editorsWrapperView.setLayoutParams(lp);
+            }
+        });
+        editorsAnimator.setInterpolator(new AccelerateInterpolator());
+        editorsAnimator.start();
+        editorsListExpanded = false;
+    }
+
+    private class ImageLoadedCallback implements Callback {
+        ProgressView progressBar;
+
+        public ImageLoadedCallback(ProgressView progBar) {
+            progressBar = progBar;
+        }
+
+        @Override
+        public void onSuccess() {
+
+        }
+
+        @Override
+        public void onError() {
+
+        }
+    }
+
+    public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
+
+        private int spanCount;
+
+        public GridSpacingItemDecoration(int spanCount) {
+            this.spanCount = spanCount;
+        }
+
+        @Override
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+            int position = parent.getChildAdapterPosition(view);
+            if (position >= spanCount) {
+                outRect.top = Math.round(convertDpToPixel(Float.valueOf(10), DiveSpotDetailsActivity.this));
+            }
+        }
     }
 
 }
