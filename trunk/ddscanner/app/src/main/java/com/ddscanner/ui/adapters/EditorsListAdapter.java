@@ -22,12 +22,18 @@ import java.util.List;
  */
 public class EditorsListAdapter extends RecyclerView.Adapter<EditorsListAdapter.UserListViewHolder> {
 
+    private static final String TAG = EditorsListAdapter.class.getName();
+
     private Context context;
     private List<User> userArrayList;
+    private int avatarImageSize;
+    private int avatarImageRadius;
 
     public EditorsListAdapter(Context context, List<User> users) {
         userArrayList = users;
         this.context = context;
+        avatarImageRadius = (int) context.getResources().getDimension(R.dimen.editor_avatar_radius);
+        avatarImageSize = 2 * avatarImageRadius;
     }
 
     @Override
@@ -40,8 +46,11 @@ public class EditorsListAdapter extends RecyclerView.Adapter<EditorsListAdapter.
 
     @Override
     public void onBindViewHolder(UserListViewHolder holder, int position) {
-        Picasso.with(context).load(userArrayList.get(position).getPicture()).resize(35,35)
-                .centerCrop().transform(new TransformationRoundImage(50,0)).into(holder.userAvatar);
+        Picasso.with(context).load(userArrayList.get(position).getPicture())
+                .resize(avatarImageSize, avatarImageSize)
+                .centerCrop()
+                .transform(new TransformationRoundImage(avatarImageRadius, 0))
+                .into(holder.userAvatar);
         holder.userName.setText(userArrayList.get(position).getName());
     }
 
