@@ -48,6 +48,7 @@ import com.ddscanner.entities.Sealife;
 import com.ddscanner.entities.User;
 import com.ddscanner.entities.request.ValidationReguest;
 import com.ddscanner.events.OpenPhotosActivityEvent;
+import com.ddscanner.events.ShowLoginActivityIntent;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.DiveSpotsPhotosAdapter;
 import com.ddscanner.ui.adapters.EditorsListAdapter;
@@ -135,6 +136,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private int avatarImageSize;
     private int avatarImageRadius;
     private ImageView expandEditorsArrow;
+    private Menu menu;
 
     private RelativeLayout editorsWrapperView;
     private RecyclerView editorsRecyclerView;
@@ -145,6 +147,8 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private boolean isClickedCHeckin = false;
     private boolean isClickedYesValidation = false;
     private boolean isClickedNoValidation = false;
+    private boolean isFavorite = false;
+
 
     private List<Comment> usersComments;
     private List<User> usersCheckins;
@@ -250,6 +254,9 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
      */
 
     private void setUi() {
+        if (isFavorite) {
+            updateMenuItems(menu,true);
+        }
         avatarImageRadius = (int) getResources().getDimension(R.dimen.editor_avatar_radius);
         avatarImageSize = 2 * avatarImageRadius;
         materialDialog = helpers.getMaterialDialog(this);
@@ -263,6 +270,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         showMore.setOnClickListener(this);
         showAllReviews.setOnClickListener(this);
         diveSpot = divespotDetails.getDivespot();
+
         if (divespotDetails.getComments() != null) {
             showAllReviews.setText(getString(R.string.show_all)
                     + String.valueOf(divespotDetails.getComments().size())
@@ -605,10 +613,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         call.enqueue(new retrofit2.Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    isInfoValidLayout.setVisibility(View.GONE);
-                    thanksLayout.setVisibility(View.VISIBLE);
-                }
                 if (!response.isSuccessful()) {
                     if (response.raw().code() == 422) {
                         String error = "";
@@ -720,6 +724,10 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 materialDialog.dismiss();
+                if (response.isSuccessful()) {
+                    isInfoValidLayout.setVisibility(View.GONE);
+                    thanksLayout.setVisibility(View.VISIBLE);
+                }
                 if (!response.isSuccessful()) {
                     if (response.raw().code() == 422) {
                         String error = "";
@@ -750,9 +758,10 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     }
 
     private void addDiveSpotToFavorites() {
+        final Helpers helpers = new Helpers();
         Call<ResponseBody> call = RestClient.getServiceInstance().addDiveSpotToFavourites(
                 String.valueOf(diveSpot.getId()),
-                helpers.getUserQuryMapRequest()
+                helpers.getRegisterRequest()
         );
         call.enqueue(new retrofit2.Callback<ResponseBody>() {
             @Override
@@ -770,6 +779,25 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                         } catch (IOException e) {
                         }
                     }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private void removeFromFavorites(String id) {
+        Call<ResponseBody> call = RestClient.getServiceInstance()
+                .removeSpotFromFavorites(id, helpers.getUserQuryMapRequest());
+        call.enqueue(new retrofit2.Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.raw().code() == 422 || response.raw().code() == 404) {
+                    SharedPreferenceHelper.logout();
+                    DDScannerApplication.bus.post(new ShowLoginActivityIntent());
                 }
             }
 
@@ -897,6 +925,20 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_details, menu);
         return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        this.menu=menu;
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    private void updateMenuItems(Menu menu,boolean isFavorite) {
+        if (isFavorite) {
+            menu.findItem(R.id.favorite).setTitle("Remove from favorites");
+            return;
+        }
+        menu.findItem(R.id.favorite).setTitle("Add to favorites");
     }
 
     private void showLoginActivity() {

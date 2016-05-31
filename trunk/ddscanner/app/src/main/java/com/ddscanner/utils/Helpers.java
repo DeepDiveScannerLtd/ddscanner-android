@@ -296,6 +296,9 @@ public class Helpers {
             if ((differenceOfTime / minuteSeconds) > 0) {
                 return String.valueOf(differenceOfTime / minuteSeconds) + "m";
             }
+            if (differenceOfTime > 0 && differenceOfTime < 60) {
+                return String.valueOf(differenceOfTime) + "s";
+            }
         } catch (ParseException e) {
             return "";
         }

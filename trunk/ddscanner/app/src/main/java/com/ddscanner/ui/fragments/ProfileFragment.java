@@ -453,6 +453,12 @@ public class ProfileFragment extends Fragment
                     DDScannerApplication.bus.post(new ChangePageOfMainViewPagerEvent(0));
                     materialDialog.dismiss();
                 }
+                if (response.raw().code() == 400) {
+                    aboutLayout.setVisibility(View.GONE);
+                    SharedPreferenceHelper.logout();
+                    DDScannerApplication.bus.post(new ChangePageOfMainViewPagerEvent(0));
+                    materialDialog.dismiss();
+                }
             }
 
             @Override

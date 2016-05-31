@@ -49,7 +49,7 @@ public interface DDScannerRestService {
     @POST("/diving/divespot/{id}/favorite")
     Call<ResponseBody> addDiveSpotToFavourites(
             @Path("id") String id,
-            @QueryMap Map<String, String> map
+            @Body RegisterRequest registerRequest
             );
 
     @DELETE("/diving/divespot/{id}/favorite")

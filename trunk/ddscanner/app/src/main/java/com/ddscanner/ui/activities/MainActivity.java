@@ -89,6 +89,7 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
     private boolean isHasLocation;
     private MaterialDialog materialDialog;
     private boolean isTryToOpenAddDiveSpotActivity = false;
+    private int positionToScroll;
 
     private MapListFragment mapListFragment = new MapListFragment();
     private NotificationsFragment notificationsFragment = new NotificationsFragment();
@@ -212,7 +213,8 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
         }
         Log.i(TAG,String.valueOf(SharedPreferenceHelper.getIsUserLogined()));
         Log.i(TAG,String.valueOf(SharedPreferenceHelper.getToken()));
-        if (position == 2 && !SharedPreferenceHelper.getIsUserLogined()) {
+        if ((position == 2 || position == 1) && !SharedPreferenceHelper.getIsUserLogined()) {
+            positionToScroll = position;
             Intent intent = new Intent(MainActivity.this, SocialNetworks.class);
             startActivityForResult(intent, RC_LOGIN);
         }
@@ -272,9 +274,12 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
                     isTryToOpenAddDiveSpotActivity = false;
                     return;
                 }
-                mainViewPager.setCurrentItem(2);
+                mainViewPager.setCurrentItem(positionToScroll);
             } else {
                 isTryToOpenAddDiveSpotActivity = false;
+            }
+            if (resultCode == RESULT_CANCELED) {
+                mainViewPager.setCurrentItem(0);
             }
         }
 

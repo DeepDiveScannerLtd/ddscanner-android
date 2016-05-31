@@ -172,7 +172,7 @@ public class SwipableDiveSpotListAdapter
     }
     private void addToFavorites(String id) {
         Call<ResponseBody> call = RestClient.getServiceInstance()
-                .addDiveSpotToFavourites(id, helpers.getUserQuryMapRequest());
+                .addDiveSpotToFavourites(id, helpers.getRegisterRequest());
         call.enqueue(new retrofit2.Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

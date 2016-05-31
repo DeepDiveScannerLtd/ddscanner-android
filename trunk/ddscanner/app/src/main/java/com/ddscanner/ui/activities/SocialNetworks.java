@@ -280,8 +280,6 @@ public class SocialNetworks extends AppCompatActivity
     public void onBackPressed() {
         Intent returnIntent = new Intent();
         setResult(Activity.RESULT_CANCELED, returnIntent);
-        AppsFlyerLib.getInstance().trackEvent(getApplicationContext(), EventTrackerHelper
-                .EVENT_SIGN_IN_CANCELLED, new HashMap<String, Object>());
         finish();
     }
 

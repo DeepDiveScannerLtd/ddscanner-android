@@ -19,6 +19,7 @@
             android:scaleType="center"/>
         <android.support.percent.PercentRelativeLayout
             android:id="@+id/content"
+            android:background="?attr/selectableItemBackground"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
         <TextView

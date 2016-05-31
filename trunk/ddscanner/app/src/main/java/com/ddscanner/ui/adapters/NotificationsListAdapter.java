@@ -99,6 +99,9 @@ public class NotificationsListAdapter
 
     @Override
     public int getItemCount() {
+        if (notifications == null) {
+            return 0;
+        }
         return notifications.size();
     }
 
@@ -117,6 +120,7 @@ public class NotificationsListAdapter
             timeAgo = (TextView) v.findViewById(R.id.time_ago);
             text = (TextView) v.findViewById(R.id.text);
             percentRelativeLayout = (PercentRelativeLayout) v.findViewById(R.id.content);
+            percentRelativeLayout.setOnClickListener(this);
             image = (ImageView) v.findViewById(R.id.image);
             timeAgo = (TextView) v.findViewById(R.id.time_ago);
             image.setOnClickListener(this);
@@ -127,7 +131,7 @@ public class NotificationsListAdapter
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.content:
-                  //  createAction(getAdapterPosition(), false);
+                    createAction(getAdapterPosition(), false);
                     break;
                 case R.id.image:
                     createAction(getAdapterPosition(), true);
