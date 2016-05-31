@@ -515,8 +515,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 break;
             case R.id.yes_button:
                 diveSpotValidation(true);
-                isInfoValidLayout.setVisibility(View.GONE);
-                thanksLayout.setVisibility(View.VISIBLE);
                 break;
             case R.id.no_button:
                 showEditDiveSpotDialog();
@@ -547,11 +545,13 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                    @Override
                    public void onClick(@NonNull MaterialDialog dialog,
                                        @NonNull DialogAction which) {
-                       Intent editDiveSpotIntent = new Intent(DiveSpotDetailsActivity.this,
-                               EditDiveSpotActivity.class);
-                       editDiveSpotIntent
-                               .putExtra(Constants.DIVESPOTID, String.valueOf(diveSpot.getId()));
-                       startActivityForResult(editDiveSpotIntent, RC_EDIT_DIVE_SPOT);
+                       if (SharedPreferenceHelper.getIsUserLogined()) {
+                           Intent editDiveSpotIntent = new Intent(DiveSpotDetailsActivity.this,
+                                   EditDiveSpotActivity.class);
+                           editDiveSpotIntent
+                                   .putExtra(Constants.DIVESPOTID, String.valueOf(diveSpot.getId()));
+                           startActivityForResult(editDiveSpotIntent, RC_EDIT_DIVE_SPOT);
+                       }
                    }
                })
                .onNegative(new MaterialDialog.SingleButtonCallback() {
@@ -559,8 +559,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                    public void onClick(@NonNull MaterialDialog dialog,
                                        @NonNull DialogAction which) {
                        diveSpotValidation(false);
-                       isInfoValidLayout.setVisibility(View.GONE);
-                       thanksLayout.setVisibility(View.VISIBLE);
                        dialog.dismiss();
                    }
                });
@@ -607,6 +605,10 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         call.enqueue(new retrofit2.Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    isInfoValidLayout.setVisibility(View.GONE);
+                    thanksLayout.setVisibility(View.VISIBLE);
+                }
                 if (!response.isSuccessful()) {
                     if (response.raw().code() == 422) {
                         String error = "";
