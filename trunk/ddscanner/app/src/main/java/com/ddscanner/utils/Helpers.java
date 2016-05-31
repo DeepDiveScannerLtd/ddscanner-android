@@ -1,9 +1,4 @@
 package com.ddscanner.utils;
-
-import android.app.DialogFragment;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -11,9 +6,11 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.provider.Settings;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -33,8 +30,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
-import io.fabric.sdk.android.services.common.SystemCurrentTimeProvider;
 
 /**
  * Created by lashket on 9.4.16.
@@ -282,34 +277,26 @@ public class Helpers {
             differenceOfTime = currentDateInMillis - incomingDateInMillis;
             differenceOfTime = differenceOfTime /1000;
             if ((differenceOfTime / yearsSeconds) > 0) {
-                Log.i(TAG, String.valueOf(differenceOfTime / yearsSeconds));
                 return String.valueOf(differenceOfTime / yearsSeconds) + "y";
             }
             if ((differenceOfTime / monthSeconds) > 0) {
-                Log.i(TAG, String.valueOf(differenceOfTime / monthSeconds));
                 return String.valueOf(differenceOfTime / monthSeconds) + "m";
             }
             if ((differenceOfTime / weeksSeconds) > 0) {
-                Log.i(TAG, String.valueOf(differenceOfTime / weeksSeconds));
                 return String.valueOf(differenceOfTime / weeksSeconds) + "w";
             }
             if ((differenceOfTime / daysSeconds) > 0) {
-                Log.i(TAG, String.valueOf(differenceOfTime / daysSeconds));
                 return String.valueOf(differenceOfTime / daysSeconds) + "d";
             }
             if ((differenceOfTime / hourSeconds) > 0) {
-                Log.i(TAG, String.valueOf(differenceOfTime / hourSeconds));
                 return String.valueOf(differenceOfTime / hourSeconds) + "h";
             }
             if ((differenceOfTime / minuteSeconds) > 0) {
-                Log.i(TAG, String.valueOf(differenceOfTime / minuteSeconds));
                 return String.valueOf(differenceOfTime / minuteSeconds) + "m";
             }
         } catch (ParseException e) {
             return "";
         }
-
-
         return returnString;
     }
 

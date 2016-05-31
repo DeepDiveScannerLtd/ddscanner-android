@@ -1,12 +1,10 @@
 package com.ddscanner.ui.activities;
 
-import android.app.DialogFragment;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,6 +19,9 @@ import com.ddscanner.ui.adapters.UserListAdapter;
 import com.ddscanner.ui.dialogs.ProfileDialog;
 import com.ddscanner.utils.Helpers;
 import com.squareup.otto.Subscribe;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 
 import java.util.ArrayList;
 
@@ -113,8 +114,8 @@ public class CheckInPeoplesActivity extends AppCompatActivity {
 
     @Subscribe
     public void showDialog(ShowUserDialogEvent event) {
-        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        Fragment prev = getFragmentManager().findFragmentByTag("profile");
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        Fragment prev = getSupportFragmentManager().findFragmentByTag("profile");
         if (prev != null) {
             fragmentTransaction.remove(prev);
         }

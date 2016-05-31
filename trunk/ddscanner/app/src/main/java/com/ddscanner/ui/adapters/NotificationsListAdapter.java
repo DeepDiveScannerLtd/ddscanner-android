@@ -1,9 +1,9 @@
 package com.ddscanner.ui.adapters;
 
-import android.app.FragmentManager;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.percent.PercentRelativeLayout;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -16,9 +16,12 @@ import android.widget.TextView;
 import com.ddscanner.R;
 import com.ddscanner.entities.Notification;
 import com.ddscanner.ui.activities.DiveSpotDetailsActivity;
+import com.ddscanner.ui.views.TransformationRoundImage;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
+import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,9 +35,11 @@ public class NotificationsListAdapter
     private Helpers helpers = new Helpers();
     private FragmentManager mFragmentManager;
 
-    public NotificationsListAdapter(Context context/*, FragmentManager fragmentManager*/) {
+    public NotificationsListAdapter(ArrayList<Notification> notifications, Context context,
+                                    FragmentManager fragmentManager) {
         this.context = context;
-//        this.mFragmentManager = fragmentManager;
+        this.notifications = notifications;
+        this.mFragmentManager = fragmentManager;
     }
 
     @Override
@@ -45,6 +50,8 @@ public class NotificationsListAdapter
             int color = context.getResources().getColor(R.color.primary);
             ForegroundColorSpan fcs = new ForegroundColorSpan(color);
             if (notification.getType().equals("dislike")) {
+                Picasso.with(context).load(notification.getUser().getPicture())
+                        .transform(new TransformationRoundImage(50,0)).into(holder.image);
                 String text = Constants.NOTIF_DISLIKE;
                 String name = notification.getUser().getName();
                 String divespot = notification.getDiveSpot().getName();
@@ -53,8 +60,11 @@ public class NotificationsListAdapter
                 spannableString.setSpan(fcs, 0, name.length(), 0);
                 spannableString.setSpan(fcs, text.indexOf(divespot), text.length(), 0);
                 holder.text.setText(spannableString);
+                holder.timeAgo.setText(helpers.getDate(notification.getDate()));
             }
             if (notification.getType().equals("like")) {
+                Picasso.with(context).load(notification.getUser().getPicture())
+                        .transform(new TransformationRoundImage(50,0)).into(holder.image);
                 String text = Constants.NOTIF_LIKE;
                 String name = notification.getUser().getName();
                 String divespot = notification.getDiveSpot().getName();
@@ -63,6 +73,8 @@ public class NotificationsListAdapter
                 spannableString.setSpan(fcs, 0, name.length(), 0);
                 spannableString.setSpan(fcs, text.indexOf(divespot), text.length(), 0);
                 holder.text.setText(spannableString);
+                holder.timeAgo.setText(helpers.getDate(notification.getDate()));
+
             }
             if (notification.getType().equals("accept")) {
                 String text = Constants.NOTIF_ACCEPT;
@@ -72,6 +84,7 @@ public class NotificationsListAdapter
                 spannableString.setSpan(fcs, text.indexOf(divespot),
                         text.length() - divespot.length(), 0);
                 holder.text.setText(spannableString);
+                holder.timeAgo.setText(helpers.getDate(notification.getDate()));
             }
         }
     }
@@ -86,7 +99,7 @@ public class NotificationsListAdapter
 
     @Override
     public int getItemCount() {
-        return 10;
+        return notifications.size();
     }
 
     public class NotificationListViewHolder extends RecyclerView.ViewHolder
@@ -117,7 +130,7 @@ public class NotificationsListAdapter
                   //  createAction(getAdapterPosition(), false);
                     break;
                 case R.id.image:
-                  //  createAction(getAdapterPosition(), true);
+                    createAction(getAdapterPosition(), true);
                     break;
             }
         }
@@ -127,7 +140,7 @@ public class NotificationsListAdapter
 
             if (isImage && (notification.getType().equals("like")
                     || notification.getType().equals("dislike"))) {
-               // helpers.showDialog(notification.getUser(), mFragmentManager);
+                helpers.showDialog(notification.getUser(), mFragmentManager);
             }
 
             if (!isImage) {

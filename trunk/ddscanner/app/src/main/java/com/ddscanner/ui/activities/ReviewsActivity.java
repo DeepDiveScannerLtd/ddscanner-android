@@ -155,7 +155,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
 
     @Subscribe
     public void showDialog(ShowUserDialogEvent event) {
-        helpers.showDialog(event.getUser(), getFragmentManager());
+        helpers.showDialog(event.getUser(), getSupportFragmentManager());
     }
 
     @Subscribe

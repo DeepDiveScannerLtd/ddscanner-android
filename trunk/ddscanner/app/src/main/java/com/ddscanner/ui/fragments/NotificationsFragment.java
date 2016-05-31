@@ -127,6 +127,8 @@ public class NotificationsFragment extends Fragment {
                             notifications = new Gson().fromJson(responseString, Notifications.class);
                             activities = notifications.getActivities();
                             activityNotificationsFragment.addList((ArrayList<Activity>) activities);
+                            allNotificationsFragment.addList((ArrayList<Notification>)
+                                    notifications.getNotifications());
 //                            notificationList = notifications.getNotifications();
 //                            Bundle bundle = new Bundle();
 //                            bundle.putSerializable("NOTIF", (ArrayList<Notification>) notificationList);

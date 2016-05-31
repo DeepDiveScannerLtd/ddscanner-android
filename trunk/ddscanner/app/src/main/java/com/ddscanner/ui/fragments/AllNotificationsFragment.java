@@ -2,6 +2,7 @@ package com.ddscanner.ui.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,7 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ddscanner.R;
+import com.ddscanner.entities.Activity;
+import com.ddscanner.entities.Notification;
+import com.ddscanner.ui.adapters.ActivitiesListAdapter;
 import com.ddscanner.ui.adapters.NotificationsListAdapter;
+
+import java.util.ArrayList;
 
 /**
  * Created by lashket on 25.5.16.
@@ -17,6 +23,7 @@ import com.ddscanner.ui.adapters.NotificationsListAdapter;
 public class AllNotificationsFragment extends Fragment {
 
     private RecyclerView recyclerView;
+    private FragmentActivity myContext;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -31,8 +38,12 @@ public class AllNotificationsFragment extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setAdapter(new NotificationsListAdapter(getContext()));
         return view;
+    }
+
+    public void addList(ArrayList<Notification> activities) {
+        recyclerView.setAdapter(new NotificationsListAdapter(activities, getContext(),
+                getFragmentManager()));
     }
 
 }
