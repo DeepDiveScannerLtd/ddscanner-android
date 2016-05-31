@@ -61,6 +61,7 @@ public class ActivitiesListAdapter
                 spannableString.setSpan(fcs, 0, name.length(), 0);
                 spannableString.setSpan(fcs, text.indexOf(divespot), text.length(), 0);
                 holder.text.setText(spannableString);
+                holder.timeAgo.setText(helpers.getDate(activity.getDate()));
             }
             if (activity.getType().equals("store")) {
                 String text = Constants.NOTIF_NEWDS;
@@ -69,14 +70,18 @@ public class ActivitiesListAdapter
                 SpannableString spannableString = new SpannableString(text);
                 spannableString.setSpan(fcs, text.indexOf(divespot), text.length(), 0);
                 holder.text.setText(spannableString);
+                holder.timeAgo.setText(helpers.getDate(activity.getDate()));
             }
             if (activity.getType().equals("update")) {
+                String time = helpers.getDate(activity.getDate());
                 String text = Constants.NOTIF_ACCEPT;
                 String divespot = activity.getDiveSpot().getName();
                 text = String.format(text, divespot);
                 SpannableString spannableString = new SpannableString(text);
-                spannableString.setSpan(fcs, text.indexOf(divespot), text.lastIndexOf(divespot), 0);
+                spannableString.setSpan(fcs, text.indexOf(divespot), text.indexOf(divespot)
+                        + divespot.length(), 0);
                 holder.text.setText(spannableString);
+                holder.timeAgo.setText(helpers.getDate(activity.getDate()));
             }
         }
     }

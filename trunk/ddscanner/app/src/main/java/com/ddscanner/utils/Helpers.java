@@ -11,7 +11,9 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -25,9 +27,14 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import io.fabric.sdk.android.services.common.SystemCurrentTimeProvider;
 
 /**
  * Created by lashket on 9.4.16.
@@ -254,6 +261,56 @@ public class Helpers {
                 .contentColor(context.getResources().getColor(R.color.black_text))
                 .widgetColor(context.getResources().getColor(R.color.primary)).build();
         return materialDialog;
+    }
+
+    public String getDate(String date) {
+        Date date1 = new Date();
+        long currentDateInMillis = date1.getTime();
+        long differenceOfTime = 0;
+        long incomingDateInMillis = 0;
+        int yearsSeconds = 3600*24*365;
+        int monthSeconds = 3600*24*30;
+        int weeksSeconds = 3600*24*7;
+        int daysSeconds = 3600*24;
+        int hourSeconds = 3600;
+        int minuteSeconds = 60;
+        String returnString = "";
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            Date incomingDate = format.parse(date);
+            incomingDateInMillis = incomingDate.getTime();
+            differenceOfTime = currentDateInMillis - incomingDateInMillis;
+            differenceOfTime = differenceOfTime /1000;
+            if ((differenceOfTime / yearsSeconds) > 0) {
+                Log.i(TAG, String.valueOf(differenceOfTime / yearsSeconds));
+                return String.valueOf(differenceOfTime / yearsSeconds) + "y";
+            }
+            if ((differenceOfTime / monthSeconds) > 0) {
+                Log.i(TAG, String.valueOf(differenceOfTime / monthSeconds));
+                return String.valueOf(differenceOfTime / monthSeconds) + "m";
+            }
+            if ((differenceOfTime / weeksSeconds) > 0) {
+                Log.i(TAG, String.valueOf(differenceOfTime / weeksSeconds));
+                return String.valueOf(differenceOfTime / weeksSeconds) + "w";
+            }
+            if ((differenceOfTime / daysSeconds) > 0) {
+                Log.i(TAG, String.valueOf(differenceOfTime / daysSeconds));
+                return String.valueOf(differenceOfTime / daysSeconds) + "d";
+            }
+            if ((differenceOfTime / hourSeconds) > 0) {
+                Log.i(TAG, String.valueOf(differenceOfTime / hourSeconds));
+                return String.valueOf(differenceOfTime / hourSeconds) + "h";
+            }
+            if ((differenceOfTime / minuteSeconds) > 0) {
+                Log.i(TAG, String.valueOf(differenceOfTime / minuteSeconds));
+                return String.valueOf(differenceOfTime / minuteSeconds) + "m";
+            }
+        } catch (ParseException e) {
+            return "";
+        }
+
+
+        return returnString;
     }
 
 }
