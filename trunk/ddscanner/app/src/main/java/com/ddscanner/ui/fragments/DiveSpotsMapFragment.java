@@ -263,9 +263,11 @@ public class DiveSpotsMapFragment extends Fragment implements View.OnClickListen
                 // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
 //                myLocationMarker = mGoogleMap.addMarker(new MarkerOptions()
 //                        .position(myLocation)
+//                        .anchor(0.5f, 0.5f)
 //                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.pin_me)));
                 myLocationMarker = mGoogleMap.addMarker(new MarkerOptions()
                         .position(myLocation)
+                        .anchor(0.5f, 0.5f)
                         .icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.pin_me))));
             } else {
                 myLocationMarker.setPosition(new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude()));

@@ -52,6 +52,7 @@ import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.DiveSpotsPhotosAdapter;
 import com.ddscanner.ui.adapters.EditorsListAdapter;
 import com.ddscanner.ui.adapters.SealifeListAdapter;
+import com.ddscanner.ui.views.TransformationRoundImage;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
@@ -131,6 +132,9 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private TextView numberOfCheckinPeoplesHere;
     private TextView creatorName;
     private ImageView creatorAvatar;
+    private int avatarImageSize;
+    private int avatarImageRadius;
+    private ImageView expandEditorsArrow;
 
     private RelativeLayout editorsWrapperView;
     private RecyclerView editorsRecyclerView;
@@ -220,6 +224,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         creatorAvatar = (ImageView) findViewById(R.id.creator_avatar);
         editorsRecyclerView = (RecyclerView) findViewById(R.id.editors);
         editorsWrapperView = (RelativeLayout) findViewById(R.id.editors_wrapper);
+        expandEditorsArrow = (ImageView) findViewById(R.id.expand_editors_arrow);
     }
 
     /**
@@ -245,6 +250,8 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
      */
 
     private void setUi() {
+        avatarImageRadius = (int) getResources().getDimension(R.dimen.editor_avatar_radius);
+        avatarImageSize = 2 * avatarImageRadius;
         materialDialog = helpers.getMaterialDialog(this);
         thanksClose.setOnClickListener(this);
         btnDsDetailsIsInvalid.setOnClickListener(this);
@@ -338,15 +345,15 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 workWithMap(googleMap);
             }
         });
-//        if (diveSpot.getCreator() != null) {
+        if (diveSpot.getCreator() != null) {
             creatorLayout.setVisibility(View.VISIBLE);
-//            Picasso.with(this).load(diveSpot.getCreator().getPicture())
-//                    .resize(60, 60)
-//                    .centerCrop()
-//                    .transform(new TransformationRoundImage(100, 0)).into(creatorAvatar);
-//            creatorLayout.setOnClickListener(this);
-//            creatorName.setText(diveSpot.getCreator().getName());
-//        }
+            Picasso.with(this).load(diveSpot.getCreator().getPicture())
+                    .resize(avatarImageSize, avatarImageSize)
+                    .centerCrop()
+                    .transform(new TransformationRoundImage(avatarImageRadius, 0)).into(creatorAvatar);
+            creatorLayout.setOnClickListener(this);
+            creatorName.setText(diveSpot.getCreator().getName());
+        }
 
         progressBarFull.setVisibility(View.GONE);
         informationLayout.setVisibility(View.VISIBLE);
@@ -973,7 +980,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         editorsAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                LogUtils.i(TAG, "onAnimationUpdate " + valueAnimator.getAnimatedValue());
                 ViewGroup.LayoutParams lp = editorsWrapperView.getLayoutParams();
                 lp.height = (int) valueAnimator.getAnimatedValue();
                 editorsWrapperView.setLayoutParams(lp);
@@ -981,6 +987,18 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         });
         editorsAnimator.setInterpolator(new AccelerateInterpolator());
         editorsAnimator.start();
+
+        ValueAnimator arrowRotationAnimator = ValueAnimator.ofFloat(0f, -90f);
+        arrowRotationAnimator.setDuration(300);
+        arrowRotationAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                expandEditorsArrow.setRotation((Float) valueAnimator.getAnimatedValue());
+            }
+        });
+        arrowRotationAnimator.setInterpolator(new AccelerateInterpolator());
+        arrowRotationAnimator.start();
+
         editorsRecyclerView.setNestedScrollingEnabled(false);
         editorsListExpanded = true;
     }
@@ -1018,7 +1036,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         editorsAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                LogUtils.i(TAG, "onAnimationUpdate " + valueAnimator.getAnimatedValue());
                 ViewGroup.LayoutParams lp = editorsWrapperView.getLayoutParams();
                 lp.height = (int) valueAnimator.getAnimatedValue();
                 editorsWrapperView.setLayoutParams(lp);
@@ -1026,6 +1043,18 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         });
         editorsAnimator.setInterpolator(new AccelerateInterpolator());
         editorsAnimator.start();
+
+        ValueAnimator arrowRotationAnimator = ValueAnimator.ofFloat(-90f, 0f);
+        arrowRotationAnimator.setDuration(300);
+        arrowRotationAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                expandEditorsArrow.setRotation((Float) valueAnimator.getAnimatedValue());
+            }
+        });
+        arrowRotationAnimator.setInterpolator(new AccelerateInterpolator());
+        arrowRotationAnimator.start();
+
         editorsListExpanded = false;
     }
 
