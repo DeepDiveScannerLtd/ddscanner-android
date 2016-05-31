@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TimeZone;
 
 /**
  * Created by lashket on 9.4.16.
@@ -272,6 +273,7 @@ public class Helpers {
         String returnString = "";
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
+            format.setTimeZone(TimeZone.getTimeZone("GMT+0"));
             Date incomingDate = format.parse(date);
             incomingDateInMillis = incomingDate.getTime();
             differenceOfTime = currentDateInMillis - incomingDateInMillis;
