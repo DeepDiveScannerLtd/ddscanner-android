@@ -50,8 +50,8 @@ public class NotificationsListAdapter
             int color = context.getResources().getColor(R.color.primary);
             ForegroundColorSpan fcs = new ForegroundColorSpan(color);
             if (notification.getType().equals("dislike")) {
-                Picasso.with(context).load(notification.getUser().getPicture())
-                        .transform(new TransformationRoundImage(50,0)).into(holder.image);
+                Picasso.with(context).load(notification.getUser().getPicture()).resize(64,64)
+                        .transform(new TransformationRoundImage(50, 0)).into(holder.image);
                 String text = Constants.NOTIF_DISLIKE;
                 String name = notification.getUser().getName();
                 String divespot = notification.getDiveSpot().getName();
@@ -63,7 +63,7 @@ public class NotificationsListAdapter
                 holder.timeAgo.setText(helpers.getDate(notification.getDate()));
             }
             if (notification.getType().equals("like")) {
-                Picasso.with(context).load(notification.getUser().getPicture())
+                Picasso.with(context).load(notification.getUser().getPicture()).resize(64,64)
                         .transform(new TransformationRoundImage(50,0)).into(holder.image);
                 String text = Constants.NOTIF_LIKE;
                 String name = notification.getUser().getName();

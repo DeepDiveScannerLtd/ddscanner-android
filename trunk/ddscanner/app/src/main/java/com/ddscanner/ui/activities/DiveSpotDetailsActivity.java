@@ -350,7 +350,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             Picasso.with(this).load(diveSpot.getCreator().getPicture())
                     .resize(avatarImageSize, avatarImageSize)
                     .centerCrop()
-                    .transform(new TransformationRoundImage(avatarImageRadius, 0)).into(creatorAvatar);
+                    .transform(new TransformationRoundImage(avatarImageRadius, 12)).into(creatorAvatar);
             creatorLayout.setOnClickListener(this);
             creatorName.setText(diveSpot.getCreator().getName());
         }

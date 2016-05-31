@@ -74,12 +74,11 @@ public class ActivitiesListAdapter
             }
             if (activity.getType().equals("update")) {
                 String time = helpers.getDate(activity.getDate());
-                String text = Constants.NOTIF_ACCEPT;
+                String text = Constants.NOTIF_WAS_CHANGED;
                 String divespot = activity.getDiveSpot().getName();
                 text = String.format(text, divespot);
                 SpannableString spannableString = new SpannableString(text);
-                spannableString.setSpan(fcs, text.indexOf(divespot), text.indexOf(divespot)
-                        + divespot.length(), 0);
+                spannableString.setSpan(fcs, 0, divespot.length(), 0);
                 holder.text.setText(spannableString);
                 holder.timeAgo.setText(helpers.getDate(activity.getDate()));
             }
