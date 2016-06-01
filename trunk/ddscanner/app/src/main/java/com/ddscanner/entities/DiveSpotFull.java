@@ -26,6 +26,15 @@ public class DiveSpotFull {
     private String sealifePathOrigin;
     private String object;
     private boolean isCheckin;
+    private boolean isFavorite;
+
+    public boolean getIsFavorite() {
+        return isFavorite;
+    }
+
+    public void setIsFavorite(boolean favorite) {
+        isFavorite = favorite;
+    }
 
     public Boolean getValidation() {
         return isValidation;

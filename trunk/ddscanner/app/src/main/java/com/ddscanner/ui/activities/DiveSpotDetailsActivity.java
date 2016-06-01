@@ -254,9 +254,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
      */
 
     private void setUi() {
-        if (isFavorite) {
-            updateMenuItems(menu,true);
-        }
         avatarImageRadius = (int) getResources().getDimension(R.dimen.editor_avatar_radius);
         avatarImageSize = 2 * avatarImageRadius;
         materialDialog = helpers.getMaterialDialog(this);
@@ -270,7 +267,8 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         showMore.setOnClickListener(this);
         showAllReviews.setOnClickListener(this);
         diveSpot = divespotDetails.getDivespot();
-
+        isFavorite = diveSpot.getIsFavorite();
+        updateMenuItems(menu, isFavorite);
         if (divespotDetails.getComments() != null) {
             showAllReviews.setText(getString(R.string.show_all)
                     + String.valueOf(divespotDetails.getComments().size())
@@ -701,7 +699,11 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 onBackPressed();
                 return true;
             case R.id.favorite:
-                addDiveSpotToFavorites();
+                if (!isFavorite) {
+                    addDiveSpotToFavorites();
+                } else {
+                    removeFromFavorites(String.valueOf(diveSpot.getId()));
+                }
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -766,6 +768,10 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         call.enqueue(new retrofit2.Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.raw().code() == 200) {
+                    isFavorite = true;
+                    updateMenuItems(menu, isFavorite);
+                }
                 if (!response.isSuccessful()) {
                     if (response.raw().code() == 422) {
                         String error = "";
@@ -795,6 +801,10 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         call.enqueue(new retrofit2.Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.raw().code() == 200) {
+                    isFavorite = false;
+                    updateMenuItems(menu, isFavorite);
+                }
                 if (response.raw().code() == 422 || response.raw().code() == 404) {
                     SharedPreferenceHelper.logout();
                     DDScannerApplication.bus.post(new ShowLoginActivityIntent());
