@@ -13,9 +13,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.DiveSpot;
+import com.ddscanner.events.OpenAddDsActivityAfterLogin;
+import com.ddscanner.ui.activities.AddDiveSpotActivity;
 import com.ddscanner.ui.adapters.ProductListAdapter;
+import com.ddscanner.utils.SharedPreferenceHelper;
 
 import java.util.ArrayList;
 
@@ -30,6 +34,7 @@ public class ProductListFragment extends Fragment implements View.OnClickListene
     private Button btnGoToMap;
     private ViewPager viewPager;
     private FloatingActionButton mapListFAB;
+    private FloatingActionButton addDsFab;
 
 
     @Override
@@ -39,6 +44,8 @@ public class ProductListFragment extends Fragment implements View.OnClickListene
         rc = (RecyclerView) view.findViewById(R.id.cv);
         please = (RelativeLayout) view.findViewById(R.id.please);
         mapListFAB = (FloatingActionButton) view.findViewById(R.id.map_list_fab);
+        addDsFab = (FloatingActionButton) view.findViewById(R.id.add_ds_fab);
+        addDsFab.setOnClickListener(this);
         mapListFAB.setOnClickListener(this);
         rc.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
@@ -74,6 +81,13 @@ public class ProductListFragment extends Fragment implements View.OnClickListene
         switch (v.getId()) {
             case R.id.map_list_fab:
                 viewPager.setCurrentItem(0, false);
+                break;
+            case  R.id.add_ds_fab:
+                if (SharedPreferenceHelper.getIsUserLogined()) {
+                    AddDiveSpotActivity.show(getActivity());
+                } else {
+                    DDScannerApplication.bus.post(new OpenAddDsActivityAfterLogin());
+                }
                 break;
         }
     }
