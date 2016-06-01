@@ -73,8 +73,8 @@ public class MapListPagerAdapter extends FragmentStatePagerAdapter {
     }
 
     public void requestDiveSpots(String currents, String level, String object, int rating, String visibility) {
-        diveSpotsClusterManager.updateFilter(currents, level, object, rating, visibility);
-        diveSpotsClusterManager.requestCityProducts();
+//        diveSpotsClusterManager.updateFilter(currents, level, object, rating, visibility);
+//        diveSpotsClusterManager.requestCityProducts();
     }
 
 }

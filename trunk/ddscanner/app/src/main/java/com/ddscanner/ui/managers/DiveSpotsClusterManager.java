@@ -19,6 +19,7 @@ import com.ddscanner.entities.DiveSpot;
 import com.ddscanner.entities.DivespotsWrapper;
 import com.ddscanner.entities.request.DiveSpotsRequestMap;
 import com.ddscanner.events.CloseInfoWindowEvent;
+import com.ddscanner.events.FilterChosedEvent;
 import com.ddscanner.events.MarkerClickEvent;
 import com.ddscanner.events.OnMapClickEvent;
 import com.ddscanner.events.PlaceChoosedEvent;
@@ -270,12 +271,14 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         return true;
     }
 
-    public void updateFilter(String currents, String level, String object, int rating, String visibility) {
-        this.currents = currents;
+    public void updateFilter(String level, String object) {
+        if (level == null) {
+            this.level = "";
+            this.object = "";
+            return;
+        }
         this.level = level;
         this.object = object;
-        this.rating = rating;
-        this.visibility = visibility;
     }
 
 
@@ -418,6 +421,17 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
     @Subscribe
     public void moveCameraByChosedLocation(PlaceChoosedEvent event) {
         googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(event.getLatLngBounds(), 0));
+    }
+
+    @Subscribe
+    public void filterChosed(FilterChosedEvent event) {
+        if (event.getLevel() == null) {
+            updateFilter(null, null);
+            requestCityProducts();
+            return;
+        }
+        updateFilter(event.getLevel(), event.getObject());
+        requestCityProducts();
     }
 
 }

@@ -381,9 +381,9 @@ public class ProfileFragment extends Fragment
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                materialDialog.dismiss();
                 if (response.isSuccessful()) {
                     String responseString = "";
-                    materialDialog.dismiss();
                     if (response.raw().code() == 200) {
                         try {
                             responseString = response.body().string();

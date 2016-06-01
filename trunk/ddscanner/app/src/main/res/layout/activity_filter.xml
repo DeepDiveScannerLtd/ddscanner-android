@@ -134,6 +134,7 @@
         android:src="@drawable/divider" />
 
     <com.rey.material.widget.Button
+        android:id="@+id/applyFilters"
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:layout_marginLeft="20dp"

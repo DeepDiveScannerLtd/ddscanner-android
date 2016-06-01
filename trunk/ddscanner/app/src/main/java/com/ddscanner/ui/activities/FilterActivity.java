@@ -15,6 +15,9 @@ import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.FiltersResponseEntity;
+import com.ddscanner.entities.request.DiveSpotsRequestMap;
+import com.ddscanner.events.FilterChosedEvent;
+import com.ddscanner.events.FiltersChosedEvent;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.SpinnerItemsAdapter;
 import com.ddscanner.utils.EventTrackerHelper;
@@ -24,6 +27,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.rey.material.widget.Button;
 import com.rey.material.widget.Spinner;
 
 import java.io.IOException;
@@ -48,7 +52,11 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
     private FiltersResponseEntity filters = new FiltersResponseEntity();
     private Spinner objectSpinner;
     private Spinner levelSpinner;
+    private Button save;
     private Helpers helpers = new Helpers();
+    private Map<String,String> objectsMap = new HashMap<>();
+    private Map<String, String> levelsMap = new HashMap<>();
+    private FilterChosedEvent filterChosedEvent = new FilterChosedEvent();
 
     @Override
     protected void onCreate(Bundle savedInstance) {
@@ -68,6 +76,8 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         objectSpinner = (Spinner) findViewById(R.id.object_spinner);
         levelSpinner = (Spinner) findViewById(R.id.level_spinner);
+        save = (Button) findViewById(R.id.applyFilters);
+        save.setOnClickListener(this);
     }
 
 
@@ -88,6 +98,13 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
     public void onClick(View v) {
         Map <String, Object> eventValues = new HashMap<>();
         Intent data = new Intent();
+        filterChosedEvent.setObject(helpers.getMirrorOfHashMap(objectsMap)
+                .get(objectSpinner.getSelectedItem().toString()));
+        filterChosedEvent.setLevel(helpers.getMirrorOfHashMap(levelsMap)
+                .get(levelSpinner.getSelectedItem().toString()));
+        DDScannerApplication.bus.post(filterChosedEvent);
+       /* data.putExtra(DiveSpotsRequestMap.KEY_OBJECT, helpers.getMirrorOfHashMap(objectsMap)
+                .get(objectSpinner.getSelectedItem().toString()));*/
       /*  int selectedRadioButtonId = rgCurrents.getCheckedRadioButtonId();
         if (selectedRadioButtonId != -1) {
             data.putExtra(DiveSpotsRequestMap.KEY_CURRENTS, findViewById(selectedRadioButtonId).getTag().toString());
@@ -166,7 +183,8 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
 
 
                     Log.i(TAG, responseString);
-
+                    objectsMap = filters.getObject();
+                    levelsMap = filters.getLevel();
                     setFilerGroup(objectSpinner, filters.getObject(), SharedPreferenceHelper.getCurrents());
                     setFilerGroup(levelSpinner, filters.getLevel(), SharedPreferenceHelper.getCurrents());
                 } else {
@@ -188,9 +206,12 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
                 AppsFlyerLib.getInstance().trackEvent(getApplicationContext(),
                         EventTrackerHelper.EVENT_FILTER_CANCELLED, new HashMap<String, Object>());
                 onBackPressed();
-                return true;
+                finish();
             case R.id.reset_filters:
-                return true;
+                filterChosedEvent.setLevel(null);
+                filterChosedEvent.setObject(null);
+                DDScannerApplication.bus.post(filterChosedEvent);
+                finish();
             default:
                 return super.onOptionsItemSelected(item);
         }
