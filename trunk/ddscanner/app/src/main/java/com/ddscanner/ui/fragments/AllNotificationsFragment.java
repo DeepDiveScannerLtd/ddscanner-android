@@ -14,8 +14,10 @@ import com.ddscanner.entities.Activity;
 import com.ddscanner.entities.Notification;
 import com.ddscanner.ui.adapters.ActivitiesListAdapter;
 import com.ddscanner.ui.adapters.NotificationsListAdapter;
+import com.ddscanner.ui.adapters.SectionedRecyclerViewAdapter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by lashket on 25.5.16.
@@ -42,8 +44,19 @@ public class AllNotificationsFragment extends Fragment {
     }
 
     public void addList(ArrayList<Notification> activities) {
-        recyclerView.setAdapter(new NotificationsListAdapter(activities, getContext(),
-                getFragmentManager()));
+        NotificationsListAdapter notificationsListAdapter = new NotificationsListAdapter(
+                activities, getContext(), getFragmentManager());
+        List<SectionedRecyclerViewAdapter.Section> sections =
+                new ArrayList<SectionedRecyclerViewAdapter.Section>();
+        sections.add(new SectionedRecyclerViewAdapter.Section(0, "Newest"));
+        sections.add(new SectionedRecyclerViewAdapter.Section(1, "Older"));
+        SectionedRecyclerViewAdapter.Section[] dummy =
+                new SectionedRecyclerViewAdapter.Section[sections.size()];
+        SectionedRecyclerViewAdapter sectionedRecyclerViewAdapter =
+                new SectionedRecyclerViewAdapter(getContext(), R.layout.section_layout,
+                        R.id.section_title, notificationsListAdapter);
+        sectionedRecyclerViewAdapter.setSections(sections.toArray(dummy));
+        recyclerView.setAdapter(sectionedRecyclerViewAdapter);
     }
 
 }

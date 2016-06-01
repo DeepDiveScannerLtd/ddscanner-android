@@ -97,4 +97,5 @@ dependencies {
     compile 'com.daimajia.swipelayout:library:1.2.0@aar'
     compile 'com.github.ganfra:material-spinner:1.1.1'
     compile 'com.github.lovetuzitong:MultiImageSelector:1.1'
+    compile 'org.lucasr.twowayview:twowayview:0.1.4'
 }

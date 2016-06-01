@@ -3,6 +3,7 @@ package com.ddscanner.ui.adapters;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.support.percent.PercentRelativeLayout;
+import android.support.v7.widget.AppCompatDrawableManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -62,6 +63,8 @@ public class ActivitiesListAdapter
                 spannableString.setSpan(fcs, text.indexOf(divespot), text.length(), 0);
                 holder.text.setText(spannableString);
                 holder.timeAgo.setText(helpers.getDate(activity.getDate()));
+                holder.image.setImageDrawable(AppCompatDrawableManager.get()
+                        .getDrawable(context, R.drawable.ic_notif_checkin));
             }
             if (activity.getType().equals("store")) {
                 String text = Constants.NOTIF_NEWDS;
@@ -73,6 +76,8 @@ public class ActivitiesListAdapter
                 holder.timeAgo.setText(helpers.getDate(activity.getDate()));
             }
             if (activity.getType().equals("update")) {
+                holder.image.setImageDrawable(AppCompatDrawableManager.get()
+                        .getDrawable(context, R.drawable.ic_notif_changed));
                 String time = helpers.getDate(activity.getDate());
                 String text = Constants.NOTIF_WAS_CHANGED;
                 String divespot = activity.getDiveSpot().getName();
@@ -100,6 +105,7 @@ public class ActivitiesListAdapter
         private TextView text;
         private TextView timeAgo;
         private PercentRelativeLayout percentRelativeLayout;
+        private ImageView image;
         private Context context;
 
         public ActivitiesListViewHolder(View v) {
@@ -109,6 +115,7 @@ public class ActivitiesListAdapter
             timeAgo = (TextView) v.findViewById(R.id.time_ago); 
             text = (TextView) v.findViewById(R.id.text);
             percentRelativeLayout = (PercentRelativeLayout) v.findViewById(R.id.content);
+            image = (ImageView) v.findViewById(R.id.image);
         }
 
         @Override
