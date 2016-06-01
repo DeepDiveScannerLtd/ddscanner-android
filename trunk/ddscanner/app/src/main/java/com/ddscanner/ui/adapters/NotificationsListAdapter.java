@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.percent.PercentRelativeLayout;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.widget.AppCompatDrawableManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -50,6 +51,8 @@ public class NotificationsListAdapter
             int color = context.getResources().getColor(R.color.primary);
             ForegroundColorSpan fcs = new ForegroundColorSpan(color);
             if (notification.getType().equals("dislike")) {
+                holder.likeDislikeImage.setImageDrawable(AppCompatDrawableManager.get()
+                        .getDrawable(context, R.drawable.icon_dislike));
                 Picasso.with(context).load(notification.getUser().getPicture()).resize(64,64)
                         .transform(new TransformationRoundImage(50, 0)).into(holder.image);
                 String text = Constants.NOTIF_DISLIKE;
@@ -63,6 +66,8 @@ public class NotificationsListAdapter
                 holder.timeAgo.setText(helpers.getDate(notification.getDate()));
             }
             if (notification.getType().equals("like")) {
+                holder.likeDislikeImage.setImageDrawable(AppCompatDrawableManager.get()
+                        .getDrawable(context, R.drawable.icon_like));
                 Picasso.with(context).load(notification.getUser().getPicture()).resize(64,64)
                         .transform(new TransformationRoundImage(50,0)).into(holder.image);
                 String text = Constants.NOTIF_LIKE;
@@ -113,6 +118,7 @@ public class NotificationsListAdapter
         private TextView timeAgo;
         private PercentRelativeLayout percentRelativeLayout;
         private Context context;
+        private ImageView likeDislikeImage;
 
         public NotificationListViewHolder(View v) {
             super(v);
@@ -123,6 +129,7 @@ public class NotificationsListAdapter
             percentRelativeLayout.setOnClickListener(this);
             image = (ImageView) v.findViewById(R.id.image);
             timeAgo = (TextView) v.findViewById(R.id.time_ago);
+            likeDislikeImage = (ImageView) v.findViewById(R.id.like_dislike);
             image.setOnClickListener(this);
             percentRelativeLayout.setOnClickListener(this);
         }
