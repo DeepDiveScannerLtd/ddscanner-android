@@ -21,6 +21,7 @@ import com.ddscanner.events.ShowUserDialogEvent;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.dialogs.ProfileDialog;
 import com.ddscanner.ui.views.TransformationRoundImage;
+import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.squareup.picasso.Picasso;
 
@@ -42,14 +43,12 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
     private String path;
     private boolean isAdapterSet = false;
     private static ProfileDialog profileDialog = new ProfileDialog();
-    private static RegisterRequest registerRequest = new RegisterRequest();
+    private Helpers helpers = new Helpers();
 
     public ReviewsListAdapter(ArrayList<Comment> comments, Context context, String path) {
         this.path = path;
         this.comments = comments;
         this.context = context;
-        registerRequest.setSocial(SharedPreferenceHelper.getSn());
-        registerRequest.setToken(SharedPreferenceHelper.getToken());
     }
 
     @Override
@@ -173,8 +172,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
                              final ImageView likeImage,
                              final TextView likesCount, final TextView dislikesCount) {
         Call<ResponseBody> call = RestClient.getServiceInstance().likeComment(
-                id,
-                registerRequest
+                id, helpers.getRegisterRequest()
         );
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -198,8 +196,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
                                 final ImageView likeImage,
                                 final TextView likesCount, final TextView dislikesCount) {
         Call<ResponseBody> call = RestClient.getServiceInstance().dislikeComment(
-                id,
-                registerRequest
+                id, helpers.getRegisterRequest()
         );
         call.enqueue(new Callback<ResponseBody>() {
             @Override
