@@ -65,7 +65,8 @@ import retrofit2.Call;
 /**
  * Created by lashket on 20.4.16.
  */
-public class MainActivity extends FragmentActivity implements ViewPager.OnPageChangeListener, View.OnClickListener {
+public class MainActivity extends FragmentActivity
+        implements ViewPager.OnPageChangeListener, View.OnClickListener {
 
     private static final String TAG = MainActivity.class.getName();
 
@@ -211,8 +212,6 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
                         }
                     });
         }
-        Log.i(TAG,String.valueOf(SharedPreferenceHelper.getIsUserLogined()));
-        Log.i(TAG,String.valueOf(SharedPreferenceHelper.getToken()));
         if ((position == 2 || position == 1) && !SharedPreferenceHelper.getIsUserLogined()) {
             positionToScroll = position;
             Intent intent = new Intent(MainActivity.this, SocialNetworks.class);
@@ -274,12 +273,12 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
                     isTryToOpenAddDiveSpotActivity = false;
                     return;
                 }
-                mainViewPager.setCurrentItem(positionToScroll);
+                mainViewPager.setCurrentItem(positionToScroll, false);
             } else {
                 isTryToOpenAddDiveSpotActivity = false;
             }
             if (resultCode == RESULT_CANCELED) {
-                mainViewPager.setCurrentItem(0);
+                mainViewPager.setCurrentItem(0, false);
             }
         }
 
