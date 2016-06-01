@@ -96,43 +96,11 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
-        Map <String, Object> eventValues = new HashMap<>();
-        Intent data = new Intent();
         filterChosedEvent.setObject(helpers.getMirrorOfHashMap(objectsMap)
                 .get(objectSpinner.getSelectedItem().toString()));
         filterChosedEvent.setLevel(helpers.getMirrorOfHashMap(levelsMap)
                 .get(levelSpinner.getSelectedItem().toString()));
         DDScannerApplication.bus.post(filterChosedEvent);
-       /* data.putExtra(DiveSpotsRequestMap.KEY_OBJECT, helpers.getMirrorOfHashMap(objectsMap)
-                .get(objectSpinner.getSelectedItem().toString()));*/
-      /*  int selectedRadioButtonId = rgCurrents.getCheckedRadioButtonId();
-        if (selectedRadioButtonId != -1) {
-            data.putExtra(DiveSpotsRequestMap.KEY_CURRENTS, findViewById(selectedRadioButtonId).getTag().toString());
-            SharedPreferenceHelper.setCurrents(findViewById(selectedRadioButtonId).getTag().toString());
-            eventValues.put(DiveSpotsRequestMap.KEY_CURRENTS, findViewById(selectedRadioButtonId).getTag().toString());
-        }
-        selectedRadioButtonId = rgLevel.getCheckedRadioButtonId();
-        if (selectedRadioButtonId != -1) {
-            data.putExtra(DiveSpotsRequestMap.KEY_LEVEL, findViewById(selectedRadioButtonId).getTag().toString());
-            SharedPreferenceHelper.setLevel(findViewById(selectedRadioButtonId).getTag().toString());
-            eventValues.put(DiveSpotsRequestMap.KEY_LEVEL, findViewById(selectedRadioButtonId).getTag().toString());
-        }
-        selectedRadioButtonId = rgVisibility.getCheckedRadioButtonId();
-        if (selectedRadioButtonId != -1) {
-            data.putExtra(DiveSpotsRequestMap.KEY_VISIBILITY, findViewById(selectedRadioButtonId).getTag().toString());
-            SharedPreferenceHelper.setVisibility(findViewById(selectedRadioButtonId).getTag().toString());
-            eventValues.put(DiveSpotsRequestMap.KEY_VISIBILITY, findViewById(selectedRadioButtonId).getTag().toString());
-        }
-        selectedRadioButtonId = rgObject.getCheckedRadioButtonId();
-        if (selectedRadioButtonId != -1) {
-            data.putExtra(DiveSpotsRequestMap.KEY_OBJECT, findViewById(selectedRadioButtonId).getTag().toString());
-            SharedPreferenceHelper.setObject(findViewById(selectedRadioButtonId).getTag().toString());
-            eventValues.put(DiveSpotsRequestMap.KEY_OBJECT, findViewById(selectedRadioButtonId).getTag().toString());
-        }
-*/
-        AppsFlyerLib.getInstance().trackEvent(getApplicationContext(),
-                EventTrackerHelper.EVENT_FILTER_APPLIED, eventValues);
-        setResult(RESULT_OK, data);
         finish();
     }
 
