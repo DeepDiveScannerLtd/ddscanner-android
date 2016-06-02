@@ -145,10 +145,18 @@ public class NotificationsListAdapter
 
             switch (v.getId()) {
                 case R.id.content:
-                    createAction(sectionAdapter.sectionedPositionToPosition(getAdapterPosition()), false);
+                    if (sectionAdapter != null) {
+                        createAction(sectionAdapter.sectionedPositionToPosition(getAdapterPosition()), false);
+                    } else {
+                        createAction(getAdapterPosition(), false);
+                    }
                     break;
                 case R.id.image:
-                    createAction(sectionAdapter.sectionedPositionToPosition(getAdapterPosition()), true);
+                    if (sectionAdapter != null) {
+                        createAction(sectionAdapter.sectionedPositionToPosition(getAdapterPosition()), true);
+                    } else {
+                        createAction(getAdapterPosition(), true);
+                    }
                     break;
             }
         }

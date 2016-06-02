@@ -12,8 +12,12 @@ import com.ddscanner.R;
 import com.ddscanner.entities.Activity;
 import com.ddscanner.ui.adapters.ActivitiesListAdapter;
 import com.ddscanner.ui.adapters.NotificationsListAdapter;
+import com.ddscanner.ui.adapters.SectionedRecyclerViewAdapter;
+import com.ddscanner.utils.Helpers;
+import com.ddscanner.utils.SharedPreferenceHelper;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -22,6 +26,7 @@ import java.util.List;
 public class ActivityNotificationsFragment extends Fragment {
 
     private RecyclerView recyclerView;
+    private Helpers helpers = new Helpers();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,6 +49,47 @@ public class ActivityNotificationsFragment extends Fragment {
     }
 
     public void addList(ArrayList<Activity> activities) {
-        recyclerView.setAdapter(new ActivitiesListAdapter(getContext(), activities));
+        if (!helpers.comparingTimes(SharedPreferenceHelper.getLastShowingNotificationTime(),
+                activities.get(0).getDate())) {
+            recyclerView.setAdapter(new ActivitiesListAdapter(
+                    getContext(), activities));
+            Date date = new Date();
+            long currentDateInMillis = date.getTime();
+            SharedPreferenceHelper.setLastShowingNotificationTime(currentDateInMillis);
+            return;
+        }
+        int i = 0;
+        while (helpers.comparingTimes(SharedPreferenceHelper.getLastShowingNotificationTime(),
+                activities.get(i).getDate())) {
+            i++;
+        }
+        ActivitiesListAdapter notificationsListAdapter = new ActivitiesListAdapter(
+                getContext(), activities);
+        List<SectionedRecyclerViewAdapter.Section> sections =
+                new ArrayList<SectionedRecyclerViewAdapter.Section>();
+        sections.add(new SectionedRecyclerViewAdapter.Section(0, "Newest"));
+        sections.add(new SectionedRecyclerViewAdapter.Section(i, "Older"));
+        SectionedRecyclerViewAdapter.Section[] dummy =
+                new SectionedRecyclerViewAdapter.Section[sections.size()];
+        SectionedRecyclerViewAdapter sectionedRecyclerViewAdapter =
+                new SectionedRecyclerViewAdapter(getContext(), R.layout.section_layout,
+                        R.id.section_title, notificationsListAdapter);
+        sectionedRecyclerViewAdapter.setSections(sections.toArray(dummy));
+        notificationsListAdapter.setSectionAdapter(sectionedRecyclerViewAdapter);
+        recyclerView.setAdapter(sectionedRecyclerViewAdapter);
+        Date date = new Date();
+        long currentDateInMillis = date.getTime();
+        SharedPreferenceHelper.setLastShowingNotificationTime(currentDateInMillis);
+    }
+
+    @Override
+    public void setUserVisibleHint(final boolean visible) {
+        super.setUserVisibleHint(visible);
+        if (visible) {
+            if (recyclerView != null) {
+                Date date1 = new Date();
+                long currentDateInMillis = date1.getTime();
+            }
+        }
     }
 }

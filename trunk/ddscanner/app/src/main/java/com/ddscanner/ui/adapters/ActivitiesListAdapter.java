@@ -32,6 +32,7 @@ public class ActivitiesListAdapter
     private Helpers helpers = new Helpers();
     private FragmentManager mFragmentManager;
     private List<Activity> activities;
+    private SectionedRecyclerViewAdapter sectionAdapter;
 
     public ActivitiesListAdapter(Context context, ArrayList<Activity> activities) {
         this.context = context;
@@ -90,6 +91,10 @@ public class ActivitiesListAdapter
         }
     }
 
+    public void setSectionAdapter(SectionedRecyclerViewAdapter sectionAdapter) {
+        this.sectionAdapter = sectionAdapter;
+    }
+
     @Override
     public int getItemCount() {
         if (activities !=null) {
@@ -120,8 +125,13 @@ public class ActivitiesListAdapter
 
         @Override
         public void onClick(View v) {
+            if (sectionAdapter != null) {
+                DiveSpotDetailsActivity.show(context,
+                        String.valueOf(activities.get(sectionAdapter.sectionedPositionToPosition(getAdapterPosition())).getDiveSpot().getId()));
+                return;
+            }
             DiveSpotDetailsActivity.show(context,
-                    String.valueOf(activities.get(getAdapterPosition()).getDiveSpot().getId()));
+                    String.valueOf(activities.get(sectionAdapter.sectionedPositionToPosition(getAdapterPosition())).getDiveSpot().getId()));
         }
     }
 

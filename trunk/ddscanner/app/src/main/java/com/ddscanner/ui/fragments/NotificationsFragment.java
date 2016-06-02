@@ -23,6 +23,7 @@ import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import okhttp3.ResponseBody;
@@ -33,7 +34,7 @@ import retrofit2.Response;
 /**
  * Created by lashket on 20.4.16.
  */
-public class NotificationsFragment extends Fragment {
+public class NotificationsFragment extends Fragment implements ViewPager.OnPageChangeListener{
 
     private List<Activity> activities = new ArrayList<>();
     private List<Notification> notificationList = new ArrayList<>();
@@ -54,7 +55,7 @@ public class NotificationsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_notifications, container, false);
         findViews(view);
-        getUserNotifications();
+     //   getUserNotifications();
         return view;
     }
 
@@ -87,8 +88,13 @@ public class NotificationsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        if (DDScannerApplication.isActivitiesFragmentVisible) {
+            Date date1 = new Date();
+            long currentDateInMillis = date1.getTime();
+            SharedPreferenceHelper.setLastShowingNotificationTime(currentDateInMillis);
+        }
         if (SharedPreferenceHelper.getIsUserLogined()) {
-            getUserNotifications();
+           // getUserNotifications();
         }
         DDScannerApplication.bus.register(this);
         if (!getUserVisibleHint())
@@ -129,14 +135,6 @@ public class NotificationsFragment extends Fragment {
                             activityNotificationsFragment.addList((ArrayList<Activity>) activities);
                             allNotificationsFragment.addList((ArrayList<Notification>)
                                     notifications.getNotifications());
-//                            notificationList = notifications.getNotifications();
-//                            Bundle bundle = new Bundle();
-//                            bundle.putSerializable("NOTIF", (ArrayList<Notification>) notificationList);
-//                            allNotificationsFragment.setArguments(bundle);
-                           /*  Bundle bundle = new Bundle();
-                            bundle.putSerializable("NOTIF", (ArrayList<Activity>) activities);
-                            activityNotificationsFragment.setArguments(bundle);*/
-
                         } catch (IOException e) {
 
                         }
@@ -149,6 +147,21 @@ public class NotificationsFragment extends Fragment {
 
             }
         });
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
     }
 
 }

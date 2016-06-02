@@ -27,6 +27,7 @@ public class DDScannerApplication extends Application {
     public static Bus bus = new Bus();
     public static boolean isErrorActivityShown = false;
     private static boolean activityVisible = true;
+    public static boolean isActivitiesFragmentVisible = false;
 
     private static DDScannerApplication instance;
 

@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,13 +61,33 @@ public class AllNotificationsFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.i("RES", "resumed");
+    }
+
     public void addList(ArrayList<Notification> activities) {
+        if (!helpers.comparingTimes(SharedPreferenceHelper.getLastShowingNotificationTime(),
+               activities.get(0).getDate())) {
+            recyclerView.setAdapter(new NotificationsListAdapter(
+                    activities, getContext(), getFragmentManager()));
+            Date date = new Date();
+            long currentDateInMillis = date.getTime();
+            SharedPreferenceHelper.setLastShowingNotificationTime(currentDateInMillis);
+            return;
+        }
+        int i = 0;
+        while (helpers.comparingTimes(SharedPreferenceHelper.getLastShowingNotificationTime(),
+                activities.get(i).getDate())) {
+            i++;
+        }
         NotificationsListAdapter notificationsListAdapter = new NotificationsListAdapter(
                 activities, getContext(), getFragmentManager());
         List<SectionedRecyclerViewAdapter.Section> sections =
                 new ArrayList<SectionedRecyclerViewAdapter.Section>();
         sections.add(new SectionedRecyclerViewAdapter.Section(0, "Newest"));
-        sections.add(new SectionedRecyclerViewAdapter.Section(1, "Older"));
+        sections.add(new SectionedRecyclerViewAdapter.Section(i, "Older"));
         SectionedRecyclerViewAdapter.Section[] dummy =
                 new SectionedRecyclerViewAdapter.Section[sections.size()];
         SectionedRecyclerViewAdapter sectionedRecyclerViewAdapter =
@@ -75,6 +96,9 @@ public class AllNotificationsFragment extends Fragment {
         sectionedRecyclerViewAdapter.setSections(sections.toArray(dummy));
         notificationsListAdapter.setSectionAdapter(sectionedRecyclerViewAdapter);
         recyclerView.setAdapter(sectionedRecyclerViewAdapter);
+        Date date = new Date();
+        long currentDateInMillis = date.getTime();
+        SharedPreferenceHelper.setLastShowingNotificationTime(currentDateInMillis);
     }
 
 }

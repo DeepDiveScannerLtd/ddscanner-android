@@ -186,6 +186,7 @@ public class ProfileFragment extends Fragment
                 break;
             case R.id.logout:
                 materialDialog.show();
+                SharedPreferenceHelper.setLastShowingNotificationTime(0);
                 logout();
                 break;
             case R.id.checkins_activity:

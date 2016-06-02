@@ -133,7 +133,9 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
             iv.setPadding(0, 0, 5, 0);
             reviewsListViewHolder.rating.addView(iv);
         }
-        reviewsListViewHolder.date.setText(helpers.convertDate(comments.get(i).getDate()));
+        if (comments.get(i).getDate() != null && !comments.get(i).getDate().isEmpty()) {
+            reviewsListViewHolder.date.setText(helpers.convertDate(comments.get(i).getDate()));
+        }
     }
 
     @Override
