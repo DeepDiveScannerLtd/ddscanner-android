@@ -29,6 +29,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -318,6 +319,20 @@ public class Helpers {
             return false;
         }
 
+    }
+
+    public String convertDate(String incomingDate) {
+        String returningString = "";
+        SimpleDateFormat serverFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        serverFormat.setTimeZone(TimeZone.getTimeZone("GMT+0"));
+        SimpleDateFormat returnedFormat = new SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH);
+        try {
+            Date date = serverFormat.parse(incomingDate);
+            returningString = returnedFormat.format(date);
+        } catch (ParseException e) {
+
+        }
+        return returningString;
     }
 
 }
