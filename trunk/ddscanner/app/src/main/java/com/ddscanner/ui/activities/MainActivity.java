@@ -92,10 +92,10 @@ public class MainActivity extends FragmentActivity
     private boolean isTryToOpenAddDiveSpotActivity = false;
     private int positionToScroll;
 
-    private MapListFragment mapListFragment = new MapListFragment();
-    private NotificationsFragment notificationsFragment = new NotificationsFragment();
+//    private MapListFragment mapListFragment = new MapListFragment();
+//    private NotificationsFragment notificationsFragment = new NotificationsFragment();
     private ProfileFragment profileFragment = new ProfileFragment();
-    private EditProfileFragment editProfileFragment = new EditProfileFragment();
+//    private EditProfileFragment editProfileFragment = new EditProfileFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

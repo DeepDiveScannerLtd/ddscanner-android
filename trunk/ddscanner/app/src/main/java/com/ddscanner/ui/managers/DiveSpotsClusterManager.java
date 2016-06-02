@@ -2,17 +2,13 @@ package com.ddscanner.ui.managers;
 
 import android.content.Context;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
-import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.DiveSpot;
@@ -25,8 +21,7 @@ import com.ddscanner.events.OnMapClickEvent;
 import com.ddscanner.events.PlaceChoosedEvent;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.services.GPSTracker;
-import com.ddscanner.ui.adapters.MapListPagerAdapter;
-import com.ddscanner.utils.EventTrackerHelper;
+import com.ddscanner.ui.fragments.MapListFragment;
 import com.ddscanner.utils.LogUtils;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -44,7 +39,6 @@ import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.algo.GridBasedAlgorithm;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
-import com.google.maps.android.ui.SquareTextView;
 import com.squareup.otto.Subscribe;
 
 import java.io.IOException;
@@ -65,6 +59,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
     private final IconGenerator clusterIconGenerator3Symbols;
     private Context context;
     private GoogleMap googleMap;
+    private MapListFragment parentFragment;
     private DiveSpotsRequestMap diveSpotsRequestMap = new DiveSpotsRequestMap();
     private DivespotsWrapper divespotsWrapper;
     private ArrayList<DiveSpot> diveSpots = new ArrayList<>();
@@ -76,8 +71,6 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
     private int rating = -1;
     private String visibility;
 
-    private MapListPagerAdapter mapListPagerAdapter;
-
     private boolean isCanMakeRequest = false;
 
     private ProgressBar progressBar;
@@ -85,10 +78,11 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
 
     private Marker lastClickedMarker;
 
-    public DiveSpotsClusterManager(Context context, GoogleMap googleMap, MapListPagerAdapter mapListPagerAdapter, RelativeLayout toast, ProgressBar progressBar) {
+    public DiveSpotsClusterManager(Context context, GoogleMap googleMap, RelativeLayout toast, ProgressBar progressBar, MapListFragment parentFragment) {
         super(context, googleMap);
         this.context = context;
         this.googleMap = googleMap;
+        this.parentFragment = parentFragment;
 
         View clusterView;
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -110,7 +104,6 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
 
         this.toast = toast;
         this.progressBar = progressBar;
-        this.mapListPagerAdapter = mapListPagerAdapter;
         googleMap.setOnMapClickListener(this);
         setAlgorithm(new GridBasedAlgorithm<DiveSpot>());
         setRenderer(new IconRenderer(context, googleMap, this));
@@ -180,7 +173,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
 
         LatLng southwest = googleMap.getProjection().getVisibleRegion().latLngBounds.southwest;
         LatLng northeast = googleMap.getProjection().getVisibleRegion().latLngBounds.northeast;
-        mapListPagerAdapter.populateDiveSpotsList(changeListToListFragment(diveSpots));
+        parentFragment.fillDiveSpots(getVisibleMarkersList(diveSpots));
         if (checkArea(southwest, northeast)) {
             if (isCanMakeRequest) {
                 if (southwest.latitude <= diveSpotsRequestMap.getSouthWestLat() ||
@@ -325,7 +318,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
                         LogUtils.i(TAG, "response body is " + responseString);
                         divespotsWrapper = new Gson().fromJson(responseString, DivespotsWrapper.class);
                         updateDiveSpots((ArrayList<DiveSpot>) divespotsWrapper.getDiveSpots());
-                        mapListPagerAdapter.populateDiveSpotsList(changeListToListFragment((ArrayList<DiveSpot>) divespotsWrapper.getDiveSpots()));
+                        parentFragment.fillDiveSpots(getVisibleMarkersList(diveSpots));
                         hidePb();
                     } else {
                         hidePb();
@@ -389,7 +382,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         }
     }
 
-    private ArrayList<DiveSpot> changeListToListFragment(ArrayList<DiveSpot> oldList) {
+    private ArrayList<DiveSpot> getVisibleMarkersList(ArrayList<DiveSpot> oldList) {
         ArrayList<DiveSpot> newList = new ArrayList<>();
         for (DiveSpot diveSpot : oldList) {
             if (isSpotVisibleOnScreen(Float.valueOf(diveSpot.getLat()), Float.valueOf(diveSpot.getLng()))) {
