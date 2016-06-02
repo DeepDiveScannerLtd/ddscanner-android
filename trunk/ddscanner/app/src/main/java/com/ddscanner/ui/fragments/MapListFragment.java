@@ -356,8 +356,10 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
                         .position(myLocation)
                         .anchor(0.5f, 0.5f)
                         .icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.pin_me))));
+                diveSpotsClusterManager.setUserCurrentLocationMarker(myLocationMarker);
             } else {
                 myLocationMarker.setPosition(new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude()));
+                diveSpotsClusterManager.setUserCurrentLocationMarker(myLocationMarker);
             }
         } else {
             gpsTracker.showSettingsAlert();

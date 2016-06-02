@@ -77,6 +77,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
     private RelativeLayout toast;
 
     private Marker lastClickedMarker;
+    private Marker userCurrentLocationMarker;
 
     public DiveSpotsClusterManager(Context context, GoogleMap googleMap, RelativeLayout toast, ProgressBar progressBar, MapListFragment parentFragment) {
         super(context, googleMap);
@@ -192,7 +193,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
 
     @Override
     public boolean onMarkerClick(final Marker marker) {
-        if (super.onMarkerClick(marker)) {
+        if (super.onMarkerClick(marker) || marker.equals(userCurrentLocationMarker)) {
             return true;
         }
         if (lastClickedMarker != null) {
@@ -427,4 +428,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         requestCityProducts();
     }
 
+    public void setUserCurrentLocationMarker(Marker userCurrentLocationMarker) {
+        this.userCurrentLocationMarker = userCurrentLocationMarker;
+    }
 }
