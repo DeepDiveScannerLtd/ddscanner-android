@@ -76,8 +76,6 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
     private int rating = -1;
     private String visibility;
 
-    private MapListPagerAdapter mapListPagerAdapter;
-
     private boolean isCanMakeRequest = false;
 
     private ProgressBar progressBar;
@@ -85,7 +83,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
 
     private Marker lastClickedMarker;
 
-    public DiveSpotsClusterManager(Context context, GoogleMap googleMap, MapListPagerAdapter mapListPagerAdapter, RelativeLayout toast, ProgressBar progressBar) {
+    public DiveSpotsClusterManager(Context context, GoogleMap googleMap, RelativeLayout toast, ProgressBar progressBar) {
         super(context, googleMap);
         this.context = context;
         this.googleMap = googleMap;
@@ -110,7 +108,6 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
 
         this.toast = toast;
         this.progressBar = progressBar;
-        this.mapListPagerAdapter = mapListPagerAdapter;
         googleMap.setOnMapClickListener(this);
         setAlgorithm(new GridBasedAlgorithm<DiveSpot>());
         setRenderer(new IconRenderer(context, googleMap, this));
@@ -180,7 +177,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
 
         LatLng southwest = googleMap.getProjection().getVisibleRegion().latLngBounds.southwest;
         LatLng northeast = googleMap.getProjection().getVisibleRegion().latLngBounds.northeast;
-        mapListPagerAdapter.populateDiveSpotsList(changeListToListFragment(diveSpots));
+//        mapListPagerAdapter.populateDiveSpotsList(changeListToListFragment(diveSpots));
         if (checkArea(southwest, northeast)) {
             if (isCanMakeRequest) {
                 if (southwest.latitude <= diveSpotsRequestMap.getSouthWestLat() ||
@@ -325,7 +322,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
                         LogUtils.i(TAG, "response body is " + responseString);
                         divespotsWrapper = new Gson().fromJson(responseString, DivespotsWrapper.class);
                         updateDiveSpots((ArrayList<DiveSpot>) divespotsWrapper.getDiveSpots());
-                        mapListPagerAdapter.populateDiveSpotsList(changeListToListFragment((ArrayList<DiveSpot>) divespotsWrapper.getDiveSpots()));
+//                        mapListPagerAdapter.populateDiveSpotsList(changeListToListFragment((ArrayList<DiveSpot>) divespotsWrapper.getDiveSpots()));
                         hidePb();
                     } else {
                         hidePb();

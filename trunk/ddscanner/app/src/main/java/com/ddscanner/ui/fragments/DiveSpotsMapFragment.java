@@ -30,6 +30,7 @@ import com.ddscanner.ui.activities.AddDiveSpotActivity;
 import com.ddscanner.ui.activities.DiveSpotDetailsActivity;
 import com.ddscanner.ui.adapters.MapListPagerAdapter;
 import com.ddscanner.ui.managers.DiveSpotsClusterManager;
+import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -49,6 +50,7 @@ import java.util.Map;
  */
 public class DiveSpotsMapFragment extends Fragment implements View.OnClickListener {
 
+    private static final String TAG = DiveSpotsMapFragment.class.getName();
     private GoogleMap mGoogleMap;
     private DiveSpotsClusterManager diveSpotsClusterManager;
     MapView mMapView;
@@ -76,6 +78,49 @@ public class DiveSpotsMapFragment extends Fragment implements View.OnClickListen
     private MapListPagerAdapter mapListPagerAdapter;
     private View v;
 
+//    @Override
+//    public void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//
+//        mMapView.onCreate(savedInstanceState);
+//    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        mMapView.onDestroy();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+
+        mMapView.onLowMemory();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        mMapView.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        mMapView.onResume();
+    }
+
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        mMapView.onSaveInstanceState(outState);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
        // super.onCreateView(inflater, container, savedInstanceState);
@@ -101,16 +146,18 @@ public class DiveSpotsMapFragment extends Fragment implements View.OnClickListen
         addDsFab.setOnClickListener(this);
         mapListFAB.setOnClickListener(this);
         mMapView = (MapView) v.findViewById(R.id.mapView);
+        LogUtils.i(TAG, "mMapView inited");
         mMapView.onCreate(savedInstanceState);
-        mMapView.onResume();
         mMapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap googleMap) {
+                LogUtils.i(TAG, "onMapReady, googleMap = " + googleMap);
                 mGoogleMap = googleMap;
                 mGoogleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
                     @Override
                     public void onMapLoaded() {
-                        diveSpotsClusterManager = new DiveSpotsClusterManager(getActivity(), mGoogleMap, mapListPagerAdapter ,toast, progressBar);
+                        LogUtils.i(TAG, "onMapLoaded");
+                        diveSpotsClusterManager = new DiveSpotsClusterManager(getActivity(), mGoogleMap, toast, progressBar);
                         mGoogleMap.setOnMarkerClickListener(diveSpotsClusterManager);
                         mGoogleMap.setOnCameraChangeListener(diveSpotsClusterManager);
                     }
@@ -129,13 +176,6 @@ public class DiveSpotsMapFragment extends Fragment implements View.OnClickListen
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        mMapView.onResume();
 
     }
 

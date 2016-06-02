@@ -28,9 +28,9 @@ public class MapListPagerAdapter extends FragmentStatePagerAdapter {
     private ProgressBar progressBar;
     private FragmentManager fragmentManager;
     private Context context;
-    private ProductListFragment productListFragment;
     private DiveSpotsClusterManager diveSpotsClusterManager;
     private ViewPager viewPager;
+    private ProductListFragment productListFragment;
 
     public MapListPagerAdapter(Context context, FragmentManager fm, LatLng latLng, LatLngBounds latLngBounds, RelativeLayout toast, ProgressBar progressBar, ViewPager viewPager) {
         super(fm);
@@ -47,16 +47,15 @@ public class MapListPagerAdapter extends FragmentStatePagerAdapter {
     @Override
     public Fragment getItem(int position) {
         Fragment fragment = null;
-        DiveSpotsMapFragment diveSpotsMapFragment = new DiveSpotsMapFragment();
-        productListFragment = new ProductListFragment();
         switch (position) {
             case 0:
-                fragment = diveSpotsMapFragment;
-                diveSpotsMapFragment.setUI(toast, progressBar, this, viewPager);
+                fragment = new DiveSpotsMapFragment();
+                ((DiveSpotsMapFragment) fragment).setUI(toast, progressBar, this, viewPager);
                 break;
             case 1:
-                fragment = productListFragment;
-                productListFragment.setViewPager(viewPager);
+                fragment = new ProductListFragment();
+                productListFragment = (ProductListFragment) fragment;
+                ((ProductListFragment) fragment).setViewPager(viewPager);
                 break;
         }
         return fragment;
