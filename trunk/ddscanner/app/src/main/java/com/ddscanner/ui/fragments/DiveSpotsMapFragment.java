@@ -107,9 +107,14 @@ public class DiveSpotsMapFragment extends Fragment implements View.OnClickListen
             @Override
             public void onMapReady(GoogleMap googleMap) {
                 mGoogleMap = googleMap;
-                diveSpotsClusterManager = new DiveSpotsClusterManager(getActivity(), mGoogleMap, mapListPagerAdapter ,toast, progressBar);
-                mGoogleMap.setOnMarkerClickListener(diveSpotsClusterManager);
-                mGoogleMap.setOnCameraChangeListener(diveSpotsClusterManager);
+                mGoogleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+                    @Override
+                    public void onMapLoaded() {
+                        diveSpotsClusterManager = new DiveSpotsClusterManager(getActivity(), mGoogleMap, mapListPagerAdapter ,toast, progressBar);
+                        mGoogleMap.setOnMarkerClickListener(diveSpotsClusterManager);
+                        mGoogleMap.setOnCameraChangeListener(diveSpotsClusterManager);
+                    }
+                });
 
             }
         });
