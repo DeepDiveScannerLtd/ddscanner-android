@@ -73,6 +73,7 @@ public class AllNotificationsFragment extends Fragment {
                 new SectionedRecyclerViewAdapter(getContext(), R.layout.section_layout,
                         R.id.section_title, notificationsListAdapter);
         sectionedRecyclerViewAdapter.setSections(sections.toArray(dummy));
+        notificationsListAdapter.setSectionAdapter(sectionedRecyclerViewAdapter);
         recyclerView.setAdapter(sectionedRecyclerViewAdapter);
     }
 

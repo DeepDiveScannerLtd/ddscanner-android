@@ -8,6 +8,7 @@ import android.support.v7.widget.AppCompatDrawableManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +36,7 @@ public class NotificationsListAdapter
     private Context context;
     private Helpers helpers = new Helpers();
     private FragmentManager mFragmentManager;
+    private SectionedRecyclerViewAdapter sectionAdapter;
 
     public NotificationsListAdapter(ArrayList<Notification> notifications, Context context,
                                     FragmentManager fragmentManager) {
@@ -94,6 +96,10 @@ public class NotificationsListAdapter
         }
     }
 
+    public void setSectionAdapter(SectionedRecyclerViewAdapter sectionAdapter) {
+        this.sectionAdapter = sectionAdapter;
+    }
+
     @Override
     public NotificationListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.
@@ -139,10 +145,10 @@ public class NotificationsListAdapter
 
             switch (v.getId()) {
                 case R.id.content:
-                    createAction(getAdapterPosition(), false);
+                    createAction(sectionAdapter.sectionedPositionToPosition(getAdapterPosition()), false);
                     break;
                 case R.id.image:
-                    createAction(getAdapterPosition(), true);
+                    createAction(sectionAdapter.sectionedPositionToPosition(getAdapterPosition()), true);
                     break;
             }
         }
