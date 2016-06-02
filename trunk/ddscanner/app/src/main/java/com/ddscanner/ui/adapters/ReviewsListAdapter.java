@@ -133,7 +133,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
             iv.setPadding(0, 0, 5, 0);
             reviewsListViewHolder.rating.addView(iv);
         }
-        Log.i(TAG,helpers.convertDate(comments.get(i).getDate()));
+        reviewsListViewHolder.date.setText(helpers.convertDate(comments.get(i).getDate()));
     }
 
     @Override
@@ -232,12 +232,14 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         private ImageView likeImage;
         private ImageView dislikeImage;
         private LinearLayout stars;
+        private TextView date;
         private boolean isLiked = false;
         private boolean isDisliked = false;
 
 
         public ReviewsListViewHolder(View v) {
             super(v);
+            date = (TextView) v.findViewById(R.id.date);
             user_avatar = (ImageView) v.findViewById(R.id.user_avatar);
             rating = (LinearLayout) v.findViewById(R.id.stars);
             user_name = (TextView) v.findViewById(R.id.user_name);

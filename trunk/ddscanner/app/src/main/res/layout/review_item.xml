@@ -67,10 +67,10 @@
             android:layout_marginBottom="10dp" />
 
         <TextView
+            android:id="@+id/date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:text="3 jun 2016"
             android:textColor="#a3a3a3"
             android:textSize="13sp" />
     </LinearLayout>
