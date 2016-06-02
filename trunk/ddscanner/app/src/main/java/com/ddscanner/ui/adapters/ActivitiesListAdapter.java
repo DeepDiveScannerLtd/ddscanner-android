@@ -131,7 +131,7 @@ public class ActivitiesListAdapter
                 return;
             }
             DiveSpotDetailsActivity.show(context,
-                    String.valueOf(activities.get(sectionAdapter.sectionedPositionToPosition(getAdapterPosition())).getDiveSpot().getId()));
+                    String.valueOf(activities.get(getAdapterPosition()).getDiveSpot().getId()));
         }
     }
 
