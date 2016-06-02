@@ -136,6 +136,7 @@ public class NotificationsListAdapter
 
         @Override
         public void onClick(View v) {
+
             switch (v.getId()) {
                 case R.id.content:
                     createAction(getAdapterPosition(), false);

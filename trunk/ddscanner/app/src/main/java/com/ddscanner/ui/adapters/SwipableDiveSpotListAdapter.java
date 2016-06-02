@@ -59,7 +59,7 @@ public class SwipableDiveSpotListAdapter
     public SwipableDiveSpotListViewHolder onCreateViewHolder(ViewGroup viewGroup, int position) {
         View itemView = LayoutInflater.
                 from(viewGroup.getContext()).
-                inflate(R.layout.item_product_swipable, viewGroup, false);
+                inflate(R.layout.product_item, viewGroup, false);
         return new SwipableDiveSpotListViewHolder(itemView);
 
     }
@@ -214,28 +214,23 @@ public class SwipableDiveSpotListAdapter
         protected TextView title;
         protected LinearLayout stars;
         protected ProgressBar progressBar;
-        public Button mButton;
-        private TextView delete;
         private Context mContext;
 
 
         public SwipableDiveSpotListViewHolder(View itemView) {
             super(itemView);
             mContext = itemView.getContext();
-          //  itemView.setOnClickListener(this);
+            itemView.setOnClickListener(this);
             imageView = (ImageView) itemView.findViewById(R.id.product_logo);
             title = (TextView) itemView.findViewById(R.id.product_title);
             stars = (LinearLayout) itemView.findViewById(R.id.stars);
             progressBar = (ProgressBar) itemView.findViewById(R.id.progressBar);
-            mButton = (Button) itemView.findViewById(android.R.id.button1);
-            delete = (TextView) itemView.findViewById(R.id.delete);
-
         }
 
         @Override
         public void onClick(View v) {
             DiveSpotDetailsActivity
-                    .show(mContext, String.valueOf(divespots.get(getPosition()).getId()));
+                    .show(mContext, String.valueOf(divespots.get(getAdapterPosition()).getId()));
         }
     }
 

@@ -305,4 +305,19 @@ public class Helpers {
         return returnString;
     }
 
+    public boolean comparingTimes(long lastShowingTime, String notificationTime) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        format.setTimeZone(TimeZone.getTimeZone("GMT+0"));
+        try {
+            Date notificationDate = format.parse(notificationTime);
+            if (lastShowingTime < notificationDate.getTime()) {
+                return true;
+            }
+            return false;
+        } catch (ParseException e) {
+            return false;
+        }
+
+    }
+
 }

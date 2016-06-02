@@ -187,6 +187,16 @@ public class SharedPreferenceHelper {
         return prefs.getString(USER_SERVER_ID, "");
     }
 
+    public static void setLastShowingNotificationTime(long time) {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        Editor editor = prefs.edit();
+        editor.putLong("LASTNOTIF", time);
+        editor.commit();
+    }
 
+    public static long getLastShowingNotificationTime() {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        return prefs.getLong("LASTNOTIF", 0);
+    }
 
 }

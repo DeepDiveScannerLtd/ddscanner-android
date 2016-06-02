@@ -15,8 +15,11 @@ import com.ddscanner.entities.Notification;
 import com.ddscanner.ui.adapters.ActivitiesListAdapter;
 import com.ddscanner.ui.adapters.NotificationsListAdapter;
 import com.ddscanner.ui.adapters.SectionedRecyclerViewAdapter;
+import com.ddscanner.utils.Helpers;
+import com.ddscanner.utils.SharedPreferenceHelper;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -26,6 +29,8 @@ public class AllNotificationsFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private FragmentActivity myContext;
+    private ArrayList<Notification> notifications = new ArrayList<>();
+    private Helpers helpers = new Helpers();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,6 +46,18 @@ public class AllNotificationsFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(linearLayoutManager);
         return view;
+    }
+
+    @Override
+    public void setUserVisibleHint(final boolean visible) {
+        super.setUserVisibleHint(visible);
+        if (visible) {
+            if (recyclerView != null) {
+                Date date1 = new Date();
+                long currentDateInMillis = date1.getTime();
+                SharedPreferenceHelper.setLastShowingNotificationTime(currentDateInMillis);
+            }
+        }
     }
 
     public void addList(ArrayList<Notification> activities) {
