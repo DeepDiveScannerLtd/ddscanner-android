@@ -530,11 +530,15 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 break;
             case R.id.creator:
 //                helpers.showDialog(diveSpot.getCreator(), getFragmentManager());
-                if (!editorsListExpanded) {
-                    showEditorsList();
-                } else {
-                    hideEditorsList();
+                if (divespotDetails.getEditors()!=null) {
+                    if (!editorsListExpanded) {
+                        showEditorsList();
+                    } else {
+                        hideEditorsList();
+                    }
+                    break;
                 }
+                helpers.showDialog(diveSpot.getCreator(), getSupportFragmentManager());
                 break;
         }
     }
