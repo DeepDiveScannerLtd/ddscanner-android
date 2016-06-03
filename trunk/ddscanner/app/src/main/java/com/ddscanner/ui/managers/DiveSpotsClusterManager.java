@@ -177,6 +177,12 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         LatLng southwest = googleMap.getProjection().getVisibleRegion().latLngBounds.southwest;
         LatLng northeast = googleMap.getProjection().getVisibleRegion().latLngBounds.northeast;
         parentFragment.fillDiveSpots(getVisibleMarkersList(diveSpots));
+        if (diveSpotsRequestMap.size() == 0) {
+            diveSpotsRequestMap.putSouthWestLat(southwest.latitude - Math.abs(northeast.latitude - southwest.latitude));
+            diveSpotsRequestMap.putSouthWestLng(southwest.longitude - Math.abs(northeast.longitude - southwest.longitude));
+            diveSpotsRequestMap.putNorthEastLat(northeast.latitude + Math.abs(northeast.latitude - southwest.latitude));
+            diveSpotsRequestMap.putNorthEastLng(northeast.longitude + Math.abs(northeast.longitude - southwest.longitude));
+        }
         if (checkArea(southwest, northeast)) {
             if (isCanMakeRequest) {
                 if (southwest.latitude <= diveSpotsRequestMap.getSouthWestLat() ||
