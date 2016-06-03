@@ -3,6 +3,7 @@ package com.ddscanner.ui.fragments;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.UiThread;
@@ -42,6 +43,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -85,6 +88,7 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
     private TextView object;
     private RelativeLayout mapControlLayout;
     private Marker myLocationMarker;
+    private Circle circle;
 
     private Map<String, Drawable> infoWindowBackgroundImages = new HashMap<>();
 
@@ -349,7 +353,7 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
         if (gpsTracker.canGetLocation()) {
             LatLng myLocation = new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude());
             mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 14.0f));
-            if (myLocationMarker == null) {
+            if (circle == null) {
                 // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
 //                myLocationMarker = mGoogleMap.addMarker(new MarkerOptions()
 //                        .position(myLocation)
@@ -358,9 +362,16 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
                 myLocationMarker = mGoogleMap.addMarker(new MarkerOptions()
                         .position(myLocation)
                         .anchor(0.5f, 0.5f)
-                        .icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.pin_me))));
+                        .icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.ic_pin_me))));
+                CircleOptions circleOptions = new CircleOptions()
+                        .center(myLocation)
+                        .radius(200)
+                        .strokeColor(android.R.color.transparent)
+                        .fillColor(Color.parseColor("#1A0668a1"));
+                circle = mGoogleMap.addCircle(circleOptions);
                 diveSpotsClusterManager.setUserCurrentLocationMarker(myLocationMarker);
             } else {
+                circle.setCenter(myLocation);
                 myLocationMarker.setPosition(new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude()));
                 diveSpotsClusterManager.setUserCurrentLocationMarker(myLocationMarker);
             }
