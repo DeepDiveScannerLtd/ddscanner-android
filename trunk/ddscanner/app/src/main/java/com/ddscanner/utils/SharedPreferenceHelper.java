@@ -199,4 +199,16 @@ public class SharedPreferenceHelper {
         return prefs.getLong("LASTNOTIF", 0);
     }
 
+    public static void setLastShowingActivityTime(long time) {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        Editor editor = prefs.edit();
+        editor.putLong("LASTACTIVITY", time);
+        editor.commit();
+    }
+
+    public static long getLastShowingActivityTime() {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        return prefs.getLong("LASTACTIVITY", 0);
+    }
+
 }

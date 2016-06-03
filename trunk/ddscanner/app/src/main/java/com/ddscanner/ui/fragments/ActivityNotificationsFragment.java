@@ -49,17 +49,17 @@ public class ActivityNotificationsFragment extends Fragment {
     }
 
     public void addList(ArrayList<Activity> activities) {
-        if (!helpers.comparingTimes(SharedPreferenceHelper.getLastShowingNotificationTime(),
+        if (!helpers.comparingTimes(SharedPreferenceHelper.getLastShowingActivityTime(),
                 activities.get(0).getDate())) {
             recyclerView.setAdapter(new ActivitiesListAdapter(
                     getContext(), activities));
             Date date = new Date();
             long currentDateInMillis = date.getTime();
-            SharedPreferenceHelper.setLastShowingNotificationTime(currentDateInMillis);
+            SharedPreferenceHelper.setLastShowingActivityTime(currentDateInMillis);
             return;
         }
         int i = 0;
-        while (helpers.comparingTimes(SharedPreferenceHelper.getLastShowingNotificationTime(),
+        while (helpers.comparingTimes(SharedPreferenceHelper.getLastShowingActivityTime(),
                 activities.get(i).getDate())) {
             i++;
         }
@@ -79,7 +79,7 @@ public class ActivityNotificationsFragment extends Fragment {
         recyclerView.setAdapter(sectionedRecyclerViewAdapter);
         Date date = new Date();
         long currentDateInMillis = date.getTime();
-        SharedPreferenceHelper.setLastShowingNotificationTime(currentDateInMillis);
+        SharedPreferenceHelper.setLastShowingActivityTime(currentDateInMillis);
     }
 
     @Override
