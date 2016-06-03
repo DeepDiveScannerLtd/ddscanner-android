@@ -1,8 +1,6 @@
 package com.ddscanner.ui.activities;
 
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,21 +8,18 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
-import com.ddscanner.services.GPSTracker;
 import com.ddscanner.ui.views.DDProgressBarView;
 import com.ddscanner.utils.Helpers;
-import com.google.android.gms.maps.model.LatLng;
 
 /**
  * Created by Vitaly on 29.11.2015.
  */
-public class SplashActivity extends Activity {
+public class SplashActivity extends AppCompatActivity {
 
     private static final String TAG = SplashActivity.class.getName();
 

@@ -10,15 +10,12 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.design.widget.TabLayout;
 import android.support.percent.PercentRelativeLayout;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -28,16 +25,15 @@ import com.ddscanner.R;
 import com.ddscanner.entities.request.IdentifyRequest;
 import com.ddscanner.events.ChangePageOfMainViewPagerEvent;
 import com.ddscanner.events.InternetConnectionClosedEvent;
+import com.ddscanner.events.LocationReadyEvent;
 import com.ddscanner.events.OpenAddDsActivityAfterLogin;
 import com.ddscanner.events.PickPhotoFromGallery;
 import com.ddscanner.events.PlaceChoosedEvent;
 import com.ddscanner.events.ShowLoginActivityIntent;
 import com.ddscanner.events.TakePhotoFromCameraEvent;
 import com.ddscanner.rest.RestClient;
-import com.ddscanner.services.GPSTracker;
 import com.ddscanner.services.RegistrationIntentService;
 import com.ddscanner.ui.adapters.MainActivityPagerAdapter;
-import com.ddscanner.ui.fragments.EditProfileFragment;
 import com.ddscanner.ui.fragments.MapListFragment;
 import com.ddscanner.ui.fragments.NotificationsFragment;
 import com.ddscanner.ui.fragments.ProfileFragment;
@@ -65,16 +61,18 @@ import retrofit2.Call;
 /**
  * Created by lashket on 20.4.16.
  */
-public class MainActivity extends FragmentActivity
+public class MainActivity extends BaseAppCompatActivity
         implements ViewPager.OnPageChangeListener, View.OnClickListener {
 
     private static final String TAG = MainActivity.class.getName();
 
     private static final int REQUEST_CODE_PLACE_AUTOCOMPLETE = 1000;
-    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
-    private static final int RC_PICK_PHOTO = 8000;
-    private static final int RC_LOGIN = 7000;
-    static final int REQUEST_IMAGE_CAPTURE = 1;
+    private static final int REQUEST_CODE_PLAY_SERVICES_RESOLUTION = 9000;
+    private static final int REQUEST_CODE_PICK_PHOTO = 8000;
+    private static final int REQUEST_CODE_LOGIN = 7000;
+    private static final int REQUEST_CODE_IMAGE_CAPTURE = 6000;
+    private static final int REQUEST_CODE_TURN_ON_LOCATION_PROVIDERS = 5000;
+
     private Uri capturedImageUri;
     private LocationManager locationManager;
 
@@ -92,7 +90,9 @@ public class MainActivity extends FragmentActivity
     private boolean isTryToOpenAddDiveSpotActivity = false;
     private int positionToScroll;
 
-//    private MapListFragment mapListFragment = new MapListFragment();
+    private boolean isInitialLocationRequest = true;
+
+    //    private MapListFragment mapListFragment = new MapListFragment();
 //    private NotificationsFragment notificationsFragment = new NotificationsFragment();
     private ProfileFragment profileFragment = new ProfileFragment();
 //    private EditProfileFragment editProfileFragment = new EditProfileFragment();
@@ -116,20 +116,7 @@ public class MainActivity extends FragmentActivity
         setUi();
         setupTabLayout();
         playServices();
-        if (checkIsProvidersEnabled()) {
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    GPSTracker tracker = new GPSTracker(MainActivity.this);
-                    identifyUser(String.valueOf(tracker.getLatitude()),
-                            String.valueOf(tracker.getLongitude()));
-                }
-            }, 1000);
-        } else {
-            showAlertDialogLocationSettings();
-        }
-
+        getLocation();
     }
 
     private void setUi() {
@@ -157,7 +144,7 @@ public class MainActivity extends FragmentActivity
         tmSerial = "" + tm.getSimSerialNumber();
         androidId = "" + android.provider.Settings.Secure.getString(getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
 
-        UUID deviceUuid = new UUID(androidId.hashCode(), ((long)tmDevice.hashCode() << 32) | tmSerial.hashCode());
+        UUID deviceUuid = new UUID(androidId.hashCode(), ((long) tmDevice.hashCode() << 32) | tmSerial.hashCode());
         String deviceId = deviceUuid.toString();
         SharedPreferenceHelper.setUserAppId(deviceId);
         return deviceId;
@@ -215,7 +202,7 @@ public class MainActivity extends FragmentActivity
         if ((position == 2 || position == 1) && !SharedPreferenceHelper.getIsUserLogined()) {
             positionToScroll = position;
             Intent intent = new Intent(MainActivity.this, SocialNetworks.class);
-            startActivityForResult(intent, RC_LOGIN);
+            startActivityForResult(intent, REQUEST_CODE_LOGIN);
         }
     }
 
@@ -247,67 +234,46 @@ public class MainActivity extends FragmentActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         profileFragment.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 2001) {
-            if (resultCode == RESULT_OK) {
-
-            }
-        }
-        if (requestCode == REQUEST_CODE_PLACE_AUTOCOMPLETE) {
-            materialDialog.dismiss();
-            if (resultCode == RESULT_OK) {
-                final Place place = PlaceAutocomplete.getPlace(this, data);
-                DDScannerApplication.bus.post(new PlaceChoosedEvent(place.getViewport()));
-            }
-        }
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            profileFragment.setImage(capturedImageUri);
-        }
-        if (requestCode == RC_PICK_PHOTO && resultCode == RESULT_OK) {
-            Uri uri = data.getData();
-            profileFragment.setImage(uri);
-        }
-        if (requestCode == RC_LOGIN) {
-            if (resultCode == RESULT_OK) {
-                if (isTryToOpenAddDiveSpotActivity) {
-                    AddDiveSpotActivity.show(this);
-                    isTryToOpenAddDiveSpotActivity = false;
-                    return;
+        switch (requestCode) {
+            case REQUEST_CODE_PLACE_AUTOCOMPLETE:
+                materialDialog.dismiss();
+                if (resultCode == RESULT_OK) {
+                    final Place place = PlaceAutocomplete.getPlace(this, data);
+                    DDScannerApplication.bus.post(new PlaceChoosedEvent(place.getViewport()));
                 }
-                mainViewPager.setCurrentItem(positionToScroll, false);
-            } else {
-                isTryToOpenAddDiveSpotActivity = false;
-            }
-            if (resultCode == RESULT_CANCELED) {
-                mainViewPager.setCurrentItem(0, false);
-            }
-        }
-
-        if (requestCode == 1) {
-            if (checkIsProvidersEnabled()) {
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        GPSTracker tracker = new GPSTracker(MainActivity.this);
-                        identifyUser(String.valueOf(tracker.getLatitude()),
-                                String.valueOf(tracker.getLongitude()));
-                        DDScannerApplication.bus.post(new PlaceChoosedEvent(new LatLngBounds(
-                                new LatLng(tracker.getLatitude() - 1, tracker.getLongitude() - 1),
-                                new LatLng(tracker.getLatitude() + 1, tracker.getLongitude() + 1)
-                        )));
+                break;
+            case REQUEST_CODE_IMAGE_CAPTURE:
+                if (resultCode == RESULT_OK) {
+                    profileFragment.setImage(capturedImageUri);
+                }
+                break;
+            case REQUEST_CODE_PICK_PHOTO:
+                if (resultCode == RESULT_OK) {
+                    Uri uri = data.getData();
+                    profileFragment.setImage(uri);
+                }
+                break;
+            case REQUEST_CODE_LOGIN:
+                if (resultCode == RESULT_OK) {
+                    if (isTryToOpenAddDiveSpotActivity) {
+                        AddDiveSpotActivity.show(this);
+                        isTryToOpenAddDiveSpotActivity = false;
+                        return;
                     }
-                }, 1000);
-            } else {
-                showAlertDialogLocationSettings();
-            }
+                    mainViewPager.setCurrentItem(positionToScroll, false);
+                } else {
+                    isTryToOpenAddDiveSpotActivity = false;
+                }
+                if (resultCode == RESULT_CANCELED) {
+                    mainViewPager.setCurrentItem(0, false);
+                }
+                break;
         }
     }
 
     private void openSearchLocationWindow() {
         try {
-            Intent intent =
-                    new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
-                            .build(this);
+            Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN).build(this);
             startActivityForResult(intent, REQUEST_CODE_PLACE_AUTOCOMPLETE);
         } catch (GooglePlayServicesRepairableException e) {
 
@@ -336,7 +302,7 @@ public class MainActivity extends FragmentActivity
     private IdentifyRequest getUserIdentifyData(String lat, String lng) {
         IdentifyRequest identifyRequest = new IdentifyRequest();
         identifyRequest.setAppId(getUserUniqueId());
-        if(SharedPreferenceHelper.getIsUserLogined()) {
+        if (SharedPreferenceHelper.getIsUserLogined()) {
             identifyRequest.setSocial(SharedPreferenceHelper.getSn());
             identifyRequest.setToken(SharedPreferenceHelper.getToken());
             if (SharedPreferenceHelper.getSn().equals("tw")) {
@@ -349,7 +315,7 @@ public class MainActivity extends FragmentActivity
             identifyRequest.setLng(lng);
         }
         identifyRequest.setType("android");
-        return  identifyRequest;
+        return identifyRequest;
     }
 
     public void playServices() {
@@ -364,7 +330,7 @@ public class MainActivity extends FragmentActivity
         int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
         if (resultCode != ConnectionResult.SUCCESS) {
             if (apiAvailability.isUserResolvableError(resultCode)) {
-                apiAvailability.getErrorDialog(this, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST).show();
+                apiAvailability.getErrorDialog(this, resultCode, REQUEST_CODE_PLAY_SERVICES_RESOLUTION).show();
             } else {
                 finish();
             }
@@ -409,7 +375,7 @@ public class MainActivity extends FragmentActivity
         capturedImageUri = Uri.fromFile(image);
         takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, capturedImageUri);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            startActivityForResult(takePictureIntent, REQUEST_CODE_IMAGE_CAPTURE);
         }
     }
 
@@ -423,7 +389,7 @@ public class MainActivity extends FragmentActivity
 
                             public void onClick(DialogInterface dialog, int id) {
                                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                                startActivityForResult(intent, 1);
+                                startActivityForResult(intent, REQUEST_CODE_TURN_ON_LOCATION_PROVIDERS);
                                 dialog.dismiss();
                             }
                         })
@@ -449,6 +415,15 @@ public class MainActivity extends FragmentActivity
     }
 
     @Subscribe
+    public void onLocationReady(LocationReadyEvent event) {
+        identifyUser(String.valueOf(event.getLocation().getLatitude()), String.valueOf(event.getLocation().getLongitude()));
+        if (isInitialLocationRequest) {
+            DDScannerApplication.bus.post(new PlaceChoosedEvent(new LatLngBounds(new LatLng(event.getLocation().getLatitude() - 1, event.getLocation().getLongitude() - 1), new LatLng(event.getLocation().getLatitude() + 1, event.getLocation().getLongitude() + 1))));
+            isInitialLocationRequest = false;
+        }
+    }
+
+    @Subscribe
     public void changeProfileFragmentView(TakePhotoFromCameraEvent event) {
         dispatchTakePictureIntent();
     }
@@ -457,7 +432,7 @@ public class MainActivity extends FragmentActivity
     public void pickPhotoFromGallery(PickPhotoFromGallery event) {
         Intent i = new Intent(Intent.ACTION_PICK,
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(i, RC_PICK_PHOTO);
+        startActivityForResult(i, REQUEST_CODE_PICK_PHOTO);
     }
 
     @Subscribe
@@ -473,14 +448,14 @@ public class MainActivity extends FragmentActivity
     @Subscribe
     public void showLoginActivity(ShowLoginActivityIntent event) {
         Intent intent = new Intent(MainActivity.this, SocialNetworks.class);
-        startActivityForResult(intent, RC_LOGIN);
+        startActivityForResult(intent, REQUEST_CODE_LOGIN);
     }
 
     @Subscribe
     public void openLoginWindowToAdd(OpenAddDsActivityAfterLogin event) {
         isTryToOpenAddDiveSpotActivity = true;
         Intent intent = new Intent(MainActivity.this, SocialNetworks.class);
-        startActivityForResult(intent, RC_LOGIN);
+        startActivityForResult(intent, REQUEST_CODE_LOGIN);
     }
 
     protected void onSaveInstanceState(Bundle outState) {

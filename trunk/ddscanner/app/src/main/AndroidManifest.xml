@@ -72,10 +72,12 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDt6pJZggDyU-aQy2Ks6i7WgZd6ayKK-I8" />
         <activity android:name=".ui.activities.UsersDivespotListSwipableActivity"
-            android:screenOrientation="portrait" >
-
-        </activity>
+            android:screenOrientation="portrait" />
         <activity android:name=".ui.activities.DiveSpotsListActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.activities.LocationProvidersNotAvailableActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.activities.LocationPermissionNotGrantedActivity"
             android:screenOrientation="portrait"/>
         <activity android:name=".ui.activities.InternetClosedActivity"
             android:screenOrientation="portrait"

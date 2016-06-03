@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/ic_locationoff" />
+
+        <TextView
+            android:id="@+id/text"
+            android:layout_width="263dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/icon"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:layout_marginTop="16dp"
+            android:text="@string/error_turn_on_location_provider"
+            android:textColor="@color/black_text"
+            android:fontFamily="sans-serif"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/btn_open_settings"
+            style="@style/EmptyButtons"
+            android:layout_width="wrap_content"
+            android:layout_below="@+id/text"
+            android:layout_marginTop="200dp"
+            android:paddingBottom="12dp"
+            android:paddingTop="12dp"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:text="@string/open_settings" />
+    </RelativeLayout>
+</LinearLayout>
