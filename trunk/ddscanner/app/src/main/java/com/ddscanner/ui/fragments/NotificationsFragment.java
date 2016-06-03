@@ -131,10 +131,14 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
                         try {
                             responseString = response.body().string();
                             notifications = new Gson().fromJson(responseString, Notifications.class);
-                            activities = notifications.getActivities();
-                            activityNotificationsFragment.addList((ArrayList<Activity>) activities);
-                            allNotificationsFragment.addList((ArrayList<Notification>)
-                                    notifications.getNotifications());
+                            if (notifications.getActivities() != null) {
+                                activities = notifications.getActivities();
+                                activityNotificationsFragment.addList((ArrayList<Activity>) activities);
+                            }
+                            if (notifications.getNotifications() != null) {
+                                allNotificationsFragment.addList((ArrayList<Notification>)
+                                        notifications.getNotifications());
+                            }
                         } catch (IOException e) {
 
                         }
