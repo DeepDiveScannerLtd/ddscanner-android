@@ -49,6 +49,11 @@ public class ActivityNotificationsFragment extends Fragment {
     }
 
     public void addList(ArrayList<Activity> activities) {
+        if (activities == null) {
+            recyclerView.setAdapter(new ActivitiesListAdapter(
+                    getContext(), activities));
+            return;
+        }
         if (helpers.comparingTimes(SharedPreferenceHelper.getLastShowingActivityTime(), activities.get(activities.size() - 1).getDate())
                 || !helpers.comparingTimes(SharedPreferenceHelper.getLastShowingActivityTime(), activities.get(0).getDate())) {
             recyclerView.setAdapter(new ActivitiesListAdapter(

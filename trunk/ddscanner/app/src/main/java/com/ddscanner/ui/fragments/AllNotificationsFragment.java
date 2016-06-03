@@ -68,6 +68,11 @@ public class AllNotificationsFragment extends Fragment {
     }
 
     public void addList(ArrayList<Notification> activities) {
+        if (activities == null) {
+            recyclerView.setAdapter(new NotificationsListAdapter(
+                    activities, getContext(), getFragmentManager()));
+            return;
+        }
         if (helpers.comparingTimes(SharedPreferenceHelper.getLastShowingNotificationTime(),
                 activities.get(activities.size() -1).getDate()) || !helpers.comparingTimes(SharedPreferenceHelper.getLastShowingNotificationTime(), activities.get(0).getDate())) {
             recyclerView.setAdapter(new NotificationsListAdapter(

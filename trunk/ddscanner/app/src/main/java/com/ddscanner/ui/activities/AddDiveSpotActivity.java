@@ -435,9 +435,9 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
 
     private void createRequestBodyies() {
         requestName = RequestBody.create(MediaType.parse("multipart/form-data"),
-                name.getText().toString());
+                name.getText().toString().trim());
         requestDepth = RequestBody.create(MediaType.parse("multipart/form-data"),
-                depth.getText().toString());
+                depth.getText().toString().trim());
         if (diveSpotLocation != null) {
             requestLat = RequestBody.create(MediaType.parse("multipart/form-data"),
                     String.valueOf(diveSpotLocation.latitude));
@@ -470,7 +470,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
             }
         }
         requestDescription = RequestBody.create(MediaType.parse("multipart/form-data"),
-                description.getText().toString());
+                description.getText().toString().trim());
         createAddDiveSpotRequest();
     }
 
