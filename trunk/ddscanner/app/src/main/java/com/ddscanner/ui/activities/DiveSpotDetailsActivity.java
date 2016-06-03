@@ -148,6 +148,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private boolean isClickedYesValidation = false;
     private boolean isClickedNoValidation = false;
     private boolean isFavorite = false;
+    private boolean isClickedEdit = false;
 
 
     private List<Comment> usersComments;
@@ -561,6 +562,9 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                            editDiveSpotIntent
                                    .putExtra(Constants.DIVESPOTID, String.valueOf(diveSpot.getId()));
                            startActivityForResult(editDiveSpotIntent, RC_EDIT_DIVE_SPOT);
+                       } else {
+                           isClickedEdit = true;
+                           showLoginActivity();
                        }
                    }
                })
@@ -919,6 +923,14 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 }
                 if (isClickedYesValidation) {
                     diveSpotValidation(true);
+                }
+                if (isClickedEdit) {
+                    Intent editDiveSpotIntent = new Intent(DiveSpotDetailsActivity.this,
+                            EditDiveSpotActivity.class);
+                    editDiveSpotIntent
+                            .putExtra(Constants.DIVESPOTID, String.valueOf(diveSpot.getId()));
+                    startActivityForResult(editDiveSpotIntent, RC_EDIT_DIVE_SPOT);
+                    isClickedEdit = false;
                 }
             } else {
                 if (isClickedCHeckin || isCLickedFavorite) {
