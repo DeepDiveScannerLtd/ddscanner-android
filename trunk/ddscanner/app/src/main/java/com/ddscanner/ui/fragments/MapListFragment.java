@@ -2,6 +2,7 @@ package com.ddscanner.ui.fragments;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -28,11 +29,12 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.DiveSpot;
 import com.ddscanner.events.CloseInfoWindowEvent;
+import com.ddscanner.events.LocationReadyEvent;
 import com.ddscanner.events.MarkerClickEvent;
 import com.ddscanner.events.OnMapClickEvent;
 import com.ddscanner.events.OpenAddDsActivityAfterLogin;
-import com.ddscanner.services.GPSTracker;
 import com.ddscanner.ui.activities.AddDiveSpotActivity;
+import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.activities.DiveSpotDetailsActivity;
 import com.ddscanner.ui.adapters.ProductListAdapter;
 import com.ddscanner.ui.managers.DiveSpotsClusterManager;
@@ -90,6 +92,8 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
     private Marker myLocationMarker;
     private Circle circle;
 
+    public BaseAppCompatActivity baseAppCompatActivity;
+
     private Map<String, Drawable> infoWindowBackgroundImages = new HashMap<>();
 
     // List mode member fields
@@ -98,6 +102,17 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
     private ProductListAdapter productListAdapter;
     private Button btnGoToMap;
     private ViewPager viewPager;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        if (context instanceof BaseAppCompatActivity) {
+            baseAppCompatActivity = (BaseAppCompatActivity) context;
+        } else {
+            throw new RuntimeException("MapListFragment: activity must extend BaseAppCompatActivity");
+        }
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -258,12 +273,12 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
                 diveSpotsClusterManager.mapZoomMinus();
                 break;
             case R.id.go_to_my_location:
-                goToMyLocation();
+                baseAppCompatActivity.getLocation();
                 break;
             case R.id.dive_spot_info_layout:
                 DiveSpotDetailsActivity.show(getActivity(), String.valueOf(lastDiveSpotId));
                 break;
-            case  R.id.add_ds_fab:
+            case R.id.add_ds_fab:
                 if (SharedPreferenceHelper.getIsUserLogined()) {
                     AddDiveSpotActivity.show(getActivity());
                 } else {
@@ -298,13 +313,13 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
         for (int k = 0; k < Math.round(event.getDiveSpot().getRating()); k++) {
             ImageView iv = new ImageView(getActivity());
             iv.setImageResource(R.drawable.ic_iw_star_full);
-            iv.setPadding(0,0,5,0);
+            iv.setPadding(0, 0, 5, 0);
             rating.addView(iv);
         }
         for (int k = 0; k < 5 - Math.round(event.getDiveSpot().getRating()); k++) {
             ImageView iv = new ImageView(getActivity());
             iv.setImageResource(R.drawable.ic_iw_star_empty);
-            iv.setPadding(0,0,5,0);
+            iv.setPadding(0, 0, 5, 0);
             rating.addView(iv);
         }
     }
@@ -350,38 +365,6 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
                 });
     }
 
-    public void goToMyLocation() {
-        GPSTracker gpsTracker = new GPSTracker(getActivity());
-        if (gpsTracker.canGetLocation()) {
-            LatLng myLocation = new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude());
-            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 14.0f));
-            if (circle == null) {
-                // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
-//                myLocationMarker = mGoogleMap.addMarker(new MarkerOptions()
-//                        .position(myLocation)
-//                        .anchor(0.5f, 0.5f)
-//                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.pin_me)));
-                myLocationMarker = mGoogleMap.addMarker(new MarkerOptions()
-                        .position(myLocation)
-                        .anchor(0.5f, 0.5f)
-                        .icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.ic_pin_me))));
-                CircleOptions circleOptions = new CircleOptions()
-                        .center(myLocation)
-                        .radius(200)
-                        .strokeColor(android.R.color.transparent)
-                        .fillColor(Color.parseColor("#1A0668a1"));
-                circle = mGoogleMap.addCircle(circleOptions);
-                diveSpotsClusterManager.setUserCurrentLocationMarker(myLocationMarker);
-            } else {
-                circle.setCenter(myLocation);
-                myLocationMarker.setPosition(new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude()));
-                diveSpotsClusterManager.setUserCurrentLocationMarker(myLocationMarker);
-            }
-        } else {
-            gpsTracker.showSettingsAlert();
-        }
-    }
-
     public void fillDiveSpots(ArrayList<DiveSpot> diveSpots) {
         if (productListAdapter == null) {
             productListAdapter = new ProductListAdapter(diveSpots, getActivity());
@@ -398,5 +381,34 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
             please.setVisibility(View.VISIBLE);
         }
 
+    }
+
+    @Subscribe
+    public void onLocationReady(LocationReadyEvent event) {
+        LogUtils.i(TAG, "onLocationReady");
+        LatLng myLocation = new LatLng(event.getLocation().getLatitude(), event.getLocation().getLongitude());
+        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 14.0f));
+        if (circle == null) {
+            // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
+//                myLocationMarker = mGoogleMap.addMarker(new MarkerOptions()
+//                        .position(myLocation)
+//                        .anchor(0.5f, 0.5f)
+//                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.pin_me)));
+            myLocationMarker = mGoogleMap.addMarker(new MarkerOptions()
+                    .position(myLocation)
+                    .anchor(0.5f, 0.5f)
+                    .icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.ic_pin_me))));
+            CircleOptions circleOptions = new CircleOptions()
+                    .center(myLocation)
+                    .radius(200)
+                    .strokeColor(android.R.color.transparent)
+                    .fillColor(Color.parseColor("#1A0668a1"));
+            circle = mGoogleMap.addCircle(circleOptions);
+            diveSpotsClusterManager.setUserCurrentLocationMarker(myLocationMarker);
+        } else {
+            circle.setCenter(myLocation);
+            myLocationMarker.setPosition(new LatLng(event.getLocation().getLatitude(), event.getLocation().getLongitude()));
+            diveSpotsClusterManager.setUserCurrentLocationMarker(myLocationMarker);
+        }
     }
 }

@@ -74,7 +74,6 @@ public class MainActivity extends BaseAppCompatActivity
     private static final int REQUEST_CODE_TURN_ON_LOCATION_PROVIDERS = 5000;
 
     private Uri capturedImageUri;
-    private LocationManager locationManager;
 
     private TabLayout toolbarTabLayout;
     private ViewPager mainViewPager;
@@ -108,7 +107,6 @@ public class MainActivity extends BaseAppCompatActivity
     }
 
     private void startActivity() {
-        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         getWindow().setBackgroundDrawable(null);
         setContentView(R.layout.activity_main);
         findViews();
@@ -403,15 +401,6 @@ public class MainActivity extends BaseAppCompatActivity
                         });
         AlertDialog alert = builder.create();
         alert.show();
-    }
-
-    private boolean checkIsProvidersEnabled() {
-        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) &&
-                !locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-            return false;
-        } else {
-            return true;
-        }
     }
 
     @Subscribe

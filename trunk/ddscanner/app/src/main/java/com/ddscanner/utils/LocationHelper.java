@@ -17,6 +17,7 @@ public class LocationHelper implements LocationListener {
 
     private static final String TAG = LocationHelper.class.getName();
 
+    private static final int TWO_MINUTES = 1000 * 60 * 2;
     private static final long MIN_TIME_BETWEEN_UPDATES = 1000L * 60 * 1;
     private static final long MAX_LOCATION_LIFE_PERIOD = 1L * 60 * 60 * 1000; // in millis
     private static final int LOCATION_ACCURACY = 500; // in meters
@@ -68,37 +69,94 @@ public class LocationHelper implements LocationListener {
     }
 
     public void requestLocation() {
-        // GPS location provider
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            Location lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            if (isLocationOk(lastKnownLocation)) {
-                DDScannerApplication.bus.post(new LocationReadyEvent(lastKnownLocation));
+        Location lastKnownLocationGps = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        Location lastKnownLocationNetwork = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+        if (isLocationOk(lastKnownLocationGps) && isLocationOk(lastKnownLocationNetwork)) {
+            if (isBetterLocation(lastKnownLocationNetwork, lastKnownLocationGps)) {
+                DDScannerApplication.bus.post(new LocationReadyEvent(lastKnownLocationNetwork));
             } else {
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME_BETWEEN_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+                DDScannerApplication.bus.post(new LocationReadyEvent(lastKnownLocationGps));
             }
-        } else
-            // NETWORK location provider
-            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED && locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-                Location lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-                if (isLocationOk(lastKnownLocation)) {
-                    DDScannerApplication.bus.post(new LocationReadyEvent(lastKnownLocation));
-                } else {
-                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME_BETWEEN_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
-                }
-            }
+        } else if (isLocationOk(lastKnownLocationGps)) {
+            DDScannerApplication.bus.post(new LocationReadyEvent(lastKnownLocationGps));
+        } else if (isLocationOk(lastKnownLocationNetwork)) {
+            DDScannerApplication.bus.post(new LocationReadyEvent(lastKnownLocationNetwork));
+        }
+
+
+        // NETWORK location provider
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED && locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME_BETWEEN_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+        }
+        // GPS location provider
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME_BETWEEN_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+        }
+
     }
 
     private boolean isLocationOk(Location lastKnownLocation) {
-        if (lastKnownLocation.hasAccuracy() && lastKnownLocation.getAccuracy() <= LOCATION_ACCURACY && (System.currentTimeMillis() - lastKnownLocation.getTime() <= MAX_LOCATION_LIFE_PERIOD)) {
+        if (lastKnownLocation != null && lastKnownLocation.hasAccuracy() && lastKnownLocation.getAccuracy() <= LOCATION_ACCURACY && (System.currentTimeMillis() - lastKnownLocation.getTime() <= MAX_LOCATION_LIFE_PERIOD)) {
             return true;
         } else {
             return false;
         }
     }
 
+    protected boolean isBetterLocation(Location location, Location currentBestLocation) {
+        if (currentBestLocation == null) {
+            // A new location is always better than no location
+            return true;
+        }
+
+        // Check whether the new location fix is newer or older
+        long timeDelta = location.getTime() - currentBestLocation.getTime();
+        boolean isSignificantlyNewer = timeDelta > TWO_MINUTES;
+        boolean isSignificantlyOlder = timeDelta < -TWO_MINUTES;
+        boolean isNewer = timeDelta > 0;
+
+        // If it's been more than two minutes since the current location, use the new location
+        // because the user has likely moved
+        if (isSignificantlyNewer) {
+            return true;
+            // If the new location is more than two minutes older, it must be worse
+        } else if (isSignificantlyOlder) {
+            return false;
+        }
+
+        // Check whether the new location fix is more or less accurate
+        int accuracyDelta = (int) (location.getAccuracy() - currentBestLocation.getAccuracy());
+        boolean isLessAccurate = accuracyDelta > 0;
+        boolean isMoreAccurate = accuracyDelta < 0;
+        boolean isSignificantlyLessAccurate = accuracyDelta > 200;
+
+        // Check if the old and new location are from the same provider
+        boolean isFromSameProvider = isSameProvider(location.getProvider(),
+                currentBestLocation.getProvider());
+
+        // Determine location quality using a combination of timeliness and accuracy
+        if (isMoreAccurate) {
+            return true;
+        } else if (isNewer && !isLessAccurate) {
+            return true;
+        } else if (isNewer && !isSignificantlyLessAccurate && isFromSameProvider) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isSameProvider(String provider1, String provider2) {
+        if (provider1 == null) {
+            return provider2 == null;
+        }
+        return provider1.equals(provider2);
+    }
+
     @Override
     public void onLocationChanged(Location location) {
         if (isLocationOk(location)) {
+            LogUtils.i(TAG, "Found good location, sending bus event.");
             DDScannerApplication.bus.post(new LocationReadyEvent(location));
             if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 // TODO Why the fuck do we need to request permission when removing locaion updates listener!?
