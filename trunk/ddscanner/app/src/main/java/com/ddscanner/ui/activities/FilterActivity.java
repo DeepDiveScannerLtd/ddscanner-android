@@ -18,6 +18,7 @@ import com.ddscanner.entities.FiltersResponseEntity;
 import com.ddscanner.entities.request.DiveSpotsRequestMap;
 import com.ddscanner.events.FilterChosedEvent;
 import com.ddscanner.events.FiltersChosedEvent;
+import com.ddscanner.events.OnMapClickEvent;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.SpinnerItemsAdapter;
 import com.ddscanner.utils.EventTrackerHelper;

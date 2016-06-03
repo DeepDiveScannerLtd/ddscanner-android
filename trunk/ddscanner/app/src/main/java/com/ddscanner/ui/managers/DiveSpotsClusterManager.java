@@ -165,6 +165,8 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
             // lastClickedMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
             DDScannerApplication.bus.post(new OnMapClickEvent(lastClickedMarker));
             lastClickedMarker = null;
+        } else {
+            DDScannerApplication.bus.post(new OnMapClickEvent(lastClickedMarker));
         }
     }
 
@@ -266,6 +268,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
     }
 
     public void updateFilter(String level, String object) {
+        lastClickedMarker = null;
         if (level == null) {
             this.level = "";
             this.object = "";

@@ -331,7 +331,9 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
     public void hideDiveSpotinfo(OnMapClickEvent event) {
         // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
 //                event.getMarker().setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
-        event.getMarker().setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.ic_ds)));
+        if (event.getMarker() != null) {
+            event.getMarker().setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.ic_ds)));
+        }
         mapControlLayout.animate().translationY(0);
         addDsFab.animate().translationY(0);
         mapListFAB.animate().translationY(0);
