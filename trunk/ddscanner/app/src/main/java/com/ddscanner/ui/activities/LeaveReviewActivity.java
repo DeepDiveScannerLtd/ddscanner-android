@@ -95,6 +95,7 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
     private RequestBody requestSocial = null;
     private RequestBody requestSecret = null;
     private Helpers helpers = new Helpers();
+    private int maxPhotos = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -321,6 +322,8 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
         }
         if (requestCode == RC_PICK_PHOTO) {
             if (resultCode == RESULT_OK) {
+                maxPhotos = maxPhotos - data.getStringArrayListExtra(MultiImageSelectorActivity
+                        .EXTRA_RESULT).size();
                 imageUris.addAll(data.getStringArrayListExtra(MultiImageSelectorActivity
                         .EXTRA_RESULT));
                 photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris,
@@ -353,6 +356,7 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
 //                }
 //                startActivityForResult(i, RC_PICK_PHOTO);
                 MultiImageSelector.create(this)
+                        .count(maxPhotos)
                         .start(this, RC_PICK_PHOTO);
                 break;
         }
@@ -387,6 +391,7 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
 
     @Subscribe
     public void deleteImage(ImageDeletedEvent event) {
+        maxPhotos++;
         imageUris.remove(event.getImageIndex());
         photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris,
                 LeaveReviewActivity.this, addPhotoTitle));
