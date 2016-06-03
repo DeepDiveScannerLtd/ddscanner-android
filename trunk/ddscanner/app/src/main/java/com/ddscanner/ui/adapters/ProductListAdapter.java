@@ -85,6 +85,7 @@ public class ProductListAdapter
             iv.setPadding(0,0,5,0);
             productListViewHolder.stars.addView(iv);
         }
+        productListViewHolder.object.setText(divespot.getObject());
     }
 
     @Override
@@ -99,6 +100,7 @@ public class ProductListAdapter
         protected TextView title;
         protected LinearLayout stars;
         protected ProgressBar progressBar;
+        protected TextView object;
         private int position;
         private Context context;
         private final String PRODUCT = "PRODUCT";
@@ -112,6 +114,7 @@ public class ProductListAdapter
             title = (TextView) v.findViewById(R.id.product_title);
             stars = (LinearLayout) v.findViewById(R.id.stars);
             progressBar = (ProgressBar) v.findViewById(R.id.progressBar);
+            object = (TextView) v.findViewById(R.id.object);
         }
 
         @Override

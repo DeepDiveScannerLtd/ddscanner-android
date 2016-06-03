@@ -162,6 +162,7 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
         mapListFAB = (FloatingActionButton) view.findViewById(R.id.map_list_fab);
         addDsFab = (FloatingActionButton) view.findViewById(R.id.add_ds_fab);
         mainLayout = (RelativeLayout) view.findViewById(R.id.main_layout);
+        diveSpotType = (TextView) view.findViewById(R.id.object);
 
         // List mode
         rc = (RecyclerView) view.findViewById(R.id.cv);
@@ -286,6 +287,8 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
                     }
                 });
         diveSpotName.setText(event.getDiveSpot().getName());
+        diveSpotType.setText(event.getDiveSpot().getObject());
+        diveSpotInfo.setBackground(infoWindowBackgroundImages.get(event.getDiveSpot().getObject()));
         lastDiveSpotId = event.getDiveSpot().getId();
         rating.removeAllViews();
         for (int k = 0; k < Math.round(event.getDiveSpot().getRating()); k++) {
