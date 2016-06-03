@@ -3,6 +3,7 @@ package com.ddscanner.ui.fragments;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.UiThread;
@@ -42,6 +43,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -85,6 +88,7 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
     private TextView object;
     private RelativeLayout mapControlLayout;
     private Marker myLocationMarker;
+    private Circle circle;
 
     private Map<String, Drawable> infoWindowBackgroundImages = new HashMap<>();
 
@@ -162,6 +166,7 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
         mapListFAB = (FloatingActionButton) view.findViewById(R.id.map_list_fab);
         addDsFab = (FloatingActionButton) view.findViewById(R.id.add_ds_fab);
         mainLayout = (RelativeLayout) view.findViewById(R.id.main_layout);
+        diveSpotType = (TextView) view.findViewById(R.id.object);
 
         // List mode
         rc = (RecyclerView) view.findViewById(R.id.cv);
@@ -286,6 +291,8 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
                     }
                 });
         diveSpotName.setText(event.getDiveSpot().getName());
+        diveSpotType.setText(event.getDiveSpot().getObject());
+        diveSpotInfo.setBackground(infoWindowBackgroundImages.get(event.getDiveSpot().getObject()));
         lastDiveSpotId = event.getDiveSpot().getId();
         rating.removeAllViews();
         for (int k = 0; k < Math.round(event.getDiveSpot().getRating()); k++) {
@@ -324,7 +331,9 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
     public void hideDiveSpotinfo(OnMapClickEvent event) {
         // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
 //                event.getMarker().setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
-        event.getMarker().setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.ic_ds)));
+        if (event.getMarker() != null) {
+            event.getMarker().setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.ic_ds)));
+        }
         mapControlLayout.animate().translationY(0);
         addDsFab.animate().translationY(0);
         mapListFAB.animate().translationY(0);
@@ -346,7 +355,7 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
         if (gpsTracker.canGetLocation()) {
             LatLng myLocation = new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude());
             mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 14.0f));
-            if (myLocationMarker == null) {
+            if (circle == null) {
                 // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
 //                myLocationMarker = mGoogleMap.addMarker(new MarkerOptions()
 //                        .position(myLocation)
@@ -355,9 +364,16 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
                 myLocationMarker = mGoogleMap.addMarker(new MarkerOptions()
                         .position(myLocation)
                         .anchor(0.5f, 0.5f)
-                        .icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.pin_me))));
+                        .icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.ic_pin_me))));
+                CircleOptions circleOptions = new CircleOptions()
+                        .center(myLocation)
+                        .radius(200)
+                        .strokeColor(android.R.color.transparent)
+                        .fillColor(Color.parseColor("#1A0668a1"));
+                circle = mGoogleMap.addCircle(circleOptions);
                 diveSpotsClusterManager.setUserCurrentLocationMarker(myLocationMarker);
             } else {
+                circle.setCenter(myLocation);
                 myLocationMarker.setPosition(new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude()));
                 diveSpotsClusterManager.setUserCurrentLocationMarker(myLocationMarker);
             }

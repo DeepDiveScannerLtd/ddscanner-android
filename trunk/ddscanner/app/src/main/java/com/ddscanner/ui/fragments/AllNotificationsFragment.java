@@ -68,8 +68,13 @@ public class AllNotificationsFragment extends Fragment {
     }
 
     public void addList(ArrayList<Notification> activities) {
-        if (!helpers.comparingTimes(SharedPreferenceHelper.getLastShowingNotificationTime(),
-               activities.get(0).getDate())) {
+        if (activities == null) {
+            recyclerView.setAdapter(new NotificationsListAdapter(
+                    activities, getContext(), getFragmentManager()));
+            return;
+        }
+        if (helpers.comparingTimes(SharedPreferenceHelper.getLastShowingNotificationTime(),
+                activities.get(activities.size() -1).getDate()) || !helpers.comparingTimes(SharedPreferenceHelper.getLastShowingNotificationTime(), activities.get(0).getDate())) {
             recyclerView.setAdapter(new NotificationsListAdapter(
                     activities, getContext(), getFragmentManager()));
             Date date = new Date();
@@ -79,7 +84,7 @@ public class AllNotificationsFragment extends Fragment {
         }
         int i = 0;
         while (helpers.comparingTimes(SharedPreferenceHelper.getLastShowingNotificationTime(),
-                activities.get(i).getDate())) {
+                activities.get(i-1).getDate()) && i < notifications.size() - 1) {
             i++;
         }
         NotificationsListAdapter notificationsListAdapter = new NotificationsListAdapter(

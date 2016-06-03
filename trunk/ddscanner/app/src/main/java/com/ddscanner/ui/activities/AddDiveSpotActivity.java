@@ -103,6 +103,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     private TextView error_depth;
     private TextView error_sealife;
     private TextView error_images;
+    private int maxPhotos = 3;
 
 
     private Helpers helpers = new Helpers();
@@ -235,6 +236,8 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
 //                    imageUris.add(helpers.getRealPathFromURI(AddDiveSpotActivity.this, uri));
 //                    photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris, AddDiveSpotActivity.this, addPhotoTitle));
 //                }
+                maxPhotos = maxPhotos - data.getStringArrayListExtra(MultiImageSelectorActivity
+                        .EXTRA_RESULT).size();
                 imageUris.addAll(data.getStringArrayListExtra(MultiImageSelectorActivity
                         .EXTRA_RESULT));
                 photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris,
@@ -398,6 +401,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         switch (v.getId()) {
             case R.id.btn_add_photo:
                 MultiImageSelector.create(this)
+                        .count(maxPhotos)
                         .start(this, RC_PICK_PHOTO);
                 // Method 1
                 // Pros: works fine
@@ -435,9 +439,9 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
 
     private void createRequestBodyies() {
         requestName = RequestBody.create(MediaType.parse("multipart/form-data"),
-                name.getText().toString());
+                name.getText().toString().trim());
         requestDepth = RequestBody.create(MediaType.parse("multipart/form-data"),
-                depth.getText().toString());
+                depth.getText().toString().trim());
         if (diveSpotLocation != null) {
             requestLat = RequestBody.create(MediaType.parse("multipart/form-data"),
                     String.valueOf(diveSpotLocation.latitude));
@@ -470,7 +474,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
             }
         }
         requestDescription = RequestBody.create(MediaType.parse("multipart/form-data"),
-                description.getText().toString());
+                description.getText().toString().trim());
         createAddDiveSpotRequest();
     }
 
@@ -522,6 +526,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
 
     @Subscribe
     public void deleteImage(ImageDeletedEvent event) {
+        maxPhotos++;
         imageUris.remove(event.getImageIndex());
         photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris,
                 AddDiveSpotActivity.this, addPhotoTitle));

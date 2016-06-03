@@ -49,18 +49,23 @@ public class ActivityNotificationsFragment extends Fragment {
     }
 
     public void addList(ArrayList<Activity> activities) {
-        if (!helpers.comparingTimes(SharedPreferenceHelper.getLastShowingNotificationTime(),
-                activities.get(0).getDate())) {
+        if (activities == null) {
+            recyclerView.setAdapter(new ActivitiesListAdapter(
+                    getContext(), activities));
+            return;
+        }
+        if (helpers.comparingTimes(SharedPreferenceHelper.getLastShowingActivityTime(), activities.get(activities.size() - 1).getDate())
+                || !helpers.comparingTimes(SharedPreferenceHelper.getLastShowingActivityTime(), activities.get(0).getDate())) {
             recyclerView.setAdapter(new ActivitiesListAdapter(
                     getContext(), activities));
             Date date = new Date();
             long currentDateInMillis = date.getTime();
-            SharedPreferenceHelper.setLastShowingNotificationTime(currentDateInMillis);
+            SharedPreferenceHelper.setLastShowingActivityTime(currentDateInMillis);
             return;
         }
         int i = 0;
-        while (helpers.comparingTimes(SharedPreferenceHelper.getLastShowingNotificationTime(),
-                activities.get(i).getDate())) {
+        while (helpers.comparingTimes(SharedPreferenceHelper.getLastShowingActivityTime(),
+                activities.get(i-1).getDate()) && i < activities.size() - 1) {
             i++;
         }
         ActivitiesListAdapter notificationsListAdapter = new ActivitiesListAdapter(
@@ -79,7 +84,7 @@ public class ActivityNotificationsFragment extends Fragment {
         recyclerView.setAdapter(sectionedRecyclerViewAdapter);
         Date date = new Date();
         long currentDateInMillis = date.getTime();
-        SharedPreferenceHelper.setLastShowingNotificationTime(currentDateInMillis);
+        SharedPreferenceHelper.setLastShowingActivityTime(currentDateInMillis);
     }
 
     @Override

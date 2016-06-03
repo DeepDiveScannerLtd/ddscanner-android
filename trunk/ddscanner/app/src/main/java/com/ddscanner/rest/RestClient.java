@@ -2,6 +2,7 @@ package com.ddscanner.rest;
 
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -32,6 +33,8 @@ public abstract class RestClient {
 
             OkHttpClient.Builder builder = new OkHttpClient.Builder();
             builder.interceptors().add(interceptor);
+            builder.readTimeout(10, TimeUnit.MINUTES);
+            builder.writeTimeout(10, TimeUnit.MINUTES);
             HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
             logging.setLevel(HttpLoggingInterceptor.Level.BODY);
 

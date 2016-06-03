@@ -39,7 +39,7 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
     private Notifications notifications = new Notifications();
     private Helpers helpers = new Helpers();
     private TabLayout tabLayout;
-    private ViewPager photosViewPager;
+    private ViewPager notificationsViewPager;
     private AllNotificationsFragment allNotificationsFragment = new AllNotificationsFragment();
     private ActivityNotificationsFragment activityNotificationsFragment = new ActivityNotificationsFragment();
 
@@ -59,7 +59,8 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
 
     private void findViews(View v) {
         tabLayout = (TabLayout) v.findViewById(R.id.notif_tab_layout);
-        photosViewPager = (ViewPager) v.findViewById(R.id.notif_view_pager);
+        notificationsViewPager = (ViewPager) v.findViewById(R.id.notif_view_pager);
+        notificationsViewPager.setOnPageChangeListener(this);
         setupViewPager();
     }
 
@@ -74,13 +75,13 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
         );
         notificationsPagerAdapter.addFragment(allNotificationsFragment, "Notifications");
         notificationsPagerAdapter.addFragment(activityNotificationsFragment, "Activity");
-        photosViewPager.setAdapter(notificationsPagerAdapter);
+        notificationsViewPager.setAdapter(notificationsPagerAdapter);
         setUi();
     }
 
     private void setUi() {
-        tabLayout.setupWithViewPager(photosViewPager);
-        photosViewPager.setOffscreenPageLimit(2);
+        tabLayout.setupWithViewPager(notificationsViewPager);
+        notificationsViewPager.setOffscreenPageLimit(2);
         setUpTabLayout();
     }
     @Override
@@ -129,10 +130,15 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
                         try {
                             responseString = response.body().string();
                             notifications = new Gson().fromJson(responseString, Notifications.class);
-                            activities = notifications.getActivities();
-                            activityNotificationsFragment.addList((ArrayList<Activity>) activities);
-                            allNotificationsFragment.addList((ArrayList<Notification>)
-                                    notifications.getNotifications());
+//                            if (notifications.getActivities() != null) {
+//                                activities = notifications.getActivities();
+//                                activityNotificationsFragment.addList((ArrayList<Activity>) activities);
+//                            }
+//                            if (notifications.getNotifications() != null) {
+//                                allNotificationsFragment.addList((ArrayList<Notification>)
+//                                        notifications.getNotifications());
+//                            }
+                            setData();
                         } catch (IOException e) {
 
                         }
@@ -146,10 +152,41 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
             }
         });
     }
-
+    
+    private void setData() {
+        if (notificationsViewPager.getCurrentItem() == 0) {
+            if (notifications.getNotifications() != null) {
+                allNotificationsFragment.addList((ArrayList<Notification>)
+                        notifications.getNotifications());
+            } else {
+                allNotificationsFragment.addList(null);
+            }
+        }
+        if (notificationsViewPager.getCurrentItem() == 1) {
+            if (notifications.getActivities() != null) {
+                activities = notifications.getActivities();
+                activityNotificationsFragment.addList((ArrayList<Activity>) activities);
+            } else {
+                activityNotificationsFragment.addList(null);
+            }
+        }
+        
+    }
+    
     @Override
     public void onPageSelected(int position) {
-
+        if (position == 0) {
+            if (notifications.getNotifications() != null) {
+                allNotificationsFragment.addList((ArrayList<Notification>)
+                        notifications.getNotifications());
+            }
+        }
+        if (position == 1) {
+            if (notifications.getActivities() != null) {
+                activities = notifications.getActivities();
+                activityNotificationsFragment.addList((ArrayList<Activity>) activities);
+            }
+        }
     }
 
     @Override
