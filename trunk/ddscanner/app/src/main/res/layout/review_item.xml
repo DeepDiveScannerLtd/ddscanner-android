@@ -83,16 +83,15 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
+        android:layout_height="45dp"
         android:orientation="horizontal"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        android:paddingTop="12dp">
+        android:paddingRight="15dp">
         <LinearLayout
+            android:background="?attr/selectableItemBackground"
             android:id="@+id/like_layout"
+            android:minWidth="50dp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:gravity="center"
             android:orientation="horizontal">
             <ImageView
@@ -111,10 +110,12 @@
                 />
         </LinearLayout>
         <LinearLayout
+            android:background="?attr/selectableItemBackground"
             android:id="@+id/dislike_layout"
-            android:layout_marginLeft="40dp"
+            android:layout_marginLeft="10dp"
+            android:minWidth="50dp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:gravity="center"
             android:orientation="horizontal">
             <ImageView
