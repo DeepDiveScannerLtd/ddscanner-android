@@ -34,6 +34,7 @@ public class EventTrackerHelper {
     public static final String EVENT_LEAVE_FEEDBACK_PROCEEDED = "leave_feedback_proceeded";
     public static final String EVENT_LEAVE_FEEDBACK_CLICK = "leave_feedback_click";
     public static final String EVENT_LOCATION_DETERMINED = "location_determined";
+    public static final String EVENT_SUBSCRIBED_FOR_UPDATE = "subscribed_for_update";
 
     public static final String PARAM_SIGN_IN_BTN_CLICK = "type";
     public static final String PARAM_MARKER_CLICK_TYPE = "marker_type";
@@ -51,5 +52,6 @@ public class EventTrackerHelper {
     public static final String PARAM_WRITE_REVIEW_CLICK = "place_id";
     public static final String PARAM_SEND_REVIEW_CLICK = "place_id";
     public static final String PARAM_LOCATION_DETERMINED = "country";
+    public static final String PARAM_SUBSCRIPTION_EMAIL = "email";
 
 }

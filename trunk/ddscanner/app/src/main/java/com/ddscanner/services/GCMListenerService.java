@@ -12,6 +12,7 @@ import android.util.Log;
 
 import com.ddscanner.R;
 import com.ddscanner.ui.activities.CityActivity;
+import com.ddscanner.ui.activities.ComingSoonActivity;
 import com.google.android.gms.gcm.GcmListenerService;
 
 
@@ -64,7 +65,7 @@ public class GCMListenerService extends GcmListenerService {
      * @param message GCM message received.
      */
     private void sendNotification(String message) {
-        Intent intent = new Intent(this, CityActivity.class);
+        Intent intent = new Intent(this, ComingSoonActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);
