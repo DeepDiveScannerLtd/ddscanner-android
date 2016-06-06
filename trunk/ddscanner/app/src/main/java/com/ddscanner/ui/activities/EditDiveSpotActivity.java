@@ -72,6 +72,8 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
     private static final int RC_PICK_LOCATION = 8001;
     private static final int RC_PICK_SEALIFE = 7001;
 
+    private int maxPhotosCount = 3;
+
     private String diveSpotId;
 
     private ImageButton btnAddPhoto;
@@ -287,6 +289,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
         switch (v.getId()) {
             case R.id.btn_add_photo:
                 MultiImageSelector.create(this)
+                        .count(maxPhotosCount)
                         .start(this, RC_PICK_PHOTO);
                 break;
             case R.id.location_layout:
@@ -347,6 +350,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
             if (resultCode == RESULT_OK) {
                 ArrayList<String> addedImages = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
                 if (addedImages != null) {
+                    maxPhotosCount = maxPhotosCount - addedImages.size();
                     imageUris.addAll(addedImages);
                 }
                 addPhotoToDsListAdapter = new AddPhotoToDsListAdapter(imageUris, EditDiveSpotActivity.this, addPhotoTitle);
@@ -578,8 +582,12 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
     @Subscribe
     public void deleteImage(ImageDeletedEvent event) {
         imageUris.remove(event.getImageIndex());
-        photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris,
-                EditDiveSpotActivity.this, addPhotoTitle));
+        AddPhotoToDsListAdapter addPhotoToDsListAdapter = new AddPhotoToDsListAdapter(imageUris,
+                EditDiveSpotActivity.this, addPhotoTitle);
+        photos_rc.setAdapter(addPhotoToDsListAdapter);
+        if (addPhotoToDsListAdapter.getNewFilesUrisList() != null) {
+            maxPhotosCount = 3 - addPhotoToDsListAdapter.getNewFilesUrisList().size();
+        }
     }
 
 }

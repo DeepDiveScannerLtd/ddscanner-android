@@ -670,6 +670,12 @@
                             tools:clickable="false" />
                     </LinearLayout>
                 </LinearLayout>
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:background="@color/orange"
+                    android:text="@string/contact_dive_centers"
+                    />
             </LinearLayout>
         </LinearLayout>
     </com.ddscanner.ui.views.FlingableNestedScrollView>

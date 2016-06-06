@@ -135,5 +135,6 @@
     <string name="error_no_internet">No internet connection</string>
     <string name="open_settings">OPEN SETTINGS</string>
     <string name="grant_permission">GRANT PERMISSION</string>
+    <string name="contact_dive_centers">Contact dive centers</string>
 
 </resources>
