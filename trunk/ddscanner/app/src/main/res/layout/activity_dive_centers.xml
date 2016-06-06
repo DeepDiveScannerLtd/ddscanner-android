@@ -1,28 +1,203 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<LinearLayout android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <include layout="@layout/view_toolbar" />
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/tools"
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/map_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <include layout="@layout/view_toolbar" />
-
-        <android.support.design.widget.TabLayout
-            android:id="@+id/place_sliding_tabs"
-            android:layout_width="match_parent"
-            style="@style/tabLayout"
-            android:layout_height="wrap_content"
-            android:background="@color/primary"
-            app:tabMode="scrollable" />
-
-        <android.support.v4.view.ViewPager
-            android:id="@+id/place_view_pager"
+        <com.google.android.gms.maps.MapView
+            android:id="@+id/mapView"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-    </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/map_control_layout"
+            android:layout_gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp">
+
+            <ImageView
+                android:id="@+id/zoom_plus"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/background_map_tools"
+                android:padding="10dp"
+                android:src="@drawable/ic_zoom_plus" />
+
+            <ImageView
+                android:id="@+id/zoom_minus"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/zoom_plus"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/background_map_tools"
+                android:padding="10dp"
+                android:src="@drawable/ic_zoom_minus" />
+
+            <ImageView
+                android:id="@+id/go_to_my_location"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/zoom_minus"
+                android:layout_marginTop="23dp"
+                android:background="@drawable/background_map_tools"
+                android:padding="10dp"
+                android:src="@drawable/ic_my_location" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_gravity="bottom"
+            android:id="@+id/dive_spot_info_layout"
+            android:layout_width="match_parent"
+            android:layout_height="110dp"
+            android:background="@drawable/iw_card_divecenter"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/dive_spot_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="22dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginTop="20dp"
+                android:ellipsize="end"
+                android:lines="1"
+                android:text="Racha yai wrecks fds fds fds fsdf sdf sd ds"
+                android:textColor="@color/white"
+                android:textSize="22sp" />
+
+            <LinearLayout
+                android:id="@+id/rating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/dive_spot_title"
+                android:layout_marginLeft="22dp"
+                android:layout_marginTop="3dp"
+                android:gravity="center_vertical|center_horizontal"
+                android:orientation="horizontal" />
+
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/rating"
+                android:layout_marginLeft="22dp"
+                android:layout_marginTop="3dp"
+                android:textColor="@color/white" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="16dp"
+                android:src="@drawable/ic_iw_arrow" />
+
+        </RelativeLayout>
+
+    </android.support.design.widget.CoordinatorLayout>
+
+    <RelativeLayout
+        android:id="@+id/list_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/cv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:scrollbars="vertical"
+            android:visibility="gone" />
+
+        <RelativeLayout
+            android:id="@+id/please"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/sad"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_sad" />
+
+            <TextView
+                android:id="@+id/text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/sad"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="15dp"
+                android:gravity="center"
+                android:text="Sorry! There are no spots here"
+                android:textColor="#939393"
+                android:textSize="18sp" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <ProgressBar
+        android:id="@+id/request_progress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="18dp"
+        android:layout_marginTop="10dp"
+        android:background="@android:color/transparent"
+        android:indeterminateOnly="true"
+        android:indeterminateTint="@color/primary"
+        android:indeterminateTintMode="src_in"
+        android:progressTint="@color/primary"
+        android:visibility="gone" />
+
+    <RelativeLayout
+        android:id="@+id/toast"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="250dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/border"
+            android:gravity="center"
+            android:text="Please zoom in to see dive spots"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/map_list_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="14dp"
+        android:src="@drawable/ic_acb_list"
+        app:backgroundTint="@color/white" />
+
+</RelativeLayout>
 </LinearLayout>

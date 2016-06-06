@@ -128,6 +128,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private LinearLayout thanksLayout;
     private Button btnDsDetailsIsValid;
     private Button btnDsDetailsIsInvalid;
+    private Button showDiveCenters;
     private ImageView thanksClose;
     private RelativeLayout creatorLayout;
     private TextView numberOfCheckinPeoplesHere;
@@ -230,6 +231,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         editorsRecyclerView = (RecyclerView) findViewById(R.id.editors);
         editorsWrapperView = (RelativeLayout) findViewById(R.id.editors_wrapper);
         expandEditorsArrow = (ImageView) findViewById(R.id.expand_editors_arrow);
+        showDiveCenters = (Button) findViewById(R.id.button_show_divecenters);
     }
 
     /**
@@ -260,6 +262,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         materialDialog = helpers.getMaterialDialog(this);
         thanksClose.setOnClickListener(this);
         btnDsDetailsIsInvalid.setOnClickListener(this);
+        showDiveCenters.setOnClickListener(this);
         btnDsDetailsIsValid.setOnClickListener(this);
         btnCheckIn.setOnClickListener(this);
         creatorLayout.setOnClickListener(this);
@@ -540,6 +543,9 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                     break;
                 }
                 helpers.showDialog(diveSpot.getCreator(), getSupportFragmentManager());
+                break;
+            case R.id.button_show_divecenters:
+                DiveCentersActivity.show(this, new LatLng(Double.valueOf(diveSpot.getLat()), Double.valueOf(diveSpot.getLng())), diveSpot.getName());
                 break;
         }
     }
