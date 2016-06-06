@@ -1,14 +1,12 @@
 package com.ddscanner.ui.activities;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 
 import com.ddscanner.utils.LocationHelper;
 import com.ddscanner.utils.LogUtils;
+
+import java.util.HashSet;
 
 public class BaseAppCompatActivity extends AppCompatActivity {
 
@@ -18,17 +16,21 @@ public class BaseAppCompatActivity extends AppCompatActivity {
     private static final int REQUEST_CODE_LOCATION_PROVIDERS = 1302;
 
     private LocationHelper locationHelper;
+    private HashSet<Integer> requestCodes = new HashSet<>();
 
     /**
      * Call this method to get user location. Subscribe to LocationReadyEvent for result
      */
-    public void getLocation() {
+    public void getLocation(int requestCode) {
+        if (requestCode != -1) {
+            requestCodes.add(requestCode);
+        }
         if (locationHelper == null) {
             locationHelper = new LocationHelper(this);
         }
         try {
             locationHelper.checkLocationConditions();
-            locationHelper.requestLocation();
+            locationHelper.requestLocation(requestCodes);
         } catch (LocationHelper.LocationProvidersNotAvailableException e) {
             LogUtils.i(TAG, "location providers not available. starting LocationProvidersNotAvailableActivity");
             LocationProvidersNotAvailableActivity.showForResult(this, REQUEST_CODE_LOCATION_PROVIDERS);
@@ -45,7 +47,8 @@ public class BaseAppCompatActivity extends AppCompatActivity {
         switch (requestCode) {
             case REQUEST_CODE_LOCATION_PROVIDERS:
             case REQUEST_CODE_LOCATION_PERMISSION:
-                getLocation();
+                // Because by this time we have already put request code to collection, we are passing -1.
+                getLocation(-1);
                 break;
         }
     }

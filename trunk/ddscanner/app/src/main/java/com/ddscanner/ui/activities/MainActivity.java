@@ -89,8 +89,6 @@ public class MainActivity extends BaseAppCompatActivity
     private boolean isTryToOpenAddDiveSpotActivity = false;
     private int positionToScroll;
 
-    private boolean isInitialLocationRequest = true;
-
     //    private MapListFragment mapListFragment = new MapListFragment();
 //    private NotificationsFragment notificationsFragment = new NotificationsFragment();
     private ProfileFragment profileFragment = new ProfileFragment();
@@ -114,7 +112,7 @@ public class MainActivity extends BaseAppCompatActivity
         setUi();
         setupTabLayout();
         playServices();
-        getLocation();
+        getLocation(Constants.REQUEST_CODE_MAIN_ACTIVITY_GET_LOCATION_ON_ACTIVITY_START);
     }
 
     private void setUi() {
@@ -405,11 +403,15 @@ public class MainActivity extends BaseAppCompatActivity
 
     @Subscribe
     public void onLocationReady(LocationReadyEvent event) {
-        identifyUser(String.valueOf(event.getLocation().getLatitude()), String.valueOf(event.getLocation().getLongitude()));
-        if (isInitialLocationRequest) {
-            DDScannerApplication.bus.post(new PlaceChoosedEvent(new LatLngBounds(new LatLng(event.getLocation().getLatitude() - 1, event.getLocation().getLongitude() - 1), new LatLng(event.getLocation().getLatitude() + 1, event.getLocation().getLongitude() + 1))));
-            isInitialLocationRequest = false;
+        for (Integer code : event.getRequestCodes()) {
+            switch (code) {
+                case Constants.REQUEST_CODE_MAIN_ACTIVITY_GET_LOCATION_ON_ACTIVITY_START:
+                    identifyUser(String.valueOf(event.getLocation().getLatitude()), String.valueOf(event.getLocation().getLongitude()));
+                    DDScannerApplication.bus.post(new PlaceChoosedEvent(new LatLngBounds(new LatLng(event.getLocation().getLatitude() - 1, event.getLocation().getLongitude() - 1), new LatLng(event.getLocation().getLatitude() + 1, event.getLocation().getLongitude() + 1))));
+                    break;
+            }
         }
+        identifyUser(String.valueOf(event.getLocation().getLatitude()), String.valueOf(event.getLocation().getLongitude()));
     }
 
     @Subscribe
