@@ -84,7 +84,7 @@ public class AllNotificationsFragment extends Fragment {
         }
         int i = 0;
         while (helpers.comparingTimes(SharedPreferenceHelper.getLastShowingNotificationTime(),
-                activities.get(i-1).getDate()) && i < notifications.size() - 1) {
+                activities.get(i).getDate()) && i < notifications.size() - 1) {
             i++;
         }
         NotificationsListAdapter notificationsListAdapter = new NotificationsListAdapter(

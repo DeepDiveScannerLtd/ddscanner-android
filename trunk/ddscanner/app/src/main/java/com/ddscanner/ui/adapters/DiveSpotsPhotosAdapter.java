@@ -6,12 +6,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.events.OpenPhotosActivityEvent;
 import com.ddscanner.ui.views.TransformationRoundImage;
+import com.ddscanner.utils.ImageLoadedCallback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -43,13 +45,21 @@ public class DiveSpotsPhotosAdapter extends RecyclerView.Adapter<DiveSpotsPhotos
     }
 
     @Override
-    public void onBindViewHolder(DiveSpotsPhotosAdapterViewHolder holder, int position) {
+    public void onBindViewHolder(final DiveSpotsPhotosAdapterViewHolder holder, int position) {
         if (photos.size() > 8 && position == 7) {
             Picasso.with(context).load(path + photos.get(position)).transform(new TransformationRoundImage(2,0)).resize(70,70).centerCrop().into(holder.photo);
             holder.morePhotos.setText("+" + String.valueOf(photos.size() - 8));
             holder.morePhotos.setVisibility(View.VISIBLE);
         } else {
-            Picasso.with(context).load(path + photos.get(position)).transform(new TransformationRoundImage(2,0)).resize(70,70).centerCrop().into(holder.photo);
+            Picasso.with(context).load(path + photos.get(position)).transform(new TransformationRoundImage(2,0)).resize(70,70).centerCrop().into(holder.photo,
+                    new ImageLoadedCallback(holder.progressBar){
+                        @Override
+                        public void onSuccess() {
+                            if (holder.progressBar != null) {
+                                holder.progressBar.setVisibility(View.GONE);
+                            }
+                        }
+                    });
         }
     }
 
@@ -65,12 +75,14 @@ public class DiveSpotsPhotosAdapter extends RecyclerView.Adapter<DiveSpotsPhotos
 
         protected ImageView photo;
         protected TextView morePhotos;
+        protected ProgressBar progressBar;
 
         public DiveSpotsPhotosAdapterViewHolder(View v) {
             super(v);
             photo = (ImageView) v.findViewById(R.id.image);
             photo.setOnClickListener(this);
             morePhotos = (TextView) v.findViewById(R.id.number_of_more_images);
+            progressBar = (ProgressBar) v.findViewById(R.id.progressBar);
         }
 
         @Override

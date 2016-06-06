@@ -55,10 +55,9 @@ public class ActivitiesListAdapter
             int color = context.getResources().getColor(R.color.primary);
             ForegroundColorSpan fcs = new ForegroundColorSpan(color);
             if (activity.getType().equals("checkin")) {
-                String text = Constants.NOTIF_CHECKIN;
                 String name = activity.getUser().getName();
                 String divespot = activity.getDiveSpot().getName();
-                text = String.format(text, name, divespot);
+                String text = context.getResources().getString(R.string.user_made_checkin, name, divespot);
                 SpannableString spannableString = new SpannableString(text);
                 spannableString.setSpan(fcs, 0, name.length(), 0);
                 spannableString.setSpan(fcs, text.indexOf(divespot), text.length(), 0);
@@ -68,9 +67,8 @@ public class ActivitiesListAdapter
                         .getDrawable(context, R.drawable.ic_notif_checkin));
             }
             if (activity.getType().equals("store")) {
-                String text = Constants.NOTIF_NEWDS;
                 String divespot = activity.getDiveSpot().getName();
-                text = String.format(text, divespot);
+                String text = context.getResources().getString(R.string.new_dive_spothas_been_added_near, divespot);
                 SpannableString spannableString = new SpannableString(text);
                 spannableString.setSpan(fcs, text.indexOf(divespot), text.length(), 0);
                 holder.text.setText(spannableString);
@@ -79,10 +77,8 @@ public class ActivitiesListAdapter
             if (activity.getType().equals("update")) {
                 holder.image.setImageDrawable(AppCompatDrawableManager.get()
                         .getDrawable(context, R.drawable.ic_notif_changed));
-                String time = helpers.getDate(activity.getDate());
-                String text = Constants.NOTIF_WAS_CHANGED;
                 String divespot = activity.getDiveSpot().getName();
-                text = String.format(text, divespot);
+                String text = context.getResources().getString(R.string.divespot_was_changed, divespot);
                 SpannableString spannableString = new SpannableString(text);
                 spannableString.setSpan(fcs, 0, divespot.length(), 0);
                 holder.text.setText(spannableString);

@@ -118,12 +118,12 @@
     <string name="dialog_cancel">CANCEL</string>
     <string name="ok">OK</string>
     
-    <!--<string name="user_made_checkin">%s also made a check in %s</string>-->
-    <!--<string name="divespot_was_changed">%s was changed</string>-->
-    <!--<string name="new_dive_spothas_been_added_near">New dive spot has been added near you %s</string>-->
-    <!--<string name="user_dislike_your_review">%s disliked your review %s</string>-->
-    <!--<string name="user_liked_your_review">%s liked your review %s</string>-->
-    <!--<string name="your_changes_accepted">You changes on the %s have been accepted</string>-->
+    <string name="user_made_checkin">%1$s also made a check in %2$s</string>
+    <string name="divespot_was_changed">%1$s was changed</string>
+    <string name="new_dive_spothas_been_added_near">New dive spot has been added near you %1$s</string>
+    <string name="user_dislike_your_review">%1$s disliked your review %2$s</string>
+    <string name="user_liked_your_review">%1$s liked your review %2$s</string>
+    <string name="your_changes_accepted">You changes on the %1$s have been accepted</string>
 
     <string name="font_roboto_medium">sans-serif</string>
     <string name="filter_object">Object</string>
@@ -135,5 +135,6 @@
     <string name="error_no_internet">No internet connection</string>
     <string name="open_settings">OPEN SETTINGS</string>
     <string name="grant_permission">GRANT PERMISSION</string>
+    <string name="contact_dive_centers">Contact dive centers</string>
 
 </resources>
