@@ -61,22 +61,28 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
     }
 
     @Override
-    public void onBindViewHolder(final ReviewsListViewHolder reviewsListViewHolder, int i) {
+    public void onBindViewHolder(final ReviewsListViewHolder reviewsListViewHolder, final int i) {
         boolean isLiked;
         boolean isDisliked;
         isLiked = comments.get(reviewsListViewHolder.getAdapterPosition()).isLike();
         isDisliked = comments.get(reviewsListViewHolder.getAdapterPosition()).isDislike();
         if (isLiked) {
-            likeUi(reviewsListViewHolder.dislikeImage,
-                    reviewsListViewHolder.likeImage,
-                    reviewsListViewHolder.likesCount,
-                    reviewsListViewHolder.dislikesCount);
+//            likeUi(reviewsListViewHolder.dislikeImage,
+//                    reviewsListViewHolder.likeImage,
+//                    reviewsListViewHolder.likesCount,
+//                    reviewsListViewHolder.dislikesCount,
+//                    i);
+            reviewsListViewHolder.likeImage.setImageDrawable(AppCompatDrawableManager.get().getDrawable(
+                    context, R.drawable.ic_like_review));
         }
         if (isDisliked) {
-            dislikeUi(reviewsListViewHolder.dislikeImage,
-                    reviewsListViewHolder.likeImage,
-                    reviewsListViewHolder.likesCount,
-                    reviewsListViewHolder.dislikesCount);
+            reviewsListViewHolder.dislikeImage.setImageDrawable(AppCompatDrawableManager.get()
+                    .getDrawable(context, R.drawable.ic_review_dislike));
+//            dislikeUi(reviewsListViewHolder.dislikeImage,
+//                    reviewsListViewHolder.likeImage,
+//                    reviewsListViewHolder.likesCount,
+//                    reviewsListViewHolder.dislikesCount,
+//                    i);
         }
         if (comments.get(reviewsListViewHolder.getAdapterPosition()).getImages() != null) {
             LinearLayoutManager layoutManager = new LinearLayoutManager(context);
@@ -95,7 +101,8 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
                 likeComment(comments.get(reviewsListViewHolder.getAdapterPosition()).getId(), reviewsListViewHolder.dislikeImage,
                         reviewsListViewHolder.likeImage,
                         reviewsListViewHolder.likesCount,
-                        reviewsListViewHolder.dislikesCount);
+                        reviewsListViewHolder.dislikesCount,
+                        i);
             }
         });
 
@@ -105,7 +112,8 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
                 dislikeComment(comments.get(reviewsListViewHolder.getAdapterPosition()).getId(), reviewsListViewHolder.dislikeImage,
                         reviewsListViewHolder.likeImage,
                         reviewsListViewHolder.likesCount,
-                        reviewsListViewHolder.dislikesCount);
+                        reviewsListViewHolder.dislikesCount,
+                        i);
 
             }
         });
@@ -146,34 +154,38 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         return comments.size();
     }
 
-    private void likeUi(ImageView dislikeImage, ImageView likeImage, TextView likesCount, TextView dislikesCount) {
-        dislikeImage.setImageDrawable(AppCompatDrawableManager.get().getDrawable(
-                context, R.drawable.ic_review_dislike_empty
-        ));
-        dislikesCount.setText(String.valueOf(Integer.parseInt(dislikesCount.getText().toString()) - 1));
-
+    private void likeUi(ImageView dislikeImage, ImageView likeImage, TextView likesCount, TextView dislikesCount, int position) {
+        if (comments.get(position).isDislike()) {
+            dislikeImage.setImageDrawable(AppCompatDrawableManager.get().getDrawable(
+                    context, R.drawable.ic_review_dislike_empty
+            ));
+            dislikesCount.setText(String.valueOf(Integer.parseInt(dislikesCount.getText().toString()) - 1));
+        }
         likeImage.setImageDrawable(AppCompatDrawableManager.get().getDrawable(
                 context, R.drawable.ic_like_review
         ));
         likesCount.setText(String.valueOf(Integer.parseInt(likesCount.getText().toString()) + 1));
+        comments.get(position).setLike(true);
     }
 
-    private void dislikeUi(ImageView dislikeImage, ImageView likeImage, TextView likesCount, TextView dislikesCount) {
-        likeImage.setImageDrawable(AppCompatDrawableManager.get().getDrawable(
-                context, R.drawable.ic_review_like_empty
-        ));
-        likesCount.setText(String.valueOf(Integer.parseInt(likesCount.getText().toString()) - 1));
-
+    private void dislikeUi(ImageView dislikeImage, ImageView likeImage, TextView likesCount, TextView dislikesCount, int position) {
+        if (comments.get(position).isLike()) {
+            likeImage.setImageDrawable(AppCompatDrawableManager.get().getDrawable(
+                    context, R.drawable.ic_review_like_empty
+            ));
+            likesCount.setText(String.valueOf(Integer.parseInt(likesCount.getText().toString()) - 1));
+        }
 
         dislikeImage.setImageDrawable(AppCompatDrawableManager.get()
                 .getDrawable(context, R.drawable.ic_review_dislike));
         dislikesCount.setText(String.valueOf(Integer.parseInt(dislikesCount.getText().toString()) + 1));
+        comments.get(position).setDislike(true);
 
     }
 
     private void likeComment(String id, final ImageView dislikeImage,
                              final ImageView likeImage,
-                             final TextView likesCount, final TextView dislikesCount) {
+                             final TextView likesCount, final TextView dislikesCount, final int position) {
         Call<ResponseBody> call = RestClient.getServiceInstance().likeComment(
                 id, helpers.getRegisterRequest()
         );
@@ -183,7 +195,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
                 if (response.isSuccessful()) {
                     if (response.raw().code() == 200) {
                         DDScannerApplication.bus.post(new IsCommentLikedEvent());
-                         likeUi(dislikeImage, likeImage, likesCount, dislikesCount);
+                         likeUi(dislikeImage, likeImage, likesCount, dislikesCount, position);
                     }
                 }
             }
@@ -197,7 +209,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
 
     private void dislikeComment(String id, final ImageView dislikeImage,
                                 final ImageView likeImage,
-                                final TextView likesCount, final TextView dislikesCount) {
+                                final TextView likesCount, final TextView dislikesCount, final int position) {
         Call<ResponseBody> call = RestClient.getServiceInstance().dislikeComment(
                 id, helpers.getRegisterRequest()
         );
@@ -207,7 +219,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
                 if (response.isSuccessful()) {
                     if (response.raw().code() == 200) {
                         DDScannerApplication.bus.post(new IsCommentLikedEvent());
-                        dislikeUi(dislikeImage, likeImage, likesCount, dislikesCount);
+                        dislikeUi(dislikeImage, likeImage, likesCount, dislikesCount, position);
                     }
                 }
             }
