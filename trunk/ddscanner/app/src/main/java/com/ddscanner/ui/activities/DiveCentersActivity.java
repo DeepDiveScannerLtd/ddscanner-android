@@ -36,6 +36,7 @@ import com.ddscanner.ui.adapters.ProductListAdapter;
 import com.ddscanner.ui.managers.DiveCentersClusterManager;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -198,16 +199,13 @@ public class DiveCentersActivity extends AppCompatActivity implements View.OnCli
                 isMapShown = !isMapShown;
                 break;
             case R.id.zoom_plus:
-
+                mGoogleMap.animateCamera(CameraUpdateFactory.zoomIn());
                 break;
             case R.id.zoom_minus:
-             //   diveSpotsClusterManager.mapZoomMinus();
+                mGoogleMap.animateCamera(CameraUpdateFactory.zoomIn());
                 break;
             case R.id.go_to_my_location:
               //  baseAppCompatActivity.getLocation();
-                break;
-            case R.id.add_ds_fab:
-
                 break;
             case R.id.dive_spot_info_layout:
                 DiveCenterDetailsActivity.show(this, diveCenter, path);
