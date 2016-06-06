@@ -13,6 +13,9 @@ import android.support.v4.app.ActivityCompat;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.events.LocationReadyEvent;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class LocationHelper implements LocationListener {
 
     private static final String TAG = LocationHelper.class.getName();
@@ -25,6 +28,7 @@ public class LocationHelper implements LocationListener {
 
     private LocationManager locationManager;
     private Activity context;
+    private HashSet<Integer> requestCodes = new HashSet<>();
 
     public LocationHelper(Activity context) {
         this.context = context;
@@ -68,22 +72,31 @@ public class LocationHelper implements LocationListener {
         }
     }
 
-    public void requestLocation() {
+    public void requestLocation(HashSet<Integer> requestCodes) {
+        LogUtils.i(TAG, "location check: requestLocation codes = " + requestCodes);
+        this.requestCodes.addAll(requestCodes);
         Location lastKnownLocationGps = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         Location lastKnownLocationNetwork = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
         if (isLocationOk(lastKnownLocationGps) && isLocationOk(lastKnownLocationNetwork)) {
             if (isBetterLocation(lastKnownLocationNetwork, lastKnownLocationGps)) {
-                DDScannerApplication.bus.post(new LocationReadyEvent(lastKnownLocationNetwork));
+                DDScannerApplication.bus.post(new LocationReadyEvent(lastKnownLocationNetwork, this.requestCodes));
+                this.requestCodes.clear();
+                return;
             } else {
-                DDScannerApplication.bus.post(new LocationReadyEvent(lastKnownLocationGps));
+                DDScannerApplication.bus.post(new LocationReadyEvent(lastKnownLocationGps, this.requestCodes));
+                this.requestCodes.clear();
+                return;
             }
         } else if (isLocationOk(lastKnownLocationGps)) {
-            DDScannerApplication.bus.post(new LocationReadyEvent(lastKnownLocationGps));
+            DDScannerApplication.bus.post(new LocationReadyEvent(lastKnownLocationGps, this.requestCodes));
+            this.requestCodes.clear();
+            return;
         } else if (isLocationOk(lastKnownLocationNetwork)) {
-            DDScannerApplication.bus.post(new LocationReadyEvent(lastKnownLocationNetwork));
+            DDScannerApplication.bus.post(new LocationReadyEvent(lastKnownLocationNetwork, this.requestCodes));
+            this.requestCodes.clear();
+            return;
         }
-
 
         // NETWORK location provider
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED && locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
@@ -157,7 +170,8 @@ public class LocationHelper implements LocationListener {
     public void onLocationChanged(Location location) {
         if (isLocationOk(location)) {
             LogUtils.i(TAG, "Found good location, sending bus event.");
-            DDScannerApplication.bus.post(new LocationReadyEvent(location));
+            DDScannerApplication.bus.post(new LocationReadyEvent(location, requestCodes));
+            requestCodes.clear();
             if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 // TODO Why the fuck do we need to request permission when removing locaion updates listener!?
                 return;

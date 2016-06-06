@@ -6,6 +6,7 @@ import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.UiThread;
 import android.support.design.widget.FloatingActionButton;
@@ -38,16 +39,19 @@ import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.activities.DiveSpotDetailsActivity;
 import com.ddscanner.ui.adapters.ProductListAdapter;
 import com.ddscanner.ui.managers.DiveSpotsClusterManager;
+import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.squareup.otto.Subscribe;
@@ -73,6 +77,7 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
     private GoogleMap mGoogleMap;
     private DiveSpotsClusterManager diveSpotsClusterManager;
     MapView mMapView;
+    private Location userLocationOnFragmentStart;
 
     private RelativeLayout toast;
     private ProgressBar progressBar;
@@ -161,6 +166,7 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
         view = inflater.inflate(R.layout.fragment_maplist, container, false);
         findViews();
         setMapView(savedInstanceState);
+        baseAppCompatActivity.getLocation(Constants.REQUEST_CODE_MAP_LIST_FRAGMENT_GET_LOCATION_ON_FRAGMENT_START);
         return view;
     }
 
@@ -197,6 +203,8 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
     }
 
     private void setMapView(Bundle savedInstanceState) {
+        MapsInitializer.initialize(getActivity());
+
         infoWindowBackgroundImages.put("wreck", AppCompatDrawableManager.get().getDrawable(getActivity(),
                 R.drawable.iw_card_wreck, false));
         infoWindowBackgroundImages.put("cave", AppCompatDrawableManager.get().getDrawable(getActivity(),
@@ -210,7 +218,7 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
         mapListFAB.setOnClickListener(this);
         mMapView = (MapView) view.findViewById(R.id.mapView);
         LogUtils.i(TAG, "mMapView inited");
-        mMapView.onCreate(null);
+        mMapView.onCreate(new Bundle());
         mMapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap googleMap) {
@@ -219,10 +227,19 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
                 mGoogleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
                     @Override
                     public void onMapLoaded() {
-                        LogUtils.i(TAG, "onMapLoaded");
+                        LogUtils.i(TAG, "location check: onMapLoaded, userLocationOnFragmentStart = " + userLocationOnFragmentStart);
                         diveSpotsClusterManager = new DiveSpotsClusterManager(getActivity(), mGoogleMap, toast, progressBar, MapListFragment.this);
                         mGoogleMap.setOnMarkerClickListener(diveSpotsClusterManager);
                         mGoogleMap.setOnCameraChangeListener(diveSpotsClusterManager);
+                        if (userLocationOnFragmentStart == null) {
+                            // this means location has not yet been received. do nothing
+                        } else {
+                            // this means location has already been received
+                            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(new LatLngBounds(
+                                    new LatLng(userLocationOnFragmentStart.getLatitude() - 1, userLocationOnFragmentStart.getLongitude() - 1),
+                                    new LatLng(userLocationOnFragmentStart.getLatitude() + 1, userLocationOnFragmentStart.getLongitude() + 1)
+                            ), 0));
+                        }
                     }
                 });
 
@@ -273,7 +290,7 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
                 diveSpotsClusterManager.mapZoomMinus();
                 break;
             case R.id.go_to_my_location:
-                baseAppCompatActivity.getLocation();
+                baseAppCompatActivity.getLocation(Constants.REQUEST_CODE_MAP_LIST_FRAGMENT_GO_TO_CURRENT_LOCATION);
                 break;
             case R.id.dive_spot_info_layout:
                 DiveSpotDetailsActivity.show(getActivity(), String.valueOf(lastDiveSpotId));
@@ -385,30 +402,50 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
 
     @Subscribe
     public void onLocationReady(LocationReadyEvent event) {
-        LogUtils.i(TAG, "onLocationReady");
-        LatLng myLocation = new LatLng(event.getLocation().getLatitude(), event.getLocation().getLongitude());
-        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 14.0f));
-        if (circle == null) {
-            // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
+        LogUtils.i(TAG, "location check: onLocationReady, request codes = " + event.getRequestCodes());
+        for (Integer code : event.getRequestCodes()) {
+            switch (code) {
+                case Constants.REQUEST_CODE_MAP_LIST_FRAGMENT_GO_TO_CURRENT_LOCATION:
+                    LatLng myLocation = new LatLng(event.getLocation().getLatitude(), event.getLocation().getLongitude());
+                    mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 14.0f));
+                    if (circle == null) {
+                        // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
 //                myLocationMarker = mGoogleMap.addMarker(new MarkerOptions()
 //                        .position(myLocation)
 //                        .anchor(0.5f, 0.5f)
 //                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.pin_me)));
-            myLocationMarker = mGoogleMap.addMarker(new MarkerOptions()
-                    .position(myLocation)
-                    .anchor(0.5f, 0.5f)
-                    .icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.ic_pin_me))));
-            CircleOptions circleOptions = new CircleOptions()
-                    .center(myLocation)
-                    .radius(200)
-                    .strokeColor(android.R.color.transparent)
-                    .fillColor(Color.parseColor("#1A0668a1"));
-            circle = mGoogleMap.addCircle(circleOptions);
-            diveSpotsClusterManager.setUserCurrentLocationMarker(myLocationMarker);
-        } else {
-            circle.setCenter(myLocation);
-            myLocationMarker.setPosition(new LatLng(event.getLocation().getLatitude(), event.getLocation().getLongitude()));
-            diveSpotsClusterManager.setUserCurrentLocationMarker(myLocationMarker);
+                        myLocationMarker = mGoogleMap.addMarker(new MarkerOptions()
+                                .position(myLocation)
+                                .anchor(0.5f, 0.5f)
+                                .icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.ic_pin_me))));
+                        CircleOptions circleOptions = new CircleOptions()
+                                .center(myLocation)
+                                .radius(200)
+                                .strokeColor(android.R.color.transparent)
+                                .fillColor(Color.parseColor("#1A0668a1"));
+                        circle = mGoogleMap.addCircle(circleOptions);
+                        diveSpotsClusterManager.setUserCurrentLocationMarker(myLocationMarker);
+                    } else {
+                        circle.setCenter(myLocation);
+                        myLocationMarker.setPosition(new LatLng(event.getLocation().getLatitude(), event.getLocation().getLongitude()));
+                        diveSpotsClusterManager.setUserCurrentLocationMarker(myLocationMarker);
+                    }
+                    break;
+
+                case Constants.REQUEST_CODE_MAP_LIST_FRAGMENT_GET_LOCATION_ON_FRAGMENT_START:
+                    LogUtils.i(TAG, "location check: GET_LOCATION_ON_FRAGMENT_START: event.getLocation() = " + event.getLocation() + " diveSpotsClusterManager = " + diveSpotsClusterManager);
+                    if (diveSpotsClusterManager == null) {
+                        // this means map has not yet been initialized. we need to remember location.
+                        userLocationOnFragmentStart = event.getLocation();
+                    } else {
+                        // this means map has already been initialized.
+                        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(new LatLngBounds(
+                                new LatLng(event.getLocation().getLatitude() - 1, event.getLocation().getLongitude() - 1),
+                                new LatLng(event.getLocation().getLatitude() + 1, event.getLocation().getLongitude() + 1)
+                        ), 0));
+                    }
+                    break;
+            }
         }
     }
 }

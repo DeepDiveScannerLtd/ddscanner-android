@@ -20,7 +20,6 @@ import com.ddscanner.events.MarkerClickEvent;
 import com.ddscanner.events.OnMapClickEvent;
 import com.ddscanner.events.PlaceChoosedEvent;
 import com.ddscanner.rest.RestClient;
-import com.ddscanner.services.GPSTracker;
 import com.ddscanner.ui.fragments.MapListFragment;
 import com.ddscanner.utils.LogUtils;
 import com.google.android.gms.maps.CameraUpdate;
@@ -115,15 +114,6 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
             showToast();
         }
         DDScannerApplication.bus.register(this);
-        GPSTracker tracker = new GPSTracker(context);
-        moveCamera(new LatLngBounds(
-                new LatLng(tracker.getLatitude() - 1, tracker.getLongitude() - 1),
-                new LatLng(tracker.getLatitude() + 1, tracker.getLongitude() + 1)
-        ));
-    }
-
-    private void moveCamera(LatLngBounds latLngBounds) {
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 0));
     }
 
     private void showToast() {
