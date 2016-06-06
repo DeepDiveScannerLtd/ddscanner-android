@@ -860,7 +860,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
     private void getComments() {
         Call<ResponseBody> call = RestClient.getServiceInstance()
-                .getComments(String.valueOf(diveSpot.getId()));
+                .getComments(String.valueOf(diveSpot.getId()), helpers.getUserQuryMapRequest());
         call.enqueue(new retrofit2.Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

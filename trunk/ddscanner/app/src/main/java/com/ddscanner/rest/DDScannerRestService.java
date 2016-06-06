@@ -165,7 +165,7 @@ public interface DDScannerRestService {
     Call<ResponseBody> getCheckins(@Path("id") String id);
 
     @GET("diving/divespot/{id}/comments")
-    Call<ResponseBody> getComments(@Path("id") String id);
+    Call<ResponseBody> getComments(@Path("id") String id, @QueryMap Map<String, String> map);
 
     @GET("diving/user/{id}")
     Call<ResponseBody> getUserInfo(@Path("id") String id);
