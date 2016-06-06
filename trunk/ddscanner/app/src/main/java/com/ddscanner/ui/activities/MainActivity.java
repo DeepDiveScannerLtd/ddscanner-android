@@ -101,6 +101,7 @@ public class MainActivity extends BaseAppCompatActivity
         isHasInternetConnection = getIntent().getBooleanExtra(Constants.IS_HAS_INTERNET, false);
         startActivity();
         if (!isHasInternetConnection) {
+            LogUtils.i(TAG, "internetConnectionClosed 2");
             InternetClosedActivity.show(this);
         }
     }
@@ -435,6 +436,7 @@ public class MainActivity extends BaseAppCompatActivity
 
     @Subscribe
     public void internetConnectionClosed(InternetConnectionClosedEvent event) {
+        LogUtils.i(TAG, "internetConnectionClosed 1");
         InternetClosedActivity.show(this);
     }
 

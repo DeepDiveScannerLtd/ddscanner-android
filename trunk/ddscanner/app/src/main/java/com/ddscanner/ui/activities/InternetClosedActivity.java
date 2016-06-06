@@ -67,7 +67,6 @@ public class InternetClosedActivity extends AppCompatActivity implements View.On
 
     @Subscribe
     public void internetCOnnectionIsOpened(InternerConnectionOpenedEvent event) {
-        DDScannerApplication.errorActivityIsFinished();
         finish();
     }
 
@@ -81,9 +80,6 @@ public class InternetClosedActivity extends AppCompatActivity implements View.On
     protected void onResume() {
         super.onResume();
         DDScannerApplication.activityResumed();
-        if (!helpers.hasConnection(this)) {
-            DDScannerApplication.showErrorActivity(this);
-        }
     }
 
 }

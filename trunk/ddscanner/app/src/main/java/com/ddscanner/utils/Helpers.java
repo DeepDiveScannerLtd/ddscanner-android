@@ -1,8 +1,10 @@
 package com.ddscanner.utils;
+
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
+import android.net.Network;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.provider.MediaStore;
@@ -42,6 +44,7 @@ public class Helpers {
 
     /**
      * Method to get real path of file by URI
+     *
      * @param context
      * @param contentUri
      * @return Path to image
@@ -51,8 +54,8 @@ public class Helpers {
     public String getRealPathFromURI(Context context, Uri contentUri) {
         Cursor cursor = null;
         try {
-            String[] proj = { MediaStore.Images.Media.DATA };
-            cursor = context.getContentResolver().query(contentUri,  proj, null, null, null);
+            String[] proj = {MediaStore.Images.Media.DATA};
+            cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
             int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
             cursor.moveToFirst();
             return cursor.getString(column_index);
@@ -65,21 +68,23 @@ public class Helpers {
 
     /**
      * COnverting dp to pixels size
+     *
      * @param dp
      * @param context
      * @return dp value in pixels size
      * @author Andrei Lashkevich
      */
 
-    public float convertDpToPixel(float dp, Context context){
+    public float convertDpToPixel(float dp, Context context) {
         Resources resources = context.getResources();
         DisplayMetrics metrics = resources.getDisplayMetrics();
-        float px = dp * ((float)metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+        float px = dp * ((float) metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
         return px;
     }
 
     /**
      * Show dialog with user information
+     *
      * @param user
      * @param fragmentManager
      * @author Andrei Lashkevich
@@ -98,6 +103,7 @@ public class Helpers {
 
     /**
      * Add path to name of image
+     *
      * @param images
      * @param path
      * @return full URL's array
@@ -131,6 +137,7 @@ public class Helpers {
 
     /**
      * Comparing two arrays to third
+     *
      * @param first
      * @param second
      * @return compared array
@@ -146,12 +153,13 @@ public class Helpers {
             }
             return allPhotos;
         }
-        allPhotos =(ArrayList<String>) second.clone();
+        allPhotos = (ArrayList<String>) second.clone();
         return allPhotos;
     }
 
     /**
      * Change key-value params to value-keys to using this in spinners
+     *
      * @param map
      * @return mirror map
      * @author Andrei Lashkevich
@@ -167,11 +175,12 @@ public class Helpers {
 
     /**
      * Handling errors and showing this in textviews
+     *
      * @param context
      * @param errorsMap
      * @param errors
      */
-    public void errorHandling(Context context, Map<String,TextView> errorsMap, String errors) {
+    public void errorHandling(Context context, Map<String, TextView> errorsMap, String errors) {
         try {
             JsonObject jsonObject = new JsonParser().parse(errors).getAsJsonObject();
             for (Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) {
@@ -201,6 +210,7 @@ public class Helpers {
 
     /**
      * Check if error caused by login
+     *
      * @param errors
      * @return checking Error causing
      * @author Andrei Lashkevich
@@ -214,6 +224,7 @@ public class Helpers {
 
     /**
      * Check if has internet connection
+     *
      * @param context
      * @return
      * @author Andrei Lashkevich
@@ -221,19 +232,34 @@ public class Helpers {
 
     public boolean hasConnection(final Context context) {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo wifiInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-        if (wifiInfo != null && wifiInfo.isConnected()) {
-            return true;
+
+        //get all networks information
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            Network[] networks = cm.getAllNetworks();
+            int i;
+
+            //checking internet connectivity
+            for (i = 0; i < networks.length; ++i) {
+                if (cm.getNetworkInfo(networks[i]).getState() == NetworkInfo.State.CONNECTED) {
+                    return true;
+                }
+            }
+            return false;
+        } else {
+            NetworkInfo wifiInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+            if (wifiInfo != null && wifiInfo.isConnected()) {
+                return true;
+            }
+            wifiInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+            if (wifiInfo != null && wifiInfo.isConnected()) {
+                return true;
+            }
+            wifiInfo = cm.getActiveNetworkInfo();
+            if (wifiInfo != null && wifiInfo.isConnected()) {
+                return true;
+            }
+            return false;
         }
-        wifiInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
-        if (wifiInfo != null && wifiInfo.isConnected()) {
-            return true;
-        }
-        wifiInfo = cm.getActiveNetworkInfo();
-        if (wifiInfo != null && wifiInfo.isConnected()) {
-            return true;
-        }
-        return false;
     }
 
     public Map<String, String> getUserQuryMapRequest() {
@@ -242,7 +268,7 @@ public class Helpers {
             map.put("social", SharedPreferenceHelper.getSn());
             map.put("token", SharedPreferenceHelper.getToken());
             if (SharedPreferenceHelper.getSn().equals("tw")) {
-                map.put("secret",SharedPreferenceHelper.getSecret());
+                map.put("secret", SharedPreferenceHelper.getSecret());
             }
         } else {
             return null;
@@ -265,10 +291,10 @@ public class Helpers {
         long currentDateInMillis = date1.getTime();
         long differenceOfTime = 0;
         long incomingDateInMillis = 0;
-        int yearsSeconds = 3600*24*365;
-        int monthSeconds = 3600*24*30;
-        int weeksSeconds = 3600*24*7;
-        int daysSeconds = 3600*24;
+        int yearsSeconds = 3600 * 24 * 365;
+        int monthSeconds = 3600 * 24 * 30;
+        int weeksSeconds = 3600 * 24 * 7;
+        int daysSeconds = 3600 * 24;
         int hourSeconds = 3600;
         int minuteSeconds = 60;
         String returnString = "";
@@ -278,7 +304,7 @@ public class Helpers {
             Date incomingDate = format.parse(date);
             incomingDateInMillis = incomingDate.getTime();
             differenceOfTime = currentDateInMillis - incomingDateInMillis;
-            differenceOfTime = differenceOfTime /1000;
+            differenceOfTime = differenceOfTime / 1000;
             if ((differenceOfTime / yearsSeconds) > 0) {
                 return String.valueOf(differenceOfTime / yearsSeconds) + "y";
             }

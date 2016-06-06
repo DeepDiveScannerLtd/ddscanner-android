@@ -80,6 +80,7 @@
         <activity android:name=".ui.activities.LocationPermissionNotGrantedActivity"
             android:screenOrientation="portrait"/>
         <activity android:name=".ui.activities.InternetClosedActivity"
+            android:launchMode= "singleInstance"
             android:screenOrientation="portrait"
             />
 
