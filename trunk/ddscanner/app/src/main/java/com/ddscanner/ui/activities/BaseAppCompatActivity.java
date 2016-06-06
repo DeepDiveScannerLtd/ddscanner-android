@@ -22,6 +22,7 @@ public class BaseAppCompatActivity extends AppCompatActivity {
      * Call this method to get user location. Subscribe to LocationReadyEvent for result
      */
     public void getLocation(int requestCode) {
+        LogUtils.i(TAG, "location check: getLocation request code = " + requestCode + " request codes = " + requestCodes);
         if (requestCode != -1) {
             requestCodes.add(requestCode);
         }
@@ -31,6 +32,7 @@ public class BaseAppCompatActivity extends AppCompatActivity {
         try {
             locationHelper.checkLocationConditions();
             locationHelper.requestLocation(requestCodes);
+            requestCodes.clear();
         } catch (LocationHelper.LocationProvidersNotAvailableException e) {
             LogUtils.i(TAG, "location providers not available. starting LocationProvidersNotAvailableActivity");
             LocationProvidersNotAvailableActivity.showForResult(this, REQUEST_CODE_LOCATION_PROVIDERS);

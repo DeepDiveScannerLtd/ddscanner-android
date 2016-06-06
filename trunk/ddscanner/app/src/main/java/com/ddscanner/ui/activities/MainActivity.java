@@ -39,6 +39,7 @@ import com.ddscanner.ui.fragments.NotificationsFragment;
 import com.ddscanner.ui.fragments.ProfileFragment;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
+import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -403,6 +404,7 @@ public class MainActivity extends BaseAppCompatActivity
 
     @Subscribe
     public void onLocationReady(LocationReadyEvent event) {
+        LogUtils.i(TAG, "location check: onLocationReady request codes = " + event.getRequestCodes());
         for (Integer code : event.getRequestCodes()) {
             switch (code) {
                 case Constants.REQUEST_CODE_MAIN_ACTIVITY_GET_LOCATION_ON_ACTIVITY_START:

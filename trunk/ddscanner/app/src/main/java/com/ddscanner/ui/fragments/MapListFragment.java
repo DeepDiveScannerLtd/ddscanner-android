@@ -227,7 +227,7 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
                 mGoogleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
                     @Override
                     public void onMapLoaded() {
-                        LogUtils.i(TAG, "onMapLoaded");
+                        LogUtils.i(TAG, "location check: onMapLoaded, userLocationOnFragmentStart = " + userLocationOnFragmentStart);
                         diveSpotsClusterManager = new DiveSpotsClusterManager(getActivity(), mGoogleMap, toast, progressBar, MapListFragment.this);
                         mGoogleMap.setOnMarkerClickListener(diveSpotsClusterManager);
                         mGoogleMap.setOnCameraChangeListener(diveSpotsClusterManager);
@@ -402,7 +402,7 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
 
     @Subscribe
     public void onLocationReady(LocationReadyEvent event) {
-        LogUtils.i(TAG, "onLocationReady");
+        LogUtils.i(TAG, "location check: onLocationReady, request codes = " + event.getRequestCodes());
         for (Integer code : event.getRequestCodes()) {
             switch (code) {
                 case Constants.REQUEST_CODE_MAP_LIST_FRAGMENT_GO_TO_CURRENT_LOCATION:
@@ -433,6 +433,7 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
                     break;
 
                 case Constants.REQUEST_CODE_MAP_LIST_FRAGMENT_GET_LOCATION_ON_FRAGMENT_START:
+                    LogUtils.i(TAG, "location check: GET_LOCATION_ON_FRAGMENT_START: event.getLocation() = " + event.getLocation() + " diveSpotsClusterManager = " + diveSpotsClusterManager);
                     if (diveSpotsClusterManager == null) {
                         // this means map has not yet been initialized. we need to remember location.
                         userLocationOnFragmentStart = event.getLocation();

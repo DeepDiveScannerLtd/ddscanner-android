@@ -22,7 +22,7 @@ public class LocationHelper implements LocationListener {
 
     private static final int TWO_MINUTES = 1000 * 60 * 2;
     private static final long MIN_TIME_BETWEEN_UPDATES = 1000L * 60 * 1;
-    private static final long MAX_LOCATION_LIFE_PERIOD = 1L * 60 * 60 * 1000; // in millis
+    private static final long MAX_LOCATION_LIFE_PERIOD = 1L * 1 * 60 * 1000; // in millis
     private static final int LOCATION_ACCURACY = 500; // in meters
     private static final float MIN_DISTANCE_CHANGE_FOR_UPDATES = 10;
 
@@ -72,27 +72,31 @@ public class LocationHelper implements LocationListener {
         }
     }
 
-    public void requestLocation(HashSet<Integer> requestCode) {
-        requestCodes.addAll(requestCode);
+    public void requestLocation(HashSet<Integer> requestCodes) {
+        LogUtils.i(TAG, "location check: requestLocation codes = " + requestCodes);
+        this.requestCodes.addAll(requestCodes);
         Location lastKnownLocationGps = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         Location lastKnownLocationNetwork = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
         if (isLocationOk(lastKnownLocationGps) && isLocationOk(lastKnownLocationNetwork)) {
             if (isBetterLocation(lastKnownLocationNetwork, lastKnownLocationGps)) {
-                DDScannerApplication.bus.post(new LocationReadyEvent(lastKnownLocationNetwork, requestCodes));
-                requestCodes.clear();
+                DDScannerApplication.bus.post(new LocationReadyEvent(lastKnownLocationNetwork, this.requestCodes));
+                this.requestCodes.clear();
+                return;
             } else {
-                DDScannerApplication.bus.post(new LocationReadyEvent(lastKnownLocationGps, requestCodes));
-                requestCodes.clear();
+                DDScannerApplication.bus.post(new LocationReadyEvent(lastKnownLocationGps, this.requestCodes));
+                this.requestCodes.clear();
+                return;
             }
         } else if (isLocationOk(lastKnownLocationGps)) {
-            DDScannerApplication.bus.post(new LocationReadyEvent(lastKnownLocationGps, requestCodes));
-            requestCodes.clear();
+            DDScannerApplication.bus.post(new LocationReadyEvent(lastKnownLocationGps, this.requestCodes));
+            this.requestCodes.clear();
+            return;
         } else if (isLocationOk(lastKnownLocationNetwork)) {
-            DDScannerApplication.bus.post(new LocationReadyEvent(lastKnownLocationNetwork, requestCodes));
-            requestCodes.clear();
+            DDScannerApplication.bus.post(new LocationReadyEvent(lastKnownLocationNetwork, this.requestCodes));
+            this.requestCodes.clear();
+            return;
         }
-
 
         // NETWORK location provider
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED && locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
