@@ -57,10 +57,9 @@ public class NotificationsListAdapter
                         .getDrawable(context, R.drawable.icon_dislike));
                 Picasso.with(context).load(notification.getUser().getPicture()).resize(64,64)
                         .transform(new TransformationRoundImage(50, 0)).into(holder.image);
-                String text = Constants.NOTIF_DISLIKE;
                 String name = notification.getUser().getName();
                 String divespot = notification.getDiveSpot().getName();
-                text = String.format(text, name, divespot);
+                String text = context.getResources().getString(R.string.user_dislike_your_review, name, divespot);
                 SpannableString spannableString = new SpannableString(text);
                 spannableString.setSpan(fcs, 0, name.length(), 0);
                 spannableString.setSpan(fcs, text.indexOf(divespot), text.length(), 0);
@@ -72,10 +71,10 @@ public class NotificationsListAdapter
                         .getDrawable(context, R.drawable.icon_like));
                 Picasso.with(context).load(notification.getUser().getPicture()).resize(64,64)
                         .transform(new TransformationRoundImage(50,0)).into(holder.image);
-                String text = Constants.NOTIF_LIKE;
                 String name = notification.getUser().getName();
                 String divespot = notification.getDiveSpot().getName();
-                text = String.format(text, name, divespot);
+               // text = String.format(text, name, divespot);
+                String text = context.getResources().getString(R.string.user_liked_your_review, name, divespot);
                 SpannableString spannableString = new SpannableString(text);
                 spannableString.setSpan(fcs, 0, name.length(), 0);
                 spannableString.setSpan(fcs, text.indexOf(divespot), text.length(), 0);
@@ -84,9 +83,8 @@ public class NotificationsListAdapter
 
             }
             if (notification.getType().equals("accept")) {
-                String text = Constants.NOTIF_ACCEPT;
                 String divespot = notification.getDiveSpot().getName();
-                text = String.format(text, divespot);
+                String text = context.getResources().getString(R.string.your_changes_accepted,divespot);
                 SpannableString spannableString = new SpannableString(text);
                 spannableString.setSpan(fcs, text.indexOf(divespot),
                         text.length() - divespot.length(), 0);
