@@ -465,19 +465,19 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                         .get(levelSpinner.getSelectedItem().toString()));
         requestDescription = RequestBody.create(MediaType.parse("multipart/form-data"),
                 description.getText().toString().trim());
+        sealife = new ArrayList<>();
         if (sealifeListAddingDiveSpotAdapter != null && sealifeListAddingDiveSpotAdapter.getSealifes() != null) {
             sealifes = sealifeListAddingDiveSpotAdapter.getSealifes();
         } else {
             sealife = null;
         }
-        if (sealifes != null && sealifes.size() > 0) {
+        if (sealife != null && sealifes.size() > 0) {
             for (int i = 0; i < sealifes.size(); i++) {
                 sealife.add(MultipartBody.Part.createFormData("sealife[]", sealifes.get(i).getId()));
             }
-        } else {
-            sealife = null;
         }
         if (imageUris.size() > 0) {
+            images = new ArrayList<>();
             for (int i = 0; i < imageUris.size(); i++) {
                 File image = new File(imageUris.get(i));
                 RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), image);
