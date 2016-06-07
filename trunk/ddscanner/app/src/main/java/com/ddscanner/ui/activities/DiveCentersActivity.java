@@ -41,6 +41,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -253,6 +254,11 @@ public class DiveCentersActivity extends AppCompatActivity implements View.OnCli
                     @Override
                     public void onMapLoaded() {
                         LogUtils.i(TAG, "onMapLoaded");
+                        CameraPosition cameraPosition = new CameraPosition.Builder()
+                                .target(latLng)
+                                .zoom(12)
+                                .build();
+                        mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 2000, null);
                         DiveCentersClusterManager diveCentersClusterManager = new DiveCentersClusterManager(DiveCentersActivity.this, mGoogleMap, latLng, dsName);
                         mGoogleMap.setOnInfoWindowClickListener(diveCentersClusterManager);
                         mGoogleMap.setOnMarkerClickListener(diveCentersClusterManager);
