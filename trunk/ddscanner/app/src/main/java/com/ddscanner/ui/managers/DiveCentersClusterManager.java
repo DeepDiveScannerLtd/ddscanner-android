@@ -75,6 +75,8 @@ public class DiveCentersClusterManager extends ClusterManager<DiveCenter> implem
     private String logoPath;
     private DiveCentersResponseEntity diveCentersResponseEntity;
 
+    private Marker userCurrentLocationMarker;
+
     private final IconGenerator clusterIconGenerator1Symbol;
     private final IconGenerator clusterIconGenerator2Symbols;
     private final IconGenerator clusterIconGenerator3Symbols;
@@ -143,7 +145,7 @@ public class DiveCentersClusterManager extends ClusterManager<DiveCenter> implem
 
     @Override
     public boolean onMarkerClick(final Marker marker) {
-        if (super.onMarkerClick(marker) || marker.equals(diveSpotMarker)) {
+        if (super.onMarkerClick(marker) || marker.equals(diveSpotMarker) || marker.equals(userCurrentLocationMarker)) {
             return true;
         }
         if (lastClickedMarker != null) {
@@ -315,4 +317,9 @@ public class DiveCentersClusterManager extends ClusterManager<DiveCenter> implem
             }
         });
     }
+
+    public void setUserCurrentLocationMarker(Marker userCurrentLocationMarker) {
+        this.userCurrentLocationMarker = userCurrentLocationMarker;
+    }
+
 }
