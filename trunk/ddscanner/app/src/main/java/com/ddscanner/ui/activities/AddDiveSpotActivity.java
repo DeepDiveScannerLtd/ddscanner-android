@@ -470,7 +470,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         } else {
             sealife = null;
         }
-        if (sealifes.size() > 0) {
+        if (sealifes != null && sealifes.size() > 0) {
             for (int i = 0; i < sealifes.size(); i++) {
                 sealife.add(MultipartBody.Part.createFormData("sealife[]", sealifes.get(i).getId()));
             }
