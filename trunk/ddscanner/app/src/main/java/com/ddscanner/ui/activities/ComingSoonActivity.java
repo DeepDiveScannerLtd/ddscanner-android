@@ -49,10 +49,7 @@ public class ComingSoonActivity extends AppCompatActivity implements View.OnClic
         if (!TextUtils.isEmpty(email)) {
             switch (view.getId()) {
                 case R.id.btn_send:
-                    AppsFlyerLib.getInstance().trackEvent(getApplicationContext(),
-                            EventTrackerHelper.EVENT_SUBSCRIBED_FOR_UPDATE, new HashMap<String, Object>() {{
-                                put(EventTrackerHelper.PARAM_SUBSCRIPTION_EMAIL, email);
-                            }});
+                    AppsFlyerLib.getInstance().trackEvent(getApplicationContext(), EventTrackerHelper.EVENT_SUBSCRIBED_FOR_UPDATE + email, null);
                     Toast.makeText(this, "Thanks! You’ll get the link soon.", Toast.LENGTH_LONG).show();
                     break;
             }
