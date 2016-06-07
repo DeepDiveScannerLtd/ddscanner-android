@@ -85,10 +85,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="60dp"
+            android:paddingTop="10dp"
             android:orientation="horizontal"
             android:background="?attr/selectableItemBackground"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp">
+            >
             <ImageView
                 android:layout_width="64dp"
                 android:layout_marginTop="4dp"
@@ -107,8 +107,7 @@
                     android:id="@+id/dc_phone"
                     android:layout_marginBottom="10dp"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/depth_title" />
+                    android:layout_height="wrap_content" />
             </LinearLayout>
         </LinearLayout>
         <ImageView
