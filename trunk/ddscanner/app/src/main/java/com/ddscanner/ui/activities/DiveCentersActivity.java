@@ -202,7 +202,7 @@ public class DiveCentersActivity extends AppCompatActivity implements View.OnCli
                 mGoogleMap.animateCamera(CameraUpdateFactory.zoomIn());
                 break;
             case R.id.zoom_minus:
-                mGoogleMap.animateCamera(CameraUpdateFactory.zoomIn());
+                mGoogleMap.animateCamera(CameraUpdateFactory.zoomOut());
                 break;
             case R.id.go_to_my_location:
               //  baseAppCompatActivity.getLocation();
