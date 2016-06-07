@@ -52,6 +52,7 @@ public class SearchSealifeActivity extends AppCompatActivity implements SearchVi
     private TextView textNotFound;
     private Button addManually;
     private Helpers helpers = new Helpers();
+    private Menu menu;
 
 
     private List<Sealife> sealifes = new ArrayList<>();
@@ -70,6 +71,7 @@ public class SearchSealifeActivity extends AppCompatActivity implements SearchVi
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);
+        getSupportActionBar().setTitle(R.string.search_sealife);
         getAllSealifes();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -78,6 +80,7 @@ public class SearchSealifeActivity extends AppCompatActivity implements SearchVi
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_search_sealife, menu);
+        this.menu = menu;
         final MenuItem item = menu.findItem(R.id.action_search);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
         searchView.setQueryHint("Search");

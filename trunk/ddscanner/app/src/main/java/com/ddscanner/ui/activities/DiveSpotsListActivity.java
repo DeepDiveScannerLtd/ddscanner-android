@@ -63,7 +63,11 @@ public class DiveSpotsListActivity extends AppCompatActivity {
         progressBarFull = (ProgressView) findViewById(R.id.progressBar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Dive spots");
+        if (isAdded) {
+            getSupportActionBar().setTitle(R.string.added_ds);
+        } else {
+            getSupportActionBar().setTitle(R.string.edited_ds);
+        }
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);
     }
 
