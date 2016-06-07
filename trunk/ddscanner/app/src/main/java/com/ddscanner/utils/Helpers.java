@@ -216,7 +216,8 @@ public class Helpers {
      * @author Andrei Lashkevich
      */
     public boolean checkIsErrorByLogin(String errors) {
-        if (errors.contains("token") || errors.contains("social") || errors.contains("secret")) {
+        if (errors.contains("token") || errors.contains("social") || errors.contains("secret") || errors.contains("user not found")) {
+            SharedPreferenceHelper.logout();
             return true;
         }
         return false;

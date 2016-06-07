@@ -259,6 +259,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         }
         if (requestCode == RC_LOGIN) {
             if (resultCode == RESULT_OK) {
+                createSocialDatarequests();
                 createAddDiveSpotRequest();
             } else {
                 Toast toast = Toast.makeText(this, R.string.you_must_login_to_add_divespot, Toast.LENGTH_SHORT);
@@ -376,6 +377,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                         if (helpers.checkIsErrorByLogin(error)) {
                             Intent intent = new Intent(AddDiveSpotActivity.this, SocialNetworks.class);
                             startActivityForResult(intent, RC_LOGIN);
+                            return;
                         }
                         helpers.errorHandling(AddDiveSpotActivity.this, errorsMap,error);
                         Log.i(TAG, response.errorBody().string());
@@ -411,12 +413,31 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                 startActivityForResult(sealifeIntent, RC_PICK_SEALIFE);
                 break;
             case R.id.button_create:
-                createRequestBodyies();
+                if (SharedPreferenceHelper.getIsUserLogined()) {
+                    createRequestBodyies();
+                } else {
+                    Intent loginIntent = new Intent(this, SocialNetworks.class);
+                    startActivityForResult(loginIntent, RC_LOGIN);
+                }
                 break;
         }
     }
 
+    private void createSocialDatarequests() {
+        if (SharedPreferenceHelper.getIsUserLogined()) {
+            requestSocial = RequestBody.create(MediaType.parse("multipart/form-data"),
+                    SharedPreferenceHelper.getSn());
+            requestToken = RequestBody.create(MediaType.parse("multipart/form-data"),
+                    SharedPreferenceHelper.getToken());
+            if (SharedPreferenceHelper.getSn().equals("tw")) {
+                requestSecret = RequestBody.create(MediaType.parse("multipart/form-data"),
+                        SharedPreferenceHelper.getSecret());
+            }
+        }
+    }
+
     private void createRequestBodyies() {
+        createSocialDatarequests();
         requestName = RequestBody.create(MediaType.parse("multipart/form-data"),
                 name.getText().toString().trim());
         requestDepth = RequestBody.create(MediaType.parse("multipart/form-data"),
@@ -442,16 +463,6 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         requestLevel = RequestBody.create(MediaType.parse("multipart/form-data"),
                 helpers.getMirrorOfHashMap(filters.getLevel())
                         .get(levelSpinner.getSelectedItem().toString()));
-        if (SharedPreferenceHelper.getIsUserLogined()) {
-            requestSocial = RequestBody.create(MediaType.parse("multipart/form-data"),
-                    SharedPreferenceHelper.getSn());
-            requestToken = RequestBody.create(MediaType.parse("multipart/form-data"),
-                    SharedPreferenceHelper.getToken());
-            if (SharedPreferenceHelper.getSn().equals("tw")) {
-                requestSecret = RequestBody.create(MediaType.parse("multipart/form-data"),
-                        SharedPreferenceHelper.getSecret());
-            }
-        }
         requestDescription = RequestBody.create(MediaType.parse("multipart/form-data"),
                 description.getText().toString().trim());
         if (sealifeListAddingDiveSpotAdapter != null && sealifeListAddingDiveSpotAdapter.getSealifes() != null) {
