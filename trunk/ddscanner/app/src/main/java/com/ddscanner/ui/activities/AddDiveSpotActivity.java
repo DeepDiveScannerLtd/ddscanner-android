@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
@@ -69,6 +70,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     private static final int RC_PICK_PHOTO = 9001;
     private static final int RC_PICK_LOCATION = 8001;
     private static final int RC_PICK_SEALIFE = 7001;
+    private static final int RC_LOGIN = 6001;
 
     private ProgressDialog progressDialog;
 
@@ -117,6 +119,8 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
             requestLevel = null, requestObject = null, requestAccess = null,
             requestDescription = null, requestSocial = null, requestToken = null,
             requestSecret = null;
+    private List<MultipartBody.Part> sealife = new ArrayList<>();
+    private List<MultipartBody.Part> images = new ArrayList<>();
 
     public static void show(Context context) {
         Intent intent = new Intent(context, AddDiveSpotActivity.class);
@@ -253,6 +257,15 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                 sealifesRc.setAdapter(sealifeListAddingDiveSpotAdapter);
             }
         }
+        if (requestCode == RC_LOGIN) {
+            if (resultCode == RESULT_OK) {
+                createAddDiveSpotRequest();
+            } else {
+                Toast toast = Toast.makeText(this, R.string.you_must_login_to_add_divespot, Toast.LENGTH_SHORT);
+                toast.show();
+            }
+
+        }
     }
 
     private void setSpinnerValues(Spinner spinner, Map<String, String> values, String tag) {
@@ -325,27 +338,6 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
 
     private void createAddDiveSpotRequest() {
         progressDialogUpload.show();
-        List<MultipartBody.Part> sealife = new ArrayList<>();
-        if (sealifeListAddingDiveSpotAdapter != null && sealifeListAddingDiveSpotAdapter.getSealifes() != null) {
-            sealifes = sealifeListAddingDiveSpotAdapter.getSealifes();
-        }
-        if (sealifes.size() > 0) {
-            for (int i = 0; i < sealifes.size(); i++) {
-                sealife.add(MultipartBody.Part.createFormData("sealife[]", sealifes.get(i).getId()));
-            }
-        }
-        List<MultipartBody.Part> images = new ArrayList<>();
-        if (imageUris.size() > 0) {
-            for (int i = 0; i < imageUris.size(); i++) {
-                File image = new File(imageUris.get(i));
-                RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), image);
-                MultipartBody.Part part = MultipartBody.Part.createFormData("images[]",
-                        image.getName(), requestFile);
-                images.add(part);
-            }
-        } else {
-            images = null;
-        }
         Call<ResponseBody> call = RestClient.getServiceInstance().addDiveSpot(
                 requestName, requestLat, requestLng, requestDepth, requestVisibility,
                 requestCurrents, requestLevel, requestObject, requestAccess, requestDescription,
@@ -381,6 +373,10 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                     try {
                         String error = response.errorBody().string();
                         LogUtils.e(TAG, error);
+                        if (helpers.checkIsErrorByLogin(error)) {
+                            Intent intent = new Intent(AddDiveSpotActivity.this, SocialNetworks.class);
+                            startActivityForResult(intent, RC_LOGIN);
+                        }
                         helpers.errorHandling(AddDiveSpotActivity.this, errorsMap,error);
                         Log.i(TAG, response.errorBody().string());
                     } catch (IOException e) {
@@ -403,23 +399,6 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                 MultiImageSelector.create(this)
                         .count(maxPhotos)
                         .start(this, RC_PICK_PHOTO);
-                // Method 1
-                // Pros: works fine
-                // Cons: does not work if opened app does not support EXTRA_ALLOW_MULTIPLE; api 18+
-//                Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-//                    i.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-//                }
-//                startActivityForResult(i, RC_PICK_PHOTO);
-
-                // Method 2
-                // Pros: works on any device (?)
-                // Cons: returned uri may appear non-convertable to absolute path depending on the app that user will use for choosing. For example Google Draive may return uri for image that is not yet downloaded to device
-//                Intent i = new Intent();
-//                i.setType("image/*");
-//                i.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-//                i.setAction(Intent.ACTION_GET_CONTENT);
-//                startActivityForResult(Intent.createChooser(i,"Select Picture"), RC_PICK_PHOTO);
                 break;
             case R.id.location_layout:
                 Intent intent = new Intent(AddDiveSpotActivity.this,
@@ -475,6 +454,29 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         }
         requestDescription = RequestBody.create(MediaType.parse("multipart/form-data"),
                 description.getText().toString().trim());
+        if (sealifeListAddingDiveSpotAdapter != null && sealifeListAddingDiveSpotAdapter.getSealifes() != null) {
+            sealifes = sealifeListAddingDiveSpotAdapter.getSealifes();
+        } else {
+            sealife = null;
+        }
+        if (sealifes.size() > 0) {
+            for (int i = 0; i < sealifes.size(); i++) {
+                sealife.add(MultipartBody.Part.createFormData("sealife[]", sealifes.get(i).getId()));
+            }
+        } else {
+            sealife = null;
+        }
+        if (imageUris.size() > 0) {
+            for (int i = 0; i < imageUris.size(); i++) {
+                File image = new File(imageUris.get(i));
+                RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), image);
+                MultipartBody.Part part = MultipartBody.Part.createFormData("images[]",
+                        image.getName(), requestFile);
+                images.add(part);
+            }
+        } else {
+            images = null;
+        }
         createAddDiveSpotRequest();
     }
 

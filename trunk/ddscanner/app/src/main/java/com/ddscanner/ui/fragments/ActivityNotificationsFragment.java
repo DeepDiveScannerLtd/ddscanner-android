@@ -65,7 +65,7 @@ public class ActivityNotificationsFragment extends Fragment {
         }
         int i = 0;
         while (helpers.comparingTimes(SharedPreferenceHelper.getLastShowingActivityTime(),
-                activities.get(i-1).getDate()) && i < activities.size() - 1) {
+                activities.get(i).getDate()) && i < activities.size() - 1) {
             i++;
         }
         ActivitiesListAdapter notificationsListAdapter = new ActivitiesListAdapter(
