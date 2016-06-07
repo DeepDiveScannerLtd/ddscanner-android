@@ -75,6 +75,8 @@ public class DiveCentersClusterManager extends ClusterManager<DiveCenter> implem
     private String logoPath;
     private DiveCentersResponseEntity diveCentersResponseEntity;
 
+    private Marker userCurrentLocationMarker;
+
     private final IconGenerator clusterIconGenerator1Symbol;
     private final IconGenerator clusterIconGenerator2Symbols;
     private final IconGenerator clusterIconGenerator3Symbols;
@@ -143,7 +145,7 @@ public class DiveCentersClusterManager extends ClusterManager<DiveCenter> implem
 
     @Override
     public boolean onMarkerClick(final Marker marker) {
-        if (super.onMarkerClick(marker) || marker.equals(diveSpotMarker)) {
+        if (super.onMarkerClick(marker) || marker.equals(diveSpotMarker) || marker.equals(userCurrentLocationMarker)) {
             return true;
         }
         if (lastClickedMarker != null) {
@@ -154,7 +156,7 @@ public class DiveCentersClusterManager extends ClusterManager<DiveCenter> implem
         lastClickedMarker = marker;
         // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
 //                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds_selected));
-        marker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_ds_selected)));
+        marker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_dc_selected)));
         if (diveCentersMap.get(marker.getPosition())!= null) {
             DDScannerApplication.bus.post(new DiveCenterMarkerClickEvent(diveCentersMap.get(marker.getPosition()), logoPath));
         }
@@ -315,4 +317,9 @@ public class DiveCentersClusterManager extends ClusterManager<DiveCenter> implem
             }
         });
     }
+
+    public void setUserCurrentLocationMarker(Marker userCurrentLocationMarker) {
+        this.userCurrentLocationMarker = userCurrentLocationMarker;
+    }
+
 }

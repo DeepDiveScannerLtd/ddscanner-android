@@ -11,23 +11,21 @@
         android:orientation="vertical"
         android:id="@+id/header"
         android:layout_width="match_parent"
-        android:layout_height="224dp"
+        android:layout_height="wrap_content"
+        android:minHeight="224dp"
         android:background="@color/white"
         >
         <ImageView
             android:id="@+id/dc_logo"
-            android:layout_below="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="75dp" />
         <TextView
             android:id="@+id/dc_name"
-            android:layout_below="@+id/dc_logo"
             android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Sharms Dive Centre Diving Hurghada Egypt"
             android:textSize="20sp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="10dp"
             android:layout_marginLeft="35dp"
             android:layout_marginRight="35dp"
             android:textColor="@color/black_text"/>
@@ -35,7 +33,7 @@
             android:id="@+id/stars"
             android:layout_below="@+id/dc_name"
             android:layout_width="match_parent"
-            android:layout_marginTop="11dp"
+            android:layout_marginTop="8dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="30dp"
             android:gravity="center_vertical|center_horizontal"
@@ -48,38 +46,37 @@
         android:layout_marginTop="15dp"
         style="@style/DividerStyleFull" />
     <LinearLayout
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white">
         <LinearLayout
             android:id="@+id/dc_address_layout"
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="55dp"
+            android:minHeight="70dp"
             android:orientation="horizontal"
-            android:paddingTop="10dp">
+            android:paddingTop="20dp">
             <ImageView
-                style="@style/CharacteristicsDiveSpotListIcons"
+                android:layout_width="64dp"
+                android:layout_marginTop="4dp"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_location_dc" />
+                android:src="@drawable/ic_dc_location" />
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical">
 
                 <TextView
                     style="@style/CharacteristicsDiveSpotListTitle"
-                    android:text="Address" />
+                    android:text="@string/address" />
 
                 <TextView
                     android:id="@+id/dc_address"
+                    android:layout_marginBottom="10dp"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/depth_title"
-                    android:text="230" />
+                    android:layout_height="wrap_content" />
             </LinearLayout>
         </LinearLayout>
         <ImageView
@@ -88,14 +85,16 @@
             android:id="@+id/dc_phone_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="55dp"
+            android:minHeight="60dp"
+            android:paddingTop="10dp"
             android:orientation="horizontal"
             android:background="?attr/selectableItemBackground"
-            android:paddingTop="10dp">
+            >
             <ImageView
-                style="@style/CharacteristicsDiveSpotListIcons"
+                android:layout_width="64dp"
+                android:layout_marginTop="4dp"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_phone_dc" />
+                android:src="@drawable/ic_dc_phone" />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -103,14 +102,13 @@
 
                 <TextView
                     style="@style/CharacteristicsDiveSpotListTitle"
-                    android:text="Phone" />
+                    android:text="@string/phone" />
 
                 <TextView
                     android:id="@+id/dc_phone"
+                    android:layout_marginBottom="10dp"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/depth_title"
-                    android:text="230" />
+                    android:layout_height="wrap_content" />
             </LinearLayout>
         </LinearLayout>
         <ImageView
@@ -119,12 +117,13 @@
             android:id="@+id/dc_email_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="55dp"
+            android:minHeight="60dp"
             android:orientation="horizontal"
             android:background="?attr/selectableItemBackground"
             android:paddingTop="10dp">
             <ImageView
-                style="@style/CharacteristicsDiveSpotListIcons"
+                android:layout_width="64dp"
+                android:layout_marginTop="4dp"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_mail_dc" />
             <LinearLayout
@@ -134,14 +133,13 @@
 
                 <TextView
                     style="@style/CharacteristicsDiveSpotListTitle"
-                    android:text="E-mail" />
+                    android:text="@string/e_mail" />
 
                 <TextView
                     android:id="@+id/dc_email"
+                    android:layout_marginBottom="10dp"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/depth_title"
-                    android:text="230" />
+                    android:layout_height="wrap_content" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

@@ -227,19 +227,6 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         }
         if (requestCode == RC_PICK_PHOTO) {
             if (resultCode == RESULT_OK) {
-//                ClipData clipData = data.getClipData();
-//                if (clipData != null) {
-//                    for (int i = 0; i < clipData.getItemCount(); i++) {
-//                        ClipData.Item item = clipData.getItemAt(i);
-//                        Uri uri = item.getUri();
-//                        imageUris.add(helpers.getRealPathFromURI(AddDiveSpotActivity.this, uri));
-//                    }
-//                    photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris, AddDiveSpotActivity.this, addPhotoTitle));
-//                } else {
-//                    Uri uri = data.getData();
-//                    imageUris.add(helpers.getRealPathFromURI(AddDiveSpotActivity.this, uri));
-//                    photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris, AddDiveSpotActivity.this, addPhotoTitle));
-//                }
                 maxPhotos = maxPhotos - data.getStringArrayListExtra(MultiImageSelectorActivity
                         .EXTRA_RESULT).size();
                 imageUris.addAll(data.getStringArrayListExtra(MultiImageSelectorActivity
@@ -465,19 +452,19 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                         .get(levelSpinner.getSelectedItem().toString()));
         requestDescription = RequestBody.create(MediaType.parse("multipart/form-data"),
                 description.getText().toString().trim());
+        sealife = new ArrayList<>();
         if (sealifeListAddingDiveSpotAdapter != null && sealifeListAddingDiveSpotAdapter.getSealifes() != null) {
             sealifes = sealifeListAddingDiveSpotAdapter.getSealifes();
         } else {
             sealife = null;
         }
-        if (sealifes.size() > 0) {
+        if (sealife != null && sealifes.size() > 0) {
             for (int i = 0; i < sealifes.size(); i++) {
                 sealife.add(MultipartBody.Part.createFormData("sealife[]", sealifes.get(i).getId()));
             }
-        } else {
-            sealife = null;
         }
         if (imageUris.size() > 0) {
+            images = new ArrayList<>();
             for (int i = 0; i < imageUris.size(); i++) {
                 File image = new File(imageUris.get(i));
                 RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), image);

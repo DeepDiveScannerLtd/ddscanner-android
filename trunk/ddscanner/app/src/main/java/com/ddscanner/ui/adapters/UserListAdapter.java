@@ -40,7 +40,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserLi
 
     @Override
     public void onBindViewHolder(UserListViewHolder holder, int position) {
-        Picasso.with(context).load(userArrayList.get(position).getPicture()).resize(35, 35)
+        Picasso.with(context).load(userArrayList.get(position).getPicture()).resize(58, 58)
                 .centerCrop().transform(new TransformationRoundImage(50, 0)).into(holder.userAvatar);
         holder.userName.setText(userArrayList.get(position).getName());
         holder.info.setText(userArrayList.get(position).getCountComment() + " reviews, " +

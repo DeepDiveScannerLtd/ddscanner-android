@@ -183,6 +183,9 @@ public class Helpers {
     public void errorHandling(Context context, Map<String, TextView> errorsMap, String errors) {
         try {
             JsonObject jsonObject = new JsonParser().parse(errors).getAsJsonObject();
+            for (Map.Entry<String, TextView> entry : errorsMap.entrySet()) {
+                entry.getValue().setVisibility(View.GONE);
+            }
             for (Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) {
                 if (!entry.getKey().equals("")) {
                     if (entry.getKey().equals("token")) {

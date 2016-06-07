@@ -71,13 +71,13 @@ public class DiveCentersListAdapter extends RecyclerView.Adapter<DiveCentersList
         diveCentersListViewHolder.starsLayout.removeAllViews();
         for (int k = 0; k < rating; k++) {
             ImageView iv = new ImageView(context);
-            iv.setImageResource(R.drawable.ic_flag_full_small);
+            iv.setImageResource(R.drawable.ic_list_star_full);
             iv.setPadding(2, 0, 0, 0);
             diveCentersListViewHolder.starsLayout.addView(iv);
         }
         for (int k = 0; k < 5 - rating; k++) {
             ImageView iv = new ImageView(context);
-            iv.setImageResource(R.drawable.ic_flag_empty_small);
+            iv.setImageResource(R.drawable.ic_list_star_empty);
             iv.setPadding(2, 0, 0, 0);
             diveCentersListViewHolder.starsLayout.addView(iv);
         }

@@ -79,7 +79,11 @@ public class UsersDivespotListSwipableActivity extends AppCompatActivity {
         progressBarFull = (ProgressView) findViewById(R.id.progressBar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Dive spots");
+        if (isCheckin) {
+            getSupportActionBar().setTitle(R.string.checkin);
+        } else {
+            getSupportActionBar().setTitle(R.string.favorites);
+        }
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);
     }
 
