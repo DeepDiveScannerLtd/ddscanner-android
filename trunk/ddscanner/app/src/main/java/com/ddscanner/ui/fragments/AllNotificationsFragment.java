@@ -32,6 +32,7 @@ public class AllNotificationsFragment extends Fragment {
     private FragmentActivity myContext;
     private ArrayList<Notification> notifications = new ArrayList<>();
     private Helpers helpers = new Helpers();
+    ArrayList<Notification> activities;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,6 +47,9 @@ public class AllNotificationsFragment extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(linearLayoutManager);
+        if (activities != null) {
+            addList(activities);
+        }
         return view;
     }
 
@@ -68,9 +72,13 @@ public class AllNotificationsFragment extends Fragment {
     }
 
     public void addList(ArrayList<Notification> activities) {
+        if (recyclerView == null) {
+            // this means fragment have not yet been inited.
+            this.activities = activities;
+            return;
+        }
         if (activities == null) {
-            recyclerView.setAdapter(new NotificationsListAdapter(
-                    activities, getContext(), getFragmentManager()));
+            recyclerView.setAdapter(new NotificationsListAdapter(activities, getContext(), getFragmentManager()));
             return;
         }
         if (helpers.comparingTimes(SharedPreferenceHelper.getLastShowingNotificationTime(),

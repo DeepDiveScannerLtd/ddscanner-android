@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.support.multidex.MultiDex;
+import android.telephony.TelephonyManager;
 
 import com.crashlytics.android.Crashlytics;
 import com.ddscanner.ui.activities.InternetClosedActivity;
@@ -14,6 +15,8 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.squareup.otto.Bus;
 import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
+
+import java.util.UUID;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -45,6 +48,21 @@ public class DDScannerApplication extends Application {
         FacebookSdk.sdkInitialize(this);
         instance = this;
         Fresco.initialize(this);
+
+        initUserUniqueId();
+    }
+
+    private void initUserUniqueId() {
+        final TelephonyManager tm = (TelephonyManager) getBaseContext().getSystemService(Context.TELEPHONY_SERVICE);
+
+        final String tmDevice, tmSerial, androidId;
+        tmDevice = "" + tm.getDeviceId();
+        tmSerial = "" + tm.getSimSerialNumber();
+        androidId = "" + android.provider.Settings.Secure.getString(getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
+
+        UUID deviceUuid = new UUID(androidId.hashCode(), ((long) tmDevice.hashCode() << 32) | tmSerial.hashCode());
+        String deviceId = deviceUuid.toString();
+        SharedPreferenceHelper.setUserAppId(deviceId);
     }
 
     protected void attachBaseContext(Context base) {

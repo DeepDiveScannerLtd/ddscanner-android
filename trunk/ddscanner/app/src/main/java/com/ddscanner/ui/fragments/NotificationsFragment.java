@@ -1,5 +1,6 @@
 package com.ddscanner.ui.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -7,17 +8,27 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.Activity;
 import com.ddscanner.entities.Notification;
 import com.ddscanner.entities.Notifications;
+import com.ddscanner.events.LoggedOutEvent;
+import com.ddscanner.events.PickPhotoFromGallery;
+import com.ddscanner.events.TakePhotoFromCameraEvent;
 import com.ddscanner.rest.RestClient;
+import com.ddscanner.ui.activities.DiveSpotsListActivity;
+import com.ddscanner.ui.activities.SocialNetworks;
+import com.ddscanner.ui.activities.UsersDivespotListSwipableActivity;
 import com.ddscanner.ui.adapters.NotificationsPagerAdapter;
+import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.gson.Gson;
+import com.squareup.otto.Subscribe;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,7 +43,7 @@ import retrofit2.Response;
 /**
  * Created by lashket on 20.4.16.
  */
-public class NotificationsFragment extends Fragment implements ViewPager.OnPageChangeListener{
+public class NotificationsFragment extends Fragment implements ViewPager.OnPageChangeListener, View.OnClickListener {
 
     private List<Activity> activities = new ArrayList<>();
     private List<Notification> notificationList = new ArrayList<>();
@@ -40,6 +51,9 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
     private Helpers helpers = new Helpers();
     private TabLayout tabLayout;
     private ViewPager notificationsViewPager;
+    private TextView needToLoginMessage;
+    private Button openLoginActivityButton;
+    private View needToLoginLayout;
     private AllNotificationsFragment allNotificationsFragment = new AllNotificationsFragment();
     private ActivityNotificationsFragment activityNotificationsFragment = new ActivityNotificationsFragment();
 
@@ -53,14 +67,20 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_notifications, container, false);
         findViews(view);
-     //   getUserNotifications();
+        needToLoginMessage.setText(R.string.notifications_need_to_login);
+        openLoginActivityButton.setOnClickListener(this);
+        setUserLoggedInUI();
+        //   getUserNotifications();
         return view;
     }
 
     private void findViews(View v) {
         tabLayout = (TabLayout) v.findViewById(R.id.notif_tab_layout);
         notificationsViewPager = (ViewPager) v.findViewById(R.id.notif_view_pager);
-        notificationsViewPager.setOnPageChangeListener(this);
+        needToLoginMessage = (TextView) v.findViewById(R.id.need_to_login_message);
+        openLoginActivityButton = (Button) v.findViewById(R.id.btn_open_login_screen);
+        needToLoginLayout = v.findViewById(R.id.need_to_login);
+        notificationsViewPager.addOnPageChangeListener(this);
         setupViewPager();
     }
 
@@ -84,6 +104,7 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
         notificationsViewPager.setOffscreenPageLimit(2);
         setUpTabLayout();
     }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -92,14 +113,16 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
             long currentDateInMillis = date1.getTime();
             SharedPreferenceHelper.setLastShowingNotificationTime(currentDateInMillis);
         }
-        if (SharedPreferenceHelper.getIsUserLogined()) {
-           // getUserNotifications();
-        }
-        DDScannerApplication.bus.register(this);
-        if (!getUserVisibleHint())
-        {
+        setUserLoggedInUI();
+        if (!getUserVisibleHint()) {
             return;
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        DDScannerApplication.bus.register(this);
     }
 
     @Override
@@ -152,7 +175,7 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
             }
         });
     }
-    
+
     private void setData() {
         if (notificationsViewPager.getCurrentItem() == 0) {
             if (notifications.getNotifications() != null) {
@@ -170,15 +193,14 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
                 activityNotificationsFragment.addList(null);
             }
         }
-        
+
     }
-    
+
     @Override
     public void onPageSelected(int position) {
         if (position == 0) {
             if (notifications.getNotifications() != null) {
-                allNotificationsFragment.addList((ArrayList<Notification>)
-                        notifications.getNotifications());
+                allNotificationsFragment.addList((ArrayList<Notification>) notifications.getNotifications());
             }
         }
         if (position == 1) {
@@ -199,4 +221,45 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
 
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_open_login_screen:
+                startActivityForResult(new Intent(getActivity(), SocialNetworks.class), Constants.REQUEST_CODE_OPEN_LOGIN_SCREEN);
+                break;
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case Constants.REQUEST_CODE_OPEN_LOGIN_SCREEN:
+                if (resultCode == android.app.Activity.RESULT_OK) {
+                    setUserLoggedInUI();
+                }
+                break;
+        }
+    }
+
+    @Subscribe
+    public void onLoggedOut(LoggedOutEvent event) {
+        setUserLoggedInUI();
+        // TODO Update all data
+    }
+
+    public void setUserLoggedInUI() {
+        if (needToLoginLayout == null || tabLayout == null || notificationsViewPager == null) {
+            return;
+        }
+        if (SharedPreferenceHelper.getIsUserLogined()) {
+            needToLoginLayout.setVisibility(View.GONE);
+            tabLayout.setVisibility(View.VISIBLE);
+            notificationsViewPager.setVisibility(View.VISIBLE);
+        } else {
+            needToLoginLayout.setVisibility(View.VISIBLE);
+            tabLayout.setVisibility(View.GONE);
+            notificationsViewPager.setVisibility(View.GONE);
+        }
+    }
 }
