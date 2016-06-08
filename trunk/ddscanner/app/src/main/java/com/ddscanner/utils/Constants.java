@@ -14,5 +14,6 @@ public class Constants {
     public static final int REQUEST_CODE_MAP_LIST_FRAGMENT_GO_TO_CURRENT_LOCATION = 9011;
     public static final int REQUEST_CODE_DIVE_CENTERS_MAP_GO_TO_CURRENT_LOCATION = 9009;
     public static final int REQUEST_CODE_MAIN_ACTIVITY_GET_LOCATION_ON_ACTIVITY_START = 9012;
+    public static final int REQUEST_CODE_OPEN_LOGIN_SCREEN = 9013;
 
 }

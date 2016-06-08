@@ -93,6 +93,7 @@ public class MainActivity extends BaseAppCompatActivity
     //    private MapListFragment mapListFragment = new MapListFragment();
 //    private NotificationsFragment notificationsFragment = new NotificationsFragment();
     private ProfileFragment profileFragment = new ProfileFragment();
+    private NotificationsFragment notificationsFragment = new NotificationsFragment();
 //    private EditProfileFragment editProfileFragment = new EditProfileFragment();
 
     @Override
@@ -134,20 +135,6 @@ public class MainActivity extends BaseAppCompatActivity
         btnFilter = (ImageView) findViewById(R.id.filter_menu_button);
     }
 
-    private String getUserUniqueId() {
-        final TelephonyManager tm = (TelephonyManager) getBaseContext().getSystemService(Context.TELEPHONY_SERVICE);
-
-        final String tmDevice, tmSerial, androidId;
-        tmDevice = "" + tm.getDeviceId();
-        tmSerial = "" + tm.getSimSerialNumber();
-        androidId = "" + android.provider.Settings.Secure.getString(getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
-
-        UUID deviceUuid = new UUID(androidId.hashCode(), ((long) tmDevice.hashCode() << 32) | tmSerial.hashCode());
-        String deviceId = deviceUuid.toString();
-        SharedPreferenceHelper.setUserAppId(deviceId);
-        return deviceId;
-    }
-
     private void setupTabLayout() {
         toolbarTabLayout.getTabAt(2).setCustomView(R.layout.tab_profile_item);
         toolbarTabLayout.getTabAt(1).setCustomView(R.layout.tab_notification_item);
@@ -158,7 +145,7 @@ public class MainActivity extends BaseAppCompatActivity
     private void setupViewPager(ViewPager viewPager) {
         adapter = new MainActivityPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new MapListFragment(), "mapl/list");
-        adapter.addFragment(new NotificationsFragment(), "notifications");
+        adapter.addFragment(notificationsFragment, "notifications");
         adapter.addFragment(profileFragment, "profile");
         viewPager.setAdapter(adapter);
     }
@@ -197,11 +184,11 @@ public class MainActivity extends BaseAppCompatActivity
                         }
                     });
         }
-        if ((position == 2 || position == 1) && !SharedPreferenceHelper.getIsUserLogined()) {
-            positionToScroll = position;
-            Intent intent = new Intent(MainActivity.this, SocialNetworks.class);
-            startActivityForResult(intent, REQUEST_CODE_LOGIN);
-        }
+//        if ((position == 2 || position == 1) && !SharedPreferenceHelper.getIsUserLogined()) {
+//            positionToScroll = position;
+//            Intent intent = new Intent(MainActivity.this, SocialNetworks.class);
+//            startActivityForResult(intent, REQUEST_CODE_LOGIN);
+//        }
     }
 
     @Override
@@ -232,6 +219,7 @@ public class MainActivity extends BaseAppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         profileFragment.onActivityResult(requestCode, resultCode, data);
+        notificationsFragment.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case REQUEST_CODE_PLACE_AUTOCOMPLETE:
                 materialDialog.dismiss();
@@ -281,8 +269,7 @@ public class MainActivity extends BaseAppCompatActivity
     }
 
     public void identifyUser(String lat, String lng) {
-        Call<ResponseBody> call = RestClient.getServiceInstance()
-                .identify(getUserIdentifyData(lat, lng));
+        Call<ResponseBody> call = RestClient.getServiceInstance().identify(getUserIdentifyData(lat, lng));
         call.enqueue(new retrofit2.Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
@@ -299,7 +286,7 @@ public class MainActivity extends BaseAppCompatActivity
 
     private IdentifyRequest getUserIdentifyData(String lat, String lng) {
         IdentifyRequest identifyRequest = new IdentifyRequest();
-        identifyRequest.setAppId(getUserUniqueId());
+        identifyRequest.setAppId(SharedPreferenceHelper.getUserAppId());
         if (SharedPreferenceHelper.getIsUserLogined()) {
             identifyRequest.setSocial(SharedPreferenceHelper.getSn());
             identifyRequest.setToken(SharedPreferenceHelper.getToken());

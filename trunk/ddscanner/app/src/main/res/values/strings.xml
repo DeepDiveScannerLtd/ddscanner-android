@@ -138,6 +138,9 @@
     <string name="contact_dive_centers">Contact dive centers</string>
     <string name="dive_center">Dive Center</string>
     <string name="you_must_login_to_add_divespot">You must login to add divespot</string>
+    <string name="login_or_sign_up">Login or Sign Up</string>
+    <string name="profile_need_to_login">Login to view profile</string>
+    <string name="notifications_need_to_login">Login to view notifications</string>
     <string name="e_mail">E-mail</string>
     <string name="search_sealife">Search sealife</string>
     <string name="favorites">Favorites</string>

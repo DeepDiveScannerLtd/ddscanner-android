@@ -1,5 +1,6 @@
 package com.ddscanner.ui.fragments;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -20,13 +21,16 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.User;
 import com.ddscanner.events.ChangePageOfMainViewPagerEvent;
+import com.ddscanner.events.LoggedOutEvent;
 import com.ddscanner.events.PickPhotoFromGallery;
 import com.ddscanner.events.ShowLoginActivityIntent;
 import com.ddscanner.events.TakePhotoFromCameraEvent;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.activities.DiveSpotsListActivity;
+import com.ddscanner.ui.activities.SocialNetworks;
 import com.ddscanner.ui.activities.UsersDivespotListSwipableActivity;
 import com.ddscanner.ui.views.TransformationRoundImage;
+import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.gson.Gson;
@@ -86,6 +90,9 @@ public class ProfileFragment extends Fragment
     private SwipeRefreshLayout swipeRefreshLayout;
     private TextView error_name;
     private TextView error_about;
+    private View needToLoginLayout;
+    private TextView needToLoginMessage;
+    private Button openLoginActivityButton;
     private boolean isClickedChosingPhotoButton = false;
 
     private RequestBody requestSecret = null;
@@ -112,12 +119,15 @@ public class ProfileFragment extends Fragment
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_profile, container, false);
         findViews(v);
+        needToLoginMessage.setText(R.string.profile_need_to_login);
         editProfile.setOnClickListener(this);
         capturePhoto.setOnClickListener(this);
         cancelButton.setOnClickListener(this);
         saveChanges.setOnClickListener(this);
+        openLoginActivityButton.setOnClickListener(this);
         pickPhotoFromGallery.setOnClickListener(this);
         logout.setOnClickListener(this);
+        setUIDependingOnLoggedIn();
         if (SharedPreferenceHelper.getIsUserLogined()) {
             getUserDataRequest(SharedPreferenceHelper.getUserServerId());
         }
@@ -154,6 +164,9 @@ public class ProfileFragment extends Fragment
         showAllEdited = (LinearLayout) v.findViewById(R.id.edited_activity);
         error_about = (TextView) v.findViewById(R.id.error_about);
         error_name = (TextView) v.findViewById(R.id.error_name);
+        needToLoginLayout = v.findViewById(R.id.need_to_login);
+        needToLoginMessage = (TextView) v.findViewById(R.id.need_to_login_message);
+        openLoginActivityButton = (Button) v.findViewById(R.id.btn_open_login_screen);
 
     }
 
@@ -202,22 +215,30 @@ public class ProfileFragment extends Fragment
             case R.id.created_activity:
                 DiveSpotsListActivity.show(getContext(), true);
                 break;
+            case R.id.btn_open_login_screen:
+                startActivityForResult(new Intent(getActivity(), SocialNetworks.class), Constants.REQUEST_CODE_OPEN_LOGIN_SCREEN);
+                break;
         }
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        setUIDependingOnLoggedIn();
         if (SharedPreferenceHelper.getIsUserLogined()) {
             if (!isClickedChosingPhotoButton) {
                 getUserDataRequest(SharedPreferenceHelper.getUserServerId());
             }
         }
-        DDScannerApplication.bus.register(this);
-        if (!getUserVisibleHint())
-        {
+        if (!getUserVisibleHint()) {
             return;
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        DDScannerApplication.bus.register(this);
     }
 
     @Override
@@ -228,9 +249,9 @@ public class ProfileFragment extends Fragment
 
     public void setImage(Uri uri) {
         Picasso.with(getContext()).load(uri)
-                .resize(Math.round(helpers.convertDpToPixel(80,getContext())),
-                        Math.round(helpers.convertDpToPixel(80,getContext()))).centerCrop()
-                .transform(new TransformationRoundImage(100,0)).into(newPhoto);
+                .resize(Math.round(helpers.convertDpToPixel(80, getContext())),
+                        Math.round(helpers.convertDpToPixel(80, getContext()))).centerCrop()
+                .transform(new TransformationRoundImage(100, 0)).into(newPhoto);
         this.uri = uri;
     }
 
@@ -260,11 +281,11 @@ public class ProfileFragment extends Fragment
                 if (response.raw().code() == 422 || response.raw().code() == 404 ||
                         response.raw().code() == 400) {
                     SharedPreferenceHelper.logout();
-                  //  DDScannerApplication.bus.post(new ShowLoginActivityIntent());
+                    //  DDScannerApplication.bus.post(new ShowLoginActivityIntent());
                 }
                 if (response.errorBody() != null) {
                     try {
-                    if (helpers.checkIsErrorByLogin(response.errorBody().string())) {
+                        if (helpers.checkIsErrorByLogin(response.errorBody().string())) {
                             SharedPreferenceHelper.logout();
                         }
                     } catch (IOException e) {
@@ -325,7 +346,7 @@ public class ProfileFragment extends Fragment
         } else {
             SharedPreferenceHelper.logout();
         }
-   }
+    }
 
     @Override
     public void setUserVisibleHint(final boolean visible) {
@@ -412,13 +433,13 @@ public class ProfileFragment extends Fragment
                             if (helpers.checkIsErrorByLogin(response.errorBody().string())) {
                                 SharedPreferenceHelper.logout();
                                 DDScannerApplication.bus.post(new ShowLoginActivityIntent());
-                            }else {
-                                    try {
-                                        String error = response.errorBody().string();
-                                        helpers.errorHandling(getContext(), errorsMap,error);
-                                    } catch (IOException e) {
+                            } else {
+                                try {
+                                    String error = response.errorBody().string();
+                                    helpers.errorHandling(getContext(), errorsMap, error);
+                                } catch (IOException e) {
 
-                                    }
+                                }
                             }
                         } catch (IOException e) {
 
@@ -442,6 +463,21 @@ public class ProfileFragment extends Fragment
         swipeRefreshLayout.setRefreshing(false);
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case Constants.REQUEST_CODE_OPEN_LOGIN_SCREEN:
+                if (resultCode == Activity.RESULT_OK) {
+                    setUIDependingOnLoggedIn();
+                    if (SharedPreferenceHelper.getIsUserLogined()) {
+                        getUserDataRequest(SharedPreferenceHelper.getUserServerId());
+                    }
+                }
+                break;
+        }
+    }
+
     private void logout() {
         Call<ResponseBody> call = RestClient.getServiceInstance()
                 .logout(helpers.getRegisterRequest());
@@ -460,18 +496,30 @@ public class ProfileFragment extends Fragment
                     DDScannerApplication.bus.post(new ChangePageOfMainViewPagerEvent(0));
                     materialDialog.dismiss();
                 }
+                setUIDependingOnLoggedIn();
+                DDScannerApplication.bus.post(new LoggedOutEvent());
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    materialDialog.dismiss();
+                materialDialog.dismiss();
             }
         });
     }
 
     private void createErrorsMap() {
         errorsMap.put("name", error_name);
-        errorsMap.put("about",error_about);
+        errorsMap.put("about", error_about);
+    }
+
+    private void setUIDependingOnLoggedIn() {
+        if (SharedPreferenceHelper.getIsUserLogined()) {
+            needToLoginLayout.setVisibility(View.GONE);
+        } else {
+            needToLoginLayout.setVisibility(View.VISIBLE);
+            aboutLayout.setVisibility(View.GONE);
+            editLayout.setVisibility(View.GONE);
+        }
     }
 
 }
