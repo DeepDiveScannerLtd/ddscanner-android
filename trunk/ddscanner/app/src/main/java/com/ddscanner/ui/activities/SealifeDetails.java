@@ -64,15 +64,6 @@ public class SealifeDetails extends AppCompatActivity {
         findViews();
         sealife = (Sealife) getIntent().getSerializableExtra("SEALIFE");
         pathMedium = getIntent().getStringExtra("PATH");
-        Picasso.with(this).load(pathMedium + sealife.getImage()).into(photo, new ImageLoadedCallback(progressBar) {
-            @Override
-            public void onSuccess() {
-                if (this.progressBar != null) {
-                    this.progressBar.setVisibility(View.GONE);
-                }
-            }
-
-        });
         Log.i("SEALIFEFULL", pathMedium + sealife.getImage());
         setSupportActionBar(toolbar);
         //getSupportActionBar().setTitle(sealife.getName());
@@ -84,7 +75,16 @@ public class SealifeDetails extends AppCompatActivity {
         display.getMetrics(outMetrics);
         float density = getResources().getDisplayMetrics().density;
         float dpWidth = outMetrics.widthPixels / density;
-        Picasso.with(this).load(pathMedium + sealife.getImage()).resize(Math.round(dpWidth), 460).centerCrop().into(backgroundImage);
+        Picasso.with(this).load(pathMedium + sealife.getImage()).resize(Math.round(dpWidth), 239).centerCrop().into(photo, new ImageLoadedCallback(progressBar) {
+            @Override
+            public void onSuccess() {
+                if (this.progressBar != null) {
+                    this.progressBar.setVisibility(View.GONE);
+                }
+            }
+
+        });
+     //   Picasso.with(this).load(pathMedium + sealife.getImage()).resize(Math.round(dpWidth), 239).centerCrop().into(backgroundImage);
         backgroundImage.setColorFilter(Color.parseColor("#99000000"), PorterDuff.Mode.SRC_ATOP);
         setContent();
     }
