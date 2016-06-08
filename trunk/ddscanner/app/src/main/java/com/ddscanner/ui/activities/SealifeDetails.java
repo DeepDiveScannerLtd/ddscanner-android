@@ -20,6 +20,7 @@ import android.view.Display;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -36,7 +37,7 @@ import com.squareup.picasso.Target;
  */
 public class SealifeDetails extends AppCompatActivity {
 
-    private TextView length, weight, depth, scname, order, distribution, scclass, habitat;
+    private TextView length, weight, depth, scname, order, distribution, scclass, habitat,name;
     private ImageView photo;
     private Sealife sealife;
     private String pathMedium;
@@ -74,7 +75,8 @@ public class SealifeDetails extends AppCompatActivity {
         });
         Log.i("SEALIFEFULL", pathMedium + sealife.getImage());
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(sealife.getName());
+        //getSupportActionBar().setTitle(sealife.getName());
+        getSupportActionBar().setTitle("");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);
         Display display = getWindowManager().getDefaultDisplay();
@@ -89,6 +91,7 @@ public class SealifeDetails extends AppCompatActivity {
 
     public void findViews() {
         collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+        name = (TextView) findViewById(R.id.name);
         toolbar = (Toolbar) findViewById(R.id.toolbar_collapse);
         photo = (ImageView) findViewById(R.id.sealife_full_photo);
         length = (TextView) findViewById(R.id.length);
@@ -101,68 +104,89 @@ public class SealifeDetails extends AppCompatActivity {
         habitat = (TextView) findViewById(R.id.habitat);
         backgroundImage = (ImageView) findViewById(R.id.background_photo);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
+        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            boolean isShow = false;
+            int scrollRange = -1;
+
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                if (scrollRange == -1) {
+                    scrollRange = appBarLayout.getTotalScrollRange();
+                }
+                if (scrollRange + verticalOffset == 0) {
+                    collapsingToolbarLayout.setTitle("Details");
+                    isShow = true;
+                } else if (isShow) {
+                    collapsingToolbarLayout.setTitle("");
+                    isShow = false;
+                }
+            }
+        });
     }
 
     private void setContent() {
+        name.setText(sealife.getName());
+        name.setVisibility(View.VISIBLE);
         if (sealife.getLength() != null) {
             if (!sealife.getLength().equals("")) {
-                System.out.println(sealife.getLength());
+                LinearLayout linearLayout = (LinearLayout) findViewById(R.id.char_length);
+                linearLayout.setVisibility(View.VISIBLE);
                 length.setText(sealife.getLength());
-                findViewById(R.id.char_length).setVisibility(View.VISIBLE);
             }
         }
 
         if (sealife.getWeight() != null) {
             if (!sealife.getWeight().equals("")) {
-                System.out.println(sealife.getWeight());
+                LinearLayout linearLayout = (LinearLayout) findViewById(R.id.char_weight);
+                linearLayout.setVisibility(View.VISIBLE);
                 weight.setText(sealife.getWeight());
-                findViewById(R.id.char_weight).setVisibility(View.VISIBLE);
             }
         }
 
         if (sealife.getDepth() != null) {
             if (!sealife.getDepth().equals("")) {
-                System.out.println(sealife.getDepth());
+                LinearLayout linearLayout = (LinearLayout) findViewById(R.id.char_depth);
+                linearLayout.setVisibility(View.VISIBLE);
                 depth.setText(sealife.getDepth());
-                findViewById(R.id.char_depth).setVisibility(View.VISIBLE);
             }
         }
 
         if (sealife.getScName() != null) {
             if (!sealife.getScName().equals("")) {
-                System.out.println(sealife.getScName());
+                LinearLayout linearLayout = (LinearLayout) findViewById(R.id.char_scname);
+                linearLayout.setVisibility(View.VISIBLE);
                 scname.setText(sealife.getScName());
-                findViewById(R.id.char_scname).setVisibility(View.VISIBLE);
             }
         }
 
         if (sealife.getOrder() != null) {
             if (!sealife.getOrder().equals("")) {
-                System.out.println(sealife.getOrder());
+                LinearLayout linearLayout = (LinearLayout) findViewById(R.id.char_order);
+                linearLayout.setVisibility(View.VISIBLE);
                 order.setText(sealife.getOrder());
-                findViewById(R.id.char_order).setVisibility(View.VISIBLE);
             }
         }
 
         if (sealife.getDistribution() != null) {
-            System.out.println(sealife.getDistribution());
+            LinearLayout linearLayout = (LinearLayout) findViewById(R.id.char_distribution);
+            linearLayout.setVisibility(View.VISIBLE);
             distribution.setText(sealife.getDistribution());
-            findViewById(R.id.char_distribution).setVisibility(View.VISIBLE);
         }
 
         if (sealife.getScCLass() != null) {
             if (!sealife.getScCLass().equals("")) {
-                System.out.println(sealife.getScCLass());
+                LinearLayout linearLayout = (LinearLayout) findViewById(R.id.char_scclass);
+                linearLayout.setVisibility(View.VISIBLE);
                 scclass.setText(sealife.getScCLass());
-                findViewById(R.id.char_scclass).setVisibility(View.VISIBLE);
             }
         }
 
         if (sealife.getHabitat() != null) {
             if (!sealife.getHabitat().equals("")) {
-                System.out.println(sealife.getHabitat());
+                LinearLayout linearLayout = (LinearLayout) findViewById(R.id.char_habitat);
+                linearLayout.setVisibility(View.VISIBLE);
                 habitat.setText(sealife.getHabitat());
-                findViewById(R.id.char_habitat).setVisibility(View.VISIBLE);
             }
         }
     }
