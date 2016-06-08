@@ -256,6 +256,7 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
             needToLoginLayout.setVisibility(View.GONE);
             tabLayout.setVisibility(View.VISIBLE);
             notificationsViewPager.setVisibility(View.VISIBLE);
+            getUserNotifications();
         } else {
             needToLoginLayout.setVisibility(View.VISIBLE);
             tabLayout.setVisibility(View.GONE);
