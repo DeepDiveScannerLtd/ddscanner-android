@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
@@ -75,6 +76,7 @@ public class SocialNetworks extends AppCompatActivity
     private GoogleApiClient mGoogleApiClient;
     private com.ddscanner.entities.User selfProfile;
     private RegisterResponse registerResponse = new RegisterResponse();
+    private MaterialDialog materialDialog;
     private Helpers helpers = new Helpers();
 
     public static void show(Context context) {
@@ -86,8 +88,7 @@ public class SocialNetworks extends AppCompatActivity
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_social_login);
-        AppsFlyerLib.getInstance().trackEvent(getApplicationContext(),
-                EventTrackerHelper.EVENT_SIGN_IN_OPENED, new HashMap<String, Object>());
+        materialDialog = helpers.getMaterialDialog(this);
         /*TWITTER*/
         twitterCustomBtn = (Button) findViewById(R.id.twitter_custom);
         loginButton = (TwitterLoginButton) findViewById(R.id.twitter_login_button);
@@ -233,11 +234,13 @@ public class SocialNetworks extends AppCompatActivity
     }
 
     private void sendRegisterRequest(final RegisterRequest userData) {
+        materialDialog.show();
         Call<ResponseBody> call = RestClient.getServiceInstance().registerUser(userData);
         call.enqueue(new retrofit2.Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call,
                                    retrofit2.Response<ResponseBody> response) {
+                materialDialog.dismiss();
                 if (response.isSuccessful()) {
                     String responseString = "";
                     try {
@@ -274,6 +277,7 @@ public class SocialNetworks extends AppCompatActivity
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 // TODO Handle errors
+                materialDialog.dismiss();
             }
         });
     }
