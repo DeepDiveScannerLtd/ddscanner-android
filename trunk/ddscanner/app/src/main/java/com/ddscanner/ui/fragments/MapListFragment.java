@@ -55,6 +55,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.rey.material.widget.ProgressView;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
@@ -98,6 +99,7 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
     private RelativeLayout mapControlLayout;
     private Marker myLocationMarker;
     private Circle circle;
+    private ProgressView progressBarMyLocation;
 
     public BaseAppCompatActivity baseAppCompatActivity;
 
@@ -150,7 +152,8 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onResume() {
         super.onResume();
-
+        goToMyLocation.setVisibility(View.VISIBLE);
+        progressBarMyLocation.setVisibility(View.GONE);
         mMapView.onResume();
     }
 
@@ -190,6 +193,7 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
         addDsFab = (FloatingActionButton) view.findViewById(R.id.add_ds_fab);
         mainLayout = (RelativeLayout) view.findViewById(R.id.main_layout);
         diveSpotType = (TextView) view.findViewById(R.id.object);
+        progressBarMyLocation = (ProgressView) view.findViewById(R.id.progressBar);
 
         // List mode
         rc = (RecyclerView) view.findViewById(R.id.cv);
@@ -292,6 +296,8 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
                 diveSpotsClusterManager.mapZoomMinus();
                 break;
             case R.id.go_to_my_location:
+                goToMyLocation.setVisibility(View.GONE);
+                progressBarMyLocation.setVisibility(View.VISIBLE);
                 baseAppCompatActivity.getLocation(Constants.REQUEST_CODE_MAP_LIST_FRAGMENT_GO_TO_CURRENT_LOCATION);
                 break;
             case R.id.dive_spot_info_layout:
@@ -366,7 +372,11 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
         // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
 //                event.getMarker().setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
         if (event.getMarker() != null) {
-            event.getMarker().setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.ic_ds)));
+            try {
+                event.getMarker().setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.ic_ds)));
+            } catch (NullPointerException e) {
+
+            }
         }
         mapControlLayout.animate().translationY(0);
         addDsFab.animate().translationY(0);
@@ -409,7 +419,13 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
             switch (code) {
                 case Constants.REQUEST_CODE_MAP_LIST_FRAGMENT_GO_TO_CURRENT_LOCATION:
                     LatLng myLocation = new LatLng(event.getLocation().getLatitude(), event.getLocation().getLongitude());
-                    mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 14.0f));
+                    CameraPosition cameraPosition = new CameraPosition.Builder()
+                            .target(myLocation)
+                            .zoom(12)
+                            .build();
+                    mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 2000, null);
+                    goToMyLocation.setVisibility(View.VISIBLE);
+                    progressBarMyLocation.setVisibility(View.GONE);
                     if (circle == null) {
                         // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
 //                myLocationMarker = mGoogleMap.addMarker(new MarkerOptions()
@@ -441,10 +457,10 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
                         userLocationOnFragmentStart = event.getLocation();
                     } else {
                         // this means map has already been initialized.
-                        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(new LatLngBounds(
+                        mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(new LatLngBounds(
                                 new LatLng(event.getLocation().getLatitude() - 1, event.getLocation().getLongitude() - 1),
                                 new LatLng(event.getLocation().getLatitude() + 1, event.getLocation().getLongitude() + 1)
-                        ), 0));
+                        ), 0), 2000, null);
                     }
                     break;
             }

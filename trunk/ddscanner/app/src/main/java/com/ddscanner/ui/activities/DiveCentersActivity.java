@@ -313,7 +313,11 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
         // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
 //                event.getMarker().setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
         if (event.getMarker() != null) {
-            event.getMarker().setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.pin_dc)));
+            try {
+                event.getMarker().setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.pin_dc)));
+            } catch (NullPointerException e) {
+
+            }
         }
         mapControlLayout.animate().translationY(0);
         mapListFAB.animate().translationY(0);
