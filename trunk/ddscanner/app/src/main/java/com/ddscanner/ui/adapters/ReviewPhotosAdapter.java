@@ -8,12 +8,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.ddscanner.R;
 import com.ddscanner.ui.activities.ImageSliderActivity;
 import com.ddscanner.ui.views.TransformationRoundImage;
 import com.ddscanner.utils.Helpers;
+import com.ddscanner.utils.ImageLoadedCallback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -45,13 +47,20 @@ public class ReviewPhotosAdapter extends RecyclerView.Adapter<ReviewPhotosAdapte
     }
 
     @Override
-    public void onBindViewHolder(ReviewPhotosAdapterViewHolder holder, int position) {
+    public void onBindViewHolder(final ReviewPhotosAdapterViewHolder holder, int position) {
         if(position == 4) {
             holder.morePhotos.setText("+" + String.valueOf(8 - 4));
             holder.morePhotos.setVisibility(View.VISIBLE);
         }
-        Picasso.with(context).load(photos.get(position)).resize(60,60).centerCrop()
-                .transform(new TransformationRoundImage(2,0)).into(holder.photo);
+        Picasso.with(context).load(path + photos.get(position)).transform(new TransformationRoundImage(2,0)).resize(70,70).centerCrop().into(holder.photo,
+                new ImageLoadedCallback(holder.progressBar){
+                    @Override
+                    public void onSuccess() {
+                        if (holder.progressBar != null) {
+                            holder.progressBar.setVisibility(View.GONE);
+                        }
+                    }
+                });
     }
 
     @Override
@@ -66,12 +75,14 @@ public class ReviewPhotosAdapter extends RecyclerView.Adapter<ReviewPhotosAdapte
 
         protected ImageView photo;
         protected TextView morePhotos;
+        private ProgressBar progressBar;
 
         public ReviewPhotosAdapterViewHolder(View v) {
             super(v);
             v.setOnClickListener(this);
             photo = (ImageView) v.findViewById(R.id.image);
             morePhotos = (TextView) v.findViewById(R.id.number_of_more_images);
+            progressBar = (ProgressBar) v.findViewById(R.id.progressBar);
         }
 
         @Override
