@@ -119,6 +119,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private TextView depth;
     private TextView visibility;
     private TextView currents;
+    private TextView access;
     private RelativeLayout checkInPeoples;
     private TextView showMore;
     private RatingBar ratingBar;
@@ -126,6 +127,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private Button showAllReviews;
     private LinearLayout isInfoValidLayout;
     private LinearLayout thanksLayout;
+    private RelativeLayout accessLayout;
     private Button btnDsDetailsIsValid;
     private Button btnDsDetailsIsInvalid;
     private Button showDiveCenters;
@@ -232,6 +234,8 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         editorsWrapperView = (RelativeLayout) findViewById(R.id.editors_wrapper);
         expandEditorsArrow = (ImageView) findViewById(R.id.expand_editors_arrow);
         showDiveCenters = (Button) findViewById(R.id.button_show_divecenters);
+        access = (TextView) findViewById(R.id.access);
+        accessLayout = (RelativeLayout) findViewById(R.id.acces_layout);
     }
 
     /**
@@ -279,6 +283,11 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                     + getString(R.string.skobka));
         } else {
             showAllReviews.setText(R.string.write_review);
+        }
+        if (diveSpot.getAccess() != null) {
+            access.setText(diveSpot.getAccess());
+        } else {
+            accessLayout.setVisibility(View.GONE);
         }
         object.setText(diveSpot.getObject());
         level.setText(diveSpot.getLevel());

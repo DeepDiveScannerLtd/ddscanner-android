@@ -281,6 +281,7 @@ public class ProfileFragment extends Fragment
                 if (response.raw().code() == 422 || response.raw().code() == 404 ||
                         response.raw().code() == 400) {
                     SharedPreferenceHelper.logout();
+                    setUIDependingOnLoggedIn();
                     //  DDScannerApplication.bus.post(new ShowLoginActivityIntent());
                 }
                 if (response.errorBody() != null) {

@@ -25,8 +25,17 @@ public class DiveSpotFull {
     private String sealifePathMedium;
     private String sealifePathOrigin;
     private String object;
+    private String access;
     private boolean isCheckin;
     private boolean isFavorite;
+
+    public String getAccess() {
+        return access;
+    }
+
+    public void setAccess(String access) {
+        this.access = access;
+    }
 
     public boolean getIsFavorite() {
         return isFavorite;
