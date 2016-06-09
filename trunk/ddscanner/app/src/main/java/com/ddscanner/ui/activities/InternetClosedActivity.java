@@ -43,7 +43,7 @@ public class InternetClosedActivity extends AppCompatActivity implements View.On
     @Override
     public void onClick(View v) {
         if (helpers.hasConnection(this)) {
-            onBackPressed();
+            finish();
         }
     }
 

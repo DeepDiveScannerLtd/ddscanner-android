@@ -7,9 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ddscanner.R;
 import com.ddscanner.entities.Sealife;
+import com.ddscanner.utils.Helpers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +24,7 @@ public class SealifeListAddingDiveSpotAdapter extends RecyclerView.Adapter<Seali
     private Context context;
     private ArrayList<Sealife> sealifes;
     private TextView title;
+    private Helpers helpers = new Helpers();
 
     public SealifeListAddingDiveSpotAdapter(ArrayList<Sealife> sealifes, Context context, TextView title) {
         this.sealifes = sealifes;
@@ -61,6 +64,11 @@ public class SealifeListAddingDiveSpotAdapter extends RecyclerView.Adapter<Seali
     }
 
     public void add(Sealife sealife) {
+        if (helpers.checkIsSealifeAlsoInList(sealifes, sealife.getId())) {
+            Toast toast = Toast.makeText(context, "This sealife also in list", Toast.LENGTH_SHORT);
+            toast.show();
+            return;
+        }
         sealifes.add(sealife);
         notifyDataSetChanged();
     }

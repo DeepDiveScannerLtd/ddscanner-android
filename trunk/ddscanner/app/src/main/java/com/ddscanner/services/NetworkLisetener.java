@@ -23,9 +23,9 @@ public class NetworkLisetener extends BroadcastReceiver {
         LogUtils.i(TAG, "onReceive");
         if (DDScannerApplication.isActivityVisible()) {
             if (helpers.hasConnection(context)) {
-                DDScannerApplication.bus.post(new InternerConnectionOpenedEvent());
+              //  DDScannerApplication.bus.post(new InternerConnectionOpenedEvent());
             } else {
-                DDScannerApplication.showErrorActivity(context);
+             //   DDScannerApplication.showErrorActivity(context);
             }
         }
     }

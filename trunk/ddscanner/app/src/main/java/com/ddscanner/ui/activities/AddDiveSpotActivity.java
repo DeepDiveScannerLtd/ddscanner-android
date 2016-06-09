@@ -238,6 +238,12 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         if (requestCode == RC_PICK_SEALIFE) {
             if (resultCode == RESULT_OK) {
                 Sealife sealife =(Sealife) data.getSerializableExtra("SEALIFE");
+
+                if (helpers.checkIsSealifeAlsoInList((ArrayList<Sealife>) sealifes, sealife.getId())) {
+                    Toast toast = Toast.makeText(AddDiveSpotActivity.this, "This sealife also in list", Toast.LENGTH_SHORT);
+                    toast.show();
+                    return;
+                }
                 sealifes.add(sealife);
                 sealifeListAddingDiveSpotAdapter = new SealifeListAddingDiveSpotAdapter(
                         (ArrayList<Sealife>) sealifes, this, addSealifeTitle);

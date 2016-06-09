@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.R;
+import com.ddscanner.entities.Sealife;
 import com.ddscanner.entities.User;
 import com.ddscanner.entities.request.RegisterRequest;
 import com.ddscanner.ui.dialogs.ProfileDialog;
@@ -363,6 +364,15 @@ public class Helpers {
 
         }
         return returningString;
+    }
+
+    public boolean checkIsSealifeAlsoInList(ArrayList<Sealife> sealifes, String id) {
+        for (Sealife sealife : sealifes) {
+            if (sealife.getId().equals(id)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }
