@@ -980,7 +980,9 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             menu.findItem(R.id.favorite).setTitle("Remove from favorites");
             return;
         }
-        menu.findItem(R.id.favorite).setTitle("Add to favorites");
+        if (menu.findItem(R.id.favorite) != null) {
+            menu.findItem(R.id.favorite).setTitle("Add to favorites");
+        }
     }
 
     private void showLoginActivity() {

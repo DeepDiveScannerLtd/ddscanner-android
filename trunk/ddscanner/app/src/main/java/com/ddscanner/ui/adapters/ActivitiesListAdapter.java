@@ -2,6 +2,7 @@ package com.ddscanner.ui.adapters;
 
 import android.app.FragmentManager;
 import android.content.Context;
+import android.media.Image;
 import android.support.percent.PercentRelativeLayout;
 import android.support.v7.widget.AppCompatDrawableManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,8 +17,10 @@ import android.widget.TextView;
 import com.ddscanner.R;
 import com.ddscanner.entities.Activity;
 import com.ddscanner.ui.activities.DiveSpotDetailsActivity;
+import com.ddscanner.ui.views.TransformationRoundImage;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +57,11 @@ public class ActivitiesListAdapter
             Activity activity = activities.get(position);
             int color = context.getResources().getColor(R.color.primary);
             ForegroundColorSpan fcs = new ForegroundColorSpan(color);
+            Picasso.with(context)
+                    .load(activity.getDiveSpot().getPath() + activity.getDiveSpot().getImage())
+                    .resize(Math.round(helpers.convertDpToPixel(40, context)),Math.round(helpers.convertDpToPixel(40, context)))
+                    .transform(new TransformationRoundImage(2,0))
+                    .into(holder.dsLogo);
             if (activity.getType().equals("checkin")) {
                 String name = activity.getUser().getName();
                 String divespot = activity.getDiveSpot().getName();
@@ -102,11 +110,11 @@ public class ActivitiesListAdapter
     public class ActivitiesListViewHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener {
 
-        private ImageView dsLogo;
         private TextView text;
         private TextView timeAgo;
         private PercentRelativeLayout percentRelativeLayout;
         private ImageView image;
+        private ImageView dsLogo;
         private Context context;
 
         public ActivitiesListViewHolder(View v) {
@@ -117,6 +125,7 @@ public class ActivitiesListAdapter
             text = (TextView) v.findViewById(R.id.text);
             percentRelativeLayout = (PercentRelativeLayout) v.findViewById(R.id.content);
             image = (ImageView) v.findViewById(R.id.image);
+            dsLogo = (ImageView) v.findViewById(R.id.ds_logo);
         }
 
         @Override

@@ -321,6 +321,8 @@ public class ProfileFragment extends Fragment
             if (user.getAbout() != null) {
                 userAbout.setVisibility(View.VISIBLE);
                 userAbout.setText(user.getAbout());
+            } else {
+                userAbout.setVisibility(View.GONE);
             }
             userFullName.setText(user.getName());
             addedCount.setText(user.getCountAdd());

@@ -25,6 +25,15 @@ public class DiveSpot implements Serializable, ClusterItem {
     private String reviews;
     private String image;
     private String object;
+    private String path;
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
 
     public String getObject() {
         return object;
