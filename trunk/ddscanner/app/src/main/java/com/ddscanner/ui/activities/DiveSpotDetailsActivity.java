@@ -220,6 +220,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         showMore = (TextView) findViewById(R.id.showmore);
         ratingBar = (RatingBar) findViewById(R.id.rating_bar);
         btnCheckIn = (FloatingActionButton) findViewById(R.id.fab_checkin);
+        btnCheckIn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
         showAllReviews = (Button) findViewById(R.id.btn_show_all_reviews);
         isInfoValidLayout = (LinearLayout) findViewById(R.id.is_info_valid_layout);
         thanksLayout = (LinearLayout) findViewById(R.id.thanks_layout);

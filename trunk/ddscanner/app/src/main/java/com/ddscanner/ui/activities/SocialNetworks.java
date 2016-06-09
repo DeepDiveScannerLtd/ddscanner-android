@@ -65,7 +65,6 @@ public class SocialNetworks extends AppCompatActivity
     private static final String TAG = "SOCIAL";
 
     private TwitterLoginButton loginButton;
-    private Button twitterCustomBtn;
 
     private CallbackManager callbackManager;
     private LoginButton fbLoginButton;
@@ -89,43 +88,7 @@ public class SocialNetworks extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_social_login);
         materialDialog = helpers.getMaterialDialog(this);
-        /*TWITTER*/
-        twitterCustomBtn = (Button) findViewById(R.id.twitter_custom);
-        loginButton = (TwitterLoginButton) findViewById(R.id.twitter_login_button);
-        loginButton.setCallback(new Callback<TwitterSession>() {
-            @Override
-            public void success(Result<TwitterSession> result) {
-                TwitterSession session = result.data;
-                Twitter.getApiClient(session).getAccountService()
-                        .verifyCredentials(true, false, new Callback<User>() {
-                    @Override
-                    public void success(Result<User> result) {
-                        SharedPreferenceHelper.setIsUserSignedIn(true);
-                    }
 
-                    @Override
-                    public void failure(TwitterException e) {
-
-                    }
-                });
-                TwitterAuthToken authToken = session.getAuthToken();
-                Log.i(TAG, session.getAuthToken().secret + "\n" + session.getAuthToken().token);
-                sendRegisterRequest(putTokensToMap(SharedPreferenceHelper.getUserAppId(),
-                        "tw", authToken.token, authToken.secret));
-            }
-
-            @Override
-            public void failure(TwitterException exception) {
-                Log.d("TwitterKit", "Login with Twitter failure", exception);
-            }
-        });
-        twitterCustomBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loginButton.performClick();
-            }
-        });
-        /*FACEBOOK*/
         callbackManager = CallbackManager.Factory.create();
         fbCustomLogin = (Button) findViewById(R.id.fb_custom);
         fbCustomLogin.setOnClickListener(new View.OnClickListener() {
