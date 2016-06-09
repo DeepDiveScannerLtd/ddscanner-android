@@ -48,13 +48,13 @@ public class DiveSpotsListActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_users_dive_spots);
-        findViews();
         isAdded = getIntent().getBooleanExtra("ISADDED", false);
         if (isAdded) {
             getAddedList();
         } else {
             getEditedList();
         }
+        findViews();
     }
 
     private void findViews() {

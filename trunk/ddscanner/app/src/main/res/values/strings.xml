@@ -145,7 +145,7 @@
     <string name="search_sealife">Search sealife</string>
     <string name="favorites">Favorites</string>
     <string name="checkin">Check in</string>
-    <string name="added_ds">Added</string>
+    <string name="added_ds">Created</string>
     <string name="edited_ds">Edited</string>
 
 </resources>
