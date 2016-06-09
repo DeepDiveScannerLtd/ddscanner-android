@@ -52,7 +52,7 @@ public class ReviewPhotosAdapter extends RecyclerView.Adapter<ReviewPhotosAdapte
             holder.morePhotos.setText("+" + String.valueOf(8 - 4));
             holder.morePhotos.setVisibility(View.VISIBLE);
         }
-        Picasso.with(context).load(path + photos.get(position)).transform(new TransformationRoundImage(2,0)).resize(70,70).centerCrop().into(holder.photo,
+        Picasso.with(context).load(photos.get(position)).transform(new TransformationRoundImage(2,0)).resize(70,70).centerCrop().into(holder.photo,
                 new ImageLoadedCallback(holder.progressBar){
                     @Override
                     public void onSuccess() {
