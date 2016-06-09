@@ -197,7 +197,11 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         if (lastClickedMarker != null) {
             // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
 //                lastClickedMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
-            lastClickedMarker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_ds)));
+            try {
+                lastClickedMarker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_ds)));
+            } catch (IllegalArgumentException e) {
+
+            }
         }
         lastClickedMarker = marker;
         // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276

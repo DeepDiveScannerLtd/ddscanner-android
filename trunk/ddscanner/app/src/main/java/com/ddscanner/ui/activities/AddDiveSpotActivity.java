@@ -89,6 +89,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     private Spinner currentsSpinner;
     private Spinner objectSpinner;
     private Spinner visibilitySpinner;
+    private Spinner accessSpinner;
     private EditText name;
     private EditText depth;
     private EditText description;
@@ -157,6 +158,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         objectSpinner = (Spinner) findViewById(R.id.object_spinner);
         visibilitySpinner = (Spinner) findViewById(R.id.visibility_spinner);
         currentsSpinner = (Spinner) findViewById(R.id.currents_spinner);
+        accessSpinner = (Spinner) findViewById(R.id.access_spinner);
         pickLocation = (LinearLayout) findViewById(R.id.location_layout);
         locationTitle = (TextView) findViewById(R.id.location);
         btnSave = (Button) findViewById(R.id.button_create);
@@ -308,6 +310,10 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                     for (Map.Entry<String, JsonElement> elementEntry : visibilityJsonObject.entrySet()) {
                         filters.getVisibility().put(elementEntry.getKey(), elementEntry.getValue().getAsString());
                     }
+                    JsonObject accessJsonObject = jsonObject.getAsJsonObject("access");
+                    for (Map.Entry<String, JsonElement> elementEntry : accessJsonObject.entrySet()) {
+                        filters.getAccess().put(elementEntry.getKey(), elementEntry.getValue().getAsString());
+                    }
                     Gson gson = new Gson();
                     if (jsonObject.get("rating") != null) {
                         filters.setRating(gson.fromJson(jsonObject.get("rating").getAsJsonArray(), int[].class));
@@ -319,6 +325,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                     setSpinnerValues(levelSpinner, filters.getLevel(), "");
                     setSpinnerValues(currentsSpinner, filters.getCurrents(), "");
                     setSpinnerValues(visibilitySpinner, filters.getVisibility(), "");
+                    setSpinnerValues(accessSpinner, filters.getAccess(), "");
 
                 }
             }
@@ -441,7 +448,9 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
             requestLng = RequestBody.create(MediaType.parse("multipart/form-data"),
                     String.valueOf(diveSpotLocation.longitude));
         }
-        requestAccess = RequestBody.create(MediaType.parse("multipart/form-data"), "boat");
+        requestAccess = RequestBody.create(MediaType.parse("multipart/form-data"),
+                helpers.getMirrorOfHashMap(filters.getAccess())
+                        .get(accessSpinner.getSelectedItem().toString()));
         requestObject = RequestBody.create(MediaType.parse("multipart/form-data"),
                 helpers.getMirrorOfHashMap(filters.getObject())
                         .get(objectSpinner.getSelectedItem().toString()));

@@ -13,12 +13,22 @@ public class FiltersResponseEntity implements Serializable {
     private Map<String, String> object;
     private int[] rating;
     private Map<String, String> visibility;
+    private Map<String, String> access;
 
     public FiltersResponseEntity() {
         currents = new HashMap<>();
         level = new HashMap<>();
         object = new HashMap<>();
         visibility = new HashMap<>();
+        access = new HashMap<>();
+    }
+
+    public Map<String, String> getAccess() {
+        return access;
+    }
+
+    public void setAccess(Map<String, String> access) {
+        this.access = access;
     }
 
     public Map<String, String> getCurrents() {
