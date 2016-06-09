@@ -35,6 +35,7 @@
                     android:layout_marginTop="10dp"
                     android:gravity="center"
                     android:textColor="@color/black_text"
+                    android:layout_marginBottom="7dp"
                     android:textSize="18sp" />
 
                 <LinearLayout
@@ -55,7 +56,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="7dp"
                         android:fontFamily="sans-serif-medium"
-                        android:text="Expert"
                         android:textColor="#ed1b24"
                         android:textSize="13sp" />
                 </LinearLayout>
@@ -64,10 +64,8 @@
                     android:id="@+id/user_about"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="7dp"
                     android:layout_marginLeft="43dp"
                     android:layout_marginRight="43dp"
-                    android:layout_marginTop="7dp"
                     android:gravity="center"
                     android:textColor="#616161"
                     android:textSize="13sp"
@@ -94,8 +92,7 @@
 
                         <TextView
                             android:id="@+id/user_comments"
-                            style="@style/ProfileNumberDivespotsSrtyle"
-                            android:text="354" />
+                            style="@style/ProfileNumberDivespotsSrtyle" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -114,8 +111,7 @@
 
                         <TextView
                             android:id="@+id/user_likes"
-                            style="@style/ProfileNumberDivespotsSrtyle"
-                            android:text="2K" />
+                            style="@style/ProfileNumberDivespotsSrtyle" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -170,14 +166,13 @@
 
                         <TextView
                             style="@style/CharacteristicsDiveSpotListTitle"
-                            android:text="Check in" />
+                            android:text="@string/checkin" />
 
                         <TextView
                             android:id="@+id/checkin_count"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_below="@+id/depth_title"
-                            android:text="230" />
+                            />
                     </LinearLayout>
 
                     <ImageView
@@ -253,9 +248,7 @@
                         <TextView
                             android:id="@+id/edited_count"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/depth_title"
-                            android:text="230" />
+                            android:layout_height="wrap_content" />
                     </LinearLayout>
 
                     <ImageView
@@ -292,9 +285,7 @@
                         <TextView
                             android:id="@+id/favourites_count"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/depth_title"
-                            android:text="230" />
+                            android:layout_height="wrap_content" />
                     </LinearLayout>
 
                     <ImageView
@@ -312,7 +303,6 @@
                     android:id="@+id/edit_profile"
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
-                    android:background="?attr/selectableItemBackground"
                     android:orientation="horizontal">
 
                     <ImageView
