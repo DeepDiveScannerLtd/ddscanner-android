@@ -267,4 +267,10 @@ public class SocialNetworks extends AppCompatActivity
             DDScannerApplication.showErrorActivity(this);
         }
     }
+
+    public static void showForResult(Activity context, int code) {
+        Intent intent = new Intent(context, SocialNetworks.class);
+        context.startActivityForResult(intent, code);
+    }
+
 }

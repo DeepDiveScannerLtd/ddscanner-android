@@ -80,6 +80,8 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
     private static final int RC_PICK_PHOTO = 9001;
     private static final int RC_PICK_LOCATION = 8001;
     private static final int RC_PICK_SEALIFE = 7001;
+    private static final int RC_LOGIN_TO_SEND = 6001;
+    private static final int RC_LOGIN_TO_GET_DATA = 5001;
 
     private int maxPhotosCount = 3;
 
@@ -251,10 +253,10 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
+                if (!response.isSuccessful()) {
                     String responseString = "";
                     try {
-                        responseString = response.body().string();
+                        responseString = response.errorBody().string();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -280,20 +282,30 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
                         helpers.showToast(EditDiveSpotActivity.this, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
+                        SharedPreferenceHelper.logout();
+                        SocialNetworks.showForResult(EditDiveSpotActivity.this, RC_LOGIN_TO_GET_DATA);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
                         helpers.showToast(EditDiveSpotActivity.this, R.string.toast_server_error);
                     } finally {
                         // This will be called only if response code is 200
-                        divespotDetails = new Gson().fromJson(responseString, DivespotDetails.class);
-                        diveSpot = divespotDetails.getDivespot();
-                        sealifes = divespotDetails.getSealifes();
-                        imageUris = changeImageAddresses(diveSpot.getImages());
-                        addPhotoToDsListAdapter = new AddPhotoToDsListAdapter(imageUris, EditDiveSpotActivity.this, addPhotoTitle);
-                        diveSpotLocation = new LatLng(divespotDetails.getDivespot().getLat(),
-                                divespotDetails.getDivespot().getLng());
-                        setUi();
                     }
+                }
+                if (response.isSuccessful()) {
+                    String responseString = "";
+                    try {
+                        responseString = response.body().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    divespotDetails = new Gson().fromJson(responseString, DivespotDetails.class);
+                    diveSpot = divespotDetails.getDivespot();
+                    sealifes = divespotDetails.getSealifes();
+                    imageUris = changeImageAddresses(diveSpot.getImages());
+                    addPhotoToDsListAdapter = new AddPhotoToDsListAdapter(imageUris, EditDiveSpotActivity.this, addPhotoTitle);
+                    diveSpotLocation = new LatLng(divespotDetails.getDivespot().getLat(),
+                            divespotDetails.getDivespot().getLng());
+                    setUi();
                 }
 
             }
@@ -399,6 +411,19 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
                 Log.i(TAG, sealifeListAddingDiveSpotAdapter.getSealifes().get(0).getName());
             }
         }
+        if (requestCode == RC_LOGIN_TO_SEND) {
+            if (resultCode == RESULT_OK) {
+                createAddDiveSpotRequest();
+            }
+        }
+        if (requestCode == RC_LOGIN_TO_GET_DATA) {
+            if (resultCode == RESULT_OK) {
+                getDsInfoRequest();
+            }
+            if (resultCode == RESULT_CANCELED) {
+                finish();
+            }
+        }
     }
 
     private void createRequestBodyies() {
@@ -485,20 +510,47 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.raw().code() == 200) {
-                    Intent intent = new Intent();
-                    setResult(RESULT_OK, intent);
-                    finish();
-                    return;
-                }
-                if (response.errorBody() != null) {
+                if (!response.isSuccessful()) {
+                    String responseString = "";
                     try {
-                        String error = response.errorBody().string();
-                        helpers.errorHandling(EditDiveSpotActivity.this, errorsMap, error);
-                        Log.i(TAG, response.errorBody().string());
+                        responseString = response.errorBody().string();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+                    LogUtils.i("response body is " + responseString);
+                    try {
+                        ErrorsParser.checkForError(response.code(), responseString);
+                    } catch (ServerInternalErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(EditDiveSpotActivity.this, R.string.toast_server_error);
+                    } catch (BadRequestException e) {
+                        // TODO Handle
+                        helpers.showToast(EditDiveSpotActivity.this, R.string.toast_server_error);
+                    } catch (ValidationErrorException e) {
+                        // TODO Handle
+                        helpers.errorHandling(EditDiveSpotActivity.this, errorsMap, responseString);
+                    } catch (NotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(EditDiveSpotActivity.this, R.string.toast_server_error);
+                    } catch (UnknownErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(EditDiveSpotActivity.this, R.string.toast_server_error);
+                    } catch (DiveSpotNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(EditDiveSpotActivity.this, R.string.toast_server_error);
+                    } catch (UserNotFoundException e) {
+                        // TODO Handle
+                        SharedPreferenceHelper.logout();
+                        SocialNetworks.showForResult(EditDiveSpotActivity.this, RC_LOGIN_TO_SEND);
+                    } catch (CommentNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(EditDiveSpotActivity.this, R.string.toast_server_error);
+                    }
+                }
+                if (response.isSuccessful()) {
+                    Intent intent = new Intent();
+                    setResult(RESULT_OK, intent);
+                    finish();
                 }
                 progressDialogUpload.dismiss();
             }

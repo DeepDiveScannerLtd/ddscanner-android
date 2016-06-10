@@ -27,7 +27,16 @@ import com.ddscanner.R;
 import com.ddscanner.entities.DiveSpot;
 import com.ddscanner.entities.FiltersResponseEntity;
 import com.ddscanner.entities.Sealife;
+import com.ddscanner.entities.errors.BadRequestException;
+import com.ddscanner.entities.errors.CommentNotFoundException;
+import com.ddscanner.entities.errors.DiveSpotNotFoundException;
+import com.ddscanner.entities.errors.NotFoundException;
+import com.ddscanner.entities.errors.ServerInternalErrorException;
+import com.ddscanner.entities.errors.UnknownErrorException;
+import com.ddscanner.entities.errors.UserNotFoundException;
+import com.ddscanner.entities.errors.ValidationErrorException;
 import com.ddscanner.events.ImageDeletedEvent;
+import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.AddPhotoToDsListAdapter;
 import com.ddscanner.ui.adapters.SealifeListAddingDiveSpotAdapter;
@@ -71,6 +80,8 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     private static final int RC_PICK_LOCATION = 8001;
     private static final int RC_PICK_SEALIFE = 7001;
     private static final int RC_LOGIN = 6001;
+    private static final int RC_LOGIN_TO_SEND = 4001;
+    private static final int RC_LOGIN_TO_GET_DATA = 5001;
 
     private ProgressDialog progressDialog;
 
@@ -262,6 +273,19 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
             }
 
         }
+        if (requestCode == RC_LOGIN_TO_SEND) {
+            if (resultCode == RESULT_OK) {
+                createAddDiveSpotRequest();
+            }
+        }
+        if (requestCode == RC_LOGIN_TO_GET_DATA) {
+            if (resultCode == RESULT_OK) {
+                loadFiltersDataRequest();
+            }
+            if (resultCode == RESULT_CANCELED) {
+                finish();
+            }
+        }
     }
 
     private void setSpinnerValues(Spinner spinner, Map<String, String> values, String tag) {
@@ -282,6 +306,43 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (!response.isSuccessful()) {
+                    String responseString = "";
+                    try {
+                        responseString = response.errorBody().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    LogUtils.i("response body is " + responseString);
+                    try {
+                        ErrorsParser.checkForError(response.code(), responseString);
+                    } catch (ServerInternalErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(AddDiveSpotActivity.this, R.string.toast_server_error);
+                    } catch (BadRequestException e) {
+                        // TODO Handle
+                        helpers.showToast(AddDiveSpotActivity.this, R.string.toast_server_error);
+                    } catch (ValidationErrorException e) {
+                        // TODO Handle
+                        helpers.errorHandling(AddDiveSpotActivity.this, errorsMap, responseString);
+                    } catch (NotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(AddDiveSpotActivity.this, R.string.toast_server_error);
+                    } catch (UnknownErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(AddDiveSpotActivity.this, R.string.toast_server_error);
+                    } catch (DiveSpotNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(AddDiveSpotActivity.this, R.string.toast_server_error);
+                    } catch (UserNotFoundException e) {
+                        // TODO Handle
+                        SharedPreferenceHelper.logout();
+                        SocialNetworks.showForResult(AddDiveSpotActivity.this, RC_LOGIN_TO_GET_DATA);
+                    } catch (CommentNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(AddDiveSpotActivity.this, R.string.toast_server_error);
+                    }
+                }
                 if (response.isSuccessful()) {
                     String responseString = "";
                     try {
@@ -349,6 +410,43 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 Log.i(TAG, "success");
                 progressDialogUpload.dismiss();
+                if (!response.isSuccessful()) {
+                    String responseString = "";
+                    try {
+                        responseString = response.errorBody().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    LogUtils.i("response body is " + responseString);
+                    try {
+                        ErrorsParser.checkForError(response.code(), responseString);
+                    } catch (ServerInternalErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(AddDiveSpotActivity.this, R.string.toast_server_error);
+                    } catch (BadRequestException e) {
+                        // TODO Handle
+                        helpers.showToast(AddDiveSpotActivity.this, R.string.toast_server_error);
+                    } catch (ValidationErrorException e) {
+                        // TODO Handle
+                        helpers.errorHandling(AddDiveSpotActivity.this, errorsMap, responseString);
+                    } catch (NotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(AddDiveSpotActivity.this, R.string.toast_server_error);
+                    } catch (UnknownErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(AddDiveSpotActivity.this, R.string.toast_server_error);
+                    } catch (DiveSpotNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(AddDiveSpotActivity.this, R.string.toast_server_error);
+                    } catch (UserNotFoundException e) {
+                        // TODO Handle
+                        SharedPreferenceHelper.logout();
+                        SocialNetworks.showForResult(AddDiveSpotActivity.this, RC_LOGIN_TO_SEND);
+                    } catch (CommentNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(AddDiveSpotActivity.this, R.string.toast_server_error);
+                    }
+                }
                 if (response.isSuccessful()) {
                     if (response.raw().code() == 200) {
                         String responseString = "";
@@ -368,21 +466,6 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
 
                         }
 
-                    }
-                }
-                if (response.errorBody() != null) {
-                    try {
-                        String error = response.errorBody().string();
-                        LogUtils.e(TAG, error);
-                        if (helpers.checkIsErrorByLogin(error)) {
-                            Intent intent = new Intent(AddDiveSpotActivity.this, SocialNetworks.class);
-                            startActivityForResult(intent, RC_LOGIN);
-                            return;
-                        }
-                        helpers.errorHandling(AddDiveSpotActivity.this, errorsMap,error);
-                        Log.i(TAG, response.errorBody().string());
-                    } catch (IOException e) {
-                        e.printStackTrace();
                     }
                 }
             }
