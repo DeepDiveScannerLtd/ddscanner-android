@@ -211,13 +211,13 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
     private void setMapView(Bundle savedInstanceState) {
         MapsInitializer.initialize(getActivity());
 
-        infoWindowBackgroundImages.put("wreck", AppCompatDrawableManager.get().getDrawable(getActivity(),
+        infoWindowBackgroundImages.put("Wreck", AppCompatDrawableManager.get().getDrawable(getActivity(),
                 R.drawable.iw_card_wreck, false));
-        infoWindowBackgroundImages.put("cave", AppCompatDrawableManager.get().getDrawable(getActivity(),
+        infoWindowBackgroundImages.put("Cave", AppCompatDrawableManager.get().getDrawable(getActivity(),
                 R.drawable.iw_card_cave, false));
-        infoWindowBackgroundImages.put("reef", AppCompatDrawableManager.get().getDrawable(getActivity(),
+        infoWindowBackgroundImages.put("Reef", AppCompatDrawableManager.get().getDrawable(getActivity(),
                 R.drawable.iw_card_reef, false));
-        infoWindowBackgroundImages.put("other", AppCompatDrawableManager.get().getDrawable(getActivity(),
+        infoWindowBackgroundImages.put("Other", AppCompatDrawableManager.get().getDrawable(getActivity(),
                 R.drawable.iw_card_other, false));
 
         addDsFab.setOnClickListener(this);
