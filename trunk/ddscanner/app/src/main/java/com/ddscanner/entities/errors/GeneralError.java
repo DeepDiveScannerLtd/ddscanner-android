@@ -6,13 +6,13 @@ public class GeneralError {
 //            "status_code": 404
 //    }
     private String message;
-    private String status_code;
+    private int status_code;
 
-    public String getStatusCode() {
+    public int getStatusCode() {
         return status_code;
     }
 
-    public void setStatusCode(String statusCode) {
+    public void setStatusCode(int statusCode) {
         this.status_code = statusCode;
     }
 

@@ -1,8 +1,14 @@
 package com.ddscanner.rest;
 
+import com.ddscanner.entities.errors.CommentNotFoundException;
+import com.ddscanner.entities.errors.DiveSpotNotFoundException;
 import com.ddscanner.entities.errors.Field;
 import com.ddscanner.entities.errors.GeneralError;
-import com.ddscanner.entities.errors.GeneralErrorException;
+import com.ddscanner.entities.errors.BadRequestException;
+import com.ddscanner.entities.errors.NotFoundException;
+import com.ddscanner.entities.errors.ServerInternalErrorException;
+import com.ddscanner.entities.errors.UnknownErrorException;
+import com.ddscanner.entities.errors.UserNotFoundException;
 import com.ddscanner.entities.errors.ValidationError;
 import com.ddscanner.entities.errors.ValidationErrorException;
 import com.google.gson.Gson;
@@ -16,7 +22,7 @@ import java.util.Set;
 
 public class ErrorsParser {
 
-    public static void checkForError(int responseCode, String json) throws GeneralErrorException, ValidationErrorException {
+    public static void checkForError(int responseCode, String json) throws BadRequestException, ValidationErrorException, ServerInternalErrorException, NotFoundException, UnknownErrorException, UserNotFoundException, DiveSpotNotFoundException, CommentNotFoundException {
         if (responseCode == 200) {
             return;
         }
@@ -27,11 +33,23 @@ public class ErrorsParser {
             case 400:
                 // bad request. for example event already happened or event preconditions are not held
                 generalError = gson.fromJson(json, GeneralError.class);
-                throw new GeneralErrorException().setGeneralError(generalError);
+                throw new BadRequestException().setGeneralError(generalError);
             case 404:
                 // entity not found
                 generalError = gson.fromJson(json, GeneralError.class);
-                throw new GeneralErrorException().setGeneralError(generalError);
+                switch (generalError.getStatusCode()) {
+                    case 801:
+                        // user not found
+                        throw new UserNotFoundException().setGeneralError(generalError);
+                    case 802:
+                        // dive spot not found
+                        throw new DiveSpotNotFoundException().setGeneralError(generalError);
+                    case 803:
+                        // dive spot comment not found
+                        throw new CommentNotFoundException().setGeneralError(generalError);
+                    default:
+                        throw new NotFoundException().setGeneralError(generalError);
+                }
             case 422:
                 // validation error
                 validationError = new ValidationError();
@@ -52,7 +70,11 @@ public class ErrorsParser {
             case 500:
                 // unknown server error
                 generalError = gson.fromJson(json, GeneralError.class);
-                throw new GeneralErrorException().setGeneralError(generalError);
+                throw new ServerInternalErrorException().setGeneralError(generalError);
+            default:
+                // If unexpected error code is received
+                generalError = gson.fromJson(json, GeneralError.class);
+                throw new UnknownErrorException().setGeneralError(generalError);
         }
     }
 }

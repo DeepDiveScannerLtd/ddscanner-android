@@ -28,7 +28,16 @@ import com.ddscanner.entities.DiveSpotFull;
 import com.ddscanner.entities.DivespotDetails;
 import com.ddscanner.entities.FiltersResponseEntity;
 import com.ddscanner.entities.Sealife;
+import com.ddscanner.entities.errors.BadRequestException;
+import com.ddscanner.entities.errors.CommentNotFoundException;
+import com.ddscanner.entities.errors.DiveSpotNotFoundException;
+import com.ddscanner.entities.errors.NotFoundException;
+import com.ddscanner.entities.errors.ServerInternalErrorException;
+import com.ddscanner.entities.errors.UnknownErrorException;
+import com.ddscanner.entities.errors.UserNotFoundException;
+import com.ddscanner.entities.errors.ValidationErrorException;
 import com.ddscanner.events.ImageDeletedEvent;
+import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.AddPhotoToDsListAdapter;
 import com.ddscanner.ui.adapters.SealifeListAddingDiveSpotAdapter;
@@ -63,7 +72,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class EditDiveSpotActivity extends AppCompatActivity implements View.OnClickListener{
+public class EditDiveSpotActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = EditDiveSpotActivity.class.getSimpleName();
 
@@ -250,7 +259,26 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
                         e.printStackTrace();
                     }
                     LogUtils.i("response body is " + responseString);
-                    if (response.raw().code() == 200) {
+                    try {
+                        ErrorsParser.checkForError(response.code(), responseString);
+                    } catch (ServerInternalErrorException e) {
+                        // TODO Handle
+                    } catch (BadRequestException e) {
+                        // TODO Handle
+                    } catch (ValidationErrorException e) {
+                        // TODO Handle
+                    } catch (NotFoundException e) {
+                        // TODO Handle
+                    } catch (UnknownErrorException e) {
+                        // TODO Handle
+                    } catch (DiveSpotNotFoundException e) {
+                        // TODO Handle
+                    } catch (UserNotFoundException e) {
+                        // TODO Handle
+                    } catch (CommentNotFoundException e) {
+                        // TODO Handle
+                    } finally {
+                        // This will be called only if response code is 200
                         divespotDetails = new Gson().fromJson(responseString, DivespotDetails.class);
                         diveSpot = divespotDetails.getDivespot();
                         sealifes = divespotDetails.getSealifes();
@@ -259,8 +287,6 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
                         diveSpotLocation = new LatLng(divespotDetails.getDivespot().getLat(),
                                 divespotDetails.getDivespot().getLng());
                         setUi();
-                    } else {
-
                     }
                 }
 
@@ -275,12 +301,13 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
 
     /**
      * Add path to images to name to have a full address of image for future work with this
+     *
      * @param images
      * @return images
      */
 
     private List<String> changeImageAddresses(List<String> images) {
-        for (int i = 0; i <images.size(); i++) {
+        for (int i = 0; i < images.size(); i++) {
             images.set(i, diveSpot.getDiveSpotPathSmall() + images.get(i));
         }
         return images;
@@ -314,19 +341,19 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
 
     /**
      * Remove adress part from image URL for creating list of deleted images names
+     *
      * @param deleted
      * @return
      */
     private ArrayList<String> removeAdressPart(ArrayList<String> deleted) {
 
-        for (int i = 0; i <deleted.size(); i++ ) {
+        for (int i = 0; i < deleted.size(); i++) {
             deleted.set(i, deleted.get(i).replace(diveSpot.getDiveSpotPathSmall(), ""
             ));
         }
 
         return deleted;
     }
-
 
 
     @Override
@@ -361,7 +388,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
         }
         if (requestCode == RC_PICK_SEALIFE) {
             if (resultCode == RESULT_OK) {
-                Sealife sealife =(Sealife) data.getSerializableExtra("SEALIFE");
+                Sealife sealife = (Sealife) data.getSerializableExtra("SEALIFE");
                 sealifeListAddingDiveSpotAdapter.add(sealife);
                 Log.i(TAG, sealifeListAddingDiveSpotAdapter.getSealifes().get(0).getName());
             }
@@ -409,7 +436,6 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
         requestType = RequestBody.create(MediaType.parse("multipart/form-data"), "PUT");
 
 
-
         sealifeRequest = new ArrayList<>();
         for (int i = 0; i < sealifes.size(); i++) {
             sealifeRequest.add(MultipartBody.Part.createFormData("sealife[]", sealifes.get(i).getId()));
@@ -432,7 +458,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
             deletedImages = null;
         } else {
             ArrayList<String> deleted;
-            deleted = (ArrayList<String>)addPhotoToDsListAdapter.getListOfDeletedImages();
+            deleted = (ArrayList<String>) addPhotoToDsListAdapter.getListOfDeletedImages();
             deleted = removeAdressPart(deleted);
             for (int i = 0; i < deleted.size(); i++) {
                 deletedImages.add(MultipartBody.Part.createFormData("images_del[]", deleted.get(i)));
@@ -462,7 +488,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
                 if (response.errorBody() != null) {
                     try {
                         String error = response.errorBody().string();
-                        helpers.errorHandling(EditDiveSpotActivity.this, errorsMap,error);
+                        helpers.errorHandling(EditDiveSpotActivity.this, errorsMap, error);
                         Log.i(TAG, response.errorBody().string());
                     } catch (IOException e) {
                         e.printStackTrace();
