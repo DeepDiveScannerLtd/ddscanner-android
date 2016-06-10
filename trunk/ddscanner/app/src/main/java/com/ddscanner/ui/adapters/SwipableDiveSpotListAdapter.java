@@ -44,6 +44,7 @@ public class SwipableDiveSpotListAdapter
     private boolean isCheckins = true;
     private Helpers helpers = new Helpers();
     private static AppCompatActivity mActivity;
+    private String lastId;
 
 
     public SwipableDiveSpotListAdapter(AppCompatActivity activity,ArrayList<DiveSpot> divespots, Context context,
@@ -135,6 +136,7 @@ public class SwipableDiveSpotListAdapter
     }
 
     private void checkOut(String id) {
+        lastId = id;
         Call<ResponseBody> call = RestClient.getServiceInstance()
                 .checkOutUser(id, helpers.getUserQuryMapRequest());
         call.enqueue(new retrofit2.Callback<ResponseBody>() {
@@ -153,6 +155,7 @@ public class SwipableDiveSpotListAdapter
         });
     }
     private void checkIn(String id) {
+        lastId = id;
         Call<ResponseBody> call = RestClient.getServiceInstance()
                 .checkIn(id, helpers.getRegisterRequest());
         call.enqueue(new retrofit2.Callback<ResponseBody>() {
@@ -171,6 +174,7 @@ public class SwipableDiveSpotListAdapter
         });
     }
     private void addToFavorites(String id) {
+        lastId = id;
         Call<ResponseBody> call = RestClient.getServiceInstance()
                 .addDiveSpotToFavourites(id, helpers.getRegisterRequest());
         call.enqueue(new retrofit2.Callback<ResponseBody>() {
@@ -190,6 +194,7 @@ public class SwipableDiveSpotListAdapter
     }
 
     private void removeFromFavorites(String id) {
+        lastId = id;
         Call<ResponseBody> call = RestClient.getServiceInstance()
                 .removeSpotFromFavorites(id, helpers.getUserQuryMapRequest());
         call.enqueue(new retrofit2.Callback<ResponseBody>() {

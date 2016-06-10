@@ -186,6 +186,11 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void sendReview() {
+        if (!SharedPreferenceHelper.getIsUserLogined()) {
+            SocialNetworks.showForResult(LeaveReviewActivity.this, RC_LOGIN);
+            return;
+        }
+        materialDialog.show();
         List<MultipartBody.Part> images = new ArrayList<>();
       //  imageUris = addPhotoToDsListAdapter.getNewFilesUrisList();
         for (int i = 0; i < imageUris.size(); i++) {
@@ -256,6 +261,7 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
                         helpers.showToast(LeaveReviewActivity.this, R.string.toast_server_error);
                     } catch (ValidationErrorException e) {
                         // TODO Handle
+
                     } catch (NotFoundException e) {
                         // TODO Handle
                         helpers.showToast(LeaveReviewActivity.this, R.string.toast_server_error);
@@ -296,7 +302,6 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
                             put(EventTrackerHelper.PARAM_SEND_REVIEW_CLICK, diveSpotId);
                         }});
                 if (checkText(text.getText().toString())) {
-                    materialDialog.show();
                     sendReview();
                 }
                 return true;

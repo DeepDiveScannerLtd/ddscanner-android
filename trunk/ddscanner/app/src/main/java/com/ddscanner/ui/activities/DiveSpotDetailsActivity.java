@@ -46,9 +46,18 @@ import com.ddscanner.entities.DiveSpotFull;
 import com.ddscanner.entities.DivespotDetails;
 import com.ddscanner.entities.Sealife;
 import com.ddscanner.entities.User;
+import com.ddscanner.entities.errors.BadRequestException;
+import com.ddscanner.entities.errors.CommentNotFoundException;
+import com.ddscanner.entities.errors.DiveSpotNotFoundException;
+import com.ddscanner.entities.errors.NotFoundException;
+import com.ddscanner.entities.errors.ServerInternalErrorException;
+import com.ddscanner.entities.errors.UnknownErrorException;
+import com.ddscanner.entities.errors.UserNotFoundException;
+import com.ddscanner.entities.errors.ValidationErrorException;
 import com.ddscanner.entities.request.ValidationReguest;
 import com.ddscanner.events.OpenPhotosActivityEvent;
 import com.ddscanner.events.ShowLoginActivityIntent;
+import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.DiveSpotsPhotosAdapter;
 import com.ddscanner.ui.adapters.EditorsListAdapter;
@@ -148,9 +157,11 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
     private boolean isCLickedFavorite = false;
     private boolean isClickedCHeckin = false;
+    private boolean isClickedCheckOut = false;
     private boolean isClickedYesValidation = false;
     private boolean isClickedNoValidation = false;
     private boolean isFavorite = false;
+    private boolean isClickedRemoveFromFavorites = false;
     private boolean isClickedEdit = false;
 
 
@@ -628,6 +639,12 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
     private void checkIn() {
         checkinUi();
+        if (!SharedPreferenceHelper.getIsUserLogined()) {
+            checkoutUi();
+            isClickedCHeckin = true;
+            showLoginActivity();
+            return;
+        }
         Call<ResponseBody> call = RestClient.getServiceInstance().checkIn(
                 String.valueOf(divespotDetails.getDivespot().getId()),
                 helpers.getRegisterRequest()
@@ -635,26 +652,46 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         call.enqueue(new retrofit2.Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (!response.isSuccessful()) {
-                    if (response.raw().code() == 422) {
-                        String error = "";
-                        try {
-                            error = response.errorBody().string();
-                            if (helpers.checkIsErrorByLogin(error)) {
-                                isClickedCHeckin = true;
-                                showLoginActivity();
-                                return;
-                            }
-                        } catch (IOException e) {
-                        }
-                    }
-                    if (response.raw().code() != 200) {
-                        checkoutUi();
-                        return;
-                    }
-                }
                 if (response.isSuccessful()) {
                     getCheckins();
+                }
+                if (!response.isSuccessful()) {
+                    checkoutUi();
+                    String responseString = "";
+                    try {
+                        responseString = response.errorBody().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    LogUtils.i("response body is " + responseString);
+                    try {
+                        ErrorsParser.checkForError(response.code(), responseString);
+                    } catch (ServerInternalErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+                    } catch (BadRequestException e) {
+                        // TODO Handle
+                        helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+                    } catch (ValidationErrorException e) {
+                        // TODO Handle
+
+                    } catch (NotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+                    } catch (UnknownErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+                    } catch (DiveSpotNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+                    } catch (UserNotFoundException e) {
+                        // TODO Handle
+                        isClickedCHeckin = true;
+                        showLoginActivity();
+                    } catch (CommentNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+                    }
                 }
             }
 
@@ -686,6 +723,12 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
     private void checkOut() {
         checkoutUi();
+        if (!SharedPreferenceHelper.getIsUserLogined()) {
+            checkinUi();
+            isClickedCheckOut = true;
+            showLoginActivity();
+            return;
+        }
         Call<ResponseBody> call = RestClient.getServiceInstance().checkOutUser(
                 String.valueOf(divespotDetails.getDivespot().getId()),
                 helpers.getUserQuryMapRequest()
@@ -693,9 +736,43 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         call.enqueue(new retrofit2.Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.raw().code() != 200) {
+                if (!response.isSuccessful()) {
                     checkinUi();
-                    return;
+                    String responseString = "";
+                    try {
+                        responseString = response.errorBody().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    LogUtils.i("response body is " + responseString);
+                    try {
+                        ErrorsParser.checkForError(response.code(), responseString);
+                    } catch (ServerInternalErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+                    } catch (BadRequestException e) {
+                        // TODO Handle
+                        helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+                    } catch (ValidationErrorException e) {
+                        // TODO Handle
+
+                    } catch (NotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+                    } catch (UnknownErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+                    } catch (DiveSpotNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+                    } catch (UserNotFoundException e) {
+                        // TODO Handle
+                        isClickedCheckOut = true;
+                        showLoginActivity();
+                    } catch (CommentNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+                    }
                 }
                 getCheckins();
             }
@@ -784,6 +861,11 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     }
 
     private void addDiveSpotToFavorites() {
+        if (!SharedPreferenceHelper.getIsUserLogined()) {
+            isCLickedFavorite = true;
+            showLoginActivity();
+            return;
+        }
         final Helpers helpers = new Helpers();
         Call<ResponseBody> call = RestClient.getServiceInstance().addDiveSpotToFavourites(
                 String.valueOf(diveSpot.getId()),
@@ -797,17 +879,40 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                     updateMenuItems(menu, isFavorite);
                 }
                 if (!response.isSuccessful()) {
-                    if (response.raw().code() == 422) {
-                        String error = "";
-                        try {
-                            error = response.errorBody().string();
-                            if (helpers.checkIsErrorByLogin(error)) {
-                                isCLickedFavorite = true;
-                                showLoginActivity();
-                                return;
-                            }
-                        } catch (IOException e) {
-                        }
+                    String responseString = "";
+                    try {
+                        responseString = response.errorBody().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    LogUtils.i("response body is " + responseString);
+                    try {
+                        ErrorsParser.checkForError(response.code(), responseString);
+                    } catch (ServerInternalErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+                    } catch (BadRequestException e) {
+                        // TODO Handle
+                        helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+                    } catch (ValidationErrorException e) {
+                        // TODO Handle
+
+                    } catch (NotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+                    } catch (UnknownErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+                    } catch (DiveSpotNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+                    } catch (UserNotFoundException e) {
+                        // TODO Handle
+                        isCLickedFavorite = true;
+                        showLoginActivity();
+                    } catch (CommentNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
                     }
                 }
             }
@@ -820,6 +925,11 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     }
 
     private void removeFromFavorites(String id) {
+        if (!SharedPreferenceHelper.getIsUserLogined()) {
+            isCLickedFavorite = true;
+            showLoginActivity();
+            return;
+        }
         Call<ResponseBody> call = RestClient.getServiceInstance()
                 .removeSpotFromFavorites(id, helpers.getUserQuryMapRequest());
         call.enqueue(new retrofit2.Callback<ResponseBody>() {
@@ -829,9 +939,42 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                     isFavorite = false;
                     updateMenuItems(menu, isFavorite);
                 }
-                if (response.raw().code() == 422 || response.raw().code() == 404) {
-                    SharedPreferenceHelper.logout();
-                    DDScannerApplication.bus.post(new ShowLoginActivityIntent());
+                if (!response.isSuccessful()) {
+                    String responseString = "";
+                    try {
+                        responseString = response.errorBody().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    LogUtils.i("response body is " + responseString);
+                    try {
+                        ErrorsParser.checkForError(response.code(), responseString);
+                    } catch (ServerInternalErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+                    } catch (BadRequestException e) {
+                        // TODO Handle
+                        helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+                    } catch (ValidationErrorException e) {
+                        // TODO Handle
+
+                    } catch (NotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+                    } catch (UnknownErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+                    } catch (DiveSpotNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+                    } catch (UserNotFoundException e) {
+                        // TODO Handle
+                        isClickedRemoveFromFavorites = true;
+                        showLoginActivity();
+                    } catch (CommentNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+                    }
                 }
             }
 
@@ -930,9 +1073,17 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                     checkIn();
                     isClickedCHeckin = false;
                 }
+                if (isClickedCheckOut) {
+                    checkOut();
+                    isClickedCheckOut = false;
+                }
                 if (isCLickedFavorite) {
                     addDiveSpotToFavorites();
                     isCLickedFavorite = false;
+                }
+                if (isClickedRemoveFromFavorites) {
+                    removeFromFavorites(String.valueOf(diveSpot.getId()));
+                    isClickedRemoveFromFavorites = false;
                 }
                 if (isClickedNoValidation) {
                     diveSpotValidation(false);
@@ -949,10 +1100,19 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                     isClickedEdit = false;
                 }
             } else {
-                if (isClickedCHeckin || isCLickedFavorite) {
+                if (isClickedCHeckin) {
                     checkoutUi();
-                    isCLickedFavorite = false;
                     isClickedCHeckin = false;
+                }
+                if (isClickedCheckOut) {
+                    checkinUi();
+                    isClickedCheckOut = false;
+                }
+                if (isCLickedFavorite) {
+                    updateMenuItems(menu, false);
+                }
+                if (isClickedRemoveFromFavorites) {
+                    updateMenuItems(menu, true);
                 }
                 if (isClickedYesValidation || isClickedNoValidation) {
                     isInfoValidLayout.setVisibility(View.VISIBLE);

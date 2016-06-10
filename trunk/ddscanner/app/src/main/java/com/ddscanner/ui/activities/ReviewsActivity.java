@@ -31,27 +31,52 @@ import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.Comment;
+import com.ddscanner.entities.Comments;
+import com.ddscanner.entities.errors.BadRequestException;
+import com.ddscanner.entities.errors.CommentNotFoundException;
+import com.ddscanner.entities.errors.DiveSpotNotFoundException;
+import com.ddscanner.entities.errors.NotFoundException;
+import com.ddscanner.entities.errors.ServerInternalErrorException;
+import com.ddscanner.entities.errors.UnknownErrorException;
+import com.ddscanner.entities.errors.UserNotFoundException;
+import com.ddscanner.entities.errors.ValidationErrorException;
 import com.ddscanner.events.IsCommentLikedEvent;
+import com.ddscanner.events.ShowLoginActivityIntent;
 import com.ddscanner.events.ShowUserDialogEvent;
+import com.ddscanner.rest.ErrorsParser;
+import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.ReviewsListAdapter;
 import com.ddscanner.ui.dialogs.ProfileDialog;
 import com.ddscanner.ui.views.TransformationRoundImage;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.EventTrackerHelper;
 import com.ddscanner.utils.Helpers;
+import com.ddscanner.utils.LogUtils;
+import com.ddscanner.utils.SharedPreferenceHelper;
+import com.google.gson.Gson;
+import com.rey.material.widget.ProgressView;
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by lashket on 12.3.16.
  */
 public class ReviewsActivity extends AppCompatActivity implements View.OnClickListener{
 
+    private static final int RC_LOGIN = 8001;
+
     private ArrayList<Comment> comments;
     private RecyclerView commentsRc;
+    private ProgressView progressView;
 
     private Toolbar toolbar;
     private FloatingActionButton leaveReview;
@@ -80,6 +105,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
         commentsRc = (RecyclerView) findViewById(R.id.reviews_rc);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         leaveReview = (FloatingActionButton) findViewById(R.id.fab_write_review);
+        progressView = (ProgressView) findViewById(R.id.progressBarFull);
         leaveReview.setOnClickListener(this);
     }
 
@@ -126,6 +152,76 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
                 //Write your code if there's no result
             }
         }
+        if (requestCode == RC_LOGIN) {
+            if (resultCode == RESULT_OK) {
+                getComments();
+            }
+        }
+    }
+
+    private void getComments() {
+        commentsRc.setVisibility(View.GONE);
+        progressView.setVisibility(View.VISIBLE);
+        isHasNewComment = true;
+        Call<ResponseBody> call = RestClient.getServiceInstance().getComments(diveSpotId, helpers.getUserQuryMapRequest());
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    String responseString = "";
+                    try {
+                        responseString = response.body().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    Comments comments = new Gson().fromJson(responseString, Comments.class);
+                    progressView.setVisibility(View.GONE);
+                    commentsRc.setVisibility(View.VISIBLE);
+                    commentsRc.setAdapter(new ReviewsListAdapter((ArrayList<Comment>) comments.getComments(), ReviewsActivity.this, path));
+                }
+                if (!response.isSuccessful()) {
+                    String responseString = "";
+                    try {
+                        responseString = response.errorBody().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    LogUtils.i("response body is " + responseString);
+                    try {
+                        ErrorsParser.checkForError(response.code(), responseString);
+                    } catch (ServerInternalErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                    } catch (BadRequestException e) {
+                        // TODO Handle
+                        helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                    } catch (ValidationErrorException e) {
+                        // TODO Handle
+                    } catch (NotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                    } catch (UnknownErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                    } catch (DiveSpotNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                    } catch (UserNotFoundException e) {
+                        // TODO Handle
+                        SharedPreferenceHelper.logout();
+                        SocialNetworks.showForResult(ReviewsActivity.this, RC_LOGIN);
+                    } catch (CommentNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
     }
 
     @Override
@@ -188,6 +284,11 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
         if (!helpers.hasConnection(this)) {
             DDScannerApplication.showErrorActivity(this);
         }
+    }
+
+    @Subscribe
+    public void showLoginActivity(ShowLoginActivityIntent event) {
+        SocialNetworks.showForResult(ReviewsActivity.this, RC_LOGIN);
     }
 
 }

@@ -15,16 +15,28 @@ import android.widget.TextView;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.Comment;
+import com.ddscanner.entities.errors.BadRequestException;
+import com.ddscanner.entities.errors.CommentNotFoundException;
+import com.ddscanner.entities.errors.DiveSpotNotFoundException;
+import com.ddscanner.entities.errors.NotFoundException;
+import com.ddscanner.entities.errors.ServerInternalErrorException;
+import com.ddscanner.entities.errors.UnknownErrorException;
+import com.ddscanner.entities.errors.UserNotFoundException;
+import com.ddscanner.entities.errors.ValidationErrorException;
 import com.ddscanner.entities.request.RegisterRequest;
 import com.ddscanner.events.IsCommentLikedEvent;
+import com.ddscanner.events.ShowLoginActivityIntent;
 import com.ddscanner.events.ShowUserDialogEvent;
+import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.dialogs.ProfileDialog;
 import com.ddscanner.ui.views.TransformationRoundImage;
 import com.ddscanner.utils.Helpers;
+import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import okhttp3.ResponseBody;
@@ -186,6 +198,10 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
     private void likeComment(String id, final ImageView dislikeImage,
                              final ImageView likeImage,
                              final TextView likesCount, final TextView dislikesCount, final int position) {
+        if (!SharedPreferenceHelper.getIsUserLogined()) {
+            DDScannerApplication.bus.post(new ShowLoginActivityIntent());
+            return;
+        }
         Call<ResponseBody> call = RestClient.getServiceInstance().likeComment(
                 id, helpers.getRegisterRequest()
         );
@@ -196,6 +212,42 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
                     if (response.raw().code() == 200) {
                         DDScannerApplication.bus.post(new IsCommentLikedEvent());
                          likeUi(dislikeImage, likeImage, likesCount, dislikesCount, position);
+                    }
+                }
+                if (!response.isSuccessful()) {
+                    String responseString = "";
+                    try {
+                        responseString = response.errorBody().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    LogUtils.i("response body is " + responseString);
+                    try {
+                        ErrorsParser.checkForError(response.code(), responseString);
+                    } catch (ServerInternalErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(context, R.string.toast_server_error);
+                    } catch (BadRequestException e) {
+                        // TODO Handle
+                        helpers.showToast(context, R.string.toast_server_error);
+                    } catch (ValidationErrorException e) {
+                        // TODO Handle
+                    } catch (NotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(context, R.string.toast_server_error);
+                    } catch (UnknownErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(context, R.string.toast_server_error);
+                    } catch (DiveSpotNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(context, R.string.toast_server_error);
+                    } catch (UserNotFoundException e) {
+                        // TODO Handle
+                        SharedPreferenceHelper.logout();
+                        DDScannerApplication.bus.post(new ShowLoginActivityIntent());
+                    } catch (CommentNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(context, R.string.toast_server_error);
                     }
                 }
             }
@@ -210,6 +262,10 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
     private void dislikeComment(String id, final ImageView dislikeImage,
                                 final ImageView likeImage,
                                 final TextView likesCount, final TextView dislikesCount, final int position) {
+        if (!SharedPreferenceHelper.getIsUserLogined()) {
+            DDScannerApplication.bus.post(new ShowLoginActivityIntent());
+            return;
+        }
         Call<ResponseBody> call = RestClient.getServiceInstance().dislikeComment(
                 id, helpers.getRegisterRequest()
         );
@@ -220,6 +276,42 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
                     if (response.raw().code() == 200) {
                         DDScannerApplication.bus.post(new IsCommentLikedEvent());
                         dislikeUi(dislikeImage, likeImage, likesCount, dislikesCount, position);
+                    }
+                }
+                if (!response.isSuccessful()) {
+                    String responseString = "";
+                    try {
+                        responseString = response.errorBody().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    LogUtils.i("response body is " + responseString);
+                    try {
+                        ErrorsParser.checkForError(response.code(), responseString);
+                    } catch (ServerInternalErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(context, R.string.toast_server_error);
+                    } catch (BadRequestException e) {
+                        // TODO Handle
+                        helpers.showToast(context, R.string.toast_server_error);
+                    } catch (ValidationErrorException e) {
+                        // TODO Handle
+                    } catch (NotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(context, R.string.toast_server_error);
+                    } catch (UnknownErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(context, R.string.toast_server_error);
+                    } catch (DiveSpotNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(context, R.string.toast_server_error);
+                    } catch (UserNotFoundException e) {
+                        // TODO Handle
+                        SharedPreferenceHelper.logout();
+                        DDScannerApplication.bus.post(new ShowLoginActivityIntent());
+                    } catch (CommentNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(context, R.string.toast_server_error);
                     }
                 }
             }
