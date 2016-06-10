@@ -27,6 +27,15 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.DiveSpot;
 import com.ddscanner.entities.DivespotsWrapper;
+import com.ddscanner.entities.errors.BadRequestException;
+import com.ddscanner.entities.errors.CommentNotFoundException;
+import com.ddscanner.entities.errors.DiveSpotNotFoundException;
+import com.ddscanner.entities.errors.NotFoundException;
+import com.ddscanner.entities.errors.ServerInternalErrorException;
+import com.ddscanner.entities.errors.UnknownErrorException;
+import com.ddscanner.entities.errors.UserNotFoundException;
+import com.ddscanner.entities.errors.ValidationErrorException;
+import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.SwipableDiveSpotListAdapter;
 import com.ddscanner.utils.Helpers;
@@ -51,6 +60,8 @@ import retrofit2.Response;
  */
 public class UsersDivespotListSwipableActivity extends AppCompatActivity {
 
+    private static final int RC_LOGIN = 9001;
+
     private RecyclerView rc;
     private Toolbar toolbar;
     private SwipableDiveSpotListAdapter swipableDiveSpotListAdapter;
@@ -70,6 +81,23 @@ public class UsersDivespotListSwipableActivity extends AppCompatActivity {
             getListOfDiveSPotsCheckins();
         } else {
             getListOfDiveSPotsFavorites();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_LOGIN) {
+            if (resultCode == RESULT_OK) {
+                if (isCheckin) {
+                    getListOfDiveSPotsCheckins();
+                } else {
+                    getListOfDiveSPotsFavorites();
+                }
+            }
+            if (resultCode == RESULT_CANCELED) {
+                finish();
+            }
         }
     }
 
@@ -125,8 +153,42 @@ public class UsersDivespotListSwipableActivity extends AppCompatActivity {
                             .fromJson(responseString, DivespotsWrapper.class);
                     diveSpots = divespotsWrapper.getDiveSpots();
                     setUi();
-                } else {
-
+                }
+                if (!response.isSuccessful()) {
+                    String responseString = "";
+                    try {
+                        responseString = response.errorBody().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    LogUtils.i("response body is " + responseString);
+                    try {
+                        ErrorsParser.checkForError(response.code(), responseString);
+                    } catch (ServerInternalErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(UsersDivespotListSwipableActivity.this, R.string.toast_server_error);
+                    } catch (BadRequestException e) {
+                        // TODO Handle
+                        helpers.showToast(UsersDivespotListSwipableActivity.this, R.string.toast_server_error);
+                    } catch (ValidationErrorException e) {
+                        // TODO Handle
+                    } catch (NotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(UsersDivespotListSwipableActivity.this, R.string.toast_server_error);
+                    } catch (UnknownErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(UsersDivespotListSwipableActivity.this, R.string.toast_server_error);
+                    } catch (DiveSpotNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(UsersDivespotListSwipableActivity.this, R.string.toast_server_error);
+                    } catch (UserNotFoundException e) {
+                        // TODO Handle
+                        SharedPreferenceHelper.logout();
+                        SocialNetworks.showForResult(UsersDivespotListSwipableActivity.this, RC_LOGIN);
+                    } catch (CommentNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(UsersDivespotListSwipableActivity.this, R.string.toast_server_error);
+                    }
                 }
             }
 
@@ -163,8 +225,42 @@ public class UsersDivespotListSwipableActivity extends AppCompatActivity {
                             .fromJson(responseString, DivespotsWrapper.class);
                     diveSpots = divespotsWrapper.getDiveSpots();
                     setUi();
-                } else {
-
+                }
+                if (!response.isSuccessful()) {
+                    String responseString = "";
+                    try {
+                        responseString = response.errorBody().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    LogUtils.i("response body is " + responseString);
+                    try {
+                        ErrorsParser.checkForError(response.code(), responseString);
+                    } catch (ServerInternalErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(UsersDivespotListSwipableActivity.this, R.string.toast_server_error);
+                    } catch (BadRequestException e) {
+                        // TODO Handle
+                        helpers.showToast(UsersDivespotListSwipableActivity.this, R.string.toast_server_error);
+                    } catch (ValidationErrorException e) {
+                        // TODO Handle
+                    } catch (NotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(UsersDivespotListSwipableActivity.this, R.string.toast_server_error);
+                    } catch (UnknownErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(UsersDivespotListSwipableActivity.this, R.string.toast_server_error);
+                    } catch (DiveSpotNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(UsersDivespotListSwipableActivity.this, R.string.toast_server_error);
+                    } catch (UserNotFoundException e) {
+                        // TODO Handle
+                        SharedPreferenceHelper.logout();
+                        SocialNetworks.showForResult(UsersDivespotListSwipableActivity.this, RC_LOGIN);
+                    } catch (CommentNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(UsersDivespotListSwipableActivity.this, R.string.toast_server_error);
+                    }
                 }
             }
 

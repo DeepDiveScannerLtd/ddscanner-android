@@ -31,12 +31,22 @@ import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.Comment;
+import com.ddscanner.entities.errors.BadRequestException;
+import com.ddscanner.entities.errors.CommentNotFoundException;
+import com.ddscanner.entities.errors.DiveSpotNotFoundException;
+import com.ddscanner.entities.errors.NotFoundException;
+import com.ddscanner.entities.errors.ServerInternalErrorException;
+import com.ddscanner.entities.errors.UnknownErrorException;
+import com.ddscanner.entities.errors.UserNotFoundException;
+import com.ddscanner.entities.errors.ValidationErrorException;
 import com.ddscanner.events.ImageDeletedEvent;
+import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.AddPhotoToDsListAdapter;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.EventTrackerHelper;
 import com.ddscanner.utils.Helpers;
+import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -214,6 +224,7 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                materialDialog.dismiss();
                 if (response.raw().isSuccessful()) {
                     String responseString = null;
                     try {
@@ -226,39 +237,43 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
                     returnIntent.putExtra("COMMENT", comment);
                     setResult(Activity.RESULT_OK, returnIntent);
                     finish();
-                    materialDialog.dismiss();
-                } else {
-                    materialDialog.dismiss();
-                    int httpResultCode = response.raw().code();
-                    Log.i(TAG, response.raw().message());
-                    String json = "";
+                }
+                if (!response.isSuccessful()) {
+                    String responseString = "";
                     try {
-                        json = response.errorBody().string();
+                        responseString = response.errorBody().string();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    Log.i(TAG, json);
-                    if (httpResultCode == 400) {
-                        Intent intent = new Intent(LeaveReviewActivity.this, SocialNetworks.class);
-                        startActivityForResult(intent, RC_LOGIN);
-                    } else {
-                        String errors = "";
-                        JsonObject jsonObject = new JsonParser().parse(json).getAsJsonObject();
-                        for (Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) {
-                            System.out.println(entry.getKey());
-                            System.out.println(entry.getValue());
-                            if (entry.getKey().equals("token") || entry.getKey().equals("social")) {
-                                Intent intent = new Intent(LeaveReviewActivity.this, SocialNetworks.class);
-                                startActivityForResult(intent, RC_LOGIN);
-                                break;
-                            } else {
-                                LinearLayout header = (LinearLayout) findViewById(R.id.message_layout);
-                                header.setBackgroundResource(R.drawable.error_border);
-                                errors = errors + entry.getValue() + "\n";
-                            }
-                        }
+                    LogUtils.i("response body is " + responseString);
+                    try {
+                        ErrorsParser.checkForError(response.code(), responseString);
+                    } catch (ServerInternalErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(LeaveReviewActivity.this, R.string.toast_server_error);
+                    } catch (BadRequestException e) {
+                        // TODO Handle
+                        helpers.showToast(LeaveReviewActivity.this, R.string.toast_server_error);
+                    } catch (ValidationErrorException e) {
+                        // TODO Handle
+                    } catch (NotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(LeaveReviewActivity.this, R.string.toast_server_error);
+                    } catch (UnknownErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(LeaveReviewActivity.this, R.string.toast_server_error);
+                    } catch (DiveSpotNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(LeaveReviewActivity.this, R.string.toast_server_error);
+                    } catch (UserNotFoundException e) {
+                        // TODO Handle
+                        SocialNetworks.showForResult(LeaveReviewActivity.this, RC_LOGIN);
+                    } catch (CommentNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(LeaveReviewActivity.this, R.string.toast_server_error);
                     }
                 }
+                
             }
 
             @Override

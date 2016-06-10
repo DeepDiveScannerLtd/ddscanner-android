@@ -15,12 +15,23 @@ import android.widget.Button;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.R;
+import com.ddscanner.entities.errors.BadRequestException;
+import com.ddscanner.entities.errors.CommentNotFoundException;
+import com.ddscanner.entities.errors.DiveSpotNotFoundException;
+import com.ddscanner.entities.errors.NotFoundException;
+import com.ddscanner.entities.errors.ServerInternalErrorException;
+import com.ddscanner.entities.errors.UnknownErrorException;
+import com.ddscanner.entities.errors.UserNotFoundException;
+import com.ddscanner.entities.errors.ValidationErrorException;
+import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.AllPhotosDiveSpotAdapter;
 import com.ddscanner.utils.Helpers;
+import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +47,8 @@ import retrofit2.Response;
  * Created by lashket on 26.5.16.
  */
 public class AddPhotosDoDiveSpotActivity extends AppCompatActivity implements View.OnClickListener{
+
+    private static final int RC_LOGIN_TO_SEND = 4001;
 
     private RecyclerView recyclerView;
     private Button button;
@@ -108,6 +121,42 @@ public class AddPhotosDoDiveSpotActivity extends AppCompatActivity implements Vi
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 materialDialog.dismiss();
+                if (!response.isSuccessful()) {
+                    String responseString = "";
+                    try {
+                        responseString = response.errorBody().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    LogUtils.i("response body is " + responseString);
+                    try {
+                        ErrorsParser.checkForError(response.code(), responseString);
+                    } catch (ServerInternalErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(AddPhotosDoDiveSpotActivity.this, R.string.toast_server_error);
+                    } catch (BadRequestException e) {
+                        // TODO Handle
+                        helpers.showToast(AddPhotosDoDiveSpotActivity.this, R.string.toast_server_error);
+                    } catch (ValidationErrorException e) {
+                        // TODO Handle
+                    } catch (NotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(AddPhotosDoDiveSpotActivity.this, R.string.toast_server_error);
+                    } catch (UnknownErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(AddPhotosDoDiveSpotActivity.this, R.string.toast_server_error);
+                    } catch (DiveSpotNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(AddPhotosDoDiveSpotActivity.this, R.string.toast_server_error);
+                    } catch (UserNotFoundException e) {
+                        // TODO Handle
+                        SharedPreferenceHelper.logout();
+                        SocialNetworks.showForResult(AddPhotosDoDiveSpotActivity.this, RC_LOGIN_TO_SEND);
+                    } catch (CommentNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(AddPhotosDoDiveSpotActivity.this, R.string.toast_server_error);
+                    }
+                }
                 if (response.isSuccessful()) {
                     Intent returnIntent = new Intent();
                     setResult(Activity.RESULT_OK, returnIntent);
@@ -137,6 +186,19 @@ public class AddPhotosDoDiveSpotActivity extends AppCompatActivity implements Vi
             if (position >= spanCount) {
                 outRect.top = Math.round(helpers.convertDpToPixel(Float.valueOf(4),
                         AddPhotosDoDiveSpotActivity.this));
+            }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_LOGIN_TO_SEND) {
+            if (resultCode == RESULT_OK) {
+                sendRequest();
+            }
+            if (resultCode == RESULT_CANCELED) {
+                finish();
             }
         }
     }

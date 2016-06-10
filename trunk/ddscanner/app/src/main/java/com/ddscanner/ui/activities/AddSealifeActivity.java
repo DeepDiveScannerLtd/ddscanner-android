@@ -22,6 +22,15 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.Sealife;
+import com.ddscanner.entities.errors.BadRequestException;
+import com.ddscanner.entities.errors.CommentNotFoundException;
+import com.ddscanner.entities.errors.DiveSpotNotFoundException;
+import com.ddscanner.entities.errors.NotFoundException;
+import com.ddscanner.entities.errors.ServerInternalErrorException;
+import com.ddscanner.entities.errors.UnknownErrorException;
+import com.ddscanner.entities.errors.UserNotFoundException;
+import com.ddscanner.entities.errors.ValidationErrorException;
+import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
@@ -60,6 +69,7 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
 
     private static final int RC_LOGIN = 8001;
     private static final int RC_PICK_PHOTO = 1001;
+    private static final int RC_LOGIN_TO_SEND = 4001;
     private Uri filePath;
 
 
@@ -163,6 +173,11 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
             Uri uri = data.getData();
             filePath = uri;
             setBackImage(uri);
+        }
+        if (requestCode == RC_LOGIN_TO_SEND) {
+            if (resultCode == RESULT_OK) {
+                sendRequestToAddSealife(filePath);
+            }
         }
     }
 
@@ -280,7 +295,45 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if(response.body() != null) {
+                progressDialogUpload.dismiss();
+                if (!response.isSuccessful()) {
+                    String responseString = "";
+                    try {
+                        responseString = response.errorBody().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    LogUtils.i("response body is " + responseString);
+                    try {
+                        ErrorsParser.checkForError(response.code(), responseString);
+                    } catch (ServerInternalErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(AddSealifeActivity.this, R.string.toast_server_error);
+                    } catch (BadRequestException e) {
+                        // TODO Handle
+                        helpers.showToast(AddSealifeActivity.this, R.string.toast_server_error);
+                    } catch (ValidationErrorException e) {
+                        // TODO Handle
+                        helpers.errorHandling(AddSealifeActivity.this, errorsMap, responseString);
+                    } catch (NotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(AddSealifeActivity.this, R.string.toast_server_error);
+                    } catch (UnknownErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(AddSealifeActivity.this, R.string.toast_server_error);
+                    } catch (DiveSpotNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(AddSealifeActivity.this, R.string.toast_server_error);
+                    } catch (UserNotFoundException e) {
+                        // TODO Handle
+                        SharedPreferenceHelper.logout();
+                        SocialNetworks.showForResult(AddSealifeActivity.this, RC_LOGIN_TO_SEND);
+                    } catch (CommentNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(AddSealifeActivity.this, R.string.toast_server_error);
+                    }
+                }
+                if(response.isSuccessful()) {
                     try {
                         String responseString = "";
                         responseString = response.body().string();
@@ -296,17 +349,6 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
 
                         }
                         Log.i(TAG, response.body().string());
-                        progressDialogUpload.dismiss();
-                    } catch (IOException e) {
-
-                    }
-                }
-                if(response.errorBody() != null) {
-                    progressDialogUpload.dismiss();
-                    try {
-                        String error = response.errorBody().string();
-                        handleErrors(error, response.raw().code());
-                        Log.i(TAG, response.errorBody().string());
                     } catch (IOException e) {
 
                     }

@@ -11,18 +11,29 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.FiltersResponseEntity;
+import com.ddscanner.entities.errors.BadRequestException;
+import com.ddscanner.entities.errors.CommentNotFoundException;
+import com.ddscanner.entities.errors.DiveSpotNotFoundException;
+import com.ddscanner.entities.errors.NotFoundException;
+import com.ddscanner.entities.errors.ServerInternalErrorException;
+import com.ddscanner.entities.errors.UnknownErrorException;
+import com.ddscanner.entities.errors.UserNotFoundException;
+import com.ddscanner.entities.errors.ValidationErrorException;
 import com.ddscanner.entities.request.DiveSpotsRequestMap;
 import com.ddscanner.events.FilterChosedEvent;
 import com.ddscanner.events.FiltersChosedEvent;
 import com.ddscanner.events.OnMapClickEvent;
+import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.SpinnerItemsAdapter;
 import com.ddscanner.utils.EventTrackerHelper;
 import com.ddscanner.utils.Helpers;
+import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -58,6 +69,7 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
     private Map<String,String> objectsMap = new HashMap<>();
     private Map<String, String> levelsMap = new HashMap<>();
     private FilterChosedEvent filterChosedEvent = new FilterChosedEvent();
+    private MaterialDialog materialDialog;
 
     @Override
     protected void onCreate(Bundle savedInstance) {
@@ -74,11 +86,13 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void findViews() {
+        materialDialog = helpers.getMaterialDialog(this);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         objectSpinner = (Spinner) findViewById(R.id.object_spinner);
         levelSpinner = (Spinner) findViewById(R.id.level_spinner);
         save = (Button) findViewById(R.id.applyFilters);
         save.setOnClickListener(this);
+        save.setVisibility(View.GONE);
     }
 
 
@@ -111,11 +125,12 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void request() {
-
+        materialDialog.show();
         Call<ResponseBody> call = RestClient.getServiceInstance().getFilters();
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                materialDialog.dismiss();
                 if (response.isSuccessful()) {
                     String responseString = "";
                     try {
@@ -156,8 +171,41 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
                     levelsMap = filters.getLevel();
                     setFilerGroup(objectSpinner, filters.getObject(), SharedPreferenceHelper.getCurrents());
                     setFilerGroup(levelSpinner, filters.getLevel(), SharedPreferenceHelper.getCurrents());
-                } else {
-                    // TODO Handle errors
+                    save.setVisibility(View.VISIBLE);
+                }
+                if (!response.isSuccessful()) {
+                    String responseString = "";
+                    try {
+                        responseString = response.errorBody().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    LogUtils.i("response body is " + responseString);
+                    try {
+                        ErrorsParser.checkForError(response.code(), responseString);
+                    } catch (ServerInternalErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(FilterActivity.this, R.string.toast_server_error);
+                    } catch (BadRequestException e) {
+                        // TODO Handle
+                        helpers.showToast(FilterActivity.this, R.string.toast_server_error);
+                    } catch (ValidationErrorException e) {
+                        // TODO Handle
+                    } catch (NotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(FilterActivity.this, R.string.toast_server_error);
+                    } catch (UnknownErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(FilterActivity.this, R.string.toast_server_error);
+                    } catch (DiveSpotNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(FilterActivity.this, R.string.toast_server_error);
+                    } catch (UserNotFoundException e) {
+                        // TODO Handle
+                    } catch (CommentNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(FilterActivity.this, R.string.toast_server_error);
+                    }
                 }
             }
 

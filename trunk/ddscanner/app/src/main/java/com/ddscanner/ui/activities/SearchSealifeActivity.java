@@ -21,10 +21,20 @@ import com.ddscanner.R;
 import com.ddscanner.entities.Sealife;
 import com.ddscanner.entities.Sealife;
 import com.ddscanner.entities.SealifeResponseEntity;
+import com.ddscanner.entities.errors.BadRequestException;
+import com.ddscanner.entities.errors.CommentNotFoundException;
+import com.ddscanner.entities.errors.DiveSpotNotFoundException;
+import com.ddscanner.entities.errors.NotFoundException;
+import com.ddscanner.entities.errors.ServerInternalErrorException;
+import com.ddscanner.entities.errors.UnknownErrorException;
+import com.ddscanner.entities.errors.UserNotFoundException;
+import com.ddscanner.entities.errors.ValidationErrorException;
 import com.ddscanner.events.SealifeChoosedEvent;
+import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.SealifeSearchAdapter;
 import com.ddscanner.utils.Helpers;
+import com.ddscanner.utils.LogUtils;
 import com.google.gson.Gson;
 import com.squareup.otto.Subscribe;
 
@@ -152,6 +162,46 @@ public class SearchSealifeActivity extends AppCompatActivity implements SearchVi
 
                     mAdapter = new SealifeSearchAdapter(SearchSealifeActivity.this, sealifes);
                     mRecyclerView.setAdapter(mAdapter);
+                }
+                if (!response.isSuccessful()) {
+                    String responseString = "";
+                    try {
+                        responseString = response.errorBody().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    LogUtils.i("response body is " + responseString);
+                    try {
+                        ErrorsParser.checkForError(response.code(), responseString);
+                    } catch (ServerInternalErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(SearchSealifeActivity.this, R.string.toast_server_error);
+                        finish();
+                    } catch (BadRequestException e) {
+                        // TODO Handle
+                        helpers.showToast(SearchSealifeActivity.this, R.string.toast_server_error);
+                        finish();
+                    } catch (ValidationErrorException e) {
+                        // TODO Handle
+                    } catch (NotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(SearchSealifeActivity.this, R.string.toast_server_error);
+                        finish();
+                    } catch (UnknownErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(SearchSealifeActivity.this, R.string.toast_server_error);
+                        finish();
+                    } catch (DiveSpotNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(SearchSealifeActivity.this, R.string.toast_server_error);
+                        finish();
+                    } catch (UserNotFoundException e) {
+                        // TODO Handle
+                    } catch (CommentNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(SearchSealifeActivity.this, R.string.toast_server_error);
+                        finish();
+                    }
                 }
             }
 
