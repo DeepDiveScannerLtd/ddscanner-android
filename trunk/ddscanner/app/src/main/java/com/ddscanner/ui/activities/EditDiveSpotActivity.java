@@ -29,9 +29,12 @@ import com.ddscanner.entities.DivespotDetails;
 import com.ddscanner.entities.FiltersResponseEntity;
 import com.ddscanner.entities.Sealife;
 import com.ddscanner.entities.errors.BadRequestException;
+import com.ddscanner.entities.errors.CommentNotFoundException;
+import com.ddscanner.entities.errors.DiveSpotNotFoundException;
 import com.ddscanner.entities.errors.NotFoundException;
 import com.ddscanner.entities.errors.ServerInternalErrorException;
 import com.ddscanner.entities.errors.UnknownErrorException;
+import com.ddscanner.entities.errors.UserNotFoundException;
 import com.ddscanner.entities.errors.ValidationErrorException;
 import com.ddscanner.events.ImageDeletedEvent;
 import com.ddscanner.rest.ErrorsParser;
@@ -267,6 +270,12 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
                     } catch (NotFoundException e) {
                         // TODO Handle
                     } catch (UnknownErrorException e) {
+                        // TODO Handle
+                    } catch (DiveSpotNotFoundException e) {
+                        // TODO Handle
+                    } catch (UserNotFoundException e) {
+                        // TODO Handle
+                    } catch (CommentNotFoundException e) {
                         // TODO Handle
                     } finally {
                         // This will be called only if response code is 200

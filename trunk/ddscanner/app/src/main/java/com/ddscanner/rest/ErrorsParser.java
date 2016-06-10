@@ -1,11 +1,14 @@
 package com.ddscanner.rest;
 
+import com.ddscanner.entities.errors.CommentNotFoundException;
+import com.ddscanner.entities.errors.DiveSpotNotFoundException;
 import com.ddscanner.entities.errors.Field;
 import com.ddscanner.entities.errors.GeneralError;
 import com.ddscanner.entities.errors.BadRequestException;
 import com.ddscanner.entities.errors.NotFoundException;
 import com.ddscanner.entities.errors.ServerInternalErrorException;
 import com.ddscanner.entities.errors.UnknownErrorException;
+import com.ddscanner.entities.errors.UserNotFoundException;
 import com.ddscanner.entities.errors.ValidationError;
 import com.ddscanner.entities.errors.ValidationErrorException;
 import com.google.gson.Gson;
@@ -19,7 +22,7 @@ import java.util.Set;
 
 public class ErrorsParser {
 
-    public static void checkForError(int responseCode, String json) throws BadRequestException, ValidationErrorException, ServerInternalErrorException, NotFoundException, UnknownErrorException {
+    public static void checkForError(int responseCode, String json) throws BadRequestException, ValidationErrorException, ServerInternalErrorException, NotFoundException, UnknownErrorException, UserNotFoundException, DiveSpotNotFoundException, CommentNotFoundException {
         if (responseCode == 200) {
             return;
         }
@@ -34,7 +37,19 @@ public class ErrorsParser {
             case 404:
                 // entity not found
                 generalError = gson.fromJson(json, GeneralError.class);
-                throw new NotFoundException().setGeneralError(generalError);
+                switch (generalError.getStatusCode()) {
+                    case 801:
+                        // user not found
+                        throw new UserNotFoundException().setGeneralError(generalError);
+                    case 802:
+                        // dive spot not found
+                        throw new DiveSpotNotFoundException().setGeneralError(generalError);
+                    case 803:
+                        // dive spot comment not found
+                        throw new CommentNotFoundException().setGeneralError(generalError);
+                    default:
+                        throw new NotFoundException().setGeneralError(generalError);
+                }
             case 422:
                 // validation error
                 validationError = new ValidationError();
