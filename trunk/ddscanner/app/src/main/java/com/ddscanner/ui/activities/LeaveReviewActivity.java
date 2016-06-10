@@ -89,6 +89,7 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
     private String diveSpotId;
     private EditText text;
     private RatingBar ratingBar;
+    private TextView errorText;
     private float rating;
     private MaterialDialog materialDialog;
     private TextView symbolNumberLeft;
@@ -99,7 +100,7 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
     private AddPhotoToDsListAdapter addPhotoToDsListAdapter;
     private List<String> imagesEncodedList = new ArrayList<>();
     private String imageEncoded;
-
+    private Map<String, TextView> errorsMap = new HashMap<>();
     private RequestBody requestId, requestComment, requestRating;
     private RequestBody requessToken = null;
     private RequestBody requestSocial = null;
@@ -155,6 +156,8 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
         photos_rc = (RecyclerView) findViewById(R.id.photos_rc);
         btnAddPhoto = (ImageButton) findViewById(R.id.btn_add_photo);
         addPhotoTitle = (TextView) findViewById(R.id.add_photo_title);
+        errorText = (TextView) findViewById(R.id.comment_error);
+        errorsMap.put("comment", errorText);
         btnAddPhoto.setOnClickListener(this);
     }
 
@@ -261,7 +264,7 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
                         helpers.showToast(LeaveReviewActivity.this, R.string.toast_server_error);
                     } catch (ValidationErrorException e) {
                         // TODO Handle
-
+                        helpers.errorHandling(LeaveReviewActivity.this, errorsMap, responseString);
                     } catch (NotFoundException e) {
                         // TODO Handle
                         helpers.showToast(LeaveReviewActivity.this, R.string.toast_server_error);
@@ -320,8 +323,6 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
         comment = comment.trim();
         if (comment.length() == 0) {
             Toast toast = Toast.makeText(getApplicationContext(), "Please leave your feedback", Toast.LENGTH_SHORT);
-            LinearLayout header = (LinearLayout) findViewById(R.id.message_layout);
-            header.setBackgroundResource(R.drawable.error_border);
             toast.show();
             return false;
         }

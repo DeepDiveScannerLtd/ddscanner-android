@@ -51,7 +51,8 @@
         android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:background="@color/white">
+        android:background="@color/white"
+        android:layout_marginBottom="15dp">
         <RatingBar
             android:id="@+id/rating_bar"
             style="@style/CustomRatingBar"
@@ -63,12 +64,16 @@
             android:stepSize="1.0"
             android:numStars="5"/>
     </FrameLayout>
+    <TextView
+        android:id="@+id/comment_error"
+        android:layout_marginLeft="15dp"
+        style="@style/ValidationErrorTextView"
+        android:layout_marginBottom="5dp"/>
     <LinearLayout
         android:id="@+id/message_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        android:layout_marginTop="15dp"
         android:layout_marginBottom="5dp">
         <RelativeLayout
             android:layout_width="match_parent"
@@ -85,12 +90,13 @@
                 android:text="250"/>
         <EditText
             android:inputType="text|textFilter|textMultiLine"
+            android:gravity="top"
             android:layout_below="@id/left_number"
             android:layout_gravity="center"
             android:cursorVisible="true"
             android:id="@+id/review_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:hint="Write a review"
             android:layout_marginTop="13dp"
             android:layout_marginLeft="20dp"
