@@ -147,5 +147,5 @@
     <string name="checkin">Check in</string>
     <string name="added_ds">Created</string>
     <string name="edited_ds">Edited</string>
-
+    <string name="toast_server_error">Error. Try again later</string>
 </resources>

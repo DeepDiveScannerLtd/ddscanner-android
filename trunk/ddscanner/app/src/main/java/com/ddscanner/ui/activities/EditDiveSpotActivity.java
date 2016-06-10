@@ -263,20 +263,26 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
                         ErrorsParser.checkForError(response.code(), responseString);
                     } catch (ServerInternalErrorException e) {
                         // TODO Handle
+                        helpers.showToast(EditDiveSpotActivity.this, R.string.toast_server_error);
                     } catch (BadRequestException e) {
                         // TODO Handle
+                        helpers.showToast(EditDiveSpotActivity.this, R.string.toast_server_error);
                     } catch (ValidationErrorException e) {
                         // TODO Handle
                     } catch (NotFoundException e) {
                         // TODO Handle
+                        helpers.showToast(EditDiveSpotActivity.this, R.string.toast_server_error);
                     } catch (UnknownErrorException e) {
                         // TODO Handle
+                        helpers.showToast(EditDiveSpotActivity.this, R.string.toast_server_error);
                     } catch (DiveSpotNotFoundException e) {
                         // TODO Handle
+                        helpers.showToast(EditDiveSpotActivity.this, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
+                        helpers.showToast(EditDiveSpotActivity.this, R.string.toast_server_error);
                     } finally {
                         // This will be called only if response code is 200
                         divespotDetails = new Gson().fromJson(responseString, DivespotDetails.class);

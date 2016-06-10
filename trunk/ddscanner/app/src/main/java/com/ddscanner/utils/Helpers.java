@@ -15,6 +15,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.R;
@@ -373,6 +374,11 @@ public class Helpers {
             }
         }
         return false;
+    }
+
+    public void showToast(Context context, int message) {
+        Toast toast = Toast.makeText(context, context.getString(message), Toast.LENGTH_LONG);
+        toast.show();
     }
 
 }
