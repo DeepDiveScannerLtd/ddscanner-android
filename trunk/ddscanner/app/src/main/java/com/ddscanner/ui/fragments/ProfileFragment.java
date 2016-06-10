@@ -62,7 +62,7 @@ public class ProfileFragment extends Fragment
 
     private LinearLayout editProfile;
     private ScrollView aboutLayout;
-    private LinearLayout editLayout;
+    private ScrollView editLayout;
     private LinearLayout logout;
     private ImageView capturePhoto;
     private ImageView newPhoto;
@@ -142,7 +142,7 @@ public class ProfileFragment extends Fragment
         favouriteCount = (TextView) v.findViewById(R.id.favourites_count);
         editedCount = (TextView) v.findViewById(R.id.edited_count);
         aboutLayout = (ScrollView) v.findViewById(R.id.about);
-        editLayout = (LinearLayout) v.findViewById(R.id.editProfile);
+        editLayout = (ScrollView) v.findViewById(R.id.editProfile);
         editProfile = (LinearLayout) v.findViewById(R.id.edit_profile);
         capturePhoto = (ImageView) v.findViewById(R.id.capture_photo);
         newPhoto = (ImageView) v.findViewById(R.id.user_chosed_photo);

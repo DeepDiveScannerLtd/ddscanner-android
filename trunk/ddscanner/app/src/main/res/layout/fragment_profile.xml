@@ -353,14 +353,16 @@
 
         </LinearLayout>
     </ScrollView>
-
-    <LinearLayout
+    <ScrollView
         android:id="@+id/editProfile"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
+        android:visibility="gone"
         android:layout_below="@id/about"
-        android:visibility="gone">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -447,12 +449,12 @@
 
                     <EditText
                         android:id="@+id/fullName"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@android:color/transparent"
                         android:hint="Full name"
                         android:text=""
-                        android:textSize="14sp" />
+                        android:textSize="16sp" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -468,6 +470,7 @@
                 android:layout_height="wrap_content"
                 android:minHeight="70dp"
                 android:orientation="horizontal"
+                android:layout_marginBottom="10dp"
                 android:paddingTop="10dp">
 
                 <ImageView
@@ -488,12 +491,12 @@
 
                     <EditText
                         android:id="@+id/aboutEdit"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@android:color/transparent"
                         android:hint="About"
                         android:text=""
-                        android:textSize="14sp" />
+                        android:textSize="16sp" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -524,6 +527,6 @@
             app:rd_backgroundColor="@color/gray"
             app:rd_rippleType="touch" />
     </LinearLayout>
-
+    </ScrollView>
     <include layout="@layout/view_need_to_login"/>
 </RelativeLayout>
