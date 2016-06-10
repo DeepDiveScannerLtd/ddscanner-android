@@ -225,7 +225,12 @@ public class MainActivity extends BaseAppCompatActivity
                 materialDialog.dismiss();
                 if (resultCode == RESULT_OK) {
                     final Place place = PlaceAutocomplete.getPlace(this, data);
-                    DDScannerApplication.bus.post(new PlaceChoosedEvent(place.getViewport()));
+                    if (place.getViewport() != null) {
+                        DDScannerApplication.bus.post(new PlaceChoosedEvent(place.getViewport()));
+                    } else {
+                        LatLngBounds latLngBounds = new LatLngBounds(new LatLng(place.getLatLng().latitude - 0.2, place.getLatLng().longitude - 0.2), new LatLng(place.getLatLng().latitude + 0.2, place.getLatLng().longitude + 0.2) );
+                        DDScannerApplication.bus.post(new PlaceChoosedEvent(latLngBounds));
+                    }
                 }
                 break;
             case REQUEST_CODE_IMAGE_CAPTURE:
