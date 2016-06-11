@@ -9,6 +9,7 @@ import android.widget.ImageView;
 
 import com.ddscanner.R;
 import com.ddscanner.ui.activities.ImageSliderActivity;
+import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ public class AllPhotosDiveSpotAdapter extends RecyclerView.Adapter<AllPhotosDive
     private String path;
     private ArrayList<String> images;
     private Context context;
+    private Helpers helpers = new Helpers();
 
     public AllPhotosDiveSpotAdapter(ArrayList<String> photos, Context context) {
         images = photos;
@@ -29,7 +31,11 @@ public class AllPhotosDiveSpotAdapter extends RecyclerView.Adapter<AllPhotosDive
 
     @Override
     public void onBindViewHolder(AllPhotosDIveSpotViewHolder holder, int position) {
-        Picasso.with(context).load(images.get(position)).resize(115,115).centerCrop().into(holder.image);
+        Picasso.with(context)
+                .load(images.get(position))
+                .resize(Math.round(helpers.convertDpToPixel(115, context)),Math.round(helpers.convertDpToPixel(115, context)))
+                .centerCrop()
+                .into(holder.image);
     }
 
     @Override

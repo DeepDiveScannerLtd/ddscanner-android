@@ -187,8 +187,7 @@
                         android:id="@+id/creator_avatar"
                         android:layout_width="@dimen/editor_item_height"
                         android:layout_height="@dimen/editor_item_height"
-                        android:paddingLeft="15dp"
-                        android:paddingRight="15dp"
+                        android:padding="12dp"
                         android:layout_centerVertical="true" />
 
                     <TextView

@@ -13,6 +13,7 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.events.OpenPhotosActivityEvent;
 import com.ddscanner.ui.views.TransformationRoundImage;
+import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.ImageLoadedCallback;
 import com.squareup.picasso.Picasso;
 
@@ -27,6 +28,8 @@ public class DiveSpotsPhotosAdapter extends RecyclerView.Adapter<DiveSpotsPhotos
     public String path;
     public Context context;
     public ArrayList<String> reviewsImages;
+    private int photoSize;
+    private Helpers helpers = new Helpers();
 
     public DiveSpotsPhotosAdapter(ArrayList<String> photos, String path,
                                   Context context,ArrayList<String> reviewsImages) {
@@ -34,6 +37,7 @@ public class DiveSpotsPhotosAdapter extends RecyclerView.Adapter<DiveSpotsPhotos
         this.path = path;
         this.context = context;
         this.reviewsImages = reviewsImages;
+        photoSize = (int) context.getResources().getDimension(R.dimen.image_in_divespot_small);
     }
 
     @Override
@@ -47,12 +51,21 @@ public class DiveSpotsPhotosAdapter extends RecyclerView.Adapter<DiveSpotsPhotos
     @Override
     public void onBindViewHolder(final DiveSpotsPhotosAdapterViewHolder holder, int position) {
         if (photos.size() > 8 && position == 7) {
-            Picasso.with(context).load(path + photos.get(position)).transform(new TransformationRoundImage(2,0)).resize(70,70).centerCrop().into(holder.photo);
+            Picasso.with(context)
+                    .load(path + photos.get(position))
+                    .transform(new TransformationRoundImage(2,0))
+                    .resize(Math.round(helpers.convertDpToPixel(photoSize, context)),Math.round(helpers.convertDpToPixel(photoSize, context)))
+                    .centerCrop()
+                    .into(holder.photo);
             holder.morePhotos.setText("+" + String.valueOf(photos.size() - 8));
             holder.morePhotos.setVisibility(View.VISIBLE);
         } else {
-            Picasso.with(context).load(path + photos.get(position)).transform(new TransformationRoundImage(2,0)).resize(70,70).centerCrop().into(holder.photo,
-                    new ImageLoadedCallback(holder.progressBar){
+            Picasso.with(context)
+                    .load(path + photos.get(position))
+                    .transform(new TransformationRoundImage(2,0))
+                    .resize(Math.round(helpers.convertDpToPixel(photoSize, context)),Math.round(helpers.convertDpToPixel(photoSize, context)))
+                    .centerCrop()
+                    .into(holder.photo, new ImageLoadedCallback(holder.progressBar){
                         @Override
                         public void onSuccess() {
                             if (holder.progressBar != null) {

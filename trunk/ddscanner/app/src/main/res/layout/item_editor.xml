@@ -8,9 +8,7 @@
         android:id="@+id/user_avatar"
         android:layout_width="@dimen/editor_item_height"
         android:layout_height="@dimen/editor_item_height"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        android:scaleType="center"
+        android:padding="12dp"
         tools:src="@drawable/avatar_checkin" />
 
     <LinearLayout

@@ -26,6 +26,8 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
+import jp.wasabeef.picasso.transformations.CropCircleTransformation;
+
 /**
  * Created by lashket on 25.5.16.
  */
@@ -55,8 +57,11 @@ public class NotificationsListAdapter
             if (notification.getType().equals("dislike")) {
                 holder.likeDislikeImage.setImageDrawable(AppCompatDrawableManager.get()
                         .getDrawable(context, R.drawable.icon_dislike));
-                Picasso.with(context).load(notification.getUser().getPicture()).resize(64,64)
-                        .transform(new TransformationRoundImage(50, 0)).into(holder.image);
+                Picasso.with(context)
+                        .load(notification.getUser().getPicture())
+                        .resize(Math.round(helpers.convertDpToPixel(64, context)),Math.round(helpers.convertDpToPixel(64, context)))
+                        .transform(new CropCircleTransformation())
+                        .into(holder.image);
                 String name = notification.getUser().getName();
                 String divespot = notification.getDiveSpot().getName();
                 String text = context.getResources().getString(R.string.user_dislike_your_review, name, divespot);
@@ -69,8 +74,11 @@ public class NotificationsListAdapter
             if (notification.getType().equals("like")) {
                 holder.likeDislikeImage.setImageDrawable(AppCompatDrawableManager.get()
                         .getDrawable(context, R.drawable.icon_like));
-                Picasso.with(context).load(notification.getUser().getPicture()).resize(64,64)
-                        .transform(new TransformationRoundImage(50,0)).into(holder.image);
+                Picasso.with(context)
+                        .load(notification.getUser().getPicture())
+                        .resize(Math.round(helpers.convertDpToPixel(64, context)),Math.round(helpers.convertDpToPixel(64, context)))
+                        .transform(new CropCircleTransformation())
+                        .into(holder.image);
                 String name = notification.getUser().getName();
                 String divespot = notification.getDiveSpot().getName();
                // text = String.format(text, name, divespot);

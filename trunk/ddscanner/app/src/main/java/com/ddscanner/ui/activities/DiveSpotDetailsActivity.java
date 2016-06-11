@@ -380,7 +380,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         if (diveSpot.getCreator() != null) {
             creatorLayout.setVisibility(View.VISIBLE);
             Picasso.with(this).load(diveSpot.getCreator().getPicture())
-                    .resize(avatarImageSize, avatarImageSize)
+                    .resize(Math.round(helpers.convertDpToPixel(avatarImageSize, this)), Math.round(helpers.convertDpToPixel(avatarImageSize, this)))
                     .centerCrop()
                     .transform(new CropCircleTransformation()).into(creatorAvatar);
             creatorLayout.setOnClickListener(this);

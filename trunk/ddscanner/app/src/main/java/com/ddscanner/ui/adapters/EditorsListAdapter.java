@@ -13,9 +13,12 @@ import com.ddscanner.R;
 import com.ddscanner.entities.User;
 import com.ddscanner.events.ShowUserDialogEvent;
 import com.ddscanner.ui.views.TransformationRoundImage;
+import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
+
+import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 /**
  * Created by lashket on 28.4.16.
@@ -28,6 +31,7 @@ public class EditorsListAdapter extends RecyclerView.Adapter<EditorsListAdapter.
     private List<User> userArrayList;
     private int avatarImageSize;
     private int avatarImageRadius;
+    private Helpers helpers = new Helpers();
 
     public EditorsListAdapter(Context context, List<User> users) {
         userArrayList = users;
@@ -47,9 +51,9 @@ public class EditorsListAdapter extends RecyclerView.Adapter<EditorsListAdapter.
     @Override
     public void onBindViewHolder(UserListViewHolder holder, int position) {
         Picasso.with(context).load(userArrayList.get(position).getPicture())
-                .resize(avatarImageSize, avatarImageSize)
+                .resize(Math.round(helpers.convertDpToPixel(avatarImageSize, context)), Math.round(helpers.convertDpToPixel(avatarImageSize, context)))
                 .centerCrop()
-                .transform(new TransformationRoundImage(avatarImageRadius, 0))
+                .transform(new CropCircleTransformation())
                 .into(holder.userAvatar);
         holder.userName.setText(userArrayList.get(position).getName());
     }
