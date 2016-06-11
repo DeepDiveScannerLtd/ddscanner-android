@@ -450,6 +450,7 @@
                     <EditText
                         android:id="@+id/fullName"
                         android:layout_marginRight="15dp"
+                        android:maxLength="100"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@android:color/transparent"
@@ -493,6 +494,7 @@
                     <EditText
                         android:id="@+id/aboutEdit"
                         android:layout_marginRight="15dp"
+                        android:maxLength="240"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@android:color/transparent"
