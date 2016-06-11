@@ -87,6 +87,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -381,7 +382,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             Picasso.with(this).load(diveSpot.getCreator().getPicture())
                     .resize(avatarImageSize, avatarImageSize)
                     .centerCrop()
-                    .transform(new TransformationRoundImage(avatarImageRadius, 12)).into(creatorAvatar);
+                    .transform(new CropCircleTransformation()).into(creatorAvatar);
             creatorLayout.setOnClickListener(this);
             creatorName.setText(diveSpot.getCreator().getName());
         }
