@@ -1,6 +1,7 @@
 package com.ddscanner.ui.fragments;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -44,6 +46,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -189,6 +192,11 @@ public class ProfileFragment extends Fragment
                 isClickedChosingPhotoButton = false;
                 aboutLayout.setVisibility(View.VISIBLE);
                 editLayout.setVisibility(View.GONE);
+                View view = getActivity().getCurrentFocus();
+                if (view != null) {
+                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                }
                 break;
             case R.id.button_save:
                 createUpdateRequest();
@@ -251,7 +259,7 @@ public class ProfileFragment extends Fragment
         Picasso.with(getContext()).load(uri)
                 .resize(Math.round(helpers.convertDpToPixel(80, getContext())),
                         Math.round(helpers.convertDpToPixel(80, getContext()))).centerCrop()
-                .transform(new TransformationRoundImage(100, 0)).into(newPhoto);
+                .transform(new CropCircleTransformation()).into(newPhoto);
         this.uri = uri;
     }
 
@@ -310,14 +318,14 @@ public class ProfileFragment extends Fragment
             Picasso.with(getContext()).load(user.getPicture())
                     .resize(Math.round(helpers.convertDpToPixel(100, getContext())),
                             Math.round(helpers.convertDpToPixel(100, getContext()))).centerCrop()
-                    .transform(new TransformationRoundImage(100, 0)).into(avatar);
+                    .transform(new CropCircleTransformation()).into(avatar);
             userCommentsCount.setText(user.getCountComment());
             userLikesCount.setText(user.getCountLike());
             userDislikesCount.setText(user.getCountDislike());
             Picasso.with(getContext()).load(user.getPicture())
                     .resize(Math.round(helpers.convertDpToPixel(80, getContext())),
                             Math.round(helpers.convertDpToPixel(80, getContext()))).centerCrop()
-                    .transform(new TransformationRoundImage(100, 0)).into(newPhoto);
+                    .transform(new CropCircleTransformation()).into(newPhoto);
             if (user.getAbout() != null) {
                 userAbout.setVisibility(View.VISIBLE);
                 userAbout.setText(user.getAbout());

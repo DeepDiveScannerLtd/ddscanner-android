@@ -153,10 +153,14 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
     public void onMapClick(LatLng latLng) {
         if (lastClickedMarker != null) {
             // lastClickedMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
-            DDScannerApplication.bus.post(new OnMapClickEvent(lastClickedMarker));
+            if (diveSpotsMap.get(lastClickedMarker.getPosition()).getStatus().equals("waiting")) {
+                DDScannerApplication.bus.post(new OnMapClickEvent(lastClickedMarker, true));
+            } else {
+                DDScannerApplication.bus.post(new OnMapClickEvent(lastClickedMarker, false));
+            }
             lastClickedMarker = null;
         } else {
-            DDScannerApplication.bus.post(new OnMapClickEvent(lastClickedMarker));
+            DDScannerApplication.bus.post(new OnMapClickEvent(lastClickedMarker, false));
         }
     }
 
@@ -198,7 +202,11 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
             // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
 //                lastClickedMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
             try {
-                lastClickedMarker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_ds)));
+                if (diveSpotsMap.get(marker.getPosition()).getStatus().equals("waiting")) {
+                    marker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_ds_new)));
+                } else {
+                    lastClickedMarker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_ds)));
+                }
             } catch (IllegalArgumentException e) {
 
             }
@@ -376,7 +384,11 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
             try {
                 // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
 //                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
-                marker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_ds)));
+                if (diveSpot.getStatus().equals("waiting")) {
+                    marker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_ds_new)));
+                } else {
+                    marker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_ds)));
+                }
                 if (lastClickedMarker != null && lastClickedMarker.getPosition().equals(marker.getPosition()) && lastClickedMarker.isInfoWindowShown()) {
                     //      marker.showInfoWindow();
                 }

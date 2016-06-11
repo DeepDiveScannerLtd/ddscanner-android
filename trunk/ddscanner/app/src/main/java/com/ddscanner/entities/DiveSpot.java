@@ -26,6 +26,15 @@ public class DiveSpot implements Serializable, ClusterItem {
     private String image;
     private String object;
     private String path;
+    private String status;
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     public String getPath() {
         return path;

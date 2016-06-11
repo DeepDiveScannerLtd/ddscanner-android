@@ -373,8 +373,14 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
 //                event.getMarker().setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
         if (event.getMarker() != null) {
             try {
-                event.getMarker().setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.ic_ds)));
+                if (event.getIsNew()) {
+                    event.getMarker().setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.ic_ds_new)));
+                } else {
+                    event.getMarker().setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.ic_ds)));
+                }
             } catch (NullPointerException e) {
+
+            } catch (IllegalArgumentException e) {
 
             }
         }

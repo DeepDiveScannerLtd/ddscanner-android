@@ -193,6 +193,9 @@
                         android:id="@+id/creator_name"
                         style="@style/CharacteristicsDiveSpotListTitle"
                         android:layout_above="@+id/anchor"
+                        android:lines="1"
+                        android:ellipsize="end"
+                        android:layout_marginRight="10dp"
                         android:layout_toRightOf="@+id/creator_avatar"
                         tools:text="Ivan Ivanov" />
 

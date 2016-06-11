@@ -17,6 +17,7 @@ import android.support.percent.PercentRelativeLayout;
 import android.support.v4.view.ViewPager;
 import android.telephony.TelephonyManager;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -159,6 +160,13 @@ public class MainActivity extends BaseAppCompatActivity
 
     @Override
     public void onPageSelected(int position) {
+        if (position != 2) {
+            View view = this.getCurrentFocus();
+            if (view != null) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            }
+        }
         if (position != 0) {
             menuItemsLayout.animate()
                     .translationX(menuItemsLayout.getWidth())

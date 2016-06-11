@@ -167,10 +167,10 @@ public class DiveCentersClusterManager extends ClusterManager<DiveCenter> implem
     public void onMapClick(LatLng latLng) {
         if (lastClickedMarker != null) {
             // lastClickedMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
-            DDScannerApplication.bus.post(new OnMapClickEvent(lastClickedMarker));
+            DDScannerApplication.bus.post(new OnMapClickEvent(lastClickedMarker, false));
             lastClickedMarker = null;
         } else {
-            DDScannerApplication.bus.post(new OnMapClickEvent(lastClickedMarker));
+            DDScannerApplication.bus.post(new OnMapClickEvent(lastClickedMarker, false));
         }
     }
 
