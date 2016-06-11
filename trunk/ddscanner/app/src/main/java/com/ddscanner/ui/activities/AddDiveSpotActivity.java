@@ -253,8 +253,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                 Sealife sealife =(Sealife) data.getSerializableExtra("SEALIFE");
 
                 if (helpers.checkIsSealifeAlsoInList((ArrayList<Sealife>) sealifes, sealife.getId())) {
-                    Toast toast = Toast.makeText(AddDiveSpotActivity.this, "This sealife also in list", Toast.LENGTH_SHORT);
-                    toast.show();
+                    helpers.showToast(AddDiveSpotActivity.this, R.string.sealife_already_added);
                     return;
                 }
                 sealifes.add(sealife);

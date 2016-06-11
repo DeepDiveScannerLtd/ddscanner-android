@@ -65,8 +65,7 @@ public class SealifeListAddingDiveSpotAdapter extends RecyclerView.Adapter<Seali
 
     public void add(Sealife sealife) {
         if (helpers.checkIsSealifeAlsoInList(sealifes, sealife.getId())) {
-            Toast toast = Toast.makeText(context, "This sealife also in list", Toast.LENGTH_SHORT);
-            toast.show();
+            helpers.showToast(context, R.string.sealife_already_added);
             return;
         }
         sealifes.add(sealife);

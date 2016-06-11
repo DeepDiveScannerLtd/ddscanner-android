@@ -42,11 +42,11 @@
 
 
     <!-- Details layout -->
-    <string name="sealifePlace">Sealife</string>
+    <string name="sealifePlace">Sea life</string>
     <string name="details_reviews">reviews</string>
     <string name="details_depth">Max depth</string>
     <string name="details_visibility">Visibility</string>
-    <string name="details_currents">Currents</string>
+    <string name="details_currents">Current</string>
     <string name="details_level">Diver level</string>
     <string name="details_description">Description</string>
     <string name="details_access">Access</string>
@@ -67,14 +67,14 @@
     <string name="photos_title">Photos</string>
     <string name="btn_yes">YES</string>
     <string name="btn_no">NO</string>
-    <string name="the_information_is_valid">The information is valid?</string>
-    <string name="tap_on_star_to_review">Tap on star to review</string>
+    <string name="the_information_is_valid">Is the information valid?</string>
+    <string name="tap_on_star_to_review">Tap to rate this dive spot</string>
     <string name="diveSpot">Dive Spot</string>
     <string name="people">People</string>
     <string name="add_photos">Add photos</string>
     <string name="photos">Photos</string>
     <string name="tap_a_flag_to_rate">Tap a flag to rate</string>
-    <string name="add_sealife">Add Sealife</string>
+    <string name="add_sealife">Add Sea life</string>
     <string name="name">Name</string>
     <string name="habitat">Habitat</string>
     <string name="distribution">Distribution</string>
@@ -95,15 +95,15 @@
     <string name="max_depth_meters">Max depth (meters)</string>
     <string name="location">Location</string>
     <string name="add_manually">ADD MANUALLY</string>
-    <string name="sealife">SEALIFE</string>
+    <string name="sealife">SEA LIFE</string>
     <string name="edit_dive_spot">Edit dive spot</string>
     <string name="edit_profile">Edit profile</string>
     <string name="created">Created</string>
     <string name="edited_low">Edited</string>
-    <string name="favourites">Favourites</string>
+    <string name="favourites">Favorites</string>
     <string name="full_name">Full name</string>
     <string name="about">About</string>
-    <string name="write_review">Write review</string>
+    <string name="write_review">Write a review</string>
     <string name="show_all">Show all reviews (</string>
     <string name="skobka">)</string>
     <string name="peoples_checked_in_here"> people checked in here</string>
@@ -144,8 +144,9 @@
     <string name="e_mail">E-mail</string>
     <string name="search_sealife">Search sealife</string>
     <string name="favorites">Favorites</string>
-    <string name="checkin">Check in</string>
+    <string name="checkin">Check-ins</string>
     <string name="added_ds">Created</string>
     <string name="edited_ds">Edited</string>
     <string name="toast_server_error">Error. Try again later</string>
+    <string name="sealife_already_added">It has already been added</string>
 </resources>
