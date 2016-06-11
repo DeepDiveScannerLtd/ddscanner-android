@@ -199,10 +199,16 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
         switch (v.getId()) {
             case R.id.map_list_fab:
                 if (isMapShown) {
+                    if (diveCenterInfo.getVisibility() == View.VISIBLE) {
+                        mapListFAB.setY(mapListFAB.getY() + diveCenterInfo.getHeight());
+                    }
                     diveSpotsMapView.setVisibility(View.GONE);
                     diveSpotsListView.setVisibility(View.VISIBLE);
                     mapListFAB.setImageResource(R.drawable.ic_acb_map);
                 } else {
+                    if (diveCenterInfo.getVisibility() == View.VISIBLE) {
+                        mapListFAB.setY(mapListFAB.getY() - diveCenterInfo.getHeight());
+                    }
                     diveSpotsMapView.setVisibility(View.VISIBLE);
                     diveSpotsListView.setVisibility(View.GONE);
                     mapListFAB.setImageResource(R.drawable.ic_acb_list);

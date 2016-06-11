@@ -279,10 +279,18 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.map_list_fab:
                 if (isMapShown) {
+                    if (diveSpotInfo.getVisibility() == View.VISIBLE) {
+                        mapListFAB.setY(mapListFAB.getY() + diveSpotInfo.getHeight());
+                        addDsFab.setY(addDsFab.getY() + diveSpotInfo.getHeight());
+                    }
                     diveSpotsMapView.setVisibility(View.GONE);
                     diveSpotsListView.setVisibility(View.VISIBLE);
                     mapListFAB.setImageResource(R.drawable.ic_acb_map);
                 } else {
+                    if (diveSpotInfo.getVisibility() == View.VISIBLE) {
+                        mapListFAB.setY(mapListFAB.getY() - diveSpotInfo.getHeight());
+                        addDsFab.setY(addDsFab.getY() - diveSpotInfo.getHeight());
+                    }
                     diveSpotsMapView.setVisibility(View.VISIBLE);
                     diveSpotsListView.setVisibility(View.GONE);
                     mapListFAB.setImageResource(R.drawable.ic_acb_list);
