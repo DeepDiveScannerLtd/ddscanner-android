@@ -3,10 +3,13 @@ package com.ddscanner.ui.fragments;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,6 +65,8 @@ public class ProfileFragment extends Fragment
         implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
+    private static final int MAX_LENGTH_NAME = 100;
+    private static final int MAX_LENGTH_ABOUT = 250;
 
     private LinearLayout editProfile;
     private ScrollView aboutLayout;
@@ -75,6 +80,8 @@ public class ProfileFragment extends Fragment
     private TextView userCommentsCount;
     private TextView userLikesCount;
     private TextView userDislikesCount;
+    private TextView nameLeftSymbols;
+    private TextView aboutLeftSymbols;
     private ImageView avatar;
     private EditText aboutEdit;
     private EditText fullNameEdit;
@@ -170,6 +177,52 @@ public class ProfileFragment extends Fragment
         needToLoginLayout = v.findViewById(R.id.need_to_login);
         needToLoginMessage = (TextView) v.findViewById(R.id.need_to_login_message);
         openLoginActivityButton = (Button) v.findViewById(R.id.btn_open_login_screen);
+        nameLeftSymbols = (TextView) v.findViewById(R.id.name_count);
+        aboutLeftSymbols = (TextView) v.findViewById(R.id.about_count);
+
+        aboutEdit.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (MAX_LENGTH_ABOUT - aboutEdit.length() < 10) {
+                    aboutLeftSymbols.setTextColor(getResources().getColor(R.color.tw__composer_red));
+                } else {
+                    aboutLeftSymbols.setTextColor(Color.parseColor("#b2b2b2"));
+                }
+                aboutLeftSymbols.setText(String.valueOf(MAX_LENGTH_ABOUT - aboutEdit.length()));
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        fullNameEdit.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (MAX_LENGTH_NAME - fullNameEdit.length() < 10) {
+                    nameLeftSymbols.setTextColor(getResources().getColor(R.color.tw__composer_red));
+                } else {
+                    nameLeftSymbols.setTextColor(Color.parseColor("#b2b2b2"));
+                }
+                nameLeftSymbols.setText(String.valueOf(MAX_LENGTH_NAME - fullNameEdit.length()));
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
 
     }
 
