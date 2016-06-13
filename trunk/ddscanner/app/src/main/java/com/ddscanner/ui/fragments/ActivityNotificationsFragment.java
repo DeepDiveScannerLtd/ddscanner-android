@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import com.ddscanner.R;
 import com.ddscanner.entities.Activity;
+import com.ddscanner.entities.Notification;
 import com.ddscanner.ui.adapters.ActivitiesListAdapter;
 import com.ddscanner.ui.adapters.NotificationsListAdapter;
 import com.ddscanner.ui.adapters.SectionedRecyclerViewAdapter;
@@ -62,6 +63,12 @@ public class ActivityNotificationsFragment extends Fragment {
                     getContext(), activities));
             return;
         }
+        if (activities != null && this.activities != null) {
+            if (checkIsListDifferent(activities, this.activities)) {
+                return;
+            }
+        }
+        this.activities = activities;
         if (helpers.comparingTimes(SharedPreferenceHelper.getLastShowingActivityTime(), activities.get(activities.size() - 1).getDate())
                 || !helpers.comparingTimes(SharedPreferenceHelper.getLastShowingActivityTime(), activities.get(0).getDate())) {
             recyclerView.setAdapter(new ActivitiesListAdapter(
@@ -104,5 +111,16 @@ public class ActivityNotificationsFragment extends Fragment {
                 long currentDateInMillis = date1.getTime();
             }
         }
+    }
+
+    private boolean checkIsListDifferent(ArrayList<Activity> newNotifications, ArrayList<Activity> oldNotifications) {
+        for (Activity notification : oldNotifications) {
+            for (Activity notification1 : newNotifications) {
+                if (!notification.getType().equals(notification1.getType()) || !notification.getUser().getId().equals(notification1.getUser().getId()) || notification.getDiveSpot().getId() != notification1.getDiveSpot().getId()) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

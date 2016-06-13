@@ -1,5 +1,7 @@
 package com.ddscanner.entities;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 /**
@@ -7,18 +9,29 @@ import java.io.Serializable;
  */
 public class Notification implements Serializable {
 
-    private String type;
+    public static enum Type{
+        @SerializedName("like")
+        LIKE,
+
+        @SerializedName("dislike")
+        DISLIKE,
+
+        @SerializedName("accept")
+        ACCEPT;
+    };
+    @SerializedName("type")
+    private Type type;
     private String date;
     private String message;
     private DiveSpot diveSpot;
     private User user;
     private Comment comment;
 
-    public String getType() {
+    public Type getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(Type type) {
         this.type = type;
     }
 

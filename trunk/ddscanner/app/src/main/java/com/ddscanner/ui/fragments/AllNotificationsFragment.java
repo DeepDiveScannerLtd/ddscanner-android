@@ -82,6 +82,12 @@ public class AllNotificationsFragment extends Fragment {
             recyclerView.setAdapter(new NotificationsListAdapter(activities, getContext(), getFragmentManager()));
             return;
         }
+        if (activities != null && this.activities != null) {
+            if (checkIsListDifferent(activities, this.activities)) {
+                return;
+            }
+        }
+        this.activities = activities;
         if (helpers.comparingTimes(SharedPreferenceHelper.getLastShowingNotificationTime(),
                 activities.get(activities.size() -1).getDate()) || !helpers.comparingTimes(SharedPreferenceHelper.getLastShowingNotificationTime(), activities.get(0).getDate())) {
             recyclerView.setAdapter(new NotificationsListAdapter(
@@ -113,6 +119,17 @@ public class AllNotificationsFragment extends Fragment {
         Date date = new Date();
         long currentDateInMillis = date.getTime();
         SharedPreferenceHelper.setLastShowingNotificationTime(currentDateInMillis);
+    }
+
+    private boolean checkIsListDifferent( ArrayList<Notification> newNotifications, ArrayList<Notification> oldNotifications) {
+        for (Notification notification : oldNotifications) {
+            for (Notification notification1 : newNotifications) {
+                if (!notification.getType().equals(notification1.getType()) || !notification.getUser().getId().equals(notification1.getUser().getId()) || notification.getDiveSpot().getId() != notification1.getDiveSpot().getId()) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
 }
