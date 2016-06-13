@@ -16,9 +16,18 @@ import com.ddscanner.R;
 import com.ddscanner.entities.Activity;
 import com.ddscanner.entities.Notification;
 import com.ddscanner.entities.Notifications;
+import com.ddscanner.entities.errors.BadRequestException;
+import com.ddscanner.entities.errors.CommentNotFoundException;
+import com.ddscanner.entities.errors.DiveSpotNotFoundException;
+import com.ddscanner.entities.errors.NotFoundException;
+import com.ddscanner.entities.errors.ServerInternalErrorException;
+import com.ddscanner.entities.errors.UnknownErrorException;
+import com.ddscanner.entities.errors.UserNotFoundException;
+import com.ddscanner.entities.errors.ValidationErrorException;
 import com.ddscanner.events.LoggedOutEvent;
 import com.ddscanner.events.PickPhotoFromGallery;
 import com.ddscanner.events.TakePhotoFromCameraEvent;
+import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.activities.DiveSpotsListActivity;
 import com.ddscanner.ui.activities.SocialNetworks;
@@ -26,6 +35,7 @@ import com.ddscanner.ui.activities.UsersDivespotListSwipableActivity;
 import com.ddscanner.ui.adapters.NotificationsPagerAdapter;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
+import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.gson.Gson;
 import com.squareup.otto.Subscribe;
@@ -164,6 +174,41 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
                             setData();
                         } catch (IOException e) {
 
+                        }
+                    }
+                    if (!response.isSuccessful()) {
+                        try {
+                            responseString = response.errorBody().string();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        LogUtils.i("response body is " + responseString);
+                        try {
+                            ErrorsParser.checkForError(response.code(), responseString);
+                        } catch (ServerInternalErrorException e) {
+                            // TODO Handle
+                            helpers.showToast(getContext(), R.string.toast_server_error);
+                        } catch (BadRequestException e) {
+                            // TODO Handle
+                            helpers.showToast(getContext(), R.string.toast_server_error);
+                        } catch (ValidationErrorException e) {
+                            // TODO Handle
+                        } catch (NotFoundException e) {
+                            // TODO Handle
+                            helpers.showToast(getContext(), R.string.toast_server_error);
+                        } catch (UnknownErrorException e) {
+                            // TODO Handle
+                            helpers.showToast(getContext(), R.string.toast_server_error);
+                        } catch (DiveSpotNotFoundException e) {
+                            // TODO Handle
+                            helpers.showToast(getContext(), R.string.toast_server_error);
+                        } catch (UserNotFoundException e) {
+                            // TODO Handle
+                            SharedPreferenceHelper.logout();
+                            setUserLoggedInUI();
+                        } catch (CommentNotFoundException e) {
+                            // TODO Handle
+                            helpers.showToast(getContext(), R.string.toast_server_error);
                         }
                     }
                 }
