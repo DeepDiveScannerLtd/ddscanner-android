@@ -31,7 +31,7 @@ public class DDScannerApplication extends Application {
     public static final String TWITTER_KEY = "tT7PhwjwXb8dEXbhQzI529VR4";
     public static final String TWITTER_SECRET = "C4wijpAOBWWwUVsmtyoMEhWUQD5P6BFulUDTVQGQmrJI32BlaT";
     public static Bus bus = new Bus();
-    private static boolean activityVisible = true;
+    private static boolean activityVisible;
     public static boolean isActivitiesFragmentVisible = false;
 
     private static DDScannerApplication instance;
