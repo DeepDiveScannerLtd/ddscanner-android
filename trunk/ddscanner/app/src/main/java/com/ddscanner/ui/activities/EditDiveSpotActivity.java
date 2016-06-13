@@ -119,6 +119,12 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
     private TextView error_sealife;
     private TextView error_images;
 
+    private ArrayAdapter<String> objectAdapter;
+    private ArrayAdapter<String> levelAdapter;
+    private ArrayAdapter<String> accessAdapter;
+    private ArrayAdapter<String> visibilityAdapter;
+    private ArrayAdapter<String> currentsAdapter;
+
 
     private List<String> imageUris = new ArrayList<String>();
     private List<Sealife> sealifes = new ArrayList<>();
@@ -149,7 +155,6 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
         findViews();
         toolbarSettings();
         getDsInfoRequest();
-        loadFiltersDataRequest();
         makeErrorsMap();
     }
 
@@ -305,6 +310,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
                     addPhotoToDsListAdapter = new AddPhotoToDsListAdapter(imageUris, EditDiveSpotActivity.this, addPhotoTitle);
                     diveSpotLocation = new LatLng(divespotDetails.getDivespot().getLat(),
                             divespotDetails.getDivespot().getLng());
+                    loadFiltersDataRequest();
                     setUi();
                 }
 
@@ -607,11 +613,11 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
 
                     Log.i(TAG, responseString);
 
-                    setSpinnerValues(objectSpinner, filters.getObject(), "");
-                    setSpinnerValues(levelSpinner, filters.getLevel(), "");
-                    setSpinnerValues(currentsSpinner, filters.getCurrents(), "");
-                    setSpinnerValues(visibilitySpinner, filters.getVisibility(), "");
-                    setSpinnerValues(accessSpinner, filters.getAccess(), "");
+                    setSpinnerValues(objectSpinner, filters.getObject(), diveSpot.getObject());
+                    setSpinnerValues(levelSpinner, filters.getLevel(), diveSpot.getLevel());
+                    setSpinnerValues(currentsSpinner, filters.getCurrents(), diveSpot.getCurrents());
+                    setSpinnerValues(visibilitySpinner, filters.getVisibility(), diveSpot.getVisibility());
+                    setSpinnerValues(accessSpinner, filters.getAccess(), diveSpot.getAccess());
 
                 }
             }
@@ -627,12 +633,10 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
         List<String> objects = new ArrayList<>();
         for (Map.Entry<String, String> entry : values.entrySet()) {
             objects.add(entry.getValue());
-            if (entry.getKey().equals(tag)) {
-
-            }
         }
         ArrayAdapter<String> adapter = new SpinnerItemsAdapter(this, R.layout.spinner_drop_down_item, objects);
         spinner.setAdapter(adapter);
+        spinner.setSelection(adapter.getPosition(values.get(tag)));
     }
 
     private void makeErrorsMap() {
