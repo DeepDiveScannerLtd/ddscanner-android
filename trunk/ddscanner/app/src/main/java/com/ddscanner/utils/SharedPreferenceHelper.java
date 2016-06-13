@@ -23,6 +23,7 @@ public class SharedPreferenceHelper {
     private static final String LINK = "LINK";
     private static final String USER_SERVER_ID = "USER_SERVER_ID";
     private static final String USER_APP_ID = "USER_APP_ID";
+    private static final String IS_USER_APP_ID_RECEIVED = "IS_USER_APP_ID_RECEIVED";
 
 
     private static SharedPreferences prefs;
@@ -37,6 +38,18 @@ public class SharedPreferenceHelper {
     public static String getUserAppId() {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         return prefs.getString(USER_APP_ID,"");
+    }
+
+    public static void setUserAppIdReceived() {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        Editor editor = prefs.edit();
+        editor.putBoolean(IS_USER_APP_ID_RECEIVED, true);
+        editor.commit();
+    }
+
+    public static boolean isUserAppIdReceived() {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        return prefs.getBoolean(IS_USER_APP_ID_RECEIVED, false);
     }
 
     public static void setPhotolink(String value) {
