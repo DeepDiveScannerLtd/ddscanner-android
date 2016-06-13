@@ -6,7 +6,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -15,7 +14,6 @@ import android.provider.Settings;
 import android.support.design.widget.TabLayout;
 import android.support.percent.PercentRelativeLayout;
 import android.support.v4.view.ViewPager;
-import android.telephony.TelephonyManager;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
@@ -25,6 +23,7 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.request.IdentifyRequest;
 import com.ddscanner.events.ChangePageOfMainViewPagerEvent;
+import com.ddscanner.events.InstanceIDReceivedEvent;
 import com.ddscanner.events.InternetConnectionClosedEvent;
 import com.ddscanner.events.LocationReadyEvent;
 import com.ddscanner.events.OpenAddDsActivityAfterLogin;
@@ -55,7 +54,6 @@ import com.squareup.otto.Subscribe;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.UUID;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -317,7 +315,7 @@ public class MainActivity extends BaseAppCompatActivity
     }
 
     public void playServices() {
-        if (checkPlayServices()) {
+        if (!SharedPreferenceHelper.isUserAppIdReceived() && checkPlayServices()) {
             Intent intent = new Intent(this, RegistrationIntentService.class);
             startService(intent);
         }
@@ -409,12 +407,18 @@ public class MainActivity extends BaseAppCompatActivity
         for (Integer code : event.getRequestCodes()) {
             switch (code) {
                 case Constants.REQUEST_CODE_MAIN_ACTIVITY_GET_LOCATION_ON_ACTIVITY_START:
-                    identifyUser(String.valueOf(event.getLocation().getLatitude()), String.valueOf(event.getLocation().getLongitude()));
-                    DDScannerApplication.bus.post(new PlaceChoosedEvent(new LatLngBounds(new LatLng(event.getLocation().getLatitude() - 1, event.getLocation().getLongitude() - 1), new LatLng(event.getLocation().getLatitude() + 1, event.getLocation().getLongitude() + 1))));
+                    if (SharedPreferenceHelper.isUserAppIdReceived()) {
+                        identifyUser(String.valueOf(event.getLocation().getLatitude()), String.valueOf(event.getLocation().getLongitude()));
+                        DDScannerApplication.bus.post(new PlaceChoosedEvent(new LatLngBounds(new LatLng(event.getLocation().getLatitude() - 1, event.getLocation().getLongitude() - 1), new LatLng(event.getLocation().getLatitude() + 1, event.getLocation().getLongitude() + 1))));
+                    }
                     break;
             }
         }
-        identifyUser(String.valueOf(event.getLocation().getLatitude()), String.valueOf(event.getLocation().getLongitude()));
+    }
+
+    @Subscribe
+    public void onAppInstanceIdReceived(InstanceIDReceivedEvent event) {
+        getLocation(Constants.REQUEST_CODE_MAIN_ACTIVITY_GET_LOCATION_ON_ACTIVITY_START);
     }
 
     @Subscribe

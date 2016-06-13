@@ -7,7 +7,9 @@ import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.events.InstanceIDReceivedEvent;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.android.gms.gcm.GcmPubSub;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -46,6 +48,9 @@ public class RegistrationIntentService extends IntentService {
             // [END get_token]
             Log.i(TAG, "GCM Registration Token: " + token);
             SharedPreferenceHelper.setGcmId(token);
+            SharedPreferenceHelper.setUserAppId(instanceID.getId());
+            SharedPreferenceHelper.setUserAppIdReceived();
+            DDScannerApplication.bus.post(new InstanceIDReceivedEvent());
             // TODO: Implement this method to send any registration to your app's servers.
             sendRegistrationToServer(token);
 
