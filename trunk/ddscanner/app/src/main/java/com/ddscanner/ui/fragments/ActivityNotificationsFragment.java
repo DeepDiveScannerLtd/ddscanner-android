@@ -27,6 +27,7 @@ public class ActivityNotificationsFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private Helpers helpers = new Helpers();
+    private ArrayList<Activity> activities;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,11 +45,18 @@ public class ActivityNotificationsFragment extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(linearLayoutManager);
+        if (activities != null) {
+            addList(activities);
+        }
       //  recyclerView.setAdapter(new ActivitiesListAdapter(getContext()));
         return view;
     }
 
     public void addList(ArrayList<Activity> activities) {
+        if (recyclerView == null) {
+            this.activities = activities;
+            return;
+        }
         if (activities == null) {
             recyclerView.setAdapter(new ActivitiesListAdapter(
                     getContext(), activities));
