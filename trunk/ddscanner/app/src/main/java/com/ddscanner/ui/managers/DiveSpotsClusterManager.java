@@ -199,23 +199,23 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
             return true;
         }
         if (lastClickedMarker != null) {
-            // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
-//                lastClickedMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
             try {
+                // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
+//                lastClickedMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
                 if (diveSpotsMap.get(marker.getPosition()).getStatus().equals("waiting")) {
-                    marker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_ds_new)));
+                    lastClickedMarker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_ds_new)));
                 } else {
                     lastClickedMarker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_ds)));
                 }
             } catch (IllegalArgumentException e) {
-
+                e.printStackTrace();
             }
         }
         lastClickedMarker = marker;
         // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
 //                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds_selected));
         marker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_ds_selected)));
-        if (diveSpotsMap.get(marker.getPosition())!= null) {
+        if (diveSpotsMap.get(marker.getPosition()) != null) {
             DDScannerApplication.bus.post(new MarkerClickEvent(diveSpotsMap.get(marker.getPosition())));
         }
         return true;
