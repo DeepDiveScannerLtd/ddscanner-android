@@ -140,12 +140,13 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
 
         if (requestCode == 9001) {
             if(resultCode == Activity.RESULT_OK){
-                Comment comment = (Comment)data.getSerializableExtra("COMMENT");
-                if (comments == null) {
-                    comments = new ArrayList<Comment>();
-                }
-                comments.add(0, comment);
-                commentsRc.setAdapter(new ReviewsListAdapter(comments, ReviewsActivity.this, path));
+//                Comment comment = (Comment)data.getSerializableExtra("COMMENT");
+//                if (comments == null) {
+//                    comments = new ArrayList<Comment>();
+//                }
+//                comments.add(0, comment);
+//                commentsRc.setAdapter(new ReviewsListAdapter(comments, ReviewsActivity.this, path));
+                getComments();
                 isHasNewComment = true;
             }
             if (resultCode == Activity.RESULT_CANCELED) {
