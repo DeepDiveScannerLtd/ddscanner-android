@@ -82,4 +82,9 @@ public class InternetClosedActivity extends AppCompatActivity implements View.On
         DDScannerApplication.activityResumed();
     }
 
+
+    @Override
+    public void onBackPressed() {
+
+    }
 }
