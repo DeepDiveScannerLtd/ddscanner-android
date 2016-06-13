@@ -1,6 +1,7 @@
 package com.ddscanner.ui.fragments;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -92,7 +93,7 @@ public class AllNotificationsFragment extends Fragment {
         }
         int i = 0;
         while (helpers.comparingTimes(SharedPreferenceHelper.getLastShowingNotificationTime(),
-                activities.get(i).getDate()) && i < notifications.size() - 1) {
+                activities.get(i).getDate()) && i < activities.size() - 1) {
             i++;
         }
         NotificationsListAdapter notificationsListAdapter = new NotificationsListAdapter(
