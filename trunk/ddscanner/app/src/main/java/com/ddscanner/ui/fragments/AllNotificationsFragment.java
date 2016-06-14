@@ -83,14 +83,14 @@ public class AllNotificationsFragment extends Fragment {
             recyclerView.setAdapter(new NotificationsListAdapter(activities, getContext(), getFragmentManager()));
             return;
         }
-        if (!isHasSections) {
-            if (activities != null && this.activities != null) {
-                if (checkIsListDifferent(activities, this.activities)) {
-                    isHasSections = false;
-                    return;
-                }
-            }
-        }
+//        if (!isHasSections) {
+//            if (activities != null && this.activities != null) {
+//                if (checkIsListDifferent(activities, this.activities)) {
+//                    isHasSections = false;
+//                    return;
+//                }
+//            }
+//        }
         this.activities = activities;
         if (helpers.comparingTimes(SharedPreferenceHelper.getLastShowingNotificationTime(),
                 activities.get(activities.size() -1).getDate()) || !helpers.comparingTimes(SharedPreferenceHelper.getLastShowingNotificationTime(), activities.get(0).getDate())) {
@@ -112,7 +112,7 @@ public class AllNotificationsFragment extends Fragment {
                 new ArrayList<SectionedRecyclerViewAdapter.Section>();
         sections.add(new SectionedRecyclerViewAdapter.Section(0, "Newest"));
         sections.add(new SectionedRecyclerViewAdapter.Section(i, "Older"));
-        isHasSections = true;
+       // isHasSections = true;
         SectionedRecyclerViewAdapter.Section[] dummy =
                 new SectionedRecyclerViewAdapter.Section[sections.size()];
         SectionedRecyclerViewAdapter sectionedRecyclerViewAdapter =

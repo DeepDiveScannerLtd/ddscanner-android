@@ -10,7 +10,7 @@
             android:id="@+id/icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_wifi"
+            android:src="@drawable/ic_nowifi"
             android:layout_centerHorizontal="true"
             />
         <TextView
@@ -23,12 +23,21 @@
             android:textSize="16sp"
             android:textColor="@color/black_text"
             android:layout_centerHorizontal="true"/>
+        <TextView
+            android:layout_below="@+id/text"
+            android:id="@+id/warning"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="5dp"
+            android:text="@string/please_connect_to_a_network_to_continue"
+            android:textSize="15sp"/>
         <Button
             android:id="@+id/btn_retry"
             android:layout_marginTop="200dp"
-            style="@style/EmptyButtons"
-            android:layout_width="110dp"
+            style="@style/OrangeButtons"
+            android:layout_width="180dp"
             android:layout_below="@+id/text"
-            android:text="retry" />
+            android:text="@string/refresh" />
     </RelativeLayout>
 </LinearLayout>

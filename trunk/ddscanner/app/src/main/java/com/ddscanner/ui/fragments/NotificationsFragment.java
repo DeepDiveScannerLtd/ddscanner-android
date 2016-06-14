@@ -157,8 +157,8 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                String responseString = "";
                 if (response.isSuccessful()) {
-                    String responseString = "";
                     if (response.raw().code() == 200) {
                         try {
                             responseString = response.body().string();
@@ -176,40 +176,40 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
 
                         }
                     }
-                    if (!response.isSuccessful()) {
-                        try {
-                            responseString = response.errorBody().string();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        LogUtils.i("response body is " + responseString);
-                        try {
-                            ErrorsParser.checkForError(response.code(), responseString);
-                        } catch (ServerInternalErrorException e) {
-                            // TODO Handle
-                            helpers.showToast(getContext(), R.string.toast_server_error);
-                        } catch (BadRequestException e) {
-                            // TODO Handle
-                            helpers.showToast(getContext(), R.string.toast_server_error);
-                        } catch (ValidationErrorException e) {
-                            // TODO Handle
-                        } catch (NotFoundException e) {
-                            // TODO Handle
-                            helpers.showToast(getContext(), R.string.toast_server_error);
-                        } catch (UnknownErrorException e) {
-                            // TODO Handle
-                            helpers.showToast(getContext(), R.string.toast_server_error);
-                        } catch (DiveSpotNotFoundException e) {
-                            // TODO Handle
-                            helpers.showToast(getContext(), R.string.toast_server_error);
-                        } catch (UserNotFoundException e) {
-                            // TODO Handle
-                            SharedPreferenceHelper.logout();
-                            setUserLoggedInUI();
-                        } catch (CommentNotFoundException e) {
-                            // TODO Handle
-                            helpers.showToast(getContext(), R.string.toast_server_error);
-                        }
+                }
+                if (!response.isSuccessful()) {
+                    try {
+                        responseString = response.errorBody().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    LogUtils.i("response body is " + responseString);
+                    try {
+                        ErrorsParser.checkForError(response.code(), responseString);
+                    } catch (ServerInternalErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(getContext(), R.string.toast_server_error);
+                    } catch (BadRequestException e) {
+                        // TODO Handle
+                        helpers.showToast(getContext(), R.string.toast_server_error);
+                    } catch (ValidationErrorException e) {
+                        // TODO Handle
+                    } catch (NotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(getContext(), R.string.toast_server_error);
+                    } catch (UnknownErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(getContext(), R.string.toast_server_error);
+                    } catch (DiveSpotNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(getContext(), R.string.toast_server_error);
+                    } catch (UserNotFoundException e) {
+                        // TODO Handle
+                        SharedPreferenceHelper.logout();
+                        setUserLoggedInUI();
+                    } catch (CommentNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(getContext(), R.string.toast_server_error);
                     }
                 }
             }
