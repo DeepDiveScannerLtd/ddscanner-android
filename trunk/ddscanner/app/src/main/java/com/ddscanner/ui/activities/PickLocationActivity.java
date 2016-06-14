@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -68,7 +69,7 @@ public class PickLocationActivity extends AppCompatActivity implements GoogleMap
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pick_ds_location);
         geocoder = new Geocoder(this, Locale.ENGLISH);
-        startLocation = getIntent().getParcelableExtra("LATLNG");
+        startLocation = getIntent().getParcelableExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_LATLNG);
         findViews();
         toolbarSettings();
         mapSettings();
@@ -93,7 +94,7 @@ public class PickLocationActivity extends AppCompatActivity implements GoogleMap
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Pick location");
+        getSupportActionBar().setTitle(R.string.pick_location);
     }
 
     private void mapSettings() {
@@ -170,7 +171,7 @@ public class PickLocationActivity extends AppCompatActivity implements GoogleMap
         switch (v.getId()) {
             case R.id.apply_location:
                 Intent returnIntent = new Intent();
-                returnIntent.putExtra("LATLNG", pickedLatLng);
+                returnIntent.putExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_LATLNG, pickedLatLng);
                 setResult(Activity.RESULT_OK, returnIntent);
                 onBackPressed();
                 break;

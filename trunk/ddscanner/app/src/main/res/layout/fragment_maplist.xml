@@ -151,7 +151,7 @@
                 android:id="@+id/sad"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_sad" />
+                android:src="@drawable/ic_nospots" />
 
             <TextView
                 android:id="@+id/text"

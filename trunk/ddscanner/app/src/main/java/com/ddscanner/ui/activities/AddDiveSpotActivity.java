@@ -41,6 +41,7 @@ import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.AddPhotoToDsListAdapter;
 import com.ddscanner.ui.adapters.SealifeListAddingDiveSpotAdapter;
 import com.ddscanner.ui.adapters.SpinnerItemsAdapter;
+import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
@@ -218,9 +219,8 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("New Divespot");
+        getSupportActionBar().setTitle(R.string.new_divespot);
 
-        progressDialog.setMessage("Wait while dive spot adding");
         progressDialog.setCancelable(false);
 
         progressView.stop();
@@ -234,7 +234,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_PICK_LOCATION) {
             if (resultCode == RESULT_OK) {
-                this.diveSpotLocation = data.getParcelableExtra("LATLNG");
+                this.diveSpotLocation = data.getParcelableExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_LATLNG);
                 locationTitle.setTextColor(getResources().getColor(R.color.black_text));
             }
         }
@@ -250,7 +250,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         }
         if (requestCode == RC_PICK_SEALIFE) {
             if (resultCode == RESULT_OK) {
-                Sealife sealife =(Sealife) data.getSerializableExtra("SEALIFE");
+                Sealife sealife =(Sealife) data.getSerializableExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_SEALIFE);
 
                 if (helpers.checkIsSealifeAlsoInList((ArrayList<Sealife>) sealifes, sealife.getId())) {
                     helpers.showToast(AddDiveSpotActivity.this, R.string.sealife_already_added);

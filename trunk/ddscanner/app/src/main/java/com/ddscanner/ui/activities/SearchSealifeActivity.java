@@ -33,6 +33,7 @@ import com.ddscanner.events.SealifeChoosedEvent;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.SealifeSearchAdapter;
+import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
 import com.google.gson.Gson;
@@ -242,7 +243,7 @@ public class SearchSealifeActivity extends AppCompatActivity implements SearchVi
     @Subscribe
     public void setResult(SealifeChoosedEvent event) {
         Intent intent = new Intent();
-        intent.putExtra("SEALIFE", event.getSealife());
+        intent.putExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_SEALIFE, event.getSealife());
         setResult(RESULT_OK, intent);
         finish();
     }
@@ -262,9 +263,9 @@ public class SearchSealifeActivity extends AppCompatActivity implements SearchVi
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_ADD_SEALIFE) {
             if (resultCode == RESULT_OK) {
-                Sealife sealife = (Sealife) data.getSerializableExtra("SEALIFE");
+                Sealife sealife = (Sealife) data.getSerializableExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_SEALIFE);
                 Intent intent = new Intent();
-                intent.putExtra("SEALIFE", sealife);
+                intent.putExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_SEALIFE, sealife);
                 setResult(RESULT_OK, intent);
                 finish();
             }

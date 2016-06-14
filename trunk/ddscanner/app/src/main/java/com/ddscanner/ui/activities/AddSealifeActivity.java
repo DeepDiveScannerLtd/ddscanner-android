@@ -32,6 +32,7 @@ import com.ddscanner.entities.errors.UserNotFoundException;
 import com.ddscanner.entities.errors.ValidationErrorException;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
+import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
@@ -342,7 +343,7 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
                             responseString = jsonObject.getString("sealife");
                             Sealife sealife = new Gson().fromJson(responseString, Sealife.class);
                             Intent intent = new Intent();
-                            intent.putExtra("SEALIFE", sealife);
+                            intent.putExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_SEALIFE, sealife);
                             setResult(RESULT_OK, intent);
                             finish();
                         } catch (JSONException e) {
@@ -372,38 +373,6 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
         errorsMap.put("distribution", distribution_error);
         errorsMap.put("habitat", habitat_error);
         errorsMap.put("image", image_error);
-    }
-
-    /**
-     * Handling errors. Show error message if error goes from server.
-     * @author Andrei Lashkevich
-     * @param errors JSON string with errors
-     */
-
-    private void handleErrors(String errors, int error_number) {
-        if (error_number == 400) {
-            Intent intent = new Intent(AddSealifeActivity.this, SocialNetworks.class);
-            startActivityForResult(intent, RC_LOGIN);
-            return;
-        }
-        JsonObject jsonObject = new JsonParser().parse(errors).getAsJsonObject();
-        for (Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) {
-            if(!entry.getKey().equals("")) {
-                if (entry.getKey().equals("token")) {
-                    Intent intent = new Intent(AddSealifeActivity.this, SocialNetworks.class);
-                    startActivityForResult(intent, RC_LOGIN);
-                    return;
-                }
-                if (errorsMap.get(entry.getKey()) != null) {
-                    String key = entry.getKey();
-                    String value = entry.getValue().toString();
-                    value = value.replace("[\"", "");
-                    value = value.replace("\"]", "");
-                    errorsMap.get(key).setVisibility(View.VISIBLE);
-                    errorsMap.get(key).setText(value);
-                }
-            }
-        }
     }
 
     @Override

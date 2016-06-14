@@ -151,4 +151,6 @@
     <string name="sealife_already_added">It has already been added</string>
     <string name="please_connect_to_a_network_to_continue">Please connect to a network to continue</string>
     <string name="refresh">REFRESH</string>
+    <string name="new_divespot">New Divespot</string>
+    <string name="pick_location">Pick location</string>
 </resources>

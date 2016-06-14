@@ -103,6 +103,8 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
     private Marker myLocationMarker;
     private Circle circle;
     private ProgressView progressBarMyLocation;
+    private Marker clickedMarker;
+    private boolean isMarkerNew;
 
     public BaseAppCompatActivity baseAppCompatActivity;
 
@@ -214,13 +216,13 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
     private void setMapView(Bundle savedInstanceState) {
         MapsInitializer.initialize(getActivity());
 
-        infoWindowBackgroundImages.put("Wreck", AppCompatDrawableManager.get().getDrawable(getActivity(),
+        infoWindowBackgroundImages.put(Constants.OBJECT_TYPE_WRECK, AppCompatDrawableManager.get().getDrawable(getActivity(),
                 R.drawable.iw_card_wreck, false));
-        infoWindowBackgroundImages.put("Cave", AppCompatDrawableManager.get().getDrawable(getActivity(),
+        infoWindowBackgroundImages.put(Constants.OBJECT_TYPE_CAVE, AppCompatDrawableManager.get().getDrawable(getActivity(),
                 R.drawable.iw_card_cave, false));
-        infoWindowBackgroundImages.put("Reef", AppCompatDrawableManager.get().getDrawable(getActivity(),
+        infoWindowBackgroundImages.put(Constants.OBJECT_TYPE_REEF, AppCompatDrawableManager.get().getDrawable(getActivity(),
                 R.drawable.iw_card_reef, false));
-        infoWindowBackgroundImages.put("Other", AppCompatDrawableManager.get().getDrawable(getActivity(),
+        infoWindowBackgroundImages.put(Constants.OBJECT_TYPE_OTHER, AppCompatDrawableManager.get().getDrawable(getActivity(),
                 R.drawable.iw_card_other, false));
 
         addDsFab.setOnClickListener(this);
@@ -364,6 +366,20 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
 
     @Subscribe
     public void dismissInfoWindowWhenCameraZoomingOut(CloseInfoWindowEvent event) {
+        if (clickedMarker != null) {
+            try {
+                if (isMarkerNew) {
+                    clickedMarker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.ic_ds_new)));
+                } else {
+                    clickedMarker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.ic_ds)));
+                }
+            } catch (NullPointerException e) {
+
+            } catch (IllegalArgumentException e) {
+
+            }
+        }
+        clickedMarker = null;
         mapControlLayout.animate().translationY(0);
         addDsFab.animate().translationY(0);
         mapListFAB.animate().translationY(0);
@@ -386,6 +402,7 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
 //                event.getMarker().setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
         if (event.getMarker() != null) {
             try {
+
                 if (event.getIsNew()) {
                     event.getMarker().setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.ic_ds_new)));
                 } else {
