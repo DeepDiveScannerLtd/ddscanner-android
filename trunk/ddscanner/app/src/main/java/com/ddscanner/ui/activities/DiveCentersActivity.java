@@ -323,6 +323,8 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
                 event.getMarker().setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.pin_dc)));
             } catch (NullPointerException e) {
 
+            } catch (IllegalArgumentException e) {
+
             }
         }
         mapControlLayout.animate().translationY(0);
