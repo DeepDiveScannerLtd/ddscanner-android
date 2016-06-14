@@ -25,11 +25,20 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.User;
+import com.ddscanner.entities.errors.BadRequestException;
+import com.ddscanner.entities.errors.CommentNotFoundException;
+import com.ddscanner.entities.errors.DiveSpotNotFoundException;
+import com.ddscanner.entities.errors.NotFoundException;
+import com.ddscanner.entities.errors.ServerInternalErrorException;
+import com.ddscanner.entities.errors.UnknownErrorException;
+import com.ddscanner.entities.errors.UserNotFoundException;
+import com.ddscanner.entities.errors.ValidationErrorException;
 import com.ddscanner.events.ChangePageOfMainViewPagerEvent;
 import com.ddscanner.events.LoggedOutEvent;
 import com.ddscanner.events.PickPhotoFromGallery;
 import com.ddscanner.events.ShowLoginActivityIntent;
 import com.ddscanner.events.TakePhotoFromCameraEvent;
+import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.activities.DiveSpotsListActivity;
 import com.ddscanner.ui.activities.SocialNetworks;
@@ -37,6 +46,7 @@ import com.ddscanner.ui.activities.UsersDivespotListSwipableActivity;
 import com.ddscanner.ui.views.TransformationRoundImage;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
+import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
@@ -65,7 +75,7 @@ public class ProfileFragment extends Fragment
         implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
-    private static final int MAX_LENGTH_NAME = 100;
+    private static final int MAX_LENGTH_NAME = 30;
     private static final int MAX_LENGTH_ABOUT = 250;
 
     private LinearLayout editProfile;
@@ -548,20 +558,56 @@ public class ProfileFragment extends Fragment
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                materialDialog.dismiss();
                 if (response.raw().code() == 200) {
                     aboutLayout.setVisibility(View.GONE);
                     SharedPreferenceHelper.logout();
+                    setUIDependingOnLoggedIn();
+                    DDScannerApplication.bus.post(new LoggedOutEvent());
                     DDScannerApplication.bus.post(new ChangePageOfMainViewPagerEvent(0));
-                    materialDialog.dismiss();
                 }
-                if (response.raw().code() == 400) {
-                    aboutLayout.setVisibility(View.GONE);
-                    SharedPreferenceHelper.logout();
-                    DDScannerApplication.bus.post(new ChangePageOfMainViewPagerEvent(0));
-                    materialDialog.dismiss();
+                if (!response.isSuccessful()) {
+                    String responseString = "";
+                    try {
+                        responseString = response.errorBody().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    LogUtils.i("response body is " + responseString);
+                    try {
+                        ErrorsParser.checkForError(response.code(), responseString);
+                    } catch (ServerInternalErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(getContext(), R.string.toast_server_error);
+                    } catch (BadRequestException e) {
+                        // TODO Handle
+                        helpers.showToast(getContext(), R.string.toast_server_error);
+                    } catch (ValidationErrorException e) {
+                        // TODO Handle
+                    } catch (NotFoundException e) {
+                        // TODO Handle
+                      // helpers.showToast(getContext(), R.string.toast_server_error);
+                        SharedPreferenceHelper.logout();
+                        setUIDependingOnLoggedIn();
+                        DDScannerApplication.bus.post(new LoggedOutEvent());
+                        DDScannerApplication.bus.post(new ChangePageOfMainViewPagerEvent(0));
+                    } catch (UnknownErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(getContext(), R.string.toast_server_error);
+                    } catch (DiveSpotNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(getContext(), R.string.toast_server_error);
+                    } catch (UserNotFoundException e) {
+                        // TODO Handle
+                        SharedPreferenceHelper.logout();
+                        setUIDependingOnLoggedIn();
+                        DDScannerApplication.bus.post(new LoggedOutEvent());
+                        DDScannerApplication.bus.post(new ChangePageOfMainViewPagerEvent(0));
+                    } catch (CommentNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(getContext(), R.string.toast_server_error);
+                    }
                 }
-                setUIDependingOnLoggedIn();
-                DDScannerApplication.bus.post(new LoggedOutEvent());
             }
 
             @Override

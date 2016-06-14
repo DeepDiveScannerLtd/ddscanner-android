@@ -33,6 +33,7 @@ public class AllNotificationsFragment extends Fragment {
     private FragmentActivity myContext;
     private ArrayList<Notification> notifications = new ArrayList<>();
     private Helpers helpers = new Helpers();
+    private boolean isHasSections = false;
     ArrayList<Notification> activities;
 
     @Override
@@ -82,9 +83,12 @@ public class AllNotificationsFragment extends Fragment {
             recyclerView.setAdapter(new NotificationsListAdapter(activities, getContext(), getFragmentManager()));
             return;
         }
-        if (activities != null && this.activities != null) {
-            if (checkIsListDifferent(activities, this.activities)) {
-                return;
+        if (!isHasSections) {
+            if (activities != null && this.activities != null) {
+                if (checkIsListDifferent(activities, this.activities)) {
+                    isHasSections = false;
+                    return;
+                }
             }
         }
         this.activities = activities;
@@ -108,6 +112,7 @@ public class AllNotificationsFragment extends Fragment {
                 new ArrayList<SectionedRecyclerViewAdapter.Section>();
         sections.add(new SectionedRecyclerViewAdapter.Section(0, "Newest"));
         sections.add(new SectionedRecyclerViewAdapter.Section(i, "Older"));
+        isHasSections = true;
         SectionedRecyclerViewAdapter.Section[] dummy =
                 new SectionedRecyclerViewAdapter.Section[sections.size()];
         SectionedRecyclerViewAdapter sectionedRecyclerViewAdapter =

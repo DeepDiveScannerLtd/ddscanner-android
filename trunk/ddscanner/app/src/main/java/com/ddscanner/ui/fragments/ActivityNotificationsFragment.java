@@ -29,6 +29,7 @@ public class ActivityNotificationsFragment extends Fragment {
     private RecyclerView recyclerView;
     private Helpers helpers = new Helpers();
     private ArrayList<Activity> activities;
+    private boolean isHasSections = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -63,9 +64,12 @@ public class ActivityNotificationsFragment extends Fragment {
                     getContext(), activities));
             return;
         }
-        if (activities != null && this.activities != null) {
-            if (checkIsListDifferent(activities, this.activities)) {
-                return;
+        if (!isHasSections) {
+            if (activities != null && this.activities != null) {
+                if (checkIsListDifferent(activities, this.activities)) {
+                    isHasSections = false;
+                    return;
+                }
             }
         }
         this.activities = activities;
@@ -89,6 +93,7 @@ public class ActivityNotificationsFragment extends Fragment {
                 new ArrayList<SectionedRecyclerViewAdapter.Section>();
         sections.add(new SectionedRecyclerViewAdapter.Section(0, "Newest"));
         sections.add(new SectionedRecyclerViewAdapter.Section(i, "Older"));
+        isHasSections = true;
         SectionedRecyclerViewAdapter.Section[] dummy =
                 new SectionedRecyclerViewAdapter.Section[sections.size()];
         SectionedRecyclerViewAdapter sectionedRecyclerViewAdapter =

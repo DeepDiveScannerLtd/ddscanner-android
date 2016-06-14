@@ -103,51 +103,6 @@ public class NotificationsListAdapter
                     holder.timeAgo.setText(helpers.getDate(notification.getDate()));
                     break;
             }
-//            if (notification.getType()) {
-//                holder.likeDislikeImage.setImageDrawable(AppCompatDrawableManager.get()
-//                        .getDrawable(context, R.drawable.icon_dislike));
-//                Picasso.with(context)
-//                        .load(notification.getUser().getPicture())
-//                        .resize(Math.round(helpers.convertDpToPixel(64, context)),Math.round(helpers.convertDpToPixel(64, context)))
-//                        .transform(new CropCircleTransformation())
-//                        .into(holder.image);
-//                String name = notification.getUser().getName();
-//                String divespot = notification.getDiveSpot().getName();
-//                String text = context.getResources().getString(R.string.user_dislike_your_review, name, divespot);
-//                SpannableString spannableString = new SpannableString(text);
-//                spannableString.setSpan(fcs, 0, name.length(), 0);
-//                spannableString.setSpan(fcs, text.indexOf(divespot), text.length(), 0);
-//                holder.text.setText(spannableString);
-//                holder.timeAgo.setText(helpers.getDate(notification.getDate()));
-//            }
-//            if (notification.getType().equals("like")) {
-//                holder.likeDislikeImage.setImageDrawable(AppCompatDrawableManager.get()
-//                        .getDrawable(context, R.drawable.icon_like));
-//                Picasso.with(context)
-//                        .load(notification.getUser().getPicture())
-//                        .resize(Math.round(helpers.convertDpToPixel(64, context)),Math.round(helpers.convertDpToPixel(64, context)))
-//                        .transform(new CropCircleTransformation())
-//                        .into(holder.image);
-//                String name = notification.getUser().getName();
-//                String divespot = notification.getDiveSpot().getName();
-//               // text = String.format(text, name, divespot);
-//                String text = context.getResources().getString(R.string.user_liked_your_review, name, divespot);
-//                SpannableString spannableString = new SpannableString(text);
-//                spannableString.setSpan(fcs, 0, name.length(), 0);
-//                spannableString.setSpan(fcs, text.indexOf(divespot), text.length(), 0);
-//                holder.text.setText(spannableString);
-//                holder.timeAgo.setText(helpers.getDate(notification.getDate()));
-//
-//            }
-//            if (notification.getType().equals("accept")) {
-//                String divespot = notification.getDiveSpot().getName();
-//                String text = context.getResources().getString(R.string.your_changes_accepted,divespot);
-//                SpannableString spannableString = new SpannableString(text);
-//                spannableString.setSpan(fcs, text.indexOf(divespot),
-//                        text.length() - divespot.length(), 0);
-//                holder.text.setText(spannableString);
-//                holder.timeAgo.setText(helpers.getDate(notification.getDate()));
-//            }
         }
     }
 
@@ -219,8 +174,8 @@ public class NotificationsListAdapter
         private void createAction(int position, boolean isImage) {
             Notification notification = notifications.get(position);
 
-            if (isImage && (notification.getType().equals("like")
-                    || notification.getType().equals("dislike"))) {
+            if (isImage && (notification.getType().name().equalsIgnoreCase("like")
+                    || notification.getType().name().equalsIgnoreCase("dislike"))) {
                 helpers.showDialog(notification.getUser(), mFragmentManager);
             }
 
