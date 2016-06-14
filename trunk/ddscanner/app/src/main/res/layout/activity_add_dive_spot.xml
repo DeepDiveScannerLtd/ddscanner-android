@@ -156,6 +156,8 @@
 
                     <android.support.v7.widget.AppCompatEditText
                         android:id="@+id/depth"
+                        android:maxLength="5"
+                        android:inputType="number"
                         style="@style/AddDsCharTitleStyle"
                         android:hint="@string/max_depth_meters" />
                 </LinearLayout>

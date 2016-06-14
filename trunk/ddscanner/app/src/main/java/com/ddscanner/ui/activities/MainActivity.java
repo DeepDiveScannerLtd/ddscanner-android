@@ -23,8 +23,12 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.request.IdentifyRequest;
 import com.ddscanner.events.ChangePageOfMainViewPagerEvent;
+import com.ddscanner.events.CloseInfoWindowEvent;
+import com.ddscanner.events.CloseListEvent;
+import com.ddscanner.events.InfowWindowOpenedEvent;
 import com.ddscanner.events.InstanceIDReceivedEvent;
 import com.ddscanner.events.InternetConnectionClosedEvent;
+import com.ddscanner.events.ListOpenedEvent;
 import com.ddscanner.events.LocationReadyEvent;
 import com.ddscanner.events.OpenAddDsActivityAfterLogin;
 import com.ddscanner.events.PickPhotoFromGallery;
@@ -49,6 +53,7 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.squareup.otto.Subscribe;
 
 import java.io.File;
@@ -87,8 +92,11 @@ public class MainActivity extends BaseAppCompatActivity
     private boolean isHasLocation;
     private MaterialDialog materialDialog;
     private boolean isTryToOpenAddDiveSpotActivity = false;
+    private boolean isDiveSpotInfoWindowShown = false;
+    private boolean isDiveSpotListIsShown = false;
     private int positionToScroll;
 
+    private Marker lastClickedMarker;
     //    private MapListFragment mapListFragment = new MapListFragment();
 //    private NotificationsFragment notificationsFragment = new NotificationsFragment();
     private ProfileFragment profileFragment = new ProfileFragment();
@@ -465,5 +473,34 @@ public class MainActivity extends BaseAppCompatActivity
         super.onRestoreInstanceState(savedInstanceState);
     }
 
+    @Subscribe
+    public void infowindowShowed(InfowWindowOpenedEvent event) {
+        isDiveSpotInfoWindowShown = true;
+        if (event.getMarker() != null) {
+            lastClickedMarker = event.getMarker();
+        }
+    }
 
+    @Subscribe
+    public void listOpenedEvent(ListOpenedEvent event) {
+        isDiveSpotListIsShown = true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mainViewPager.getCurrentItem() != 0) {
+            DDScannerApplication.bus.post(new ChangePageOfMainViewPagerEvent(0));
+            return;
+        }
+        if (isDiveSpotInfoWindowShown) {
+            DDScannerApplication.bus.post(new CloseInfoWindowEvent());
+            isDiveSpotInfoWindowShown = false;
+            return;
+        }
+        if (isDiveSpotListIsShown) {
+            DDScannerApplication.bus.post(new CloseListEvent());
+            isDiveSpotListIsShown = false;
+            return;
+        }
+    }
 }

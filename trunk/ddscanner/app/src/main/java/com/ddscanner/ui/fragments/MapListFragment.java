@@ -30,6 +30,9 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.DiveSpot;
 import com.ddscanner.events.CloseInfoWindowEvent;
+import com.ddscanner.events.CloseListEvent;
+import com.ddscanner.events.InfowWindowOpenedEvent;
+import com.ddscanner.events.ListOpenedEvent;
 import com.ddscanner.events.LocationReadyEvent;
 import com.ddscanner.events.MarkerClickEvent;
 import com.ddscanner.events.OnMapClickEvent;
@@ -285,6 +288,7 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
                     }
                     diveSpotsMapView.setVisibility(View.GONE);
                     diveSpotsListView.setVisibility(View.VISIBLE);
+                    DDScannerApplication.bus.post(new ListOpenedEvent());
                     mapListFAB.setImageResource(R.drawable.ic_acb_map);
                 } else {
                     if (diveSpotInfo.getVisibility() == View.VISIBLE) {
@@ -324,6 +328,7 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
     @UiThread
     @Subscribe
     public void getDiveSpotInfow(MarkerClickEvent event) {
+        DDScannerApplication.bus.post(new InfowWindowOpenedEvent(null));
         mapControlLayout.animate().translationY(-diveSpotInfo.getHeight());
         addDsFab.animate().translationY(-diveSpotInfo.getHeight());
         mapListFAB.animate().translationY(-diveSpotInfo.getHeight());
@@ -479,5 +484,10 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
                     break;
             }
         }
+    }
+
+    @Subscribe
+    public void showMap(CloseListEvent event) {
+        mapListFAB.performClick();
     }
 }

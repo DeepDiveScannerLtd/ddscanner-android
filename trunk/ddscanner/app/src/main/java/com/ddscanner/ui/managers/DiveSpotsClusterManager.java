@@ -63,6 +63,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
     private DivespotsWrapper divespotsWrapper;
     private ArrayList<DiveSpot> diveSpots = new ArrayList<>();
     private HashMap<LatLng, DiveSpot> diveSpotsMap = new HashMap<>();
+    private float lastZoom;
 
     private String currents;
     private String level;
@@ -153,8 +154,12 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
     public void onMapClick(LatLng latLng) {
         if (lastClickedMarker != null) {
             // lastClickedMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
-            if (diveSpotsMap.get(lastClickedMarker.getPosition()).getStatus().equals("waiting")) {
-                DDScannerApplication.bus.post(new OnMapClickEvent(lastClickedMarker, true));
+            if (diveSpotsMap.get(lastClickedMarker.getPosition()).getStatus() != null) {
+                if (diveSpotsMap.get(lastClickedMarker.getPosition()).getStatus().equals("waiting")) {
+                    DDScannerApplication.bus.post(new OnMapClickEvent(lastClickedMarker, true));
+                } else {
+                    DDScannerApplication.bus.post(new OnMapClickEvent(lastClickedMarker, false));
+                }
             } else {
                 DDScannerApplication.bus.post(new OnMapClickEvent(lastClickedMarker, false));
             }
@@ -167,7 +172,10 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
     @Override
     public void onCameraChange(CameraPosition cameraPosition) {
         super.onCameraChange(cameraPosition);
-
+        if (lastZoom != googleMap.getCameraPosition().zoom && lastClickedMarker != null) {
+            lastZoom = googleMap.getCameraPosition().zoom;
+            DDScannerApplication.bus.post(new OnMapClickEvent(null, false));
+        }
         LatLng southwest = googleMap.getProjection().getVisibleRegion().latLngBounds.southwest;
         LatLng northeast = googleMap.getProjection().getVisibleRegion().latLngBounds.northeast;
         parentFragment.fillDiveSpots(getVisibleMarkersList(diveSpots));
