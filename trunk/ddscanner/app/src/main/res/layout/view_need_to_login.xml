@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/ic_login" />
+        android:src="@drawable/ic_nologin" />
 
     <TextView
         android:id="@+id/need_to_login_message"
@@ -28,10 +28,10 @@
 
     <Button
         android:id="@+id/btn_open_login_screen"
-        style="@style/EmptyButtons"
+        style="@style/OrangeButtons"
         android:layout_width="wrap_content"
         android:layout_below="@+id/text"
-        android:layout_marginTop="200dp"
+        android:layout_marginTop="250dp"
         android:paddingBottom="12dp"
         android:paddingLeft="30dp"
         android:paddingRight="30dp"
