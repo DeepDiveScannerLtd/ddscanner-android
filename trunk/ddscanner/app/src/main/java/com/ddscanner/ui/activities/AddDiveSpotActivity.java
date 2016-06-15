@@ -77,12 +77,12 @@ import retrofit2.Response;
 public class AddDiveSpotActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = AddDiveSpotActivity.class.getSimpleName();
-    private static final int RC_PICK_PHOTO = 9001;
-    private static final int RC_PICK_LOCATION = 8001;
-    private static final int RC_PICK_SEALIFE = 7001;
-    private static final int RC_LOGIN = 6001;
-    private static final int RC_LOGIN_TO_SEND = 4001;
-    private static final int RC_LOGIN_TO_GET_DATA = 5001;
+    private static final int RC_PICK_SEALIFE = Constants.ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_PICK_SEALIFE;
+    private static final int RC_PICK_PHOTO = Constants.ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_PICK_PHOTO;
+    private static final int RC_PICK_LOCATION =Constants.ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_PICK_LOCATION;
+    private static final int RC_LOGIN = Constants.ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_LOGIN;
+    private static final int RC_LOGIN_TO_SEND = Constants.ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_LOGIN_TO_SEND;
+    private static final int RC_LOGIN_TO_GET_DATA = Constants.ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_LOGIN_TO_GET_DATA;
 
     private ProgressDialog progressDialog;
 
@@ -354,29 +354,25 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
 
                     JsonParser parser = new JsonParser();
                     JsonObject jsonObject = parser.parse(responseString).getAsJsonObject();
-                    JsonObject currentsJsonObject = jsonObject.getAsJsonObject("currents");
+                    JsonObject currentsJsonObject = jsonObject.getAsJsonObject(Constants.FILTERS_VALUE_CURRENTS);
                     for (Map.Entry<String, JsonElement> elementEntry : currentsJsonObject.entrySet()) {
                         filters.getCurrents().put(elementEntry.getKey(), elementEntry.getValue().getAsString());
                     }
-                    JsonObject levelJsonObject = jsonObject.getAsJsonObject("level");
+                    JsonObject levelJsonObject = jsonObject.getAsJsonObject(Constants.FILTERS_VALUE_LEVEL);
                     for (Map.Entry<String, JsonElement> elementEntry : levelJsonObject.entrySet()) {
                         filters.getLevel().put(elementEntry.getKey(), elementEntry.getValue().getAsString());
                     }
-                    JsonObject objectJsonObject = jsonObject.getAsJsonObject("object");
+                    JsonObject objectJsonObject = jsonObject.getAsJsonObject(Constants.FILTERS_VALUE_OBJECT);
                     for (Map.Entry<String, JsonElement> elementEntry : objectJsonObject.entrySet()) {
                         filters.getObject().put(elementEntry.getKey(), elementEntry.getValue().getAsString());
                     }
-                    JsonObject visibilityJsonObject = jsonObject.getAsJsonObject("visibility");
+                    JsonObject visibilityJsonObject = jsonObject.getAsJsonObject(Constants.FILTERS_VALUE_VISIBILITY);
                     for (Map.Entry<String, JsonElement> elementEntry : visibilityJsonObject.entrySet()) {
                         filters.getVisibility().put(elementEntry.getKey(), elementEntry.getValue().getAsString());
                     }
-                    JsonObject accessJsonObject = jsonObject.getAsJsonObject("access");
+                    JsonObject accessJsonObject = jsonObject.getAsJsonObject(Constants.FILTERS_VALUE_ACCESS);
                     for (Map.Entry<String, JsonElement> elementEntry : accessJsonObject.entrySet()) {
                         filters.getAccess().put(elementEntry.getKey(), elementEntry.getValue().getAsString());
-                    }
-                    Gson gson = new Gson();
-                    if (jsonObject.get("rating") != null) {
-                        filters.setRating(gson.fromJson(jsonObject.get("rating").getAsJsonArray(), int[].class));
                     }
 
                     Log.i(TAG, responseString);

@@ -19,6 +19,19 @@ public class Constants {
     /*Add dive spot activity*/
     public static final String ADD_DIVE_SPOT_ACTIVITY_LATLNG = "location";
     public static final String ADD_DIVE_SPOT_ACTIVITY_SEALIFE = "sealife";
+    public static final int ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_PICK_PHOTO = 1001;
+    public static final int ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_PICK_SEALIFE = 1002;
+    public static final int ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_PICK_LOCATION = 1003;
+    public static final int ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_LOGIN = 1004;
+    public static final int ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_LOGIN_TO_SEND = 1005;
+    public static final int ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_LOGIN_TO_GET_DATA = 1006;
+
+    /*Fields in filters*/
+    public static final String FILTERS_VALUE_OBJECT = "object";
+    public static final String FILTERS_VALUE_ACCESS = "access";
+    public static final String FILTERS_VALUE_CURRENTS = "currents";
+    public static final String FILTERS_VALUE_LEVEL = "level";
+    public static final String FILTERS_VALUE_VISIBILITY = "visibility";
 
     public static final int REQUEST_CODE_MAP_LIST_FRAGMENT_GET_LOCATION_ON_FRAGMENT_START = 9010;
     public static final int REQUEST_CODE_MAP_LIST_FRAGMENT_GO_TO_CURRENT_LOCATION = 9011;
