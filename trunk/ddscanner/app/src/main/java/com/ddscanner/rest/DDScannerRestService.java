@@ -220,4 +220,15 @@ public interface DDScannerRestService {
     @GET("/diving/divespot/{id}/editors")
     Call<ResponseBody> getDiveSpotEditors(@Path("id") String id, @QueryMap Map<String, String> map);
 
+    @POST("diving/divespot/search")
+    @Multipart
+    Call<ResponseBody> getDivespotsByParameters(
+            @Part("search") RequestBody search,
+            @Part List<MultipartBody.Part> like,
+            @Part("order") RequestBody order,
+            @Part("sort") RequestBody sort,
+            @Part("limit") RequestBody limit,
+            @Part List<MultipartBody.Part> select
+    );
+
 }
