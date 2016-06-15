@@ -153,4 +153,6 @@
     <string name="refresh">REFRESH</string>
     <string name="new_divespot">New Divespot</string>
     <string name="pick_location">Pick location</string>
+    <string name="search">Search</string>
+    <string name="dive_spot">Dive Spot</string>
 </resources>

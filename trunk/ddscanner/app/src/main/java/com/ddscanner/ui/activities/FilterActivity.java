@@ -31,6 +31,7 @@ import com.ddscanner.events.OnMapClickEvent;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.SpinnerItemsAdapter;
+import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.EventTrackerHelper;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
@@ -143,28 +144,14 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
 
                     JsonParser parser = new JsonParser();
                     JsonObject jsonObject = parser.parse(responseString).getAsJsonObject();
-                    JsonObject currentsJsonObject = jsonObject.getAsJsonObject("currents");
-                    for (Map.Entry<String, JsonElement> elementEntry : currentsJsonObject.entrySet()) {
-                        filters.getCurrents().put(elementEntry.getKey(), elementEntry.getValue().getAsString());
-                    }
-                    JsonObject levelJsonObject = jsonObject.getAsJsonObject("level");
+                    JsonObject levelJsonObject = jsonObject.getAsJsonObject(Constants.FILTERS_VALUE_LEVEL);
                     for (Map.Entry<String, JsonElement> elementEntry : levelJsonObject.entrySet()) {
                         filters.getLevel().put(elementEntry.getKey(), elementEntry.getValue().getAsString());
                     }
-                    JsonObject objectJsonObject = jsonObject.getAsJsonObject("object");
+                    JsonObject objectJsonObject = jsonObject.getAsJsonObject(Constants.FILTERS_VALUE_OBJECT);
                     for (Map.Entry<String, JsonElement> elementEntry : objectJsonObject.entrySet()) {
                         filters.getObject().put(elementEntry.getKey(), elementEntry.getValue().getAsString());
                     }
-                    JsonObject visibilityJsonObject = jsonObject.getAsJsonObject("visibility");
-                    for (Map.Entry<String, JsonElement> elementEntry : visibilityJsonObject.entrySet()) {
-                        filters.getVisibility().put(elementEntry.getKey(), elementEntry.getValue().getAsString());
-                    }
-
-                    if (jsonObject.get("rating") != null) {
-                        Gson gson = new Gson();
-                        filters.setRating(gson.fromJson(jsonObject.get("rating").getAsJsonArray(), int[].class));
-                    }
-
 
                     Log.i(TAG, responseString);
                     objectsMap = filters.getObject();

@@ -94,7 +94,7 @@ public class SearchSealifeActivity extends AppCompatActivity implements SearchVi
         this.menu = menu;
         final MenuItem item = menu.findItem(R.id.action_search);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
-        searchView.setQueryHint("Search");
+        searchView.setQueryHint(getString(R.string.search));
         searchView.setOnQueryTextListener(this);
         return true;
     }

@@ -209,8 +209,9 @@ public class MainActivity extends BaseAppCompatActivity
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.search_location_menu_button:
-                materialDialog.show();
-                openSearchLocationWindow();
+//                materialDialog.show();
+//                openSearchLocationWindow();
+                SearchSpotOrLocationActivity.show(MainActivity.this);
                 break;
             case R.id.filter_menu_button:
                 Intent intent = new Intent(MainActivity.this, FilterActivity.class);
