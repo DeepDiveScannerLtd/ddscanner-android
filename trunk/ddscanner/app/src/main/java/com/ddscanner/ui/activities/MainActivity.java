@@ -502,5 +502,6 @@ public class MainActivity extends BaseAppCompatActivity
             isDiveSpotListIsShown = false;
             return;
         }
+        super.onBackPressed();
     }
 }
