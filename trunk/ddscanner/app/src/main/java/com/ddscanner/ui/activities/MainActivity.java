@@ -493,14 +493,14 @@ public class MainActivity extends BaseAppCompatActivity
             DDScannerApplication.bus.post(new ChangePageOfMainViewPagerEvent(0));
             return;
         }
-        if (isDiveSpotInfoWindowShown) {
-            DDScannerApplication.bus.post(new CloseInfoWindowEvent());
-            isDiveSpotInfoWindowShown = false;
-            return;
-        }
         if (isDiveSpotListIsShown) {
             DDScannerApplication.bus.post(new CloseListEvent());
             isDiveSpotListIsShown = false;
+            return;
+        }
+        if (isDiveSpotInfoWindowShown) {
+            DDScannerApplication.bus.post(new CloseInfoWindowEvent());
+            isDiveSpotInfoWindowShown = false;
             return;
         }
         super.onBackPressed();

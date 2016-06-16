@@ -3,6 +3,7 @@ package com.ddscanner.ui.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
@@ -18,22 +19,48 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.ddscanner.R;
+import com.ddscanner.entities.DiveSpot;
+import com.ddscanner.entities.DivespotsWrapper;
+import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.CustomPagerAdapter;
 import com.ddscanner.ui.fragments.SearchDiveSpotsFragment;
 import com.ddscanner.ui.fragments.SearchLocationFragment;
+import com.google.gson.Gson;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by lashket on 15.6.16.
  */
-public class SearchSpotOrLocationActivity extends AppCompatActivity {
+public class SearchSpotOrLocationActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
     private Menu menu;
     private Toolbar toolbar;
     private ViewPager viewPager;
     private TabLayout tabLayout;
-    private Fragment searchDiveSpotFragment = new SearchDiveSpotsFragment();
+    private SearchDiveSpotsFragment searchDiveSpotFragment = new SearchDiveSpotsFragment();
     private Fragment searchLocationFragment = new SearchLocationFragment();
     private CustomPagerAdapter adapter;
+    private Handler handler = new Handler();
+
+    private RequestBody name; // query
+    private RequestBody order; // sort by (name)
+    private RequestBody sort; // asc - alphabet desc - nealphabet
+    private RequestBody limit; // limit size
+    private List<MultipartBody.Part> like = new ArrayList<>(); // name - оп имени
+    private List<MultipartBody.Part> select = new ArrayList<>(); // fields (id,name)
+    private long lastEnterDataInMillis;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,11 +114,65 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity {
         final MenuItem item = menu.findItem(R.id.action_search);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
         searchView.setQueryHint(getString(R.string.search));
+        searchView.setOnQueryTextListener(this);
         return true;
     }
 
     public static void show(Context context) {
         Intent intent = new Intent(context, SearchSpotOrLocationActivity.class);
         context.startActivity(intent);
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        if (!newText.isEmpty()) {
+            name = RequestBody.create(MediaType.parse("multipart/form-data"), newText);
+            createRequestBodyies();
+        }
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+
+
+    private void createRequestBodyies() {
+        order = RequestBody.create(MediaType.parse("multipart/form-data"), "name");
+        sort = RequestBody.create(MediaType.parse("multipart/form-data"), "asc");
+        limit = RequestBody.create(MediaType.parse("multipart/form-data"), "5");
+        like.add(MultipartBody.Part.createFormData("like[]", "name"));
+        select.add(MultipartBody.Part.createFormData("select[]", "id"));
+        select.add(MultipartBody.Part.createFormData("select[]", "name"));
+        sendRequest();
+    }
+
+    private void sendRequest() {
+        Call<ResponseBody> call = RestClient.getServiceInstance().getDivespotsByParameters(name, like, order, sort, limit, select);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    String responseString = "";
+                    try {
+                        responseString = response.body().string();
+                        DivespotsWrapper divespotsWrapper;
+                        divespotsWrapper = new Gson().fromJson(responseString, DivespotsWrapper.class);
+                        if (divespotsWrapper.getDiveSpots() != null) {
+                            searchDiveSpotFragment.setDiveSpots((ArrayList<DiveSpot>) divespotsWrapper.getDiveSpots());
+                        }
+                    } catch (IOException e) {
+
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
     }
 }
