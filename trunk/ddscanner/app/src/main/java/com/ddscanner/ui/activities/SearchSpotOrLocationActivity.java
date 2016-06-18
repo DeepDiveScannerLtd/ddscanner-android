@@ -181,7 +181,9 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
-                break;
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 }

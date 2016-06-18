@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.ddscanner.R;
 import com.ddscanner.entities.DiveSpot;
+import com.ddscanner.ui.activities.DiveSpotDetailsActivity;
 
 import java.util.ArrayList;
 
@@ -46,14 +47,21 @@ public class SearchDiveSpotListAdapter extends RecyclerView.Adapter<SearchDiveSp
         return 0;
     }
 
-    public class SearchDiveSpotListViewHolder extends RecyclerView.ViewHolder {
+    public class SearchDiveSpotListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         protected TextView diveSpotName;
+        private Context context;
 
         public SearchDiveSpotListViewHolder(View v) {
             super(v);
+            context = v.getContext();
+            v.setOnClickListener(this);
             diveSpotName = (TextView) v.findViewById(R.id.diveSpotName);
         }
 
+        @Override
+        public void onClick(View v) {
+            DiveSpotDetailsActivity.show(context, String.valueOf(diveSpots.get(getAdapterPosition()).getId()));
+        }
     }
 }
