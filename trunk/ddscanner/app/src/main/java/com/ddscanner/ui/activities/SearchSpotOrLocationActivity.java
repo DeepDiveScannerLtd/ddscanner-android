@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,12 +26,31 @@ import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.CustomPagerAdapter;
 import com.ddscanner.ui.fragments.SearchDiveSpotsFragment;
 import com.ddscanner.ui.fragments.SearchLocationFragment;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResolvingResultCallbacks;
+import com.google.android.gms.common.api.Result;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.ResultCallbacks;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.AddPlaceRequest;
+import com.google.android.gms.location.places.AutocompleteFilter;
+import com.google.android.gms.location.places.AutocompletePrediction;
+import com.google.android.gms.location.places.AutocompletePredictionBuffer;
+import com.google.android.gms.location.places.GeoDataApi;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.PlaceBuffer;
+import com.google.android.gms.location.places.PlacePhotoMetadataResult;
+import com.google.android.gms.location.places.Places;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -50,9 +70,12 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
     private ViewPager viewPager;
     private TabLayout tabLayout;
     private SearchDiveSpotsFragment searchDiveSpotFragment = new SearchDiveSpotsFragment();
-    private Fragment searchLocationFragment = new SearchLocationFragment();
+    private SearchLocationFragment searchLocationFragment = new SearchLocationFragment();
     private CustomPagerAdapter adapter;
     private Handler handler = new Handler();
+    private List<String> placeList = new ArrayList<>();
+
+    private GoogleApiClient googleApiClient;
 
     private RequestBody name; // query
     private RequestBody order; // sort by (name)
@@ -66,6 +89,11 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_divespots);
+        googleApiClient = new GoogleApiClient
+                .Builder(this)
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
+                .build();
         findViews();
     }
 
@@ -126,8 +154,30 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
     @Override
     public boolean onQueryTextChange(String newText) {
         if (!newText.isEmpty()) {
-            name = RequestBody.create(MediaType.parse("multipart/form-data"), newText);
-            createRequestBodyies();
+            switch (viewPager.getCurrentItem()) {
+                case 1:
+                    name = RequestBody.create(MediaType.parse("multipart/form-data"), newText);
+                    createRequestBodyies();
+                    break;
+                case 0:
+                    List<Integer> filterTypes = new ArrayList<Integer>();
+                    placeList = new ArrayList<String>();
+                    filterTypes.add(Place.TYPE_ESTABLISHMENT);
+                    Places.GeoDataApi.getAutocompletePredictions(googleApiClient, newText, new LatLngBounds(new LatLng(-180, -180), new LatLng(180, 180)), null).setResultCallback(
+                            new ResultCallback<AutocompletePredictionBuffer>() {
+                                @Override
+                                public void onResult(@NonNull AutocompletePredictionBuffer autocompletePredictions) {
+                                    if (autocompletePredictions.getStatus().isSuccess()) {
+                                        for (AutocompletePrediction prediction : autocompletePredictions) {
+                                            Log.i("ADA", prediction.getPlaceId());
+                                            placeList.add(prediction.getPlaceId());
+                                        }
+                                        searchLocationFragment.setList((ArrayList<String>) placeList, googleApiClient);
+                                    }
+                                }
+                            });
+                    break;
+            }
         }
         return false;
     }
@@ -185,5 +235,11 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        googleApiClient.connect();
     }
 }

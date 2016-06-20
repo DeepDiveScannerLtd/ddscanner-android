@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="82dp"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/white"
     android:clickable="true"
     android:focusable="true">
@@ -43,7 +44,7 @@
                 android:id="@+id/product_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Rock back"
+                tools:text="Rock back"
                 android:textColor="@color/black_text"
                 android:textSize="18sp" />
 
@@ -62,7 +63,7 @@
                 android:layout_below="@+id/stars"
                 android:textSize="15sp"
                 android:textColor="@color/shuffle_item_text"
-                android:text="Wreck"/>
+                tools:text="Wreck"/>
         </RelativeLayout>
         <ImageView
             android:layout_toRightOf="@+id/product_logo"

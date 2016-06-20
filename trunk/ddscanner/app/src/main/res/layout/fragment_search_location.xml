@@ -2,11 +2,32 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    android:gravity="center"
+    android:background="#FBFBFB"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:text = "search location"/>
+    <LinearLayout
+        android:id="@+id/go_to_my_location"
+        android:background="?attr/selectableItemBackground"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:orientation="horizontal">
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_my_location"/>
+        <TextView
+            android:layout_marginLeft="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/my_current_location"
+            android:fontFamily="sans-serif-medium"
+            android:textColor="@color/black_text"/>
+    </LinearLayout>
+    <ImageView
+        style="@style/DividerStyleFull" />
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/places_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 </LinearLayout>
