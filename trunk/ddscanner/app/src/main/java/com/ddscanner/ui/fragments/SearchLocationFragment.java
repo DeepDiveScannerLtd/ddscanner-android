@@ -44,7 +44,7 @@ public class SearchLocationFragment extends Fragment implements View.OnClickList
         locationRecyclerView.setLayoutManager(linearLayoutManager);
     }
 
-    public void setList(ArrayList<String> places, GoogleApiClient googleApiClient) {
+    public void setList(ArrayList<Place> places, GoogleApiClient googleApiClient) {
         locationRecyclerView.setAdapter(new PlacesListAdapter(places, googleApiClient));
     }
 

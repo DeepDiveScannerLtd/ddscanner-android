@@ -23,10 +23,10 @@ import java.util.List;
  */
 public class PlacesListAdapter extends RecyclerView.Adapter<PlacesListAdapter.PlacesListViewHolder>{
 
-    private ArrayList<String> places;
+    private ArrayList<Place> places;
     private GoogleApiClient googleApiClient;
 
-    public PlacesListAdapter(ArrayList<String> places, GoogleApiClient googleApiClient) {
+    public PlacesListAdapter(ArrayList<Place> places, GoogleApiClient googleApiClient) {
         this.googleApiClient = googleApiClient;
         this.places = places;
     }
@@ -41,22 +41,7 @@ public class PlacesListAdapter extends RecyclerView.Adapter<PlacesListAdapter.Pl
 
     @Override
     public void onBindViewHolder(final PlacesListViewHolder holder, int position) {
-        Places.GeoDataApi.getPlaceById(googleApiClient, places.get(position)).setResultCallback(new ResultCallback<PlaceBuffer>() {
-            @Override
-            public void onResult(PlaceBuffer places) {
-                if( places.getStatus().isSuccess() ) {
-                    try {
 
-
-                        Place place = places.get(0);
-                        holder.placeName.setText(place.getName());
-                    } catch (IllegalStateException e) {
-
-                    }
-                }
-                places.release();
-            }
-        });
     }
 
     @Override

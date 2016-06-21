@@ -19,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.DiveSpot;
 import com.ddscanner.entities.DivespotsWrapper;
@@ -73,7 +74,7 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
     private SearchLocationFragment searchLocationFragment = new SearchLocationFragment();
     private CustomPagerAdapter adapter;
     private Handler handler = new Handler();
-    private List<String> placeList = new ArrayList<>();
+    private List<Place> placeList = new ArrayList<>();
 
     private GoogleApiClient googleApiClient;
 
@@ -161,7 +162,7 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
                     break;
                 case 0:
                     List<Integer> filterTypes = new ArrayList<Integer>();
-                    placeList = new ArrayList<String>();
+                    placeList = new ArrayList<Place>();
                     filterTypes.add(Place.TYPE_ESTABLISHMENT);
                     Places.GeoDataApi.getAutocompletePredictions(googleApiClient, newText, new LatLngBounds(new LatLng(-180, -180), new LatLng(180, 180)), null).setResultCallback(
                             new ResultCallback<AutocompletePredictionBuffer>() {
@@ -170,9 +171,23 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
                                     if (autocompletePredictions.getStatus().isSuccess()) {
                                         for (AutocompletePrediction prediction : autocompletePredictions) {
                                             Log.i("ADA", prediction.getPlaceId());
-                                            placeList.add(prediction.getPlaceId());
+                                            Places.GeoDataApi.getPlaceById(googleApiClient, prediction.getPlaceId()).setResultCallback(new ResultCallback<PlaceBuffer>() {
+                                                @Override
+                                                public void onResult(PlaceBuffer places) {
+                                                    if( places.getStatus().isSuccess() ) {
+                                                        try {
+                                                            Place place = places.get(0);
+                                                            placeList.add(place);
+                                                        } catch (IllegalStateException e) {
+
+                                                        }
+                                                    }
+                                                    places.release();
+                                                }
+                                            });
                                         }
-                                        searchLocationFragment.setList((ArrayList<String>) placeList, googleApiClient);
+                                        Log.i("GGG", String.valueOf(placeList.size()));
+                                        //searchLocationFragment.setList((ArrayList<String>) placeList, googleApiClient);
                                     }
                                 }
                             });
@@ -240,6 +255,34 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
     @Override
     protected void onStart() {
         super.onStart();
+        DDScannerApplication.bus.register(this);
         googleApiClient.connect();
     }
+
+    private void setResultOfActivity(LatLngBounds latLngBounds) {
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra("LATLNGBOUNDS", latLngBounds);
+        setResult(RESULT_OK, returnIntent);
+        finish();
+    }
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        DDScannerApplication.activityPaused();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        DDScannerApplication.activityResumed();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        DDScannerApplication.bus.unregister(this);
+    }
+
 }
