@@ -170,7 +170,6 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
                                 public void onResult(@NonNull AutocompletePredictionBuffer autocompletePredictions) {
                                     if (autocompletePredictions.getStatus().isSuccess()) {
                                         for (AutocompletePrediction prediction : autocompletePredictions) {
-                                            Log.i("ADA", prediction.getPlaceId());
                                             Places.GeoDataApi.getPlaceById(googleApiClient, prediction.getPlaceId()).setResultCallback(new ResultCallback<PlaceBuffer>() {
                                                 @Override
                                                 public void onResult(PlaceBuffer places) {
@@ -186,7 +185,6 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
                                                 }
                                             });
                                         }
-                                        Log.i("GGG", String.valueOf(placeList.size()));
                                         //searchLocationFragment.setList((ArrayList<String>) placeList, googleApiClient);
                                     }
                                 }
