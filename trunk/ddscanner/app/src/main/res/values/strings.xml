@@ -156,4 +156,5 @@
     <string name="search">Search</string>
     <string name="dive_spot">Dive Spot</string>
     <string name="my_current_location">My current location</string>
+    <string name="no_results">No results</string>
 </resources>

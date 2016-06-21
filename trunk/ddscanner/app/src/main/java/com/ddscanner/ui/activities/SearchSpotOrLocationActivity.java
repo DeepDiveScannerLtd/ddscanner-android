@@ -161,9 +161,7 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
                     createRequestBodyies();
                     break;
                 case 0:
-                    List<Integer> filterTypes = new ArrayList<Integer>();
                     placeList = new ArrayList<Place>();
-                    filterTypes.add(Place.TYPE_ESTABLISHMENT);
                     Places.GeoDataApi.getAutocompletePredictions(googleApiClient, newText, new LatLngBounds(new LatLng(-180, -180), new LatLng(180, 180)), null).setResultCallback(
                             new ResultCallback<AutocompletePredictionBuffer>() {
                                 @Override
@@ -184,6 +182,7 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
                                                     places.release();
                                                 }
                                             });
+                                            searchLocationFragment.setList((ArrayList<Place>) placeList, googleApiClient);
                                         }
                                         //searchLocationFragment.setList((ArrayList<String>) placeList, googleApiClient);
                                     }
