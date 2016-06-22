@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 
 import com.ddscanner.R;
 import com.ddscanner.ui.adapters.PlacesListAdapter;
@@ -25,6 +26,8 @@ public class SearchLocationFragment extends Fragment implements View.OnClickList
 
     private RecyclerView locationRecyclerView;
     private LinearLayout goToMyLocation;
+    private LinearLayout content;
+    private ScrollView noResultsView;
 
     @Nullable
     @Override
@@ -38,6 +41,8 @@ public class SearchLocationFragment extends Fragment implements View.OnClickList
     private void findViews(View v){
         locationRecyclerView = (RecyclerView) v.findViewById(R.id.places_recyclerview);
         goToMyLocation = (LinearLayout) v.findViewById(R.id.go_to_my_location);
+        noResultsView = (ScrollView) v.findViewById(R.id.no_results);
+        content = (LinearLayout) v.findViewById(R.id.content);
 
         goToMyLocation.setOnClickListener(this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
@@ -45,7 +50,14 @@ public class SearchLocationFragment extends Fragment implements View.OnClickList
     }
 
     public void setList(ArrayList<Place> places, GoogleApiClient googleApiClient) {
-        locationRecyclerView.setAdapter(new PlacesListAdapter(places, googleApiClient));
+        if (places == null || places.size() == 0) {
+            noResultsView.setVisibility(View.VISIBLE);
+            content.setVisibility(View.GONE);
+        } else {
+            noResultsView.setVisibility(View.GONE);
+            content.setVisibility(View.VISIBLE);
+            locationRecyclerView.setAdapter(new PlacesListAdapter(places, googleApiClient));
+        }
     }
 
     @Override
