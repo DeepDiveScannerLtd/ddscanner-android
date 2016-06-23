@@ -1,5 +1,6 @@
 package com.ddscanner.ui.activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,10 +24,14 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.DiveSpot;
 import com.ddscanner.entities.DivespotsWrapper;
+import com.ddscanner.events.LocationChosedEvent;
+import com.ddscanner.events.OpenAddDsActivityAfterLogin;
+import com.ddscanner.events.PlaceChoosedEvent;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.CustomPagerAdapter;
 import com.ddscanner.ui.fragments.SearchDiveSpotsFragment;
 import com.ddscanner.ui.fragments.SearchLocationFragment;
+import com.ddscanner.utils.Constants;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResolvingResultCallbacks;
@@ -46,6 +51,7 @@ import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.gson.Gson;
+import com.squareup.otto.Subscribe;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -74,7 +80,8 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
     private SearchLocationFragment searchLocationFragment = new SearchLocationFragment();
     private CustomPagerAdapter adapter;
     private Handler handler = new Handler();
-    private List<Place> placeList = new ArrayList<>();
+    private List<String> placeList = new ArrayList<>();
+    private static final int REQUEST_CODE_LOGIN = Constants.SEARCH_ACTIVITY_REQUEST_CODE_LOGIN;
 
     private GoogleApiClient googleApiClient;
 
@@ -83,7 +90,8 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
     private RequestBody sort; // asc - alphabet desc - nealphabet
     private RequestBody limit; // limit size
     private List<MultipartBody.Part> like = new ArrayList<>(); // name - оп имени
-    private List<MultipartBody.Part> select = new ArrayList<>(); // fields (id,name)
+    private List<MultipartBody.Part> select = new ArrayList<>();// fields (id,name)
+    private boolean isTryToOpenAddDiveSpotActivity = false;
     private long lastEnterDataInMillis;
 
     @Override
@@ -147,58 +155,53 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
         return true;
     }
 
-    public static void show(Context context) {
-        Intent intent = new Intent(context, SearchSpotOrLocationActivity.class);
-        context.startActivity(intent);
+    public static void showForResult(Activity activity, int requestCode) {
+        Intent intent = new Intent(activity, SearchSpotOrLocationActivity.class);
+        activity.startActivityForResult(intent, requestCode);
     }
 
     @Override
     public boolean onQueryTextChange(String newText) {
         if (!newText.isEmpty()) {
-            switch (viewPager.getCurrentItem()) {
-                case 1:
-                    name = RequestBody.create(MediaType.parse("multipart/form-data"), newText);
-                    createRequestBodyies();
-                    break;
-                case 0:
-                    placeList = new ArrayList<Place>();
-                    Places.GeoDataApi.getAutocompletePredictions(googleApiClient, newText, new LatLngBounds(new LatLng(-180, -180), new LatLng(180, 180)), null).setResultCallback(
-                            new ResultCallback<AutocompletePredictionBuffer>() {
-                                @Override
-                                public void onResult(@NonNull AutocompletePredictionBuffer autocompletePredictions) {
-                                    if (autocompletePredictions.getStatus().isSuccess()) {
-                                        for (AutocompletePrediction prediction : autocompletePredictions) {
-                                            Places.GeoDataApi.getPlaceById(googleApiClient, prediction.getPlaceId()).setResultCallback(new ResultCallback<PlaceBuffer>() {
-                                                @Override
-                                                public void onResult(PlaceBuffer places) {
-                                                    if( places.getStatus().isSuccess() ) {
-                                                        try {
-                                                            Place place = places.get(0);
-                                                            placeList.add(place);
-                                                        } catch (IllegalStateException e) {
+            name = RequestBody.create(MediaType.parse("multipart/form-data"), newText);
+            createRequestBodyies();
+            placeList = new ArrayList<String>();
+            Places.GeoDataApi.getAutocompletePredictions(googleApiClient, newText, new LatLngBounds(new LatLng(-180, -180), new LatLng(180, 180)), null).setResultCallback(
+                    new ResultCallback<AutocompletePredictionBuffer>() {
+                        @Override
+                        public void onResult(@NonNull AutocompletePredictionBuffer autocompletePredictions) {
+                            if (autocompletePredictions.getStatus().isSuccess()) {
+                                for (AutocompletePrediction prediction : autocompletePredictions) {
+                                    placeList.add(prediction.getPlaceId());
+                                    Places.GeoDataApi.getPlaceById(googleApiClient, prediction.getPlaceId()).setResultCallback(new ResultCallback<PlaceBuffer>() {
+                                        @Override
+                                        public void onResult(PlaceBuffer places) {
+                                            if (places.getStatus().isSuccess()) {
+                                                try {
+                                                    Place place = places.get(0);
+                                                   // placeList.add(place);
+                                                } catch (IllegalStateException e) {
 
-                                                        }
-                                                    }
-                                                    places.release();
                                                 }
-                                            });
-                                            searchLocationFragment.setList((ArrayList<Place>) placeList, googleApiClient);
+                                            }
+                                            places.release();
                                         }
-                                        //searchLocationFragment.setList((ArrayList<String>) placeList, googleApiClient);
-                                    }
+                                    });
+                                   // searchLocationFragment.setList((ArrayList<Place>) placeList, googleApiClient);
                                 }
-                            });
-                    break;
-            }
+                                searchLocationFragment.setList((ArrayList<String>) placeList, googleApiClient);
+                            }
+                        }
+                    });
+
         }
-        return false;
+        return true;
     }
 
     @Override
     public boolean onQueryTextSubmit(String query) {
         return false;
     }
-
 
 
     private void createRequestBodyies() {
@@ -282,4 +285,49 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
         DDScannerApplication.bus.unregister(this);
     }
 
+    @Subscribe
+    public void locationChosed(LocationChosedEvent event) {
+        Places.GeoDataApi.getPlaceById(googleApiClient, event.getLatLngBounds()).setResultCallback(new ResultCallback<PlaceBuffer>() {
+            @Override
+            public void onResult(PlaceBuffer places) {
+                if (places.getStatus().isSuccess()) {
+                    try {
+                        Place place = places.get(0);
+                        if (place.getViewport() != null) {
+                            setResultOfActivity(place.getViewport());
+                        } else {
+                            LatLngBounds latLngBounds = new LatLngBounds(new LatLng(place.getLatLng().latitude - 0.2, place.getLatLng().longitude - 0.2), new LatLng(place.getLatLng().latitude + 0.2, place.getLatLng().longitude + 0.2) );
+                            setResultOfActivity(latLngBounds);
+                        }
+                        // placeList.add(place);
+                    } catch (IllegalStateException e) {
+
+                    }
+                }
+                places.release();
+            }
+        });
+    }
+
+    @Subscribe
+    public void openLoginWindowToAdd(OpenAddDsActivityAfterLogin event) {
+        isTryToOpenAddDiveSpotActivity = true;
+        Intent intent = new Intent(SearchSpotOrLocationActivity.this, SocialNetworks.class);
+        startActivityForResult(intent, REQUEST_CODE_LOGIN);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case REQUEST_CODE_LOGIN:
+                if (resultCode == RESULT_OK) {
+                    if (isTryToOpenAddDiveSpotActivity) {
+                        isTryToOpenAddDiveSpotActivity = false;
+                        AddDiveSpotActivity.show(SearchSpotOrLocationActivity.this);
+                    }
+                }
+                break;
+        }
+    }
 }

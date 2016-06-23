@@ -211,7 +211,8 @@ public class MainActivity extends BaseAppCompatActivity
             case R.id.search_location_menu_button:
 //                materialDialog.show();
 //                openSearchLocationWindow();
-                SearchSpotOrLocationActivity.show(MainActivity.this);
+
+                SearchSpotOrLocationActivity.showForResult(MainActivity.this, REQUEST_CODE_PLACE_AUTOCOMPLETE);
                 break;
             case R.id.filter_menu_button:
                 Intent intent = new Intent(MainActivity.this, FilterActivity.class);
@@ -239,13 +240,14 @@ public class MainActivity extends BaseAppCompatActivity
             case REQUEST_CODE_PLACE_AUTOCOMPLETE:
                 materialDialog.dismiss();
                 if (resultCode == RESULT_OK) {
-                    final Place place = PlaceAutocomplete.getPlace(this, data);
-                    if (place.getViewport() != null) {
-                        DDScannerApplication.bus.post(new PlaceChoosedEvent(place.getViewport()));
-                    } else {
-                        LatLngBounds latLngBounds = new LatLngBounds(new LatLng(place.getLatLng().latitude - 0.2, place.getLatLng().longitude - 0.2), new LatLng(place.getLatLng().latitude + 0.2, place.getLatLng().longitude + 0.2) );
-                        DDScannerApplication.bus.post(new PlaceChoosedEvent(latLngBounds));
-                    }
+                    final LatLngBounds place = data.getParcelableExtra("LATLNGBOUNDS");
+                    DDScannerApplication.bus.post(new PlaceChoosedEvent(place));
+//                    if (place.getViewport() != null) {
+//                        DDScannerApplication.bus.post(new PlaceChoosedEvent(place.getViewport()));
+//                    } else {
+//                        LatLngBounds latLngBounds = new LatLngBounds(new LatLng(place.getLatLng().latitude - 0.2, place.getLatLng().longitude - 0.2), new LatLng(place.getLatLng().latitude + 0.2, place.getLatLng().longitude + 0.2) );
+//                        DDScannerApplication.bus.post(new PlaceChoosedEvent(latLngBounds));
+//                    }
                 }
                 break;
             case REQUEST_CODE_IMAGE_CAPTURE:

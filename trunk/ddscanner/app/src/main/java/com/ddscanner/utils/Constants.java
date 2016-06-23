@@ -10,6 +10,9 @@ public class Constants {
     public static final String IS_HAS_INTERNET = "IS_HAS_INTERNET";
     public static final String IS_LOCATION = "IS_LOCATION";
 
+    /*Search activity*/
+    public static final int SEARCH_ACTIVITY_REQUEST_CODE_LOGIN = 1010;
+
     /*Maplist fragment*/
     public static final String OBJECT_TYPE_REEF = "Reef";
     public static final String OBJECT_TYPE_CAVE = "Cave";

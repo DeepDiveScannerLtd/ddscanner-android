@@ -7,14 +7,14 @@ import com.google.android.gms.maps.model.LatLngBounds;
  */
 public class LocationChosedEvent {
 
-    private LatLngBounds latLngBounds;
+    private String id;
 
-    public LocationChosedEvent(LatLngBounds latLngBounds) {
-        this.latLngBounds = latLngBounds;
+    public LocationChosedEvent(String id) {
+        this.id = id;
     }
 
-    public LatLngBounds getLatLngBounds() {
-        return this.latLngBounds;
+    public String getLatLngBounds() {
+        return this.id;
     }
 
 }
