@@ -42,4 +42,6 @@ public class Constants {
     public static final int REQUEST_CODE_MAIN_ACTIVITY_GET_LOCATION_ON_ACTIVITY_START = 9012;
     public static final int REQUEST_CODE_OPEN_LOGIN_SCREEN = 9013;
 
+    public static final String MULTIPART_TYPE_TEXT = "multipart/form-data";
+
 }

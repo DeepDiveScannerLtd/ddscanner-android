@@ -503,12 +503,12 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
 
     private void createSocialDatarequests() {
         if (SharedPreferenceHelper.getIsUserLogined()) {
-            requestSocial = RequestBody.create(MediaType.parse("multipart/form-data"),
+            requestSocial = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
                     SharedPreferenceHelper.getSn());
-            requestToken = RequestBody.create(MediaType.parse("multipart/form-data"),
+            requestToken = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
                     SharedPreferenceHelper.getToken());
             if (SharedPreferenceHelper.getSn().equals("tw")) {
-                requestSecret = RequestBody.create(MediaType.parse("multipart/form-data"),
+                requestSecret = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
                         SharedPreferenceHelper.getSecret());
             }
         }
@@ -516,34 +516,34 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
 
     private void createRequestBodyies() {
         createSocialDatarequests();
-        requestName = RequestBody.create(MediaType.parse("multipart/form-data"),
+        requestName = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
                 name.getText().toString().trim());
-        requestDepth = RequestBody.create(MediaType.parse("multipart/form-data"),
+        requestDepth = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
                 depth.getText().toString().trim());
         if (diveSpotLocation != null) {
-            requestLat = RequestBody.create(MediaType.parse("multipart/form-data"),
+            requestLat = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
                     String.valueOf(diveSpotLocation.latitude));
-            requestLng = RequestBody.create(MediaType.parse("multipart/form-data"),
+            requestLng = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
                     String.valueOf(diveSpotLocation.longitude));
         }
-        requestAccess = RequestBody.create(MediaType.parse("multipart/form-data"),
+        requestAccess = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
                 helpers.getMirrorOfHashMap(filters.getAccess())
                         .get(accessSpinner.getSelectedItem().toString()));
-        requestObject = RequestBody.create(MediaType.parse("multipart/form-data"),
+        requestObject = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
                 helpers.getMirrorOfHashMap(filters.getObject())
                         .get(objectSpinner.getSelectedItem().toString()));
         Log.i("Selected", helpers.getMirrorOfHashMap(filters.getVisibility())
                 .get(visibilitySpinner.getSelectedItem().toString()));
-        requestVisibility = RequestBody.create(MediaType.parse("multipart/form-data"),
+        requestVisibility = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
                 helpers.getMirrorOfHashMap(filters.getVisibility())
                         .get(visibilitySpinner.getSelectedItem().toString()));
-        requestCurrents = RequestBody.create(MediaType.parse("multipart/form-data"),
+        requestCurrents = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
                 helpers.getMirrorOfHashMap(filters.getCurrents())
                         .get(currentsSpinner.getSelectedItem().toString()));
-        requestLevel = RequestBody.create(MediaType.parse("multipart/form-data"),
+        requestLevel = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
                 helpers.getMirrorOfHashMap(filters.getLevel())
                         .get(levelSpinner.getSelectedItem().toString()));
-        requestDescription = RequestBody.create(MediaType.parse("multipart/form-data"),
+        requestDescription = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
                 description.getText().toString().trim());
         sealife = new ArrayList<>();
         if (sealifeListAddingDiveSpotAdapter != null && sealifeListAddingDiveSpotAdapter.getSealifes() != null) {

@@ -433,44 +433,44 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
     }
 
     private void createRequestBodyies() {
-        requestName = RequestBody.create(MediaType.parse("multipart/form-data"),
+        requestName = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
                 name.getText().toString());
-        requestDepth = RequestBody.create(MediaType.parse("multipart/form-data"),
+        requestDepth = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
                 depth.getText().toString());
-        requestLat = RequestBody.create(MediaType.parse("multipart/form-data"),
+        requestLat = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
                 String.valueOf(diveSpotLocation.latitude));
-        requestLng = RequestBody.create(MediaType.parse("multipart/form-data"),
+        requestLng = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
                 String.valueOf(diveSpotLocation.longitude));
-        requestAccess = RequestBody.create(MediaType.parse("multipart/form-data"),
+        requestAccess = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
                 helpers.getMirrorOfHashMap(filters.getAccess())
                         .get(accessSpinner.getSelectedItem().toString()));
-        requestObject = RequestBody.create(MediaType.parse("multipart/form-data"),
+        requestObject = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
                 helpers.getMirrorOfHashMap(filters.getObject())
                         .get(objectSpinner.getSelectedItem().toString()));
         Log.i("Selected", helpers.getMirrorOfHashMap(filters.getVisibility())
                 .get(visibilitySpinner.getSelectedItem().toString()));
-        requestVisibility = RequestBody.create(MediaType.parse("multipart/form-data"),
+        requestVisibility = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
                 helpers.getMirrorOfHashMap(filters.getVisibility())
                         .get(visibilitySpinner.getSelectedItem().toString()));
-        requestCurrents = RequestBody.create(MediaType.parse("multipart/form-data"),
+        requestCurrents = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
                 helpers.getMirrorOfHashMap(filters.getCurrents())
                         .get(currentsSpinner.getSelectedItem().toString()));
-        requestLevel = RequestBody.create(MediaType.parse("multipart/form-data"),
+        requestLevel = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
                 helpers.getMirrorOfHashMap(filters.getLevel())
                         .get(levelSpinner.getSelectedItem().toString()));
         if (SharedPreferenceHelper.getIsUserLogined()) {
-            requestSocial = RequestBody.create(MediaType.parse("multipart/form-data"),
+            requestSocial = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
                     SharedPreferenceHelper.getSn());
-            requestToken = RequestBody.create(MediaType.parse("multipart/form-data"),
+            requestToken = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
                     SharedPreferenceHelper.getToken());
             if (SharedPreferenceHelper.getSn().equals("tw")) {
-                requestSecret = RequestBody.create(MediaType.parse("multipart/form-data"),
+                requestSecret = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
                         SharedPreferenceHelper.getSecret());
             }
         }
-        requestDescription = RequestBody.create(MediaType.parse("multipart/form-data"),
+        requestDescription = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
                 description.getText().toString());
-        requestType = RequestBody.create(MediaType.parse("multipart/form-data"), "PUT");
+        requestType = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), "PUT");
 
 
         sealifeRequest = new ArrayList<>();
