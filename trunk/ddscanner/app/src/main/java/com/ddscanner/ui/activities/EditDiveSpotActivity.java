@@ -412,7 +412,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
         }
         if (requestCode == RC_PICK_SEALIFE) {
             if (resultCode == RESULT_OK) {
-                Sealife sealife = (Sealife) data.getSerializableExtra("SEALIFE");
+                Sealife sealife = (Sealife) data.getSerializableExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_SEALIFE);
                 sealifeListAddingDiveSpotAdapter.add(sealife);
                 Log.i(TAG, sealifeListAddingDiveSpotAdapter.getSealifes().get(0).getName());
             }
