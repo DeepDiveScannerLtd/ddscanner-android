@@ -1,4 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,9 +8,25 @@
     <include
         android:id="@+id/top"
         layout="@layout/view_toolbar"/>
+    <com.rey.material.widget.ProgressView
+        android:layout_below="@+id/top"
+        android:id="@+id/progressBarFull"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginTop="50dp"
+        android:layout_centerHorizontal="true"
+        app:pv_autostart="true"
+        app:pv_circular="true"
+        app:pv_progressMode="indeterminate"
+        app:pv_progressStyle="@style/CircularProgress" />
+    <RelativeLayout
+        android:id="@+id/content_layout"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/top">
     <RelativeLayout
         android:id="@+id/not_found_layout"
-        android:layout_below="@+id/top"
         android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -36,7 +53,7 @@
         android:visibility="gone"
         android:background="@color/white"
         android:id="@+id/recyclerView"
-        android:layout_below="@+id/top"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+    </RelativeLayout>
     </RelativeLayout>

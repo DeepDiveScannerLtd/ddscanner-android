@@ -37,6 +37,7 @@ import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
 import com.google.gson.Gson;
+import com.rey.material.widget.ProgressView;
 import com.squareup.otto.Subscribe;
 
 import java.io.IOException;
@@ -64,6 +65,8 @@ public class SearchSealifeActivity extends AppCompatActivity implements SearchVi
     private Button addManually;
     private Helpers helpers = new Helpers();
     private Menu menu;
+    private ProgressView progressView;
+    private RelativeLayout contentLayout;
 
 
     private List<Sealife> sealifes = new ArrayList<>();
@@ -78,6 +81,8 @@ public class SearchSealifeActivity extends AppCompatActivity implements SearchVi
         notFoundLayout = (RelativeLayout) findViewById(R.id.not_found_layout);
         textNotFound = (TextView) findViewById(R.id.text_not_found);
         addManually = (Button) findViewById(R.id.add_manualy);
+        progressView = (ProgressView) findViewById(R.id.progressBarFull);
+        contentLayout = (RelativeLayout) findViewById(R.id.content_layout);
         addManually.setOnClickListener(this);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -157,11 +162,10 @@ public class SearchSealifeActivity extends AppCompatActivity implements SearchVi
                     }
                     sealifeResponseEntity = new Gson().fromJson(responseString, SealifeResponseEntity.class);
                     sealifes = sealifeResponseEntity.getSealifes();
-
-                        mRecyclerView.setVisibility(View.VISIBLE);
-
-
+                    mRecyclerView.setVisibility(View.VISIBLE);
                     mAdapter = new SealifeSearchAdapter(SearchSealifeActivity.this, sealifes);
+                    progressView.setVisibility(View.GONE);
+                    contentLayout.setVisibility(View.VISIBLE);
                     mRecyclerView.setAdapter(mAdapter);
                 }
                 if (!response.isSuccessful()) {
