@@ -421,7 +421,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
     private void setReviewsCount(String count) {
         showAllReviews.setText(count);
-
     }
 
     /**

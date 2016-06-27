@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="125dp"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="125dp"
     android:layout_height="100dp"
     android:layout_marginRight="10dp">
     <android.support.v7.widget.AppCompatImageView
         android:id="@+id/seaife_logo"
         android:layout_width="125dp"
         android:layout_height="70dp"
-        android:scaleType="center"
-        android:src="@drawable/ds_sl_photo"/>
+        android:scaleType="center" />
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/sealife_name"
         android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="30dp"
-        android:text="Murena"
+        tools:text="Murena"
         android:ellipsize="end"
         android:lines="1"
         android:gravity="center"

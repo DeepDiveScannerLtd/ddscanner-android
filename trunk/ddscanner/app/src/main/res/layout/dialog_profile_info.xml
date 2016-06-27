@@ -42,7 +42,7 @@
             android:id="@+id/userAvatar"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:src="@drawable/avatar_profilecard"/>
+            android:src="@drawable/avatar_profile_default"/>
         <LinearLayout
             android:layout_marginLeft="23dp"
             android:layout_width="47dp"
