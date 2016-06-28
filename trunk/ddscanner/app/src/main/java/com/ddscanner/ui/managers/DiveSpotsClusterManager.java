@@ -154,9 +154,13 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
     public void onMapClick(LatLng latLng) {
         if (lastClickedMarker != null) {
             // lastClickedMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
-            if (diveSpotsMap.get(lastClickedMarker.getPosition()).getStatus() != null) {
-                if (diveSpotsMap.get(lastClickedMarker.getPosition()).getStatus().equals("waiting")) {
-                    DDScannerApplication.bus.post(new OnMapClickEvent(lastClickedMarker, true));
+            if (diveSpotsMap.get(lastClickedMarker.getPosition()) != null) {
+                if (diveSpotsMap.get(lastClickedMarker.getPosition()).getStatus() != null) {
+                    if (diveSpotsMap.get(lastClickedMarker.getPosition()).getStatus().equals("waiting")) {
+                        DDScannerApplication.bus.post(new OnMapClickEvent(lastClickedMarker, true));
+                    } else {
+                        DDScannerApplication.bus.post(new OnMapClickEvent(lastClickedMarker, false));
+                    }
                 } else {
                     DDScannerApplication.bus.post(new OnMapClickEvent(lastClickedMarker, false));
                 }
