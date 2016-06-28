@@ -239,16 +239,22 @@ public class MainActivity extends BaseAppCompatActivity
         switch (requestCode) {
             case REQUEST_CODE_PLACE_AUTOCOMPLETE:
                 materialDialog.dismiss();
-                if (resultCode == RESULT_OK) {
-                    final LatLngBounds place = data.getParcelableExtra("LATLNGBOUNDS");
-                    DDScannerApplication.bus.post(new PlaceChoosedEvent(place));
+                switch (resultCode) {
+                    case RESULT_OK:
+                        final LatLngBounds place = data.getParcelableExtra(Constants.SEARCH_ACTIVITY_INTENT_KEY);
+                        DDScannerApplication.bus.post(new PlaceChoosedEvent(place));
 //                    if (place.getViewport() != null) {
 //                        DDScannerApplication.bus.post(new PlaceChoosedEvent(place.getViewport()));
 //                    } else {
 //                        LatLngBounds latLngBounds = new LatLngBounds(new LatLng(place.getLatLng().latitude - 0.2, place.getLatLng().longitude - 0.2), new LatLng(place.getLatLng().latitude + 0.2, place.getLatLng().longitude + 0.2) );
 //                        DDScannerApplication.bus.post(new PlaceChoosedEvent(latLngBounds));
 //                    }
+                        break;
+                    case Constants.SEARCH_ACTIVITY_RESULT_CODE_MY_LOCATION:
+                        getLocation(Constants.MAIN_ACTIVITY_REQUEST_CODE_GO_TO_MY_LOCATION);
+                        break;
                 }
+
                 break;
             case REQUEST_CODE_IMAGE_CAPTURE:
                 if (resultCode == RESULT_OK) {
@@ -422,6 +428,9 @@ public class MainActivity extends BaseAppCompatActivity
                         identifyUser(String.valueOf(event.getLocation().getLatitude()), String.valueOf(event.getLocation().getLongitude()));
                         DDScannerApplication.bus.post(new PlaceChoosedEvent(new LatLngBounds(new LatLng(event.getLocation().getLatitude() - 1, event.getLocation().getLongitude() - 1), new LatLng(event.getLocation().getLatitude() + 1, event.getLocation().getLongitude() + 1))));
                     }
+                    break;
+                case Constants.MAIN_ACTIVITY_REQUEST_CODE_GO_TO_MY_LOCATION:
+                    DDScannerApplication.bus.post(new PlaceChoosedEvent(new LatLngBounds(new LatLng(event.getLocation().getLatitude() - 1, event.getLocation().getLongitude() - 1), new LatLng(event.getLocation().getLatitude() + 1, event.getLocation().getLongitude() + 1))));
                     break;
             }
         }

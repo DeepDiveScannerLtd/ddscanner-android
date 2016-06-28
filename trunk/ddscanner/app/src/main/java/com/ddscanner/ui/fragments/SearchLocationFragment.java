@@ -11,7 +11,9 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.events.GoToMyLocationButtonClickedEvent;
 import com.ddscanner.ui.adapters.PlacesListAdapter;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.GeoDataApi;
@@ -64,6 +66,7 @@ public class SearchLocationFragment extends Fragment implements View.OnClickList
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.go_to_my_location:
+                DDScannerApplication.bus.post(new GoToMyLocationButtonClickedEvent());
                 break;
         }
     }

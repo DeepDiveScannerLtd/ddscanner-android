@@ -5,6 +5,7 @@ package com.ddscanner.utils;
  */
 public class Constants {
 
+    public static final int MAIN_ACTIVITY_REQUEST_CODE_GO_TO_MY_LOCATION = 1012;
     public static final String images = "http:";
     public static final String DIVESPOTID = "ID";
     public static final String IS_HAS_INTERNET = "IS_HAS_INTERNET";
@@ -12,6 +13,8 @@ public class Constants {
 
     /*Search activity*/
     public static final int SEARCH_ACTIVITY_REQUEST_CODE_LOGIN = 1010;
+    public static final int SEARCH_ACTIVITY_RESULT_CODE_MY_LOCATION = 1011;
+    public static final String SEARCH_ACTIVITY_INTENT_KEY = "LATLNGBOUNDS";
 
     /*Maplist fragment*/
     public static final String OBJECT_TYPE_REEF = "Reef";

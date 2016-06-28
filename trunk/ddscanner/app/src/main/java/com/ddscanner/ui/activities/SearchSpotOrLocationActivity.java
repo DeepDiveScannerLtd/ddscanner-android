@@ -24,6 +24,7 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.DiveSpot;
 import com.ddscanner.entities.DivespotsWrapper;
+import com.ddscanner.events.GoToMyLocationButtonClickedEvent;
 import com.ddscanner.events.LocationChosedEvent;
 import com.ddscanner.events.OpenAddDsActivityAfterLogin;
 import com.ddscanner.events.PlaceChoosedEvent;
@@ -261,7 +262,7 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
 
     private void setResultOfActivity(LatLngBounds latLngBounds) {
         Intent returnIntent = new Intent();
-        returnIntent.putExtra("LATLNGBOUNDS", latLngBounds);
+        returnIntent.putExtra(Constants.SEARCH_ACTIVITY_INTENT_KEY, latLngBounds);
         setResult(RESULT_OK, returnIntent);
         finish();
     }
@@ -329,5 +330,11 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
                 }
                 break;
         }
+    }
+
+    @Subscribe
+    public void goToMyLocation(GoToMyLocationButtonClickedEvent event) {
+        setResult(Constants.SEARCH_ACTIVITY_RESULT_CODE_MY_LOCATION);
+        finish();
     }
 }
