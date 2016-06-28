@@ -135,6 +135,8 @@ public class MainActivity extends BaseAppCompatActivity
     private com.ddscanner.entities.User selfProfile;
     private RegisterResponse registerResponse = new RegisterResponse();
 
+    private boolean loggedInDuringLastOnStart;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -144,6 +146,7 @@ public class MainActivity extends BaseAppCompatActivity
             LogUtils.i(TAG, "internetConnectionClosed 2");
             InternetClosedActivity.show(this);
         }
+        loggedInDuringLastOnStart = SharedPreferenceHelper.isUserLoggedIn();
     }
 
     private void startActivity() {
@@ -383,7 +386,9 @@ public class MainActivity extends BaseAppCompatActivity
                 }
                 break;
             default:
-                facebookCallbackManager.onActivityResult(requestCode, resultCode, data);
+                if (facebookCallbackManager != null) {
+                    facebookCallbackManager.onActivityResult(requestCode, resultCode, data);
+                }
                 break;
         }
     }
@@ -459,6 +464,11 @@ public class MainActivity extends BaseAppCompatActivity
     public void onStart() {
         super.onStart();
         DDScannerApplication.bus.register(this);
+        if (loggedInDuringLastOnStart != SharedPreferenceHelper.isUserLoggedIn()) {
+            adapter.notifyDataSetChanged();
+            setupTabLayout();
+            loggedInDuringLastOnStart = SharedPreferenceHelper.isUserLoggedIn();
+        }
     }
 
     @Override

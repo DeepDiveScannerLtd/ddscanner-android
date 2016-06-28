@@ -24,6 +24,7 @@ import com.ddscanner.entities.errors.UnknownErrorException;
 import com.ddscanner.entities.errors.UserNotFoundException;
 import com.ddscanner.entities.errors.ValidationErrorException;
 import com.ddscanner.entities.request.RegisterRequest;
+import com.ddscanner.events.LoggedInEvent;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.utils.Helpers;
@@ -221,6 +222,7 @@ public class SocialNetworks extends AppCompatActivity
                     selfProfile = registerResponse.getUser();
                     SharedPreferenceHelper.setUserServerId(selfProfile.getId());
                     SharedPreferenceHelper.setIsUserSignedIn(true, signInType);
+                    DDScannerApplication.bus.post(new LoggedInEvent());
                     Intent returnIntent = new Intent();
                     setResult(Activity.RESULT_OK, returnIntent);
                     finish();
