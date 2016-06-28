@@ -11,10 +11,10 @@ import android.view.View;
 import android.widget.Button;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.RegisterResponse;
+import com.ddscanner.entities.SignInType;
 import com.ddscanner.entities.errors.BadRequestException;
 import com.ddscanner.entities.errors.CommentNotFoundException;
 import com.ddscanner.entities.errors.DiveSpotNotFoundException;
@@ -26,7 +26,6 @@ import com.ddscanner.entities.errors.ValidationErrorException;
 import com.ddscanner.entities.request.RegisterRequest;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
-import com.ddscanner.utils.EventTrackerHelper;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
@@ -38,31 +37,20 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.gson.Gson;
-import com.twitter.sdk.android.Twitter;
-import com.twitter.sdk.android.core.Callback;
-import com.twitter.sdk.android.core.Result;
-import com.twitter.sdk.android.core.TwitterAuthToken;
-import com.twitter.sdk.android.core.TwitterException;
-import com.twitter.sdk.android.core.TwitterSession;
-import com.twitter.sdk.android.core.identity.TwitterLoginButton;
-import com.twitter.sdk.android.core.models.User;
 
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.HashMap;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -74,14 +62,10 @@ public class SocialNetworks extends AppCompatActivity
 
     private static final String TAG = "SOCIAL";
 
-    private TwitterLoginButton loginButton;
-
     private CallbackManager callbackManager;
-    private LoginButton fbLoginButton;
     private Button fbCustomLogin;
 
-    private SignInButton googleSignIn;
-    private Button signIn;
+    private Button googleCustomSignIn;
     private GoogleApiClient mGoogleApiClient;
     private com.ddscanner.entities.User selfProfile;
     private RegisterResponse registerResponse = new RegisterResponse();
@@ -125,8 +109,8 @@ public class SocialNetworks extends AppCompatActivity
                 .enableAutoManage(this, this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
-        signIn = (Button) findViewById(R.id.custom_google);
-        signIn.setOnClickListener(new View.OnClickListener() {
+        googleCustomSignIn = (Button) findViewById(R.id.custom_google);
+        googleCustomSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 signIn();
@@ -146,7 +130,7 @@ public class SocialNetworks extends AppCompatActivity
                     @Override
                     public void onCompleted(JSONObject object, GraphResponse response) {
                         sendRegisterRequest(putTokensToMap(SharedPreferenceHelper.getUserAppId(),
-                                "fb", loginResult.getAccessToken().getToken()));
+                                "fb", loginResult.getAccessToken().getToken()), SignInType.FACEBOOK);
 
                     }
                 }).executeAsync();
@@ -186,16 +170,15 @@ public class SocialNetworks extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == 140) {
-            loginButton.onActivityResult(requestCode, resultCode, data);
-        } else if (requestCode == RC_SIGN_IN) {
+
+        if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             Log.d(TAG, "onActivityResult:GET_TOKEN:success:" + result.getStatus().isSuccess());
             if (result.isSuccess()) {
                 GoogleSignInAccount acct = result.getSignInAccount();
                 String idToken = acct.getIdToken();
                 sendRegisterRequest(putTokensToMap(SharedPreferenceHelper.getUserAppId(),
-                        "go", idToken));
+                        "go", idToken), SignInType.GOOGLE);
             }
         } else {
             callbackManager.onActivityResult(requestCode, resultCode, data);
@@ -213,7 +196,7 @@ public class SocialNetworks extends AppCompatActivity
         return registerRequest;
     }
 
-    private void sendRegisterRequest(final RegisterRequest userData) {
+    private void sendRegisterRequest(final RegisterRequest userData, final SignInType signInType) {
         materialDialog.show();
         Call<ResponseBody> call = RestClient.getServiceInstance().registerUser(userData);
         call.enqueue(new retrofit2.Callback<ResponseBody>() {
@@ -237,7 +220,7 @@ public class SocialNetworks extends AppCompatActivity
                     registerResponse = new Gson().fromJson(responseString, RegisterResponse.class);
                     selfProfile = registerResponse.getUser();
                     SharedPreferenceHelper.setUserServerId(selfProfile.getId());
-                    SharedPreferenceHelper.setIsUserSignedIn(true);
+                    SharedPreferenceHelper.setIsUserSignedIn(true, signInType);
                     Intent returnIntent = new Intent();
                     setResult(Activity.RESULT_OK, returnIntent);
                     finish();

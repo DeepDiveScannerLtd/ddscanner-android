@@ -8,8 +8,6 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
@@ -25,20 +23,14 @@ import com.ddscanner.entities.errors.UnknownErrorException;
 import com.ddscanner.entities.errors.UserNotFoundException;
 import com.ddscanner.entities.errors.ValidationErrorException;
 import com.ddscanner.events.LoggedOutEvent;
-import com.ddscanner.events.PickPhotoFromGallery;
-import com.ddscanner.events.TakePhotoFromCameraEvent;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
-import com.ddscanner.ui.activities.DiveSpotsListActivity;
-import com.ddscanner.ui.activities.SocialNetworks;
-import com.ddscanner.ui.activities.UsersDivespotListSwipableActivity;
 import com.ddscanner.ui.adapters.NotificationsPagerAdapter;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.gson.Gson;
-import com.squareup.otto.Subscribe;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -61,9 +53,6 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
     private Helpers helpers = new Helpers();
     private TabLayout tabLayout;
     private ViewPager notificationsViewPager;
-    private TextView needToLoginMessage;
-    private Button openLoginActivityButton;
-    private View needToLoginLayout;
     private AllNotificationsFragment allNotificationsFragment = new AllNotificationsFragment();
     private ActivityNotificationsFragment activityNotificationsFragment = new ActivityNotificationsFragment();
 
@@ -77,9 +66,6 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_notifications, container, false);
         findViews(view);
-        needToLoginMessage.setText(R.string.notifications_need_to_login);
-        openLoginActivityButton.setOnClickListener(this);
-        setUserLoggedInUI();
         //   getUserNotifications();
         return view;
     }
@@ -87,9 +73,6 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
     private void findViews(View v) {
         tabLayout = (TabLayout) v.findViewById(R.id.notif_tab_layout);
         notificationsViewPager = (ViewPager) v.findViewById(R.id.notif_view_pager);
-        needToLoginMessage = (TextView) v.findViewById(R.id.need_to_login_message);
-        openLoginActivityButton = (Button) v.findViewById(R.id.btn_open_login_screen);
-        needToLoginLayout = v.findViewById(R.id.need_to_login);
         notificationsViewPager.addOnPageChangeListener(this);
         setupViewPager();
     }
@@ -123,7 +106,6 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
             long currentDateInMillis = date1.getTime();
             SharedPreferenceHelper.setLastShowingNotificationTime(currentDateInMillis);
         }
-        setUserLoggedInUI();
         if (!getUserVisibleHint()) {
             return;
         }
@@ -145,7 +127,7 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
     public void setUserVisibleHint(final boolean visible) {
         super.setUserVisibleHint(visible);
         if (visible) {
-            if (SharedPreferenceHelper.getIsUserLogined()) {
+            if (SharedPreferenceHelper.isUserLoggedIn()) {
                 getUserNotifications();
             }
         }
@@ -206,7 +188,7 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         SharedPreferenceHelper.logout();
-                        setUserLoggedInUI();
+                        DDScannerApplication.bus.post(new LoggedOutEvent());
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
                         helpers.showToast(getContext(), R.string.toast_server_error);
@@ -269,9 +251,6 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btn_open_login_screen:
-                startActivityForResult(new Intent(getActivity(), SocialNetworks.class), Constants.REQUEST_CODE_OPEN_LOGIN_SCREEN);
-                break;
         }
     }
 
@@ -281,31 +260,10 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
         switch (requestCode) {
             case Constants.REQUEST_CODE_OPEN_LOGIN_SCREEN:
                 if (resultCode == android.app.Activity.RESULT_OK) {
-                    setUserLoggedInUI();
+
                 }
                 break;
         }
     }
 
-    @Subscribe
-    public void onLoggedOut(LoggedOutEvent event) {
-        setUserLoggedInUI();
-        // TODO Update all data
-    }
-
-    public void setUserLoggedInUI() {
-        if (needToLoginLayout == null || tabLayout == null || notificationsViewPager == null) {
-            return;
-        }
-        if (SharedPreferenceHelper.getIsUserLogined()) {
-            needToLoginLayout.setVisibility(View.GONE);
-            tabLayout.setVisibility(View.VISIBLE);
-            notificationsViewPager.setVisibility(View.VISIBLE);
-            getUserNotifications();
-        } else {
-            needToLoginLayout.setVisibility(View.VISIBLE);
-            tabLayout.setVisibility(View.GONE);
-            notificationsViewPager.setVisibility(View.GONE);
-        }
-    }
 }

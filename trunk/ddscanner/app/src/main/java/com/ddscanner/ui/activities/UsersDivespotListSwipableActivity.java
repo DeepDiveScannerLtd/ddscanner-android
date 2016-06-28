@@ -1,6 +1,5 @@
 package com.ddscanner.ui.activities;
 
-import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -17,12 +16,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.transition.Explode;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 
-import com.daimajia.swipe.util.Attributes;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.DiveSpot;
@@ -129,7 +126,7 @@ public class UsersDivespotListSwipableActivity extends AppCompatActivity {
 
     private void getListOfDiveSPotsCheckins() {
         Map<String, String> map = new HashMap<>();
-        if (SharedPreferenceHelper.getIsUserLogined()) {
+        if (SharedPreferenceHelper.isUserLoggedIn()) {
             map.put("social", SharedPreferenceHelper.getSn());
             map.put("token", SharedPreferenceHelper.getToken());
             if (SharedPreferenceHelper.getSn().equals("tw")) {
@@ -201,7 +198,7 @@ public class UsersDivespotListSwipableActivity extends AppCompatActivity {
 
     private void getListOfDiveSPotsFavorites() {
         Map<String, String> map = new HashMap<>();
-        if (SharedPreferenceHelper.getIsUserLogined()) {
+        if (SharedPreferenceHelper.isUserLoggedIn()) {
             map.put("social", SharedPreferenceHelper.getSn());
             map.put("token", SharedPreferenceHelper.getToken());
             if (SharedPreferenceHelper.getSn().equals("tw")) {

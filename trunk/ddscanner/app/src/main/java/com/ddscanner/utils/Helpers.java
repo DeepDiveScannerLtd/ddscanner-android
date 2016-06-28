@@ -121,7 +121,7 @@ public class Helpers {
 
     public RegisterRequest getRegisterRequest() {
         RegisterRequest registerRequest = new RegisterRequest();
-        if (!SharedPreferenceHelper.getIsUserLogined()) {
+        if (!SharedPreferenceHelper.isUserLoggedIn()) {
             registerRequest.setAppId(SharedPreferenceHelper.getUserAppId());
             registerRequest.setpush(SharedPreferenceHelper.getGcmId());
             return registerRequest;
@@ -270,7 +270,7 @@ public class Helpers {
 
     public Map<String, String> getUserQuryMapRequest() {
         Map<String, String> map = new HashMap<>();
-        if (SharedPreferenceHelper.getIsUserLogined()) {
+        if (SharedPreferenceHelper.isUserLoggedIn()) {
             map.put("social", SharedPreferenceHelper.getSn());
             map.put("token", SharedPreferenceHelper.getToken());
             if (SharedPreferenceHelper.getSn().equals("tw")) {
