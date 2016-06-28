@@ -56,13 +56,11 @@ import com.ddscanner.entities.errors.UserNotFoundException;
 import com.ddscanner.entities.errors.ValidationErrorException;
 import com.ddscanner.entities.request.ValidationReguest;
 import com.ddscanner.events.OpenPhotosActivityEvent;
-import com.ddscanner.events.ShowLoginActivityIntent;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.DiveSpotsPhotosAdapter;
 import com.ddscanner.ui.adapters.EditorsListAdapter;
 import com.ddscanner.ui.adapters.SealifeListAdapter;
-import com.ddscanner.ui.views.TransformationRoundImage;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
@@ -465,7 +463,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
      */
     private void requestProductDetails(String productId) {
         Map<String, String> map = new HashMap<>();
-        if (SharedPreferenceHelper.getIsUserLogined()) {
+        if (SharedPreferenceHelper.isUserLoggedIn()) {
             map.put("social", SharedPreferenceHelper.getSn());
             map.put("token", SharedPreferenceHelper.getToken());
             if (SharedPreferenceHelper.getSn().equals("tw")) {
@@ -583,7 +581,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                    @Override
                    public void onClick(@NonNull MaterialDialog dialog,
                                        @NonNull DialogAction which) {
-                       if (SharedPreferenceHelper.getIsUserLogined()) {
+                       if (SharedPreferenceHelper.isUserLoggedIn()) {
                            Intent editDiveSpotIntent = new Intent(DiveSpotDetailsActivity.this,
                                    EditDiveSpotActivity.class);
                            editDiveSpotIntent
@@ -639,7 +637,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
     private void checkIn() {
         checkinUi();
-        if (!SharedPreferenceHelper.getIsUserLogined()) {
+        if (!SharedPreferenceHelper.isUserLoggedIn()) {
             checkoutUi();
             isClickedCHeckin = true;
             showLoginActivity();
@@ -723,7 +721,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
     private void checkOut() {
         checkoutUi();
-        if (!SharedPreferenceHelper.getIsUserLogined()) {
+        if (!SharedPreferenceHelper.isUserLoggedIn()) {
             checkinUi();
             isClickedCheckOut = true;
             showLoginActivity();
@@ -861,7 +859,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     }
 
     private void addDiveSpotToFavorites() {
-        if (!SharedPreferenceHelper.getIsUserLogined()) {
+        if (!SharedPreferenceHelper.isUserLoggedIn()) {
             isCLickedFavorite = true;
             showLoginActivity();
             return;
@@ -925,7 +923,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     }
 
     private void removeFromFavorites(String id) {
-        if (!SharedPreferenceHelper.getIsUserLogined()) {
+        if (!SharedPreferenceHelper.isUserLoggedIn()) {
             isCLickedFavorite = true;
             showLoginActivity();
             return;

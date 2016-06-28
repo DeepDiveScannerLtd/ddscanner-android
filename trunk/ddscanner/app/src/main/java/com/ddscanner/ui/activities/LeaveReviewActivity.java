@@ -1,13 +1,9 @@
 package com.ddscanner.ui.activities;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,7 +17,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,10 +43,6 @@ import com.ddscanner.utils.EventTrackerHelper;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.squareup.otto.Subscribe;
 
 import java.io.File;
@@ -189,7 +180,7 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void sendReview() {
-        if (!SharedPreferenceHelper.getIsUserLogined()) {
+        if (!SharedPreferenceHelper.isUserLoggedIn()) {
             SocialNetworks.showForResult(LeaveReviewActivity.this, RC_LOGIN);
             return;
         }
@@ -209,7 +200,7 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
         requestId = RequestBody.create(MediaType.parse("multipart/form-data"), diveSpotId);
         requestComment = RequestBody.create(MediaType.parse("multipart/form-data"),
                 text.getText().toString().trim());
-        if (SharedPreferenceHelper.getIsUserLogined()) {
+        if (SharedPreferenceHelper.isUserLoggedIn()) {
             requestSocial = RequestBody.create(MediaType.parse("multipart/form-data"),
                     SharedPreferenceHelper.getSn());
             requessToken = RequestBody.create(MediaType.parse("multipart/form-data"),

@@ -491,7 +491,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                 startActivityForResult(sealifeIntent, RC_PICK_SEALIFE);
                 break;
             case R.id.button_create:
-                if (SharedPreferenceHelper.getIsUserLogined()) {
+                if (SharedPreferenceHelper.isUserLoggedIn()) {
                     createRequestBodyies();
                 } else {
                     Intent loginIntent = new Intent(this, SocialNetworks.class);
@@ -502,7 +502,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void createSocialDatarequests() {
-        if (SharedPreferenceHelper.getIsUserLogined()) {
+        if (SharedPreferenceHelper.isUserLoggedIn()) {
             requestSocial = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
                     SharedPreferenceHelper.getSn());
             requestToken = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),

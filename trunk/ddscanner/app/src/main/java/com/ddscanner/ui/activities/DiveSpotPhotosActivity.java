@@ -3,7 +3,6 @@ package com.ddscanner.ui.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -190,7 +189,7 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fab_add_photo:
-                if (!SharedPreferenceHelper.getIsUserLogined()) {
+                if (!SharedPreferenceHelper.isUserLoggedIn()) {
                     Intent intent = new Intent(this, SocialNetworks.class);
                     startActivityForResult(intent, 100);
                 } else {

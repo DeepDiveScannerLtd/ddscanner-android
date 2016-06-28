@@ -23,7 +23,6 @@ import com.ddscanner.entities.errors.ServerInternalErrorException;
 import com.ddscanner.entities.errors.UnknownErrorException;
 import com.ddscanner.entities.errors.UserNotFoundException;
 import com.ddscanner.entities.errors.ValidationErrorException;
-import com.ddscanner.entities.request.RegisterRequest;
 import com.ddscanner.events.IsCommentLikedEvent;
 import com.ddscanner.events.ShowLoginActivityIntent;
 import com.ddscanner.events.ShowUserDialogEvent;
@@ -198,7 +197,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
     private void likeComment(String id, final ImageView dislikeImage,
                              final ImageView likeImage,
                              final TextView likesCount, final TextView dislikesCount, final int position) {
-        if (!SharedPreferenceHelper.getIsUserLogined()) {
+        if (!SharedPreferenceHelper.isUserLoggedIn()) {
             DDScannerApplication.bus.post(new ShowLoginActivityIntent());
             return;
         }
@@ -262,7 +261,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
     private void dislikeComment(String id, final ImageView dislikeImage,
                                 final ImageView likeImage,
                                 final TextView likesCount, final TextView dislikesCount, final int position) {
-        if (!SharedPreferenceHelper.getIsUserLogined()) {
+        if (!SharedPreferenceHelper.isUserLoggedIn()) {
             DDScannerApplication.bus.post(new ShowLoginActivityIntent());
             return;
         }

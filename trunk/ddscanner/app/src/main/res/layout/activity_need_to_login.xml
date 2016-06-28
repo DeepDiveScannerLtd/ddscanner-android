@@ -14,31 +14,39 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:src="@drawable/ic_login" />
+            android:src="@drawable/ic_nologin" />
 
         <TextView
             android:id="@+id/text"
-            android:layout_width="263dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/icon"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="14dp"
+            android:fontFamily="sans-serif"
             android:gravity="center"
-            android:layout_marginTop="16dp"
             android:text="Login to view profile"
             android:textColor="@color/black_text"
-            android:fontFamily="sans-serif"
-            android:textSize="16sp" />
+            android:textSize="20sp" />
 
         <Button
-            android:id="@+id/btn_open_login_screen"
-            style="@style/EmptyButtons"
+            android:id="@+id/fb_custom"
+            style="?android:attr/borderlessButtonStyle"
             android:layout_width="wrap_content"
+            android:layout_height="65dp"
             android:layout_below="@+id/text"
-            android:layout_marginTop="200dp"
-            android:paddingBottom="12dp"
-            android:paddingTop="12dp"
-            android:paddingLeft="30dp"
-            android:paddingRight="30dp"
-            android:text="@string/login_or_sign_up" />
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="133dp"
+            android:background="@drawable/btn_fb" />
+
+        <Button
+            android:id="@+id/custom_google"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="65dp"
+            android:layout_below="@+id/fb_custom"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/btn_google" />
     </RelativeLayout>
 </LinearLayout>

@@ -95,7 +95,7 @@ public class AddPhotosDoDiveSpotActivity extends AppCompatActivity implements Vi
 
     private void sendRequest() {
         materialDialog.show();
-        if (SharedPreferenceHelper.getIsUserLogined()) {
+        if (SharedPreferenceHelper.isUserLoggedIn()) {
             requestSocial = RequestBody.create(MediaType.parse("multipart/form-data"),
                     SharedPreferenceHelper.getSn());
             requestToken = RequestBody.create(MediaType.parse("multipart/form-data"),

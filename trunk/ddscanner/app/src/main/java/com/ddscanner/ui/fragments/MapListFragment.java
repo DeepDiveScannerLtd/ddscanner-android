@@ -63,7 +63,6 @@ import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 
 /**
@@ -318,7 +317,7 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
                 DiveSpotDetailsActivity.show(getActivity(), String.valueOf(lastDiveSpotId));
                 break;
             case R.id.add_ds_fab:
-                if (SharedPreferenceHelper.getIsUserLogined()) {
+                if (SharedPreferenceHelper.isUserLoggedIn()) {
                     AddDiveSpotActivity.show(getActivity());
                 } else {
                     DDScannerApplication.bus.post(new OpenAddDsActivityAfterLogin());

@@ -6,11 +6,14 @@ import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 
 import com.ddscanner.DDScannerApplication;
+import com.ddscanner.entities.SignInType;
 
 public class SharedPreferenceHelper {
 
     private static final String PREFERENCES_GCM_ID = "PREFERENCES_GCM_ID";
     private static final String TOKEN = "TOKEN";
+    private static final String IS_USER_SIGNED_IN = "ISLOGINED";
+    private static final String SIGN_IN_TYPE = "SIGN_IN_TYPE";
     private static final String SN = "SOCIALNETWORK";
     private static final String SECRET = "SECRET";
     private static final String CURRENTS = "CURRENTS";
@@ -37,7 +40,7 @@ public class SharedPreferenceHelper {
 
     public static String getUserAppId() {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
-        return prefs.getString(USER_APP_ID,"");
+        return prefs.getString(USER_APP_ID, "");
     }
 
     public static void setUserAppIdReceived() {
@@ -121,23 +124,31 @@ public class SharedPreferenceHelper {
         editor.commit();
     }
 
-    public static void setIsUserSignedIn(Boolean isUserSignedIn) {
+    public static void setIsUserSignedIn(Boolean isUserSignedIn, SignInType signInType) {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         Editor editor = prefs.edit();
         if (isUserSignedIn) {
-            editor.putString("ISLOGINED", "1");
+            if (signInType == null) {
+                throw new RuntimeException("signInType must not be null when isUserSignedIn = true");
+            }
+            editor.putString(IS_USER_SIGNED_IN, "1");
+            editor.putString(SIGN_IN_TYPE, signInType.getName());
         } else {
-            editor.putString("ISLOGINED", "0");
+            editor.putString(IS_USER_SIGNED_IN, "0");
+            editor.remove(SIGN_IN_TYPE);
         }
         System.out.println("LOGINED");
         editor.commit();
     }
 
-    public static boolean getIsUserLogined() {
+    public static boolean isUserLoggedIn() {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
-        String is = prefs.getString("ISLOGINED", "");
-        if (is.equals("1")) { return true; }
-        else { return false; }
+        String is = prefs.getString(IS_USER_SIGNED_IN, "");
+        if (is.equals("1")) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public static String getGcmId() {
@@ -185,7 +196,7 @@ public class SharedPreferenceHelper {
         SharedPreferenceHelper.setToken("");
         SharedPreferenceHelper.setUserServerId("");
         SharedPreferenceHelper.setSecret("");
-        SharedPreferenceHelper.setIsUserSignedIn(false);
+        SharedPreferenceHelper.setIsUserSignedIn(false, null);
     }
 
     public static void setUserServerId(String id) {

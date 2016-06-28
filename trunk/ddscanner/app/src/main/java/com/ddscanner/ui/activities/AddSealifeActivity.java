@@ -37,9 +37,6 @@ import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.rey.material.widget.EditText;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
@@ -264,7 +261,7 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
                 distribution.getText().toString());
         requestHabitat = RequestBody.create(MediaType.parse("multipart/form-data"),
                 habitat.getText().toString());
-        if (SharedPreferenceHelper.getIsUserLogined()) {
+        if (SharedPreferenceHelper.isUserLoggedIn()) {
             requestSocial = RequestBody.create(MediaType.parse("multipart/form-data"),
                     SharedPreferenceHelper.getSn());
             requestToken = RequestBody.create(MediaType.parse("multipart/form-data"),

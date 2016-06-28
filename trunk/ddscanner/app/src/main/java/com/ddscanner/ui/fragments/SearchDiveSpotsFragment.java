@@ -58,7 +58,7 @@ public class SearchDiveSpotsFragment extends Fragment implements View.OnClickLis
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.add_spot:
-                if (SharedPreferenceHelper.getIsUserLogined()) {
+                if (SharedPreferenceHelper.isUserLoggedIn()) {
                     AddDiveSpotActivity.show(getContext());
                 } else {
                     DDScannerApplication.bus.post(new OpenAddDsActivityAfterLogin());

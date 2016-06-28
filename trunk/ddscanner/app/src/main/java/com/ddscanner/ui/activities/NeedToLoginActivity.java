@@ -27,15 +27,11 @@ public class NeedToLoginActivity extends AppCompatActivity implements View.OnCli
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_need_to_login);
-        findViewById(R.id.btn_open_login_screen).setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btn_open_login_screen:
-
-                break;
         }
     }
 
