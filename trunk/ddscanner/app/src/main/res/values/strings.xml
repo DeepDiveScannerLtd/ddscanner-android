@@ -165,6 +165,6 @@
     <string name="privacy_policy_part_6">Personal data should be relevant to the purposes for which it is used and should be accurate, complete, and up-to-date.</string>
     <string name="privacy_policy_part_7">We will protect personal information by reasonable security safeguards against loss or theft, as well as unauthorized access, disclosure, copying, use or modification.</string>
     <string name="privacy_policy_part_8">We will provide customers with all information about our policies and practices relating to the management of personal information.</string>
-    <string name="privacy_policy_part_9">The media content that you provide is not considered to be personal information. So under these terms it appears to be the application's property that can be used inside the application.</string>
+    <string name="privacy_policy_part_9">The media content that you provide is not considered to be personal information. So under these terms it appears to be the application\'s property that can be used inside the application.</string>
     <string name="privacy_policy_part_10">We are committed to following all these principles in order to ensure that personal information is protected.</string>
 </resources>
