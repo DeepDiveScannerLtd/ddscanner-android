@@ -167,4 +167,5 @@
     <string name="privacy_policy_part_8">We will provide customers with all information about our policies and practices relating to the management of personal information.</string>
     <string name="privacy_policy_part_9">The media content that you provide is not considered to be personal information. So under these terms it appears to be the application\'s property that can be used inside the application.</string>
     <string name="privacy_policy_part_10">We are committed to following all these principles in order to ensure that personal information is protected.</string>
+    <string name="show_privacy_policy">By signing up, you agree to the Terms of Service and Privacy Policy</string>
 </resources>

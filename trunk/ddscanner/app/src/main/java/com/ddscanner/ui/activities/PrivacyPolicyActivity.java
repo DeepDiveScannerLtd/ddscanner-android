@@ -1,5 +1,7 @@
 package com.ddscanner.ui.activities;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -8,9 +10,6 @@ import android.view.MenuItem;
 
 import com.ddscanner.R;
 
-/**
- * Created by lashket on 29.6.16.
- */
 public class PrivacyPolicyActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
@@ -33,5 +32,10 @@ public class PrivacyPolicyActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public static void show(Context context) {
+        Intent intent = new Intent(context, PrivacyPolicyActivity.class);
+        context.startActivity(intent);
     }
 }

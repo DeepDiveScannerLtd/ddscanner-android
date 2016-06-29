@@ -2,6 +2,8 @@ package com.ddscanner.ui.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +14,7 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.events.LoginViaFacebookClickEvent;
 import com.ddscanner.events.LoginViaGoogleClickEvent;
+import com.ddscanner.ui.activities.PrivacyPolicyActivity;
 
 /**
  * Created by lashket on 20.4.16.
@@ -22,6 +25,7 @@ public class NeedToLoginFragment extends Fragment implements View.OnClickListene
     private static final String ARGS_KEY_TITLE_RES_ID = "ARGS_KEY_TITLE_RES_ID";
 
     private TextView titleTextView;
+    private TextView privacyPolicy;
     private Button fbCustomLogin;
     private Button googleCustomSignIn;
 
@@ -39,11 +43,19 @@ public class NeedToLoginFragment extends Fragment implements View.OnClickListene
 
         fbCustomLogin.setOnClickListener(this);
         googleCustomSignIn.setOnClickListener(this);
+        int color = getContext().getResources().getColor(R.color.primary);
+        SpannableString spannableString = new SpannableString(privacyPolicy.getText());
+        spannableString.setSpan(new ForegroundColorSpan(color), 32, 48, 0);
+        spannableString.setSpan(new ForegroundColorSpan(color), 53, spannableString.length(), 0);
+        privacyPolicy.setText(spannableString);
+        privacyPolicy.setOnClickListener(this);
+
         return v;
     }
 
     private void findViews(View v) {
         titleTextView = (TextView) v.findViewById(R.id.need_to_login_message);
+        privacyPolicy = (TextView) v.findViewById(R.id.privacy_policy);
         fbCustomLogin = (Button) v.findViewById(R.id.fb_custom);
         googleCustomSignIn = (Button) v.findViewById(R.id.custom_google);
     }
@@ -56,6 +68,9 @@ public class NeedToLoginFragment extends Fragment implements View.OnClickListene
                 break;
             case R.id.custom_google:
                 DDScannerApplication.bus.post(new LoginViaGoogleClickEvent());
+                break;
+            case R.id.privacy_policy:
+                PrivacyPolicyActivity.show(getContext());
                 break;
         }
     }

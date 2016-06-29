@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
+    android:background="@color/white"
     android:gravity="center">
 
     <ImageView
@@ -46,4 +47,17 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="5dp"
         android:background="@drawable/btn_google" />
+
+    <TextView
+        android:id="@+id/privacy_policy"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/custom_google"
+        android:layout_marginTop="12dp"
+        android:layout_marginLeft="60dp"
+        android:layout_marginRight="60dp"
+        android:background="?attr/selectableItemBackground"
+        android:text="@string/show_privacy_policy"
+        />
 </RelativeLayout>
