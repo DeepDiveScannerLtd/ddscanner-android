@@ -260,7 +260,7 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
         switch (requestCode) {
             case Constants.REQUEST_CODE_OPEN_LOGIN_SCREEN:
                 if (resultCode == android.app.Activity.RESULT_OK) {
-
+                    tabLayout.setVisibility(View.VISIBLE);
                 }
                 break;
         }

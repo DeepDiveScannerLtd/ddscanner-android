@@ -157,4 +157,14 @@
     <string name="dive_spot">Dive Spot</string>
     <string name="my_current_location">My current location</string>
     <string name="no_results">No results</string>
+    <string name="privacy_policy_first_part">Your data is very important to us. Accordingly, we have developed this Policy in order to explain you how we collect, disclose and use personal information. The following outlines our privacy policy.</string>
+    <string name="privacy_policy_part_2">We will identify the purposes for which personal information is being collected.</string>
+    <string name="privacy_policy_part_3">We will collect and use personal information with the objective of fulfilling those purposes specified by us and for other compatible purposes, unless we obtain the consent of the individual or as required by law.</string>
+    <string name="privacy_policy_part_4">We will only retain personal information as long as necessary for the fulfillment of those purposes specified by us.</string>
+    <string name="privacy_policy_part_5">We will collect personal information by lawful and fair means and, where appropriate, with the knowledge or consent of the individual.</string>
+    <string name="privacy_policy_part_6">Personal data should be relevant to the purposes for which it is used and should be accurate, complete, and up-to-date.</string>
+    <string name="privacy_policy_part_7">We will protect personal information by reasonable security safeguards against loss or theft, as well as unauthorized access, disclosure, copying, use or modification.</string>
+    <string name="privacy_policy_part_8">We will provide customers with all information about our policies and practices relating to the management of personal information.</string>
+    <string name="privacy_policy_part_9">The media content that you provide is not considered to be personal information. So under these terms it appears to be the application's property that can be used inside the application.</string>
+    <string name="privacy_policy_part_10">We are committed to following all these principles in order to ensure that personal information is protected.</string>
 </resources>

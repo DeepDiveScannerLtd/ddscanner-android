@@ -146,7 +146,8 @@
         <activity
             android:name=".ui.activities.ImageSliderActivity"
             android:screenOrientation="portrait" />
-
+        <activity android:name=".ui.activities.PrivacyPolicyActivity"
+            android:screenOrientation="portrait" />
         <receiver
             android:name="com.google.android.gms.gcm.GcmReceiver"
             android:exported="true"

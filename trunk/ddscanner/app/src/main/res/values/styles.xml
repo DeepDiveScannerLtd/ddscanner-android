@@ -220,4 +220,18 @@
         <item name="android:textSize">14sp</item>
     </style>
 
+    <style name="PrivacyPolicyText">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/black_text</item>
+    </style>
+
+    <style name="PrivacyPolicyCircle">
+        <item name="android:layout_width">4dp</item>
+        <item name="android:layout_height">4dp</item>
+        <item name="android:background">@drawable/circle_privace_list_divider</item>
+        <item name="android:layout_marginLeft">3dp</item>
+        <item name="android:layout_marginTop">9dp</item>
+        <item name="android:layout_marginRight">9dp</item>
+    </style>
+
 </resources>
