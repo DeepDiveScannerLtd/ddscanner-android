@@ -6,9 +6,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
@@ -57,7 +60,7 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 
 public class SocialNetworks extends AppCompatActivity
-        implements GoogleApiClient.OnConnectionFailedListener {
+        implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
 
     private static final int RC_SIGN_IN = 0;
 
@@ -72,6 +75,7 @@ public class SocialNetworks extends AppCompatActivity
     private RegisterResponse registerResponse = new RegisterResponse();
     private MaterialDialog materialDialog;
     private Helpers helpers = new Helpers();
+    private TextView privacyPolicy;
 
     public static void show(Context context) {
         Intent intent = new Intent(context, SocialNetworks.class);
@@ -82,8 +86,14 @@ public class SocialNetworks extends AppCompatActivity
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_social_login);
+        privacyPolicy = (TextView) findViewById(R.id.privacy_policy);
         materialDialog = helpers.getMaterialDialog(this);
-
+        int color = getResources().getColor(R.color.primary);
+        SpannableString spannableString = new SpannableString(privacyPolicy.getText());
+        spannableString.setSpan(new ForegroundColorSpan(color), 32, 48, 0);
+        spannableString.setSpan(new ForegroundColorSpan(color), 53, spannableString.length(), 0);
+        privacyPolicy.setText(spannableString);
+        privacyPolicy.setOnClickListener(this);
         callbackManager = CallbackManager.Factory.create();
         fbCustomLogin = (Button) findViewById(R.id.fb_custom);
         fbCustomLogin.setOnClickListener(new View.OnClickListener() {
@@ -299,4 +309,12 @@ public class SocialNetworks extends AppCompatActivity
         context.startActivityForResult(intent, code);
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.privacy_policy:
+                PrivacyPolicyActivity.show(SocialNetworks.this);
+                break;
+        }
+    }
 }
