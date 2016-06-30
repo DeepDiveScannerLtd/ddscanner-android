@@ -169,4 +169,5 @@
     <string name="privacy_policy_part_10">We are committed to following all these principles in order to ensure that personal information is protected.</string>
     <string name="show_privacy_policy">By signing up, you agree to the Terms of Service and Privacy Policy</string>
     <string name="login_to_continue">Login to continue</string>
+    <string name="deep_dive_scanner">Deep Dive Scanner</string>
 </resources>
