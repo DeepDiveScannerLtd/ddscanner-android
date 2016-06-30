@@ -11,6 +11,7 @@ import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -76,6 +77,7 @@ public class SocialNetworks extends AppCompatActivity
     private MaterialDialog materialDialog;
     private Helpers helpers = new Helpers();
     private TextView privacyPolicy;
+    private ImageView close;
 
     public static void show(Context context) {
         Intent intent = new Intent(context, SocialNetworks.class);
@@ -87,7 +89,9 @@ public class SocialNetworks extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_social_login);
         privacyPolicy = (TextView) findViewById(R.id.privacy_policy);
+        close = (ImageView) findViewById(R.id.close);
         materialDialog = helpers.getMaterialDialog(this);
+        close.setOnClickListener(this);
         int color = getResources().getColor(R.color.primary);
         SpannableString spannableString = new SpannableString(privacyPolicy.getText());
         spannableString.setSpan(new ForegroundColorSpan(color), 32, 48, 0);
@@ -314,6 +318,9 @@ public class SocialNetworks extends AppCompatActivity
         switch (v.getId()) {
             case R.id.privacy_policy:
                 PrivacyPolicyActivity.show(SocialNetworks.this);
+                break;
+            case R.id.close:
+                onBackPressed();
                 break;
         }
     }
