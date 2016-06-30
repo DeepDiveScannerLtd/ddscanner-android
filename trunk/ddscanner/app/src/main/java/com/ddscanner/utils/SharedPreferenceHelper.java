@@ -13,6 +13,7 @@ public class SharedPreferenceHelper {
     private static final String PREFERENCES_GCM_ID = "PREFERENCES_GCM_ID";
     private static final String TOKEN = "TOKEN";
     private static final String IS_USER_SIGNED_IN = "ISLOGINED";
+    private static final String IS_FIRST_LAUNCH = "IS_FIRST_LAUNCH";
     private static final String SIGN_IN_TYPE = "SIGN_IN_TYPE";
     private static final String SN = "SOCIALNETWORK";
     private static final String SECRET = "SECRET";
@@ -149,6 +150,18 @@ public class SharedPreferenceHelper {
         } else {
             return false;
         }
+    }
+
+    public static boolean isFirstLaunch() {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        return prefs.getBoolean(IS_FIRST_LAUNCH, false);
+    }
+
+    public static void setIsFirstLaunch(boolean isFirstLaunch) {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        Editor editor = prefs.edit();
+        editor.putBoolean(IS_FIRST_LAUNCH, isFirstLaunch);
+        editor.commit();
     }
 
     public static String getGcmId() {
