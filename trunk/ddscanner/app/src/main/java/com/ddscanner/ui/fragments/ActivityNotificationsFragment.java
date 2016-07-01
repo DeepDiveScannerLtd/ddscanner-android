@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,8 @@ import java.util.List;
  */
 public class ActivityNotificationsFragment extends Fragment {
 
+    private static final String TAG = ActivityNotificationsFragment.class.getName();
+
     private RecyclerView recyclerView;
     private Helpers helpers = new Helpers();
     private ArrayList<Activity> activities;
@@ -39,6 +42,7 @@ public class ActivityNotificationsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
 //        List<Activity> activities = new ArrayList<>();
 //        activities = (ArrayList<Activity>)getArguments().getSerializable("NOTIF");
 

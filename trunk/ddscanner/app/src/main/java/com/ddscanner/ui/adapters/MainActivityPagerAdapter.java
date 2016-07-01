@@ -93,6 +93,7 @@ public class MainActivityPagerAdapter extends FragmentPagerAdapter {
             profileFragment = null;
         }
         if (notificationsFragment != null) {
+            notificationsFragment.clean();
             transition.remove(notificationsFragment);
             notificationsFragment = null;
         }

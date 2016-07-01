@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,14 +49,16 @@ import retrofit2.Response;
  */
 public class NotificationsFragment extends Fragment implements ViewPager.OnPageChangeListener, View.OnClickListener {
 
+    private static final String TAG = NotificationsFragment.class.getName();
+
     private List<Activity> activities = new ArrayList<>();
     private List<Notification> notificationList = new ArrayList<>();
     private Notifications notifications = new Notifications();
     private Helpers helpers = new Helpers();
     private TabLayout tabLayout;
     private ViewPager notificationsViewPager;
-    private AllNotificationsFragment allNotificationsFragment = new AllNotificationsFragment();
-    private ActivityNotificationsFragment activityNotificationsFragment = new ActivityNotificationsFragment();
+    private AllNotificationsFragment allNotificationsFragment;
+    private ActivityNotificationsFragment activityNotificationsFragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -66,15 +70,30 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_notifications, container, false);
         findViews(view);
+        allNotificationsFragment = new AllNotificationsFragment();
+        activityNotificationsFragment = new ActivityNotificationsFragment();
+        setupViewPager();
         //   getUserNotifications();
         return view;
+    }
+
+    public void clean() {
+        FragmentTransaction transition = getFragmentManager().beginTransaction();
+        if (allNotificationsFragment != null) {
+            transition.remove(allNotificationsFragment);
+            allNotificationsFragment = null;
+        }
+        if (activityNotificationsFragment != null) {
+            transition.remove(activityNotificationsFragment);
+            activityNotificationsFragment = null;
+        }
+        transition.commit();
     }
 
     private void findViews(View v) {
         tabLayout = (TabLayout) v.findViewById(R.id.notif_tab_layout);
         notificationsViewPager = (ViewPager) v.findViewById(R.id.notif_view_pager);
         notificationsViewPager.addOnPageChangeListener(this);
-        setupViewPager();
     }
 
     private void setUpTabLayout() {
@@ -83,9 +102,7 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
     }
 
     private void setupViewPager() {
-        NotificationsPagerAdapter notificationsPagerAdapter = new NotificationsPagerAdapter(
-                getFragmentManager()
-        );
+        NotificationsPagerAdapter notificationsPagerAdapter = new NotificationsPagerAdapter(getFragmentManager());
         notificationsPagerAdapter.addFragment(allNotificationsFragment, "Notifications");
         notificationsPagerAdapter.addFragment(activityNotificationsFragment, "Activity");
         notificationsViewPager.setAdapter(notificationsPagerAdapter);
