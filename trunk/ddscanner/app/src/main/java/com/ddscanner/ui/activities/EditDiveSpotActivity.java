@@ -348,7 +348,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
             case R.id.location_layout:
                 Intent intent = new Intent(EditDiveSpotActivity.this,
                         PickLocationActivity.class);
-                intent.putExtra("LATLNG", diveSpotLocation);
+                intent.putExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_LATLNG, diveSpotLocation);
                 startActivityForResult(intent, RC_PICK_LOCATION);
                 break;
             case R.id.btn_add_sealife:
@@ -396,7 +396,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_PICK_LOCATION) {
             if (resultCode == RESULT_OK) {
-                this.diveSpotLocation = data.getParcelableExtra("LATLNG");
+                this.diveSpotLocation = data.getParcelableExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_LATLNG);
             }
         }
         if (requestCode == RC_PICK_PHOTO) {
