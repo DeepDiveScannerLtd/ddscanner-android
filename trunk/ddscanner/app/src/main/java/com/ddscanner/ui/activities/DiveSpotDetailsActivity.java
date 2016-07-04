@@ -407,6 +407,13 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             setCheckinsCountPeople(String.valueOf(usersCheckins.size()) + " " +
                     getString(R.string.peoples_checked_in_here), false);
         }
+        if (divespotDetails.getEditors() != null) {
+            for (User user : divespotDetails.getEditors()) {
+                creatorsEditorsList.add(user);
+            }
+           // EditorsListActivity.show(DiveSpotDetailsActivity.this, (ArrayList<User>) creatorsEditorsList);
+
+        }
     }
 
     private void setCheckinsCountPeople(String count, boolean isNull) {
@@ -555,13 +562,13 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 break;
             case R.id.creator:
 //                helpers.showDialog(diveSpot.getCreator(), getFragmentManager());
-                if (divespotDetails.getEditors() != null) {
-                    for (User user : divespotDetails.getEditors()) {
-                        creatorsEditorsList.add(user);
-                    }
-                    EditorsListActivity.show(DiveSpotDetailsActivity.this, (ArrayList<User>) creatorsEditorsList);
-                    break;
-                }
+//                if (divespotDetails.getEditors() != null) {
+//                    for (User user : divespotDetails.getEditors()) {
+//                        creatorsEditorsList.add(user);
+//                    }
+//                    EditorsListActivity.show(DiveSpotDetailsActivity.this, (ArrayList<User>) creatorsEditorsList);
+//                    break;
+//                }
                 EditorsListActivity.show(DiveSpotDetailsActivity.this, (ArrayList<User>) creatorsEditorsList);
                 break;
             case R.id.button_show_divecenters:
@@ -704,13 +711,13 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private void checkinUi() {
         btnCheckIn.setImageDrawable(AppCompatDrawableManager.get().getDrawable(
                 DiveSpotDetailsActivity.this, R.drawable.ic_acb_pin_checked));
-        btnCheckIn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.orange)));
+        btnCheckIn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
         isCheckedIn = true;
     }
 
     private void checkoutUi() {
         btnCheckIn.setImageDrawable(AppCompatDrawableManager.get().getDrawable(DiveSpotDetailsActivity.this, R.drawable.ic_acb_pin));
-        btnCheckIn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
+        btnCheckIn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.orange)));
         isCheckedIn = false;
     }
 

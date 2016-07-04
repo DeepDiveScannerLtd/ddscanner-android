@@ -17,6 +17,7 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.User;
 import com.ddscanner.events.ShowUserDialogEvent;
+import com.ddscanner.ui.adapters.EditorsUsersListAdapter;
 import com.ddscanner.ui.adapters.UserListAdapter;
 import com.ddscanner.ui.dialogs.ProfileDialog;
 import com.ddscanner.utils.Helpers;
@@ -59,11 +60,11 @@ public class EditorsListActivity extends AppCompatActivity {
     private void setUi() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         usersRecyclerView.setLayoutManager(linearLayoutManager);
-        usersRecyclerView.setAdapter(new UserListAdapter(this, users));
+        usersRecyclerView.setAdapter(new EditorsUsersListAdapter(this, users));
     }
 
     public static void show(Context context, ArrayList<User> users) {
-        Intent intent = new Intent(context, CheckInPeoplesActivity.class);
+        Intent intent = new Intent(context, EditorsListActivity.class);
         intent.putParcelableArrayListExtra("USERS", users);
         context.startActivity(intent);
     }
@@ -72,7 +73,7 @@ public class EditorsListActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                onBackPressed();
+                finish();
                 return true;
         }
         return super.onOptionsItemSelected(item);
