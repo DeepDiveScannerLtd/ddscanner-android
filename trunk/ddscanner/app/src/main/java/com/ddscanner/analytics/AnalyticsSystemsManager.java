@@ -15,7 +15,8 @@ public class AnalyticsSystemsManager {
 
     public static void initAnalyticsSystems(Context context) {
         // Init Google Firebase
-        FirebaseAnalytics.getInstance(context).setAnalyticsCollectionEnabled(!BuildConfig.DEBUG);
+//        FirebaseAnalytics.getInstance(context).setAnalyticsCollectionEnabled(!BuildConfig.DEBUG);
+        FirebaseAnalytics.getInstance(context).setAnalyticsCollectionEnabled(true);
         firebaseAnalytics = FirebaseAnalytics.getInstance(context);
     }
 
