@@ -396,6 +396,8 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         informationLayout.setVisibility(View.VISIBLE);
         if (diveSpot.getCheckin()) {
             checkinUi();
+        } else {
+            checkoutUi();
         }
         if (diveSpot.getValidation() != null) {
             if (!diveSpot.getValidation()) {

@@ -694,6 +694,7 @@
         android:clickable="true"
         android:src="@drawable/ic_acb_pin"
         app:layout_anchor="@id/app_bar_layout"
+        app:backgroundTint="@color/orange"
         app:layout_anchorGravity="bottom|right|end"
         app:layout_collapseMode="pin" />
 
