@@ -455,7 +455,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                             }
                             DiveSpot diveSpot = new Gson().fromJson(responseString, DiveSpot.class);
                             DiveSpotDetailsActivity.show(AddDiveSpotActivity.this, String
-                                    .valueOf(diveSpot.getId()));
+                                    .valueOf(diveSpot.getId()), null);
                             finish();
                         } catch (IOException e) {
 

@@ -24,6 +24,7 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.User;
 import com.ddscanner.entities.errors.BadRequestException;
 import com.ddscanner.entities.errors.CommentNotFoundException;
@@ -264,17 +265,16 @@ public class ProfileFragment extends Fragment
                 logout();
                 break;
             case R.id.checkins_activity:
-                Intent intent = new Intent(getContext(), UsersDivespotListSwipableActivity.class);
-                UsersDivespotListSwipableActivity.show(getContext(), true);
+                UsersDivespotListSwipableActivity.show(getContext(), true, EventsTracker.SpotViewSource.FROM_PROFILE_CHECKINS);
                 break;
             case R.id.favorites_activity:
-                UsersDivespotListSwipableActivity.show(getContext(), false);
+                UsersDivespotListSwipableActivity.show(getContext(), false, EventsTracker.SpotViewSource.FROM_PROFILE_FAVOURITES);
                 break;
             case R.id.edited_activity:
-                DiveSpotsListActivity.show(getContext(), false);
+                DiveSpotsListActivity.show(getContext(), false, EventsTracker.SpotViewSource.FROM_PROFILE_EDITED);
                 break;
             case R.id.created_activity:
-                DiveSpotsListActivity.show(getContext(), true);
+                DiveSpotsListActivity.show(getContext(), true, EventsTracker.SpotViewSource.FROM_PROFILE_CREATED);
                 break;
         }
     }

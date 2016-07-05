@@ -7,11 +7,13 @@ import android.support.multidex.MultiDex;
 import android.telephony.TelephonyManager;
 
 import com.crashlytics.android.Crashlytics;
+import com.ddscanner.analytics.AnalyticsSystemsManager;
 import com.ddscanner.ui.activities.InternetClosedActivity;
 import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.facebook.FacebookSdk;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.squareup.otto.Bus;
 import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
@@ -44,10 +46,13 @@ public class DDScannerApplication extends Application {
     public void onCreate() {
         super.onCreate();
         TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
-        Fabric.with(this, new Crashlytics(), new Twitter(authConfig));
+        if (!BuildConfig.DEBUG) {
+            Fabric.with(this, new Crashlytics(), new Twitter(authConfig));
+        }
         FacebookSdk.sdkInitialize(this);
         instance = this;
         Fresco.initialize(this);
+        AnalyticsSystemsManager.initAnalyticsSystems(this);
     }
 
     protected void attachBaseContext(Context base) {

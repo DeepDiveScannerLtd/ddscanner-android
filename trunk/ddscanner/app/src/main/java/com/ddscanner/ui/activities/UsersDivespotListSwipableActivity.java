@@ -22,6 +22,7 @@ import android.view.Window;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.DiveSpot;
 import com.ddscanner.entities.DivespotsWrapper;
 import com.ddscanner.entities.errors.BadRequestException;
@@ -58,6 +59,7 @@ import retrofit2.Response;
 public class UsersDivespotListSwipableActivity extends AppCompatActivity {
 
     private static final int RC_LOGIN = 9001;
+    private static final String BUNDLE_KEY_SPOT_VIEW_SOURCE = "BUNDLE_KEY_SPOT_VIEW_SOURCE";
 
     private RecyclerView rc;
     private Toolbar toolbar;
@@ -66,6 +68,7 @@ public class UsersDivespotListSwipableActivity extends AppCompatActivity {
     private boolean isCheckin = false;
     private ProgressView progressBarFull;
     private Helpers helpers = new Helpers();
+    private EventsTracker.SpotViewSource spotViewSource;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -79,6 +82,7 @@ public class UsersDivespotListSwipableActivity extends AppCompatActivity {
         } else {
             getListOfDiveSPotsFavorites();
         }
+        spotViewSource = EventsTracker.SpotViewSource.getByName(getIntent().getStringExtra(BUNDLE_KEY_SPOT_VIEW_SOURCE));
     }
 
     @Override
@@ -116,8 +120,7 @@ public class UsersDivespotListSwipableActivity extends AppCompatActivity {
         rc.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         rc.setLayoutManager(linearLayoutManager);
-        swipableDiveSpotListAdapter = new SwipableDiveSpotListAdapter(this,
-                (ArrayList<DiveSpot>) diveSpots, this, isCheckin);
+        swipableDiveSpotListAdapter = new SwipableDiveSpotListAdapter((ArrayList<DiveSpot>) diveSpots, this, spotViewSource);
         rc.setAdapter(swipableDiveSpotListAdapter);
         initSwipe();
         progressBarFull.setVisibility(View.GONE);
@@ -268,9 +271,10 @@ public class UsersDivespotListSwipableActivity extends AppCompatActivity {
         });
     }
 
-    public static void show(Context context, boolean isCheckins) {
+    public static void show(Context context, boolean isCheckins, EventsTracker.SpotViewSource spotViewSource) {
         Intent intent = new Intent(context, UsersDivespotListSwipableActivity.class);
         intent.putExtra("ISCHECKIN", isCheckins);
+        intent.putExtra(BUNDLE_KEY_SPOT_VIEW_SOURCE, spotViewSource.getName());
         context.startActivity(intent);
     }
 

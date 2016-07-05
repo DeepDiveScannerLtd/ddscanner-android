@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.DiveCenter;
 import com.ddscanner.ui.activities.DiveCenterDetailsActivity;
 import com.ddscanner.utils.EventTrackerHelper;
@@ -127,7 +128,7 @@ public class DiveCentersListAdapter extends RecyclerView.Adapter<DiveCentersList
                         put(EventTrackerHelper.PARAM_DIVE_CENTERS_LIST_ITEM_CLICK, diveCenters.get(getAdapterPosition()).getId());
                     }});
 
-            DiveCenterDetailsActivity.show(context, diveCenters.get(getPosition()), DiveCentersListAdapter.this.getLogopath());
+            DiveCenterDetailsActivity.show(context, diveCenters.get(getPosition()), DiveCentersListAdapter.this.getLogopath(), EventsTracker.SpotViewSource.FROM_LIST);
         }
 
     }

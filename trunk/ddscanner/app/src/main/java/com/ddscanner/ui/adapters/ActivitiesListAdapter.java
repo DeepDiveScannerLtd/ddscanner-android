@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.Activity;
 import com.ddscanner.ui.activities.DiveSpotDetailsActivity;
 import com.ddscanner.ui.views.TransformationRoundImage;
@@ -132,11 +133,11 @@ public class ActivitiesListAdapter
         public void onClick(View v) {
             if (sectionAdapter != null) {
                 DiveSpotDetailsActivity.show(context,
-                        String.valueOf(activities.get(sectionAdapter.sectionedPositionToPosition(getAdapterPosition())).getDiveSpot().getId()));
+                        String.valueOf(activities.get(sectionAdapter.sectionedPositionToPosition(getAdapterPosition())).getDiveSpot().getId()), EventsTracker.SpotViewSource.FROM_ACTIVITIES);
                 return;
             }
             DiveSpotDetailsActivity.show(context,
-                    String.valueOf(activities.get(getAdapterPosition()).getDiveSpot().getId()));
+                    String.valueOf(activities.get(getAdapterPosition()).getDiveSpot().getId()), EventsTracker.SpotViewSource.FROM_ACTIVITIES);
         }
     }
 

@@ -13,6 +13,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.DiveSpot;
 import com.ddscanner.ui.activities.DiveSpotDetailsActivity;
 import com.ddscanner.ui.views.TransformationRoundImage;
@@ -24,17 +25,19 @@ import java.util.ArrayList;
 /**
  * Created by lashket on 23.12.15.
  */
-public class ProductListAdapter
-        extends RecyclerView.Adapter<ProductListAdapter.ProductListViewHolder>{
+public class DiveSpotsListAdapter
+        extends RecyclerView.Adapter<DiveSpotsListAdapter.ProductListViewHolder>{
 
-    private static final String TAG = ProductListAdapter.class.getSimpleName();
+    private static final String TAG = DiveSpotsListAdapter.class.getSimpleName();
 
     public ArrayList<DiveSpot> divespots;
     private Context context;
+    private EventsTracker.SpotViewSource spotViewSource;
 
-    public ProductListAdapter(ArrayList<DiveSpot> divespots, Context context) {
+    public DiveSpotsListAdapter(ArrayList<DiveSpot> divespots, Context context, EventsTracker.SpotViewSource spotViewSource) {
         this.divespots = divespots;
         this.context = context;
+        this.spotViewSource = spotViewSource;
     }
 
     @Override
@@ -119,8 +122,7 @@ public class ProductListAdapter
 
         @Override
         public void onClick(View v) {
-            DiveSpotDetailsActivity
-                    .show(context, String.valueOf(divespots.get(getPosition()).getId()));
+            DiveSpotDetailsActivity.show(context, String.valueOf(divespots.get(getAdapterPosition()).getId()), spotViewSource);
         }
     }
 

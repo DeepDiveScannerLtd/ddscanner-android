@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.DiveCenter;
 import com.ddscanner.utils.EventTrackerHelper;
 import com.ddscanner.utils.Helpers;
@@ -146,7 +147,10 @@ public class DiveCenterDetailsActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(R.string.dive_center);
     }
 
-    public static void show(Context context, DiveCenter diveCenter, String path) {
+    public static void show(Context context, DiveCenter diveCenter, String path, EventsTracker.SpotViewSource spotViewSource) {
+        if (spotViewSource != null) {
+            EventsTracker.trackDiveCenterView(Long.valueOf(diveCenter.getId()), spotViewSource);
+        }
         Intent intent = new Intent(context, DiveCenterDetailsActivity.class);
         intent.putExtra("DC", diveCenter);
         intent.putExtra("PATH", path);

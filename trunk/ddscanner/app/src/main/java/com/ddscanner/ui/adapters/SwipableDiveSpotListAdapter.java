@@ -3,12 +3,10 @@ package com.ddscanner.ui.adapters;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -16,6 +14,7 @@ import android.widget.TextView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.DiveSpot;
 import com.ddscanner.events.ShowLoginActivityIntent;
 import com.ddscanner.rest.RestClient;
@@ -39,20 +38,16 @@ public class SwipableDiveSpotListAdapter
         extends RecyclerView.Adapter<SwipableDiveSpotListAdapter.SwipableDiveSpotListViewHolder> {
 
     private static final String TAG = SwipableDiveSpotListAdapter.class.getSimpleName();
+
     public ArrayList<DiveSpot> divespots;
     private Context context;
-    private boolean isCheckins = true;
     private Helpers helpers = new Helpers();
-    private static AppCompatActivity mActivity;
-    private String lastId;
+    private EventsTracker.SpotViewSource spotViewSource;
 
-
-    public SwipableDiveSpotListAdapter(AppCompatActivity activity,ArrayList<DiveSpot> divespots, Context context,
-                                       boolean isCheckins) {
+    public SwipableDiveSpotListAdapter(ArrayList<DiveSpot> divespots, Context context, EventsTracker.SpotViewSource spotViewSource) {
         this.divespots = divespots;
         this.context = context;
-        this.isCheckins = isCheckins;
-        mActivity = activity;
+        this.spotViewSource = spotViewSource;
 
     }
 
@@ -88,8 +83,7 @@ public class SwipableDiveSpotListAdapter
 
     @Override
     public void onBindViewHolder(final SwipableDiveSpotListViewHolder swipableDiveSpotListViewHolder, final int position) {
-        DiveSpot divespot = new DiveSpot();
-        divespot = divespots.get(position);
+        DiveSpot divespot = divespots.get(position);
         swipableDiveSpotListViewHolder.progressBar.getIndeterminateDrawable().
                 setColorFilter(context.getResources().getColor(R.color.primary),
                         PorterDuff.Mode.MULTIPLY);
@@ -136,7 +130,6 @@ public class SwipableDiveSpotListAdapter
     }
 
     private void checkOut(String id) {
-        lastId = id;
         Call<ResponseBody> call = RestClient.getServiceInstance()
                 .checkOutUser(id, helpers.getUserQuryMapRequest());
         call.enqueue(new retrofit2.Callback<ResponseBody>() {
@@ -155,7 +148,6 @@ public class SwipableDiveSpotListAdapter
         });
     }
     private void checkIn(String id) {
-        lastId = id;
         Call<ResponseBody> call = RestClient.getServiceInstance()
                 .checkIn(id, helpers.getRegisterRequest());
         call.enqueue(new retrofit2.Callback<ResponseBody>() {
@@ -174,7 +166,6 @@ public class SwipableDiveSpotListAdapter
         });
     }
     private void addToFavorites(String id) {
-        lastId = id;
         Call<ResponseBody> call = RestClient.getServiceInstance()
                 .addDiveSpotToFavourites(id, helpers.getRegisterRequest());
         call.enqueue(new retrofit2.Callback<ResponseBody>() {
@@ -194,7 +185,6 @@ public class SwipableDiveSpotListAdapter
     }
 
     private void removeFromFavorites(String id) {
-        lastId = id;
         Call<ResponseBody> call = RestClient.getServiceInstance()
                 .removeSpotFromFavorites(id, helpers.getUserQuryMapRequest());
         call.enqueue(new retrofit2.Callback<ResponseBody>() {
@@ -235,7 +225,7 @@ public class SwipableDiveSpotListAdapter
         @Override
         public void onClick(View v) {
             DiveSpotDetailsActivity
-                    .show(mContext, String.valueOf(divespots.get(getAdapterPosition()).getId()));
+                    .show(mContext, String.valueOf(divespots.get(getAdapterPosition()).getId()), spotViewSource);
         }
     }
 

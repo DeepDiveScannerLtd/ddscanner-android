@@ -13,6 +13,7 @@ import android.view.View;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.DiveSpot;
 import com.ddscanner.entities.DivespotsWrapper;
 import com.ddscanner.entities.errors.BadRequestException;
@@ -25,7 +26,7 @@ import com.ddscanner.entities.errors.UserNotFoundException;
 import com.ddscanner.entities.errors.ValidationErrorException;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
-import com.ddscanner.ui.adapters.ProductListAdapter;
+import com.ddscanner.ui.adapters.DiveSpotsListAdapter;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
@@ -47,6 +48,7 @@ import retrofit2.Response;
 public class DiveSpotsListActivity extends AppCompatActivity {
 
     private static final int RC_LOGIN = 9001;
+    private static final String BUNDLE_KEY_SPOT_VIEW_SOURCE = "BUNDLE_KEY_SPOT_VIEW_SOURCE";
     
     private RecyclerView rc;
     private Toolbar toolbar;
@@ -54,12 +56,14 @@ public class DiveSpotsListActivity extends AppCompatActivity {
     private boolean isAdded = false;
     private Helpers helpers = new Helpers();
     private ProgressView progressBarFull;
+    private EventsTracker.SpotViewSource spotViewSource;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_users_dive_spots);
         isAdded = getIntent().getBooleanExtra("ISADDED", false);
+        spotViewSource = EventsTracker.SpotViewSource.getByName(getIntent().getStringExtra(BUNDLE_KEY_SPOT_VIEW_SOURCE));
         if (isAdded) {
             getAddedList();
         } else {
@@ -103,7 +107,7 @@ public class DiveSpotsListActivity extends AppCompatActivity {
         rc.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         rc.setLayoutManager(linearLayoutManager);
-        rc.setAdapter(new ProductListAdapter((ArrayList<DiveSpot>) diveSpots, this));
+        rc.setAdapter(new DiveSpotsListAdapter((ArrayList<DiveSpot>) diveSpots, this, spotViewSource));
         progressBarFull.setVisibility(View.GONE);
         rc.setVisibility(View.VISIBLE);
     }
@@ -252,9 +256,10 @@ public class DiveSpotsListActivity extends AppCompatActivity {
         finish();
     }
 
-    public static void show(Context context, boolean isAdded) {
+    public static void show(Context context, boolean isAdded, EventsTracker.SpotViewSource spotViewSource) {
         Intent intent = new Intent(context, DiveSpotsListActivity.class);
         intent.putExtra("ISADDED", isAdded);
+        intent.putExtra(BUNDLE_KEY_SPOT_VIEW_SOURCE, spotViewSource.getName());
         context.startActivity(intent);
     }
 

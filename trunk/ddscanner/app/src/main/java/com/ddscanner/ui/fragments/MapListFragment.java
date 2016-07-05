@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.support.annotation.UiThread;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.AppCompatDrawableManager;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,7 +18,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -28,6 +26,7 @@ import android.widget.TextView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.DiveSpot;
 import com.ddscanner.events.CloseInfoWindowEvent;
 import com.ddscanner.events.CloseListEvent;
@@ -40,7 +39,7 @@ import com.ddscanner.events.OpenAddDsActivityAfterLogin;
 import com.ddscanner.ui.activities.AddDiveSpotActivity;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.activities.DiveSpotDetailsActivity;
-import com.ddscanner.ui.adapters.ProductListAdapter;
+import com.ddscanner.ui.adapters.DiveSpotsListAdapter;
 import com.ddscanner.ui.managers.DiveSpotsClusterManager;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.LogUtils;
@@ -112,9 +111,7 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
     // List mode member fields
     private RecyclerView rc;
     private RelativeLayout please;
-    private ProductListAdapter productListAdapter;
-    private Button btnGoToMap;
-    private ViewPager viewPager;
+    private DiveSpotsListAdapter productListAdapter;
 
     @Override
     public void onAttach(Context context) {
@@ -314,7 +311,7 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
                 baseAppCompatActivity.getLocation(Constants.REQUEST_CODE_MAP_LIST_FRAGMENT_GO_TO_CURRENT_LOCATION);
                 break;
             case R.id.dive_spot_info_layout:
-                DiveSpotDetailsActivity.show(getActivity(), String.valueOf(lastDiveSpotId));
+                DiveSpotDetailsActivity.show(getActivity(), String.valueOf(lastDiveSpotId), EventsTracker.SpotViewSource.FROM_MAP);
                 break;
             case R.id.add_ds_fab:
                 if (SharedPreferenceHelper.isUserLoggedIn()) {
@@ -431,7 +428,7 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
 
     public void fillDiveSpots(ArrayList<DiveSpot> diveSpots) {
         if (productListAdapter == null) {
-            productListAdapter = new ProductListAdapter(diveSpots, getActivity());
+            productListAdapter = new DiveSpotsListAdapter(diveSpots, getActivity(), EventsTracker.SpotViewSource.FROM_LIST);
             rc.setAdapter(productListAdapter);
         } else {
             productListAdapter.setDiveSpots(diveSpots);

@@ -75,7 +75,6 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.gson.Gson;
@@ -389,17 +388,6 @@ public class MainActivity extends BaseAppCompatActivity
                     facebookCallbackManager.onActivityResult(requestCode, resultCode, data);
                 }
                 break;
-        }
-    }
-
-    private void openSearchLocationWindow() {
-        try {
-            Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN).build(this);
-            startActivityForResult(intent, REQUEST_CODE_PLACE_AUTOCOMPLETE);
-        } catch (GooglePlayServicesRepairableException e) {
-
-        } catch (GooglePlayServicesNotAvailableException e) {
-
         }
     }
 

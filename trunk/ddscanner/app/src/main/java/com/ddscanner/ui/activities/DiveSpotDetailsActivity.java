@@ -39,6 +39,7 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.Checkins;
 import com.ddscanner.entities.Comment;
 import com.ddscanner.entities.Comments;
@@ -184,7 +185,11 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
      * @author Andrei Lashkevich
      */
 
-    public static void show(Context context, String id) {
+    public static void show(Context context, String id, EventsTracker.SpotViewSource spotViewSource) {
+        if (spotViewSource != null) {
+            EventsTracker.trackDiveSpotView(Long.valueOf(id), spotViewSource);
+        }
+
         Intent intent = new Intent(context, DiveSpotDetailsActivity.class);
         intent.putExtra(EXTRA_ID, id);
         context.startActivity(intent);

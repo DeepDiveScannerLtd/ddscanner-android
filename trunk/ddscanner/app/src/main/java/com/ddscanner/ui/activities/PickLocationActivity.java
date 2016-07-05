@@ -23,18 +23,13 @@ import com.ddscanner.utils.Helpers;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlaceAutocomplete;
-import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
-
 
 import java.util.List;
 import java.util.Locale;
@@ -42,7 +37,7 @@ import java.util.Locale;
 /**
  * Created by lashket on 5.4.16.
  */
-public class PickLocationActivity extends AppCompatActivity implements GoogleMap.OnCameraChangeListener, View.OnClickListener {
+public class PickLocationActivity extends AppCompatActivity implements GoogleMap.OnCameraChangeListener, View.OnClickListener, OnMapReadyCallback {
 
     private static final int REQUEST_CODE_PLACE_AUTOCOMPLETE = 8001;
     private static final String TAG = PickLocationActivity.class.getSimpleName();
@@ -82,12 +77,7 @@ public class PickLocationActivity extends AppCompatActivity implements GoogleMap
         applyLocation.setOnClickListener(this);
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapFragment);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        googleMap = mapFragment.getMap();
-        googleMap.setOnCameraChangeListener(this);
-        googleMap.getUiSettings().setZoomControlsEnabled(false);
-        if (startLocation != null) {
-            googleMap.moveCamera(CameraUpdateFactory.newLatLng(startLocation));
-        }
+        mapFragment.getMapAsync(this);
     }
 
     private void toolbarSettings() {
@@ -141,7 +131,7 @@ public class PickLocationActivity extends AppCompatActivity implements GoogleMap
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_PLACE_AUTOCOMPLETE) {
-            Place place = PlaceAutocomplete.getPlace(this, data);
+            Place place = PlacePicker.getPlace(this, data);
             googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(place.getViewport(),0));
         }
     }
@@ -180,14 +170,22 @@ public class PickLocationActivity extends AppCompatActivity implements GoogleMap
 
     private void openSearchLocationWindow() {
         try {
-            Intent intent =
-                    new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY)
-                            .build(this);
-            startActivityForResult(intent, REQUEST_CODE_PLACE_AUTOCOMPLETE);
+            PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+            startActivityForResult(builder.build(this), REQUEST_CODE_PLACE_AUTOCOMPLETE);
         } catch (GooglePlayServicesRepairableException e) {
             Log.i(TAG, e.toString());
         } catch (GooglePlayServicesNotAvailableException e) {
             Log.i(TAG, e.toString());
+        }
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        this.googleMap = googleMap;
+        googleMap.setOnCameraChangeListener(this);
+        googleMap.getUiSettings().setZoomControlsEnabled(false);
+        if (startLocation != null) {
+            googleMap.moveCamera(CameraUpdateFactory.newLatLng(startLocation));
         }
     }
 

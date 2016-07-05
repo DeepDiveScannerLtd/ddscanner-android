@@ -9,8 +9,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.UiThread;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,23 +16,20 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.DiveCenter;
 import com.ddscanner.events.DiveCenterMarkerClickEvent;
 import com.ddscanner.events.LocationReadyEvent;
-import com.ddscanner.events.MarkerClickEvent;
 import com.ddscanner.events.OnMapClickEvent;
 import com.ddscanner.events.PutDiveCentersToListEvent;
 import com.ddscanner.ui.adapters.DiveCentersListAdapter;
-import com.ddscanner.ui.adapters.ProductListAdapter;
 import com.ddscanner.ui.managers.DiveCentersClusterManager;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
@@ -53,8 +48,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.rey.material.widget.ProgressView;
 import com.squareup.otto.Subscribe;
-
-import java.util.ArrayList;
 
 /**
  * Created by lashket on 29.1.16.
@@ -96,10 +89,6 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
 
     // List mode member fields
     private RecyclerView rc;
-    private RelativeLayout please;
-    private ProductListAdapter productListAdapter;
-    private Button btnGoToMap;
-    private ViewPager viewPager;
     private DiveCentersListAdapter diveCentersListAdapter;
     private DiveCentersClusterManager diveCentersClusterManager;
 
@@ -137,7 +126,6 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
         progressBar = (ProgressView) findViewById(R.id.progressBar);
 
         // List mode
-        please = (RelativeLayout) findViewById(R.id.please);
         rc = (RecyclerView) findViewById(R.id.cv);
         mapListFAB = (FloatingActionButton) findViewById(R.id.map_list_fab);
         mapListFAB.setOnClickListener(this);
@@ -229,7 +217,7 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
               //  baseAppCompatActivity.getLocation();
                 break;
             case R.id.dive_spot_info_layout:
-                DiveCenterDetailsActivity.show(this, diveCenter, path);
+                DiveCenterDetailsActivity.show(this, diveCenter, path, EventsTracker.SpotViewSource.FROM_MAP);
                 break;
         }
     }

@@ -16,10 +16,16 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-feature android:name="android.hardware.camera"
+
+    <uses-feature
+        android:name="android.hardware.camera"
         android:required="true" />
 
-    <permission android:name="com.ddscanner.permission.C2D_MESSAGE" />
+    <permission
+        android:name="com.ddscanner.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="com.ddscanner.permission.C2D_MESSAGE" />
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
@@ -38,12 +44,13 @@
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".services.NetworkLisetener" >
+        <receiver android:name=".services.NetworkLisetener">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
                 <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
             </intent-filter>
         </receiver>
+
         <activity
             android:name=".ui.activities.MainActivity"
             android:screenOrientation="portrait">
@@ -53,14 +60,17 @@
             </intent-filter>
         </activity>
         <activity
-            android:configChanges="orientation|screenSize"
-            android:name="me.nereo.multi_image_selector.MultiImageSelectorActivity" />
+            android:name="me.nereo.multi_image_selector.MultiImageSelectorActivity"
+            android:configChanges="orientation|screenSize" />
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
+        <meta-data
+            android:name="firebase_analytics_collection_enabled"
+            android:value="false" />
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
@@ -70,18 +80,23 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDt6pJZggDyU-aQy2Ks6i7WgZd6ayKK-I8" />
-        <activity android:name=".ui.activities.UsersDivespotListSwipableActivity"
+
+        <activity
+            android:name=".ui.activities.UsersDivespotListSwipableActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".ui.activities.DiveSpotsListActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".ui.activities.LocationProvidersNotAvailableActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".ui.activities.LocationPermissionNotGrantedActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".ui.activities.InternetClosedActivity"
-            android:launchMode= "singleInstance"
-            android:screenOrientation="portrait"
-            />
+        <activity
+            android:name=".ui.activities.DiveSpotsListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activities.LocationProvidersNotAvailableActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activities.LocationPermissionNotGrantedActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activities.InternetClosedActivity"
+            android:launchMode="singleInstance"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.activities.SplashActivity"
@@ -92,38 +107,39 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.activities.AddPhotosDoDiveSpotActivity"
+        <activity
+            android:name=".ui.activities.AddPhotosDoDiveSpotActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activities.SearchSpotOrLocationActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activities.AddDiveSpotActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activities.PickLocationActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activities.DiveSpotPhotosActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activities.FilterActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activities.CheckInPeoplesActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activities.ReviewsActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activities.ShowDsLocationActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activities.DiveCentersActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activities.AddSealifeActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activities.EditDiveSpotActivity"
             android:screenOrientation="portrait" />
@@ -133,21 +149,23 @@
         <activity
             android:name=".ui.activities.LeaveReviewActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".ui.activities.DiveCenterDetailsActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activities.DiveSpotDetailsActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activities.SearchSealifeActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activities.ImageSliderActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".ui.activities.PrivacyPolicyActivity"
+        <activity
+            android:name=".ui.activities.PrivacyPolicyActivity"
             android:screenOrientation="portrait" />
+
         <receiver
             android:name="com.google.android.gms.gcm.GcmReceiver"
             android:exported="true"

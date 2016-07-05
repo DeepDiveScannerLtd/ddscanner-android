@@ -16,8 +16,6 @@ import com.ddscanner.R;
 import com.ddscanner.events.GoToMyLocationButtonClickedEvent;
 import com.ddscanner.ui.adapters.PlacesListAdapter;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.places.GeoDataApi;
-import com.google.android.gms.location.places.Place;
 
 import java.util.ArrayList;
 

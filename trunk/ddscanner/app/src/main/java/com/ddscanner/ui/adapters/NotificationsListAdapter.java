@@ -1,14 +1,12 @@
 package com.ddscanner.ui.adapters;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.percent.PercentRelativeLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.AppCompatDrawableManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +14,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.Notification;
 import com.ddscanner.ui.activities.DiveSpotDetailsActivity;
-import com.ddscanner.ui.views.TransformationRoundImage;
-import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;
 
@@ -180,8 +177,7 @@ public class NotificationsListAdapter
             }
 
             if (!isImage) {
-                DiveSpotDetailsActivity.show(context,
-                        String.valueOf(notification.getDiveSpot().getId()));
+                DiveSpotDetailsActivity.show(context, String.valueOf(notification.getDiveSpot().getId()), EventsTracker.SpotViewSource.FROM_NOTIFICATIONS);
             }
 
         }

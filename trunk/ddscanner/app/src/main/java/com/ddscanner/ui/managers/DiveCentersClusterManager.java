@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.DiveCenter;
 import com.ddscanner.entities.DiveCentersResponseEntity;
 import com.ddscanner.events.DiveCenterMarkerClickEvent;
@@ -132,7 +133,7 @@ public class DiveCentersClusterManager extends ClusterManager<DiveCenter> implem
                 put(EventTrackerHelper.PARAM_MARKER_CLICK_TYPE, "dive_center");
                 put(EventTrackerHelper.PARAM_MARKER_CLICK_PLACE_ID, String.valueOf(diveCentersMap.get(marker.getPosition()).getId()));
             }});
-            DiveCenterDetailsActivity.show(context, diveCentersMap.get(marker.getPosition()), logoPath);
+            DiveCenterDetailsActivity.show(context, diveCentersMap.get(marker.getPosition()), logoPath, EventsTracker.SpotViewSource.FROM_MAP);
         }
     }
 
