@@ -188,7 +188,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
     public static void show(Context context, String id, EventsTracker.SpotViewSource spotViewSource) {
         if (spotViewSource != null) {
-            EventsTracker.trackDiveSpotView(Long.valueOf(id), spotViewSource);
+            EventsTracker.trackDiveSpotView(id, spotViewSource);
         }
 
         Intent intent = new Intent(context, DiveSpotDetailsActivity.class);

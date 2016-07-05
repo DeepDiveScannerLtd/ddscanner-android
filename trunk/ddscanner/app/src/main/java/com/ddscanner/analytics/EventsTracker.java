@@ -2,6 +2,12 @@ package com.ddscanner.analytics;
 
 import android.os.Bundle;
 
+import com.flurry.android.FlurryAgent;
+import com.google.firebase.analytics.FirebaseAnalytics;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public class EventsTracker {
 
     private static final String EVENT_NAME_DIVE_SPOT_VIEW = "dive_spot_view";
@@ -25,12 +31,25 @@ public class EventsTracker {
 
     }
 
-    public static void trackDiveSpotView(long diveSpotId, SpotViewSource spotViewSource) {
+    public static void trackDiveSpotView(String diveSpotId, SpotViewSource spotViewSource) {
         // Google Firebase
+        // way 1
+//        Bundle params = new Bundle();
+//        params.putLong(EVENT_PARAMETER_NAME_DIVE_SPOT_ID, diveSpotId);
+//        params.putString(EVENT_PARAMETER_NAME_VIEW_FORM, spotViewSource.getName());
+//        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_DIVE_SPOT_VIEW, params);
+        // way 2
         Bundle params = new Bundle();
-        params.putLong(EVENT_PARAMETER_NAME_DIVE_SPOT_ID, diveSpotId);
-        params.putString(EVENT_PARAMETER_NAME_VIEW_FORM, spotViewSource.getName());
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_DIVE_SPOT_VIEW, params);
+        params.putString(FirebaseAnalytics.Param.ITEM_NAME, "dive_spot");
+        params.putString(FirebaseAnalytics.Param.ITEM_ID, diveSpotId);
+        params.putString(FirebaseAnalytics.Param.ORIGIN, spotViewSource.getName());
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(FirebaseAnalytics.Event.VIEW_ITEM, params);
+
+        // Flurry
+        Map<String, String> flurryParams = new HashMap<>();
+        flurryParams.put(EVENT_PARAMETER_NAME_DIVE_SPOT_ID, diveSpotId);
+        flurryParams.put(EVENT_PARAMETER_NAME_VIEW_FORM, spotViewSource.getName());
+        FlurryAgent.logEvent(EVENT_NAME_DIVE_SPOT_VIEW, flurryParams);
     }
 
     public static void trackDiveCenterView(long diveCenterId, SpotViewSource spotViewSource) {

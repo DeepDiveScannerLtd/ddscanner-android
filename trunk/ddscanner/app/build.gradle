@@ -31,11 +31,13 @@ android {
         debug {
             ext.enableCrashlytics = false
             applicationIdSuffix ".debug"
+            resValue "string", "flurry_api_key", "DQ8GM2FPPSTBGK7QX4D8"
 //            minifyEnabled false
 //            shrinkResources false
 //            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules-debug.pro'
         }
         release {
+            resValue "string", "flurry_api_key", "YP8R2DBM35F6VM7WDFNW"
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -100,6 +102,7 @@ dependencies {
     compile 'com.github.ganfra:material-spinner:1.1.1'
     compile 'com.github.lovetuzitong:MultiImageSelector:1.1'
     compile 'jp.wasabeef:picasso-transformations:2.1.0'
+    compile 'com.flurry.android:analytics:6.4.0'
 }
 
 apply plugin: 'com.google.gms.google-services'
