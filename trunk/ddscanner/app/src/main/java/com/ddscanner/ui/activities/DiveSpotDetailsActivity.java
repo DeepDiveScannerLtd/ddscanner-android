@@ -149,6 +149,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private int avatarImageRadius;
     private ImageView expandEditorsArrow;
     private Menu menu;
+    private List<User> creatorsEditorsList = new ArrayList<>();
 
     private RelativeLayout editorsWrapperView;
     private RecyclerView editorsRecyclerView;
@@ -381,6 +382,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             }
         });
         if (diveSpot.getCreator() != null) {
+            creatorsEditorsList.add(diveSpot.getCreator());
             creatorLayout.setVisibility(View.VISIBLE);
             Picasso.with(this).load(diveSpot.getCreator().getPicture())
                     .resize(Math.round(helpers.convertDpToPixel(avatarImageSize, this)), Math.round(helpers.convertDpToPixel(avatarImageSize, this)))
@@ -409,6 +411,13 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             usersCheckins = divespotDetails.getCheckins();
             setCheckinsCountPeople(String.valueOf(usersCheckins.size()) + " " +
                     getString(R.string.peoples_checked_in_here), false);
+        }
+        if (divespotDetails.getEditors() != null) {
+            for (User user : divespotDetails.getEditors()) {
+                creatorsEditorsList.add(user);
+            }
+           // EditorsListActivity.show(DiveSpotDetailsActivity.this, (ArrayList<User>) creatorsEditorsList);
+
         }
     }
 
@@ -558,15 +567,14 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 break;
             case R.id.creator:
 //                helpers.showDialog(diveSpot.getCreator(), getFragmentManager());
-                if (divespotDetails.getEditors()!=null) {
-                    if (!editorsListExpanded) {
-                        showEditorsList();
-                    } else {
-                        hideEditorsList();
-                    }
-                    break;
-                }
-                helpers.showDialog(diveSpot.getCreator(), getSupportFragmentManager());
+//                if (divespotDetails.getEditors() != null) {
+//                    for (User user : divespotDetails.getEditors()) {
+//                        creatorsEditorsList.add(user);
+//                    }
+//                    EditorsListActivity.show(DiveSpotDetailsActivity.this, (ArrayList<User>) creatorsEditorsList);
+//                    break;
+//                }
+                EditorsListActivity.show(DiveSpotDetailsActivity.this, (ArrayList<User>) creatorsEditorsList);
                 break;
             case R.id.button_show_divecenters:
                 DiveCentersActivity.show(this, new LatLng(Double.valueOf(diveSpot.getLat()), Double.valueOf(diveSpot.getLng())), diveSpot.getName());
@@ -575,38 +583,38 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     }
 
     private void showEditDiveSpotDialog() {
-       MaterialDialog.Builder dialog = new MaterialDialog.Builder(this)
-               .title(R.string.edit)
-               .content(R.string.question_edit_dive_spot)
-               .positiveText(R.string.btn_yes)
-               .positiveColor(getResources().getColor(R.color.primary))
-               .negativeColor(getResources().getColor(R.color.primary))
-               .negativeText(R.string.no_just_vote_answer)
-               .onPositive(new MaterialDialog.SingleButtonCallback() {
-                   @Override
-                   public void onClick(@NonNull MaterialDialog dialog,
-                                       @NonNull DialogAction which) {
-                       if (SharedPreferenceHelper.isUserLoggedIn()) {
-                           Intent editDiveSpotIntent = new Intent(DiveSpotDetailsActivity.this,
-                                   EditDiveSpotActivity.class);
-                           editDiveSpotIntent
-                                   .putExtra(Constants.DIVESPOTID, String.valueOf(diveSpot.getId()));
-                           startActivityForResult(editDiveSpotIntent, RC_EDIT_DIVE_SPOT);
-                       } else {
-                           isClickedEdit = true;
-                           showLoginActivity();
-                       }
-                   }
-               })
-               .onNegative(new MaterialDialog.SingleButtonCallback() {
-                   @Override
-                   public void onClick(@NonNull MaterialDialog dialog,
-                                       @NonNull DialogAction which) {
-                       diveSpotValidation(false);
-                       dialog.dismiss();
-                   }
-               });
-              dialog.show();
+        MaterialDialog.Builder dialog = new MaterialDialog.Builder(this)
+                .title(R.string.edit)
+                .content(R.string.question_edit_dive_spot)
+                .positiveText(R.string.btn_yes)
+                .positiveColor(getResources().getColor(R.color.primary))
+                .negativeColor(getResources().getColor(R.color.primary))
+                .negativeText(R.string.no_just_vote_answer)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog,
+                                        @NonNull DialogAction which) {
+                        if (SharedPreferenceHelper.isUserLoggedIn()) {
+                            Intent editDiveSpotIntent = new Intent(DiveSpotDetailsActivity.this,
+                                    EditDiveSpotActivity.class);
+                            editDiveSpotIntent
+                                    .putExtra(Constants.DIVESPOTID, String.valueOf(diveSpot.getId()));
+                            startActivityForResult(editDiveSpotIntent, RC_EDIT_DIVE_SPOT);
+                        } else {
+                            isClickedEdit = true;
+                            showLoginActivity();
+                        }
+                    }
+                })
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog,
+                                        @NonNull DialogAction which) {
+                        diveSpotValidation(false);
+                        dialog.dismiss();
+                    }
+                });
+        dialog.show();
     }
 
     private void showCheckInDialog() {
@@ -708,13 +716,13 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private void checkinUi() {
         btnCheckIn.setImageDrawable(AppCompatDrawableManager.get().getDrawable(
                 DiveSpotDetailsActivity.this, R.drawable.ic_acb_pin_checked));
-        btnCheckIn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.orange)));
+        btnCheckIn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
         isCheckedIn = true;
     }
 
     private void checkoutUi() {
         btnCheckIn.setImageDrawable(AppCompatDrawableManager.get().getDrawable(DiveSpotDetailsActivity.this, R.drawable.ic_acb_pin));
-        btnCheckIn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
+        btnCheckIn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.orange)));
         isCheckedIn = false;
     }
 
@@ -1134,11 +1142,11 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        this.menu=menu;
+        this.menu = menu;
         return super.onPrepareOptionsMenu(menu);
     }
 
-    private void updateMenuItems(Menu menu,boolean isFavorite) {
+    private void updateMenuItems(Menu menu, boolean isFavorite) {
         if (isFavorite) {
             menu.findItem(R.id.favorite).setTitle("Remove from favorites");
             return;

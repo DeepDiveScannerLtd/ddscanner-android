@@ -222,19 +222,23 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
 
     private void setData() {
         if (notificationsViewPager.getCurrentItem() == 0) {
-            if (notifications.getNotifications() != null) {
-                allNotificationsFragment.addList((ArrayList<Notification>)
-                        notifications.getNotifications());
-            } else {
-                allNotificationsFragment.addList(null);
+            if (allNotificationsFragment != null) {
+                if (notifications.getNotifications() != null) {
+                    allNotificationsFragment.addList((ArrayList<Notification>)
+                            notifications.getNotifications());
+                } else {
+                    allNotificationsFragment.addList(null);
+                }
             }
         }
         if (notificationsViewPager.getCurrentItem() == 1) {
-            if (notifications.getActivities() != null) {
-                activities = notifications.getActivities();
-                activityNotificationsFragment.addList((ArrayList<Activity>) activities);
-            } else {
-                activityNotificationsFragment.addList(null);
+            if (activityNotificationsFragment != null) {
+                if (notifications.getActivities() != null) {
+                    activities = notifications.getActivities();
+                    activityNotificationsFragment.addList((ArrayList<Activity>) activities);
+                } else {
+                    activityNotificationsFragment.addList(null);
+                }
             }
         }
 
