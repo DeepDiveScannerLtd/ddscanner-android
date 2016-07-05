@@ -1,9 +1,6 @@
 package com.ddscanner.analytics;
 
-import android.os.Bundle;
-
 import com.flurry.android.FlurryAgent;
-import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,6 +22,16 @@ public class EventsTracker {
     private static final String EVENT_PARAMETER_CONTACT_DIVE_CENTER_TYPE_PHONE_CALL = "phone_call";
     private static final String EVENT_PARAMETER_CONTACT_DIVE_CENTER_TYPE_EMAIL = "email";
 
+    // ----------------------------------------------------
+    // Content management
+    // ----------------------------------------------------
+
+    private static final String EVENT_NAME_DIVE_SPOT_VALID = "dive_spot_valid";
+    private static final String EVENT_NAME_DIVE_SPOT_INVALID = "dive_spot_invalid";
+//    private static final String EVENT_PARAMETER_NAME_DIVE_SPOT_VALIDATION_RESULT = "result";
+
+    private static final String EVENT_NAME_EDIT_DIVE_SPOT = "edit_dive_spot";
+
 //    private static final String EVENT_NAME_ = "";
 
     private EventsTracker() {
@@ -39,11 +46,11 @@ public class EventsTracker {
 //        params.putString(EVENT_PARAMETER_NAME_VIEW_FORM, spotViewSource.getName());
 //        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_DIVE_SPOT_VIEW, params);
         // way 2
-        Bundle params = new Bundle();
-        params.putString(FirebaseAnalytics.Param.ITEM_NAME, "dive_spot");
-        params.putString(FirebaseAnalytics.Param.ITEM_ID, diveSpotId);
-        params.putString(FirebaseAnalytics.Param.ORIGIN, spotViewSource.getName());
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(FirebaseAnalytics.Event.VIEW_ITEM, params);
+//        Bundle params = new Bundle();
+//        params.putString(FirebaseAnalytics.Param.ITEM_NAME, "dive_spot");
+//        params.putString(FirebaseAnalytics.Param.ITEM_ID, diveSpotId);
+//        params.putString(FirebaseAnalytics.Param.ORIGIN, spotViewSource.getName());
+//        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(FirebaseAnalytics.Event.VIEW_ITEM, params);
 
         // Flurry
         Map<String, String> flurryParams = new HashMap<>();
@@ -52,12 +59,39 @@ public class EventsTracker {
         FlurryAgent.logEvent(EVENT_NAME_DIVE_SPOT_VIEW, flurryParams);
     }
 
-    public static void trackDiveCenterView(long diveCenterId, SpotViewSource spotViewSource) {
+    public static void trackDiveCenterView(String diveCenterId, SpotViewSource spotViewSource) {
         // Google Firebase
-        Bundle params = new Bundle();
-        params.putLong(EVENT_PARAMETER_NAME_DIVE_CENTER_ID, diveCenterId);
-        params.putString(EVENT_PARAMETER_NAME_VIEW_FORM, spotViewSource.getName());
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_DIVE_CENTER_VIEW, params);
+//        Bundle params = new Bundle();
+//        params.putLong(EVENT_PARAMETER_NAME_DIVE_CENTER_ID, diveCenterId);
+//        params.putString(EVENT_PARAMETER_NAME_VIEW_FORM, spotViewSource.getName());
+//        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_DIVE_CENTER_VIEW, params);
+
+        // Flurry
+        Map<String, String> flurryParams = new HashMap<>();
+        flurryParams.put(EVENT_PARAMETER_NAME_DIVE_CENTER_ID, diveCenterId);
+        flurryParams.put(EVENT_PARAMETER_NAME_VIEW_FORM, spotViewSource.getName());
+        FlurryAgent.logEvent(EVENT_NAME_DIVE_CENTER_VIEW, flurryParams);
+    }
+
+    public static void trackDiveSpotValid() {
+        // Flurry
+//        Map<String, String> flurryParams = new HashMap<>();
+//        flurryParams.put(EVENT_PARAMETER_NAME_DIVE_SPOT_VALIDATION_RESULT, result.getName());
+//        FlurryAgent.logEvent(EVENT_NAME_DIVE_SPOT_VALID, flurryParams);
+        FlurryAgent.logEvent(EVENT_NAME_DIVE_SPOT_VALID);
+    }
+
+    public static void trackDiveSpotInvalid() {
+        // Flurry
+//        Map<String, String> flurryParams = new HashMap<>();
+//        flurryParams.put(EVENT_PARAMETER_NAME_DIVE_SPOT_VALIDATION_RESULT, result.getName());
+//        FlurryAgent.logEvent(EVENT_NAME_DIVE_SPOT_INVALID, flurryParams);
+        FlurryAgent.logEvent(EVENT_NAME_DIVE_SPOT_INVALID);
+    }
+
+    public static void trackDiveSpotEdit() {
+        // Flurry
+        FlurryAgent.logEvent(EVENT_NAME_EDIT_DIVE_SPOT);
     }
 
     public enum SpotViewSource {
@@ -98,5 +132,19 @@ public class EventsTracker {
             }
         }
     }
+
+//    public enum DiveSpotValidationResult {
+//        SUCCESS("success"), CANCELLED("cancelled"), CANCELLED_ON_LOGIN("cancelled_on_login"), ERROR("error");
+//
+//        private String name;
+//
+//        DiveSpotValidationResult(String name) {
+//            this.name = name;
+//        }
+//
+//        public String getName() {
+//            return name;
+//        }
+//    }
 
 }

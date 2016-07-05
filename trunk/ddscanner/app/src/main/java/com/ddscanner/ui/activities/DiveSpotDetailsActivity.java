@@ -843,8 +843,12 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 if (response.isSuccessful()) {
                     isInfoValidLayout.setVisibility(View.GONE);
                     thanksLayout.setVisibility(View.VISIBLE);
-                }
-                if (!response.isSuccessful()) {
+                    if (isValid) {
+                        EventsTracker.trackDiveSpotValid();
+                    } else {
+                        EventsTracker.trackDiveSpotInvalid();
+                    }
+                } else {
                     if (response.raw().code() == 422) {
                         String error = "";
                         try {

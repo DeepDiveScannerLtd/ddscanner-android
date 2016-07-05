@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.DiveSpot;
 import com.ddscanner.entities.FiltersResponseEntity;
 import com.ddscanner.entities.Sealife;
@@ -453,6 +454,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                             } catch (JSONException e) {
 
                             }
+                            EventsTracker.trackDiveSpotEdit();
                             DiveSpot diveSpot = new Gson().fromJson(responseString, DiveSpot.class);
                             DiveSpotDetailsActivity.show(AddDiveSpotActivity.this, String
                                     .valueOf(diveSpot.getId()), null);
