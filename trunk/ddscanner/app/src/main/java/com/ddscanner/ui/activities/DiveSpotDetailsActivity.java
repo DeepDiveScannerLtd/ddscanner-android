@@ -144,6 +144,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private RelativeLayout creatorLayout;
     private TextView numberOfCheckinPeoplesHere;
     private TextView creatorName;
+    private TextView newDiveSpotView;
     private ImageView creatorAvatar;
     private int avatarImageSize;
     private int avatarImageRadius;
@@ -253,6 +254,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         showDiveCenters = (Button) findViewById(R.id.button_show_divecenters);
         access = (TextView) findViewById(R.id.access);
         accessLayout = (RelativeLayout) findViewById(R.id.acces_layout);
+        newDiveSpotView = (TextView) findViewById(R.id.newDiveSpot);
     }
 
     /**
@@ -305,6 +307,9 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             access.setText(diveSpot.getAccess());
         } else {
             accessLayout.setVisibility(View.GONE);
+        }
+        if (diveSpot.getStatus().equals("waiting")) {
+            newDiveSpotView.setVisibility(View.VISIBLE);
         }
         object.setText(diveSpot.getObject());
         level.setText(diveSpot.getLevel());
@@ -362,6 +367,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             iv.setPadding(0, 0, 5, 0);
             rating.addView(iv);
         }
+
         photosRecyclerView.setLayoutManager(new GridLayoutManager(DiveSpotDetailsActivity.this, 4));
         //      photosRecyclerView.addItemDecoration(new GridSpacingItemDecoration(4));
         photosRecyclerView.setAdapter(new DiveSpotsPhotosAdapter((ArrayList<String>) diveSpot.getImages(),

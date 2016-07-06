@@ -29,6 +29,22 @@
                     android:fitsSystemWindows="true"
                     android:scaleType="centerCrop"
                     android:transitionName="image" />
+                <TextView
+                    android:id="@+id/newDiveSpot"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginLeft="14dp"
+                    android:paddingTop="3dp"
+                    android:paddingBottom="3dp"
+                    android:paddingRight="9dp"
+                    android:paddingLeft="9dp"
+                    android:textSize="11sp"
+                    android:textColor="@color/white"
+                    android:background="@drawable/new_dive_spot_title_background"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/new_dive_spot"
+                    android:visibility="gone"/>
 
                 <com.rey.material.widget.ProgressView
                     android:id="@+id/progressBar"
