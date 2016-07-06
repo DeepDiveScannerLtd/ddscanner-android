@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
@@ -633,6 +634,12 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 .positiveColor(getResources().getColor(R.color.primary))
                 .negativeColor(getResources().getColor(R.color.primary))
                 .negativeText(R.string.dialog_cancel)
+                .dismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialogInterface) {
+                        EventsTracker.trackCheckIn(EventsTracker.CheckInStatus.CANCELLED);
+                    }
+                })
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog,
@@ -645,6 +652,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                     public void onClick(@NonNull MaterialDialog dialog,
                                         @NonNull DialogAction which) {
                         dialog.dismiss();
+                        EventsTracker.trackCheckIn(EventsTracker.CheckInStatus.CANCELLED);
                     }
                 });
         dialog.show();
@@ -673,8 +681,8 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
                     getCheckins();
-                }
-                if (!response.isSuccessful()) {
+                    EventsTracker.trackCheckIn(EventsTracker.CheckInStatus.SUCCESS);
+                } else {
                     checkoutUi();
                     String responseString = "";
                     try {
@@ -792,8 +800,10 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                         // TODO Handle
                         helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
                     }
+                } else {
+                    EventsTracker.trackCheckOut();
+                    getCheckins();
                 }
-                getCheckins();
             }
 
             @Override
