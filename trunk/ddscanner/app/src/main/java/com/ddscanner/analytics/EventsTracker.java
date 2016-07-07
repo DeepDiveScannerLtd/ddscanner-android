@@ -11,12 +11,7 @@ public class EventsTracker {
     private static final String EVENT_NAME_DIVE_CENTER_VIEW = "dive_center_view";
     private static final String EVENT_PARAMETER_NAME_DIVE_SPOT_ID = "dive_spot_id";
     private static final String EVENT_PARAMETER_NAME_DIVE_CENTER_ID = "dive_center_id";
-    private static final String EVENT_PARAMETER_NAME_VIEW_FORM = "source";
-
-    private static final String EVENT_NAME_CHECK_IN = "check_in";
-    private static final String EVENT_PARAMETER_CHECK_IN_STEP_BUTTON_CLICK = "click";
-    private static final String EVENT_PARAMETER_CHECK_IN_STEP_CONFIRMATION_YES = "confirmed";
-    private static final String EVENT_PARAMETER_CHECK_IN_STEP_CONFIRMATION_NO = "cancelled";
+    private static final String EVENT_PARAMETER_NAME_VIEW_SOURCE = "source";
 
     private static final String EVENT_NAME_CONTACT_DIVE_CENTER = "contact_dive_center";
     private static final String EVENT_PARAMETER_CONTACT_DIVE_CENTER_TYPE_PHONE_CALL = "phone_call";
@@ -32,6 +27,17 @@ public class EventsTracker {
 
     private static final String EVENT_NAME_EDIT_DIVE_SPOT = "edit_dive_spot";
 
+    // ----------------------------------------------------
+    // User activity
+    // ----------------------------------------------------
+
+    private static final String EVENT_NAME_CHECK_IN = "check_in";
+    private static final String EVENT_PARAMETER_NAME_CHECK_IN_STATUS = "status";
+    private static final String EVENT_NAME_CHECK_OUT = "check_out";
+
+    private static final String EVENT_NAME_SEND_REVIEW = "send_review";
+    private static final String EVENT_PARAMETER_NAME_SEND_REVIEW_SOURCE = "source";
+
 //    private static final String EVENT_NAME_ = "";
 
     private EventsTracker() {
@@ -43,7 +49,7 @@ public class EventsTracker {
         // way 1
 //        Bundle params = new Bundle();
 //        params.putLong(EVENT_PARAMETER_NAME_DIVE_SPOT_ID, diveSpotId);
-//        params.putString(EVENT_PARAMETER_NAME_VIEW_FORM, spotViewSource.getName());
+//        params.putString(EVENT_PARAMETER_NAME_VIEW_SOURCE, spotViewSource.getName());
 //        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_DIVE_SPOT_VIEW, params);
         // way 2
 //        Bundle params = new Bundle();
@@ -55,7 +61,7 @@ public class EventsTracker {
         // Flurry
         Map<String, String> flurryParams = new HashMap<>();
         flurryParams.put(EVENT_PARAMETER_NAME_DIVE_SPOT_ID, diveSpotId);
-        flurryParams.put(EVENT_PARAMETER_NAME_VIEW_FORM, spotViewSource.getName());
+        flurryParams.put(EVENT_PARAMETER_NAME_VIEW_SOURCE, spotViewSource.getName());
         FlurryAgent.logEvent(EVENT_NAME_DIVE_SPOT_VIEW, flurryParams);
     }
 
@@ -63,13 +69,13 @@ public class EventsTracker {
         // Google Firebase
 //        Bundle params = new Bundle();
 //        params.putLong(EVENT_PARAMETER_NAME_DIVE_CENTER_ID, diveCenterId);
-//        params.putString(EVENT_PARAMETER_NAME_VIEW_FORM, spotViewSource.getName());
+//        params.putString(EVENT_PARAMETER_NAME_VIEW_SOURCE, spotViewSource.getName());
 //        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_DIVE_CENTER_VIEW, params);
 
         // Flurry
         Map<String, String> flurryParams = new HashMap<>();
         flurryParams.put(EVENT_PARAMETER_NAME_DIVE_CENTER_ID, diveCenterId);
-        flurryParams.put(EVENT_PARAMETER_NAME_VIEW_FORM, spotViewSource.getName());
+        flurryParams.put(EVENT_PARAMETER_NAME_VIEW_SOURCE, spotViewSource.getName());
         FlurryAgent.logEvent(EVENT_NAME_DIVE_CENTER_VIEW, flurryParams);
     }
 
@@ -92,6 +98,25 @@ public class EventsTracker {
     public static void trackDiveSpotEdit() {
         // Flurry
         FlurryAgent.logEvent(EVENT_NAME_EDIT_DIVE_SPOT);
+    }
+
+    public static void trackCheckIn(CheckInStatus status) {
+        // Flurry
+        Map<String, String> flurryParams = new HashMap<>();
+        flurryParams.put(EVENT_PARAMETER_NAME_CHECK_IN_STATUS, status.getName());
+        FlurryAgent.logEvent(EVENT_NAME_CHECK_IN, flurryParams);
+    }
+
+    public static void trackCheckOut() {
+        // Flurry
+        FlurryAgent.logEvent(EVENT_NAME_CHECK_OUT);
+    }
+
+    public static void trackReviewSending(SendReviewSource sendReviewSource) {
+        // Flurry
+        Map<String, String> flurryParams = new HashMap<>();
+        flurryParams.put(EVENT_PARAMETER_NAME_SEND_REVIEW_SOURCE, sendReviewSource.getName());
+        FlurryAgent.logEvent(EVENT_NAME_SEND_REVIEW, flurryParams);
     }
 
     public enum SpotViewSource {
@@ -146,5 +171,44 @@ public class EventsTracker {
 //            return name;
 //        }
 //    }
+
+    public enum CheckInStatus {
+        SUCCESS("success"), CANCELLED("cancelled");
+
+        private String name;
+
+        CheckInStatus(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+    }
+
+    public enum SendReviewSource {
+        FROM_STARS("stars"), FROM_REVIEWS_LIST("reviews_list"), UNKNOWN("unknown");
+
+        private String name;
+
+        private SendReviewSource(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public static SendReviewSource getByName(String name) {
+            switch (name) {
+                case "stars":
+                    return FROM_STARS;
+                case "reviews_list":
+                    return FROM_REVIEWS_LIST;
+                default:
+                    return UNKNOWN;
+            }
+        }
+    }
 
 }
