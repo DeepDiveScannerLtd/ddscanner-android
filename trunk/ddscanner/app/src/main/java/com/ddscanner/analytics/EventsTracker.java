@@ -27,6 +27,8 @@ public class EventsTracker {
 
     private static final String EVENT_NAME_EDIT_DIVE_SPOT = "edit_dive_spot";
 
+    private static final String EVENT_NAME_CREATE_DIVE_SPOT = "create_dive_spot";
+
     // ----------------------------------------------------
     // User activity
     // ----------------------------------------------------
@@ -103,6 +105,11 @@ public class EventsTracker {
     public static void trackDiveSpotEdit() {
         // Flurry
         FlurryAgent.logEvent(EVENT_NAME_EDIT_DIVE_SPOT);
+    }
+
+    public static void trackDiveSpotCreation() {
+        // Flurry
+        FlurryAgent.logEvent(EVENT_NAME_CREATE_DIVE_SPOT);
     }
 
     public static void trackCheckIn(CheckInStatus status) {
