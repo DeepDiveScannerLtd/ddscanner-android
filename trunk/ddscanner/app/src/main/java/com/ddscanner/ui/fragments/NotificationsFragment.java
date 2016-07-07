@@ -33,6 +33,7 @@ import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.gson.Gson;
+import com.rey.material.widget.ProgressView;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -57,6 +58,7 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
     private Helpers helpers = new Helpers();
     private TabLayout tabLayout;
     private ViewPager notificationsViewPager;
+    private ProgressView progressView;
     private AllNotificationsFragment allNotificationsFragment;
     private ActivityNotificationsFragment activityNotificationsFragment;
 
@@ -93,6 +95,7 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
     private void findViews(View v) {
         tabLayout = (TabLayout) v.findViewById(R.id.notif_tab_layout);
         notificationsViewPager = (ViewPager) v.findViewById(R.id.notif_view_pager);
+        progressView = (ProgressView) v.findViewById(R.id.progressBarFull);
         notificationsViewPager.addOnPageChangeListener(this);
     }
 
@@ -145,6 +148,8 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
         super.setUserVisibleHint(visible);
         if (visible) {
             if (SharedPreferenceHelper.isUserLoggedIn()) {
+                progressView.setVisibility(View.VISIBLE);
+                notificationsViewPager.setVisibility(View.GONE);
                 getUserNotifications();
             }
         }
@@ -170,6 +175,8 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
 //                                allNotificationsFragment.addList((ArrayList<Notification>)
 //                                        notifications.getNotifications());
 //                            }
+                            progressView.setVisibility(View.GONE);
+                            notificationsViewPager.setVisibility(View.VISIBLE);
                             setData();
                         } catch (IOException e) {
 
