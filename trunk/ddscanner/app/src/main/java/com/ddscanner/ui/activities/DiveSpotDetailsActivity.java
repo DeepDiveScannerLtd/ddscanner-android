@@ -185,7 +185,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
      *
      * @param context
      * @param id
-     * @author Andrei Lashkevich
+     * Andrei Lashkevich
      */
 
     public static void show(Context context, String id, EventsTracker.SpotViewSource spotViewSource) {
@@ -211,7 +211,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     /**
      * Find views in activity
      *
-     * @author Andrei Lashkevich
+     * Andrei Lashkevich
      */
 
     private void findViews() {
@@ -261,7 +261,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     /**
      * Create toolbar ui
      *
-     * @author Andrei Lashkevich
+     * Andrei Lashkevich
      */
 
     private void toolbarSettings() {
@@ -277,7 +277,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     /**
      * Set ui data at current activity
      *
-     * @author Andrei Lashkevich
+     * Andrei Lashkevich
      */
 
     private void setUi() {
@@ -448,7 +448,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
      * Handling map click events
      *
      * @param googleMap
-     * @author Andrei Lashkevich
+     * Andrei Lashkevich
      */
     private void workWithMap(GoogleMap googleMap) {
         // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
@@ -482,7 +482,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
      * Request for getting data about dive spot
      *
      * @param productId
-     * @author Andrei Lashkevich
+     * Andrei Lashkevich
      */
     private void requestProductDetails(String productId) {
         Map<String, String> map = new HashMap<>();
@@ -547,22 +547,15 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 break;
             case R.id.btn_show_all_reviews:
                 if (divespotDetails.getComments() != null || usersComments != null) {
-                    Intent reviewsIntent = new Intent(DiveSpotDetailsActivity.this,
-                            ReviewsActivity.class);
+                    Intent reviewsIntent = new Intent(DiveSpotDetailsActivity.this, ReviewsActivity.class);
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable("COMMENTS",
-                            (ArrayList<Comment>) usersComments);
-                    bundle.putString(Constants.DIVESPOTID,
-                            String.valueOf(divespotDetails.getDivespot().getId()));
+                    bundle.putSerializable("COMMENTS", (ArrayList<Comment>) usersComments);
+                    bundle.putString(Constants.DIVESPOTID, String.valueOf(divespotDetails.getDivespot().getId()));
                     bundle.putString("PATH", divespotDetails.getDivespot().getDiveSpotPathMedium());
                     reviewsIntent.putExtras(bundle);
                     startActivityForResult(reviewsIntent, 9001);
                 } else {
-                    Intent leaveReviewIntent = new Intent(DiveSpotDetailsActivity.this,
-                            LeaveReviewActivity.class);
-                    leaveReviewIntent.putExtra(Constants.DIVESPOTID, String.valueOf(
-                            diveSpot.getId()));
-                    startActivityForResult(leaveReviewIntent, RC_LEAVE_REVIEW_ACTIVITY);
+                    LeaveReviewActivity.showForResult(this, String.valueOf(diveSpot.getId()), 0f, EventsTracker.SendReviewSource.FROM_EMPTY_REVIEWS_LIST, RC_LEAVE_REVIEW_ACTIVITY);
                 }
                 break;
             case R.id.yes_button:
@@ -586,7 +579,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 EditorsListActivity.show(DiveSpotDetailsActivity.this, (ArrayList<User>) creatorsEditorsList);
                 break;
             case R.id.button_show_divecenters:
-                DiveCentersActivity.show(this, new LatLng(Double.valueOf(diveSpot.getLat()), Double.valueOf(diveSpot.getLng())), diveSpot.getName());
+                DiveCentersActivity.show(this, new LatLng(diveSpot.getLat(), diveSpot.getLng()), diveSpot.getName());
                 break;
         }
     }
@@ -661,7 +654,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     /**
      * Sending request when try to check in in dive spot and change FAB style
      *
-     * @author Andrei Lashkevich
+     * Andrei Lashkevich
      */
 
     private void checkIn() {
@@ -745,7 +738,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     /**
      * Sending request when try to check out in dive spot and change FAB style
      *
-     * @author Andrei Lashkevich
+     * Andrei Lashkevich
      */
 
     private void checkOut() {
@@ -815,11 +808,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
     @Override
     public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-        Intent leaveReviewIntent = new Intent(DiveSpotDetailsActivity.this,
-                LeaveReviewActivity.class);
-        leaveReviewIntent.putExtra(Constants.DIVESPOTID, String.valueOf(diveSpot.getId()));
-        leaveReviewIntent.putExtra("RATING", rating);
-        startActivityForResult(leaveReviewIntent, RC_LEAVE_REVIEW_ACTIVITY);
+        LeaveReviewActivity.showForResult(this, String.valueOf(diveSpot.getId()), rating, EventsTracker.SendReviewSource.FROM_RATING_BAR, RC_LEAVE_REVIEW_ACTIVITY);
     }
 
     @Override

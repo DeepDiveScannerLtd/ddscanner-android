@@ -187,7 +187,7 @@ public class EventsTracker {
     }
 
     public enum SendReviewSource {
-        FROM_STARS("stars"), FROM_REVIEWS_LIST("reviews_list"), UNKNOWN("unknown");
+        FROM_RATING_BAR("rating_bar"), FROM_EMPTY_REVIEWS_LIST("empty_reviews_list"), FROM_REVIEWS_LIST("reviews_list"), UNKNOWN("unknown");
 
         private String name;
 
@@ -201,8 +201,8 @@ public class EventsTracker {
 
         public static SendReviewSource getByName(String name) {
             switch (name) {
-                case "stars":
-                    return FROM_STARS;
+                case "rating_bar":
+                    return FROM_RATING_BAR;
                 case "reviews_list":
                     return FROM_REVIEWS_LIST;
                 default:
