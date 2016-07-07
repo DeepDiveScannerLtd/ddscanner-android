@@ -41,6 +41,8 @@ public class EventsTracker {
     private static final String EVENT_NAME_COMMENT_LIKED = "comment_liked";
     private static final String EVENT_NAME_COMMENT_DISLIKED = "comment_disliked";
 
+    private static final String EVENT_NAME_DIVE_SPOT_PHOTO_ADDED = "dive_spot_photo_added";
+
 //    private static final String EVENT_NAME_ = "";
 
     private EventsTracker() {
@@ -130,6 +132,11 @@ public class EventsTracker {
     public static void trackCommentDisliked() {
         // Flurry
         FlurryAgent.logEvent(EVENT_NAME_COMMENT_DISLIKED);
+    }
+
+    public static void trackDiveSpotPhotoAdded() {
+        // Flurry
+        FlurryAgent.logEvent(EVENT_NAME_DIVE_SPOT_PHOTO_ADDED);
     }
 
     public enum SpotViewSource {

@@ -15,6 +15,7 @@ import android.widget.Button;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.errors.BadRequestException;
 import com.ddscanner.entities.errors.CommentNotFoundException;
 import com.ddscanner.entities.errors.DiveSpotNotFoundException;
@@ -156,8 +157,8 @@ public class AddPhotosDoDiveSpotActivity extends AppCompatActivity implements Vi
                         // TODO Handle
                         helpers.showToast(AddPhotosDoDiveSpotActivity.this, R.string.toast_server_error);
                     }
-                }
-                if (response.isSuccessful()) {
+                } else {
+                    EventsTracker.trackDiveSpotPhotoAdded();
                     Intent returnIntent = new Intent();
                     setResult(Activity.RESULT_OK, returnIntent);
                     finish();
