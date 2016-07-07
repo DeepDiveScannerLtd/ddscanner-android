@@ -38,6 +38,9 @@ public class EventsTracker {
     private static final String EVENT_NAME_SEND_REVIEW = "send_review";
     private static final String EVENT_PARAMETER_NAME_SEND_REVIEW_SOURCE = "source";
 
+    private static final String EVENT_NAME_COMMENT_LIKED = "comment_liked";
+    private static final String EVENT_NAME_COMMENT_DISLIKED = "comment_disliked";
+
 //    private static final String EVENT_NAME_ = "";
 
     private EventsTracker() {
@@ -117,6 +120,16 @@ public class EventsTracker {
         Map<String, String> flurryParams = new HashMap<>();
         flurryParams.put(EVENT_PARAMETER_NAME_SEND_REVIEW_SOURCE, sendReviewSource.getName());
         FlurryAgent.logEvent(EVENT_NAME_SEND_REVIEW, flurryParams);
+    }
+
+    public static void trackCommentLiked() {
+        // Flurry
+        FlurryAgent.logEvent(EVENT_NAME_COMMENT_LIKED);
+    }
+
+    public static void trackCommentDisliked() {
+        // Flurry
+        FlurryAgent.logEvent(EVENT_NAME_COMMENT_DISLIKED);
     }
 
     public enum SpotViewSource {
