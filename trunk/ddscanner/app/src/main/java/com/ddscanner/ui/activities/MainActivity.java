@@ -72,8 +72,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -113,7 +111,7 @@ public class MainActivity extends BaseAppCompatActivity
     private PercentRelativeLayout menuItemsLayout;
     private ImageView searchLocationBtn;
     private ImageView btnFilter;
-    private MainActivityPagerAdapter adapter;
+    private MainActivityPagerAdapter mainViewPagerAdapter;
     private ImageView imageView;
     private Helpers helpers = new Helpers();
     private boolean isHasInternetConnection;
@@ -227,8 +225,8 @@ public class MainActivity extends BaseAppCompatActivity
     }
 
     private void setUi() {
-        adapter = new MainActivityPagerAdapter(getSupportFragmentManager());
-        mainViewPager.setAdapter(adapter);
+        mainViewPagerAdapter = new MainActivityPagerAdapter(getSupportFragmentManager());
+        mainViewPager.setAdapter(mainViewPagerAdapter);
         toolbarTabLayout.setupWithViewPager(mainViewPager);
         mainViewPager.setOffscreenPageLimit(3);
         mainViewPager.addOnPageChangeListener(this);
@@ -350,13 +348,13 @@ public class MainActivity extends BaseAppCompatActivity
                 break;
             case REQUEST_CODE_IMAGE_CAPTURE:
                 if (resultCode == RESULT_OK) {
-                    adapter.setProfileImage(capturedImageUri);
+                    mainViewPagerAdapter.setProfileImage(capturedImageUri);
                 }
                 break;
             case REQUEST_CODE_PICK_PHOTO:
                 if (resultCode == RESULT_OK) {
                     Uri uri = data.getData();
-                    adapter.setProfileImage(uri);
+                    mainViewPagerAdapter.setProfileImage(uri);
                 }
                 break;
             case REQUEST_CODE_LOGIN:
@@ -460,7 +458,7 @@ public class MainActivity extends BaseAppCompatActivity
         super.onStart();
         DDScannerApplication.bus.register(this);
         if (loggedInDuringLastOnStart != SharedPreferenceHelper.isUserLoggedIn()) {
-            adapter.notifyDataSetChanged();
+            mainViewPagerAdapter.notifyDataSetChanged();
             setupTabLayout();
             loggedInDuringLastOnStart = SharedPreferenceHelper.isUserLoggedIn();
         }
@@ -537,8 +535,7 @@ public class MainActivity extends BaseAppCompatActivity
                     SharedPreferenceHelper.setUserServerId(selfProfile.getId());
                     SharedPreferenceHelper.setIsUserSignedIn(true, signInType);
                     DDScannerApplication.bus.post(new LoggedInEvent());
-                }
-                if (!response.isSuccessful()) {
+                } else {
                     String responseString = "";
                     try {
                         responseString = response.errorBody().string();
@@ -660,13 +657,13 @@ public class MainActivity extends BaseAppCompatActivity
 
     @Subscribe
     public void onLoggedIn(LoggedInEvent event) {
-        adapter.notifyDataSetChanged();
+        mainViewPagerAdapter.notifyDataSetChanged();
         setupTabLayout();
     }
 
     @Subscribe
     public void onLoggedOut(LoggedOutEvent event) {
-        adapter.notifyDataSetChanged();
+        mainViewPagerAdapter.notifyDataSetChanged();
         setupTabLayout();
     }
 

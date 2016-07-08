@@ -523,21 +523,6 @@ public class ProfileFragment extends Fragment
         swipeRefreshLayout.setRefreshing(false);
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case Constants.REQUEST_CODE_OPEN_LOGIN_SCREEN:
-                if (resultCode == Activity.RESULT_OK) {
-                    DDScannerApplication.bus.post(new LoggedInEvent());
-                    if (SharedPreferenceHelper.isUserLoggedIn()) {
-                        getUserDataRequest(SharedPreferenceHelper.getUserServerId());
-                    }
-                }
-                break;
-        }
-    }
-
     private void logout() {
         Call<ResponseBody> call = RestClient.getServiceInstance()
                 .logout(helpers.getRegisterRequest());

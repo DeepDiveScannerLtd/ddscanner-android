@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 
 import com.ddscanner.R;
@@ -18,7 +19,7 @@ import com.ddscanner.utils.SharedPreferenceHelper;
 /**
  * Created by lashket on 20.4.16.
  */
-public class MainActivityPagerAdapter extends FragmentPagerAdapter {
+public class MainActivityPagerAdapter extends FragmentStatePagerAdapter {
 
     private static final String TAG = MainActivityPagerAdapter.class.getName();
 
@@ -99,11 +100,6 @@ public class MainActivityPagerAdapter extends FragmentPagerAdapter {
         }
         transition.commit();
         super.notifyDataSetChanged();
-    }
-
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        profileFragment.onActivityResult(requestCode, resultCode, data);
-        notificationsFragment.onActivityResult(requestCode, resultCode, data);
     }
 
     public void setProfileImage(Uri uri) {
