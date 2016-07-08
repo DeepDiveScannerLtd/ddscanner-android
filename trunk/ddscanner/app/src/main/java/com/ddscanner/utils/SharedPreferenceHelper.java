@@ -154,7 +154,7 @@ public class SharedPreferenceHelper {
 
     public static boolean isFirstLaunch() {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
-        return prefs.getBoolean(IS_FIRST_LAUNCH, false);
+        return prefs.getBoolean(IS_FIRST_LAUNCH, true);
     }
 
     public static void setIsFirstLaunch(boolean isFirstLaunch) {

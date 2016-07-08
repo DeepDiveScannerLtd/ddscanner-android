@@ -32,12 +32,14 @@ android {
             ext.enableCrashlytics = false
             applicationIdSuffix ".debug"
             resValue "string", "flurry_api_key", "DQ8GM2FPPSTBGK7QX4D8"
+            resValue "string", "google_maps_api_key", "AIzaSyDt6pJZggDyU-aQy2Ks6i7WgZd6ayKK-I8"
 //            minifyEnabled false
 //            shrinkResources false
 //            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules-debug.pro'
         }
         release {
             resValue "string", "flurry_api_key", "YP8R2DBM35F6VM7WDFNW"
+            resValue "string", "google_maps_api_key", "AIzaSyA5jpAj7uwrxA4oaYvI_bdV9IDbb7gUrZc"
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }

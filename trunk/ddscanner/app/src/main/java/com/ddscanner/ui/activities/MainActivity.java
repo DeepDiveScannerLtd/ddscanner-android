@@ -151,10 +151,6 @@ public class MainActivity extends BaseAppCompatActivity
         setupTabLayout();
         playServices();
         getLocation(Constants.REQUEST_CODE_MAIN_ACTIVITY_GET_LOCATION_ON_ACTIVITY_START);
-        if (SharedPreferenceHelper.isFirstLaunch()) {
-            identifyUser("", "");
-            SharedPreferenceHelper.setIsFirstLaunch(false);
-        }
     }
 
     private void initGoogleLoginManager() {
@@ -616,6 +612,10 @@ public class MainActivity extends BaseAppCompatActivity
 
     @Subscribe
     public void onAppInstanceIdReceived(InstanceIDReceivedEvent event) {
+        if (SharedPreferenceHelper.isFirstLaunch()) {
+            identifyUser("", "");
+            SharedPreferenceHelper.setIsFirstLaunch(false);
+        }
         getLocation(Constants.REQUEST_CODE_MAIN_ACTIVITY_GET_LOCATION_ON_ACTIVITY_START);
     }
 
