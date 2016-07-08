@@ -442,8 +442,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                         // TODO Handle
                         helpers.showToast(AddDiveSpotActivity.this, R.string.toast_server_error);
                     }
-                }
-                if (response.isSuccessful()) {
+                } else {
                     if (response.raw().code() == 200) {
                         String responseString = "";
                         try {
@@ -454,7 +453,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                             } catch (JSONException e) {
 
                             }
-                            EventsTracker.trackDiveSpotEdit();
+                            EventsTracker.trackDiveSpotCreation();
                             DiveSpot diveSpot = new Gson().fromJson(responseString, DiveSpot.class);
                             DiveSpotDetailsActivity.show(AddDiveSpotActivity.this, String
                                     .valueOf(diveSpot.getId()), null);

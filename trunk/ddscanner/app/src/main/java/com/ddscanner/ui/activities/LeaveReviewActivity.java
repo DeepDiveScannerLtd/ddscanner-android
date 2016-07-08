@@ -25,6 +25,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.Comment;
 import com.ddscanner.entities.errors.BadRequestException;
 import com.ddscanner.entities.errors.CommentNotFoundException;
@@ -72,6 +73,7 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
     private static final String TAG = LeaveReviewActivity.class.getSimpleName();
     private static final String ID = "ID";
     private static final String RATING = "RATING";
+    private static final String SOURCE = "SOURCE";
     private static final int RC_LOGIN = 8001;
     private static final int COMMENT_MAX_LENGTH = 250;
 
@@ -99,6 +101,8 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
     private Helpers helpers = new Helpers();
     private int maxPhotos = 3;
 
+    private EventsTracker.SendReviewSource sendReviewSource;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,6 +110,7 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
         Bundle bundle = getIntent().getExtras();
         diveSpotId = bundle.getString(Constants.DIVESPOTID);
         rating = getIntent().getExtras().getFloat(RATING);
+        sendReviewSource = EventsTracker.SendReviewSource.getByName(getIntent().getStringExtra(SOURCE));
         findViews();
         toolbarSettings();
         setRcSettings();
@@ -172,11 +177,20 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
         materialDialog = helpers.getMaterialDialog(this);
     }
 
-    public static void show(Context context, String id, float rating) {
+    public static void show(Context context, String id, float rating, EventsTracker.SendReviewSource sendReviewSource) {
+        context.startActivity(getShowIntent(context, id, rating, sendReviewSource));
+    }
+
+    public static void showForResult(Activity context, String id, float rating, EventsTracker.SendReviewSource sendReviewSource, int requestCode) {
+        context.startActivityForResult(getShowIntent(context, id, rating, sendReviewSource), requestCode);
+    }
+
+    private static Intent getShowIntent(Context context, String id, float rating, EventsTracker.SendReviewSource sendReviewSource) {
         Intent intent = new Intent(context, LeaveReviewActivity.class);
         intent.putExtra(Constants.DIVESPOTID, id);
         intent.putExtra(RATING, rating);
-        context.startActivity(intent);
+        intent.putExtra(SOURCE, sendReviewSource.getName());
+        return intent;
     }
 
     private void sendReview() {
@@ -231,13 +245,14 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+
+                    EventsTracker.trackReviewSending(sendReviewSource);
 //                    comment = new Gson().fromJson(responseString, Comment.class);
                     Intent returnIntent = new Intent();
 //                    returnIntent.putExtra("COMMENT", comment);
                     setResult(Activity.RESULT_OK, returnIntent);
                     finish();
-                }
-                if (!response.isSuccessful()) {
+                } else {
                     String responseString = "";
                     try {
                         responseString = response.errorBody().string();

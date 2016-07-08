@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.Comment;
 import com.ddscanner.entities.errors.BadRequestException;
 import com.ddscanner.entities.errors.CommentNotFoundException;
@@ -209,8 +210,9 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
                     if (response.raw().code() == 200) {
+                        EventsTracker.trackCommentLiked();
                         DDScannerApplication.bus.post(new IsCommentLikedEvent());
-                         likeUi(dislikeImage, likeImage, likesCount, dislikesCount, position);
+                        likeUi(dislikeImage, likeImage, likesCount, dislikesCount, position);
                     }
                 }
                 if (!response.isSuccessful()) {
@@ -273,6 +275,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
                     if (response.raw().code() == 200) {
+                        EventsTracker.trackCommentDisliked();
                         DDScannerApplication.bus.post(new IsCommentLikedEvent());
                         dislikeUi(dislikeImage, likeImage, likesCount, dislikesCount, position);
                     }

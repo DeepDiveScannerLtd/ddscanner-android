@@ -24,6 +24,7 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.DiveSpotFull;
 import com.ddscanner.entities.DivespotDetails;
 import com.ddscanner.entities.FiltersResponseEntity;
@@ -554,6 +555,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
                     }
                 }
                 if (response.isSuccessful()) {
+                    EventsTracker.trackDiveSpotEdit();
                     Intent intent = new Intent();
                     setResult(RESULT_OK, intent);
                     finish();

@@ -30,6 +30,7 @@ import android.widget.TextView;
 import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.Comment;
 import com.ddscanner.entities.Comments;
 import com.ddscanner.entities.errors.BadRequestException;
@@ -229,11 +230,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.fab_write_review:
-                Intent intent = new Intent(ReviewsActivity.this, LeaveReviewActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString(Constants.DIVESPOTID, diveSpotId);
-                intent.putExtras(bundle);
-                startActivityForResult(intent, 9001);
+                LeaveReviewActivity.showForResult(this, diveSpotId, 0f, EventsTracker.SendReviewSource.FROM_REVIEWS_LIST, 9001);
                 break;
         }
     }

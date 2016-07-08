@@ -179,8 +179,7 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
         }
         if (requestCode == 100) {
             if (resultCode == RESULT_OK) {
-                MultiImageSelector.create(this)
-                        .start(this, 1);
+                MultiImageSelector.create(this).start(this, 1);
             }
         }
     }
@@ -193,8 +192,7 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
                     Intent intent = new Intent(this, SocialNetworks.class);
                     startActivityForResult(intent, 100);
                 } else {
-                    MultiImageSelector.create(this)
-                            .start(this, 1);
+                    MultiImageSelector.create(this).start(this, 1);
                 }
                 break;
         }

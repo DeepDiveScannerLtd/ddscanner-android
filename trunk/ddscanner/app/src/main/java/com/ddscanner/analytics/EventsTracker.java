@@ -27,6 +27,8 @@ public class EventsTracker {
 
     private static final String EVENT_NAME_EDIT_DIVE_SPOT = "edit_dive_spot";
 
+    private static final String EVENT_NAME_CREATE_DIVE_SPOT = "create_dive_spot";
+
     // ----------------------------------------------------
     // User activity
     // ----------------------------------------------------
@@ -37,6 +39,11 @@ public class EventsTracker {
 
     private static final String EVENT_NAME_SEND_REVIEW = "send_review";
     private static final String EVENT_PARAMETER_NAME_SEND_REVIEW_SOURCE = "source";
+
+    private static final String EVENT_NAME_COMMENT_LIKED = "comment_liked";
+    private static final String EVENT_NAME_COMMENT_DISLIKED = "comment_disliked";
+
+    private static final String EVENT_NAME_DIVE_SPOT_PHOTO_ADDED = "dive_spot_photo_added";
 
 //    private static final String EVENT_NAME_ = "";
 
@@ -100,6 +107,11 @@ public class EventsTracker {
         FlurryAgent.logEvent(EVENT_NAME_EDIT_DIVE_SPOT);
     }
 
+    public static void trackDiveSpotCreation() {
+        // Flurry
+        FlurryAgent.logEvent(EVENT_NAME_CREATE_DIVE_SPOT);
+    }
+
     public static void trackCheckIn(CheckInStatus status) {
         // Flurry
         Map<String, String> flurryParams = new HashMap<>();
@@ -117,6 +129,21 @@ public class EventsTracker {
         Map<String, String> flurryParams = new HashMap<>();
         flurryParams.put(EVENT_PARAMETER_NAME_SEND_REVIEW_SOURCE, sendReviewSource.getName());
         FlurryAgent.logEvent(EVENT_NAME_SEND_REVIEW, flurryParams);
+    }
+
+    public static void trackCommentLiked() {
+        // Flurry
+        FlurryAgent.logEvent(EVENT_NAME_COMMENT_LIKED);
+    }
+
+    public static void trackCommentDisliked() {
+        // Flurry
+        FlurryAgent.logEvent(EVENT_NAME_COMMENT_DISLIKED);
+    }
+
+    public static void trackDiveSpotPhotoAdded() {
+        // Flurry
+        FlurryAgent.logEvent(EVENT_NAME_DIVE_SPOT_PHOTO_ADDED);
     }
 
     public enum SpotViewSource {
@@ -187,7 +214,7 @@ public class EventsTracker {
     }
 
     public enum SendReviewSource {
-        FROM_STARS("stars"), FROM_REVIEWS_LIST("reviews_list"), UNKNOWN("unknown");
+        FROM_RATING_BAR("rating_bar"), FROM_EMPTY_REVIEWS_LIST("empty_reviews_list"), FROM_REVIEWS_LIST("reviews_list"), UNKNOWN("unknown");
 
         private String name;
 
@@ -201,8 +228,8 @@ public class EventsTracker {
 
         public static SendReviewSource getByName(String name) {
             switch (name) {
-                case "stars":
-                    return FROM_STARS;
+                case "rating_bar":
+                    return FROM_RATING_BAR;
                 case "reviews_list":
                     return FROM_REVIEWS_LIST;
                 default:
