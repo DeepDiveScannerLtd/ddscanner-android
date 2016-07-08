@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
@@ -149,8 +150,12 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_search_sealife, menu);
         this.menu = menu;
-        final MenuItem item = menu.findItem(R.id.action_search);
-        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
+        MenuItem item = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
+        searchView.setIconified(false);
+        //searchView.setIconifiedByDefault(false);
+      //  searchView.requestFocus();
+      //  item.expandActionView();
         searchView.setQueryHint(getString(R.string.search));
         searchView.setOnQueryTextListener(this);
         return true;
