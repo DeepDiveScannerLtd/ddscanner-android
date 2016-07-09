@@ -2,11 +2,21 @@ package com.ddscanner.ui.activities;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
+import com.ddscanner.DDScannerApplication;
+import com.ddscanner.entities.request.IdentifyRequest;
+import com.ddscanner.events.UserSuccessfullyIdentifiedEvent;
+import com.ddscanner.rest.RestClient;
 import com.ddscanner.utils.LocationHelper;
 import com.ddscanner.utils.LogUtils;
+import com.ddscanner.utils.SharedPreferenceHelper;
 
+import java.io.IOException;
 import java.util.HashSet;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
 
 public class BaseAppCompatActivity extends AppCompatActivity {
 
@@ -53,6 +63,50 @@ public class BaseAppCompatActivity extends AppCompatActivity {
                 getLocation(-1);
                 break;
         }
+    }
+
+    public void identifyUser(String lat, String lng) {
+        Call<ResponseBody> call = RestClient.getServiceInstance().identify(getUserIdentifyData(lat, lng));
+        call.enqueue(new retrofit2.Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    String responseString = "";
+                    try {
+                        responseString = response.body().string();
+                        Log.i(TAG, "identifyUser responseString = " + responseString);
+                        DDScannerApplication.bus.post(new UserSuccessfullyIdentifiedEvent());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+
+        });
+    }
+
+    private IdentifyRequest getUserIdentifyData(String lat, String lng) {
+        IdentifyRequest identifyRequest = new IdentifyRequest();
+        identifyRequest.setAppId(SharedPreferenceHelper.getUserAppId());
+        if (SharedPreferenceHelper.isUserLoggedIn()) {
+            identifyRequest.setSocial(SharedPreferenceHelper.getSn());
+            identifyRequest.setToken(SharedPreferenceHelper.getToken());
+            if (SharedPreferenceHelper.getSn().equals("tw")) {
+                identifyRequest.setSecret(SharedPreferenceHelper.getSecret());
+            }
+        }
+        identifyRequest.setpush(SharedPreferenceHelper.getGcmId());
+        if (lat != null && lng != null) {
+            identifyRequest.setLat(lat);
+            identifyRequest.setLng(lng);
+        }
+        identifyRequest.setType("android");
+        return identifyRequest;
     }
 
 }

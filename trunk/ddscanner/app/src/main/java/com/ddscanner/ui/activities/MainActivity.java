@@ -31,13 +31,11 @@ import com.ddscanner.entities.errors.ServerInternalErrorException;
 import com.ddscanner.entities.errors.UnknownErrorException;
 import com.ddscanner.entities.errors.UserNotFoundException;
 import com.ddscanner.entities.errors.ValidationErrorException;
-import com.ddscanner.entities.request.IdentifyRequest;
 import com.ddscanner.entities.request.RegisterRequest;
 import com.ddscanner.events.ChangePageOfMainViewPagerEvent;
 import com.ddscanner.events.CloseInfoWindowEvent;
 import com.ddscanner.events.CloseListEvent;
 import com.ddscanner.events.InfowWindowOpenedEvent;
-import com.ddscanner.events.InstanceIDReceivedEvent;
 import com.ddscanner.events.InternetConnectionClosedEvent;
 import com.ddscanner.events.ListOpenedEvent;
 import com.ddscanner.events.LocationReadyEvent;
@@ -52,7 +50,6 @@ import com.ddscanner.events.ShowLoginActivityIntent;
 import com.ddscanner.events.TakePhotoFromCameraEvent;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
-import com.ddscanner.services.RegistrationIntentService;
 import com.ddscanner.ui.adapters.MainActivityPagerAdapter;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
@@ -71,7 +68,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -98,7 +94,6 @@ public class MainActivity extends BaseAppCompatActivity
     private static final String TAG = MainActivity.class.getName();
 
     private static final int REQUEST_CODE_PLACE_AUTOCOMPLETE = 1000;
-    private static final int REQUEST_CODE_PLAY_SERVICES_RESOLUTION = 9000;
     private static final int REQUEST_CODE_PICK_PHOTO = 8000;
     private static final int REQUEST_CODE_LOGIN = 7000;
     private static final int REQUEST_CODE_IMAGE_CAPTURE = 6000;
@@ -128,6 +123,7 @@ public class MainActivity extends BaseAppCompatActivity
     private RegisterResponse registerResponse = new RegisterResponse();
 
     private boolean loggedInDuringLastOnStart;
+    private boolean needToClearDefaultAccount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,11 +145,11 @@ public class MainActivity extends BaseAppCompatActivity
         searchLocationBtn.setOnClickListener(this);
         btnFilter.setOnClickListener(this);
         setupTabLayout();
-        playServices();
         getLocation(Constants.REQUEST_CODE_MAIN_ACTIVITY_GET_LOCATION_ON_ACTIVITY_START);
     }
 
     private void initGoogleLoginManager() {
+        needToClearDefaultAccount = true;
         GoogleSignInOptions gso = new GoogleSignInOptions
                 .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken("195706914618-ist9f8ins485k2gglbomgdp4l2pn57iq.apps.googleusercontent.com")
@@ -165,8 +161,11 @@ public class MainActivity extends BaseAppCompatActivity
                 .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
                     @Override
                     public void onConnected(@Nullable Bundle bundle) {
-                        Auth.GoogleSignInApi.signOut(mGoogleApiClient);
-                        mGoogleApiClient.clearDefaultAccountAndReconnect();
+                        if (needToClearDefaultAccount) {
+                            Auth.GoogleSignInApi.signOut(mGoogleApiClient);
+                            mGoogleApiClient.clearDefaultAccountAndReconnect();
+                            needToClearDefaultAccount = false;
+                        }
                     }
 
                     @Override
@@ -385,70 +384,6 @@ public class MainActivity extends BaseAppCompatActivity
         }
     }
 
-    public void identifyUser(String lat, String lng) {
-        Call<ResponseBody> call = RestClient.getServiceInstance().identify(getUserIdentifyData(lat, lng));
-        call.enqueue(new retrofit2.Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    String responseString = "";
-                    try {
-                        responseString = response.body().string();
-                        Log.i(TAG, "identifyUser responseString = " + responseString);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-            }
-
-        });
-    }
-
-    private IdentifyRequest getUserIdentifyData(String lat, String lng) {
-        IdentifyRequest identifyRequest = new IdentifyRequest();
-        identifyRequest.setAppId(SharedPreferenceHelper.getUserAppId());
-        if (SharedPreferenceHelper.isUserLoggedIn()) {
-            identifyRequest.setSocial(SharedPreferenceHelper.getSn());
-            identifyRequest.setToken(SharedPreferenceHelper.getToken());
-            if (SharedPreferenceHelper.getSn().equals("tw")) {
-                identifyRequest.setSecret(SharedPreferenceHelper.getSecret());
-            }
-        }
-        identifyRequest.setpush(SharedPreferenceHelper.getGcmId());
-        if (lat != null && lng != null) {
-            identifyRequest.setLat(lat);
-            identifyRequest.setLng(lng);
-        }
-        identifyRequest.setType("android");
-        return identifyRequest;
-    }
-
-    public void playServices() {
-        if (!SharedPreferenceHelper.isUserAppIdReceived() && checkPlayServices()) {
-            Intent intent = new Intent(this, RegistrationIntentService.class);
-            startService(intent);
-        }
-    }
-
-    private boolean checkPlayServices() {
-        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
-        int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
-        if (resultCode != ConnectionResult.SUCCESS) {
-            if (apiAvailability.isUserResolvableError(resultCode)) {
-                apiAvailability.getErrorDialog(this, resultCode, REQUEST_CODE_PLAY_SERVICES_RESOLUTION).show();
-            } else {
-                finish();
-            }
-            return false;
-        }
-        return true;
-    }
-
     @Override
     public void onStart() {
         super.onStart();
@@ -608,15 +543,6 @@ public class MainActivity extends BaseAppCompatActivity
                     break;
             }
         }
-    }
-
-    @Subscribe
-    public void onAppInstanceIdReceived(InstanceIDReceivedEvent event) {
-        if (SharedPreferenceHelper.isFirstLaunch()) {
-            identifyUser("", "");
-            SharedPreferenceHelper.setIsFirstLaunch(false);
-        }
-        getLocation(Constants.REQUEST_CODE_MAIN_ACTIVITY_GET_LOCATION_ON_ACTIVITY_START);
     }
 
     @Subscribe

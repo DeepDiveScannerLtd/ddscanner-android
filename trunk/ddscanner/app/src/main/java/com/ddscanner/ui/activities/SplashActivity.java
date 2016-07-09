@@ -8,20 +8,27 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.events.InstanceIDReceivedEvent;
+import com.ddscanner.events.UserSuccessfullyIdentifiedEvent;
+import com.ddscanner.services.RegistrationIntentService;
 import com.ddscanner.ui.views.DDProgressBarView;
 import com.ddscanner.utils.Helpers;
+import com.ddscanner.utils.SharedPreferenceHelper;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.squareup.otto.Subscribe;
 
 /**
  * Created by Vitaly on 29.11.2015.
  */
-public class SplashActivity extends AppCompatActivity {
+public class SplashActivity extends BaseAppCompatActivity {
 
     private static final String TAG = SplashActivity.class.getName();
+    private static final int REQUEST_CODE_PLAY_SERVICES_RESOLUTION = 9000;
 
     private LocationManager locationManager;
 
@@ -39,7 +46,32 @@ public class SplashActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_splash);
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-        showMainActivity();
+        if (SharedPreferenceHelper.isFirstLaunch()) {
+            registerForGCM();
+        } else {
+            showMainActivity();
+        }
+    }
+
+    private void registerForGCM() {
+        if (!SharedPreferenceHelper.isUserAppIdReceived() && checkPlayServices()) {
+            Intent intent = new Intent(this, RegistrationIntentService.class);
+            startService(intent);
+        }
+    }
+
+    private boolean checkPlayServices() {
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (apiAvailability.isUserResolvableError(resultCode)) {
+                apiAvailability.getErrorDialog(this, resultCode, REQUEST_CODE_PLAY_SERVICES_RESOLUTION).show();
+            } else {
+                finish();
+            }
+            return false;
+        }
+        return true;
     }
 
     private boolean checkIsProvidersEnabled() {
@@ -115,5 +147,30 @@ public class SplashActivity extends AppCompatActivity {
         if (!helpers.hasConnection(this)) {
             DDScannerApplication.showErrorActivity(this);
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        DDScannerApplication.bus.unregister(this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        DDScannerApplication.bus.register(this);
+    }
+
+    @Subscribe
+    public void onAppInstanceIdReceived(InstanceIDReceivedEvent event) {
+        identifyUser("", "");
+    }
+
+    @Subscribe
+    public void onUserIdentified(UserSuccessfullyIdentifiedEvent event) {
+        showMainActivity();
+        SharedPreferenceHelper.setIsFirstLaunch(false);
     }
 }
