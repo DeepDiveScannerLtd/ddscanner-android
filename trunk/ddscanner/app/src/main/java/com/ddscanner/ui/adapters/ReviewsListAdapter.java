@@ -202,7 +202,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
             DDScannerApplication.bus.post(new ShowLoginActivityIntent());
             return;
         }
-        Call<ResponseBody> call = RestClient.getServiceInstance().likeComment(
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().likeComment(
                 id, helpers.getRegisterRequest()
         );
         call.enqueue(new Callback<ResponseBody>() {
@@ -267,7 +267,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
             DDScannerApplication.bus.post(new ShowLoginActivityIntent());
             return;
         }
-        Call<ResponseBody> call = RestClient.getServiceInstance().dislikeComment(
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().dislikeComment(
                 id, helpers.getRegisterRequest()
         );
         call.enqueue(new Callback<ResponseBody>() {

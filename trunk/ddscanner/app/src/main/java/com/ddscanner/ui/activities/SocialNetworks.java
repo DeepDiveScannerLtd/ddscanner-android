@@ -213,7 +213,7 @@ public class SocialNetworks extends AppCompatActivity
 
     private void sendRegisterRequest(final RegisterRequest userData, final SignInType signInType) {
         materialDialog.show();
-        Call<ResponseBody> call = RestClient.getServiceInstance().registerUser(userData);
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().registerUser(userData);
         call.enqueue(new retrofit2.Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call,

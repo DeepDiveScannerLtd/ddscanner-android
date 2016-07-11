@@ -66,7 +66,7 @@ public class BaseAppCompatActivity extends AppCompatActivity {
     }
 
     public void identifyUser(String lat, String lng) {
-        Call<ResponseBody> call = RestClient.getServiceInstance().identify(getUserIdentifyData(lat, lng));
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().identify(getUserIdentifyData(lat, lng));
         call.enqueue(new retrofit2.Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {

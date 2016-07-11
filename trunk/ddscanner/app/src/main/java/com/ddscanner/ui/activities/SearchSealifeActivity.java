@@ -8,7 +8,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,7 +17,6 @@ import android.widget.TextView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
-import com.ddscanner.entities.Sealife;
 import com.ddscanner.entities.Sealife;
 import com.ddscanner.entities.SealifeResponseEntity;
 import com.ddscanner.entities.errors.BadRequestException;
@@ -149,7 +147,7 @@ public class SearchSealifeActivity extends AppCompatActivity implements SearchVi
     }
 
     private void getAllSealifes() {
-        Call<ResponseBody> call = RestClient.getServiceInstance().getSealifes();
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getSealifes();
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

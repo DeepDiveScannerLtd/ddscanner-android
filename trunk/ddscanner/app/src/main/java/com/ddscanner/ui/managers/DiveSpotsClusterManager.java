@@ -328,7 +328,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
             for (Map.Entry<String, Object> entry : diveSpotsRequestMap.entrySet()) {
                 LogUtils.i(TAG, "get dive spots request parameter: " + entry.getKey() + " " + entry.getValue());
             }
-            Call<ResponseBody> call = RestClient.getServiceInstance().getDivespots(diveSpotsRequestMap);
+            Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDivespots(diveSpotsRequestMap);
             call.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {

@@ -1,25 +1,18 @@
 package com.ddscanner.ui.activities;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.EditText;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
@@ -28,27 +21,17 @@ import com.ddscanner.entities.DivespotsWrapper;
 import com.ddscanner.events.GoToMyLocationButtonClickedEvent;
 import com.ddscanner.events.LocationChosedEvent;
 import com.ddscanner.events.OpenAddDsActivityAfterLogin;
-import com.ddscanner.events.PlaceChoosedEvent;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.CustomPagerAdapter;
 import com.ddscanner.ui.fragments.SearchDiveSpotsFragment;
 import com.ddscanner.ui.fragments.SearchLocationFragment;
 import com.ddscanner.utils.Constants;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.ResolvingResultCallbacks;
-import com.google.android.gms.common.api.Result;
 import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.ResultCallbacks;
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.places.AddPlaceRequest;
-import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.AutocompletePrediction;
 import com.google.android.gms.location.places.AutocompletePredictionBuffer;
-import com.google.android.gms.location.places.GeoDataApi;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceBuffer;
-import com.google.android.gms.location.places.PlacePhotoMetadataResult;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -57,9 +40,7 @@ import com.squareup.otto.Subscribe;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -221,7 +202,7 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
     }
 
     private void sendRequest() {
-        Call<ResponseBody> call = RestClient.getServiceInstance().getDivespotsByParameters(name, like, order, sort, limit, select);
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDivespotsByParameters(name, like, order, sort, limit, select);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

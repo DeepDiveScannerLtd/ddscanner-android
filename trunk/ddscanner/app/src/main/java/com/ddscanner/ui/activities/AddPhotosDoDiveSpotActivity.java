@@ -116,7 +116,7 @@ public class AddPhotosDoDiveSpotActivity extends AppCompatActivity implements Vi
                     image.getName(), requestFile);
             imagesToSend.add(part);
         }
-        Call<ResponseBody> call = RestClient.getServiceInstance().addImagesToDiveSpot(dsId,
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().addImagesToDiveSpot(dsId,
                 requestType, imagesToSend, requestToken, requestSocial, requestSecret);
         call.enqueue(new Callback<ResponseBody>() {
             @Override

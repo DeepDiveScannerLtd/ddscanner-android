@@ -14,10 +14,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public abstract class RestClient {
 
-    private static DDScannerRestService serviceInstance;
+    private static DDScannerRestService ddscannerServiceInstance;
+    private static GoogleApisRestService googleApisServiceInstance;
 
-    public static DDScannerRestService getServiceInstance() {
-        if (serviceInstance == null) {
+    public static DDScannerRestService getDdscannerServiceInstance() {
+        if (ddscannerServiceInstance == null) {
             Interceptor interceptor = new Interceptor() {
                 @Override
                 public Response intercept(Chain chain) throws IOException {
@@ -48,10 +49,30 @@ public abstract class RestClient {
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(client)
                     .build();
-            serviceInstance = retrofit.create(DDScannerRestService.class);
+            ddscannerServiceInstance = retrofit.create(DDScannerRestService.class);
         }
-        return serviceInstance;
+        return ddscannerServiceInstance;
     }
 
+    public static GoogleApisRestService getGoogleApisServiceInstance() {
+        if (googleApisServiceInstance == null) {
+            OkHttpClient.Builder builder = new OkHttpClient.Builder();
+            builder.readTimeout(10, TimeUnit.SECONDS);
+            builder.writeTimeout(10, TimeUnit.SECONDS);
+            HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+            logging.setLevel(HttpLoggingInterceptor.Level.BODY);
 
+            builder.interceptors().add(logging);
+
+            OkHttpClient client = builder.build();
+
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl("https://www.googleapis.com")
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .client(client)
+                    .build();
+            googleApisServiceInstance = retrofit.create(GoogleApisRestService.class);
+        }
+        return googleApisServiceInstance;
+    }
 }

@@ -6,7 +6,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,6 +60,7 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
     private ProgressView progressView;
     private AllNotificationsFragment allNotificationsFragment;
     private ActivityNotificationsFragment activityNotificationsFragment;
+    private boolean isViewNull = true;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -75,7 +75,13 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
         allNotificationsFragment = new AllNotificationsFragment();
         activityNotificationsFragment = new ActivityNotificationsFragment();
         setupViewPager();
-        //   getUserNotifications();
+        if (isViewNull) {
+            if (SharedPreferenceHelper.isUserLoggedIn()) {
+                progressView.setVisibility(View.VISIBLE);
+                notificationsViewPager.setVisibility(View.GONE);
+                getUserNotifications();
+            }
+        }
         return view;
     }
 
@@ -147,16 +153,21 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
     public void setUserVisibleHint(final boolean visible) {
         super.setUserVisibleHint(visible);
         if (visible) {
-            if (SharedPreferenceHelper.isUserLoggedIn()) {
-                progressView.setVisibility(View.VISIBLE);
-                notificationsViewPager.setVisibility(View.GONE);
-                getUserNotifications();
+            if (getView() != null) {
+                isViewNull = false;
+                if (SharedPreferenceHelper.isUserLoggedIn()) {
+                    progressView.setVisibility(View.VISIBLE);
+                    notificationsViewPager.setVisibility(View.GONE);
+                    getUserNotifications();
+                }
+            } else {
+                isViewNull = true;
             }
         }
     }
 
     private void getUserNotifications() {
-        Call<ResponseBody> call = RestClient.getServiceInstance().getNotifications(
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getNotifications(
                 SharedPreferenceHelper.getUserServerId(), helpers.getUserQuryMapRequest());
         call.enqueue(new Callback<ResponseBody>() {
             @Override

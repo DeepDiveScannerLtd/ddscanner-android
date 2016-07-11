@@ -493,7 +493,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 map.put("secret", SharedPreferenceHelper.getSecret());
             }
         }
-        Call<ResponseBody> call = RestClient.getServiceInstance().getDiveSpotById(productId, map);
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveSpotById(productId, map);
         call.enqueue(new retrofit2.Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
@@ -665,7 +665,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             showLoginActivity();
             return;
         }
-        Call<ResponseBody> call = RestClient.getServiceInstance().checkIn(
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().checkIn(
                 String.valueOf(divespotDetails.getDivespot().getId()),
                 helpers.getRegisterRequest()
         );
@@ -749,7 +749,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             showLoginActivity();
             return;
         }
-        Call<ResponseBody> call = RestClient.getServiceInstance().checkOutUser(
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().checkOutUser(
                 String.valueOf(divespotDetails.getDivespot().getId()),
                 helpers.getUserQuryMapRequest()
         );
@@ -838,7 +838,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             validationReguest.setSecret(helpers.getRegisterRequest().getSecret());
         }
         validationReguest.setValid(isValid);
-        Call<ResponseBody> call = RestClient.getServiceInstance()
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance()
                 .divespotValidation(String.valueOf(divespotDetails.getDivespot().getId()),
                         validationReguest);
         call.enqueue(new retrofit2.Callback<ResponseBody>() {
@@ -889,7 +889,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             return;
         }
         final Helpers helpers = new Helpers();
-        Call<ResponseBody> call = RestClient.getServiceInstance().addDiveSpotToFavourites(
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().addDiveSpotToFavourites(
                 String.valueOf(diveSpot.getId()),
                 helpers.getRegisterRequest()
         );
@@ -952,7 +952,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             showLoginActivity();
             return;
         }
-        Call<ResponseBody> call = RestClient.getServiceInstance()
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance()
                 .removeSpotFromFavorites(id, helpers.getUserQuryMapRequest());
         call.enqueue(new retrofit2.Callback<ResponseBody>() {
             @Override
@@ -1008,7 +1008,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     }
 
     private void getCheckins() {
-        Call<ResponseBody> call = RestClient.getServiceInstance().getCheckins(String.valueOf(diveSpot.getId()));
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getCheckins(String.valueOf(diveSpot.getId()));
         call.enqueue(new retrofit2.Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -1040,7 +1040,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     }
 
     private void getComments() {
-        Call<ResponseBody> call = RestClient.getServiceInstance()
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance()
                 .getComments(String.valueOf(diveSpot.getId()), helpers.getUserQuryMapRequest());
         call.enqueue(new retrofit2.Callback<ResponseBody>() {
             @Override

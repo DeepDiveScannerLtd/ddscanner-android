@@ -21,6 +21,8 @@ import android.widget.ImageView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
+import com.ddscanner.entities.DiveSpot;
 import com.ddscanner.entities.RegisterResponse;
 import com.ddscanner.entities.SignInType;
 import com.ddscanner.entities.errors.BadRequestException;
@@ -69,11 +71,14 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.OptionalPendingResult;
+import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.gson.Gson;
 import com.squareup.otto.Subscribe;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -84,6 +89,8 @@ import java.util.Date;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by lashket on 20.4.16.
@@ -161,6 +168,7 @@ public class MainActivity extends BaseAppCompatActivity
                 .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
                     @Override
                     public void onConnected(@Nullable Bundle bundle) {
+                        refreshIdTokenSilently();
                         if (needToClearDefaultAccount) {
                             Auth.GoogleSignInApi.signOut(mGoogleApiClient);
                             mGoogleApiClient.clearDefaultAccountAndReconnect();
@@ -442,7 +450,7 @@ public class MainActivity extends BaseAppCompatActivity
 
     private void sendRegisterRequest(final RegisterRequest userData, final SignInType signInType) {
         materialDialog.show();
-        Call<ResponseBody> call = RestClient.getServiceInstance().registerUser(userData);
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().registerUser(userData);
         call.enqueue(new retrofit2.Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call,
@@ -508,6 +516,70 @@ public class MainActivity extends BaseAppCompatActivity
                 materialDialog.dismiss();
             }
         });
+    }
+
+    private void validateIdToken() {
+        Call<ResponseBody> call = RestClient.getGoogleApisServiceInstance().getTokenInfo("eyJhbGciOiJSUzI1NiIsImtpZCI6IjIyZjJiN2RjMzI5ZWIxMWU0ZTA1MjEzMjRjNjZiZGJmNjNiYzNhNzIifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhdWQiOiIxOTU3MDY5MTQ2MTgtaXN0OWY4aW5zNDg1azJnZ2xib21nZHA0bDJwbjU3aXEuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMDA4MjExMDgxMDk2NzM2OTc1NjMiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiYXpwIjoiMTk1NzA2OTE0NjE4LXUydGlsdTZ0cGU3bDA2bzNjZzcwNWJlZzB0bmdqMmdpLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwiZW1haWwiOiJteWxhbmd2dWlAZ21haWwuY29tIiwiaWF0IjoxNDY4MTYxMTk0LCJleHAiOjE0NjgxNjQ3OTQsIm5hbWUiOiJMYW5nIFZ1aSIsImdpdmVuX25hbWUiOiJMYW5nIiwiZmFtaWx5X25hbWUiOiJWdWkiLCJsb2NhbGUiOiJlbiJ9.PcDkSOYFFv8TvkPM9LfZ2F5TaNOk6aLy0x8kqci4RLmisWAbomnnBtlPhZ-KVgsmjvTevwKb8DDCkJysxLkngh8ZjuPj-wDbNrPaHQMiawFW1pABorygWLU7fbd2ddnj6lY7DabeI1YW_fnux1Ep_36WUULGyz5YPstA0zsZNUWC9ndu_m-kTnlL-di5WXaqLadD9YMisZMStgYrTzr7LCwtg_x1A5xo2zCr5wISjI7eQN4xoRX9kff7vCoJMCUPmK-jyBnM62DRelxEELvhVppUl5ypqY6GHkajA8t8viug7ZdPbUh9i8OlGY3hCvCFilNALVDVRLZFbjXqTZPQ6Q");
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                Log.i(TAG, "createAddDiveSpotRequest success");
+                if (!response.isSuccessful()) {
+                    String responseString = "";
+                    try {
+                        responseString = response.errorBody().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    LogUtils.i("createAddDiveSpotRequest response body is " + responseString);
+                } else {
+                    if (response.raw().code() == 200) {
+                        String responseString = "";
+                        try {
+                            responseString = response.body().string();
+                            LogUtils.i("createAddDiveSpotRequest response body is " + responseString);
+                        } catch (IOException e) {
+
+                        }
+
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private void refreshIdTokenSilently() {
+        if (mGoogleApiClient == null) {
+            Log.i(TAG, "refreshIdTokenSilently initGoogleLoginManager");
+            initGoogleLoginManager();
+        }
+        OptionalPendingResult<GoogleSignInResult> pendingResult = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
+        if (pendingResult.isDone()) {
+            // There's immediate result available.
+            GoogleSignInAccount acct = pendingResult.get().getSignInAccount();
+            String idToken = acct.getIdToken();
+            Log.i(TAG, "refreshIdTokenSilently pendingResult.isDone idToken = " + idToken);
+        } else {
+            // There's no immediate result ready, displays some progress indicator and waits for the
+            // async callback.
+            pendingResult.setResultCallback(new ResultCallback<GoogleSignInResult>() {
+                @Override
+                public void onResult(@NonNull GoogleSignInResult result) {
+                    Log.i(TAG, "refreshIdTokenSilently onResult result.isSuccess = " + result.isSuccess());
+                    if (result.isSuccess()) {
+                        GoogleSignInAccount acct = result.getSignInAccount();
+                        String idToken = acct.getIdToken();
+                        Log.i(TAG, "refreshIdTokenSilently onResult idToken = " + idToken);
+                    }
+                }
+            });
+        }
+
     }
 
     @Subscribe

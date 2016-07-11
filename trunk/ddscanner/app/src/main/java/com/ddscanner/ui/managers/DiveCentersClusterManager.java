@@ -3,16 +3,12 @@ package com.ddscanner.ui.managers;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.DDScannerApplication;
@@ -21,17 +17,14 @@ import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.DiveCenter;
 import com.ddscanner.entities.DiveCentersResponseEntity;
 import com.ddscanner.events.DiveCenterMarkerClickEvent;
-import com.ddscanner.events.MarkerClickEvent;
 import com.ddscanner.events.OnMapClickEvent;
 import com.ddscanner.events.PutDiveCentersToListEvent;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.activities.DiveCenterDetailsActivity;
 import com.ddscanner.utils.EventTrackerHelper;
-import com.ddscanner.utils.LogUtils;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -46,8 +39,6 @@ import com.google.maps.android.clustering.algo.GridBasedAlgorithm;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
 import com.google.maps.android.ui.SquareTextView;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -280,7 +271,7 @@ public class DiveCentersClusterManager extends ClusterManager<DiveCenter> implem
         map.put("lngLeft", String.valueOf(latLng.longitude - 2.0));
         map.put("lngRight", String.valueOf(latLng.longitude + 2.0));
         map.put("latRight", String.valueOf(latLng.latitude + 2.0));
-        Call<ResponseBody> call = RestClient.getServiceInstance().getDiveCenters(map);
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveCenters(map);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {

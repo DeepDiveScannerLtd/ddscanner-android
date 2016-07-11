@@ -225,7 +225,7 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
             }
         }
 
-        Call<ResponseBody> call = RestClient.getServiceInstance().addCommentToDiveSpot(
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().addCommentToDiveSpot(
                 requestId,
                 requestComment,
                 requestRating,

@@ -286,7 +286,7 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
             RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
             body = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
         }
-        Call<ResponseBody> call = RestClient.getServiceInstance().addSealife(
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().addSealife(
                 requestName, requestDistribution, requestHabitat, body, requestScname,
                 requestLength, requestWeight, requestDepth, requestOrder, requestClass,
                 requestToken, requestSocial, requestSecret);

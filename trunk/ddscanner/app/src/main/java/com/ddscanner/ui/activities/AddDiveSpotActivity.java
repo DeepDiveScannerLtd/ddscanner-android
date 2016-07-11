@@ -302,7 +302,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
 
     private void loadFiltersDataRequest() {
 
-        Call<ResponseBody> call = RestClient.getServiceInstance().getFilters();
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getFilters();
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -396,7 +396,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
 
     private void createAddDiveSpotRequest() {
         progressDialogUpload.show();
-        Call<ResponseBody> call = RestClient.getServiceInstance().addDiveSpot(
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().addDiveSpot(
                 requestName, requestLat, requestLng, requestDepth, requestVisibility,
                 requestCurrents, requestLevel, requestObject, requestAccess, requestDescription,
                 sealife, images, requestToken, requestSocial, requestSecret

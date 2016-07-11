@@ -130,7 +130,7 @@ public class SwipableDiveSpotListAdapter
     }
 
     private void checkOut(String id) {
-        Call<ResponseBody> call = RestClient.getServiceInstance()
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance()
                 .checkOutUser(id, helpers.getUserQuryMapRequest());
         call.enqueue(new retrofit2.Callback<ResponseBody>() {
             @Override
@@ -148,7 +148,7 @@ public class SwipableDiveSpotListAdapter
         });
     }
     private void checkIn(String id) {
-        Call<ResponseBody> call = RestClient.getServiceInstance()
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance()
                 .checkIn(id, helpers.getRegisterRequest());
         call.enqueue(new retrofit2.Callback<ResponseBody>() {
             @Override
@@ -166,7 +166,7 @@ public class SwipableDiveSpotListAdapter
         });
     }
     private void addToFavorites(String id) {
-        Call<ResponseBody> call = RestClient.getServiceInstance()
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance()
                 .addDiveSpotToFavourites(id, helpers.getRegisterRequest());
         call.enqueue(new retrofit2.Callback<ResponseBody>() {
             @Override
@@ -185,7 +185,7 @@ public class SwipableDiveSpotListAdapter
     }
 
     private void removeFromFavorites(String id) {
-        Call<ResponseBody> call = RestClient.getServiceInstance()
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance()
                 .removeSpotFromFavorites(id, helpers.getUserQuryMapRequest());
         call.enqueue(new retrofit2.Callback<ResponseBody>() {
             @Override

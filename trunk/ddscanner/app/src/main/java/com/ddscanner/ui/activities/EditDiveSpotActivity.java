@@ -254,7 +254,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
      */
     private void getDsInfoRequest() {
 
-        Call<ResponseBody> call = RestClient.getServiceInstance().getDiveSpotForEdit(
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveSpotForEdit(
                 diveSpotId, helpers.getUserQuryMapRequest());
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -508,7 +508,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
     }
 
     private void createAddDiveSpotRequest() {
-        Call<ResponseBody> call = RestClient.getServiceInstance().updateDiveSpot(
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().updateDiveSpot(
                 diveSpotId, requestType, requestName, requestLat, requestLng, requestDepth,
                 requestVisibility, requestCurrents, requestLevel, requestObject, requestAccess,
                 requestDescription, sealifeRequest, newImages, deletedImages, requestToken,
@@ -572,7 +572,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
 
     private void loadFiltersDataRequest() {
 
-        Call<ResponseBody> call = RestClient.getServiceInstance().getFilters();
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getFilters();
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

@@ -113,7 +113,7 @@ public class DiveSpotsListActivity extends AppCompatActivity {
     }
 
     private void getAddedList() {
-        Call<ResponseBody> call = RestClient.getServiceInstance().getUsersAdded(
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUsersAdded(
                 SharedPreferenceHelper.getUserServerId(), helpers.getUserQuryMapRequest());
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -177,7 +177,7 @@ public class DiveSpotsListActivity extends AppCompatActivity {
     }
 
     private void getEditedList() {
-        Call<ResponseBody> call = RestClient.getServiceInstance().getUsersEdited(
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUsersEdited(
                 SharedPreferenceHelper.getUserServerId(), helpers.getUserQuryMapRequest());
         call.enqueue(new Callback<ResponseBody>() {
             @Override

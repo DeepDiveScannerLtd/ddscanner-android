@@ -1,33 +1,16 @@
 package com.ddscanner.ui.activities;
 
 import android.app.Activity;
-import android.app.DialogFragment;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapShader;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.RectF;
-import android.graphics.Shader;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
-import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
@@ -47,21 +30,16 @@ import com.ddscanner.events.ShowUserDialogEvent;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.ReviewsListAdapter;
-import com.ddscanner.ui.dialogs.ProfileDialog;
-import com.ddscanner.ui.views.TransformationRoundImage;
 import com.ddscanner.utils.Constants;
-import com.ddscanner.utils.EventTrackerHelper;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.gson.Gson;
 import com.rey.material.widget.ProgressView;
 import com.squareup.otto.Subscribe;
-import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -165,7 +143,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
         commentsRc.setVisibility(View.GONE);
         progressView.setVisibility(View.VISIBLE);
         isHasNewComment = true;
-        Call<ResponseBody> call = RestClient.getServiceInstance().getComments(diveSpotId, helpers.getUserQuryMapRequest());
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getComments(diveSpotId, helpers.getUserQuryMapRequest());
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

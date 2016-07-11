@@ -1,8 +1,6 @@
 package com.ddscanner.ui.fragments;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -35,7 +33,6 @@ import com.ddscanner.entities.errors.UnknownErrorException;
 import com.ddscanner.entities.errors.UserNotFoundException;
 import com.ddscanner.entities.errors.ValidationErrorException;
 import com.ddscanner.events.ChangePageOfMainViewPagerEvent;
-import com.ddscanner.events.LoggedInEvent;
 import com.ddscanner.events.LoggedOutEvent;
 import com.ddscanner.events.PickPhotoFromGallery;
 import com.ddscanner.events.ShowLoginActivityIntent;
@@ -44,7 +41,6 @@ import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.activities.DiveSpotsListActivity;
 import com.ddscanner.ui.activities.UsersDivespotListSwipableActivity;
-import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
@@ -313,7 +309,7 @@ public class ProfileFragment extends Fragment
     }
 
     private void getUserDataRequest(String id) {
-        Call<ResponseBody> call = RestClient.getServiceInstance().getUserInfo(id);
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserInfo(id);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -454,7 +450,7 @@ public class ProfileFragment extends Fragment
 
         requestType = RequestBody.create(MediaType.parse("multipart/form-data"), "PUT");
 
-        Call<ResponseBody> call = RestClient.getServiceInstance().updateUserById(
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().updateUserById(
                 SharedPreferenceHelper.getUserServerId(),
                 requestType, image, name, username, about, requestToken, requestSocial,
                 requestSecret
@@ -524,7 +520,7 @@ public class ProfileFragment extends Fragment
     }
 
     private void logout() {
-        Call<ResponseBody> call = RestClient.getServiceInstance()
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance()
                 .logout(helpers.getRegisterRequest());
         call.enqueue(new Callback<ResponseBody>() {
             @Override

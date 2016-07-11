@@ -59,7 +59,7 @@ public class SubscribeDialog extends DialogFragment implements View.OnClickListe
     }
 
    /* private void sendSubscribeRequest(Map<String, String> map) {
-        RestClient.getServiceInstance().subscribe(map, new Callback<Response>() {
+        RestClient.getDdscannerServiceInstance().subscribe(map, new Callback<Response>() {
             @Override
             public void success(Response s, Response response) {
                 String responseString = new String(((TypedByteArray) s.getBody()).getBytes());

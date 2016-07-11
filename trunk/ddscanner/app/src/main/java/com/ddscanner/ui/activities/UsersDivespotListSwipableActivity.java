@@ -136,7 +136,7 @@ public class UsersDivespotListSwipableActivity extends AppCompatActivity {
                 map.put("secret", SharedPreferenceHelper.getSecret());
             }
         }
-        Call<ResponseBody> call = RestClient.getServiceInstance().getUsersCheckins(
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUsersCheckins(
                 SharedPreferenceHelper.getUserServerId(), map);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -208,7 +208,7 @@ public class UsersDivespotListSwipableActivity extends AppCompatActivity {
                 map.put("secret", SharedPreferenceHelper.getSecret());
             }
         }
-        Call<ResponseBody> call = RestClient.getServiceInstance().getUsersFavorites(
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUsersFavorites(
                 SharedPreferenceHelper.getUserServerId(), map);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
