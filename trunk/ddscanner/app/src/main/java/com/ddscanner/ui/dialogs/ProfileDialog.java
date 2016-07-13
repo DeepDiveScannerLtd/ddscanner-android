@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.ddscanner.R;
 import com.ddscanner.entities.User;
 import com.ddscanner.ui.views.TransformationRoundImage;
+import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;
 
@@ -48,7 +49,7 @@ public class ProfileDialog extends DialogFragment implements View.OnClickListene
     public static ProfileDialog newInstance(User user) {
         ProfileDialog profileDialog = new ProfileDialog();
         Bundle args = new Bundle();
-        args.putParcelable("USER", user);
+        args.putParcelable(Constants.PROFILE_DIALOG_INTENT_USER, user);
         profileDialog.setArguments(args);
         return profileDialog;
     }
@@ -56,8 +57,8 @@ public class ProfileDialog extends DialogFragment implements View.OnClickListene
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        user = getArguments().getParcelable("USER");
-        FACEBOOK_URL = "https://www.facebook.com/" + user.getSocialId();
+        user = getArguments().getParcelable(Constants.PROFILE_DIALOG_INTENT_USER);
+        FACEBOOK_URL = Constants.PROFILE_DIALOG_FACEBOOK_URL + user.getSocialId();
         FACEBOOK_PAGE_ID = user.getSocialId();
     }
 
@@ -100,13 +101,13 @@ public class ProfileDialog extends DialogFragment implements View.OnClickListene
 
         switch (user.getType()) {
             case "fb":
-                link.setText("Open on facebook");
+                link.setText(R.string.open_on_facebook);
                 break;
             case "tw":
-                link.setText("Open on twitter");
+                link.setText(R.string.open_on_twitter);
                 break;
             case "go":
-                link.setText("Open on Google+");
+                link.setText(R.string.open_on_google_plus);
                 break;
         }
         return v;
@@ -120,6 +121,7 @@ public class ProfileDialog extends DialogFragment implements View.OnClickListene
         added = (TextView) v.findViewById(R.id.added);
         edited = (TextView) v.findViewById(R.id.edited);
         about = (TextView) v.findViewById(R.id.about);
+        about.setVisibility(View.GONE);
         avatar = (ImageView) v.findViewById(R.id.userAvatar);
         link = (TextView) v.findViewById(R.id.linkText);
         open = (LinearLayout) v.findViewById(R.id.link);
@@ -133,6 +135,7 @@ public class ProfileDialog extends DialogFragment implements View.OnClickListene
         edited.setText(user.getCountEdit());
         if (user.getAbout() != null) {
             about.setText(user.getAbout());
+            about.setVisibility(View.VISIBLE);
         }
         Picasso.with(context).load(user.getPicture()).resize(80,80).centerCrop()
                 .transform(new TransformationRoundImage(50,0)).into(avatar);
@@ -141,13 +144,13 @@ public class ProfileDialog extends DialogFragment implements View.OnClickListene
 
         switch (user.getType()) {
             case "fb":
-                link.setText("Open on facebook");
+                link.setText(R.string.open_on_facebook);
                 break;
             case "tw":
-                link.setText("Open on twitter");
+                link.setText(R.string.open_on_twitter);
                 break;
             case "go":
-                link.setText("Open on Google+");
+                link.setText(R.string.open_on_google_plus);
                 break;
         }
 
@@ -171,23 +174,23 @@ public class ProfileDialog extends DialogFragment implements View.OnClickListene
             case "tw":
                 try {
                     Intent intent = new Intent(Intent.ACTION_VIEW,
-                            Uri.parse("twitter://user?screen_name=" + userName));
+                            Uri.parse(Constants.PROFILE_DIALOG_TWITTER_URI + userName));
                     startActivity(intent);
 
                 }catch (Exception e) {
                     startActivity(new Intent(Intent.ACTION_VIEW,
-                            Uri.parse("https://twitter.com/#!/" + userName)));
+                            Uri.parse(Constants.PROFILE_DIALOG_TWITTER_URL + userName)));
                 }
                 break;
             case "go":
                 try {
                     Intent intent = new Intent(Intent.ACTION_VIEW);
-                    intent.setData(Uri.parse("https://plus.google.com/" + userName));
+                    intent.setData(Uri.parse(Constants.PROFILE_DIALOG_GOOGLE_URL + userName));
                     intent.setPackage("com.google.android.apps.plus");
                     startActivity(intent);
                 } catch (Exception e) {
                     startActivity(new Intent(
-                            Intent.ACTION_VIEW, Uri.parse("https://plus.google.com/" + userName)));
+                            Intent.ACTION_VIEW, Uri.parse(Constants.PROFILE_DIALOG_GOOGLE_URL + userName)));
                 }
                 break;
             case "fb":
@@ -211,9 +214,9 @@ public class ProfileDialog extends DialogFragment implements View.OnClickListene
         try {
             int versionCode = packageManager.getPackageInfo("com.facebook.katana", 0).versionCode;
             if (versionCode >= 3002850) {
-                return "fb://facewebmodal/f?href=" + FACEBOOK_URL;
+                return Constants.PROFILE_DIALOG_FACEBOOK_OLD_URI + FACEBOOK_URL;
             } else {
-                return "fb://page/" + FACEBOOK_PAGE_ID;
+                return Constants.PROFILE_DIALOG_FACEBOOK_NEW_URI + FACEBOOK_PAGE_ID;
             }
         } catch (PackageManager.NameNotFoundException e) {
             return FACEBOOK_URL;

@@ -11,6 +11,16 @@ public class Constants {
     public static final String IS_HAS_INTERNET = "IS_HAS_INTERNET";
     public static final String IS_LOCATION = "IS_LOCATION";
 
+    /*Profile dialog*/
+    public static final String PROFILE_DIALOG_INTENT_USER = "USER";
+    public static final String PROFILE_DIALOG_FACEBOOK_URL = "https://www.facebook.com/";
+    public static final String PROFILE_DIALOG_FACEBOOK_OLD_URI = "fb://facewebmodal/f?href=";
+    public static final String PROFILE_DIALOG_FACEBOOK_NEW_URI = "fb://page/";
+    public static final String PROFILE_DIALOG_TWITTER_URI = "twitter://user?screen_name=";
+    public static final String PROFILE_DIALOG_TWITTER_URL = "twitter://user?screen_name=";
+    public static final String PROFILE_DIALOG_GOOGLE_URL = "https://plus.google.com/";
+
+
     /*Search activity*/
     public static final int SEARCH_ACTIVITY_REQUEST_CODE_LOGIN = 1010;
     public static final int SEARCH_ACTIVITY_RESULT_CODE_MY_LOCATION = 1011;
