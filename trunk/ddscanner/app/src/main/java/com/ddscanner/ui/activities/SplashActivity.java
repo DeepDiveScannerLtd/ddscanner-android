@@ -114,9 +114,9 @@ public class SplashActivity extends BaseAppCompatActivity {
     private void showAlertDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(
-                "To work with ddscanner you must enable location service. Do you want to do this?")
+                R.string.locatio_dialog_title)
                 .setCancelable(false)
-                .setPositiveButton("Yes",
+                .setPositiveButton(R.string.btn_yes,
                         new DialogInterface.OnClickListener() {
 
                             public void onClick(DialogInterface dialog, int id) {
@@ -125,7 +125,7 @@ public class SplashActivity extends BaseAppCompatActivity {
                                 dialog.dismiss();
                             }
                         })
-                .setNegativeButton("No",
+                .setNegativeButton(R.string.btn_no,
                         new DialogInterface.OnClickListener() {
 
                             public void onClick(DialogInterface dialog,
