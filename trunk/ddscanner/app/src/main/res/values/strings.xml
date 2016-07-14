@@ -175,4 +175,5 @@
     <string name="open_on_twitter">Open on twitter</string>
     <string name="open_on_google_plus">Open on Google+</string>
     <string name="locatio_dialog_title">To work with ddscanner you must enable location service. Do you want to do this?</string>
+    <string name="add_photos_toolbar_title">Add photos</string>
 </resources>
