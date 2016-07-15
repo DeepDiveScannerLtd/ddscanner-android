@@ -7,15 +7,36 @@ import java.util.Map;
 
 public class EventsTracker {
 
+    private static final String EVENT_NAME_CONTACT_DIVE_CENTER = "contact_dive_center";
+    private static final String EVENT_PARAMETER_CONTACT_DIVE_CENTER_TYPE_PHONE_CALL = "phone_call";
+    private static final String EVENT_PARAMETER_CONTACT_DIVE_CENTER_TYPE_EMAIL = "email";
+
+    // ----------------------------------------------------
+    // Screens views
+    // ----------------------------------------------------
+
+    private static final String EVENT_NAME_DIVE_SPOTS_MAP_VIEW = "dive_spots_map_view";
+    private static final String EVENT_NAME_DIVE_SPOTS_LIST_VIEW = "dive_spots_list_view";
+    private static final String EVENT_NAME_DIVE_CENTERS_MAP_VIEW = "dive_centers_map_view";
+    private static final String EVENT_NAME_DIVE_CENTERS_LIST_VIEW = "dive_centers_list_view";
+    private static final String EVENT_NAME_NOTIFICATIONS_VIEW = "notifications_view";
+    private static final String EVENT_NAME_ACTIVITY_VIEW = "activity_view";
+    private static final String EVENT_NAME_USER_PROFILE_VIEW = "user_profile_view";
+    private static final String EVENT_NAME_USER_CHECK_INS_VIEW = "user_check_ins_view";
+    private static final String EVENT_NAME_USER_CREATED_VIEW = "user_created_view";
+    private static final String EVENT_NAME_USER_EDITED_VIEW = "user_edited_view";
+    private static final String EVENT_NAME_USER_FAVOURITES_VIEW = "user_favourites_view";
+    private static final String EVENT_NAME_DIVE_SPOT_CHECK_INS_VIEW = "dive_spot_check_ins_view";
+    private static final String EVENT_NAME_DIVE_SPOT_PHOTOS_VIEW = "dive_spot_photos_view";
+    private static final String EVENT_NAME_DIVE_SPOT_SEALIFE_VIEW = "dive_spot_sealife_view";
+    private static final String EVENT_NAME_DIVE_SPOT_REVIEWS_VIEW = "dive_spot_reviews_view";
+    private static final String EVENT_NAME_REVIEWER_PROFILE_VIEW = "reviewer_profile_view";
+
     private static final String EVENT_NAME_DIVE_SPOT_VIEW = "dive_spot_view";
     private static final String EVENT_NAME_DIVE_CENTER_VIEW = "dive_center_view";
     private static final String EVENT_PARAMETER_NAME_DIVE_SPOT_ID = "dive_spot_id";
     private static final String EVENT_PARAMETER_NAME_DIVE_CENTER_ID = "dive_center_id";
     private static final String EVENT_PARAMETER_NAME_VIEW_SOURCE = "source";
-
-    private static final String EVENT_NAME_CONTACT_DIVE_CENTER = "contact_dive_center";
-    private static final String EVENT_PARAMETER_CONTACT_DIVE_CENTER_TYPE_PHONE_CALL = "phone_call";
-    private static final String EVENT_PARAMETER_CONTACT_DIVE_CENTER_TYPE_EMAIL = "email";
 
     // ----------------------------------------------------
     // Content management
@@ -45,7 +66,7 @@ public class EventsTracker {
 
     private static final String EVENT_NAME_DIVE_SPOT_PHOTO_ADDED = "dive_spot_photo_added";
 
-//    private static final String EVENT_NAME_ = "";
+    private static final String EVENT_NAME_USER_PROFILE_EDITED = "user_profile_edited";
 
     private EventsTracker() {
 
@@ -147,7 +168,16 @@ public class EventsTracker {
     }
 
     public enum SpotViewSource {
-        FROM_MAP("map"), FROM_LIST("list"), FROM_SEARCH("search"), FROM_ACTIVITIES("activities"), FROM_NOTIFICATIONS("notifications"), FROM_PROFILE_CHECKINS("profile_checkins"), FROM_PROFILE_CREATED("profile_created"), FROM_PROFILE_EDITED("profile_edited"), FROM_PROFILE_FAVOURITES("profile_favourites"), UNKNOWN("unknown");
+        FROM_MAP("map"),
+        FROM_LIST("list"),
+        FROM_SEARCH("search"),
+        FROM_ACTIVITIES("activities"),
+        FROM_NOTIFICATIONS("notifications"),
+        FROM_PROFILE_CHECKINS("profile_checkins"),
+        FROM_PROFILE_CREATED("profile_created"),
+        FROM_PROFILE_EDITED("profile_edited"),
+        FROM_PROFILE_FAVOURITES("profile_favourites"),
+        UNKNOWN("unknown");
 
         private String name;
 
