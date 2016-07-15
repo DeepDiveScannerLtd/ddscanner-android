@@ -58,6 +58,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.ddscanner.utils.Constants.MULTIPART_TYPE_TEXT;
+
 /**
  * Created by lashket on 8.4.16.
  */
@@ -151,10 +153,7 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
 
 
     private void setUi() {
-        progressDialogUpload = new MaterialDialog.Builder(this)
-                .content("Please wait...").progress(true, 0)
-                .contentColor(getResources().getColor(R.color.black_text))
-                .widgetColor(getResources().getColor(R.color.primary)).build();
+        progressDialogUpload = helpers.getMaterialDialog(this);
         btnSaveSealife.setOnClickListener(this);
         addPhoto.setOnClickListener(this);
         btnDelete.setOnClickListener(this);
@@ -243,31 +242,31 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
 
     private void createRequestBody() {
         progressDialogUpload.show();
-        requestName = RequestBody.create(MediaType.parse("multipart/form-data"),
+        requestName = RequestBody.create(MediaType.parse(MULTIPART_TYPE_TEXT),
                 name.getText().toString());
-        requestLength = RequestBody.create(MediaType.parse("multipart/form-data"),
+        requestLength = RequestBody.create(MediaType.parse(MULTIPART_TYPE_TEXT),
                 length.getText().toString());
-        requestWeight = RequestBody.create(MediaType.parse("multipart/form-data"),
+        requestWeight = RequestBody.create(MediaType.parse(MULTIPART_TYPE_TEXT),
                 weight.getText().toString());
-        requestDepth = RequestBody.create(MediaType.parse("multipart/form-data"),
+        requestDepth = RequestBody.create(MediaType.parse(MULTIPART_TYPE_TEXT),
                 depth.getText().toString());
-        requestScname = RequestBody.create(MediaType.parse("multipart/form-data"),
+        requestScname = RequestBody.create(MediaType.parse(MULTIPART_TYPE_TEXT),
                 scName.getText().toString());
-        requestOrder = RequestBody.create(MediaType.parse("multipart/form-data"),
+        requestOrder = RequestBody.create(MediaType.parse(MULTIPART_TYPE_TEXT),
                 order.getText().toString());
-        requestClass = RequestBody.create(MediaType.parse("multipart/form-data"),
+        requestClass = RequestBody.create(MediaType.parse(MULTIPART_TYPE_TEXT),
                 scClass.getText().toString());
-        requestDistribution = RequestBody.create(MediaType.parse("multipart/form-data"),
+        requestDistribution = RequestBody.create(MediaType.parse(MULTIPART_TYPE_TEXT),
                 distribution.getText().toString());
-        requestHabitat = RequestBody.create(MediaType.parse("multipart/form-data"),
+        requestHabitat = RequestBody.create(MediaType.parse(MULTIPART_TYPE_TEXT),
                 habitat.getText().toString());
         if (SharedPreferenceHelper.isUserLoggedIn()) {
-            requestSocial = RequestBody.create(MediaType.parse("multipart/form-data"),
+            requestSocial = RequestBody.create(MediaType.parse(MULTIPART_TYPE_TEXT),
                     SharedPreferenceHelper.getSn());
-            requestToken = RequestBody.create(MediaType.parse("multipart/form-data"),
+            requestToken = RequestBody.create(MediaType.parse(MULTIPART_TYPE_TEXT),
                     SharedPreferenceHelper.getToken());
             if (SharedPreferenceHelper.getSn().equals("tw")) {
-                requestSecret = RequestBody.create(MediaType.parse("multipart/form-data"),
+                requestSecret = RequestBody.create(MediaType.parse(MULTIPART_TYPE_TEXT),
                         SharedPreferenceHelper.getSecret());
             }
         }
@@ -337,7 +336,7 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
                         responseString = response.body().string();
                         try {
                             JSONObject jsonObject = new JSONObject(responseString);
-                            responseString = jsonObject.getString("sealife");
+                            responseString = jsonObject.getString(Constants.ADD_DIVE_SPOT_ACTIVITY_SEALIFE);
                             Sealife sealife = new Gson().fromJson(responseString, Sealife.class);
                             Intent intent = new Intent();
                             intent.putExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_SEALIFE, sealife);

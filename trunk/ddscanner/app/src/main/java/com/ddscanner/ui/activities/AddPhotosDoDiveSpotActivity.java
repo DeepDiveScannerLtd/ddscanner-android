@@ -27,6 +27,7 @@ import com.ddscanner.entities.errors.ValidationErrorException;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.AllPhotosDiveSpotAdapter;
+import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
@@ -70,11 +71,11 @@ public class AddPhotosDoDiveSpotActivity extends AppCompatActivity implements Vi
         setContentView(R.layout.activity_add_photos_to_dive_spot);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Add photos");
+        getSupportActionBar().setTitle(R.string.add_photos_toolbar_title);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         materialDialog = helpers.getMaterialDialog(this);
-        images = (ArrayList<String>)getIntent().getSerializableExtra("IMAGES");
-        dsId = getIntent().getStringExtra("id");
+        images = (ArrayList<String>)getIntent().getSerializableExtra(Constants.ADD_PHOTO_ACTIVITY_INTENT_IMAGES);
+        dsId = getIntent().getStringExtra(Constants.ADD_PHOTO_ACTIVITY_INTENT_DIVE_SPOT_ID);
         button = (Button) findViewById(R.id.button_share);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
 
@@ -97,22 +98,22 @@ public class AddPhotosDoDiveSpotActivity extends AppCompatActivity implements Vi
     private void sendRequest() {
         materialDialog.show();
         if (SharedPreferenceHelper.isUserLoggedIn()) {
-            requestSocial = RequestBody.create(MediaType.parse("multipart/form-data"),
+            requestSocial = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
                     SharedPreferenceHelper.getSn());
-            requestToken = RequestBody.create(MediaType.parse("multipart/form-data"),
+            requestToken = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
                     SharedPreferenceHelper.getToken());
             if (SharedPreferenceHelper.getSn().equals("tw")) {
-                requestSecret = RequestBody.create(MediaType.parse("multipart/form-data"),
+                requestSecret = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
                         SharedPreferenceHelper.getSecret());
             }
         }
 
-        requestType = RequestBody.create(MediaType.parse("multipart/form-data"), "PUT");
+        requestType = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), "PUT");
         List<MultipartBody.Part> imagesToSend = new ArrayList<>();
         for (int i = 0; i < images.size(); i++) {
             File image = new File(images.get(i));
             RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), image);
-            MultipartBody.Part part = MultipartBody.Part.createFormData("images[]",
+            MultipartBody.Part part = MultipartBody.Part.createFormData(Constants.ADD_DIVE_SPOT_ACTIVITY_IMAGES_ARRAY,
                     image.getName(), requestFile);
             imagesToSend.add(part);
         }

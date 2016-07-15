@@ -11,6 +11,16 @@ public class Constants {
     public static final String IS_HAS_INTERNET = "IS_HAS_INTERNET";
     public static final String IS_LOCATION = "IS_LOCATION";
 
+    /*Profile dialog*/
+    public static final String PROFILE_DIALOG_INTENT_USER = "USER";
+    public static final String PROFILE_DIALOG_FACEBOOK_URL = "https://www.facebook.com/";
+    public static final String PROFILE_DIALOG_FACEBOOK_OLD_URI = "fb://facewebmodal/f?href=";
+    public static final String PROFILE_DIALOG_FACEBOOK_NEW_URI = "fb://page/";
+    public static final String PROFILE_DIALOG_TWITTER_URI = "twitter://user?screen_name=";
+    public static final String PROFILE_DIALOG_TWITTER_URL = "twitter://user?screen_name=";
+    public static final String PROFILE_DIALOG_GOOGLE_URL = "https://plus.google.com/";
+
+
     /*Search activity*/
     public static final int SEARCH_ACTIVITY_REQUEST_CODE_LOGIN = 1010;
     public static final int SEARCH_ACTIVITY_RESULT_CODE_MY_LOCATION = 1011;
@@ -31,6 +41,9 @@ public class Constants {
     public static final int ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_LOGIN = 1004;
     public static final int ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_LOGIN_TO_SEND = 1005;
     public static final int ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_LOGIN_TO_GET_DATA = 1006;
+    public static final String ADD_DIVE_SPOT_ACTIVITY_DIVESPOT = "divespot";
+    public static final String ADD_DIVE_SPOT_ACTIVITY_SEALIFE_ARRAY = "sealife[]";
+    public static final String ADD_DIVE_SPOT_ACTIVITY_IMAGES_ARRAY = "images[]";
 
     /*Fields in filters*/
     public static final String FILTERS_VALUE_OBJECT = "object";
@@ -45,6 +58,10 @@ public class Constants {
     public static final int REQUEST_CODE_MAIN_ACTIVITY_GET_LOCATION_ON_ACTIVITY_START = 9012;
     public static final int REQUEST_CODE_OPEN_LOGIN_SCREEN = 9013;
     public static final int REQUEST_CODE_NEED_TO_LOGIN = 9014;
+
+    /*Add photo to dive spot activity*/
+    public static final String ADD_PHOTO_ACTIVITY_INTENT_IMAGES = "IMAGES";
+    public static final String ADD_PHOTO_ACTIVITY_INTENT_DIVE_SPOT_ID = "id";
 
     public static final String MULTIPART_TYPE_TEXT = "multipart/form-data";
 

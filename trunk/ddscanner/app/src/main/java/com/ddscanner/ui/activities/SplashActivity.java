@@ -34,6 +34,9 @@ public class SplashActivity extends BaseAppCompatActivity {
 
     private Helpers helpers = new Helpers();
 
+    private Handler h = new Handler();
+    private Runnable runnable;
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().getDecorView().setSystemUiVisibility(
@@ -98,22 +101,22 @@ public class SplashActivity extends BaseAppCompatActivity {
     private void showMainActivity() {
         final boolean isInternet = helpers.hasConnection(this);
         final boolean isLocation = checkIsProvidersEnabled();
-        Handler h = new Handler();
-        h.postDelayed(new Runnable() {
+        runnable = new Runnable() {
             @Override
             public void run() {
                 MainActivity.show(SplashActivity.this, isInternet, isLocation);
                 SplashActivity.this.finish();
             }
-        }, DDProgressBarView.ANIMATION_DURATION);
+        };
+        h.postDelayed(runnable, DDProgressBarView.ANIMATION_DURATION);
     }
 
     private void showAlertDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(
-                "To work with ddscanner you must enable location service. Do you want to do this?")
+                R.string.locatio_dialog_title)
                 .setCancelable(false)
-                .setPositiveButton("Yes",
+                .setPositiveButton(R.string.btn_yes,
                         new DialogInterface.OnClickListener() {
 
                             public void onClick(DialogInterface dialog, int id) {
@@ -122,7 +125,7 @@ public class SplashActivity extends BaseAppCompatActivity {
                                 dialog.dismiss();
                             }
                         })
-                .setNegativeButton("No",
+                .setNegativeButton(R.string.btn_no,
                         new DialogInterface.OnClickListener() {
 
                             public void onClick(DialogInterface dialog,
@@ -137,6 +140,7 @@ public class SplashActivity extends BaseAppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+       // h.removeCallbacks(runnable);
         DDScannerApplication.activityPaused();
     }
 
@@ -149,10 +153,12 @@ public class SplashActivity extends BaseAppCompatActivity {
         }
     }
 
+
+
     @Override
     protected void onStop() {
         super.onStop();
-
+     //   h.removeCallbacks(runnable);
         DDScannerApplication.bus.unregister(this);
     }
 
@@ -173,4 +179,13 @@ public class SplashActivity extends BaseAppCompatActivity {
         showMainActivity();
         SharedPreferenceHelper.setIsFirstLaunch(false);
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        h.removeCallbacks(runnable);
+        finish();
+    }
+
+
 }

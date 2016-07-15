@@ -449,7 +449,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                             responseString = response.body().string();
                             try {
                                 JSONObject jsonObject = new JSONObject(responseString);
-                                responseString = jsonObject.getString("divespot");
+                                responseString = jsonObject.getString(Constants.ADD_DIVE_SPOT_ACTIVITY_DIVESPOT);
                             } catch (JSONException e) {
 
                             }
@@ -553,7 +553,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         }
         if (sealife != null && sealifes.size() > 0) {
             for (int i = 0; i < sealifes.size(); i++) {
-                sealife.add(MultipartBody.Part.createFormData("sealife[]", sealifes.get(i).getId()));
+                sealife.add(MultipartBody.Part.createFormData(Constants.ADD_DIVE_SPOT_ACTIVITY_SEALIFE_ARRAY, sealifes.get(i).getId()));
             }
         }
         if (imageUris.size() > 0) {
@@ -561,7 +561,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
             for (int i = 0; i < imageUris.size(); i++) {
                 File image = new File(imageUris.get(i));
                 RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), image);
-                MultipartBody.Part part = MultipartBody.Part.createFormData("images[]",
+                MultipartBody.Part part = MultipartBody.Part.createFormData(Constants.ADD_DIVE_SPOT_ACTIVITY_IMAGES_ARRAY,
                         image.getName(), requestFile);
                 images.add(part);
             }
