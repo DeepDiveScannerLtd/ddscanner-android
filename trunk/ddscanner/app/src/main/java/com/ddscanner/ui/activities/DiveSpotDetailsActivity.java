@@ -67,6 +67,7 @@ import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
+import com.flurry.android.FlurryAgent;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -531,6 +532,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 startActivity(intent);
                 break;
             case R.id.check_in_peoples:
+                EventsTracker.trackDiveSpotCheckinsView();
                 CheckInPeoplesActivity.show(DiveSpotDetailsActivity.this, (ArrayList<User>) usersCheckins);
                 break;
             case R.id.showmore:
@@ -546,6 +548,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 }
                 break;
             case R.id.btn_show_all_reviews:
+                EventsTracker.trackDeviSpotReviewsView();
                 if (divespotDetails.getComments() != null || usersComments != null) {
                     Intent reviewsIntent = new Intent(DiveSpotDetailsActivity.this, ReviewsActivity.class);
                     Bundle bundle = new Bundle();
@@ -579,6 +582,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 EditorsListActivity.show(DiveSpotDetailsActivity.this, (ArrayList<User>) creatorsEditorsList);
                 break;
             case R.id.button_show_divecenters:
+                EventsTracker.trackContactDiveCenter();
                 DiveCentersActivity.show(this, new LatLng(diveSpot.getLat(), diveSpot.getLng()), diveSpot.getName());
                 break;
         }

@@ -75,6 +75,7 @@ public class DiveCenterDetailsActivity extends AppCompatActivity {
                             EventTrackerHelper.EVENT_CALL_NUMBER_CLICK, new HashMap<String, Object>() {{
                                 put(EventTrackerHelper.PARAM_CALL_NUMBER_CLICK, diveCenter.getId());
                             }});
+                    EventsTracker.trackContactDiveCenterByPhone();
                     try {
                         String uri = "tel:" + diveCenter.getPhone();
                         Intent intent = new Intent(Intent.ACTION_DIAL);
@@ -93,6 +94,7 @@ public class DiveCenterDetailsActivity extends AppCompatActivity {
             emailLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    EventsTracker.trackContactDiveCenterByEmail();
                     Intent intent = new Intent(Intent.ACTION_SENDTO);
                     intent.setData(Uri.parse("mailto:"));
                     intent.putExtra(Intent.EXTRA_EMAIL, new String[]{diveCenter.getEmail()});

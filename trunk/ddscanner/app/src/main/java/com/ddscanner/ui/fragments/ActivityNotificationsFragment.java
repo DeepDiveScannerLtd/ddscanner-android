@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.Activity;
 import com.ddscanner.entities.Notification;
 import com.ddscanner.ui.adapters.ActivitiesListAdapter;
@@ -63,6 +64,7 @@ public class ActivityNotificationsFragment extends Fragment {
             this.activities = activities;
             return;
         }
+        EventsTracker.trackActivityView();
         if (activities == null) {
             recyclerView.setAdapter(new ActivitiesListAdapter(
                     getContext(), activities));

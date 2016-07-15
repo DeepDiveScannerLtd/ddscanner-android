@@ -98,6 +98,7 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
         setContentView(R.layout.activity_dive_centers);
         findViews();
         setMapView(savedInstanceState);
+        EventsTracker.trackDiveCentersMapView();
         latLng = getIntent().getParcelableExtra("LATLNG");
         dsName = getIntent().getStringExtra("NAME");
     }
@@ -190,6 +191,7 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
                     if (diveCenterInfo.getVisibility() == View.VISIBLE) {
                         mapListFAB.setY(mapListFAB.getY() + diveCenterInfo.getHeight());
                     }
+                    EventsTracker.trackDiveCentersListView();
                     diveSpotsMapView.setVisibility(View.GONE);
                     diveSpotsListView.setVisibility(View.VISIBLE);
                     mapListFAB.setImageResource(R.drawable.ic_acb_map);
@@ -197,6 +199,7 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
                     if (diveCenterInfo.getVisibility() == View.VISIBLE) {
                         mapListFAB.setY(mapListFAB.getY() - diveCenterInfo.getHeight());
                     }
+                    EventsTracker.trackDiveCentersMapView();
                     diveSpotsMapView.setVisibility(View.VISIBLE);
                     diveSpotsListView.setVisibility(View.GONE);
                     mapListFAB.setImageResource(R.drawable.ic_acb_list);

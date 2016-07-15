@@ -41,6 +41,7 @@ import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.activities.DiveSpotsListActivity;
 import com.ddscanner.ui.activities.UsersDivespotListSwipableActivity;
+import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
@@ -261,15 +262,19 @@ public class ProfileFragment extends Fragment
                 logout();
                 break;
             case R.id.checkins_activity:
+                EventsTracker.trackUserCheckinsView();
                 UsersDivespotListSwipableActivity.show(getContext(), true, EventsTracker.SpotViewSource.FROM_PROFILE_CHECKINS);
                 break;
             case R.id.favorites_activity:
+                EventsTracker.trackUserFavoritesView();
                 UsersDivespotListSwipableActivity.show(getContext(), false, EventsTracker.SpotViewSource.FROM_PROFILE_FAVOURITES);
                 break;
             case R.id.edited_activity:
+                EventsTracker.trackUserEditedView();
                 DiveSpotsListActivity.show(getContext(), false, EventsTracker.SpotViewSource.FROM_PROFILE_EDITED);
                 break;
             case R.id.created_activity:
+                EventsTracker.trackUserCreatedView();
                 DiveSpotsListActivity.show(getContext(), true, EventsTracker.SpotViewSource.FROM_PROFILE_CREATED);
                 break;
         }
@@ -418,21 +423,21 @@ public class ProfileFragment extends Fragment
         isClickedChosingPhotoButton = false;
         materialDialog.show();
         if (!aboutEdit.equals(user.getAbout()) && !aboutEdit.getText().toString().equals("")) {
-            about = RequestBody.create(MediaType.parse("multipart/form-data"),
+            about = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
                     aboutEdit.getText().toString());
         }
         if (!fullNameEdit.equals(user.getName()) && !fullNameEdit.getText().toString().equals("")) {
-            name = RequestBody.create(MediaType.parse("multipart/form-data"),
+            name = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
                     fullNameEdit.getText().toString());
         }
 
         if (SharedPreferenceHelper.isUserLoggedIn()) {
-            requestSocial = RequestBody.create(MediaType.parse("multipart/form-data"),
+            requestSocial = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
                     SharedPreferenceHelper.getSn());
-            requestToken = RequestBody.create(MediaType.parse("multipart/form-data"),
+            requestToken = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
                     SharedPreferenceHelper.getToken());
             if (SharedPreferenceHelper.getSn().equals("tw")) {
-                requestSecret = RequestBody.create(MediaType.parse("multipart/form-data"),
+                requestSecret = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
                         SharedPreferenceHelper.getSecret());
             }
         }
@@ -448,7 +453,7 @@ public class ProfileFragment extends Fragment
             image = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
         }
 
-        requestType = RequestBody.create(MediaType.parse("multipart/form-data"), "PUT");
+        requestType = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), "PUT");
 
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().updateUserById(
                 SharedPreferenceHelper.getUserServerId(),

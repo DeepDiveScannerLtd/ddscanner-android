@@ -285,6 +285,7 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
                         addDsFab.setY(addDsFab.getY() + diveSpotInfo.getHeight());
                     }
                     diveSpotsMapView.setVisibility(View.GONE);
+                    EventsTracker.trackDiveSpotListView();
                     diveSpotsListView.setVisibility(View.VISIBLE);
                     DDScannerApplication.bus.post(new ListOpenedEvent());
                     mapListFAB.setImageResource(R.drawable.ic_acb_map);
@@ -293,6 +294,7 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
                         mapListFAB.setY(mapListFAB.getY() - diveSpotInfo.getHeight());
                         addDsFab.setY(addDsFab.getY() - diveSpotInfo.getHeight());
                     }
+                    EventsTracker.trackDiveSpotMapView();
                     diveSpotsMapView.setVisibility(View.VISIBLE);
                     diveSpotsListView.setVisibility(View.GONE);
                     mapListFAB.setImageResource(R.drawable.ic_acb_list);

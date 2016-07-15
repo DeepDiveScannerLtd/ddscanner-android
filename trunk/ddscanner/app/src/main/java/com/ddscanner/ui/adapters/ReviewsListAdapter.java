@@ -367,6 +367,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.user_avatar:
+                    EventsTracker.trackReviewerProfileView();
                     DDScannerApplication.bus.post(new ShowUserDialogEvent(
                             comments.get(getAdapterPosition()).getUser())
                     );

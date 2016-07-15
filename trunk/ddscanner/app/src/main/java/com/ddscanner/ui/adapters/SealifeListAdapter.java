@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.Sealife;
 import com.ddscanner.ui.activities.SealifeDetails;
 import com.ddscanner.utils.EventTrackerHelper;
@@ -74,6 +75,7 @@ public class SealifeListAdapter extends RecyclerView.Adapter<SealifeListAdapter.
         @Override
         public void onClick(View v) {
             SealifeDetails.show(context, sealifes.get(getPosition()), pathMedium);
+            EventsTracker.trackDiveSpotSealifeView();
             AppsFlyerLib.getInstance().trackEvent(context,
                     EventTrackerHelper.EVENT_SEALIFE_CLICKED, new HashMap<String, Object>() {{
                         put(EventTrackerHelper.PARAM_SEALIFE_CLICKED, sealifes.get(getPosition()));

@@ -153,6 +153,7 @@ public class MainActivity extends BaseAppCompatActivity
         btnFilter.setOnClickListener(this);
         setupTabLayout();
         getLocation(Constants.REQUEST_CODE_MAIN_ACTIVITY_GET_LOCATION_ON_ACTIVITY_START);
+        EventsTracker.trackDiveSpotMapView();
     }
 
     private void initGoogleLoginManager() {
@@ -292,6 +293,9 @@ public class MainActivity extends BaseAppCompatActivity
                             menuItemsLayout.setVisibility(View.VISIBLE);
                         }
                     });
+        }
+        if (position == 2) {
+            EventsTracker.trackUserProfileView();
         }
 //        if ((position == 2 || position == 1) && !SharedPreferenceHelper.isUserLoggedIn()) {
 //            positionToScroll = position;

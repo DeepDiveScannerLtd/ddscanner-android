@@ -25,7 +25,7 @@ public class EventsTracker {
     private static final String EVENT_NAME_USER_CHECK_INS_VIEW = "user_check_ins_view";
     private static final String EVENT_NAME_USER_CREATED_VIEW = "user_created_view";
     private static final String EVENT_NAME_USER_EDITED_VIEW = "user_edited_view";
-    private static final String EVENT_NAME_USER_FAVOURITES_VIEW = "user_favourites_view";
+    private static final String EVENT_NAME_USER_FAVORITES_VIEW = "user_favourites_view";
     private static final String EVENT_NAME_DIVE_SPOT_CHECK_INS_VIEW = "dive_spot_check_ins_view";
     private static final String EVENT_NAME_DIVE_SPOT_PHOTOS_VIEW = "dive_spot_photos_view";
     private static final String EVENT_NAME_DIVE_SPOT_SEALIFE_VIEW = "dive_spot_sealife_view";
@@ -177,6 +177,70 @@ public class EventsTracker {
 
     public static void trackContactDiveCenterByEmail() {
         FlurryAgent.logEvent(EVENT_PARAMETER_CONTACT_DIVE_CENTER_TYPE_EMAIL);
+    }
+
+    public static void trackDiveSpotMapView() {
+        FlurryAgent.logEvent(EVENT_NAME_DIVE_SPOTS_MAP_VIEW);
+    }
+
+    public static void trackDiveSpotListView() {
+        FlurryAgent.logEvent(EVENT_NAME_DIVE_SPOTS_LIST_VIEW);
+    }
+
+    public static void trackDiveCentersMapView() {
+        FlurryAgent.logEvent(EVENT_NAME_DIVE_CENTERS_MAP_VIEW);
+    }
+
+    public static void trackDiveCentersListView() {
+        FlurryAgent.logEvent(EVENT_NAME_DIVE_CENTERS_LIST_VIEW);
+    }
+
+    public static void trackNotificationsView() {
+        FlurryAgent.logEvent(EVENT_NAME_NOTIFICATIONS_VIEW);
+    }
+
+    public static void trackActivityView() {
+        FlurryAgent.logEvent(EVENT_NAME_ACTIVITY_VIEW);
+    }
+
+    public static void trackUserProfileView() {
+        FlurryAgent.logEvent(EVENT_NAME_USER_PROFILE_VIEW);
+    }
+
+    public static void trackUserCheckinsView() {
+        FlurryAgent.logEvent(EVENT_NAME_USER_CHECK_INS_VIEW);
+    }
+
+    public static void trackUserEditedView() {
+        FlurryAgent.logEvent(EVENT_NAME_USER_EDITED_VIEW);
+    }
+
+    public static void trackUserCreatedView() {
+        FlurryAgent.logEvent(EVENT_NAME_USER_CREATED_VIEW);
+    }
+
+    public static void trackUserFavoritesView() {
+        FlurryAgent.logEvent(EVENT_NAME_USER_FAVORITES_VIEW);
+    }
+
+    public static void trackDiveSpotCheckinsView() {
+        FlurryAgent.logEvent(EVENT_NAME_DIVE_SPOT_CHECK_INS_VIEW);
+    }
+
+    public static void trackDiveSpotPhotosView() {
+        FlurryAgent.logEvent(EVENT_NAME_DIVE_SPOT_PHOTOS_VIEW);
+    }
+
+    public static void trackDiveSpotSealifeView() {
+        FlurryAgent.logEvent(EVENT_NAME_DIVE_SPOT_SEALIFE_VIEW);
+    }
+
+    public static void trackDeviSpotReviewsView() {
+        FlurryAgent.logEvent(EVENT_NAME_DIVE_SPOT_REVIEWS_VIEW);
+    }
+
+    public static void trackReviewerProfileView() {
+        FlurryAgent.logEvent(EVENT_NAME_REVIEWER_PROFILE_VIEW);
     }
 
     public enum SpotViewSource {
