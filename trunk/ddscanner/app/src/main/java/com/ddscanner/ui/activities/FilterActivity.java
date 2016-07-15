@@ -15,6 +15,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.FiltersResponseEntity;
 import com.ddscanner.entities.errors.BadRequestException;
 import com.ddscanner.entities.errors.CommentNotFoundException;
@@ -113,6 +114,7 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
         filterChosedEvent.setLevel(helpers.getMirrorOfHashMap(levelsMap)
                 .get(levelSpinner.getSelectedItem().toString()));
         DDScannerApplication.bus.post(filterChosedEvent);
+     //   EventsTracker.trackFilterApplyied(helpers.getMirrorOfHashMap(levelsMap).get(levelSpinner.getSelectedItem().toString()), helpers.getMirrorOfHashMap(objectsMap).get(objectSpinner.getSelectedItem().toString()));
         finish();
     }
 

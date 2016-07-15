@@ -308,10 +308,12 @@ public class MainActivity extends BaseAppCompatActivity
 //                openSearchLocationWindow();
 
                 SearchSpotOrLocationActivity.showForResult(MainActivity.this, REQUEST_CODE_PLACE_AUTOCOMPLETE);
+        //        EventsTracker.trackSearchActivityOpened();
                 break;
             case R.id.filter_menu_button:
                 Intent intent = new Intent(MainActivity.this, FilterActivity.class);
                 startActivity(intent);
+        //        EventsTracker.trackFiltersActivityOpened();
                 break;
         }
     }

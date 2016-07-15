@@ -146,6 +146,18 @@ public class EventsTracker {
         FlurryAgent.logEvent(EVENT_NAME_DIVE_SPOT_PHOTO_ADDED);
     }
 
+    public static void trackContactDiveCenter() {
+        FlurryAgent.logEvent(EVENT_NAME_CONTACT_DIVE_CENTER);
+    }
+
+    public static void trackContactDiveCenterByPhone() {
+        FlurryAgent.logEvent(EVENT_PARAMETER_CONTACT_DIVE_CENTER_TYPE_PHONE_CALL);
+    }
+
+    public static void trackContactDiveCenterByEmail() {
+        FlurryAgent.logEvent(EVENT_PARAMETER_CONTACT_DIVE_CENTER_TYPE_EMAIL);
+    }
+
     public enum SpotViewSource {
         FROM_MAP("map"), FROM_LIST("list"), FROM_SEARCH("search"), FROM_ACTIVITIES("activities"), FROM_NOTIFICATIONS("notifications"), FROM_PROFILE_CHECKINS("profile_checkins"), FROM_PROFILE_CREATED("profile_created"), FROM_PROFILE_EDITED("profile_edited"), FROM_PROFILE_FAVOURITES("profile_favourites"), UNKNOWN("unknown");
 
