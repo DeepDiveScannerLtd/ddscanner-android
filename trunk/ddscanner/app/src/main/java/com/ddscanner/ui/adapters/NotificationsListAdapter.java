@@ -17,6 +17,7 @@ import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.Notification;
 import com.ddscanner.ui.activities.DiveSpotDetailsActivity;
+import com.ddscanner.ui.activities.ForeignProfileActivity;
 import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;
 
@@ -173,7 +174,7 @@ public class NotificationsListAdapter
 
             if (isImage && (notification.getType().name().equalsIgnoreCase("like")
                     || notification.getType().name().equalsIgnoreCase("dislike"))) {
-                helpers.showDialog(notification.getUser(), mFragmentManager);
+                ForeignProfileActivity.show(context, notification.getUser().getId());
             }
 
             if (!isImage) {

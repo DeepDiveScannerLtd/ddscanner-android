@@ -29,6 +29,7 @@ import com.ddscanner.events.ShowLoginActivityIntent;
 import com.ddscanner.events.ShowUserDialogEvent;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
+import com.ddscanner.ui.activities.ForeignProfileActivity;
 import com.ddscanner.ui.dialogs.ProfileDialog;
 import com.ddscanner.ui.views.TransformationRoundImage;
 import com.ddscanner.utils.Helpers;
@@ -368,9 +369,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
             switch (v.getId()) {
                 case R.id.user_avatar:
                     EventsTracker.trackReviewerProfileView();
-                    DDScannerApplication.bus.post(new ShowUserDialogEvent(
-                            comments.get(getAdapterPosition()).getUser())
-                    );
+                    ForeignProfileActivity.show(context, comments.get(getAdapterPosition()).getUser().getId());
                     break;
                 case R.id.like_layout:
                     if (!isLiked) {

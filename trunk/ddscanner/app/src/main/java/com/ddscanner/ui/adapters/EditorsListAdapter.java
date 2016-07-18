@@ -12,6 +12,7 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.User;
 import com.ddscanner.events.ShowUserDialogEvent;
+import com.ddscanner.ui.activities.ForeignProfileActivity;
 import com.ddscanner.ui.views.TransformationRoundImage;
 import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;
@@ -77,7 +78,7 @@ public class EditorsListAdapter extends RecyclerView.Adapter<EditorsListAdapter.
 
         @Override
         public void onClick(View v) {
-            DDScannerApplication.bus.post(new ShowUserDialogEvent(userArrayList.get(getAdapterPosition())));
+            ForeignProfileActivity.show(context, userArrayList.get(getAdapterPosition()).getId());
         }
     }
 

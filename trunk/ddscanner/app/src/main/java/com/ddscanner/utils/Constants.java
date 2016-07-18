@@ -59,6 +59,12 @@ public class Constants {
     public static final int REQUEST_CODE_OPEN_LOGIN_SCREEN = 9013;
     public static final int REQUEST_CODE_NEED_TO_LOGIN = 9014;
 
+    /*Foreign user activity*/
+    public static final String FOREIGN_USER_ACTIVITY_INTENT_ISCREATED = "ISCREATED";
+    public static final String FOREIGN_USER_ACTIVITY_INTENT_ISEDITED = "ISEDITED";
+    public static final String FOREIGN_USER_ACTIVITY_INTENT_ISCHECKIN = "ISCHECKIN";
+    public static final String FOREIGN_USER_ACTIVITY_INTENT_USER_ID = "USERID";
+
     /*Add photo to dive spot activity*/
     public static final String ADD_PHOTO_ACTIVITY_INTENT_IMAGES = "IMAGES";
     public static final String ADD_PHOTO_ACTIVITY_INTENT_DIVE_SPOT_ID = "id";

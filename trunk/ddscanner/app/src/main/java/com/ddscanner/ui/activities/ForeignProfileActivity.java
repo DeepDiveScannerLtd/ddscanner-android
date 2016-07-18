@@ -1,0 +1,156 @@
+package com.ddscanner.ui.activities;
+
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
+import android.widget.TextView;
+
+import com.ddscanner.R;
+import com.ddscanner.entities.User;
+import com.ddscanner.rest.RestClient;
+import com.ddscanner.utils.Helpers;
+import com.google.gson.Gson;
+import com.rey.material.widget.ProgressView;
+import com.squareup.picasso.Picasso;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+
+import jp.wasabeef.picasso.transformations.CropCircleTransformation;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+/**
+ * Created by lashket on 18.7.16.
+ */
+public class ForeignProfileActivity extends AppCompatActivity {
+
+    private Toolbar toolbar;
+    private TextView userCommentsCount;
+    private TextView userLikesCount;
+    private TextView userDislikesCount;
+    private ImageView avatar;
+    private TextView userFullName;
+    private TextView userAbout;
+    private TextView checkInCount;
+    private TextView addedCount;
+    private TextView editedCount;
+    private LinearLayout showAllCheckins;
+    private LinearLayout showAllAdded;
+    private LinearLayout showAllEdited;
+    private LinearLayout openInSocialNetwork;
+    private ScrollView aboutLayout;
+    private String userId;
+    private User user;
+    private ProgressView progressView;
+
+    private Helpers helpers = new Helpers();
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_foreign_user);
+        userId = getIntent().getStringExtra("USERID");
+        findViews();
+        requestUserData();
+    }
+
+    private void findViews() {
+        checkInCount = (TextView) findViewById(R.id.checkin_count);
+        addedCount = (TextView) findViewById(R.id.added_count);
+        editedCount = (TextView) findViewById(R.id.edited_count);
+        aboutLayout = (ScrollView) findViewById(R.id.about);
+        progressView = (ProgressView) findViewById(R.id.progressBarFull);
+        userCommentsCount = (TextView) findViewById(R.id.user_comments);
+        userLikesCount = (TextView) findViewById(R.id.user_likes);
+        userDislikesCount = (TextView) findViewById(R.id.user_dislikes);
+        avatar = (ImageView) findViewById(R.id.user_avatar);
+    }
+
+    private void toolbarSettings() {
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);
+        getSupportActionBar().setTitle(R.string.profile);
+    }
+
+    private void setUi(User user) {
+        userAbout.setVisibility(View.GONE);
+        checkInCount.setText(user.getCountCheckin());
+        addedCount.setText(user.getCountAdd());
+        editedCount.setText(user.getCountEdit());
+        if (user.getAbout() != null && !user.getAbout().isEmpty()) {
+            userAbout.setVisibility(View.VISIBLE);
+            userAbout.setText(user.getAbout());
+        }
+        userCommentsCount.setText(user.getCountComment());
+        userDislikesCount.setText(user.getCountDislike());
+        userLikesCount.setText(user.getCountLike());
+        Picasso.with(this).load(user.getPicture())
+                .resize(Math.round(helpers.convertDpToPixel(100, this)),
+                        Math.round(helpers.convertDpToPixel(100, this))).centerCrop()
+                .transform(new CropCircleTransformation()).into(avatar);
+        progressView.setVisibility(View.GONE);
+        aboutLayout.setVisibility(View.VISIBLE);
+    }
+
+    private void requestUserData() {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserInfo(userId);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    String responseString = "";
+                    if (response.raw().code() == 200) {
+                        try {
+                            responseString = response.body().string();
+                            JSONObject jsonObject = new JSONObject(responseString);
+                            responseString = jsonObject.getString("user");
+                            user = new Gson().fromJson(responseString, User.class);
+                            setUi(user);
+                        } catch (IOException e) {
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    public static void show(Context context, String id){
+        Intent intent = new Intent(context, ForeignProfileActivity.class);
+        intent.putExtra("USERID", id);
+        context.startActivity(intent);
+    }
+}

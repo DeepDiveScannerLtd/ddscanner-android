@@ -12,6 +12,7 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.User;
 import com.ddscanner.events.ShowUserDialogEvent;
+import com.ddscanner.ui.activities.ForeignProfileActivity;
 import com.ddscanner.ui.views.TransformationRoundImage;
 import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;
@@ -65,10 +66,12 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserLi
         private ImageView userAvatar;
         private TextView userName;
         private TextView info;
+        private Context context;
 
         public UserListViewHolder(View v) {
             super(v);
             v.setOnClickListener(this);
+            context = v.getContext();
             userAvatar = (ImageView) v.findViewById(R.id.user_avatar);
             userName = (TextView) v.findViewById(R.id.user_name);
             info = (TextView) v.findViewById(R.id.count);
@@ -76,7 +79,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserLi
 
         @Override
         public void onClick(View v) {
-            DDScannerApplication.bus.post(new ShowUserDialogEvent(userArrayList.get(getAdapterPosition())));
+           ForeignProfileActivity.show(context, userArrayList.get(getAdapterPosition()).getId());
         }
     }
 

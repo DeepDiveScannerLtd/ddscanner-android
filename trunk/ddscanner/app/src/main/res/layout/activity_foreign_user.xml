@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <include layout="@layout/view_toolbar"/>
+    <com.rey.material.widget.ProgressView
+        android:id="@+id/progressBarFull"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="50dp"
+        app:pv_autostart="true"
+        app:pv_circular="true"
+        app:pv_progressMode="indeterminate"
+        app:pv_progressStyle="@style/CircularProgress" />
+    <ScrollView
+        android:id="@+id/about"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/user_avatar"
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:layout_marginTop="32dp"
+                    android:src="@drawable/avatar_profile_default" />
+
+                <TextView
+                    android:id="@+id/user_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="7dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:textColor="@color/black_text"
+                    android:textSize="18sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="7dp"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:layout_width="14dp"
+                        android:layout_height="14dp"
+                        android:background="@color/black_text" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="7dp"
+                        android:fontFamily="sans-serif-medium"
+                        android:textColor="#ed1b24"
+                        android:textSize="13sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/user_about"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="7dp"
+                    android:layout_marginLeft="43dp"
+                    android:layout_marginRight="43dp"
+                    android:gravity="center"
+                    android:textColor="#616161"
+                    android:textSize="13sp"
+                    android:visibility="gone" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="94dp"
+                        android:layout_height="42dp"
+                        android:background="@drawable/border_gray_100px"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_comment_profile" />
+
+                        <TextView
+                            android:id="@+id/user_comments"
+                            style="@style/ProfileNumberDivespotsSrtyle" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="94dp"
+                        android:layout_height="42dp"
+                        android:layout_marginLeft="13dp"
+                        android:layout_marginRight="13dp"
+                        android:background="@drawable/border_gray_100px"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_like_profile" />
+
+                        <TextView
+                            android:id="@+id/user_likes"
+                            style="@style/ProfileNumberDivespotsSrtyle" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="94dp"
+                        android:layout_height="42dp"
+                        android:background="@drawable/border_gray_100px"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_dislike_profile" />
+
+                        <TextView
+                            android:id="@+id/user_dislikes"
+                            style="@style/ProfileNumberDivespotsSrtyle"
+                            android:text="9" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <ImageView style="@style/DividerStyleFull" />
+
+            <ImageView
+                style="@style/DividerStyleFull"
+                android:layout_marginTop="15dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/checkins_activity"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:orientation="horizontal"
+                    android:paddingTop="10dp">
+
+                    <ImageView
+                        style="@style/CharacteristicsDiveSpotListIcons"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_profile_checkin" />
+
+                    <LinearLayout
+                        android:layout_width="258dp"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/CharacteristicsDiveSpotListTitle"
+                            android:text="@string/checkin" />
+
+                        <TextView
+                            android:id="@+id/checkin_count"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="center"
+                        android:src="@drawable/ic_arrow" />
+                </LinearLayout>
+
+                <ImageView style="@style/DividerStyle" />
+
+                <LinearLayout
+                    android:id="@+id/created_activity"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:orientation="horizontal"
+                    android:paddingTop="10dp">
+
+                    <ImageView
+                        style="@style/CharacteristicsDiveSpotListIcons"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_profile_added" />
+
+                    <LinearLayout
+                        android:layout_width="258dp"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/CharacteristicsDiveSpotListTitle"
+                            android:text="@string/created" />
+
+                        <TextView
+                            android:id="@+id/added_count"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/depth_title"
+                            android:text="230" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="center"
+                        android:src="@drawable/ic_arrow" />
+                </LinearLayout>
+
+                <ImageView style="@style/DividerStyle" />
+
+                <LinearLayout
+                    android:id="@+id/edited_activity"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:orientation="horizontal"
+                    android:paddingTop="10dp">
+
+                    <ImageView
+                        style="@style/CharacteristicsDiveSpotListIcons"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_profile_edited" />
+
+                    <LinearLayout
+                        android:layout_width="258dp"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/CharacteristicsDiveSpotListTitle"
+                            android:text="@string/edited_low" />
+
+                        <TextView
+                            android:id="@+id/edited_count"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="center"
+                        android:src="@drawable/ic_arrow" />
+                </LinearLayout>
+
+                <ImageView style="@style/DividerStyleFull" />
+
+                <LinearLayout
+                    android:id="@+id/openSocialNetwork"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        style="@style/CharacteristicsDiveSpotListIcons"
+                        android:src="@drawable/ic_profile_open" />
+
+                    <TextView
+                        style="@style/CharacteristicsDiveSpotListTitle"
+                        android:layout_width="match_parent"
+                        android:textSize="14sp"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:text="Open on" />
+                </LinearLayout>
+
+            </LinearLayout>
+            <ImageView
+                style="@style/DividerStyleFull" />
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
