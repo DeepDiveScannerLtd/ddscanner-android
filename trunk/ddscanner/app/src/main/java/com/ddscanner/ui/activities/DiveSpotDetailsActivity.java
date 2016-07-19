@@ -316,7 +316,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         object.setText(diveSpot.getObject());
         level.setText(diveSpot.getLevel());
         depth.setText(diveSpot.getDepth());
-        visibility.setText(diveSpot.getVisibility());
+        visibility.setText(diveSpot.getVisibilityMin() + getString(R.string.symbol_nimus) + diveSpot.getVisibilityMax() + getString(R.string.meters));
         currents.setText(diveSpot.getCurrents());
         if (diveSpot.getImages() != null && !diveSpot.getImages().isEmpty()) {
             Picasso.with(this).load(diveSpot.getDiveSpotPathMedium() + diveSpot.getImages().get(0)).into(diveSpotMainPhoto, new ImageLoadedCallback(progressBar) {

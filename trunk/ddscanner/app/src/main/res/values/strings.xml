@@ -181,4 +181,6 @@
     <string name="profile">Profile</string>
     <string name="ed">Edited</string>
     <string name="toolbar_title_check_ins">Check Ins</string>
+    <string name="meters">" meters"</string>
+    <string name="symbol_nimus">-</string>
 </resources>
