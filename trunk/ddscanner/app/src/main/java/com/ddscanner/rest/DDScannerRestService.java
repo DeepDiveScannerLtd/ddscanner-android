@@ -233,4 +233,10 @@ public interface DDScannerRestService {
             @Part List<MultipartBody.Part> select
     );
 
+    @GET("diving/user/{id}/comment/likes")
+    Call<ResponseBody> getForeignUserLikes(@Path("id") String userId, @QueryMap Map<String, String> map);
+
+    @GET("diving/user/{id}/comment/dislikes")
+    Call<ResponseBody> getForeignUserDislikes(@Path("id") String userId, @QueryMap Map<String, String> map);
+
 }
