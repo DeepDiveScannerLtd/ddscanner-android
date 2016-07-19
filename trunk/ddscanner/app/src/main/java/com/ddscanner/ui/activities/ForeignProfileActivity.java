@@ -230,6 +230,10 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
                     finish();
                 }
                 break;
+            case Constants.FOREIGN_USER_REQUEST_CODE_SHOW_LIST:
+                if (resultCode == RESULT_CANCELED) {
+                    finish();
+                }
         }
     }
 
@@ -237,13 +241,13 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.checkins_activity:
-                ForeignUserDiveSpotList.show(this, false, false, true, userId);
+                ForeignUserDiveSpotList.show(this, false, false, true, userId, Constants.FOREIGN_USER_REQUEST_CODE_SHOW_LIST);
                 break;
             case R.id.created_activity:
-                ForeignUserDiveSpotList.show(this, false, true, false, userId);
+                ForeignUserDiveSpotList.show(this, false, true, false, userId, Constants.FOREIGN_USER_REQUEST_CODE_SHOW_LIST);
                 break;
             case R.id.edited_activity:
-                ForeignUserDiveSpotList.show(this, true, false, false, userId);
+                ForeignUserDiveSpotList.show(this, true, false, false, userId, Constants.FOREIGN_USER_REQUEST_CODE_SHOW_LIST);
                 break;
         }
     }
