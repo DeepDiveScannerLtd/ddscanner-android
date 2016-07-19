@@ -169,6 +169,9 @@
         <activity
             android:name=".ui.activities.ForeignProfileActivity"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ui.activities.ForeignUserDiveSpotList"
+            android:screenOrientation="portrait"/>
         <receiver
             android:name="com.google.android.gms.gcm.GcmReceiver"
             android:exported="true"

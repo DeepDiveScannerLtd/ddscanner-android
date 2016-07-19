@@ -64,6 +64,7 @@ public class Constants {
     public static final String FOREIGN_USER_ACTIVITY_INTENT_ISEDITED = "ISEDITED";
     public static final String FOREIGN_USER_ACTIVITY_INTENT_ISCHECKIN = "ISCHECKIN";
     public static final String FOREIGN_USER_ACTIVITY_INTENT_USER_ID = "USERID";
+    public static final int FOREIGN_USER_REQUEST_CODE_LOGIN = 1040;
 
     /*Add photo to dive spot activity*/
     public static final String ADD_PHOTO_ACTIVITY_INTENT_IMAGES = "IMAGES";
