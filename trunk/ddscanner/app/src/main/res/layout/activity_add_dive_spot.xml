@@ -23,7 +23,7 @@
         android:id="@+id/main_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -169,7 +169,7 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="56dp"
+                    android:layout_height="wrap_content"
                     android:background="@color/white"
                     android:orientation="horizontal">
 
@@ -177,22 +177,35 @@
                         style="@style/CharacteristicsDiveSpotListIcons"
                         android:src="@drawable/ic_addds_visibility" />
 
-                    <com.rey.material.widget.Spinner
-                        android:id="@+id/visibility_spinner"
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="56dp"
-                        android:dropDownWidth="150dp"
-                        android:gravity="center_vertical"
-                        android:popupBackground="@color/white"
-                        app:popupTheme="@style/AppTheme.PopupOverlay"
-                        app:rd_style="@style/Material.Drawable.Ripple.Wave"
-                        app:spn_arrowColor="@android:color/transparent"
-                        app:spn_dividerColor="@android:color/transparent"
-                        app:spn_label="Visibility"
-                        app:spn_labelEnable="true"
-                        app:spn_labelTextColor="@color/black_text"
-                        app:spn_labelTextSize="16sp"
-                        app:spn_popupItemAnimation="@null" />
+                        android:textSize="16sp"
+                        android:gravity="center"
+                        android:textColor="@color/black_text"
+                        android:text="@string/details_visibility"/>
+                    <EditText
+                        android:maxLength="5"
+                        android:inputType="number"
+                        android:id="@+id/minVisibility"
+                        android:layout_marginLeft="15dp"
+                        android:layout_width="wrap_content"
+                        android:paddingLeft="20dp"
+                        android:paddingRight="20dp"
+                        android:layout_height="56dp"
+                        style="@style/AddDsCharTitleStyle"
+                        android:hint="From"/>
+                    <EditText
+                        android:maxLength="5"
+                        android:inputType="number"
+                        android:id="@+id/maxVisibility"
+                        android:layout_marginLeft="15dp"
+                        android:layout_width="wrap_content"
+                        android:paddingLeft="20dp"
+                        android:paddingRight="20dp"
+                        android:layout_height="56dp"
+                        style="@style/AddDsCharTitleStyle"
+                        android:hint="To"/>
 
                 </LinearLayout>
 
