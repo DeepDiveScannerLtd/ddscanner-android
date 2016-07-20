@@ -97,7 +97,8 @@ public interface DDScannerRestService {
             @Part("lat") RequestBody lat,
             @Part("lng") RequestBody lng,
             @Part("depth") RequestBody depth,
-            @Part("visibility") RequestBody visibility,
+            @Part("visibilityMin") RequestBody visibilityMin,
+            @Part("visibilityMax") RequestBody visibilityMax,
             @Part("currents") RequestBody currents,
             @Part("level") RequestBody level,
             @Part("object") RequestBody object,
@@ -132,7 +133,8 @@ public interface DDScannerRestService {
             @Part("lat") RequestBody lat,
             @Part("lng") RequestBody lng,
             @Part("depth") RequestBody depth,
-            @Part("visibility") RequestBody visibility,
+            @Part("visibilityMin") RequestBody visibilityMin,
+            @Part("visibilityMax") RequestBody visibilityMax,
             @Part("currents") RequestBody currents,
             @Part("level") RequestBody level,
             @Part("object") RequestBody object,
@@ -230,5 +232,11 @@ public interface DDScannerRestService {
             @Part("limit") RequestBody limit,
             @Part List<MultipartBody.Part> select
     );
+
+    @GET("diving/user/{id}/comment/likes")
+    Call<ResponseBody> getForeignUserLikes(@Path("id") String userId, @QueryMap Map<String, String> map);
+
+    @GET("diving/user/{id}/comment/dislikes")
+    Call<ResponseBody> getForeignUserDislikes(@Path("id") String userId, @QueryMap Map<String, String> map);
 
 }

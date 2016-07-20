@@ -15,8 +15,19 @@ import android.widget.TextView;
 
 import com.ddscanner.R;
 import com.ddscanner.entities.User;
+import com.ddscanner.entities.errors.BadRequestException;
+import com.ddscanner.entities.errors.CommentNotFoundException;
+import com.ddscanner.entities.errors.DiveSpotNotFoundException;
+import com.ddscanner.entities.errors.NotFoundException;
+import com.ddscanner.entities.errors.ServerInternalErrorException;
+import com.ddscanner.entities.errors.UnknownErrorException;
+import com.ddscanner.entities.errors.UserNotFoundException;
+import com.ddscanner.entities.errors.ValidationErrorException;
+import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
+import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
+import com.ddscanner.utils.LogUtils;
 import com.google.gson.Gson;
 import com.rey.material.widget.ProgressView;
 import com.squareup.picasso.Picasso;
@@ -36,7 +47,7 @@ import retrofit2.Response;
 /**
  * Created by lashket on 18.7.16.
  */
-public class ForeignProfileActivity extends AppCompatActivity {
+public class ForeignProfileActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Toolbar toolbar;
     private TextView userCommentsCount;
@@ -65,6 +76,7 @@ public class ForeignProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_foreign_user);
         userId = getIntent().getStringExtra("USERID");
         findViews();
+        toolbarSettings();
         requestUserData();
     }
 
@@ -78,6 +90,12 @@ public class ForeignProfileActivity extends AppCompatActivity {
         userLikesCount = (TextView) findViewById(R.id.user_likes);
         userDislikesCount = (TextView) findViewById(R.id.user_dislikes);
         avatar = (ImageView) findViewById(R.id.user_avatar);
+        userFullName = (TextView) findViewById(R.id.user_name);
+        userAbout = (TextView) findViewById(R.id.user_about);
+        showAllCheckins = (LinearLayout) findViewById(R.id.checkins_activity);
+        showAllAdded = (LinearLayout) findViewById(R.id.created_activity);
+        showAllEdited = (LinearLayout) findViewById(R.id.edited_activity);
+
     }
 
     private void toolbarSettings() {
@@ -93,6 +111,17 @@ public class ForeignProfileActivity extends AppCompatActivity {
         checkInCount.setText(user.getCountCheckin());
         addedCount.setText(user.getCountAdd());
         editedCount.setText(user.getCountEdit());
+
+        if (!user.getCountCheckin().equals("0")) {
+            showAllCheckins.setOnClickListener(this);
+        }
+        if (!user.getCountEdit().equals("0")) {
+            showAllEdited.setOnClickListener(this);
+        }
+        if (!user.getCountAdd().equals("0")) {
+            showAllAdded.setOnClickListener(this);
+        }
+
         if (user.getAbout() != null && !user.getAbout().isEmpty()) {
             userAbout.setVisibility(View.VISIBLE);
             userAbout.setText(user.getAbout());
@@ -104,6 +133,7 @@ public class ForeignProfileActivity extends AppCompatActivity {
                 .resize(Math.round(helpers.convertDpToPixel(100, this)),
                         Math.round(helpers.convertDpToPixel(100, this))).centerCrop()
                 .transform(new CropCircleTransformation()).into(avatar);
+        userFullName.setText(user.getName());
         progressView.setVisibility(View.GONE);
         aboutLayout.setVisibility(View.VISIBLE);
     }
@@ -129,6 +159,41 @@ public class ForeignProfileActivity extends AppCompatActivity {
                         }
                     }
                 }
+                if (!response.isSuccessful()) {
+                    String responseString = "";
+                    try {
+                        responseString = response.errorBody().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    LogUtils.i("response body is " + responseString);
+                    try {
+                        ErrorsParser.checkForError(response.code(), responseString);
+                    } catch (ServerInternalErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(ForeignProfileActivity.this, R.string.toast_server_error);
+                    } catch (BadRequestException e) {
+                        // TODO Handle
+                        helpers.showToast(ForeignProfileActivity.this, R.string.toast_server_error);
+                    } catch (ValidationErrorException e) {
+                        // TODO Handle
+                    } catch (NotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(ForeignProfileActivity.this, R.string.toast_server_error);
+                    } catch (UnknownErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(ForeignProfileActivity.this, R.string.toast_server_error);
+                    } catch (DiveSpotNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(ForeignProfileActivity.this, R.string.toast_server_error);
+                    } catch (UserNotFoundException e) {
+                        // TODO Handle
+                        SocialNetworks.showForResult(ForeignProfileActivity.this, Constants.FOREIGN_USER_REQUEST_CODE_LOGIN);
+                    } catch (CommentNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(ForeignProfileActivity.this, R.string.toast_server_error);
+                    }
+                }
             }
 
             @Override
@@ -152,5 +217,38 @@ public class ForeignProfileActivity extends AppCompatActivity {
         Intent intent = new Intent(context, ForeignProfileActivity.class);
         intent.putExtra("USERID", id);
         context.startActivity(intent);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case Constants.FOREIGN_USER_REQUEST_CODE_LOGIN:
+                if (resultCode == RESULT_OK) {
+                    requestUserData();
+                } else {
+                    finish();
+                }
+                break;
+            case Constants.FOREIGN_USER_REQUEST_CODE_SHOW_LIST:
+                if (resultCode == RESULT_CANCELED) {
+                    finish();
+                }
+        }
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.checkins_activity:
+                ForeignUserDiveSpotList.show(this, false, false, true, userId, Constants.FOREIGN_USER_REQUEST_CODE_SHOW_LIST);
+                break;
+            case R.id.created_activity:
+                ForeignUserDiveSpotList.show(this, false, true, false, userId, Constants.FOREIGN_USER_REQUEST_CODE_SHOW_LIST);
+                break;
+            case R.id.edited_activity:
+                ForeignUserDiveSpotList.show(this, true, false, false, userId, Constants.FOREIGN_USER_REQUEST_CODE_SHOW_LIST);
+                break;
+        }
     }
 }

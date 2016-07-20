@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
@@ -19,6 +20,7 @@ import com.ddscanner.entities.Comment;
 import com.ddscanner.entities.errors.BadRequestException;
 import com.ddscanner.entities.errors.CommentNotFoundException;
 import com.ddscanner.entities.errors.DiveSpotNotFoundException;
+import com.ddscanner.entities.errors.GeneralError;
 import com.ddscanner.entities.errors.NotFoundException;
 import com.ddscanner.entities.errors.ServerInternalErrorException;
 import com.ddscanner.entities.errors.UnknownErrorException;
@@ -35,6 +37,7 @@ import com.ddscanner.ui.views.TransformationRoundImage;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
@@ -287,6 +290,13 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
                         responseString = response.errorBody().string();
                     } catch (IOException e) {
                         e.printStackTrace();
+                    }
+                    if (response.code() == 403) {
+                        Gson gson = new Gson();
+                        GeneralError generalError;
+                        generalError = gson.fromJson(responseString, GeneralError.class);
+                        Toast toast = Toast.makeText(context, generalError.getMessage(), Toast.LENGTH_SHORT);
+                        toast.show();
                     }
                     LogUtils.i("response body is " + responseString);
                     try {

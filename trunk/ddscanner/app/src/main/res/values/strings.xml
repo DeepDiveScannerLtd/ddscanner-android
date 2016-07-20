@@ -124,6 +124,9 @@
     <string name="user_dislike_your_review">%1$s disliked your review %2$s</string>
     <string name="user_liked_your_review">%1$s liked your review %2$s</string>
     <string name="your_changes_accepted">You changes on the %1$s have been accepted</string>
+    <string name="foreign_user_likes_main_text">%1$s review «%2$s»</string>
+    <string name="foreign_user_like_by">Liked by %1$s</string>
+    <string name="foreign_user_dislike_by">Disliked by %1$s</string>
 
     <string name="font_roboto_medium">sans-serif</string>
     <string name="filter_object">Object</string>
@@ -180,4 +183,9 @@
     <string name="here_will_be_displayed_last_notifications">Here will be displayed last notifications</string>
     <string name="profile">Profile</string>
     <string name="ed">Edited</string>
+    <string name="toolbar_title_check_ins">Check Ins</string>
+    <string name="meters">" meters"</string>
+    <string name="symbol_nimus">-</string>
+    <string name="user_dislikes">Dislikes</string>
+    <string name="user_likes">Likes</string>
 </resources>

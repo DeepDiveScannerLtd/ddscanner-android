@@ -310,9 +310,7 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
                         EventTrackerHelper.EVENT_SEND_REVIEW_CLICK, new HashMap<String, Object>() {{
                             put(EventTrackerHelper.PARAM_SEND_REVIEW_CLICK, diveSpotId);
                         }});
-                if (checkText(text.getText().toString())) {
                     sendReview();
-                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -322,16 +320,6 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_add_review, menu);
-        return true;
-    }
-
-    private boolean checkText(String comment) {
-        comment = comment.trim();
-        if (comment.length() == 0) {
-            Toast toast = Toast.makeText(getApplicationContext(), "Please leave your feedback", Toast.LENGTH_SHORT);
-            toast.show();
-            return false;
-        }
         return true;
     }
 

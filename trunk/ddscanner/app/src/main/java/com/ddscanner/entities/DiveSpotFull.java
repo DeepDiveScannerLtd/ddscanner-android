@@ -29,6 +29,25 @@ public class DiveSpotFull {
     private String status;
     private boolean isCheckin;
     private boolean isFavorite;
+    private String visibilityMin;
+
+    public String getVisibilityMax() {
+        return visibilityMax;
+    }
+
+    public void setVisibilityMax(String visibilityMax) {
+        this.visibilityMax = visibilityMax;
+    }
+
+    public String getVisibilityMin() {
+        return visibilityMin;
+    }
+
+    public void setVisibilityMin(String visibilityMin) {
+        this.visibilityMin = visibilityMin;
+    }
+
+    private String visibilityMax;
 
     public String getStatus() {
         return status;

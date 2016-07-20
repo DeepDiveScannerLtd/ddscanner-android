@@ -433,7 +433,8 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
             productListAdapter = new DiveSpotsListAdapter(diveSpots, getActivity(), EventsTracker.SpotViewSource.FROM_LIST);
             rc.setAdapter(productListAdapter);
         } else {
-            productListAdapter.setDiveSpots(diveSpots);
+            productListAdapter = new DiveSpotsListAdapter(diveSpots, getActivity(), EventsTracker.SpotViewSource.FROM_LIST);
+            rc.setAdapter(productListAdapter);
         }
 
         if (!diveSpots.isEmpty()) {
