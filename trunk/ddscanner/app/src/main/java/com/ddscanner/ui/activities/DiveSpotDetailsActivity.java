@@ -582,7 +582,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 EditorsListActivity.show(DiveSpotDetailsActivity.this, (ArrayList<User>) creatorsEditorsList);
                 break;
             case R.id.button_show_divecenters:
-                EventsTracker.trackContactDiveCenter();
                 DiveCentersActivity.show(this, new LatLng(diveSpot.getLat(), diveSpot.getLng()), diveSpot.getName());
                 break;
         }
