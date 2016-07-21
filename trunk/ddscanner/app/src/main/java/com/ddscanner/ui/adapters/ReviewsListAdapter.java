@@ -226,6 +226,14 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+                    if (response.raw().code() == 403) {
+                        Gson gson = new Gson();
+                        GeneralError generalError;
+                        generalError = gson.fromJson(responseString, GeneralError.class);
+                        Toast toast = Toast.makeText(context, generalError.getMessage(), Toast.LENGTH_SHORT);
+                        toast.show();
+                        return;
+                    }
                     LogUtils.i("response body is " + responseString);
                     try {
                         ErrorsParser.checkForError(response.code(), responseString);
@@ -291,12 +299,13 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    if (response.code() == 403) {
+                    if (response.raw().code() == 403) {
                         Gson gson = new Gson();
                         GeneralError generalError;
                         generalError = gson.fromJson(responseString, GeneralError.class);
                         Toast toast = Toast.makeText(context, generalError.getMessage(), Toast.LENGTH_SHORT);
                         toast.show();
+                        return;
                     }
                     LogUtils.i("response body is " + responseString);
                     try {
