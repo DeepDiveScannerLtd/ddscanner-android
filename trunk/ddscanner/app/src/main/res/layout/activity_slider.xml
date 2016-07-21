@@ -1,21 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/swipe_layout"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black_text">
-    <ImageView
-        android:id="@+id/close_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right"
-        android:padding="20dp"
-        android:src="@drawable/ic_close" />
+    android:background="@color/black_text"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="57dp"
+            android:layout_toLeftOf="@+id/close_btn"
+            android:orientation="horizontal">
+            <ImageView
+                android:layout_marginTop="11dp"
+                android:layout_marginLeft="15dp"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:background="@color/white"/>
+            <LinearLayout
+                android:layout_marginLeft="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center_vertical">
+                <TextView
+                    android:id="@+id/user_name"
+                    android:lines="1"
+                    android:ellipsize="end"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textSize="15sp"
+                    tools:text = "Maggie Fletcher"/>
+                <TextView
+                    android:id="@+id/date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:textColor="#bbbbbb"
+                    tools:text= "21 may 2016, 20:37"/>
+            </LinearLayout>
+        </LinearLayout>
+        <ImageView
+            android:id="@+id/close_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:padding="20dp"
+            android:src="@drawable/ic_close" />
+    </RelativeLayout>
+
     <android.support.v4.view.ViewPager
         android:id="@+id/image_slider"
         android:layout_width="match_parent"
-        android:layout_gravity="center"
-        android:layout_height="400dp"/>
+        android:layout_height="400dp"
+        android:layout_gravity="center" />
+
     <RelativeLayout
         android:id="@+id/viewPagerIndicator"
         android:layout_width="match_parent"
@@ -23,6 +67,7 @@
         android:layout_gravity="bottom"
         android:layout_marginTop="5dp"
         android:gravity="center">
+
         <LinearLayout
             android:id="@+id/viewPagerCountDots"
             android:layout_width="match_parent"
@@ -30,5 +75,5 @@
             android:layout_centerHorizontal="true"
             android:gravity="center"
             android:orientation="horizontal" />
-        </RelativeLayout>
+    </RelativeLayout>
 </FrameLayout>
