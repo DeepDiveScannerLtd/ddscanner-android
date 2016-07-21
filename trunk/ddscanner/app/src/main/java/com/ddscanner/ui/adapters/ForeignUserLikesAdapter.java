@@ -6,10 +6,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.ForeignUserLike;
+import com.ddscanner.ui.activities.DiveSpotDetailsActivity;
+import com.ddscanner.ui.activities.ForeignProfileActivity;
 import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;
 
@@ -82,21 +86,39 @@ public class ForeignUserLikesAdapter extends RecyclerView.Adapter<ForeignUserLik
         return firstString;
     }
 
-    public class ForeignUserLikesViewHolder extends RecyclerView.ViewHolder {
+    public class ForeignUserLikesViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         protected ImageView avatar;
         protected TextView mainText;
         protected TextView whoCreatedAction;
         protected TextView timeAgo;
+        protected LinearLayout linearLayout;
+        protected Context context;
 
         public ForeignUserLikesViewHolder(View v) {
             super(v);
+            context = v.getContext();
+            linearLayout = (LinearLayout) v.findViewById(R.id.main_layout);
             avatar = (ImageView) v.findViewById(R.id.avatar);
             mainText = (TextView) v.findViewById(R.id.text);
             whoCreatedAction = (TextView) v.findViewById(R.id.whoDisliked);
             timeAgo = (TextView) v.findViewById(R.id.timeAgo);
+
+            linearLayout.setOnClickListener(this);
+            avatar.setOnClickListener(this);
         }
 
+        @Override
+        public void onClick(View view) {
+            switch (view.getId()) {
+                case R.id.avatar:
+                    ForeignProfileActivity.show(context, likes.get(getAdapterPosition()).getUser().getId());
+                    break;
+                case R.id.main_layout:
+                    DiveSpotDetailsActivity.show(context, String.valueOf(likes.get(getAdapterPosition()).getDiveSpotId()), EventsTracker.SpotViewSource.FROM_LIST);
+                    break;
+            }
+        }
     }
 
 }

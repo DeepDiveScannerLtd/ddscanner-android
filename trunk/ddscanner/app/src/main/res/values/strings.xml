@@ -127,6 +127,7 @@
     <string name="foreign_user_likes_main_text">%1$s review «%2$s»</string>
     <string name="foreign_user_like_by">Liked by %1$s</string>
     <string name="foreign_user_dislike_by">Disliked by %1$s</string>
+    <string name="foreign_user_activity_open_on">Ope on %1$s</string>
 
     <string name="font_roboto_medium">sans-serif</string>
     <string name="filter_object">Object</string>

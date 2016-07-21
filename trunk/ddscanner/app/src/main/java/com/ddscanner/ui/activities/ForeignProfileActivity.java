@@ -2,9 +2,12 @@ package com.ddscanner.ui.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -49,6 +52,8 @@ import retrofit2.Response;
  */
 public class ForeignProfileActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private String FACEBOOK_URL;
+    private String FACEBOOK_PAGE_ID;
     private Toolbar toolbar;
     private TextView userCommentsCount;
     private TextView userLikesCount;
@@ -59,6 +64,7 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
     private TextView checkInCount;
     private TextView addedCount;
     private TextView editedCount;
+    private TextView openOn;
     private LinearLayout showAllCheckins;
     private LinearLayout showAllAdded;
     private LinearLayout showAllEdited;
@@ -67,6 +73,9 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
     private String userId;
     private User user;
     private ProgressView progressView;
+    private LinearLayout likeLayout;
+    private LinearLayout dislikeLayout;
+    private LinearLayout openOnSocialLayout;
 
     private Helpers helpers = new Helpers();
 
@@ -95,7 +104,10 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
         showAllCheckins = (LinearLayout) findViewById(R.id.checkins_activity);
         showAllAdded = (LinearLayout) findViewById(R.id.created_activity);
         showAllEdited = (LinearLayout) findViewById(R.id.edited_activity);
-
+        likeLayout = (LinearLayout) findViewById(R.id.likeLayout);
+        dislikeLayout = (LinearLayout) findViewById(R.id.dislikeLayout);
+        openOnSocialLayout = (LinearLayout) findViewById(R.id.openSocialNetwork);
+        openOn = (TextView) findViewById(R.id.openOn);
     }
 
     private void toolbarSettings() {
@@ -107,6 +119,9 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
     }
 
     private void setUi(User user) {
+        likeLayout.setOnClickListener(this);
+        dislikeLayout.setOnClickListener(this);
+        openOnSocialLayout.setOnClickListener(this);
         userAbout.setVisibility(View.GONE);
         checkInCount.setText(user.getCountCheckin());
         addedCount.setText(user.getCountAdd());
@@ -136,6 +151,17 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
         userFullName.setText(user.getName());
         progressView.setVisibility(View.GONE);
         aboutLayout.setVisibility(View.VISIBLE);
+        switch (user.getType()) {
+            case "fb":
+                openOn.setText(R.string.open_on_facebook);
+                break;
+            case "tw":
+                openOn.setText(R.string.open_on_twitter);
+                break;
+            case "go":
+                openOn.setText(R.string.open_on_google_plus);
+                break;
+        }
     }
 
     private void requestUserData() {
@@ -151,6 +177,8 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
                             JSONObject jsonObject = new JSONObject(responseString);
                             responseString = jsonObject.getString("user");
                             user = new Gson().fromJson(responseString, User.class);
+                            FACEBOOK_URL = Constants.PROFILE_DIALOG_FACEBOOK_URL + user.getSocialId();
+                            FACEBOOK_PAGE_ID = user.getSocialId();
                             setUi(user);
                         } catch (IOException e) {
 
@@ -234,6 +262,12 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
                 if (resultCode == RESULT_CANCELED) {
                     finish();
                 }
+                break;
+            case Constants.FOREIGN_USER_REQUEST_CODE_SHOW_LIKES_LIST:
+                if (resultCode == RESULT_CANCELED) {
+                    finish();
+                }
+                break;
         }
     }
 
@@ -249,6 +283,62 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
             case R.id.edited_activity:
                 ForeignUserDiveSpotList.show(this, true, false, false, userId, Constants.FOREIGN_USER_REQUEST_CODE_SHOW_LIST);
                 break;
+            case R.id.likeLayout:
+                ForeignUserLikesDislikesActivity.show(this, true, userId, Constants.FOREIGN_USER_REQUEST_CODE_SHOW_LIKES_LIST);
+                break;
+            case R.id.dislikeLayout:
+                ForeignUserLikesDislikesActivity.show(this, false, userId, Constants.FOREIGN_USER_REQUEST_CODE_SHOW_LIKES_LIST);
+                break;
+            case R.id.openSocialNetwork:
+                openLink(user.getSocialId(), user.getType());
+                break;
+        }
+    }
+
+    private void openLink(String userName, String socialNetwork) {
+        switch (socialNetwork) {
+            case "tw":
+                try {
+                    Intent intent = new Intent(Intent.ACTION_VIEW,
+                            Uri.parse(Constants.PROFILE_DIALOG_TWITTER_URI + userName));
+                    startActivity(intent);
+
+                }catch (Exception e) {
+                    startActivity(new Intent(Intent.ACTION_VIEW,
+                            Uri.parse(Constants.PROFILE_DIALOG_TWITTER_URL + userName)));
+                }
+                break;
+            case "go":
+                try {
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse(Constants.PROFILE_DIALOG_GOOGLE_URL + userName));
+                    intent.setPackage("com.google.android.apps.plus");
+                    startActivity(intent);
+                } catch (Exception e) {
+                    startActivity(new Intent(
+                            Intent.ACTION_VIEW, Uri.parse(Constants.PROFILE_DIALOG_GOOGLE_URL + userName)));
+                }
+                break;
+            case "fb":
+                Intent facebookIntent = new Intent(Intent.ACTION_VIEW);
+                String facebookUrl = getFacebookPageURL(this);
+                facebookIntent.setData(Uri.parse(facebookUrl));
+                startActivity(facebookIntent);
+                break;
+        }
+    }
+
+    public String getFacebookPageURL(Context context) {
+        PackageManager packageManager = context.getPackageManager();
+        try {
+            int versionCode = packageManager.getPackageInfo("com.facebook.katana", 0).versionCode;
+            if (versionCode >= 3002850) {
+                return Constants.PROFILE_DIALOG_FACEBOOK_OLD_URI + FACEBOOK_URL;
+            } else {
+                return Constants.PROFILE_DIALOG_FACEBOOK_NEW_URI + FACEBOOK_PAGE_ID;
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            return FACEBOOK_URL;
         }
     }
 }

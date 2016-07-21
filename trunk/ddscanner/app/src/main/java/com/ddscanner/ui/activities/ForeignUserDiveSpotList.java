@@ -323,6 +323,7 @@ public class ForeignUserDiveSpotList extends AppCompatActivity {
                 }
             } else {
                 setResult(RESULT_CANCELED);
+                finish();
             }
         }
     }
