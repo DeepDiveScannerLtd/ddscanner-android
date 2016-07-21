@@ -8,8 +8,7 @@ import java.util.Map;
 public class EventsTracker {
 
     private static final String EVENT_NAME_CONTACT_DIVE_CENTER = "contact_dive_center";
-    private static final String EVENT_PARAMETER_CONTACT_DIVE_CENTER_TYPE_PHONE_CALL = "phone_call";
-    private static final String EVENT_PARAMETER_CONTACT_DIVE_CENTER_TYPE_EMAIL = "email";
+    private static final String EVENT_PARAMETER_NAME_CONTACT_DIVE_CENTER_METHOD = "method";
 
     // ----------------------------------------------------
     // Screens views
@@ -167,16 +166,10 @@ public class EventsTracker {
         FlurryAgent.logEvent(EVENT_NAME_DIVE_SPOT_PHOTO_ADDED);
     }
 
-    public static void trackContactDiveCenter() {
+    public static void trackContactDiveCenter(ContactDiveCenterMethod method) {
+        Map<String, String> flurryParams = new HashMap<>();
+        flurryParams.put(EVENT_PARAMETER_NAME_CONTACT_DIVE_CENTER_METHOD, method.getName());
         FlurryAgent.logEvent(EVENT_NAME_CONTACT_DIVE_CENTER);
-    }
-
-    public static void trackContactDiveCenterByPhone() {
-        FlurryAgent.logEvent(EVENT_PARAMETER_CONTACT_DIVE_CENTER_TYPE_PHONE_CALL);
-    }
-
-    public static void trackContactDiveCenterByEmail() {
-        FlurryAgent.logEvent(EVENT_PARAMETER_CONTACT_DIVE_CENTER_TYPE_EMAIL);
     }
 
     public static void trackDiveSpotMapView() {
@@ -338,6 +331,31 @@ public class EventsTracker {
                     return FROM_RATING_BAR;
                 case "reviews_list":
                     return FROM_REVIEWS_LIST;
+                default:
+                    return UNKNOWN;
+            }
+        }
+    }
+
+    public enum ContactDiveCenterMethod {
+        PHONE_CALL("phone_call"), EMAIL("email"), UNKNOWN("unknown");
+
+        private String name;
+
+        private ContactDiveCenterMethod(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public static ContactDiveCenterMethod getByName(String name) {
+            switch (name) {
+                case "phone_call":
+                    return PHONE_CALL;
+                case "email":
+                    return EMAIL;
                 default:
                     return UNKNOWN;
             }
