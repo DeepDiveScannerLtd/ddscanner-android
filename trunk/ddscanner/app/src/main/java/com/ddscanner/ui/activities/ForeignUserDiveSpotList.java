@@ -305,6 +305,7 @@ public class ForeignUserDiveSpotList extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        setResult(RESULT_OK);
         finish();
     }
 
