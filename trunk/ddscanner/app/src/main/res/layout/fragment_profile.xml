@@ -565,4 +565,9 @@
                 app:rd_rippleType="touch" />
         </LinearLayout>
     </ScrollView>
+
+    <com.ddscanner.ui.views.LoginView
+        app:title="@string/profile_need_to_login"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </RelativeLayout>
