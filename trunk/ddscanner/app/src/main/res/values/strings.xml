@@ -189,4 +189,5 @@
     <string name="symbol_nimus">-</string>
     <string name="user_dislikes">Dislikes</string>
     <string name="user_likes">Likes</string>
+    <string name="google_analytics_trackingId">UA-75833949-1</string>
 </resources>

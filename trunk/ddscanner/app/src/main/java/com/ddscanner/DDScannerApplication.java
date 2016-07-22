@@ -37,6 +37,7 @@ public class DDScannerApplication extends Application {
     public static Bus bus = new Bus();
     private static boolean activityVisible;
     public static boolean isActivitiesFragmentVisible = false;
+    private Tracker tracker;
 
     private static DDScannerApplication instance;
 
@@ -55,6 +56,15 @@ public class DDScannerApplication extends Application {
         instance = this;
         Fresco.initialize(this);
         AnalyticsSystemsManager.initAnalyticsSystems(this);
+    }
+
+    synchronized public Tracker getDefaultTracker() {
+        if (tracker == null) {
+            GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
+            // To enable debug logging use: adb shell setprop log.tag.GAv4 DEBUG
+            tracker = analytics.newTracker(R.string.ga_trackingId);
+        }
+        return tracker;
     }
 
     protected void attachBaseContext(Context base) {
