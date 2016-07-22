@@ -9,6 +9,7 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
@@ -27,6 +28,7 @@ import com.ddscanner.events.LoggedOutEvent;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.NotificationsPagerAdapter;
+import com.ddscanner.ui.views.LoginView;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
@@ -47,7 +49,7 @@ import retrofit2.Response;
 /**
  * Created by lashket on 20.4.16.
  */
-public class NotificationsFragment extends Fragment implements ViewPager.OnPageChangeListener, View.OnClickListener {
+public class NotificationsFragment extends Fragment implements ViewPager.OnPageChangeListener, View.OnClickListener, LoginView.LoginStateChangeListener {
 
     private static final String TAG = NotificationsFragment.class.getName();
 
@@ -57,6 +59,7 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
     private Helpers helpers = new Helpers();
     private TabLayout tabLayout;
     private ViewPager notificationsViewPager;
+    private RelativeLayout loginView;
     private ProgressView progressView;
     private AllNotificationsFragment allNotificationsFragment;
     private ActivityNotificationsFragment activityNotificationsFragment;
@@ -101,6 +104,7 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
     private void findViews(View v) {
         tabLayout = (TabLayout) v.findViewById(R.id.notif_tab_layout);
         notificationsViewPager = (ViewPager) v.findViewById(R.id.notif_view_pager);
+        loginView = (RelativeLayout) v.findViewById(R.id.login_view_root);
         progressView = (ProgressView) v.findViewById(R.id.progressBarFull);
         notificationsViewPager.addOnPageChangeListener(this);
     }
@@ -305,4 +309,19 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
         }
     }
 
+    @Override
+    public void onLoggedIn() {
+        if (loginView != null && notificationsViewPager != null) {
+            loginView.setVisibility(View.GONE);
+            notificationsViewPager.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void onLoggedOut() {
+        if (loginView != null && notificationsViewPager != null) {
+            loginView.setVisibility(View.VISIBLE);
+            notificationsViewPager.setVisibility(View.GONE);
+        }
+    }
 }

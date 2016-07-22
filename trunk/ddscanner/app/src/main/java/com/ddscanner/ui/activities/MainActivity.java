@@ -428,6 +428,11 @@ public class MainActivity extends BaseAppCompatActivity
         if (!helpers.hasConnection(this)) {
             DDScannerApplication.showErrorActivity(this);
         }
+        if (SharedPreferenceHelper.isUserLoggedIn()) {
+            mainViewPagerAdapter.onLoggedIn();
+        } else {
+            mainViewPagerAdapter.onLoggedOut();
+        }
     }
 
     private void dispatchTakePictureIntent() {
@@ -663,12 +668,16 @@ public class MainActivity extends BaseAppCompatActivity
     public void onLoggedIn(LoggedInEvent event) {
         mainViewPagerAdapter.notifyDataSetChanged();
         setupTabLayout();
+
+        mainViewPagerAdapter.onLoggedIn();
     }
 
     @Subscribe
     public void onLoggedOut(LoggedOutEvent event) {
         mainViewPagerAdapter.notifyDataSetChanged();
         setupTabLayout();
+
+        mainViewPagerAdapter.onLoggedOut();
     }
 
     protected void onSaveInstanceState(Bundle outState) {

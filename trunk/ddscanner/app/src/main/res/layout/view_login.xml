@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/need_to_login"
-    android:background="@color/white"
+    android:id="@+id/login_view_root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_centerInParent="true">
+    android:layout_gravity="center"
+    android:background="@color/white"
+    android:gravity="center">
 
     <ImageView
         android:id="@+id/icon"
@@ -46,4 +47,17 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="5dp"
         android:background="@drawable/btn_google" />
+
+    <TextView
+        android:id="@+id/privacy_policy"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/custom_google"
+        android:layout_marginTop="12dp"
+        android:layout_marginLeft="60dp"
+        android:layout_marginRight="60dp"
+        android:background="?attr/selectableItemBackground"
+        android:text="@string/show_privacy_policy"
+        />
 </RelativeLayout>

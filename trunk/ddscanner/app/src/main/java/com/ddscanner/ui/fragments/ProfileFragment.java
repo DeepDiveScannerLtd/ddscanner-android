@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -41,6 +42,7 @@ import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.activities.DiveSpotsListActivity;
 import com.ddscanner.ui.activities.UsersDivespotListSwipableActivity;
+import com.ddscanner.ui.views.LoginView;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
@@ -69,7 +71,7 @@ import retrofit2.Response;
  * Created by lashket on 20.4.16.
  */
 public class ProfileFragment extends Fragment
-        implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
+        implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, LoginView.LoginStateChangeListener {
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int MAX_LENGTH_NAME = 30;
@@ -107,6 +109,7 @@ public class ProfileFragment extends Fragment
     private SwipeRefreshLayout swipeRefreshLayout;
     private TextView error_name;
     private TextView error_about;
+    private RelativeLayout loginView;
     private boolean isClickedChosingPhotoButton = false;
 
     private RequestBody requestSecret = null;
@@ -144,6 +147,11 @@ public class ProfileFragment extends Fragment
         }
         materialDialog = helpers.getMaterialDialog(getContext());
         createErrorsMap();
+        if (SharedPreferenceHelper.isUserLoggedIn()) {
+            onLoggedIn();
+        } else {
+            onLoggedOut();
+        }
         return v;
     }
 
@@ -177,6 +185,7 @@ public class ProfileFragment extends Fragment
         error_name = (TextView) v.findViewById(R.id.error_name);
         nameLeftSymbols = (TextView) v.findViewById(R.id.name_count);
         aboutLeftSymbols = (TextView) v.findViewById(R.id.about_count);
+        loginView = (RelativeLayout) v.findViewById(R.id.login_view_root);
 
         aboutEdit.addTextChangedListener(new TextWatcher() {
             @Override
@@ -591,4 +600,19 @@ public class ProfileFragment extends Fragment
         errorsMap.put("about", error_about);
     }
 
+    @Override
+    public void onLoggedIn() {
+        if (loginView != null && aboutLayout != null) {
+            loginView.setVisibility(View.GONE);
+            aboutLayout.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void onLoggedOut() {
+        if (loginView != null && aboutLayout != null) {
+            loginView.setVisibility(View.VISIBLE);
+            aboutLayout.setVisibility(View.GONE);
+        }
+    }
 }
