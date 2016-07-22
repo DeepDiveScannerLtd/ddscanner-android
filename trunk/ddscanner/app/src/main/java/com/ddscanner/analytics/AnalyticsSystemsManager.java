@@ -10,8 +10,8 @@ import com.google.android.gms.analytics.Tracker;
 public class AnalyticsSystemsManager {
 
 //    private static FirebaseAnalytics firebaseAnalytics;
-    private static GoogleAnalytics analytics;
-    private static Tracker tracker;
+    public static GoogleAnalytics analytics;
+    public static Tracker googleAnalyticsEventsTracker;
 
     private AnalyticsSystemsManager() {
 
@@ -28,7 +28,7 @@ public class AnalyticsSystemsManager {
 
         //Google analytics
         analytics = GoogleAnalytics.getInstance(context);
-        tracker = analytics.newTracker(R.string.google_analytics_trackingId);
+        googleAnalyticsEventsTracker = analytics.newTracker(R.string.google_analytics_trackingId);
 
     }
 
