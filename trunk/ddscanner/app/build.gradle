@@ -38,7 +38,7 @@ android {
 //            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules-debug.pro'
         }
         release {
-            resValue "string", "flurry_api_key", "YP8R2DBM35F6VM7WDFNW"
+            resValue "string", "flurry_api_key", "D45ZMHZZJWDVD8X6G55B"
             resValue "string", "google_maps_api_key", "AIzaSyA5jpAj7uwrxA4oaYvI_bdV9IDbb7gUrZc"
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'

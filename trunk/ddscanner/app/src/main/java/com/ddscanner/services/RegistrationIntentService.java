@@ -11,6 +11,7 @@ import android.util.Log;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.analytics.AnalyticsSystemsManager;
 import com.ddscanner.events.InstanceIDReceivedEvent;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.android.gms.gcm.GcmPubSub;
@@ -54,6 +55,7 @@ public class RegistrationIntentService extends IntentService {
             SharedPreferenceHelper.setGcmId(token);
             SharedPreferenceHelper.setUserAppId(instanceID.getId());
             SharedPreferenceHelper.setUserAppIdReceived();
+            AnalyticsSystemsManager.setUserIdForAnalytics(instanceID.getId());
 
             // Subscribe to topic channels
             subscribeTopics(token);

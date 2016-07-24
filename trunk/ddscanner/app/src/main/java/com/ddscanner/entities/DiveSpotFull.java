@@ -126,72 +126,140 @@ public class DiveSpotFull {
         this.object = object;
     }
 
-    public int getId() { return id; }
+    public int getId() {
+        return id;
+    }
 
-    public void setId(int id) { this.id = id; }
+    public void setId(int id) {
+        this.id = id;
+    }
 
-    public String getName() { return name; }
+    public String getName() {
+        return name;
+    }
 
-    public void setName(String name) { this.name = name; }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    public String getDescription() { return description; }
+    public String getDescription() {
+        return description;
+    }
 
-    public void setDescription(String description) { this.description = description; }
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-    public float getLat() { return lat; }
+    public float getLat() {
+        return lat;
+    }
 
-    public void setLat(Float lat) { this.lat = lat; }
+    public void setLat(Float lat) {
+        this.lat = lat;
+    }
 
-    public float getLng() { return lng; }
+    public float getLng() {
+        return lng;
+    }
 
-    public void setLng(Float lng) { this.lng = lng; }
+    public void setLng(Float lng) {
+        this.lng = lng;
+    }
 
-    public float getRating() { return rating; }
+    public float getRating() {
+        return rating;
+    }
 
-    public void setRating(float rating) { this.rating = rating; }
+    public void setRating(float rating) {
+        this.rating = rating;
+    }
 
-    public String getDepth() { return depth; }
+    public String getDepth() {
+        return depth;
+    }
 
-    public void setDepth(String depth) { this.depth = depth; }
+    public void setDepth(String depth) {
+        this.depth = depth;
+    }
 
-    public String getVisibility() { return visibility; }
+    public String getVisibility() {
+        return visibility;
+    }
 
-    public void setVisibility(String visibility) { this.visibility = visibility; }
+    public void setVisibility(String visibility) {
+        this.visibility = visibility;
+    }
 
-    public String getCurrents() { return currents; }
+    public String getCurrents() {
+        return currents;
+    }
 
-    public void setCurrents(String currents) { this.currents = currents; }
+    public void setCurrents(String currents) {
+        this.currents = currents;
+    }
 
-    public String getLevel() { return level; }
+    public String getLevel() {
+        return level;
+    }
 
-    public void setLevel(String level) { this.level = level; }
+    public void setLevel(String level) {
+        this.level = level;
+    }
 
-    public List<String> getImages() { return images; }
+    public List<String> getImages() {
+        return images;
+    }
 
-    public void setImages(List<String> images) { this.images = images; }
+    public void setImages(List<String> images) {
+        this.images = images;
+    }
 
-    public String getDiveSpotPathSmall() { return diveSpotPathSmall; }
+    public String getDiveSpotPathSmall() {
+        return diveSpotPathSmall;
+    }
 
-    public void setDiveSpotPathSmall(String diveSpotPathSmall) { this.diveSpotPathSmall = diveSpotPathSmall; }
+    public void setDiveSpotPathSmall(String diveSpotPathSmall) {
+        this.diveSpotPathSmall = diveSpotPathSmall;
+    }
 
-    public String getDiveSpotPathMedium() { return diveSpotPathMedium; }
+    public String getDiveSpotPathMedium() {
+        return diveSpotPathMedium;
+    }
 
-    public void setDiveSpotPathMedium(String diveSpotPathMedium) { this.diveSpotPathMedium = diveSpotPathMedium; }
+    public void setDiveSpotPathMedium(String diveSpotPathMedium) {
+        this.diveSpotPathMedium = diveSpotPathMedium;
+    }
 
-    public String getDiveSpotPathOrigin() { return diveSpotPathOrigin; }
+    public String getDiveSpotPathOrigin() {
+        return diveSpotPathOrigin;
+    }
 
-    public void setDiveSpotPathOrigin(String diveSpotPathOrigin) { this.diveSpotPathOrigin = diveSpotPathOrigin; }
+    public void setDiveSpotPathOrigin(String diveSpotPathOrigin) {
+        this.diveSpotPathOrigin = diveSpotPathOrigin;
+    }
 
 
-    public String getSealifePathSmall() { return sealifePathSmall; }
+    public String getSealifePathSmall() {
+        return sealifePathSmall;
+    }
 
-    public void setSealifePathSmall(String sealifePathSmall) { this.sealifePathSmall = sealifePathSmall; }
+    public void setSealifePathSmall(String sealifePathSmall) {
+        this.sealifePathSmall = sealifePathSmall;
+    }
 
-    public String getSealifePathMedium() { return sealifePathMedium; }
+    public String getSealifePathMedium() {
+        return sealifePathMedium;
+    }
 
-    public void setSealifePathMedium(String sealifePathMedium) { this.sealifePathMedium = sealifePathMedium; }
+    public void setSealifePathMedium(String sealifePathMedium) {
+        this.sealifePathMedium = sealifePathMedium;
+    }
 
-    public String getSealifePathOrigin() { return sealifePathOrigin; }
+    public String getSealifePathOrigin() {
+        return sealifePathOrigin;
+    }
 
-    public void setSealifePathOrigin(String sealifePathOrigin) { this.sealifePathOrigin = sealifePathOrigin; }
+    public void setSealifePathOrigin(String sealifePathOrigin) {
+        this.sealifePathOrigin = sealifePathOrigin;
+    }
 }
