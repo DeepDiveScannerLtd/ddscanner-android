@@ -3,17 +3,19 @@ package com.ddscanner.analytics;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.ddscanner.BuildConfig;
 import com.ddscanner.R;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.flurry.android.FlurryAgent;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 public class AnalyticsSystemsManager {
 
-//    private static FirebaseAnalytics firebaseAnalytics;
-    public static GoogleAnalytics analytics;
-    public static Tracker googleAnalyticsEventsTracker;
+    private static FirebaseAnalytics firebaseAnalytics;
+//    private static GoogleAnalytics analytics;
+//    private static Tracker googleAnalyticsEventsTracker;
 
     private AnalyticsSystemsManager() {
 
@@ -21,9 +23,9 @@ public class AnalyticsSystemsManager {
 
     public static void initAnalyticsSystems(Context context) {
         // Init Google Firebase
-//        FirebaseAnalytics.getInstance(context).setAnalyticsCollectionEnabled(!BuildConfig.DEBUG);
-//        FirebaseAnalytics.getInstance(context).setAnalyticsCollectionEnabled(true);
-//        firebaseAnalytics = FirebaseAnalytics.getInstance(context);
+        FirebaseAnalytics.getInstance(context).setAnalyticsCollectionEnabled(!BuildConfig.DEBUG);
+        FirebaseAnalytics.getInstance(context).setAnalyticsCollectionEnabled(true);
+        firebaseAnalytics = FirebaseAnalytics.getInstance(context);
 
         // Init flurry
         FlurryAgent.init(context, context.getString(R.string.flurry_api_key));
@@ -32,8 +34,8 @@ public class AnalyticsSystemsManager {
         }
 
         //Google analytics
-        analytics = GoogleAnalytics.getInstance(context);
-        googleAnalyticsEventsTracker = analytics.newTracker(R.string.google_analytics_trackingId);
+//        analytics = GoogleAnalytics.getInstance(context);
+//        googleAnalyticsEventsTracker = analytics.newTracker(R.string.google_analytics_trackingId);
 
     }
 
@@ -42,7 +44,11 @@ public class AnalyticsSystemsManager {
         FlurryAgent.setUserId(userAppId);
     }
 
-//    public static FirebaseAnalytics getFirebaseAnalytics() {
-//        return firebaseAnalytics;
+    public static FirebaseAnalytics getFirebaseAnalytics() {
+        return firebaseAnalytics;
+    }
+
+//    public static Tracker getGoogleAnalyticsEventsTracker() {
+//        return googleAnalyticsEventsTracker;
 //    }
 }

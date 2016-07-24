@@ -1,6 +1,9 @@
 package com.ddscanner.analytics;
 
+import android.os.Bundle;
+
 import com.flurry.android.FlurryAgent;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -79,25 +82,28 @@ public class EventsTracker {
 //        params.putString(EVENT_PARAMETER_NAME_VIEW_SOURCE, spotViewSource.getName());
 //        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_DIVE_SPOT_VIEW, params);
         // way 2
-//        Bundle params = new Bundle();
-//        params.putString(FirebaseAnalytics.Param.ITEM_NAME, "dive_spot");
-//        params.putString(FirebaseAnalytics.Param.ITEM_ID, diveSpotId);
-//        params.putString(FirebaseAnalytics.Param.ORIGIN, spotViewSource.getName());
-//        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(FirebaseAnalytics.Event.VIEW_ITEM, params);
+        Bundle params = new Bundle();
+        params.putString(FirebaseAnalytics.Param.ITEM_NAME, "dive_spot");
+        params.putString(FirebaseAnalytics.Param.ITEM_ID, diveSpotId);
+        params.putString(FirebaseAnalytics.Param.ORIGIN, spotViewSource.getName());
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(FirebaseAnalytics.Event.VIEW_ITEM, params);
 
         // Flurry
         Map<String, String> flurryParams = new HashMap<>();
         flurryParams.put(EVENT_PARAMETER_NAME_DIVE_SPOT_ID, diveSpotId);
         flurryParams.put(EVENT_PARAMETER_NAME_VIEW_SOURCE, spotViewSource.getName());
         FlurryAgent.logEvent(EVENT_NAME_DIVE_SPOT_VIEW, flurryParams);
+
+        // Google analytics
+
     }
 
     public static void trackDiveCenterView(String diveCenterId, SpotViewSource spotViewSource) {
         // Google Firebase
-//        Bundle params = new Bundle();
-//        params.putLong(EVENT_PARAMETER_NAME_DIVE_CENTER_ID, diveCenterId);
-//        params.putString(EVENT_PARAMETER_NAME_VIEW_SOURCE, spotViewSource.getName());
-//        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_DIVE_CENTER_VIEW, params);
+        Bundle params = new Bundle();
+        params.putString(EVENT_PARAMETER_NAME_DIVE_CENTER_ID, diveCenterId);
+        params.putString(EVENT_PARAMETER_NAME_VIEW_SOURCE, spotViewSource.getName());
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_DIVE_CENTER_VIEW, params);
 
         // Flurry
         Map<String, String> flurryParams = new HashMap<>();
@@ -107,6 +113,9 @@ public class EventsTracker {
     }
 
     public static void trackDiveSpotValid() {
+        // Google Firebase
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_DIVE_SPOT_VALID, null);
+
         // Flurry
 //        Map<String, String> flurryParams = new HashMap<>();
 //        flurryParams.put(EVENT_PARAMETER_NAME_DIVE_SPOT_VALIDATION_RESULT, result.getName());
@@ -115,6 +124,9 @@ public class EventsTracker {
     }
 
     public static void trackDiveSpotInvalid() {
+        // Google Firebase
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_DIVE_SPOT_INVALID, null);
+
         // Flurry
 //        Map<String, String> flurryParams = new HashMap<>();
 //        flurryParams.put(EVENT_PARAMETER_NAME_DIVE_SPOT_VALIDATION_RESULT, result.getName());
@@ -123,16 +135,27 @@ public class EventsTracker {
     }
 
     public static void trackDiveSpotEdit() {
+        // Google Firebase
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_EDIT_DIVE_SPOT, null);
+
         // Flurry
         FlurryAgent.logEvent(EVENT_NAME_EDIT_DIVE_SPOT);
     }
 
     public static void trackDiveSpotCreation() {
+        // Google Firebase
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_CREATE_DIVE_SPOT, null);
+
         // Flurry
         FlurryAgent.logEvent(EVENT_NAME_CREATE_DIVE_SPOT);
     }
 
     public static void trackCheckIn(CheckInStatus status) {
+        // Google Firebase
+        Bundle params = new Bundle();
+        params.putString(EVENT_PARAMETER_NAME_CHECK_IN_STATUS, status.getName());
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_CHECK_IN, params);
+
         // Flurry
         Map<String, String> flurryParams = new HashMap<>();
         flurryParams.put(EVENT_PARAMETER_NAME_CHECK_IN_STATUS, status.getName());
@@ -140,11 +163,19 @@ public class EventsTracker {
     }
 
     public static void trackCheckOut() {
+        // Google Firebase
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_CHECK_OUT, null);
+
         // Flurry
         FlurryAgent.logEvent(EVENT_NAME_CHECK_OUT);
     }
 
     public static void trackReviewSending(SendReviewSource sendReviewSource) {
+        // Google Firebase
+        Bundle params = new Bundle();
+        params.putString(EVENT_PARAMETER_NAME_SEND_REVIEW_SOURCE, sendReviewSource.getName());
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_SEND_REVIEW, params);
+
         // Flurry
         Map<String, String> flurryParams = new HashMap<>();
         flurryParams.put(EVENT_PARAMETER_NAME_SEND_REVIEW_SOURCE, sendReviewSource.getName());
@@ -152,87 +183,166 @@ public class EventsTracker {
     }
 
     public static void trackCommentLiked() {
+        // Google Firebase
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_COMMENT_LIKED, null);
+
         // Flurry
         FlurryAgent.logEvent(EVENT_NAME_COMMENT_LIKED);
     }
 
     public static void trackCommentDisliked() {
+        // Google Firebase
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_COMMENT_DISLIKED, null);
+
         // Flurry
         FlurryAgent.logEvent(EVENT_NAME_COMMENT_DISLIKED);
     }
 
     public static void trackDiveSpotPhotoAdded() {
+        // Google Firebase
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_DIVE_SPOT_PHOTO_ADDED, null);
+
         // Flurry
         FlurryAgent.logEvent(EVENT_NAME_DIVE_SPOT_PHOTO_ADDED);
     }
 
     public static void trackContactDiveCenter(ContactDiveCenterMethod method) {
+        // Google Firebase
+        Bundle params = new Bundle();
+        params.putString(EVENT_PARAMETER_NAME_CONTACT_DIVE_CENTER_METHOD, method.getName());
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_CONTACT_DIVE_CENTER, params);
+
+        // Flurry
         Map<String, String> flurryParams = new HashMap<>();
         flurryParams.put(EVENT_PARAMETER_NAME_CONTACT_DIVE_CENTER_METHOD, method.getName());
         FlurryAgent.logEvent(EVENT_NAME_CONTACT_DIVE_CENTER);
     }
 
     public static void trackDiveSpotMapView() {
+        // Google Firebase
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_DIVE_SPOTS_MAP_VIEW, null);
+
+        // Flurry
         FlurryAgent.logEvent(EVENT_NAME_DIVE_SPOTS_MAP_VIEW);
     }
 
     public static void trackDiveSpotListView() {
+        // Google Firebase
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_DIVE_SPOTS_LIST_VIEW, null);
+
+        // Flurry
         FlurryAgent.logEvent(EVENT_NAME_DIVE_SPOTS_LIST_VIEW);
     }
 
     public static void trackDiveCentersMapView() {
+        // Google Firebase
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_DIVE_CENTERS_MAP_VIEW, null);
+
+        // Flurry
         FlurryAgent.logEvent(EVENT_NAME_DIVE_CENTERS_MAP_VIEW);
     }
 
     public static void trackDiveCentersListView() {
+        // Google Firebase
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_DIVE_CENTERS_LIST_VIEW, null);
+
+        // Flurry
         FlurryAgent.logEvent(EVENT_NAME_DIVE_CENTERS_LIST_VIEW);
     }
 
     public static void trackNotificationsView() {
+        // Google Firebase
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_NOTIFICATIONS_VIEW, null);
+
+        // Flurry
         FlurryAgent.logEvent(EVENT_NAME_NOTIFICATIONS_VIEW);
     }
 
     public static void trackActivityView() {
+        // Google Firebase
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_ACTIVITY_VIEW, null);
+
+        // Flurry
         FlurryAgent.logEvent(EVENT_NAME_ACTIVITY_VIEW);
     }
 
     public static void trackUserProfileView() {
+        // Google Firebase
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_USER_PROFILE_VIEW, null);
+
+        // Flurry
         FlurryAgent.logEvent(EVENT_NAME_USER_PROFILE_VIEW);
     }
 
     public static void trackUserCheckinsView() {
+        // Google Firebase
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_USER_CHECK_INS_VIEW, null);
+
+        // Flurry
         FlurryAgent.logEvent(EVENT_NAME_USER_CHECK_INS_VIEW);
     }
 
     public static void trackUserEditedView() {
+        // Google Firebase
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_USER_EDITED_VIEW, null);
+
+        // Flurry
         FlurryAgent.logEvent(EVENT_NAME_USER_EDITED_VIEW);
     }
 
     public static void trackUserCreatedView() {
+        // Google Firebase
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_USER_CREATED_VIEW, null);
+
+        // Flurry
         FlurryAgent.logEvent(EVENT_NAME_USER_CREATED_VIEW);
     }
 
     public static void trackUserFavoritesView() {
+        // Google Firebase
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_USER_FAVORITES_VIEW, null);
+
+        // Flurry
         FlurryAgent.logEvent(EVENT_NAME_USER_FAVORITES_VIEW);
     }
 
     public static void trackDiveSpotCheckinsView() {
+        // Google Firebase
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_DIVE_SPOT_CHECK_INS_VIEW, null);
+
+        // Flurry
         FlurryAgent.logEvent(EVENT_NAME_DIVE_SPOT_CHECK_INS_VIEW);
     }
 
     public static void trackDiveSpotPhotosView() {
+        // Google Firebase
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_DIVE_SPOT_PHOTOS_VIEW, null);
+
+        // Flurry
         FlurryAgent.logEvent(EVENT_NAME_DIVE_SPOT_PHOTOS_VIEW);
     }
 
     public static void trackDiveSpotSealifeView() {
+        // Google Firebase
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_DIVE_SPOT_SEALIFE_VIEW, null);
+
+        // Flurry
         FlurryAgent.logEvent(EVENT_NAME_DIVE_SPOT_SEALIFE_VIEW);
     }
 
     public static void trackDeviSpotReviewsView() {
+        // Google Firebase
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_DIVE_SPOT_REVIEWS_VIEW, null);
+
+        // Flurry
         FlurryAgent.logEvent(EVENT_NAME_DIVE_SPOT_REVIEWS_VIEW);
     }
 
     public static void trackReviewerProfileView() {
+        // Google Firebase
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_REVIEWER_PROFILE_VIEW, null);
+
+        // Flurry
         FlurryAgent.logEvent(EVENT_NAME_REVIEWER_PROFILE_VIEW);
     }
 
