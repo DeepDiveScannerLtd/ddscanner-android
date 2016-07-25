@@ -45,7 +45,7 @@ public abstract class RestClient {
 
             Retrofit retrofit = new Retrofit.Builder()
 //                    .baseUrl("http://api.ddscanner.com")
-                    .baseUrl("http://ddsapi.ilave.pro") // dev
+                    .baseUrl("https://ddsapi.ilave.pro") // dev
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(client)
                     .build();
