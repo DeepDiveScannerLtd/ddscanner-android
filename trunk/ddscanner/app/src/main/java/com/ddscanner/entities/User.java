@@ -26,6 +26,8 @@ public class User implements Serializable, Parcelable{
     private String id;
     private String countFavorite;
 
+    private boolean imageContainsHttp = true;
+
     public String getCountFavorite() {
         return countFavorite;
     }
@@ -185,6 +187,10 @@ public class User implements Serializable, Parcelable{
     }
 
     public String getPicture() {
+        if (picture != null && imageContainsHttp) {
+            picture = picture.replace("http:", "https:");
+            imageContainsHttp = false;
+        }
         return picture;
     }
 

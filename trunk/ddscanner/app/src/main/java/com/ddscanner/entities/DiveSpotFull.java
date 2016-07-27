@@ -31,6 +31,13 @@ public class DiveSpotFull {
     private boolean isFavorite;
     private String visibilityMin;
 
+    private boolean divespotPathSmallContainsHttp = true;
+    private boolean divespotPathMediumContainsHttp = true;
+    private boolean divespotPathOriginContainsHttp = true;
+    private boolean sealifePathSmallContainsHttp = true;
+    private boolean sealifePathMediumContainsHttp = true;
+    private boolean sealifePathOriginContainsHttp = true;
+
     public String getVisibilityMax() {
         return visibilityMax;
     }
@@ -215,6 +222,10 @@ public class DiveSpotFull {
     }
 
     public String getDiveSpotPathSmall() {
+        if (diveSpotPathSmall != null && divespotPathSmallContainsHttp) {
+            diveSpotPathSmall = diveSpotPathSmall.replace("http:", "https:");
+            divespotPathSmallContainsHttp = false;
+        }
         return diveSpotPathSmall;
     }
 
@@ -223,6 +234,10 @@ public class DiveSpotFull {
     }
 
     public String getDiveSpotPathMedium() {
+        if (diveSpotPathMedium != null && divespotPathMediumContainsHttp) {
+            diveSpotPathMedium = diveSpotPathMedium.replace("http:", "https:");
+            divespotPathMediumContainsHttp = false;
+        }
         return diveSpotPathMedium;
     }
 
@@ -231,6 +246,10 @@ public class DiveSpotFull {
     }
 
     public String getDiveSpotPathOrigin() {
+        if (diveSpotPathOrigin != null && divespotPathOriginContainsHttp) {
+            diveSpotPathOrigin = diveSpotPathOrigin.replace("http:", "https:");
+            divespotPathOriginContainsHttp = false;
+        }
         return diveSpotPathOrigin;
     }
 
@@ -240,6 +259,10 @@ public class DiveSpotFull {
 
 
     public String getSealifePathSmall() {
+        if (sealifePathSmall != null && sealifePathSmallContainsHttp) {
+            sealifePathSmall = sealifePathSmall.replace("http:", "https:");
+            sealifePathSmallContainsHttp = false;
+        }
         return sealifePathSmall;
     }
 
@@ -248,6 +271,10 @@ public class DiveSpotFull {
     }
 
     public String getSealifePathMedium() {
+        if (sealifePathMedium != null && sealifePathMediumContainsHttp) {
+            sealifePathMedium = sealifePathMedium.replace("http:", "https:");
+            sealifePathMediumContainsHttp = false;
+        }
         return sealifePathMedium;
     }
 
@@ -256,6 +283,10 @@ public class DiveSpotFull {
     }
 
     public String getSealifePathOrigin() {
+        if (sealifePathOrigin != null && sealifePathOriginContainsHttp) {
+            sealifePathOrigin = sealifePathOrigin.replace("http:", "https:");
+            sealifePathOriginContainsHttp = false;
+        }
         return sealifePathOrigin;
     }
 
