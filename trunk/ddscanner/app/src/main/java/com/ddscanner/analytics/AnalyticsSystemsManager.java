@@ -3,7 +3,9 @@ package com.ddscanner.analytics;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.BuildConfig;
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.flurry.android.FlurryAgent;
@@ -33,9 +35,12 @@ public class AnalyticsSystemsManager {
             FlurryAgent.setUserId(SharedPreferenceHelper.getUserAppId());
         }
 
-        //Google analytics
+        // Google analytics
 //        analytics = GoogleAnalytics.getInstance(context);
 //        googleAnalyticsEventsTracker = analytics.newTracker(R.string.google_analytics_trackingId);
+
+        // Appsflyer
+        AppsFlyerLib.getInstance().startTracking(DDScannerApplication.getInstance(), context.getString(R.string.appsflyer_dev_key));
 
     }
 

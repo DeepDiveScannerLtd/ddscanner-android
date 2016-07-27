@@ -11,16 +11,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.DiveCenter;
 import com.ddscanner.ui.activities.DiveCenterDetailsActivity;
-import com.ddscanner.utils.EventTrackerHelper;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Created by lashket on 29.1.16.
@@ -122,12 +119,6 @@ public class DiveCentersListAdapter extends RecyclerView.Adapter<DiveCentersList
 
         @Override
         public void onClick(View v) {
-
-            AppsFlyerLib.getInstance().trackEvent(context,
-                    EventTrackerHelper.EVENT_DIVE_CENTERS_LIST_ITEM_CLICK, new HashMap<String, Object>() {{
-                        put(EventTrackerHelper.PARAM_DIVE_CENTERS_LIST_ITEM_CLICK, diveCenters.get(getAdapterPosition()).getId());
-                    }});
-
             DiveCenterDetailsActivity.show(context, diveCenters.get(getPosition()), DiveCentersListAdapter.this.getLogopath(), EventsTracker.SpotViewSource.FROM_LIST);
         }
 

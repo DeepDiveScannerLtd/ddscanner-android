@@ -12,15 +12,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 
-import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.R;
 import com.ddscanner.entities.DiveCenter;
 import com.ddscanner.ui.activities.DiveCentersActivity;
 import com.ddscanner.ui.adapters.DiveCentersListAdapter;
-import com.ddscanner.utils.EventTrackerHelper;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Created by lashket on 4.2.16.

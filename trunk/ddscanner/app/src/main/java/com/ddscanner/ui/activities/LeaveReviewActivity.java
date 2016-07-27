@@ -19,10 +19,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
@@ -40,7 +38,6 @@ import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.AddPhotoToDsListAdapter;
 import com.ddscanner.utils.Constants;
-import com.ddscanner.utils.EventTrackerHelper;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
@@ -200,7 +197,7 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
         }
         materialDialog.show();
         List<MultipartBody.Part> images = new ArrayList<>();
-      //  imageUris = addPhotoToDsListAdapter.getNewFilesUrisList();
+        //  imageUris = addPhotoToDsListAdapter.getNewFilesUrisList();
         for (int i = 0; i < imageUris.size(); i++) {
             File image = new File(imageUris.get(i));
             RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), image);
@@ -288,7 +285,7 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
                         helpers.showToast(LeaveReviewActivity.this, R.string.toast_server_error);
                     }
                 }
-                
+
             }
 
             @Override
@@ -306,11 +303,7 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
                 onBackPressed();
                 return true;
             case R.id.send_review:
-                AppsFlyerLib.getInstance().trackEvent(getApplicationContext(),
-                        EventTrackerHelper.EVENT_SEND_REVIEW_CLICK, new HashMap<String, Object>() {{
-                            put(EventTrackerHelper.PARAM_SEND_REVIEW_CLICK, diveSpotId);
-                        }});
-                    sendReview();
+                sendReview();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

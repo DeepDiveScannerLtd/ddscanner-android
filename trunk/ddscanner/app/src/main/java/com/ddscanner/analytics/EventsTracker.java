@@ -2,6 +2,8 @@ package com.ddscanner.analytics;
 
 import android.os.Bundle;
 
+import com.appsflyer.AppsFlyerLib;
+import com.ddscanner.DDScannerApplication;
 import com.flurry.android.FlurryAgent;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
@@ -94,8 +96,11 @@ public class EventsTracker {
         flurryParams.put(EVENT_PARAMETER_NAME_VIEW_SOURCE, spotViewSource.getName());
         FlurryAgent.logEvent(EVENT_NAME_DIVE_SPOT_VIEW, flurryParams);
 
-        // Google analytics
-
+        // Appsflyer
+        Map<String, Object> appsflyerParams = new HashMap<>();
+        appsflyerParams.put(EVENT_PARAMETER_NAME_DIVE_SPOT_ID, diveSpotId);
+        appsflyerParams.put(EVENT_PARAMETER_NAME_VIEW_SOURCE, spotViewSource.getName());
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_DIVE_SPOT_VIEW, appsflyerParams);
     }
 
     public static void trackDiveCenterView(String diveCenterId, SpotViewSource spotViewSource) {
@@ -110,6 +115,12 @@ public class EventsTracker {
         flurryParams.put(EVENT_PARAMETER_NAME_DIVE_CENTER_ID, diveCenterId);
         flurryParams.put(EVENT_PARAMETER_NAME_VIEW_SOURCE, spotViewSource.getName());
         FlurryAgent.logEvent(EVENT_NAME_DIVE_CENTER_VIEW, flurryParams);
+
+        // Appsflyer
+        Map<String, Object> appsflyerParams = new HashMap<>();
+        appsflyerParams.put(EVENT_PARAMETER_NAME_DIVE_CENTER_ID, diveCenterId);
+        appsflyerParams.put(EVENT_PARAMETER_NAME_VIEW_SOURCE, spotViewSource.getName());
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_DIVE_CENTER_VIEW, appsflyerParams);
     }
 
     public static void trackDiveSpotValid() {
@@ -121,6 +132,9 @@ public class EventsTracker {
 //        flurryParams.put(EVENT_PARAMETER_NAME_DIVE_SPOT_VALIDATION_RESULT, result.getName());
 //        FlurryAgent.logEvent(EVENT_NAME_DIVE_SPOT_VALID, flurryParams);
         FlurryAgent.logEvent(EVENT_NAME_DIVE_SPOT_VALID);
+
+        // Appsflyer
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_DIVE_SPOT_VALID, null);
     }
 
     public static void trackDiveSpotInvalid() {
@@ -132,6 +146,9 @@ public class EventsTracker {
 //        flurryParams.put(EVENT_PARAMETER_NAME_DIVE_SPOT_VALIDATION_RESULT, result.getName());
 //        FlurryAgent.logEvent(EVENT_NAME_DIVE_SPOT_INVALID, flurryParams);
         FlurryAgent.logEvent(EVENT_NAME_DIVE_SPOT_INVALID);
+
+        // Appsflyer
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_DIVE_SPOT_INVALID, null);
     }
 
     public static void trackDiveSpotEdit() {
@@ -140,6 +157,9 @@ public class EventsTracker {
 
         // Flurry
         FlurryAgent.logEvent(EVENT_NAME_EDIT_DIVE_SPOT);
+
+        // Appsflyer
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_EDIT_DIVE_SPOT, null);
     }
 
     public static void trackDiveSpotCreation() {
@@ -148,6 +168,9 @@ public class EventsTracker {
 
         // Flurry
         FlurryAgent.logEvent(EVENT_NAME_CREATE_DIVE_SPOT);
+
+        // Appsflyer
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_CREATE_DIVE_SPOT, null);
     }
 
     public static void trackCheckIn(CheckInStatus status) {
@@ -160,6 +183,11 @@ public class EventsTracker {
         Map<String, String> flurryParams = new HashMap<>();
         flurryParams.put(EVENT_PARAMETER_NAME_CHECK_IN_STATUS, status.getName());
         FlurryAgent.logEvent(EVENT_NAME_CHECK_IN, flurryParams);
+
+        // Appsflyer
+        Map<String, Object> appsflyerParams = new HashMap<>();
+        appsflyerParams.put(EVENT_PARAMETER_NAME_CHECK_IN_STATUS, status.getName());
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_CHECK_IN, appsflyerParams);
     }
 
     public static void trackCheckOut() {
@@ -168,6 +196,9 @@ public class EventsTracker {
 
         // Flurry
         FlurryAgent.logEvent(EVENT_NAME_CHECK_OUT);
+
+        // Appsflyer
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_CHECK_OUT, null);
     }
 
     public static void trackReviewSending(SendReviewSource sendReviewSource) {
@@ -180,6 +211,11 @@ public class EventsTracker {
         Map<String, String> flurryParams = new HashMap<>();
         flurryParams.put(EVENT_PARAMETER_NAME_SEND_REVIEW_SOURCE, sendReviewSource.getName());
         FlurryAgent.logEvent(EVENT_NAME_SEND_REVIEW, flurryParams);
+
+        // Appsflyer
+        Map<String, Object> appsflyerParams = new HashMap<>();
+        appsflyerParams.put(EVENT_PARAMETER_NAME_SEND_REVIEW_SOURCE, sendReviewSource.getName());
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_SEND_REVIEW, appsflyerParams);
     }
 
     public static void trackCommentLiked() {
@@ -188,6 +224,9 @@ public class EventsTracker {
 
         // Flurry
         FlurryAgent.logEvent(EVENT_NAME_COMMENT_LIKED);
+
+        // Appsflyer
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_COMMENT_LIKED, null);
     }
 
     public static void trackCommentDisliked() {
@@ -196,6 +235,9 @@ public class EventsTracker {
 
         // Flurry
         FlurryAgent.logEvent(EVENT_NAME_COMMENT_DISLIKED);
+
+        // Appsflyer
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_COMMENT_DISLIKED, null);
     }
 
     public static void trackDiveSpotPhotoAdded() {
@@ -204,6 +246,9 @@ public class EventsTracker {
 
         // Flurry
         FlurryAgent.logEvent(EVENT_NAME_DIVE_SPOT_PHOTO_ADDED);
+
+        // Appsflyer
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_DIVE_SPOT_PHOTO_ADDED, null);
     }
 
     public static void trackContactDiveCenter(ContactDiveCenterMethod method) {
@@ -215,7 +260,12 @@ public class EventsTracker {
         // Flurry
         Map<String, String> flurryParams = new HashMap<>();
         flurryParams.put(EVENT_PARAMETER_NAME_CONTACT_DIVE_CENTER_METHOD, method.getName());
-        FlurryAgent.logEvent(EVENT_NAME_CONTACT_DIVE_CENTER);
+        FlurryAgent.logEvent(EVENT_NAME_CONTACT_DIVE_CENTER, flurryParams);
+
+        // Appsflyer
+        Map<String, Object> appsflyerParams = new HashMap<>();
+        appsflyerParams.put(EVENT_PARAMETER_NAME_CONTACT_DIVE_CENTER_METHOD, method.getName());
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_CONTACT_DIVE_CENTER, appsflyerParams);
     }
 
     public static void trackDiveSpotMapView() {
@@ -224,6 +274,9 @@ public class EventsTracker {
 
         // Flurry
         FlurryAgent.logEvent(EVENT_NAME_DIVE_SPOTS_MAP_VIEW);
+
+        // Appsflyer
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_DIVE_SPOTS_MAP_VIEW, null);
     }
 
     public static void trackDiveSpotListView() {
@@ -232,6 +285,9 @@ public class EventsTracker {
 
         // Flurry
         FlurryAgent.logEvent(EVENT_NAME_DIVE_SPOTS_LIST_VIEW);
+
+        // Appsflyer
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_DIVE_SPOTS_LIST_VIEW, null);
     }
 
     public static void trackDiveCentersMapView() {
@@ -240,6 +296,9 @@ public class EventsTracker {
 
         // Flurry
         FlurryAgent.logEvent(EVENT_NAME_DIVE_CENTERS_MAP_VIEW);
+
+        // Appsflyer
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_DIVE_CENTERS_MAP_VIEW, null);
     }
 
     public static void trackDiveCentersListView() {
@@ -248,6 +307,9 @@ public class EventsTracker {
 
         // Flurry
         FlurryAgent.logEvent(EVENT_NAME_DIVE_CENTERS_LIST_VIEW);
+
+        // Appsflyer
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_DIVE_CENTERS_LIST_VIEW, null);
     }
 
     public static void trackNotificationsView() {
@@ -256,6 +318,9 @@ public class EventsTracker {
 
         // Flurry
         FlurryAgent.logEvent(EVENT_NAME_NOTIFICATIONS_VIEW);
+
+        // Appsflyer
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_NOTIFICATIONS_VIEW, null);
     }
 
     public static void trackActivityView() {
@@ -264,6 +329,9 @@ public class EventsTracker {
 
         // Flurry
         FlurryAgent.logEvent(EVENT_NAME_ACTIVITY_VIEW);
+
+        // Appsflyer
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_ACTIVITY_VIEW, null);
     }
 
     public static void trackUserProfileView() {
@@ -272,6 +340,9 @@ public class EventsTracker {
 
         // Flurry
         FlurryAgent.logEvent(EVENT_NAME_USER_PROFILE_VIEW);
+
+        // Appsflyer
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_USER_PROFILE_VIEW, null);
     }
 
     public static void trackUserCheckinsView() {
@@ -280,6 +351,9 @@ public class EventsTracker {
 
         // Flurry
         FlurryAgent.logEvent(EVENT_NAME_USER_CHECK_INS_VIEW);
+
+        // Appsflyer
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_USER_CHECK_INS_VIEW, null);
     }
 
     public static void trackUserEditedView() {
@@ -288,6 +362,9 @@ public class EventsTracker {
 
         // Flurry
         FlurryAgent.logEvent(EVENT_NAME_USER_EDITED_VIEW);
+
+        // Appsflyer
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_USER_EDITED_VIEW, null);
     }
 
     public static void trackUserCreatedView() {
@@ -296,6 +373,9 @@ public class EventsTracker {
 
         // Flurry
         FlurryAgent.logEvent(EVENT_NAME_USER_CREATED_VIEW);
+
+        // Appsflyer
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_USER_CREATED_VIEW, null);
     }
 
     public static void trackUserFavoritesView() {
@@ -304,6 +384,9 @@ public class EventsTracker {
 
         // Flurry
         FlurryAgent.logEvent(EVENT_NAME_USER_FAVORITES_VIEW);
+
+        // Appsflyer
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_USER_FAVORITES_VIEW, null);
     }
 
     public static void trackDiveSpotCheckinsView() {
@@ -312,6 +395,9 @@ public class EventsTracker {
 
         // Flurry
         FlurryAgent.logEvent(EVENT_NAME_DIVE_SPOT_CHECK_INS_VIEW);
+
+        // Appsflyer
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_DIVE_SPOT_CHECK_INS_VIEW, null);
     }
 
     public static void trackDiveSpotPhotosView() {
@@ -320,6 +406,9 @@ public class EventsTracker {
 
         // Flurry
         FlurryAgent.logEvent(EVENT_NAME_DIVE_SPOT_PHOTOS_VIEW);
+
+        // Appsflyer
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_DIVE_SPOT_PHOTOS_VIEW, null);
     }
 
     public static void trackDiveSpotSealifeView() {
@@ -328,6 +417,9 @@ public class EventsTracker {
 
         // Flurry
         FlurryAgent.logEvent(EVENT_NAME_DIVE_SPOT_SEALIFE_VIEW);
+
+        // Appsflyer
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_DIVE_SPOT_SEALIFE_VIEW, null);
     }
 
     public static void trackDeviSpotReviewsView() {
@@ -336,6 +428,9 @@ public class EventsTracker {
 
         // Flurry
         FlurryAgent.logEvent(EVENT_NAME_DIVE_SPOT_REVIEWS_VIEW);
+
+        // Appsflyer
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_DIVE_SPOT_REVIEWS_VIEW, null);
     }
 
     public static void trackReviewerProfileView() {
@@ -344,6 +439,9 @@ public class EventsTracker {
 
         // Flurry
         FlurryAgent.logEvent(EVENT_NAME_REVIEWER_PROFILE_VIEW);
+
+        // Appsflyer
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_REVIEWER_PROFILE_VIEW, null);
     }
 
     public enum SpotViewSource {

@@ -21,8 +21,10 @@
         android:name="android.hardware.camera"
         android:required="true" />
 
-    <permission android:name="${applicationId}.permission.C2D_MESSAGE"
+    <permission
+        android:name="${applicationId}.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
+
     <uses-permission android:name="${applicationId}.permission.C2D_MESSAGE" />
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -35,6 +37,7 @@
         android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <receiver
             android:name="com.appsflyer.MultipleInstallBroadcastReceiver"
             android:exported="true">
@@ -42,14 +45,17 @@
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
         </receiver>
-        <receiver android:name="com.google.android.gms.analytics.CampaignTrackingReceiver"
+        <receiver
+            android:name="com.google.android.gms.analytics.CampaignTrackingReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
         </receiver>
-        <service android:name="com.google.android.gms.analytics.CampaignTrackingService"
+
+        <service
+            android:name="com.google.android.gms.analytics.CampaignTrackingService"
             android:enabled="true"
             android:exported="false" />
         <receiver android:name=".services.NetworkLisetener">
@@ -178,13 +184,14 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activities.ForeignProfileActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activities.ForeignUserDiveSpotList"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activities.ForeignUserLikesDislikesActivity"
             android:screenOrientation="portrait" />
+
         <receiver
             android:name="com.google.android.gms.gcm.GcmReceiver"
             android:exported="true"

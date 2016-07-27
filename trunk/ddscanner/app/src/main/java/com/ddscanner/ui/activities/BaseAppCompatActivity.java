@@ -84,7 +84,8 @@ public class BaseAppCompatActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-
+                Log.i(TAG, "identifyUser onFailure");
+                t.printStackTrace();
             }
 
         });

@@ -13,16 +13,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.DiveCenter;
-import com.ddscanner.utils.EventTrackerHelper;
 import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;
-
-import java.util.HashMap;
 
 /**
  * Created by lashket on 31.3.16.
@@ -71,10 +67,6 @@ public class DiveCenterDetailsActivity extends AppCompatActivity {
             phoneLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    AppsFlyerLib.getInstance().trackEvent(getApplicationContext(),
-                            EventTrackerHelper.EVENT_CALL_NUMBER_CLICK, new HashMap<String, Object>() {{
-                                put(EventTrackerHelper.PARAM_CALL_NUMBER_CLICK, diveCenter.getId());
-                            }});
                     EventsTracker.trackContactDiveCenter(EventsTracker.ContactDiveCenterMethod.PHONE_CALL);
                     try {
                         String uri = "tel:" + diveCenter.getPhone();

@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
@@ -21,7 +20,6 @@ import com.ddscanner.events.OnMapClickEvent;
 import com.ddscanner.events.PutDiveCentersToListEvent;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.activities.DiveCenterDetailsActivity;
-import com.ddscanner.utils.EventTrackerHelper;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -119,11 +117,6 @@ public class DiveCentersClusterManager extends ClusterManager<DiveCenter> implem
     @Override
     public void onInfoWindowClick(final Marker marker) {
         if (!marker.getPosition().equals(diveSpotMarker.getPosition())) {
-            AppsFlyerLib.getInstance().trackEvent(context, EventTrackerHelper
-                    .EVENT_INFOWINDOW_CLICK, new HashMap<String, Object>() {{
-                put(EventTrackerHelper.PARAM_MARKER_CLICK_TYPE, "dive_center");
-                put(EventTrackerHelper.PARAM_MARKER_CLICK_PLACE_ID, String.valueOf(diveCentersMap.get(marker.getPosition()).getId()));
-            }});
             DiveCenterDetailsActivity.show(context, diveCentersMap.get(marker.getPosition()), logoPath, EventsTracker.SpotViewSource.FROM_MAP);
         }
     }

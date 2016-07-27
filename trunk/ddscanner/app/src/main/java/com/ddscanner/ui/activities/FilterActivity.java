@@ -12,10 +12,8 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
-import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.FiltersResponseEntity;
 import com.ddscanner.entities.errors.BadRequestException;
 import com.ddscanner.entities.errors.CommentNotFoundException;
@@ -30,7 +28,6 @@ import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.SpinnerItemsAdapter;
 import com.ddscanner.utils.Constants;
-import com.ddscanner.utils.EventTrackerHelper;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
@@ -73,8 +70,6 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
     protected void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
         setContentView(R.layout.activity_filter);
-        AppsFlyerLib.getInstance().trackEvent(getApplicationContext(),
-                EventTrackerHelper.EVENT_FILTER_OPENED, new HashMap<String, Object>());
         findViews();
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -205,8 +200,6 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                AppsFlyerLib.getInstance().trackEvent(getApplicationContext(),
-                        EventTrackerHelper.EVENT_FILTER_CANCELLED, new HashMap<String, Object>());
                 onBackPressed();
                 finish();
             case R.id.reset_filters:

@@ -15,9 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.R;
-import com.ddscanner.utils.EventTrackerHelper;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -95,14 +93,10 @@ public class SubscribeDialog extends DialogFragment implements View.OnClickListe
         switch(v.getId())
         {
             case R.id.okbutton_subscribe:
-                AppsFlyerLib.getInstance().trackEvent(context,
-                        EventTrackerHelper.EVENT_LEAVE_FEEDBACK_PROCEEDED, new HashMap<String, Object>());
                 sendEmail();
                 this.dismiss();
                 break;
             case R.id.cancel_button_subscribe:
-                AppsFlyerLib.getInstance().trackEvent(context,
-                        EventTrackerHelper.EVENT_LEAVE_FEEDBACK_CANCELLED, new HashMap<String, Object>());
                 this.dismiss();
                 break;
             default:
