@@ -6,7 +6,7 @@ package com.ddscanner.utils;
 public class Constants {
 
     public static final int MAIN_ACTIVITY_REQUEST_CODE_GO_TO_MY_LOCATION = 1012;
-    public static final String images = "http:";
+    public static final String images = "https:";
     public static final String DIVESPOTID = "ID";
     public static final String IS_HAS_INTERNET = "IS_HAS_INTERNET";
     public static final String IS_LOCATION = "IS_LOCATION";
