@@ -192,6 +192,7 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
 //                            }
                             progressView.setVisibility(View.GONE);
                             notificationsViewPager.setVisibility(View.VISIBLE);
+
                             setData();
                         } catch (IOException e) {
 

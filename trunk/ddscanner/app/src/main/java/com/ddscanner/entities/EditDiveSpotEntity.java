@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Created by lashket on 25.1.16.
  */
-public class DiveSpotFull {
+public class EditDiveSpotEntity {
 
     private int id;
     private String name;
@@ -17,7 +17,7 @@ public class DiveSpotFull {
     private String visibility;
     private String currents;
     private String level;
-    private List<Image> images;
+    private List<String> images;
     private String diveSpotPathMedium;
     private String diveSpotPathOrigin;
     private String sealifePathMedium;
@@ -211,11 +211,11 @@ public class DiveSpotFull {
         this.level = level;
     }
 
-    public List<Image> getImages() {
+    public List<String> getImages() {
         return images;
     }
 
-    public void setImages(List<Image> images) {
+    public void setImages(List<String> images) {
         this.images = images;
     }
 

@@ -27,6 +27,8 @@ import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.DiveSpotFull;
 import com.ddscanner.entities.DivespotDetails;
+import com.ddscanner.entities.EditDiveSpotEntity;
+import com.ddscanner.entities.EditDiveSpotWrapper;
 import com.ddscanner.entities.FiltersResponseEntity;
 import com.ddscanner.entities.Sealife;
 import com.ddscanner.entities.errors.BadRequestException;
@@ -55,6 +57,9 @@ import com.google.gson.JsonParser;
 import com.rey.material.widget.ProgressView;
 import com.rey.material.widget.Spinner;
 import com.squareup.otto.Subscribe;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -135,8 +140,8 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
     private List<MultipartBody.Part> deletedImages = new ArrayList<>();
     private List<MultipartBody.Part> newImages = new ArrayList<>();
     private FiltersResponseEntity filters;
-    private DivespotDetails divespotDetails;
-    private DiveSpotFull diveSpot;
+    private EditDiveSpotWrapper divespotDetails;
+    private EditDiveSpotEntity diveSpot;
     private AddPhotoToDsListAdapter addPhotoToDsListAdapter;
     private ProgressDialog progressDialog;
     private Helpers helpers = new Helpers();
@@ -308,11 +313,11 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    divespotDetails = new Gson().fromJson(responseString, DivespotDetails.class);
+                    divespotDetails = new Gson().fromJson(responseString, EditDiveSpotWrapper.class);
                     diveSpot = divespotDetails.getDivespot();
                     sealifes = divespotDetails.getSealifes();
-                   // imageUris = changeImageAddresses(diveSpot.getImages());
-                  //  addPhotoToDsListAdapter = new AddPhotoToDsListAdapter(imageUris, EditDiveSpotActivity.this, addPhotoTitle);
+                    imageUris = changeImageAddresses(diveSpot.getImages());
+                    addPhotoToDsListAdapter = new AddPhotoToDsListAdapter(imageUris, EditDiveSpotActivity.this, addPhotoTitle);
                     diveSpotLocation = new LatLng(divespotDetails.getDivespot().getLat(),
                             divespotDetails.getDivespot().getLng());
                     loadFiltersDataRequest();
@@ -377,7 +382,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
     private ArrayList<String> removeAdressPart(ArrayList<String> deleted) {
 
         for (int i = 0; i < deleted.size(); i++) {
-            deleted.set(i, deleted.get(i).replace(diveSpot.getDiveSpotPathSmall(), ""
+            deleted.set(i, deleted.get(i).replace(diveSpot.getDiveSpotPathMedium(), ""
             ));
         }
 
