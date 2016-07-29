@@ -8,71 +8,40 @@
 
     <include layout="@layout/view_toolbar" />
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:background="@color/white"
-        android:gravity="center_vertical">
+    <!--<RelativeLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="70dp"-->
+        <!--android:background="@color/white"-->
+        <!--android:gravity="center_vertical">-->
 
-        <ImageView
-            android:id="@+id/toprate_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="18dp"
-            android:src="@drawable/ic_toprate_filter" />
+        <!--<ImageView-->
+            <!--android:id="@+id/toprate_icon"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_marginLeft="18dp"-->
+            <!--android:src="@drawable/ic_toprate_filter" />-->
 
-        <TextView
-            android:id="@+id/toprate_text"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="26dp"
-            android:layout_toRightOf="@+id/toprate_icon"
-            android:gravity="center"
-            android:text="@string/filter_only_best_rated"
-            android:textColor="@color/black_text"
-            android:textSize="16sp" />
+        <!--<TextView-->
+            <!--android:id="@+id/toprate_text"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_marginLeft="26dp"-->
+            <!--android:layout_toRightOf="@+id/toprate_icon"-->
+            <!--android:gravity="center"-->
+            <!--android:text="@string/filter_only_best_rated"-->
+            <!--android:textColor="@color/black_text"-->
+            <!--android:textSize="16sp" />-->
 
-        <android.support.v7.widget.SwitchCompat
-            android:id="@+id/only_rated_switch"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="18dp"
-            android:layout_toRightOf="@+id/toprate_text"
-            android:checked="true"
-            android:theme="@style/Color1SwitchStyle" />
-    </RelativeLayout>
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:src="@drawable/divider" />
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="7dp"
-        android:src="@drawable/divider" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@color/white">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="20dp"
-            android:paddingTop="22dp"
-            android:text="@string/filters_filters"
-            android:textColor="#a3a3a3"
-            android:textSize="16sp" />
-    </LinearLayout>
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:src="@drawable/divider" />
+        <!--<android.support.v7.widget.SwitchCompat-->
+            <!--android:id="@+id/only_rated_switch"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_marginRight="18dp"-->
+            <!--android:layout_toRightOf="@+id/toprate_text"-->
+            <!--android:checked="true"-->
+            <!--android:theme="@style/Color1SwitchStyle" />-->
+    <!--</RelativeLayout>-->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -129,9 +98,7 @@
     </LinearLayout>
 
     <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:src="@drawable/divider" />
+        style="@style/DividerStyleFull"/>
 
     <com.rey.material.widget.Button
         android:id="@+id/applyFilters"

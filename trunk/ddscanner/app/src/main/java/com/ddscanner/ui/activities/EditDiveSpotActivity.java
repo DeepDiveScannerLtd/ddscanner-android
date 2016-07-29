@@ -337,7 +337,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
 
     private List<String> changeImageAddresses(List<String> images) {
         for (int i = 0; i < images.size(); i++) {
-            images.set(i, diveSpot.getDiveSpotPathSmall() + images.get(i));
+            images.set(i, diveSpot.getDiveSpotPathMedium() + images.get(i));
         }
         return images;
     }

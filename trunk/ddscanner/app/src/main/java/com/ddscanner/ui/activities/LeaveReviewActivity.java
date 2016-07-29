@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
@@ -91,7 +92,7 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
     private List<String> imagesEncodedList = new ArrayList<>();
     private String imageEncoded;
     private Map<String, TextView> errorsMap = new HashMap<>();
-    private RequestBody requestId, requestComment, requestRating;
+    private RequestBody requestId = null, requestComment = null, requestRating = null;
     private RequestBody requessToken = null;
     private RequestBody requestSocial = null;
     private RequestBody requestSecret = null;
@@ -195,7 +196,6 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
             SocialNetworks.showForResult(LeaveReviewActivity.this, RC_LOGIN);
             return;
         }
-        materialDialog.show();
         List<MultipartBody.Part> images = new ArrayList<>();
         //  imageUris = addPhotoToDsListAdapter.getNewFilesUrisList();
         for (int i = 0; i < imageUris.size(); i++) {
@@ -205,12 +205,18 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
                     requestFile);
             images.add(part);
         }
-
+        if (text.getText().toString().trim().isEmpty() && images.size() != 0) {
+            Toast.makeText(LeaveReviewActivity.this, "Please write a review to dive spot", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        materialDialog.show();
         requestRating = RequestBody.create(MediaType.parse("multipart/form-data"),
                 String.valueOf(Math.round(ratingBar.getRating())));
         requestId = RequestBody.create(MediaType.parse("multipart/form-data"), diveSpotId);
-        requestComment = RequestBody.create(MediaType.parse("multipart/form-data"),
-                text.getText().toString().trim());
+        if (!text.getText().toString().trim().isEmpty()) {
+            requestComment = RequestBody.create(MediaType.parse("multipart/form-data"),
+                    text.getText().toString().trim());
+        }
         if (SharedPreferenceHelper.isUserLoggedIn()) {
             requestSocial = RequestBody.create(MediaType.parse("multipart/form-data"),
                     SharedPreferenceHelper.getSn());
@@ -234,7 +240,6 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                materialDialog.dismiss();
                 if (response.raw().isSuccessful()) {
                     String responseString = null;
                     try {
@@ -249,6 +254,7 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
 //                    returnIntent.putExtra("COMMENT", comment);
                     setResult(Activity.RESULT_OK, returnIntent);
                     finish();
+                    materialDialog.dismiss();
                 } else {
                     String responseString = "";
                     try {
@@ -256,6 +262,7 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+                    materialDialog.dismiss();
                     LogUtils.i("response body is " + responseString);
                     try {
                         ErrorsParser.checkForError(response.code(), responseString);

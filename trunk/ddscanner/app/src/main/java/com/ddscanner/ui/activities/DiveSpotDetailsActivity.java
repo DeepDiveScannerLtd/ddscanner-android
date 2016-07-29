@@ -381,7 +381,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         sealifeRecyclerview.setLayoutManager(layoutManager);
         sealifeRecyclerview.setAdapter(new SealifeListAdapter(
                 (ArrayList<Sealife>) divespotDetails.getSealifes(),
-                this, diveSpot.getSealifePathSmall(),
+                this, diveSpot.getSealifePathMedium(),
                 diveSpot.getSealifePathMedium()));
         mapFragment.getMapAsync(new OnMapReadyCallback() {
             @Override
