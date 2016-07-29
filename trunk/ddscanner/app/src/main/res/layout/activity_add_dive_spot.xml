@@ -50,7 +50,7 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginTop="15dp"
                     android:fontFamily="sans-serif-medium"
-                    android:text="PHOTOS"
+                    android:text="@string/photos_title"
                     android:textColor="@color/black_text"
                     android:textSize="15sp" />
 

@@ -110,7 +110,7 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Dive centers");
+        getSupportActionBar().setTitle(R.string.dive_centers);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);
 
         // Map mode

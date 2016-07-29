@@ -18,7 +18,7 @@
         app:pv_progressStyle="@style/CircularProgress" />
     <ScrollView
         android:id="@+id/about"
-        android:visibility="gone"
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -166,7 +166,7 @@
                 <LinearLayout
                     android:id="@+id/checkins_activity"
                     android:layout_width="match_parent"
-                    android:layout_height="55dp"
+                    android:layout_height="66dp"
                     android:background="?attr/selectableItemBackground"
                     android:orientation="horizontal"
                     android:paddingTop="10dp">
@@ -187,6 +187,7 @@
 
                         <TextView
                             android:id="@+id/checkin_count"
+                            android:layout_marginTop="3dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" />
                     </LinearLayout>
@@ -203,7 +204,7 @@
                 <LinearLayout
                     android:id="@+id/created_activity"
                     android:layout_width="match_parent"
-                    android:layout_height="55dp"
+                    android:layout_height="66dp"
                     android:background="?attr/selectableItemBackground"
                     android:orientation="horizontal"
                     android:paddingTop="10dp">
@@ -226,8 +227,7 @@
                             android:id="@+id/added_count"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_below="@+id/depth_title"
-                            android:text="230" />
+                           />
                     </LinearLayout>
 
                     <ImageView
@@ -242,7 +242,7 @@
                 <LinearLayout
                     android:id="@+id/edited_activity"
                     android:layout_width="match_parent"
-                    android:layout_height="55dp"
+                    android:layout_height="66dp"
                     android:background="?attr/selectableItemBackground"
                     android:orientation="horizontal"
                     android:paddingTop="10dp">
@@ -263,6 +263,7 @@
 
                         <TextView
                             android:id="@+id/edited_count"
+                            android:layout_marginTop="3dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" />
                     </LinearLayout>

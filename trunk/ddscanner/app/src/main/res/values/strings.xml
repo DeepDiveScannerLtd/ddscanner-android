@@ -148,14 +148,14 @@
     <string name="e_mail">E-mail</string>
     <string name="search_sealife">Search sealife</string>
     <string name="favorites">Favorites</string>
-    <string name="checkin">Check-ins</string>
+    <string name="checkin">Check In</string>
     <string name="added_ds">Created</string>
     <string name="edited_ds">Edited</string>
     <string name="toast_server_error">Error. Try again later</string>
     <string name="sealife_already_added">It has already been added</string>
     <string name="please_connect_to_a_network_to_continue">Please connect to a network to continue</string>
     <string name="refresh">REFRESH</string>
-    <string name="new_divespot">New Divespot</string>
+    <string name="new_divespot">New Dive Spot</string>
     <string name="pick_location">Pick location</string>
     <string name="search">Search</string>
     <string name="dive_spot">Dive Spot</string>
@@ -190,4 +190,6 @@
     <string name="user_dislikes">Dislikes</string>
     <string name="user_likes">Likes</string>
     <string name="google_analytics_trackingId">UA-75833949-1</string>
+    <string name="dive_centers">Dive Centers</string>
+    <string name="dive_spos">" dive spots"</string>
 </resources>

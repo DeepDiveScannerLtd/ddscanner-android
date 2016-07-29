@@ -392,10 +392,10 @@ public class ProfileFragment extends Fragment
                 userAbout.setVisibility(View.GONE);
             }
             userFullName.setText(user.getName());
-            addedCount.setText(user.getCountAdd());
-            editedCount.setText(user.getCountEdit());
-            favouriteCount.setText(user.getCountFavorite());
-            checkInCount.setText(user.getCountCheckin());
+            addedCount.setText(user.getCountAdd() + getString(R.string.dive_spos));
+            editedCount.setText(user.getCountEdit() + getString(R.string.dive_spos));
+            favouriteCount.setText(user.getCountFavorite() + getString(R.string.dive_spos));
+            checkInCount.setText(user.getCountCheckin() + getString(R.string.dive_spos));
             showAllCheckins.setOnClickListener(this);
             if (Integer.parseInt(user.getCountCheckin()) == 0) {
                 showAllCheckins.setOnClickListener(null);
