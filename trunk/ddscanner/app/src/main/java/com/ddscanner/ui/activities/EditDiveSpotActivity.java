@@ -377,7 +377,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
     private ArrayList<String> removeAdressPart(ArrayList<String> deleted) {
 
         for (int i = 0; i < deleted.size(); i++) {
-            deleted.set(i, deleted.get(i).replace(diveSpot.getDiveSpotPathSmall(), ""
+            deleted.set(i, deleted.get(i).replace(diveSpot.getDiveSpotPathMedium(), ""
             ));
         }
 

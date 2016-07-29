@@ -18,10 +18,8 @@ public class DiveSpotFull {
     private String currents;
     private String level;
     private List<String> images;
-    private String diveSpotPathSmall;
     private String diveSpotPathMedium;
     private String diveSpotPathOrigin;
-    private String sealifePathSmall;
     private String sealifePathMedium;
     private String sealifePathOrigin;
     private String object;
@@ -221,18 +219,6 @@ public class DiveSpotFull {
         this.images = images;
     }
 
-    public String getDiveSpotPathSmall() {
-        if (diveSpotPathSmall != null && divespotPathSmallContainsHttp) {
-            diveSpotPathSmall = diveSpotPathSmall.replace("http:", "https:");
-            divespotPathSmallContainsHttp = false;
-        }
-        return diveSpotPathSmall;
-    }
-
-    public void setDiveSpotPathSmall(String diveSpotPathSmall) {
-        this.diveSpotPathSmall = diveSpotPathSmall;
-    }
-
     public String getDiveSpotPathMedium() {
         if (diveSpotPathMedium != null && divespotPathMediumContainsHttp) {
             diveSpotPathMedium = diveSpotPathMedium.replace("http:", "https:");
@@ -255,19 +241,6 @@ public class DiveSpotFull {
 
     public void setDiveSpotPathOrigin(String diveSpotPathOrigin) {
         this.diveSpotPathOrigin = diveSpotPathOrigin;
-    }
-
-
-    public String getSealifePathSmall() {
-        if (sealifePathSmall != null && sealifePathSmallContainsHttp) {
-            sealifePathSmall = sealifePathSmall.replace("http:", "https:");
-            sealifePathSmallContainsHttp = false;
-        }
-        return sealifePathSmall;
-    }
-
-    public void setSealifePathSmall(String sealifePathSmall) {
-        this.sealifePathSmall = sealifePathSmall;
     }
 
     public String getSealifePathMedium() {
