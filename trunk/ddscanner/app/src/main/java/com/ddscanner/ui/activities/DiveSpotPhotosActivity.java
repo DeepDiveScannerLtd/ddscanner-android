@@ -14,6 +14,7 @@ import android.view.View;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.entities.Image;
 import com.ddscanner.ui.adapters.PhotosActivityPagerAdapter;
 import com.ddscanner.ui.fragments.DiveSpotAllPhotosFragment;
 import com.ddscanner.ui.fragments.DiveSpotPhotosFragment;
@@ -35,10 +36,10 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
     private TabLayout tabLayout;
     private ViewPager photosViewPager;
     private Toolbar toolbar;
-    private ArrayList<String> diveSpotImages;
+    private ArrayList<Image> diveSpotImages;
     private String path;
-    private ArrayList<String> reviewsImages;
-    private ArrayList<String> allPhotos;
+    private ArrayList<Image> reviewsImages;
+    private ArrayList<Image> allPhotos;
     private Helpers helpers = new Helpers();
     private FloatingActionButton fabAddPhoto;
     private String dsId;
@@ -52,30 +53,31 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_photos);
         findViews();
-        diveSpotImages =(ArrayList<String>) getIntent().getSerializableExtra("images");
-        reviewsImages = (ArrayList<String>) getIntent().getSerializableExtra("reviewsImages");
+        Bundle bundle = getIntent().getExtras();
+        diveSpotImages = bundle.getParcelableArrayList("images");
+        reviewsImages =  bundle.getParcelableArrayList("reviewsImages");
 
         path = getIntent().getStringExtra("path");
         dsId = getIntent().getStringExtra("id");
 
-        diveSpotImages = helpers.appendImagesWithPath(diveSpotImages, path);
+        diveSpotImages = helpers.appendFullImagesWithPath(diveSpotImages, path);
 
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("diveSpotImages", diveSpotImages);
+        bundle = new Bundle();
+        bundle.putParcelableArrayList("diveSpotImages", diveSpotImages);
         diveSpotPhotosFragment.setArguments(bundle);
 
         if (reviewsImages != null) {
-            reviewsImages = helpers.appendImagesWithPath(reviewsImages, path);
+            reviewsImages = helpers.appendFullImagesWithPath(reviewsImages, path);
         }
 
         bundle = new Bundle();
-        bundle.putSerializable("reviewsImages", reviewsImages);
+        bundle.putParcelableArrayList("reviewsImages", reviewsImages);
         diveSpotReviewsPhoto.setArguments(bundle);
 
-        allPhotos = helpers.compareArrays(reviewsImages, diveSpotImages);
+        allPhotos = helpers.compareObjectsArray(reviewsImages, diveSpotImages);
 
         bundle = new Bundle();
-        bundle.putSerializable("images", allPhotos);
+        bundle.putParcelableArrayList("images", allPhotos);
         diveSpotAllPhotosFragment.setArguments(bundle);
 
         setupViewPager();

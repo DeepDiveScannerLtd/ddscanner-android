@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.Image;
+import com.ddscanner.ui.adapters.ReviewImageSLiderAdapter;
 import com.ddscanner.ui.adapters.SliderImagesAdapter;
 import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;
@@ -27,21 +28,18 @@ import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 /**
  * Created by lashket on 4.3.16.
  */
-public class ImageSliderActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener, View.OnClickListener{
+public class ReviewImageSliderActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener, View.OnClickListener{
 
     private LinearLayout pager_indicator;
     private int dotsCount = 0;
-    private SliderImagesAdapter sliderImagesAdapter;
+    private ReviewImageSLiderAdapter sliderImagesAdapter;
     private ImageView[] dots;
     private FrameLayout baseLayout;
     private ViewPager viewPager;
     private ImageView close;
-    private ArrayList<Image> images;
+    private ArrayList<String> images;
     private Drawable drawable;
     private int position;
-    private ImageView avatar;
-    private TextView date;
-    private TextView userName;
     private Helpers helpers = new Helpers();
 
 
@@ -50,21 +48,12 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_slider);
         findViews();
-        Bundle bundle = getIntent().getExtras();
-        images = bundle.getParcelableArrayList("IMAGES");
+        images = (ArrayList<String>) getIntent().getSerializableExtra("IMAGES");
         position = getIntent().getIntExtra("position", 0);
         viewPager.addOnPageChangeListener(this);
-        sliderImagesAdapter = new SliderImagesAdapter(getFragmentManager(), images);
+        sliderImagesAdapter = new ReviewImageSLiderAdapter(getFragmentManager(), images);
         viewPager.setAdapter(sliderImagesAdapter);
         close.setOnClickListener(this);
-        userName.setText(images.get(position).getAuthor().getName());
-        date.setText(helpers.convertDateToImageSliderActivity(images.get(position).getAuthor().getDate()));
-        Picasso.with(this)
-                .load(images.get(position).getAuthor().getPhoto())
-                .resize(Math.round(helpers.convertDpToPixel(35, this)), Math.round(helpers.convertDpToPixel(35, this)))
-                .placeholder(R.drawable.avatar_profile_default)
-                .transform(new CropCircleTransformation())
-                .into(avatar);
         setUi();
 
     }
@@ -74,9 +63,6 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         pager_indicator = (LinearLayout) findViewById(R.id.viewPagerCountDots);
         close = (ImageView) findViewById(R.id.close_btn);
         baseLayout = (FrameLayout) findViewById(R.id.swipe_layout);
-        avatar = (ImageView) findViewById(R.id.user_avatar);
-        date = (TextView) findViewById(R.id.date);
-        userName = (TextView) findViewById(R.id.user_name);
     }
 
     private void setUi() {
@@ -121,14 +107,6 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
             dots[i].setImageDrawable(getResources().getDrawable(R.drawable.nonselecteditem_dot));
         }
         dots[position].setImageDrawable(getResources().getDrawable(R.drawable.selecteditem_dot));
-        userName.setText(images.get(position).getAuthor().getName());
-        date.setText(helpers.convertDateToImageSliderActivity(images.get(position).getAuthor().getDate()));
-        Picasso.with(this)
-                .load(images.get(position).getAuthor().getPhoto())
-                .resize(Math.round(helpers.convertDpToPixel(35, this)), Math.round(helpers.convertDpToPixel(35, this)))
-                .placeholder(R.drawable.avatar_profile_default)
-                .transform(new CropCircleTransformation())
-                .into(avatar);
       /*  Picasso.with(this).load("http://www.trizeri.travel/images/divespots/medium/" +images.get(position)).into(new Target() {
             @Override
             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
@@ -136,23 +114,19 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
                 drawable.setColorFilter(Color.parseColor("#99000000"), PorterDuff.Mode.SRC_ATOP);
                 baseLayout.setBackgroundDrawable(drawable);
             }
-
             @Override
             public void onBitmapFailed(Drawable errorDrawable) {
-
             }
-
             @Override
             public void onPrepareLoad(Drawable placeHolderDrawable) {
-
             }
         });*/
     }
 
 
-    public static void show(Context context, ArrayList<Image> images, int position) {
-        Intent intent = new Intent(context, ImageSliderActivity.class);
-        intent.putParcelableArrayListExtra("IMAGES", images);
+    public static void show(Context context, ArrayList<String> images, int position) {
+        Intent intent = new Intent(context, ReviewImageSliderActivity.class);
+        intent.putExtra("IMAGES", images);
         intent.putExtra("position", position);
         context.startActivity(intent);
     }

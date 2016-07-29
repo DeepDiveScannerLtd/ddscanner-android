@@ -311,8 +311,8 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
                     divespotDetails = new Gson().fromJson(responseString, DivespotDetails.class);
                     diveSpot = divespotDetails.getDivespot();
                     sealifes = divespotDetails.getSealifes();
-                    imageUris = changeImageAddresses(diveSpot.getImages());
-                    addPhotoToDsListAdapter = new AddPhotoToDsListAdapter(imageUris, EditDiveSpotActivity.this, addPhotoTitle);
+                   // imageUris = changeImageAddresses(diveSpot.getImages());
+                  //  addPhotoToDsListAdapter = new AddPhotoToDsListAdapter(imageUris, EditDiveSpotActivity.this, addPhotoTitle);
                     diveSpotLocation = new LatLng(divespotDetails.getDivespot().getLat(),
                             divespotDetails.getDivespot().getLng());
                     loadFiltersDataRequest();

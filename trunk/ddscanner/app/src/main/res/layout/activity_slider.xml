@@ -16,6 +16,7 @@
             android:layout_toLeftOf="@+id/close_btn"
             android:orientation="horizontal">
             <ImageView
+                android:id="@+id/user_avatar"
                 android:layout_marginTop="11dp"
                 android:layout_marginLeft="15dp"
                 android:layout_width="35dp"

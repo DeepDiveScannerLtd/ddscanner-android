@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ddscanner.R;
+import com.ddscanner.entities.Image;
 import com.ddscanner.ui.adapters.AllPhotosDiveSpotAdapter;
 import com.ddscanner.utils.Helpers;
 
@@ -21,7 +22,7 @@ import java.util.ArrayList;
  */
 public class DiveSpotAllPhotosFragment extends Fragment {
 
-    private ArrayList<String> images;
+    private ArrayList<Image> images;
 
     private RecyclerView recyclerView;
 
@@ -37,9 +38,10 @@ public class DiveSpotAllPhotosFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_all_photos, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.photos);
-        images = (ArrayList<String>) getArguments().getSerializable("images");
+        Bundle bundle = getArguments();
+        images = bundle.getParcelableArrayList("images");
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(),3));
-      //  recyclerView.addItemDecoration(new GridSpacingItemDecoration(3));
+        recyclerView.addItemDecoration(new GridSpacingItemDecoration(3));
         recyclerView.setAdapter(new AllPhotosDiveSpotAdapter(images, getContext()));
         return view;
     }

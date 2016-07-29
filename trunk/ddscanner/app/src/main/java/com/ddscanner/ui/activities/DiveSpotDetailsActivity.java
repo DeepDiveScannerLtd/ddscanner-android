@@ -46,6 +46,7 @@ import com.ddscanner.entities.Comment;
 import com.ddscanner.entities.Comments;
 import com.ddscanner.entities.DiveSpotFull;
 import com.ddscanner.entities.DivespotDetails;
+import com.ddscanner.entities.Image;
 import com.ddscanner.entities.Sealife;
 import com.ddscanner.entities.User;
 import com.ddscanner.entities.errors.BadRequestException;
@@ -319,7 +320,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         visibility.setText(diveSpot.getVisibilityMin() + getString(R.string.symbol_nimus) + diveSpot.getVisibilityMax() + getString(R.string.meters));
         currents.setText(diveSpot.getCurrents());
         if (diveSpot.getImages() != null && !diveSpot.getImages().isEmpty()) {
-            Picasso.with(this).load(diveSpot.getDiveSpotPathMedium() + diveSpot.getImages().get(0)).into(diveSpotMainPhoto, new ImageLoadedCallback(progressBar) {
+            Picasso.with(this).load(diveSpot.getDiveSpotPathMedium() + diveSpot.getImages().get(0).getName()).into(diveSpotMainPhoto, new ImageLoadedCallback(progressBar) {
                 @Override
                 public void onSuccess() {
                     super.onSuccess();
@@ -372,8 +373,8 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
         photosRecyclerView.setLayoutManager(new GridLayoutManager(DiveSpotDetailsActivity.this, 4));
         //      photosRecyclerView.addItemDecoration(new GridSpacingItemDecoration(4));
-        photosRecyclerView.setAdapter(new DiveSpotsPhotosAdapter((ArrayList<String>) diveSpot.getImages(),
-                diveSpot.getDiveSpotPathMedium(), DiveSpotDetailsActivity.this, (ArrayList<String>) diveSpot.getCommentImages()));
+        photosRecyclerView.setAdapter(new DiveSpotsPhotosAdapter((ArrayList<Image>) diveSpot.getImages(),
+                diveSpot.getDiveSpotPathMedium(), DiveSpotDetailsActivity.this, (ArrayList<Image>) diveSpot.getCommentImages()));
         LinearLayoutManager layoutManager = new LinearLayoutManager(DiveSpotDetailsActivity.this);
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         sealifeRecyclerview.setNestedScrollingEnabled(false);
@@ -490,6 +491,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         if (SharedPreferenceHelper.isUserLoggedIn()) {
             map.put("social", SharedPreferenceHelper.getSn());
             map.put("token", SharedPreferenceHelper.getToken());
+            map.put("isImageAuthor", "true");
             if (SharedPreferenceHelper.getSn().equals("tw")) {
                 map.put("secret", SharedPreferenceHelper.getSecret());
             }
@@ -1213,9 +1215,9 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 //                String.valueOf(diveSpot.getId()));
         Intent intent = new Intent(this, DiveSpotPhotosActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putSerializable("images", (ArrayList<String>) diveSpot.getImages());
+        bundle.putParcelableArrayList("images", (ArrayList<Image>) diveSpot.getImages());
         bundle.putString("path", diveSpot.getDiveSpotPathMedium());
-        bundle.putSerializable("reviewsImages", (ArrayList<String>) diveSpot.getCommentImages());
+        bundle.putParcelableArrayList("reviewsImages", (ArrayList<Image>) diveSpot.getCommentImages());
         bundle.putString("id", String.valueOf(diveSpot.getId()));
         intent.putExtras(bundle);
         startActivityForResult(intent, RC_PHOTOS);

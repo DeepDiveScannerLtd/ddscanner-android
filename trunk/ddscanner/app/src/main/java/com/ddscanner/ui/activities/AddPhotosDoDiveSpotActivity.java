@@ -26,6 +26,7 @@ import com.ddscanner.entities.errors.UserNotFoundException;
 import com.ddscanner.entities.errors.ValidationErrorException;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
+import com.ddscanner.ui.adapters.AddPhotoToDiveSpotAdapter;
 import com.ddscanner.ui.adapters.AllPhotosDiveSpotAdapter;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
@@ -85,7 +86,7 @@ public class AddPhotosDoDiveSpotActivity extends AppCompatActivity implements Vi
 
         recyclerView.setLayoutManager(new GridLayoutManager(this,3));
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(3));
-        recyclerView.setAdapter(new AllPhotosDiveSpotAdapter((ArrayList<String>) imagesToShow,
+        recyclerView.setAdapter(new AddPhotoToDiveSpotAdapter((ArrayList<String>) imagesToShow,
                 AddPhotosDoDiveSpotActivity.this));
         button.setOnClickListener(this);
     }

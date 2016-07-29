@@ -17,7 +17,7 @@ public class DiveSpotFull {
     private String visibility;
     private String currents;
     private String level;
-    private List<String> images;
+    private List<Image> images;
     private String diveSpotPathSmall;
     private String diveSpotPathMedium;
     private String diveSpotPathOrigin;
@@ -106,11 +106,11 @@ public class DiveSpotFull {
         this.creator = creator;
     }
 
-    public List<String> getCommentImages() {
+    public List<Image> getCommentImages() {
         return commentImages;
     }
 
-    public void setCommentImages(List<String> commentImages) {
+    public void setCommentImages(List<Image> commentImages) {
         this.commentImages = commentImages;
     }
 
@@ -123,7 +123,7 @@ public class DiveSpotFull {
     }
 
     private User creator;
-    private List<String> commentImages;
+    private List<Image> commentImages;
 
     public String getObject() {
         return object;
@@ -213,11 +213,11 @@ public class DiveSpotFull {
         this.level = level;
     }
 
-    public List<String> getImages() {
+    public List<Image> getImages() {
         return images;
     }
 
-    public void setImages(List<String> images) {
+    public void setImages(List<Image> images) {
         this.images = images;
     }
 
