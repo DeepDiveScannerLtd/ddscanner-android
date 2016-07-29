@@ -1053,10 +1053,14 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                     try {
                         responseString = response.body().string();
                         Comments comments = new Gson().fromJson(responseString, Comments.class);
-                        usersComments = comments.getComments();
-                        setReviewsCount(getString(R.string.show_all)
-                                + String.valueOf(usersComments.size())
-                                + getString(R.string.skobka));
+                        if (comments.getComments() != null) {
+                            usersComments = comments.getComments();
+                        }
+                        if (usersComments != null) {
+                            setReviewsCount(getString(R.string.show_all)
+                                    + String.valueOf(usersComments.size())
+                                    + getString(R.string.skobka));
+                        }
                     } catch (IOException e) {
 
                     }

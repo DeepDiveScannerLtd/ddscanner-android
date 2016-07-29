@@ -77,6 +77,7 @@ public class ForeignUserDiveSpotList extends AppCompatActivity {
             toolbarTitle = getString(R.string.toolbar_title_check_ins);
             getUsersCheckinList();
         }
+        toolbarSettings();
     }
 
     private void getAddedDiveSpotList() {
@@ -268,7 +269,6 @@ public class ForeignUserDiveSpotList extends AppCompatActivity {
         rc.setLayoutManager(linearLayoutManager);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         progressBarFull = (ProgressView) findViewById(R.id.progressBar);
-        toolbarSettings();
     }
 
     private void toolbarSettings() {
