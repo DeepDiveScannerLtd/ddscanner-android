@@ -488,10 +488,10 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
      */
     private void requestProductDetails(String productId) {
         Map<String, String> map = new HashMap<>();
+        map.put("isImageAuthor", "true");
         if (SharedPreferenceHelper.isUserLoggedIn()) {
             map.put("social", SharedPreferenceHelper.getSn());
             map.put("token", SharedPreferenceHelper.getToken());
-            map.put("isImageAuthor", "true");
             if (SharedPreferenceHelper.getSn().equals("tw")) {
                 map.put("secret", SharedPreferenceHelper.getSecret());
             }
