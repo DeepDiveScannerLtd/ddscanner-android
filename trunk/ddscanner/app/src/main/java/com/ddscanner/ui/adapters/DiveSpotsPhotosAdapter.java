@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.entities.Image;
 import com.ddscanner.events.OpenPhotosActivityEvent;
 import com.ddscanner.ui.views.TransformationRoundImage;
 import com.ddscanner.utils.Helpers;
@@ -24,15 +25,15 @@ import java.util.ArrayList;
  */
 public class DiveSpotsPhotosAdapter extends RecyclerView.Adapter<DiveSpotsPhotosAdapter.DiveSpotsPhotosAdapterViewHolder> {
 
-    public ArrayList<String> photos;
+    public ArrayList<Image> photos;
     public String path;
     public Context context;
-    public ArrayList<String> reviewsImages;
+    public ArrayList<Image> reviewsImages;
     private int photoSize;
     private Helpers helpers = new Helpers();
 
-    public DiveSpotsPhotosAdapter(ArrayList<String> photos, String path,
-                                  Context context,ArrayList<String> reviewsImages) {
+    public DiveSpotsPhotosAdapter(ArrayList<Image> photos, String path,
+                                  Context context,ArrayList<Image> reviewsImages) {
         this.photos = photos;
         this.path = path;
         this.context = context;
@@ -52,7 +53,7 @@ public class DiveSpotsPhotosAdapter extends RecyclerView.Adapter<DiveSpotsPhotos
     public void onBindViewHolder(final DiveSpotsPhotosAdapterViewHolder holder, int position) {
         if (photos.size() > 8 && position == 7) {
             Picasso.with(context)
-                    .load(path + photos.get(position))
+                    .load(path + photos.get(position).getName())
                     .transform(new TransformationRoundImage(2,0))
                     .resize(Math.round(helpers.convertDpToPixel(photoSize, context)),Math.round(helpers.convertDpToPixel(photoSize, context)))
                     .centerCrop()
@@ -61,7 +62,7 @@ public class DiveSpotsPhotosAdapter extends RecyclerView.Adapter<DiveSpotsPhotos
             holder.morePhotos.setVisibility(View.VISIBLE);
         } else {
             Picasso.with(context)
-                    .load(path + photos.get(position))
+                    .load(path + photos.get(position).getName())
                     .transform(new TransformationRoundImage(2,0))
                     .resize(Math.round(helpers.convertDpToPixel(photoSize, context)),Math.round(helpers.convertDpToPixel(photoSize, context)))
                     .centerCrop()

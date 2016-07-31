@@ -9,8 +9,8 @@ import android.widget.ImageView;
 
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
-import com.ddscanner.entities.Image;
 import com.ddscanner.ui.activities.ImageSliderActivity;
+import com.ddscanner.ui.activities.ReviewImageSliderActivity;
 import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;
 
@@ -19,33 +19,33 @@ import java.util.ArrayList;
 /**
  * Created by lashket on 11.5.16.
  */
-public class AllPhotosDiveSpotAdapter extends RecyclerView.Adapter<AllPhotosDiveSpotAdapter.AllPhotosDIveSpotViewHolder> {
+public class AddPhotoToDiveSpotAdapter extends RecyclerView.Adapter<AddPhotoToDiveSpotAdapter.AddPhotoToDiveSpotViewHolder> {
 
     private String path;
-    private ArrayList<Image> images;
+    private ArrayList<String> images;
     private Context context;
     private Helpers helpers = new Helpers();
 
-    public AllPhotosDiveSpotAdapter(ArrayList<Image> photos, Context context) {
+    public AddPhotoToDiveSpotAdapter(ArrayList<String> photos, Context context) {
         images = photos;
         this.context = context;
     }
 
     @Override
-    public void onBindViewHolder(AllPhotosDIveSpotViewHolder holder, int position) {
+    public void onBindViewHolder(AddPhotoToDiveSpotViewHolder holder, int position) {
         Picasso.with(context)
-                .load(images.get(position).getName())
+                .load(images.get(position))
                 .resize(Math.round(helpers.convertDpToPixel(115, context)),Math.round(helpers.convertDpToPixel(115, context)))
                 .centerCrop()
                 .into(holder.image);
     }
 
     @Override
-    public AllPhotosDIveSpotViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public AddPhotoToDiveSpotViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.
                 from(parent.getContext()).
                 inflate(R.layout.item_photo_in_photos_activity, parent, false);
-        return new AllPhotosDIveSpotViewHolder(itemView);
+        return new AddPhotoToDiveSpotViewHolder(itemView);
     }
 
     @Override
@@ -53,11 +53,11 @@ public class AllPhotosDiveSpotAdapter extends RecyclerView.Adapter<AllPhotosDive
         return images.size();
     }
 
-    public class AllPhotosDIveSpotViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class AddPhotoToDiveSpotViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         protected ImageView image;
 
-        public AllPhotosDIveSpotViewHolder(View v) {
+        public AddPhotoToDiveSpotViewHolder(View v) {
             super(v);
             v.setOnClickListener(this);
             image = (ImageView) v.findViewById(R.id.image);
@@ -66,8 +66,9 @@ public class AllPhotosDiveSpotAdapter extends RecyclerView.Adapter<AllPhotosDive
         @Override
         public void onClick(View v) {
             EventsTracker.trackDiveSpotPhotosView();
-            ImageSliderActivity.show(context, images, getAdapterPosition());
+            ReviewImageSliderActivity.show(context, images, getAdapterPosition());
         }
     }
 
 }
+

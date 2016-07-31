@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.R;
+import com.ddscanner.entities.Image;
 import com.ddscanner.entities.Sealife;
 import com.ddscanner.entities.User;
 import com.ddscanner.entities.request.RegisterRequest;
@@ -119,6 +120,13 @@ public class Helpers {
         return images;
     }
 
+    public ArrayList<Image> appendFullImagesWithPath(ArrayList<Image> images, String path) {
+        for (int i = 0; i < images.size(); i++) {
+            images.get(i).setName(path + images.get(i).getName());
+        }
+        return images;
+    }
+
     public RegisterRequest getRegisterRequest() {
         RegisterRequest registerRequest = new RegisterRequest();
         if (!SharedPreferenceHelper.isUserLoggedIn()) {
@@ -158,6 +166,21 @@ public class Helpers {
         allPhotos = (ArrayList<String>) second.clone();
         return allPhotos;
     }
+
+    public ArrayList<Image> compareObjectsArray(ArrayList<Image> first, ArrayList<Image> second) {
+        ArrayList<Image> allPhotos = new ArrayList<>();
+        if (first != null) {
+            allPhotos = (ArrayList<Image>) first.clone();
+            for (int i = 0; i < second.size(); i++) {
+                allPhotos.add(second.get(i));
+            }
+            return allPhotos;
+        }
+        allPhotos = (ArrayList<Image>) second.clone();
+        return allPhotos;
+    }
+
+
 
     /**
      * Change key-value params to value-keys to using this in spinners
@@ -358,6 +381,20 @@ public class Helpers {
         SimpleDateFormat serverFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         serverFormat.setTimeZone(TimeZone.getTimeZone("GMT+0"));
         SimpleDateFormat returnedFormat = new SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH);
+        try {
+            Date date = serverFormat.parse(incomingDate);
+            returningString = returnedFormat.format(date);
+        } catch (ParseException e) {
+
+        }
+        return returningString;
+    }
+
+    public String convertDateToImageSliderActivity(String incomingDate) {
+        String returningString = "";
+        SimpleDateFormat serverFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        serverFormat.setTimeZone(TimeZone.getTimeZone("GMT+0"));
+        SimpleDateFormat returnedFormat = new SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.ENGLISH);
         try {
             Date date = serverFormat.parse(incomingDate);
             returningString = returnedFormat.format(date);

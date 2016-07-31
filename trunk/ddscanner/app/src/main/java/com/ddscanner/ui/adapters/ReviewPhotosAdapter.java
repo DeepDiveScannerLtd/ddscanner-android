@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.ddscanner.R;
 import com.ddscanner.ui.activities.ImageSliderActivity;
+import com.ddscanner.ui.activities.ReviewImageSliderActivity;
 import com.ddscanner.ui.views.TransformationRoundImage;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.ImageLoadedCallback;
@@ -87,7 +88,7 @@ public class ReviewPhotosAdapter extends RecyclerView.Adapter<ReviewPhotosAdapte
 
         @Override
         public void onClick(View v) {
-            ImageSliderActivity.show(context, photos, getAdapterPosition());
+           ReviewImageSliderActivity.show(context, photos, getAdapterPosition());
         }
     }
 

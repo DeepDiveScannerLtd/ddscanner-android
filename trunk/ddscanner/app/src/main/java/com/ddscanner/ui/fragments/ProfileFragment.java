@@ -379,6 +379,7 @@ public class ProfileFragment extends Fragment
             Picasso.with(getContext()).load(user.getPicture())
                     .resize(Math.round(helpers.convertDpToPixel(80, getContext())),
                             Math.round(helpers.convertDpToPixel(80, getContext()))).centerCrop()
+                    .placeholder(R.drawable.avatar_profile_default)
                     .transform(new CropCircleTransformation()).into(newPhoto);
             if (user.getAbout() != null) {
                 userAbout.setVisibility(View.VISIBLE);
@@ -601,7 +602,11 @@ public class ProfileFragment extends Fragment
     public void onLoggedIn() {
         if (loginView != null && aboutLayout != null) {
             loginView.setVisibility(View.GONE);
-            aboutLayout.setVisibility(View.VISIBLE);
+            if (editLayout.getVisibility() != View.VISIBLE) {
+                aboutLayout.setVisibility(View.VISIBLE);
+            } else {
+                aboutLayout.setVisibility(View.GONE);
+            }
         }
     }
 

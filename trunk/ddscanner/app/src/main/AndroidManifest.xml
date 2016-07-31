@@ -143,6 +143,9 @@
             android:name=".ui.activities.EditorsListActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".ui.activities.ReviewImageSliderActivity"
+            android:screenOrientation="portrait"/>
+        <activity
             android:name=".ui.activities.CheckInPeoplesActivity"
             android:screenOrientation="portrait" />
         <activity
