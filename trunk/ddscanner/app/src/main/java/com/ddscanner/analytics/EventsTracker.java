@@ -72,6 +72,18 @@ public class EventsTracker {
 
     private static final String EVENT_NAME_USER_PROFILE_EDITED = "user_profile_edited";
 
+    // ----------------------------------------------------
+    // Logging
+    // ----------------------------------------------------
+
+    private static final String EVENT_NAME_UNKNOWN_SERVER_ERROR = "unknown_error";
+    private static final String EVENT_PARAMETER_NAME_ERROR_URL = "url";
+    private static final String EVENT_PARAMETER_NAME_ERROR_TEXT = "text";
+
+    // ----------------------------------------------------
+    // ----------------------------------------------------
+    // ----------------------------------------------------
+
     private EventsTracker() {
 
     }
@@ -442,6 +454,25 @@ public class EventsTracker {
 
         // Appsflyer
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_REVIEWER_PROFILE_VIEW, null);
+    }
+
+    public static void trackUnknownServerError(String url, String errorText) {
+        // Google Firebase
+//        Bundle params = new Bundle();
+//        params.putString(EVENT_PARAMETER_NAME_ERROR_TEXT, errorText);
+//        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_UNKNOWN_SERVER_ERROR, params);
+
+        // Flurry
+        Map<String, String> flurryParams = new HashMap<>();
+        flurryParams.put(EVENT_PARAMETER_NAME_ERROR_URL, url);
+        flurryParams.put(EVENT_PARAMETER_NAME_ERROR_TEXT, errorText);
+        FlurryAgent.logEvent(EVENT_NAME_UNKNOWN_SERVER_ERROR, flurryParams);
+
+        // Appsflyer
+        Map<String, Object> appsflyerParams = new HashMap<>();
+        appsflyerParams.put(EVENT_PARAMETER_NAME_ERROR_URL, url);
+        appsflyerParams.put(EVENT_PARAMETER_NAME_ERROR_TEXT, errorText);
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_UNKNOWN_SERVER_ERROR, appsflyerParams);
     }
 
     public enum SpotViewSource {

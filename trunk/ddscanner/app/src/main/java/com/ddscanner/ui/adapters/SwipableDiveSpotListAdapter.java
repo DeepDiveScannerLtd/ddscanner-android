@@ -17,6 +17,7 @@ import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.DiveSpot;
 import com.ddscanner.events.ShowLoginActivityIntent;
+import com.ddscanner.rest.BaseCallback;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.activities.DiveSpotDetailsActivity;
 import com.ddscanner.ui.views.TransformationRoundImage;
@@ -132,54 +133,39 @@ public class SwipableDiveSpotListAdapter
     private void checkOut(String id) {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance()
                 .checkOutUser(id, helpers.getUserQuryMapRequest());
-        call.enqueue(new retrofit2.Callback<ResponseBody>() {
+        call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.raw().code() == 422 || response.raw().code() == 404) {
                     SharedPreferenceHelper.logout();
                     DDScannerApplication.bus.post(new ShowLoginActivityIntent());
                 }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
             }
         });
     }
     private void checkIn(String id) {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance()
                 .checkIn(id, helpers.getRegisterRequest());
-        call.enqueue(new retrofit2.Callback<ResponseBody>() {
+        call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.raw().code() == 422 || response.raw().code() == 404) {
                     SharedPreferenceHelper.logout();
                     DDScannerApplication.bus.post(new ShowLoginActivityIntent());
                 }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
             }
         });
     }
     private void addToFavorites(String id) {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance()
                 .addDiveSpotToFavourites(id, helpers.getRegisterRequest());
-        call.enqueue(new retrofit2.Callback<ResponseBody>() {
+        call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.raw().code() == 422 || response.raw().code() == 404) {
                     SharedPreferenceHelper.logout();
                     DDScannerApplication.bus.post(new ShowLoginActivityIntent());
                 }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
             }
         });
     }
@@ -187,18 +173,13 @@ public class SwipableDiveSpotListAdapter
     private void removeFromFavorites(String id) {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance()
                 .removeSpotFromFavorites(id, helpers.getUserQuryMapRequest());
-        call.enqueue(new retrofit2.Callback<ResponseBody>() {
+        call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.raw().code() == 422 || response.raw().code() == 404) {
                     SharedPreferenceHelper.logout();
                     DDScannerApplication.bus.post(new ShowLoginActivityIntent());
                 }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
             }
         });
     }

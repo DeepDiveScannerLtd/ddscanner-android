@@ -38,6 +38,7 @@ import com.ddscanner.events.LoggedOutEvent;
 import com.ddscanner.events.PickPhotoFromGallery;
 import com.ddscanner.events.ShowLoginActivityIntent;
 import com.ddscanner.events.TakePhotoFromCameraEvent;
+import com.ddscanner.rest.BaseCallback;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.activities.DiveSpotsListActivity;
@@ -64,7 +65,6 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
@@ -324,7 +324,7 @@ public class ProfileFragment extends Fragment
 
     private void getUserDataRequest(String id) {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserInfo(id);
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
@@ -360,11 +360,6 @@ public class ProfileFragment extends Fragment
 
                     }
                 }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
             }
         });
     }
@@ -470,7 +465,7 @@ public class ProfileFragment extends Fragment
                 requestSecret
         );
 
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 materialDialog.dismiss();
@@ -521,6 +516,7 @@ public class ProfileFragment extends Fragment
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
+                super.onFailure(call, t);
                 materialDialog.dismiss();
             }
         });
@@ -536,7 +532,7 @@ public class ProfileFragment extends Fragment
     private void logout() {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance()
                 .logout(helpers.getRegisterRequest());
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 materialDialog.dismiss();
@@ -590,6 +586,7 @@ public class ProfileFragment extends Fragment
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
+                super.onFailure(call, t);
                 materialDialog.dismiss();
             }
         });

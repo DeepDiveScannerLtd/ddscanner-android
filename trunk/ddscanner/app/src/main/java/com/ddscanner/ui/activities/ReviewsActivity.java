@@ -27,6 +27,7 @@ import com.ddscanner.entities.errors.ValidationErrorException;
 import com.ddscanner.events.IsCommentLikedEvent;
 import com.ddscanner.events.ShowLoginActivityIntent;
 import com.ddscanner.events.ShowUserDialogEvent;
+import com.ddscanner.rest.BaseCallback;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.ReviewsListAdapter;
@@ -43,7 +44,6 @@ import java.util.ArrayList;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
@@ -144,7 +144,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
         progressView.setVisibility(View.VISIBLE);
         isHasNewComment = true;
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getComments(diveSpotId, helpers.getUserQuryMapRequest());
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
@@ -195,11 +195,6 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
                         helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
                     }
                 }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
             }
         });
     }

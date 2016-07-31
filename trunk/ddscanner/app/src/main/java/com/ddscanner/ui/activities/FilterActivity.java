@@ -24,6 +24,7 @@ import com.ddscanner.entities.errors.UnknownErrorException;
 import com.ddscanner.entities.errors.UserNotFoundException;
 import com.ddscanner.entities.errors.ValidationErrorException;
 import com.ddscanner.events.FilterChosedEvent;
+import com.ddscanner.rest.BaseCallback;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.SpinnerItemsAdapter;
@@ -45,7 +46,6 @@ import java.util.Map;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
@@ -121,7 +121,7 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
     private void request() {
         materialDialog.show();
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getFilters();
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 materialDialog.dismiss();
@@ -187,11 +187,6 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
                         helpers.showToast(FilterActivity.this, R.string.toast_server_error);
                     }
                 }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                // TODO Handle errors
             }
         });
     }

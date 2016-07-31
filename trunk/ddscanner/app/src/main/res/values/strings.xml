@@ -192,4 +192,6 @@
     <string name="google_analytics_trackingId">UA-75833949-1</string>
     <string name="dive_centers">Dive Centers</string>
     <string name="dive_spos">" dive spots"</string>
+
+    <string name="unknown_error">Unknown error occurred. A bug report was captured. Please try again later.</string>
 </resources>

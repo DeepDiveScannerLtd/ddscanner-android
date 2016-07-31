@@ -28,7 +28,7 @@ import com.ddscanner.entities.errors.UserNotFoundException;
 import com.ddscanner.entities.errors.ValidationErrorException;
 import com.ddscanner.events.IsCommentLikedEvent;
 import com.ddscanner.events.ShowLoginActivityIntent;
-import com.ddscanner.events.ShowUserDialogEvent;
+import com.ddscanner.rest.BaseCallback;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.activities.ForeignProfileActivity;
@@ -45,7 +45,6 @@ import java.util.ArrayList;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
@@ -209,7 +208,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().likeComment(
                 id, helpers.getRegisterRequest()
         );
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
@@ -264,11 +263,6 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
                     }
                 }
             }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.i(TAG, "failure");
-            }
         });
     }
 
@@ -282,7 +276,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().dislikeComment(
                 id, helpers.getRegisterRequest()
         );
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
@@ -336,11 +330,6 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
                         helpers.showToast(context, R.string.toast_server_error);
                     }
                 }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
             }
         });
     }

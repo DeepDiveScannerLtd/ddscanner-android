@@ -33,6 +33,7 @@ import com.ddscanner.entities.errors.ServerInternalErrorException;
 import com.ddscanner.entities.errors.UnknownErrorException;
 import com.ddscanner.entities.errors.UserNotFoundException;
 import com.ddscanner.entities.errors.ValidationErrorException;
+import com.ddscanner.rest.BaseCallback;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.SwipableDiveSpotListAdapter;
@@ -50,7 +51,6 @@ import java.util.Map;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
@@ -138,7 +138,7 @@ public class UsersDivespotListSwipableActivity extends AppCompatActivity {
         }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUsersCheckins(
                 SharedPreferenceHelper.getUserServerId(), map);
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
@@ -190,11 +190,6 @@ public class UsersDivespotListSwipableActivity extends AppCompatActivity {
                         helpers.showToast(UsersDivespotListSwipableActivity.this, R.string.toast_server_error);
                     }
                 }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
             }
         });
     }
@@ -210,7 +205,7 @@ public class UsersDivespotListSwipableActivity extends AppCompatActivity {
         }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUsersFavorites(
                 SharedPreferenceHelper.getUserServerId(), map);
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
@@ -262,11 +257,6 @@ public class UsersDivespotListSwipableActivity extends AppCompatActivity {
                         helpers.showToast(UsersDivespotListSwipableActivity.this, R.string.toast_server_error);
                     }
                 }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
             }
         });
     }

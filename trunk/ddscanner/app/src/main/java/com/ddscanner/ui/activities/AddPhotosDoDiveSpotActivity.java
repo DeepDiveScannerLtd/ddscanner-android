@@ -24,6 +24,7 @@ import com.ddscanner.entities.errors.ServerInternalErrorException;
 import com.ddscanner.entities.errors.UnknownErrorException;
 import com.ddscanner.entities.errors.UserNotFoundException;
 import com.ddscanner.entities.errors.ValidationErrorException;
+import com.ddscanner.rest.BaseCallback;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.AllPhotosDiveSpotAdapter;
@@ -42,7 +43,6 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
@@ -119,7 +119,7 @@ public class AddPhotosDoDiveSpotActivity extends AppCompatActivity implements Vi
         }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().addImagesToDiveSpot(dsId,
                 requestType, imagesToSend, requestToken, requestSocial, requestSecret);
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 materialDialog.dismiss();
@@ -164,11 +164,6 @@ public class AddPhotosDoDiveSpotActivity extends AppCompatActivity implements Vi
                     setResult(Activity.RESULT_OK, returnIntent);
                     finish();
                 }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable throwable) {
-
             }
         });
     }

@@ -19,6 +19,7 @@ import com.ddscanner.events.FilterChosedEvent;
 import com.ddscanner.events.MarkerClickEvent;
 import com.ddscanner.events.OnMapClickEvent;
 import com.ddscanner.events.PlaceChoosedEvent;
+import com.ddscanner.rest.BaseCallback;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.fragments.MapListFragment;
 import com.ddscanner.utils.LogUtils;
@@ -47,7 +48,6 @@ import java.util.Map;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.Callback;
 
 public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements ClusterManager.OnClusterClickListener<DiveSpot>, GoogleMap.OnMapClickListener {
 
@@ -329,7 +329,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
                 LogUtils.i(TAG, "get dive spots request parameter: " + entry.getKey() + " " + entry.getValue());
             }
             Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDivespots(diveSpotsRequestMap);
-            call.enqueue(new Callback<ResponseBody>() {
+            call.enqueue(new BaseCallback() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
                     if (response.isSuccessful()) {
@@ -347,11 +347,6 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
                     } else {
                         hidePb();
                     }
-                }
-
-                @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    // TODO Handle errors
                 }
             });
         }

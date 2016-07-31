@@ -30,6 +30,7 @@ import com.ddscanner.entities.errors.ServerInternalErrorException;
 import com.ddscanner.entities.errors.UnknownErrorException;
 import com.ddscanner.entities.errors.UserNotFoundException;
 import com.ddscanner.entities.errors.ValidationErrorException;
+import com.ddscanner.rest.BaseCallback;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.utils.Constants;
@@ -55,7 +56,6 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.ddscanner.utils.Constants.MULTIPART_TYPE_TEXT;
@@ -289,7 +289,7 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
                 requestName, requestDistribution, requestHabitat, body, requestScname,
                 requestLength, requestWeight, requestDepth, requestOrder, requestClass,
                 requestToken, requestSocial, requestSecret);
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 progressDialogUpload.dismiss();
@@ -350,11 +350,6 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
 
                     }
                 }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                LogUtils.e(TAG, t.getMessage());
             }
         });
     }

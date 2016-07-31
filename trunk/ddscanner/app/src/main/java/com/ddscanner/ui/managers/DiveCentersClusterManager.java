@@ -18,6 +18,7 @@ import com.ddscanner.entities.DiveCentersResponseEntity;
 import com.ddscanner.events.DiveCenterMarkerClickEvent;
 import com.ddscanner.events.OnMapClickEvent;
 import com.ddscanner.events.PutDiveCentersToListEvent;
+import com.ddscanner.rest.BaseCallback;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.activities.DiveCenterDetailsActivity;
 import com.google.android.gms.maps.CameraUpdate;
@@ -46,7 +47,6 @@ import java.util.Map;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.Callback;
 
 public class DiveCentersClusterManager extends ClusterManager<DiveCenter> implements ClusterManager.OnClusterClickListener<DiveCenter>, GoogleMap.OnMapClickListener {
 
@@ -265,7 +265,7 @@ public class DiveCentersClusterManager extends ClusterManager<DiveCenter> implem
         map.put("lngRight", String.valueOf(latLng.longitude + 2.0));
         map.put("latRight", String.valueOf(latLng.latitude + 2.0));
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveCenters(map);
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
@@ -294,11 +294,6 @@ public class DiveCentersClusterManager extends ClusterManager<DiveCenter> implem
 //                        Log.i(TAG, json);
 //                    }
                 }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                // TODO Handle errors
             }
         });
     }

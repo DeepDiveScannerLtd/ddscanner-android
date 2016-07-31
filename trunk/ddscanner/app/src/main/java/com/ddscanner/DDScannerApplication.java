@@ -48,9 +48,9 @@ public class DDScannerApplication extends Application {
     public void onCreate() {
         super.onCreate();
         TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
-        if (!BuildConfig.DEBUG) {
+//        if (!BuildConfig.DEBUG) {
             Fabric.with(this, new Crashlytics(), new Twitter(authConfig));
-        }
+//        }
         FacebookSdk.sdkInitialize(this);
         instance = this;
         Fresco.initialize(this);

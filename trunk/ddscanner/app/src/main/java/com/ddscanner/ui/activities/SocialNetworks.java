@@ -29,6 +29,7 @@ import com.ddscanner.entities.errors.UserNotFoundException;
 import com.ddscanner.entities.errors.ValidationErrorException;
 import com.ddscanner.entities.request.RegisterRequest;
 import com.ddscanner.events.LoggedInEvent;
+import com.ddscanner.rest.BaseCallback;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.utils.Helpers;
@@ -214,7 +215,7 @@ public class SocialNetworks extends AppCompatActivity
     private void sendRegisterRequest(final RegisterRequest userData, final SignInType signInType) {
         materialDialog.show();
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().registerUser(userData);
-        call.enqueue(new retrofit2.Callback<ResponseBody>() {
+        call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call,
                                    retrofit2.Response<ResponseBody> response) {
@@ -279,7 +280,7 @@ public class SocialNetworks extends AppCompatActivity
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                // TODO Handle errors
+                super.onFailure(call, t);
                 materialDialog.dismiss();
             }
         });

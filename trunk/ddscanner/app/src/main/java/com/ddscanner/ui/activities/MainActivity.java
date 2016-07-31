@@ -22,7 +22,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
-import com.ddscanner.entities.DiveSpot;
 import com.ddscanner.entities.RegisterResponse;
 import com.ddscanner.entities.SignInType;
 import com.ddscanner.entities.errors.BadRequestException;
@@ -50,6 +49,7 @@ import com.ddscanner.events.PickPhotoFromGallery;
 import com.ddscanner.events.PlaceChoosedEvent;
 import com.ddscanner.events.ShowLoginActivityIntent;
 import com.ddscanner.events.TakePhotoFromCameraEvent;
+import com.ddscanner.rest.BaseCallback;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.MainActivityPagerAdapter;
@@ -78,7 +78,6 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.gson.Gson;
 import com.squareup.otto.Subscribe;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -89,7 +88,6 @@ import java.util.Date;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
@@ -462,7 +460,7 @@ public class MainActivity extends BaseAppCompatActivity
     private void sendRegisterRequest(final RegisterRequest userData, final SignInType signInType) {
         materialDialog.show();
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().registerUser(userData);
-        call.enqueue(new retrofit2.Callback<ResponseBody>() {
+        call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call,
                                    retrofit2.Response<ResponseBody> response) {
@@ -523,7 +521,7 @@ public class MainActivity extends BaseAppCompatActivity
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                // TODO Handle errors
+                super.onFailure(call, t);
                 materialDialog.dismiss();
             }
         });
@@ -531,7 +529,7 @@ public class MainActivity extends BaseAppCompatActivity
 
     private void validateIdToken() {
         Call<ResponseBody> call = RestClient.getGoogleApisServiceInstance().getTokenInfo("eyJhbGciOiJSUzI1NiIsImtpZCI6IjIyZjJiN2RjMzI5ZWIxMWU0ZTA1MjEzMjRjNjZiZGJmNjNiYzNhNzIifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhdWQiOiIxOTU3MDY5MTQ2MTgtaXN0OWY4aW5zNDg1azJnZ2xib21nZHA0bDJwbjU3aXEuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMDA4MjExMDgxMDk2NzM2OTc1NjMiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiYXpwIjoiMTk1NzA2OTE0NjE4LXUydGlsdTZ0cGU3bDA2bzNjZzcwNWJlZzB0bmdqMmdpLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwiZW1haWwiOiJteWxhbmd2dWlAZ21haWwuY29tIiwiaWF0IjoxNDY4MTYxMTk0LCJleHAiOjE0NjgxNjQ3OTQsIm5hbWUiOiJMYW5nIFZ1aSIsImdpdmVuX25hbWUiOiJMYW5nIiwiZmFtaWx5X25hbWUiOiJWdWkiLCJsb2NhbGUiOiJlbiJ9.PcDkSOYFFv8TvkPM9LfZ2F5TaNOk6aLy0x8kqci4RLmisWAbomnnBtlPhZ-KVgsmjvTevwKb8DDCkJysxLkngh8ZjuPj-wDbNrPaHQMiawFW1pABorygWLU7fbd2ddnj6lY7DabeI1YW_fnux1Ep_36WUULGyz5YPstA0zsZNUWC9ndu_m-kTnlL-di5WXaqLadD9YMisZMStgYrTzr7LCwtg_x1A5xo2zCr5wISjI7eQN4xoRX9kff7vCoJMCUPmK-jyBnM62DRelxEELvhVppUl5ypqY6GHkajA8t8viug7ZdPbUh9i8OlGY3hCvCFilNALVDVRLZFbjXqTZPQ6Q");
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 Log.i(TAG, "createAddDiveSpotRequest success");
@@ -555,11 +553,6 @@ public class MainActivity extends BaseAppCompatActivity
 
                     }
                 }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
             }
         });
     }

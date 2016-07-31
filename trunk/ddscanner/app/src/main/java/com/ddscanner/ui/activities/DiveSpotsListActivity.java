@@ -24,6 +24,7 @@ import com.ddscanner.entities.errors.ServerInternalErrorException;
 import com.ddscanner.entities.errors.UnknownErrorException;
 import com.ddscanner.entities.errors.UserNotFoundException;
 import com.ddscanner.entities.errors.ValidationErrorException;
+import com.ddscanner.rest.BaseCallback;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.DiveSpotsListAdapter;
@@ -39,7 +40,6 @@ import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
@@ -115,7 +115,7 @@ public class DiveSpotsListActivity extends AppCompatActivity {
     private void getAddedList() {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUsersAdded(
                 SharedPreferenceHelper.getUserServerId(), helpers.getUserQuryMapRequest());
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
@@ -167,11 +167,6 @@ public class DiveSpotsListActivity extends AppCompatActivity {
                         helpers.showToast(DiveSpotsListActivity.this, R.string.toast_server_error);
                     }
                 }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
             }
         });
     }
@@ -179,7 +174,7 @@ public class DiveSpotsListActivity extends AppCompatActivity {
     private void getEditedList() {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUsersEdited(
                 SharedPreferenceHelper.getUserServerId(), helpers.getUserQuryMapRequest());
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
@@ -231,11 +226,6 @@ public class DiveSpotsListActivity extends AppCompatActivity {
                         helpers.showToast(DiveSpotsListActivity.this, R.string.toast_server_error);
                     }
                 }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
             }
         });
     }

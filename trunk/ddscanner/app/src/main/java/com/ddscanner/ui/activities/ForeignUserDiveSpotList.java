@@ -1,7 +1,6 @@
 package com.ddscanner.ui.activities;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -24,6 +23,7 @@ import com.ddscanner.entities.errors.ServerInternalErrorException;
 import com.ddscanner.entities.errors.UnknownErrorException;
 import com.ddscanner.entities.errors.UserNotFoundException;
 import com.ddscanner.entities.errors.ValidationErrorException;
+import com.ddscanner.rest.BaseCallback;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.DiveSpotsListAdapter;
@@ -38,7 +38,6 @@ import java.util.ArrayList;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
@@ -82,7 +81,7 @@ public class ForeignUserDiveSpotList extends AppCompatActivity {
 
     private void getAddedDiveSpotList() {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUsersAdded(userId, helpers.getUserQuryMapRequest());
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
@@ -133,17 +132,12 @@ public class ForeignUserDiveSpotList extends AppCompatActivity {
                     }
                 }
             }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-            }
         });
     }
 
     private void getEditedDiveSpotList() {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUsersEdited(userId, helpers.getUserQuryMapRequest());
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
@@ -194,17 +188,12 @@ public class ForeignUserDiveSpotList extends AppCompatActivity {
                     }
                 }
             }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-            }
         });
     }
 
     private void getUsersCheckinList() {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUsersCheckins(userId, helpers.getUserQuryMapRequest());
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
@@ -254,11 +243,6 @@ public class ForeignUserDiveSpotList extends AppCompatActivity {
                         helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
                     }
                 }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
             }
         });
     }

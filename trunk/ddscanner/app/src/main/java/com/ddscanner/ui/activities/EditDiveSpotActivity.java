@@ -38,6 +38,7 @@ import com.ddscanner.entities.errors.UnknownErrorException;
 import com.ddscanner.entities.errors.UserNotFoundException;
 import com.ddscanner.entities.errors.ValidationErrorException;
 import com.ddscanner.events.ImageDeletedEvent;
+import com.ddscanner.rest.BaseCallback;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.AddPhotoToDsListAdapter;
@@ -70,7 +71,6 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 public class EditDiveSpotActivity extends AppCompatActivity implements View.OnClickListener {
@@ -260,7 +260,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
 
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveSpotForEdit(
                 diveSpotId, helpers.getUserQuryMapRequest());
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (!response.isSuccessful()) {
@@ -318,11 +318,6 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
                     loadFiltersDataRequest();
                     setUi();
                 }
-
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
 
             }
         });
@@ -516,7 +511,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
                 requestDescription, sealifeRequest, newImages, deletedImages, requestToken,
                 requestSocial, requestSecret
         );
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (!response.isSuccessful()) {
@@ -567,6 +562,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
+                super.onFailure(call, t);
                 progressDialogUpload.dismiss();
             }
         });
@@ -575,7 +571,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
     private void loadFiltersDataRequest() {
 
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getFilters();
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
@@ -625,10 +621,6 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
                 }
             }
 
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                // TODO Handle errors
-            }
         });
     }
 

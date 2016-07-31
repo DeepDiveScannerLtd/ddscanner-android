@@ -1,7 +1,6 @@
 package com.ddscanner.ui.activities;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -24,6 +23,7 @@ import com.ddscanner.entities.errors.ServerInternalErrorException;
 import com.ddscanner.entities.errors.UnknownErrorException;
 import com.ddscanner.entities.errors.UserNotFoundException;
 import com.ddscanner.entities.errors.ValidationErrorException;
+import com.ddscanner.rest.BaseCallback;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.ForeignUserLikesAdapter;
@@ -38,7 +38,6 @@ import java.util.ArrayList;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
@@ -79,7 +78,7 @@ public class ForeignUserLikesDislikesActivity extends AppCompatActivity {
 
     private void getUserDislikes() {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getForeignUserDislikes(userId, helpers.getUserQuryMapRequest());
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
@@ -130,17 +129,12 @@ public class ForeignUserLikesDislikesActivity extends AppCompatActivity {
                     }
                 }
             }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-            }
         });
     }
 
     private void getUserLikes() {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getForeignUserLikes(userId, helpers.getUserQuryMapRequest());
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
@@ -190,11 +184,6 @@ public class ForeignUserLikesDislikesActivity extends AppCompatActivity {
                         helpers.showToast(ForeignUserLikesDislikesActivity.this, R.string.toast_server_error);
                     }
                 }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
             }
         });
     }

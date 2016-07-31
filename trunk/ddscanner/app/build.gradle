@@ -29,7 +29,7 @@ android {
     }
     buildTypes {
         debug {
-            ext.enableCrashlytics = false
+//            ext.enableCrashlytics = false
             applicationIdSuffix ".debug"
             resValue "string", "appsflyer_dev_key", "5A7vyAMVwKT4RBiTaxrpSU"
             resValue "string", "flurry_api_key", "DQ8GM2FPPSTBGK7QX4D8"
@@ -70,7 +70,7 @@ dependencies {
         transitive = true;
     }
     // compile 'com.google.android.gms:play-services:8.4.0'
-    compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.1@aar') {
         transitive = true;
     }
     compile 'org.solovyev.android.views:linear-layout-manager:0.5@aar'

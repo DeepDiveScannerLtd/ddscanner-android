@@ -25,6 +25,7 @@ import com.ddscanner.entities.errors.UnknownErrorException;
 import com.ddscanner.entities.errors.UserNotFoundException;
 import com.ddscanner.entities.errors.ValidationErrorException;
 import com.ddscanner.events.LoggedOutEvent;
+import com.ddscanner.rest.BaseCallback;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.NotificationsPagerAdapter;
@@ -43,7 +44,6 @@ import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
@@ -173,7 +173,7 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
     private void getUserNotifications() {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getNotifications(
                 SharedPreferenceHelper.getUserServerId(), helpers.getUserQuryMapRequest());
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 String responseString = "";
@@ -233,11 +233,6 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
                         helpers.showToast(getContext(), R.string.toast_server_error);
                     }
                 }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable throwable) {
-
             }
         });
     }

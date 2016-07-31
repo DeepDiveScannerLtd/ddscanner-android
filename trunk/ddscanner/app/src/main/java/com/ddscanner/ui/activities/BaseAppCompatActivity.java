@@ -7,6 +7,7 @@ import android.util.Log;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.entities.request.IdentifyRequest;
 import com.ddscanner.events.UserSuccessfullyIdentifiedEvent;
+import com.ddscanner.rest.BaseCallback;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.utils.LocationHelper;
 import com.ddscanner.utils.LogUtils;
@@ -67,7 +68,7 @@ public class BaseAppCompatActivity extends AppCompatActivity {
 
     public void identifyUser(String lat, String lng) {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().identify(getUserIdentifyData(lat, lng));
-        call.enqueue(new retrofit2.Callback<ResponseBody>() {
+        call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
@@ -81,13 +82,6 @@ public class BaseAppCompatActivity extends AppCompatActivity {
                     }
                 }
             }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.i(TAG, "identifyUser onFailure");
-                t.printStackTrace();
-            }
-
         });
     }
 

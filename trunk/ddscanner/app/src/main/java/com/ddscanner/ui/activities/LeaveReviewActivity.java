@@ -35,6 +35,7 @@ import com.ddscanner.entities.errors.UnknownErrorException;
 import com.ddscanner.entities.errors.UserNotFoundException;
 import com.ddscanner.entities.errors.ValidationErrorException;
 import com.ddscanner.events.ImageDeletedEvent;
+import com.ddscanner.rest.BaseCallback;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.AddPhotoToDsListAdapter;
@@ -58,7 +59,6 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
@@ -237,7 +237,7 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
                 requestSocial,
                 requestSecret
         );
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.raw().isSuccessful()) {
@@ -292,11 +292,6 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
                         helpers.showToast(LeaveReviewActivity.this, R.string.toast_server_error);
                     }
                 }
-
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
 
             }
         });

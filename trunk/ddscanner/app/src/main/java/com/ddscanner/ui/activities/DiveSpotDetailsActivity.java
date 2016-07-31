@@ -58,6 +58,7 @@ import com.ddscanner.entities.errors.UserNotFoundException;
 import com.ddscanner.entities.errors.ValidationErrorException;
 import com.ddscanner.entities.request.ValidationReguest;
 import com.ddscanner.events.OpenPhotosActivityEvent;
+import com.ddscanner.rest.BaseCallback;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.DiveSpotsPhotosAdapter;
@@ -67,7 +68,6 @@ import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
-import com.flurry.android.FlurryAgent;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -495,7 +495,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             }
         }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveSpotById(productId, map);
-        call.enqueue(new retrofit2.Callback<ResponseBody>() {
+        call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
@@ -514,11 +514,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 } else {
 
                 }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                // TODO Handle errors
             }
         });
     }
@@ -672,7 +667,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 String.valueOf(divespotDetails.getDivespot().getId()),
                 helpers.getRegisterRequest()
         );
-        call.enqueue(new retrofit2.Callback<ResponseBody>() {
+        call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
@@ -717,11 +712,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                     }
                 }
             }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-            }
         });
     }
 
@@ -756,7 +746,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 String.valueOf(divespotDetails.getDivespot().getId()),
                 helpers.getUserQuryMapRequest()
         );
-        call.enqueue(new retrofit2.Callback<ResponseBody>() {
+        call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (!response.isSuccessful()) {
@@ -801,11 +791,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                     getCheckins();
                 }
             }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-            }
         });
     }
 
@@ -844,7 +829,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance()
                 .divespotValidation(String.valueOf(divespotDetails.getDivespot().getId()),
                         validationReguest);
-        call.enqueue(new retrofit2.Callback<ResponseBody>() {
+        call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 materialDialog.dismiss();
@@ -877,11 +862,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                     }
                 }
             }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-            }
         });
     }
 
@@ -896,7 +876,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 String.valueOf(diveSpot.getId()),
                 helpers.getRegisterRequest()
         );
-        call.enqueue(new retrofit2.Callback<ResponseBody>() {
+        call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.raw().code() == 200) {
@@ -941,11 +921,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                     }
                 }
             }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-            }
         });
     }
 
@@ -957,7 +932,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance()
                 .removeSpotFromFavorites(id, helpers.getUserQuryMapRequest());
-        call.enqueue(new retrofit2.Callback<ResponseBody>() {
+        call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.raw().code() == 200) {
@@ -1002,17 +977,12 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                     }
                 }
             }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-            }
         });
     }
 
     private void getCheckins() {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getCheckins(String.valueOf(diveSpot.getId()));
-        call.enqueue(new retrofit2.Callback<ResponseBody>() {
+        call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 String responseString = "";
@@ -1034,18 +1004,13 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                     }
                 }
             }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-            }
         });
     }
 
     private void getComments() {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance()
                 .getComments(String.valueOf(diveSpot.getId()), helpers.getUserQuryMapRequest());
-        call.enqueue(new retrofit2.Callback<ResponseBody>() {
+        call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 String responseString = "";
@@ -1065,11 +1030,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
                     }
                 }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
             }
         });
     }
