@@ -43,7 +43,7 @@ public class EditorsUsersListAdapter extends RecyclerView.Adapter<EditorsUsersLi
     }
 
     @Override
-    public void onBindViewHolder(EditorsUsersListViewHolder holder, int position) {
+    public void onBindViewHolder(EditorsUsersListViewHolder holder, final int position) {
         if (!userArrayList.get(position).getPicture().contains("http")) {
             holder.userAvatar.setImageDrawable(context.getResources().getDrawable(R.mipmap.ic_launcher));
         } else {
@@ -60,6 +60,14 @@ public class EditorsUsersListAdapter extends RecyclerView.Adapter<EditorsUsersLi
         } else {
             holder.info.setText(R.string.editor);
         }
+        if (userArrayList.get(position).getAuthor() != null && userArrayList.get(position).getAuthor().equals("social")) {
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ForeignProfileActivity.show(context, userArrayList.get(position).getId());
+                }
+            });
+        }
     }
 
     @Override
@@ -75,7 +83,7 @@ public class EditorsUsersListAdapter extends RecyclerView.Adapter<EditorsUsersLi
 
         public EditorsUsersListViewHolder(View v) {
             super(v);
-            v.setOnClickListener(this);
+//            v.setOnClickListener(this);
             userAvatar = (ImageView) v.findViewById(R.id.user_avatar);
             userName = (TextView) v.findViewById(R.id.user_name);
             info = (TextView) v.findViewById(R.id.count);
@@ -83,12 +91,9 @@ public class EditorsUsersListAdapter extends RecyclerView.Adapter<EditorsUsersLi
 
         @Override
         public void onClick(View v) {
-            if (userArrayList.get(getAdapterPosition()).getSocialId() != null) {
-                ForeignProfileActivity.show(context, userArrayList.get(getAdapterPosition()).getId());
-            }
-            if (userArrayList.get(getAdapterPosition()).getAuthor() != null && userArrayList.get(getAdapterPosition()).getAuthor().equals("social")) {
-                ForeignProfileActivity.show(context, userArrayList.get(getAdapterPosition()).getId());
-            }
+//            if (userArrayList.get(getAdapterPosition()).getAuthor() != null && userArrayList.get(getAdapterPosition()).getAuthor().equals("social")) {
+//                ForeignProfileActivity.show(context, userArrayList.get(getAdapterPosition()).getId());
+//            }
         }
     }
 
