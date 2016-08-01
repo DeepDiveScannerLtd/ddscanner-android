@@ -437,12 +437,12 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
             rc.setAdapter(productListAdapter);
         }
 
-        if (!diveSpots.isEmpty()) {
-            rc.setVisibility(View.VISIBLE);
-            please.setVisibility(View.GONE);
-        } else {
+        if (diveSpots == null || diveSpots.isEmpty() || diveSpots.size() == 0) {
             rc.setVisibility(View.GONE);
             please.setVisibility(View.VISIBLE);
+        } else {
+            rc.setVisibility(View.VISIBLE);
+            please.setVisibility(View.GONE);
         }
 
     }
