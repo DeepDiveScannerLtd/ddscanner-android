@@ -251,6 +251,7 @@ public class ProfileFragment extends Fragment
             case R.id.cancel_button:
                 isClickedChosingPhotoButton = false;
                 aboutLayout.setVisibility(View.VISIBLE);
+                aboutLayout.scrollTo(0,0);
                 editLayout.setVisibility(View.GONE);
                 View view = getActivity().getCurrentFocus();
                 if (view != null) {
@@ -331,7 +332,9 @@ public class ProfileFragment extends Fragment
                     String responseString = "";
                     if (response.raw().code() == 200) {
                         try {
-                            aboutLayout.setVisibility(View.VISIBLE);
+                            if (editLayout.getVisibility() != View.VISIBLE) {
+                                aboutLayout.setVisibility(View.VISIBLE);
+                            }
                             responseString = response.body().string();
                             JSONObject jsonObject = new JSONObject(responseString);
                             responseString = jsonObject.getString("user");
@@ -481,6 +484,7 @@ public class ProfileFragment extends Fragment
                             uri = null;
                             changeUi(user);
                             aboutLayout.setVisibility(View.VISIBLE);
+                            aboutLayout.scrollTo(0,0);
                             editLayout.setVisibility(View.GONE);
                         } catch (IOException e) {
 
