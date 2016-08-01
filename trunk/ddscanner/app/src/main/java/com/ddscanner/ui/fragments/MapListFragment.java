@@ -101,8 +101,6 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
     private Marker myLocationMarker;
     private Circle circle;
     private ProgressView progressBarMyLocation;
-    private Marker clickedMarker;
-    private boolean isMarkerNew;
 
     public BaseAppCompatActivity baseAppCompatActivity;
 
@@ -364,12 +362,12 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
 
     @Subscribe
     public void dismissInfoWindowWhenCameraZoomingOut(CloseInfoWindowEvent event) {
-        if (clickedMarker != null) {
+        if (diveSpotsClusterManager != null && diveSpotsClusterManager.getLastClickedMarker() != null) {
             try {
-                if (isMarkerNew) {
-                    clickedMarker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.ic_ds_new)));
+                if (diveSpotsClusterManager.isLastClickedMarkerNew()) {
+                    diveSpotsClusterManager.getLastClickedMarker().setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.ic_ds_new)));
                 } else {
-                    clickedMarker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.ic_ds)));
+                    diveSpotsClusterManager.getLastClickedMarker().setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.ic_ds)));
                 }
             } catch (NullPointerException e) {
 
@@ -377,7 +375,6 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
 
             }
         }
-        clickedMarker = null;
         mapControlLayout.animate().translationY(0);
         addDsFab.animate().translationY(0);
         mapListFAB.animate().translationY(0);

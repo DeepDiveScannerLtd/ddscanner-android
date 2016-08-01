@@ -453,4 +453,12 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
     public void setUserCurrentLocationMarker(Marker userCurrentLocationMarker) {
         this.userCurrentLocationMarker = userCurrentLocationMarker;
     }
+
+    public Marker getLastClickedMarker() {
+        return lastClickedMarker;
+    }
+
+    public boolean isLastClickedMarkerNew() {
+        return diveSpotsMap.get(lastClickedMarker.getPosition()).getStatus().equals("waiting");
+    }
 }
