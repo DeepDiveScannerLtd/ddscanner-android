@@ -78,27 +78,17 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
         allNotificationsFragment = new AllNotificationsFragment();
         activityNotificationsFragment = new ActivityNotificationsFragment();
         setupViewPager();
-        if (isViewNull) {
-            if (SharedPreferenceHelper.isUserLoggedIn()) {
-                progressView.setVisibility(View.VISIBLE);
-                notificationsViewPager.setVisibility(View.GONE);
-                getUserNotifications();
-            }
+        if (SharedPreferenceHelper.isUserLoggedIn()) {
+            progressView.setVisibility(View.VISIBLE);
+            notificationsViewPager.setVisibility(View.GONE);
+            getUserNotifications();
+        }
+        if (SharedPreferenceHelper.isUserLoggedIn()) {
+            onLoggedIn();
+        } else {
+            onLoggedOut();
         }
         return view;
-    }
-
-    public void clean() {
-        FragmentTransaction transition = getFragmentManager().beginTransaction();
-        if (allNotificationsFragment != null) {
-            transition.remove(allNotificationsFragment);
-            allNotificationsFragment = null;
-        }
-        if (activityNotificationsFragment != null) {
-            transition.remove(activityNotificationsFragment);
-            activityNotificationsFragment = null;
-        }
-        transition.commit();
     }
 
     private void findViews(View v) {
@@ -135,6 +125,12 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
             Date date1 = new Date();
             long currentDateInMillis = date1.getTime();
             SharedPreferenceHelper.setLastShowingNotificationTime(currentDateInMillis);
+        } else {
+            if (SharedPreferenceHelper.isUserLoggedIn()) {
+                progressView.setVisibility(View.VISIBLE);
+                notificationsViewPager.setVisibility(View.GONE);
+                getUserNotifications();
+            }
         }
         if (!getUserVisibleHint()) {
             return;
@@ -159,10 +155,16 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
         if (visible) {
             if (getView() != null) {
                 isViewNull = false;
-                if (SharedPreferenceHelper.isUserLoggedIn()) {
-                    progressView.setVisibility(View.VISIBLE);
-                    notificationsViewPager.setVisibility(View.GONE);
-                    getUserNotifications();
+                if (DDScannerApplication.isActivitiesFragmentVisible) {
+                    Date date1 = new Date();
+                    long currentDateInMillis = date1.getTime();
+                    SharedPreferenceHelper.setLastShowingNotificationTime(currentDateInMillis);
+                } else {
+                    if (SharedPreferenceHelper.isUserLoggedIn()) {
+                        progressView.setVisibility(View.VISIBLE);
+                        notificationsViewPager.setVisibility(View.GONE);
+                        getUserNotifications();
+                    }
                 }
             } else {
                 isViewNull = true;
