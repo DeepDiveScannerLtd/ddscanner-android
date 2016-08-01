@@ -203,6 +203,7 @@
                         android:id="@+id/creator_avatar"
                         android:layout_width="@dimen/editor_item_height"
                         android:layout_height="@dimen/editor_item_height"
+                        android:src="@mipmap/ic_launcher"
                         android:padding="12dp"
                         android:layout_centerVertical="true" />
 
@@ -226,6 +227,7 @@
 
                     <ImageView
                         android:id="@+id/expand_editors_arrow"
+                        android:visibility="gone"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"

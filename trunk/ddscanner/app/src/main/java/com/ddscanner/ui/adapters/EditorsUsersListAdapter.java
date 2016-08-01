@@ -44,12 +44,16 @@ public class EditorsUsersListAdapter extends RecyclerView.Adapter<EditorsUsersLi
 
     @Override
     public void onBindViewHolder(EditorsUsersListViewHolder holder, int position) {
-        Picasso.with(context)
-                .load(userArrayList.get(position).getPicture())
-                .resize(Math.round(helpers.convertDpToPixel(58, context)), Math.round(helpers.convertDpToPixel(58, context)))
-                .centerCrop()
-                .transform(new CropCircleTransformation())
-                .into(holder.userAvatar);
+        if (!userArrayList.get(position).getPicture().contains("http")) {
+            holder.userAvatar.setImageDrawable(context.getResources().getDrawable(R.mipmap.ic_launcher));
+        } else {
+            Picasso.with(context)
+                    .load(userArrayList.get(position).getPicture())
+                    .resize(Math.round(helpers.convertDpToPixel(58, context)), Math.round(helpers.convertDpToPixel(58, context)))
+                    .centerCrop()
+                    .transform(new CropCircleTransformation())
+                    .into(holder.userAvatar);
+        }
         holder.userName.setText(userArrayList.get(position).getName());
         if (position == 0) {
             holder.info.setText(R.string.creator);
@@ -79,7 +83,12 @@ public class EditorsUsersListAdapter extends RecyclerView.Adapter<EditorsUsersLi
 
         @Override
         public void onClick(View v) {
-            ForeignProfileActivity.show(context, userArrayList.get(getAdapterPosition()).getId());
+            if (userArrayList.get(getAdapterPosition()).getSocialId() != null) {
+                ForeignProfileActivity.show(context, userArrayList.get(getAdapterPosition()).getId());
+            }
+            if (userArrayList.get(getAdapterPosition()).getAuthor() != null && userArrayList.get(getAdapterPosition()).getAuthor().equals("social")) {
+                ForeignProfileActivity.show(context, userArrayList.get(getAdapterPosition()).getId());
+            }
         }
     }
 

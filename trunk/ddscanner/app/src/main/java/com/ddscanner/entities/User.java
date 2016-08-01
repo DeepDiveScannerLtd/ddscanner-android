@@ -25,6 +25,15 @@ public class User implements Serializable, Parcelable{
     private String countComment;
     private String id;
     private String countFavorite;
+    private String author;
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
 
     private boolean imageContainsHttp = true;
 
@@ -34,6 +43,11 @@ public class User implements Serializable, Parcelable{
 
     public void setCountFavorite(String countFavorite) {
         this.countFavorite = countFavorite;
+    }
+
+    public User(String name, String picture) {
+        this.name = name;
+        this.picture = picture;
     }
 
     protected User(Parcel in) {
@@ -52,6 +66,7 @@ public class User implements Serializable, Parcelable{
         countComment = in.readString();
         id = in.readString();
         countFavorite = in.readString();
+        author = in.readString();
     }
 
     public static final Creator<User> CREATOR = new Creator<User>() {
@@ -88,6 +103,7 @@ public class User implements Serializable, Parcelable{
         dest.writeString(countComment);
         dest.writeString(id);
         dest.writeString(countFavorite);
+        dest.writeString(author);
     }
 
     public String getSocialId() {

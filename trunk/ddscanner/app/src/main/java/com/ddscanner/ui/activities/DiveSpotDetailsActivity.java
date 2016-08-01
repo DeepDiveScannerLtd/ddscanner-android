@@ -11,6 +11,7 @@ import android.content.res.Resources;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Parcel;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -291,7 +292,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         showDiveCenters.setOnClickListener(this);
         btnDsDetailsIsValid.setOnClickListener(this);
         btnCheckIn.setOnClickListener(this);
-        creatorLayout.setOnClickListener(this);
+     //   creatorLayout.setOnClickListener(this);
         ratingBar.setOnRatingBarChangeListener(this);
         //checkInPeoples.setOnClickListener(this);
         showMore.setOnClickListener(this);
@@ -397,8 +398,16 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                     .resize(Math.round(helpers.convertDpToPixel(avatarImageSize, this)), Math.round(helpers.convertDpToPixel(avatarImageSize, this)))
                     .centerCrop()
                     .transform(new CropCircleTransformation()).into(creatorAvatar);
-            creatorLayout.setOnClickListener(this);
+            if (diveSpot.getCreator().getAuthor() != null && diveSpot.getCreator().getAuthor().equals("social")) {
+                creatorLayout.setOnClickListener(this);
+                expandEditorsArrow.setVisibility(View.VISIBLE);
+            }
             creatorName.setText(diveSpot.getCreator().getName());
+        } else {
+            creatorName.setText("DDScanner");
+            creatorLayout.setVisibility(View.VISIBLE);
+            User user = new User("DDScanner", String.valueOf(R.mipmap.ic_launcher));
+            creatorsEditorsList.add(user);
         }
 
         progressBarFull.setVisibility(View.GONE);
@@ -427,6 +436,8 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             for (User user : divespotDetails.getEditors()) {
                 creatorsEditorsList.add(user);
             }
+            expandEditorsArrow.setVisibility(View.VISIBLE);
+            creatorLayout.setOnClickListener(this);
            // EditorsListActivity.show(DiveSpotDetailsActivity.this, (ArrayList<User>) creatorsEditorsList);
 
         }
