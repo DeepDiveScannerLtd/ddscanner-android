@@ -194,4 +194,18 @@
     <string name="dive_spos">" dive spots"</string>
 
     <string name="unknown_error">Unknown error occurred. A bug report was captured. Please try again later.</string>
+    <string name="privac">Privacy Policy</string>
+    <string name="terms_title_1">1. Terms</string>
+    <string name="terms_text_1">By using this app, you are agreeing to be bound by these app Terms and Conditions of Use, all applicable laws and regulations, and agree that you are responsible for compliance with any applicable local laws.</string>
+    <string name="terms_title_2">2. Use license</string>
+    <string name="terms_text_2">The materials in this app are provided "as is". Deep Dive Scanner makes no warranties, expressed or implied, and hereby disclaims and negates all other warranties, including without limitation, implied warranties or conditions of merchantability, fitness for a particular purpose, or non-infringement of intellectual property or other violation of rights. Further, Deep Dive Scanner does not warrant or make any representations concerning the accuracy, likely results, or reliability of the use of the materials in its apps or otherwise relating to such materials or on any internet web sites linked to its apps.</string>
+    <string name="terms_title_3">3. Limitation</string>
+    <string name="terms_text_3">In no event shall Deep Dive Scanner or its suppliers be liable for any damages (including, without limitation, damages for loss of data or profit, or due to business interruption,) arising out of the use or inability to use the materials in this app, even if Deep Dive Scanner or a Deep Dive Scanner authorized representative has been notified orally or in writing of the possibility of such damage. Because some jurisdictions do not allow limitations on implied warranties, or limitations of liability for consequential or incidental damages, these limitations may not apply to you.</string>
+    <string name="terms_title_4">4. Revisions and Errata</string>
+    <string name="terms_text_4">The materials appearing in Deep Dive Scanner could include technical, typographical, or photographic errors. Deep Dive Scanner does not warrant that any of these materials are accurate, complete, or current. Deep Dive Scanner may make changes to the materials contained in its app at any time without notice. Deep Dive Scanner does not, however, make any commitment to update the materials.</string>
+    <string name="terms_title_5">5. Links</string>
+    <string name="terms_text_5">Deep Dive Scanner has not reviewed all of the internet web sites linked to from its app and is not responsible for the contents of any such linked site. The inclusion of any link does not imply endorsement by Deep Dive Scanner of the site. Use of any such linked site is at the user\'s own risk.</string>
+    <string name="terms_title_6">6. Site Terms of Use Modifications</string>
+    <string name="terms_text_6">Deep Dive Scanner may revise these terms of use for its app at any time without notice. By using this app you are agreeing to be bound by the then current version of these Terms and Conditions of Use.</string>
+    <string name="terms">Terms and Conditions of Use</string>
 </resources>

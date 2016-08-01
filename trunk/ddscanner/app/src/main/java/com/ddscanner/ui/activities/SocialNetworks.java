@@ -3,10 +3,17 @@ package com.ddscanner.ui.activities;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Selection;
 import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
@@ -94,11 +101,24 @@ public class SocialNetworks extends AppCompatActivity
         materialDialog = helpers.getMaterialDialog(this);
         close.setOnClickListener(this);
         int color = getResources().getColor(R.color.primary);
-        SpannableString spannableString = new SpannableString(privacyPolicy.getText());
-        spannableString.setSpan(new ForegroundColorSpan(color), 32, 48, 0);
-        spannableString.setSpan(new ForegroundColorSpan(color), 53, spannableString.length(), 0);
+        final SpannableString spannableString = new SpannableString(privacyPolicy.getText());
+        privacyPolicy.setHighlightColor(Color.TRANSPARENT);
+        spannableString.setSpan(new MyClickableSpan(privacyPolicy.getText().toString()) {
+            @Override
+            public void onClick(View tv) {
+                TermsOfServiceActivity.show(SocialNetworks.this);
+            }
+        }, 32,48, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(new MyClickableSpan(privacyPolicy.getText().toString()) {
+            @Override
+            public void onClick(View tv) {
+                PrivacyPolicyActivity.show(SocialNetworks.this);
+                tv.invalidate();
+            }
+        }, 53, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        privacyPolicy.setMovementMethod(LinkMovementMethod.getInstance());
         privacyPolicy.setText(spannableString);
-        privacyPolicy.setOnClickListener(this);
+
         callbackManager = CallbackManager.Factory.create();
         fbCustomLogin = (Button) findViewById(R.id.fb_custom);
         fbCustomLogin.setOnClickListener(new View.OnClickListener() {
@@ -323,6 +343,24 @@ public class SocialNetworks extends AppCompatActivity
             case R.id.close:
                 onBackPressed();
                 break;
+        }
+    }
+
+    class MyClickableSpan extends ClickableSpan{
+
+        String clicked;
+        public MyClickableSpan(String string) {
+            super();
+            clicked = string;
+        }
+
+        public void onClick(View tv) {
+
+        }
+
+        public void updateDrawState(TextPaint ds) {
+            ds.setColor(getResources().getColor(R.color.primary));
+            ds.setUnderlineText(false);
         }
     }
 }

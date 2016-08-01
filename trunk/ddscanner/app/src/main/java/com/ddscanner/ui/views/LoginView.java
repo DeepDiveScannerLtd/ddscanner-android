@@ -2,6 +2,12 @@ package com.ddscanner.ui.views;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Color;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
@@ -13,6 +19,7 @@ import com.ddscanner.R;
 import com.ddscanner.events.LoginViaFacebookClickEvent;
 import com.ddscanner.events.LoginViaGoogleClickEvent;
 import com.ddscanner.ui.activities.PrivacyPolicyActivity;
+import com.ddscanner.ui.activities.TermsOfServiceActivity;
 
 public class LoginView extends RelativeLayout implements View.OnClickListener {
 
@@ -49,7 +56,23 @@ public class LoginView extends RelativeLayout implements View.OnClickListener {
 
         fbCustomLogin.setOnClickListener(this);
         googleCustomSignIn.setOnClickListener(this);
-        privacyPolicy.setOnClickListener(this);
+        final SpannableString spannableString = new SpannableString(privacyPolicy.getText());
+        privacyPolicy.setHighlightColor(Color.TRANSPARENT);
+        spannableString.setSpan(new MyClickableSpan(privacyPolicy.getText().toString()) {
+            @Override
+            public void onClick(View tv) {
+                TermsOfServiceActivity.show(getContext());
+            }
+        }, 32,48, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(new MyClickableSpan(privacyPolicy.getText().toString()) {
+            @Override
+            public void onClick(View tv) {
+                PrivacyPolicyActivity.show(getContext());
+                tv.invalidate();
+            }
+        }, 53, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        privacyPolicy.setMovementMethod(LinkMovementMethod.getInstance());
+        privacyPolicy.setText(spannableString);
 
         if (attrs != null) {
             TypedArray arr = getContext().obtainStyledAttributes(attrs, R.styleable.LoginView);
@@ -79,5 +102,23 @@ public class LoginView extends RelativeLayout implements View.OnClickListener {
     public interface LoginStateChangeListener {
         void onLoggedIn();
         void onLoggedOut();
+    }
+
+    class MyClickableSpan extends ClickableSpan {
+
+        String clicked;
+        public MyClickableSpan(String string) {
+            super();
+            clicked = string;
+        }
+
+        public void onClick(View tv) {
+
+        }
+
+        public void updateDrawState(TextPaint ds) {
+            ds.setColor(getResources().getColor(R.color.primary));
+            ds.setUnderlineText(false);
+        }
     }
 }

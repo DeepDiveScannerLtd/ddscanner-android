@@ -180,6 +180,9 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
                 context, R.drawable.ic_like_review
         ));
         likesCount.setText(String.valueOf(Integer.parseInt(likesCount.getText().toString()) + 1));
+        comments.get(position).setLikes(likesCount.getText().toString());
+        comments.get(position).setDislikes(dislikesCount.getText().toString());
+        comments.get(position).setDislike(false);
         comments.get(position).setLike(true);
     }
 
@@ -194,8 +197,10 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         dislikeImage.setImageDrawable(AppCompatDrawableManager.get()
                 .getDrawable(context, R.drawable.ic_review_dislike));
         dislikesCount.setText(String.valueOf(Integer.parseInt(dislikesCount.getText().toString()) + 1));
+        comments.get(position).setLikes(likesCount.getText().toString());
+        comments.get(position).setDislikes(dislikesCount.getText().toString());
+        comments.get(position).setLike(false);
         comments.get(position).setDislike(true);
-
     }
 
     private void likeComment(String id, final ImageView dislikeImage,
