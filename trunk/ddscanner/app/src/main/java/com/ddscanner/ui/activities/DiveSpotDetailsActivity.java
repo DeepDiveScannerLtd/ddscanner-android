@@ -406,7 +406,12 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         } else {
             creatorName.setText("DDScanner");
             creatorLayout.setVisibility(View.VISIBLE);
-            User user = new User("DDScanner", String.valueOf(R.mipmap.ic_launcher));
+            Picasso.with(this).load(R.drawable.logo)
+                    .resize(Math.round(helpers.convertDpToPixel(avatarImageSize, this)), Math.round(helpers.convertDpToPixel(avatarImageSize, this)))
+                    .centerCrop()
+                    .placeholder(R.drawable.avatar_profile_default)
+                    .transform(new CropCircleTransformation()).into(creatorAvatar);
+            User user = new User("DDScanner", String.valueOf(R.drawable.logo));
             creatorsEditorsList.add(user);
         }
 

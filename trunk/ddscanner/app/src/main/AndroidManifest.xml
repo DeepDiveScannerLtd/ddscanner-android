@@ -152,6 +152,9 @@
             android:name=".ui.activities.ReviewsActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".ui.activities.TermsOfServiceActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".ui.activities.ShowDsLocationActivity"
             android:screenOrientation="portrait" />
         <activity

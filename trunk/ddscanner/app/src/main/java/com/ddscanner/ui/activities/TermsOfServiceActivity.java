@@ -10,19 +10,22 @@ import android.view.MenuItem;
 
 import com.ddscanner.R;
 
-public class PrivacyPolicyActivity extends AppCompatActivity {
+/**
+ * Created by lashket on 1.8.16.
+ */
+public class TermsOfServiceActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_privacy_policy);
+        setContentView(R.layout.activity_terms_of_service);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);
-        getSupportActionBar().setTitle(R.string.privac);
+        getSupportActionBar().setTitle(R.string.terms);
     }
 
     @Override
@@ -36,7 +39,7 @@ public class PrivacyPolicyActivity extends AppCompatActivity {
     }
 
     public static void show(Context context) {
-        Intent intent = new Intent(context, PrivacyPolicyActivity.class);
+        Intent intent = new Intent(context, TermsOfServiceActivity.class);
         context.startActivity(intent);
     }
 }

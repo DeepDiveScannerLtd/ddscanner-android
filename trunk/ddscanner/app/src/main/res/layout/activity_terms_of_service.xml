@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <include layout="@layout/view_toolbar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="14dp"
+            android:paddingLeft="14dp"
+            android:paddingRight="14dp">
+
+            <TextView
+                style="@style/TermsOfServiceTitleStyle"
+                android:text="@string/terms_title_1" />
+
+            <TextView
+                style="@style/TermsOfServiceTexteStyle"
+                android:text="@string/terms_text_1" />
+
+            <TextView
+                style="@style/TermsOfServiceTitleStyle"
+                android:text="@string/terms_title_2" />
+
+            <TextView
+                style="@style/TermsOfServiceTexteStyle"
+                android:text="@string/terms_text_2" />
+
+            <TextView
+                style="@style/TermsOfServiceTitleStyle"
+                android:text="@string/terms_title_3" />
+
+            <TextView
+                style="@style/TermsOfServiceTexteStyle"
+                android:text="@string/terms_text_3" />
+
+            <TextView
+                style="@style/TermsOfServiceTitleStyle"
+                android:text="@string/terms_title_4" />
+
+            <TextView
+                style="@style/TermsOfServiceTexteStyle"
+                android:text="@string/terms_text_4" />
+
+            <TextView
+                style="@style/TermsOfServiceTitleStyle"
+                android:text="@string/terms_title_5" />
+
+            <TextView
+                style="@style/TermsOfServiceTexteStyle"
+                android:text="@string/terms_text_5" />
+
+            <TextView
+                style="@style/TermsOfServiceTitleStyle"
+                android:text="@string/terms_title_6" />
+
+            <TextView
+                style="@style/TermsOfServiceTexteStyle"
+                android:text="@string/terms_text_6" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

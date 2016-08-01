@@ -6,7 +6,6 @@
     android:background="?attr/selectableItemBackground"
     android:layout_height="54dp">
     <TextView
-        android:background="@color/white"
         android:id="@+id/diveSpotName"
         tools:text = "Good spot"
         android:paddingLeft="20dp"
