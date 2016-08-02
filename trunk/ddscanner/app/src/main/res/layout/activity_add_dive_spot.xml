@@ -182,7 +182,8 @@
                         android:layout_height="56dp"
                         android:gravity="center"
                         android:text="@string/details_visibility"
-                        android:textColor="@color/black_text"
+                        android:textColor="#B2B2B2"
+                        android:fontFamily="sans-serif-medium"
                         android:textSize="16sp" />
 
                     <EditText
@@ -239,6 +240,7 @@
                         android:orientation="vertical">
 
                         <TextView
+                            android:fontFamily="sans-serif-medium"
                             android:layout_marginTop="3dp"
                             android:layout_width="match_parent"
                             android:layout_height="17dp"
@@ -279,6 +281,7 @@
                         android:orientation="vertical">
 
                         <TextView
+                            android:fontFamily="sans-serif-medium"
                             android:layout_marginTop="3dp"
                             android:layout_width="match_parent"
                             android:layout_height="17dp"
@@ -319,6 +322,7 @@
                         android:orientation="vertical">
 
                         <TextView
+                            android:fontFamily="sans-serif-medium"
                             android:layout_marginTop="3dp"
                             android:layout_width="match_parent"
                             android:layout_height="17dp"
@@ -359,6 +363,7 @@
                         android:orientation="vertical">
 
                         <TextView
+                            android:fontFamily="sans-serif-medium"
                             android:layout_marginTop="3dp"
                             android:layout_width="match_parent"
                             android:layout_height="17dp"
