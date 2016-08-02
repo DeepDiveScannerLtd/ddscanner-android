@@ -23,7 +23,7 @@
         android:id="@+id/main_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -242,10 +242,6 @@
                         app:rd_style="@style/Material.Drawable.Ripple.Wave"
                         app:spn_arrowColor="@android:color/transparent"
                         app:spn_dividerColor="@android:color/transparent"
-                        app:spn_label="Current"
-                        app:spn_labelEnable="true"
-                        app:spn_labelTextColor="#B2B2B2"
-                        app:spn_labelTextSize="16sp"
                         app:spn_popupItemAnimation="@null" />
 
                 </LinearLayout>
@@ -273,10 +269,6 @@
                         app:rd_style="@style/Material.Drawable.Ripple.Wave"
                         app:spn_arrowColor="@android:color/transparent"
                         app:spn_dividerColor="@android:color/transparent"
-                        app:spn_label="Level"
-                        app:spn_labelEnable="true"
-                        app:spn_labelTextColor="#B2B2B2"
-                        app:spn_labelTextSize="16sp"
                         app:spn_popupItemAnimation="@null" />
 
                 </LinearLayout>
@@ -304,10 +296,6 @@
                         app:rd_style="@style/Material.Drawable.Ripple.Wave"
                         app:spn_arrowColor="@android:color/transparent"
                         app:spn_dividerColor="@android:color/transparent"
-                        app:spn_label="Object"
-                        app:spn_labelEnable="true"
-                        app:spn_labelTextColor="#B2B2B2"
-                        app:spn_labelTextSize="16sp"
                         app:spn_popupItemAnimation="@null" />
 
                 </LinearLayout>
@@ -333,11 +321,7 @@
                         app:rd_style="@style/Material.Drawable.Ripple.Wave"
                         app:spn_arrowColor="@android:color/transparent"
                         app:spn_dividerColor="@android:color/transparent"
-                        app:spn_label="Access"
-                        app:spn_labelEnable="true"
-                        app:spn_labelTextColor="#B2B2B2"
-                        app:spn_labelTextSize="16sp"
-                        app:spn_popupItemAnimation="@null" />
+                        />
 
                 </LinearLayout>
 
