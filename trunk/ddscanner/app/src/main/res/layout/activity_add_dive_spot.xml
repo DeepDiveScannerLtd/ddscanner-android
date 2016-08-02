@@ -155,10 +155,10 @@
 
                     <android.support.v7.widget.AppCompatEditText
                         android:id="@+id/depth"
-                        android:maxLength="5"
-                        android:inputType="number"
                         style="@style/AddDsCharTitleStyle"
-                        android:hint="@string/max_depth_meters" />
+                        android:hint="@string/max_depth_meters"
+                        android:inputType="number"
+                        android:maxLength="5" />
                 </LinearLayout>
 
                 <ImageView style="@style/DividerStyle" />
@@ -180,34 +180,36 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="56dp"
-                        android:textSize="16sp"
                         android:gravity="center"
+                        android:text="@string/details_visibility"
                         android:textColor="@color/black_text"
-                        android:text="@string/details_visibility"/>
+                        android:textSize="16sp" />
+
                     <EditText
-                        android:gravity="center"
-                        android:maxLength="5"
-                        android:inputType="number"
                         android:id="@+id/minVisibility"
-                        android:layout_marginLeft="15dp"
-                        android:layout_width="wrap_content"
-                        android:paddingLeft="20dp"
-                        android:paddingRight="20dp"
-                        android:layout_height="56dp"
                         style="@style/AddDsCharTitleStyle"
-                        android:hint="@string/min"/>
-                    <EditText
-                        android:maxLength="5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="56dp"
+                        android:layout_marginLeft="15dp"
                         android:gravity="center"
+                        android:hint="@string/min"
                         android:inputType="number"
-                        android:id="@+id/maxVisibility"
-                        android:layout_marginLeft="15dp"
-                        android:layout_width="wrap_content"
+                        android:maxLength="5"
                         android:paddingLeft="20dp"
-                        android:paddingRight="20dp"
-                        android:layout_height="56dp"
+                        android:paddingRight="20dp" />
+
+                    <EditText
+                        android:id="@+id/maxVisibility"
                         style="@style/AddDsCharTitleStyle"
-                        android:hint="@string/max"/>
+                        android:layout_width="wrap_content"
+                        android:layout_height="56dp"
+                        android:layout_marginLeft="15dp"
+                        android:gravity="center"
+                        android:hint="@string/max"
+                        android:inputType="number"
+                        android:maxLength="5"
+                        android:paddingLeft="20dp"
+                        android:paddingRight="20dp" />
 
                 </LinearLayout>
 
@@ -231,23 +233,32 @@
                         style="@style/CharacteristicsDiveSpotListIcons"
                         android:src="@drawable/ic_addds_currents" />
 
-                    <com.rey.material.widget.Spinner
-                        android:id="@+id/currents_spinner"
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="56dp"
-                        android:dropDownWidth="150dp"
-                        android:gravity="center_vertical"
-                        android:popupBackground="@color/white"
-                        app:popupTheme="@style/AppTheme.PopupOverlay"
-                        app:rd_style="@style/Material.Drawable.Ripple.Wave"
-                        app:spn_arrowColor="@android:color/transparent"
-                        app:spn_dividerColor="@android:color/transparent"
-                        app:spn_label="Current"
-                        app:spn_labelEnable="true"
-                        app:spn_labelTextColor="#B2B2B2"
-                        app:spn_labelTextSize="16sp"
-                        app:spn_popupItemAnimation="@null" />
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
+                        <TextView
+                            android:layout_marginTop="3dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="17dp"
+                            android:text="Current"
+                            android:textColor="#B2B2B2"
+                            android:textSize="16sp" />
+
+                        <com.rey.material.widget.Spinner
+                            android:id="@+id/currents_spinner"
+                            android:layout_width="match_parent"
+                            android:layout_height="36dp"
+                            android:dropDownWidth="150dp"
+                            android:gravity="center_vertical"
+                            android:popupBackground="@color/white"
+                            app:popupTheme="@style/AppTheme.PopupOverlay"
+                            app:rd_style="@style/Material.Drawable.Ripple.Wave"
+                            app:spn_arrowColor="@android:color/transparent"
+                            app:spn_dividerColor="@android:color/transparent"
+                            app:spn_popupItemAnimation="@null" />
+                    </LinearLayout>
                 </LinearLayout>
 
                 <ImageView style="@style/DividerStyle" />
@@ -262,23 +273,32 @@
                         style="@style/CharacteristicsDiveSpotListIcons"
                         android:src="@drawable/ic_addds_level" />
 
-                    <com.rey.material.widget.Spinner
-                        android:id="@+id/level_spinner"
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="56dp"
-                        android:dropDownWidth="150dp"
-                        android:gravity="center_vertical"
-                        android:popupBackground="@color/white"
-                        app:popupTheme="@style/AppTheme.PopupOverlay"
-                        app:rd_style="@style/Material.Drawable.Ripple.Wave"
-                        app:spn_arrowColor="@android:color/transparent"
-                        app:spn_dividerColor="@android:color/transparent"
-                        app:spn_label="Level"
-                        app:spn_labelEnable="true"
-                        app:spn_labelTextColor="#B2B2B2"
-                        app:spn_labelTextSize="16sp"
-                        app:spn_popupItemAnimation="@null" />
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
+                        <TextView
+                            android:layout_marginTop="3dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="17dp"
+                            android:text="Level"
+                            android:textColor="#B2B2B2"
+                            android:textSize="16sp" />
+
+                        <com.rey.material.widget.Spinner
+                            android:id="@+id/level_spinner"
+                            android:layout_width="match_parent"
+                            android:layout_height="36dp"
+                            android:dropDownWidth="150dp"
+                            android:gravity="center_vertical"
+                            android:popupBackground="@color/white"
+                            app:popupTheme="@style/AppTheme.PopupOverlay"
+                            app:rd_style="@style/Material.Drawable.Ripple.Wave"
+                            app:spn_arrowColor="@android:color/transparent"
+                            app:spn_dividerColor="@android:color/transparent"
+                            app:spn_popupItemAnimation="@null" />
+                    </LinearLayout>
                 </LinearLayout>
 
                 <ImageView style="@style/DividerStyle" />
@@ -293,25 +313,36 @@
                         style="@style/CharacteristicsDiveSpotListIcons"
                         android:src="@drawable/ic_addds_object" />
 
-                    <com.rey.material.widget.Spinner
-                        android:id="@+id/object_spinner"
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="56dp"
-                        android:dropDownWidth="150dp"
-                        android:gravity="center_vertical"
-                        android:popupBackground="@color/white"
-                        app:popupTheme="@style/AppTheme.PopupOverlay"
-                        app:rd_style="@style/Material.Drawable.Ripple.Wave"
-                        app:spn_arrowColor="@android:color/transparent"
-                        app:spn_dividerColor="@android:color/transparent"
-                        app:spn_label="Object"
-                        app:spn_labelEnable="true"
-                        app:spn_labelTextColor="#B2B2B2"
-                        app:spn_labelTextSize="16sp"
-                        app:spn_popupItemAnimation="@null" />
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
+                        <TextView
+                            android:layout_marginTop="3dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="17dp"
+                            android:text="Object"
+                            android:textColor="#B2B2B2"
+                            android:textSize="16sp" />
+
+                        <com.rey.material.widget.Spinner
+                            android:id="@+id/object_spinner"
+                            android:layout_width="match_parent"
+                            android:layout_height="36dp"
+                            android:dropDownWidth="150dp"
+                            android:gravity="center_vertical"
+                            android:popupBackground="@color/white"
+                            app:popupTheme="@style/AppTheme.PopupOverlay"
+                            app:rd_style="@style/Material.Drawable.Ripple.Wave"
+                            app:spn_arrowColor="@android:color/transparent"
+                            app:spn_dividerColor="@android:color/transparent"
+                            app:spn_popupItemAnimation="@null" />
+                    </LinearLayout>
                 </LinearLayout>
+
                 <ImageView style="@style/DividerStyle" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
@@ -322,23 +353,31 @@
                         style="@style/CharacteristicsDiveSpotListIcons"
                         android:src="@drawable/ic_ds_access" />
 
-                    <com.rey.material.widget.Spinner
-                        android:id="@+id/access_spinner"
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="56dp"
-                        android:dropDownWidth="150dp"
-                        android:gravity="center_vertical"
-                        android:popupBackground="@color/white"
-                        app:popupTheme="@style/AppTheme.PopupOverlay"
-                        app:rd_style="@style/Material.Drawable.Ripple.Wave"
-                        app:spn_arrowColor="@android:color/transparent"
-                        app:spn_dividerColor="@android:color/transparent"
-                        app:spn_label="Access"
-                        app:spn_labelEnable="true"
-                        app:spn_labelTextColor="#B2B2B2"
-                        app:spn_labelTextSize="16sp"
-                        app:spn_popupItemAnimation="@null" />
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
+                        <TextView
+                            android:layout_marginTop="3dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="17dp"
+                            android:text="Access"
+                            android:textColor="#B2B2B2"
+                            android:textSize="16sp" />
+
+                        <com.rey.material.widget.Spinner
+                            android:id="@+id/access_spinner"
+                            android:layout_width="match_parent"
+                            android:layout_height="36dp"
+                            android:dropDownWidth="150dp"
+                            android:gravity="center_vertical"
+                            android:popupBackground="@color/white"
+                            app:popupTheme="@style/AppTheme.PopupOverlay"
+                            app:rd_style="@style/Material.Drawable.Ripple.Wave"
+                            app:spn_arrowColor="@android:color/transparent"
+                            app:spn_dividerColor="@android:color/transparent" />
+                    </LinearLayout>
                 </LinearLayout>
 
                 <ImageView style="@style/DividerStyle" />
@@ -357,11 +396,11 @@
                     <android.support.v7.widget.AppCompatEditText
                         android:id="@+id/description"
                         style="@style/AddDsCharTitleStyle"
-                        android:fontFamily="sans-serif"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="18dp"
-                        android:paddingBottom="7dp"
-                        android:hint="@string/description" />
+                        android:fontFamily="sans-serif"
+                        android:hint="@string/description"
+                        android:paddingBottom="7dp" />
                 </LinearLayout>
 
                 <TextView
