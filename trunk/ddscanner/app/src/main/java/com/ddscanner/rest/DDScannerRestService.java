@@ -141,8 +141,8 @@ public interface DDScannerRestService {
             @Part("access") RequestBody access,
             @Part("description") RequestBody description,
             @Part List<MultipartBody.Part> sealife,
-            @Part List<MultipartBody.Part> image_del,
             @Part List<MultipartBody.Part> image_new,
+            @Part List<MultipartBody.Part> image_del,
             @Part("token") RequestBody token,
             @Part("social") RequestBody sn,
             @Part("secret") RequestBody secret
