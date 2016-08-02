@@ -195,7 +195,7 @@
                         android:paddingRight="20dp"
                         android:layout_height="56dp"
                         style="@style/AddDsCharTitleStyle"
-                        android:hint="From"/>
+                        android:hint="@string/min"/>
                     <EditText
                         android:maxLength="5"
                         android:gravity="center"
@@ -207,7 +207,7 @@
                         android:paddingRight="20dp"
                         android:layout_height="56dp"
                         style="@style/AddDsCharTitleStyle"
-                        android:hint="To"/>
+                        android:hint="@string/max"/>
 
                 </LinearLayout>
 

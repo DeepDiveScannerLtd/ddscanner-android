@@ -208,4 +208,6 @@
     <string name="terms_title_6">6. Site Terms of Use Modifications</string>
     <string name="terms_text_6">Deep Dive Scanner may revise these terms of use for its app at any time without notice. By using this app you are agreeing to be bound by the then current version of these Terms and Conditions of Use.</string>
     <string name="terms">Terms and Conditions of Use</string>
+    <string name="min">Min</string>
+    <string name="max">Max</string>
 </resources>
