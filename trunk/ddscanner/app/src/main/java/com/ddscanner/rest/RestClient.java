@@ -25,7 +25,7 @@ public abstract class RestClient {
                     Request request = chain.request();
                     request = request.newBuilder()
                             .addHeader("Accept", "application/vnd.trizeri.v1+json") // dev
-                            .addHeader("Content-Type", "application/json;charset=utf-8")
+//                            .addHeader("Content-Type", "application/json;charset=utf-8")
                             .build();
                     Response response = chain.proceed(request);
                     return response;
@@ -44,8 +44,8 @@ public abstract class RestClient {
             OkHttpClient client = builder.build();
 
             Retrofit retrofit = new Retrofit.Builder()
-//                    .baseUrl("http://api.ddscanner.com")
-                    .baseUrl("https://ddsapi.ilave.pro") // dev
+                    .baseUrl("https://api.ddscanner.com")
+//                    .baseUrl("https://ddsapi.ilave.pro") // dev
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(client)
                     .build();

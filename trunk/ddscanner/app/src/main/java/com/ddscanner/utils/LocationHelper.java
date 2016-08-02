@@ -37,13 +37,13 @@ public class LocationHelper implements LocationListener {
 
     public void checkLocationConditions() throws LocationProvidersNotAvailableException, LocationPPermissionsNotGrantedException {
         LogUtils.i(TAG, "checkLocationConditions start");
-        if (!isLocationProvidersAvailable()) {
-            LogUtils.i(TAG, "checkLocationConditions isLocationProvidersAvailable = false");
-            throw new LocationProvidersNotAvailableException();
-        }
         if (!isLocationPermissionsGranted(context)) {
             LogUtils.i(TAG, "checkLocationConditions isLocationPermissionsGranted = false");
             throw new LocationPPermissionsNotGrantedException();
+        }
+        if (!isLocationProvidersAvailable()) {
+            LogUtils.i(TAG, "checkLocationConditions isLocationProvidersAvailable = false");
+            throw new LocationProvidersNotAvailableException();
         }
     }
 
