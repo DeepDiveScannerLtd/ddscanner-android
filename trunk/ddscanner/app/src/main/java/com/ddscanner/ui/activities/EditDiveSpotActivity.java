@@ -515,10 +515,25 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
 
     private void createAddDiveSpotRequest() {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().updateDiveSpot(
-                diveSpotId, requestType, requestName, requestLat, requestLng, requestDepth,
-                requestMinVisibility, requestMaxVisibility, requestCurrents, requestLevel, requestObject, requestAccess,
-                requestDescription, sealifeRequest, newImages, deletedImages, requestToken,
-                requestSocial, requestSecret
+                diveSpotId,
+                requestType,
+                requestName,
+                requestLat,
+                requestLng,
+                requestDepth,
+                requestMinVisibility,
+                requestMaxVisibility,
+                requestCurrents,
+                requestLevel,
+                requestObject,
+                requestAccess,
+                requestDescription,
+                sealifeRequest,
+                newImages,
+                deletedImages,
+                requestToken,
+                requestSocial,
+                requestSecret
         );
         call.enqueue(new BaseCallback() {
             @Override
