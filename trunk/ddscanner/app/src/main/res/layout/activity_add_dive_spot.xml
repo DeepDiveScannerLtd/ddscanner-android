@@ -185,6 +185,7 @@
                         android:textColor="@color/black_text"
                         android:text="@string/details_visibility"/>
                     <EditText
+                        android:gravity="center"
                         android:maxLength="5"
                         android:inputType="number"
                         android:id="@+id/minVisibility"
@@ -194,9 +195,10 @@
                         android:paddingRight="20dp"
                         android:layout_height="56dp"
                         style="@style/AddDsCharTitleStyle"
-                        android:hint="From"/>
+                        android:hint="@string/min"/>
                     <EditText
                         android:maxLength="5"
+                        android:gravity="center"
                         android:inputType="number"
                         android:id="@+id/maxVisibility"
                         android:layout_marginLeft="15dp"
@@ -205,11 +207,19 @@
                         android:paddingRight="20dp"
                         android:layout_height="56dp"
                         style="@style/AddDsCharTitleStyle"
-                        android:hint="To"/>
+                        android:hint="@string/max"/>
 
                 </LinearLayout>
 
                 <ImageView style="@style/DividerStyle" />
+
+                <TextView
+                    android:id="@+id/error_visibility_min"
+                    style="@style/ValidationErrorTextView" />
+
+                <TextView
+                    android:id="@+id/error_visibility_max"
+                    style="@style/ValidationErrorTextView" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -234,7 +244,7 @@
                         app:spn_dividerColor="@android:color/transparent"
                         app:spn_label="Current"
                         app:spn_labelEnable="true"
-                        app:spn_labelTextColor="@color/black_text"
+                        app:spn_labelTextColor="#B2B2B2"
                         app:spn_labelTextSize="16sp"
                         app:spn_popupItemAnimation="@null" />
 
@@ -265,7 +275,7 @@
                         app:spn_dividerColor="@android:color/transparent"
                         app:spn_label="Level"
                         app:spn_labelEnable="true"
-                        app:spn_labelTextColor="@color/black_text"
+                        app:spn_labelTextColor="#B2B2B2"
                         app:spn_labelTextSize="16sp"
                         app:spn_popupItemAnimation="@null" />
 
@@ -296,7 +306,7 @@
                         app:spn_dividerColor="@android:color/transparent"
                         app:spn_label="Object"
                         app:spn_labelEnable="true"
-                        app:spn_labelTextColor="@color/black_text"
+                        app:spn_labelTextColor="#B2B2B2"
                         app:spn_labelTextSize="16sp"
                         app:spn_popupItemAnimation="@null" />
 
@@ -323,9 +333,9 @@
                         app:rd_style="@style/Material.Drawable.Ripple.Wave"
                         app:spn_arrowColor="@android:color/transparent"
                         app:spn_dividerColor="@android:color/transparent"
-                        app:spn_label="Object"
+                        app:spn_label="Access"
                         app:spn_labelEnable="true"
-                        app:spn_labelTextColor="@color/black_text"
+                        app:spn_labelTextColor="#B2B2B2"
                         app:spn_labelTextSize="16sp"
                         app:spn_popupItemAnimation="@null" />
 

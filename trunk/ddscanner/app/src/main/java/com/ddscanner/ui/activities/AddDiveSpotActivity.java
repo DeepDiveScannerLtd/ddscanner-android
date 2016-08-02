@@ -120,6 +120,8 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     private TextView error_depth;
     private TextView error_sealife;
     private TextView error_images;
+    private TextView error_visibility_min;
+    private TextView error_visibility_max;
     private int maxPhotos = 3;
 
 
@@ -185,6 +187,8 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         error_name = (TextView) findViewById(R.id.error_name);
         error_images = (TextView) findViewById(R.id.error_images);
         error_sealife = (TextView) findViewById(R.id.error_sealife);
+        error_visibility_max = (TextView) findViewById(R.id.error_visibility_max);
+        error_visibility_min = (TextView) findViewById(R.id.error_visibility_min);
         visibilityMax = (EditText) findViewById(R.id.maxVisibility);
         visibilityMin = (EditText) findViewById(R.id.minVisibility);
     }
@@ -582,6 +586,8 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         errorsMap.put("location", error_location);
         errorsMap.put("images", error_images);
         errorsMap.put("sealife", error_sealife);
+        errorsMap.put("visibilityMin", error_visibility_min);
+        errorsMap.put("visibilityMax", error_visibility_max);
     }
 
     @Override
