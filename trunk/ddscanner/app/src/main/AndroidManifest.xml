@@ -197,6 +197,12 @@
         <activity
             android:name=".ui.activities.ForeignUserLikesDislikesActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activities.SocialNetworks"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activities.APIUpdatedActivity"
+            android:screenOrientation="portrait" />
 
         <receiver
             android:name="com.google.android.gms.gcm.GcmReceiver"
@@ -226,10 +232,6 @@
         <service
             android:name=".services.RegistrationIntentService"
             android:exported="false" />
-        android:screenOrientation="portrait"/>
-        <activity
-            android:name=".ui.activities.SocialNetworks"
-            android:screenOrientation="portrait" />
 
         <meta-data
             android:name="io.fabric.ApiKey"

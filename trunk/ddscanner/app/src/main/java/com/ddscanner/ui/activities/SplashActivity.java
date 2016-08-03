@@ -8,15 +8,18 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.View;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.events.InstanceIDReceivedEvent;
+import com.ddscanner.events.RemoteConfigFetchedEvent;
 import com.ddscanner.events.UserSuccessfullyIdentifiedEvent;
 import com.ddscanner.services.RegistrationIntentService;
 import com.ddscanner.ui.views.DDProgressBarView;
 import com.ddscanner.utils.Helpers;
+import com.ddscanner.utils.RemoteConfigManager;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -36,7 +39,9 @@ public class SplashActivity extends BaseAppCompatActivity {
 
     private Handler h = new Handler();
     private Runnable runnable;
+    private long activityShowTimestamp;
 
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().getDecorView().setSystemUiVisibility(
@@ -48,12 +53,10 @@ public class SplashActivity extends BaseAppCompatActivity {
                         | View.SYSTEM_UI_FLAG_IMMERSIVE);
 
         setContentView(R.layout.activity_splash);
+
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-        if (SharedPreferenceHelper.isFirstLaunch()) {
-            registerForGCM();
-        } else {
-            showMainActivity();
-        }
+
+        RemoteConfigManager.initRemoteConfig();
     }
 
     private void registerForGCM() {
@@ -108,7 +111,11 @@ public class SplashActivity extends BaseAppCompatActivity {
                 SplashActivity.this.finish();
             }
         };
-        h.postDelayed(runnable, DDProgressBarView.ANIMATION_DURATION);
+        if (System.currentTimeMillis() - activityShowTimestamp < DDProgressBarView.ANIMATION_DURATION) {
+            h.postDelayed(runnable, DDProgressBarView.ANIMATION_DURATION - (System.currentTimeMillis() - activityShowTimestamp));
+        } else {
+            h.post(runnable);
+        }
     }
 
     private void showAlertDialog() {
@@ -151,6 +158,7 @@ public class SplashActivity extends BaseAppCompatActivity {
         if (!helpers.hasConnection(this)) {
             DDScannerApplication.showErrorActivity(this);
         }
+        activityShowTimestamp = System.currentTimeMillis();
     }
 
 
@@ -178,6 +186,21 @@ public class SplashActivity extends BaseAppCompatActivity {
     public void onUserIdentified(UserSuccessfullyIdentifiedEvent event) {
         showMainActivity();
         SharedPreferenceHelper.setIsFirstLaunch(false);
+    }
+
+    @Subscribe
+    public void onRemoteConfigFetched(RemoteConfigFetchedEvent event) {
+        Log.i(TAG, "onRemoteConfigFetched " + RemoteConfigManager.getFirebaseRemoteConfig().getBoolean(RemoteConfigManager.KEY_REQUIRE_APP_UPDATE));
+        if (!RemoteConfigManager.getFirebaseRemoteConfig().getBoolean(RemoteConfigManager.KEY_REQUIRE_APP_UPDATE)) {
+            if (SharedPreferenceHelper.isFirstLaunch()) {
+                registerForGCM();
+            } else {
+                showMainActivity();
+            }
+        } else {
+            APIUpdatedActivity.show(this);
+            finish();
+        }
     }
 
     @Override

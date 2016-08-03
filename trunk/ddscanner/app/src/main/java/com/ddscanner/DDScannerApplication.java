@@ -10,6 +10,7 @@ import com.crashlytics.android.Crashlytics;
 import com.ddscanner.analytics.AnalyticsSystemsManager;
 import com.ddscanner.ui.activities.InternetClosedActivity;
 import com.ddscanner.utils.LogUtils;
+import com.ddscanner.utils.RemoteConfigManager;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.facebook.FacebookSdk;
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -55,6 +56,7 @@ public class DDScannerApplication extends Application {
         instance = this;
         Fresco.initialize(this);
         AnalyticsSystemsManager.initAnalyticsSystems(this);
+        RemoteConfigManager.initRemoteConfig();
     }
 
     protected void attachBaseContext(Context base) {
