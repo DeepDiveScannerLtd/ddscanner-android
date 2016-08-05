@@ -41,6 +41,7 @@ import com.ddscanner.events.TakePhotoFromCameraEvent;
 import com.ddscanner.rest.BaseCallback;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
+import com.ddscanner.ui.activities.AboutActivity;
 import com.ddscanner.ui.activities.DiveSpotsListActivity;
 import com.ddscanner.ui.activities.UsersDivespotListSwipableActivity;
 import com.ddscanner.ui.views.LoginView;
@@ -106,6 +107,7 @@ public class ProfileFragment extends Fragment
     private LinearLayout showAllFavorites;
     private LinearLayout showAllAdded;
     private LinearLayout showAllEdited;
+    private LinearLayout aboutDDsLayout;
     private SwipeRefreshLayout swipeRefreshLayout;
     private TextView error_name;
     private TextView error_about;
@@ -186,6 +188,8 @@ public class ProfileFragment extends Fragment
         nameLeftSymbols = (TextView) v.findViewById(R.id.name_count);
         aboutLeftSymbols = (TextView) v.findViewById(R.id.about_count);
         loginView = (RelativeLayout) v.findViewById(R.id.login_view_root);
+        aboutDDsLayout = (LinearLayout) v.findViewById(R.id.about_dss_layout);
+        aboutDDsLayout.setOnClickListener(this);
 
         aboutEdit.addTextChangedListener(new TextWatcher() {
             @Override
@@ -286,6 +290,9 @@ public class ProfileFragment extends Fragment
             case R.id.created_activity:
                 EventsTracker.trackUserCreatedView();
                 DiveSpotsListActivity.show(getContext(), true, EventsTracker.SpotViewSource.FROM_PROFILE_CREATED);
+                break;
+            case R.id.about_dss_layout:
+                AboutActivity.show(getContext());
                 break;
         }
     }

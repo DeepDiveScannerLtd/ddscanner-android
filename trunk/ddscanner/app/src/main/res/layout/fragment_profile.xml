@@ -313,6 +313,7 @@
                         android:src="@drawable/ic_profile_edit" />
 
                     <TextView
+                        android:fontFamily="sans-serif-medium"
                         style="@style/CharacteristicsDiveSpotListTitle"
                         android:layout_width="258dp"
                         android:layout_height="match_parent"
@@ -340,6 +341,7 @@
                         android:src="@drawable/ic_profile_logout" />
 
                     <TextView
+                        android:fontFamily="sans-serif-medium"
                         style="@style/CharacteristicsDiveSpotListTitle"
                         android:layout_width="258dp"
                         android:layout_height="match_parent"
@@ -351,6 +353,24 @@
                         android:layout_height="match_parent"
                         android:scaleType="center"
                         android:src="@drawable/ic_arrow" />
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/about_dss_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:orientation="horizontal"
+                    android:background="?attr/selectableItemBackground">
+                    <ImageView
+                        style="@style/CharacteristicsDiveSpotListIcons"
+                        android:src="@drawable/ic_list_about" />
+                    <TextView
+                        android:fontFamily="sans-serif-medium"
+                        style="@style/CharacteristicsDiveSpotListTitle"
+                        android:layout_width="258dp"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:text="@string/about_dds"
+                        android:textColor="#a3a3a3"/>
                 </LinearLayout>
             </LinearLayout>
 
@@ -569,6 +589,7 @@
     </ScrollView>
 
     <com.ddscanner.ui.views.LoginView
+        android:visibility="visible"
         app:title="@string/profile_need_to_login"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
