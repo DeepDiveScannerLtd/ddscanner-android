@@ -80,4 +80,8 @@ public class Constants {
 
     public static final String MULTIPART_TYPE_TEXT = "multipart/form-data";
 
+    /*Guide description activity*/
+    public static final String GUIDE_DESCRIPTION_ACTIVITY_INTENT_ITEM = "ITEM";
+
+
 }

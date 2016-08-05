@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.ddscanner.R;
 import com.ddscanner.entities.GuideItem;
+import com.ddscanner.utils.Constants;
 
 /**
  * Created by lashket on 5.8.16.
@@ -31,7 +32,7 @@ public class GuideDescriptionActivity extends AppCompatActivity {
         description = (TextView) findViewById(R.id.description);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
 
-        item = (GuideItem) getIntent().getSerializableExtra("ITEM");
+        item = (GuideItem) getIntent().getSerializableExtra(Constants.GUIDE_DESCRIPTION_ACTIVITY_INTENT_ITEM);
 
         title.setText(item.getTitle());
         description.setText(item.getDescription());
@@ -53,7 +54,7 @@ public class GuideDescriptionActivity extends AppCompatActivity {
 
     public static void show(Context context, GuideItem guideItem) {
         Intent intent = new Intent(context, GuideDescriptionActivity.class);
-        intent.putExtra("ITEM", guideItem);
+        intent.putExtra(Constants.GUIDE_DESCRIPTION_ACTIVITY_INTENT_ITEM, guideItem);
         context.startActivity(intent);
     }
 }
