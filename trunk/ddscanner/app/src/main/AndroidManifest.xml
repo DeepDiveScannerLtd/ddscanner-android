@@ -213,6 +213,12 @@
         <activity
             android:name=".ui.activities.APIUpdatedActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activities.ContactUsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activities.AboutDDSActivity"
+            android:screenOrientation="portrait" />
 
         <receiver
             android:name="com.google.android.gms.gcm.GcmReceiver"
