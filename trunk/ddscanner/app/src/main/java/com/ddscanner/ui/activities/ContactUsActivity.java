@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -46,6 +45,11 @@ public class ContactUsActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(linearLayoutManager);
 
         setList();
+
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);
+        getSupportActionBar().setTitle(R.string.contact_us);
     }
 
     public String getFacebookPageURL(Context context) {
@@ -64,14 +68,14 @@ public class ContactUsActivity extends AppCompatActivity {
         }
     }
 
-    private void getFacebookIntent() {
+    private void openFacebookApp() {
         Intent facebookIntent = new Intent(Intent.ACTION_VIEW);
         String facebookUrl = getFacebookPageURL(this);
         facebookIntent.setData(Uri.parse(facebookUrl));
         startActivity(facebookIntent);
     }
 
-    private void getTwitterIntent() {
+    private void openTwitterApp() {
         try {
             Intent intent = new Intent(Intent.ACTION_VIEW,
                     Uri.parse(Constants.PROFILE_DIALOG_TWITTER_URI + "DDScanner"));
@@ -83,7 +87,7 @@ public class ContactUsActivity extends AppCompatActivity {
         }
     }
 
-    private void getEmailIntent() {
+    private void openEmailIntent() {
         Intent intent = new Intent(Intent.ACTION_SENDTO);
         intent.setData(Uri.parse("mailto:"));
         intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"info@ddscanner.com"});
@@ -91,7 +95,7 @@ public class ContactUsActivity extends AppCompatActivity {
     }
 
     private void openInstagramApp() {
-        Uri uri = Uri.parse("http://instagram.com/ddscanner");
+        Uri uri = Uri.parse("http://instagram.com/_u/ddscanner");
         Intent likeIng = new Intent(Intent.ACTION_VIEW, uri);
 
         likeIng.setPackage("com.instagram.android");
@@ -130,16 +134,16 @@ public class ContactUsActivity extends AppCompatActivity {
     public void openSocialApp(SocialLinkOpenEvent event) {
         switch (event.getType()) {
             case "email":
-                getEmailIntent();
+                openEmailIntent();
                 break;
             case "fb":
-                getFacebookIntent();
+                openFacebookApp();
                 break;
             case "inst":
                 openInstagramApp();
                 break;
             case "tw":
-                getTwitterIntent();
+                openTwitterApp();
                 break;
             case "yt":
                 openYoutubeApp();
