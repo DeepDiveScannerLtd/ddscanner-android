@@ -3,9 +3,11 @@ package com.ddscanner.ui.adapters;
 import android.content.Context;
 import android.support.v7.widget.AppCompatDrawableManager;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -133,7 +135,12 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
             }
         });
 
-
+        reviewsListViewHolder.menu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showPopupMenu(reviewsListViewHolder.menu);
+            }
+        });
         reviewsListViewHolder.user_name.setText(comments.get(reviewsListViewHolder.getAdapterPosition()).getUser().getName());
         reviewsListViewHolder.user_review.setText(comments.get(reviewsListViewHolder.getAdapterPosition()).getComment());
         reviewsListViewHolder.likesCount.setText(comments.get(reviewsListViewHolder.getAdapterPosition()).getLikes());
@@ -159,6 +166,14 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         if (comments.get(i).getDate() != null && !comments.get(i).getDate().isEmpty()) {
             reviewsListViewHolder.date.setText(helpers.convertDate(comments.get(i).getDate()));
         }
+    }
+
+    private void showPopupMenu(View view) {
+        // inflate menu
+        PopupMenu popup = new PopupMenu(context, view);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.menu_comment, popup.getMenu());
+        popup.show();
     }
 
     @Override
@@ -355,12 +370,14 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         private ImageView dislikeImage;
         private LinearLayout stars;
         private TextView date;
+        private ImageView menu;
         private boolean isLiked = false;
         private boolean isDisliked = false;
 
 
         public ReviewsListViewHolder(View v) {
             super(v);
+            menu = (ImageView) v.findViewById(R.id.overflow);
             date = (TextView) v.findViewById(R.id.date);
             user_avatar = (ImageView) v.findViewById(R.id.user_avatar);
             rating = (LinearLayout) v.findViewById(R.id.stars);

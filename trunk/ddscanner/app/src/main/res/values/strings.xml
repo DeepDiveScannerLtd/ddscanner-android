@@ -228,4 +228,6 @@
     <string name="guide_description_6">Dive spots that have been changed and confirmed by experts cannot be changed again.</string>
     <string name="about_dds_text">We created DDScanner because we love diving. Time is valuable both under and above the surface of the water as it’s our most precious possession. We live now and don’t like planning in advance for life is so unpredictable. We should be able to «blow bubbles» anywhere, anytime, on our own terms. \n \nLet’s start the scanning…</string>
     <string name="contact_us">Contact Us</string>
+    <string name="comment_edit">Edit</string>
+    <string name="comment_delete">Delete</string>
 </resources>

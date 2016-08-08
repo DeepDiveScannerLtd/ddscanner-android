@@ -2,9 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="15dp"
     android:background="@color/white"
-    android:orientation="vertical"
-    android:layout_marginBottom="15dp">
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -26,56 +26,68 @@
                 android:layout_height="40dp"
                 android:src="@drawable/avatar_profile_default" />
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="12dp"
-                android:gravity="center_vertical"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/user_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Andrei Lashkevich"
-                    android:lines="1"
-                    android:ellipsize="end"
-                    android:layout_marginRight="10dp"
-                    android:textColor="@color/black_text"
-                    android:textSize="18sp" />
+                android:layout_height="match_parent">
 
                 <LinearLayout
-                    android:id="@+id/stars"
+                    android:id="@+id/nameAndStars"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="12dp"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal" />
-            </LinearLayout>
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/user_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp"
+                        android:ellipsize="end"
+                        android:lines="1"
+                        android:text="Andrei Lashkevich"
+                        android:textColor="@color/black_text"
+                        android:textSize="18sp" />
+
+                    <LinearLayout
+                        android:id="@+id/stars"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal" />
+                </LinearLayout>
+                <ImageView
+                    android:id="@+id/overflow"
+                    android:layout_alignParentRight="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_ac_more"/>
+            </RelativeLayout>
         </LinearLayout>
 
         <TextView
             android:id="@+id/review"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingBottom="5dp"
             android:text="Vwry very good spot in whateewer very good play market bla bla bla bla "
             android:textColor="@color/black_text"
-            android:textSize="14sp"
-            android:paddingBottom="5dp"/>
+            android:textSize="14sp" />
 
         <android.support.v7.widget.RecyclerView
-            android:visibility="visible"
             android:id="@+id/review_photos_rc"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:visibility="visible" />
 
         <TextView
             android:id="@+id/date"
-            android:text="1231332312"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
             android:layout_marginBottom="10dp"
+            android:layout_marginTop="5dp"
+            android:text="1231332312"
             android:textColor="#a3a3a3"
             android:textSize="13sp" />
     </LinearLayout>
@@ -91,53 +103,57 @@
         android:layout_height="45dp"
         android:orientation="horizontal"
         android:paddingRight="15dp">
+
         <LinearLayout
-            android:background="?attr/selectableItemBackground"
             android:id="@+id/like_layout"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:background="?attr/selectableItemBackground"
             android:gravity="center_vertical"
-            android:paddingRight="15dp"
+            android:orientation="horizontal"
             android:paddingLeft="15dp"
-            android:orientation="horizontal">
+            android:paddingRight="15dp">
+
             <ImageView
                 android:id="@+id/likes_image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_review_like_empty"/>
+                android:src="@drawable/ic_review_like_empty" />
+
             <TextView
                 android:id="@+id/likes_count"
-                android:layout_marginLeft="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="14sp"
+                android:layout_marginLeft="5dp"
                 android:text="9"
                 android:textColor="#a3a3a3"
-                />
+                android:textSize="14sp" />
         </LinearLayout>
+
         <LinearLayout
-            android:background="?attr/selectableItemBackground"
             android:id="@+id/dislike_layout"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:background="?attr/selectableItemBackground"
             android:gravity="center_vertical"
-            android:paddingRight="15dp"
+            android:orientation="horizontal"
             android:paddingLeft="15dp"
-            android:orientation="horizontal">
+            android:paddingRight="15dp">
+
             <ImageView
                 android:id="@+id/dislikes_image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_review_dislike_empty"/>
+                android:src="@drawable/ic_review_dislike_empty" />
+
             <TextView
                 android:id="@+id/dislikes_count"
-                android:layout_marginLeft="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="14sp"
+                android:layout_marginLeft="5dp"
                 android:text="9"
                 android:textColor="#a3a3a3"
-                />
+                android:textSize="14sp" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>
