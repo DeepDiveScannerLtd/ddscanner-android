@@ -56,7 +56,13 @@ public class SplashActivity extends BaseAppCompatActivity {
 
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
-        RemoteConfigManager.initRemoteConfig();
+        if (SharedPreferenceHelper.isFirstLaunch()) {
+            registerForGCM();
+        } else {
+            showMainActivity();
+        }
+
+//        RemoteConfigManager.initRemoteConfig();
     }
 
     private void registerForGCM() {

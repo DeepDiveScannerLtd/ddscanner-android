@@ -46,7 +46,7 @@ public class RemoteConfigManager {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.i(TAG, "firebaseRemoteConfig fetch fail");
+                        Log.i(TAG, "firebaseRemoteConfig fetch fail"+ e.toString());
                     }
                 });
 

@@ -41,15 +41,15 @@ public class ContactUsActivity extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(linearLayoutManager);
-
-        setList();
-
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);
         getSupportActionBar().setTitle(R.string.contact_us);
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(linearLayoutManager);
+
+        setList();
     }
 
     public String getFacebookPageURL(Context context) {
@@ -130,6 +130,14 @@ public class ContactUsActivity extends AppCompatActivity {
         }
     }
 
+    private void openTumblrApp() {
+        try {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("tumblr://www.ddscanner.tumblr.com")));
+        } catch (Exception e) {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.ddscanner.tumblr.com")));
+        }
+    }
+
     @Subscribe
     public void openSocialApp(SocialLinkOpenEvent event) {
         switch (event.getType()) {
@@ -149,6 +157,7 @@ public class ContactUsActivity extends AppCompatActivity {
                 openYoutubeApp();
                 break;
             case "tmblr":
+                openTumblrApp();
                 break;
             case "pint":
                 openPinterestApp();

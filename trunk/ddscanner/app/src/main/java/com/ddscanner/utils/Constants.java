@@ -17,7 +17,7 @@ public class Constants {
     public static final String PROFILE_DIALOG_FACEBOOK_OLD_URI = "fb://facewebmodal/f?href=";
     public static final String PROFILE_DIALOG_FACEBOOK_NEW_URI = "fb://page/";
     public static final String PROFILE_DIALOG_TWITTER_URI = "twitter://user?screen_name=";
-    public static final String PROFILE_DIALOG_TWITTER_URL = "twitter://user?screen_name=";
+    public static final String PROFILE_DIALOG_TWITTER_URL = "https://twitter.com/";
     public static final String PROFILE_DIALOG_GOOGLE_URL = "https://plus.google.com/";
 
 
