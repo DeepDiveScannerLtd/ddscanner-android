@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<defaultsMap>
-    <entry>
-        <key>android_debug_require_app_update</key>
-        <value>false</value>
-    </entry>
-</defaultsMap>

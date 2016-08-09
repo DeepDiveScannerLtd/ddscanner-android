@@ -102,7 +102,6 @@ dependencies {
     compile "com.google.android.gms:play-services-places:$playServicesVersion"
     compile "com.google.android.gms:play-services-analytics:$playServicesVersion"
     compile "com.google.firebase:firebase-core:$playServicesVersion"
-    compile "com.google.firebase:firebase-config:$playServicesVersion"
     compile 'com.github.rey5137:material:1.2.2'
     compile 'com.weiwangcn.betterspinner:library-material:1.1.0'
     compile 'com.afollestad.material-dialogs:core:0.8.5.9'
