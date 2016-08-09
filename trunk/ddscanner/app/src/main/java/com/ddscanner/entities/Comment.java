@@ -21,6 +21,15 @@ public class Comment implements Serializable{
     private User user;
     private boolean isLike;
     private boolean isDislike;
+    private boolean isEdit;
+
+    public boolean isEdit() {
+        return isEdit;
+    }
+
+    public void setEdit(boolean edit) {
+        isEdit = edit;
+    }
 
     public boolean isLike() {
         return isLike;

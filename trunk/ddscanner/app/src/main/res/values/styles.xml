@@ -7,8 +7,13 @@
         <item name="colorAccent">@color/orange</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
         <item name="android:actionMenuTextColor">@color/orange</item>
+        <item name="android:popupMenuStyle">@style/popupMenuStyle</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:windowContentTransitions">true</item>
+    </style>
+
+    <style name="popupMenuStyle" parent="@android:style/Widget.PopupMenu">
+        <item name="android:popupBackground">@color/white</item>
     </style>
 
     <style name="editTextSub" parent="Widget.AppCompat.EditText">

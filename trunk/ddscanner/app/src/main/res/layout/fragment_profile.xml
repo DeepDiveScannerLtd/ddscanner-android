@@ -362,7 +362,7 @@
                     android:background="?attr/selectableItemBackground">
                     <ImageView
                         style="@style/CharacteristicsDiveSpotListIcons"
-                        android:src="@drawable/ic_list_about" />
+                        android:src="@drawable/shape" />
                     <TextView
                         android:fontFamily="sans-serif-medium"
                         style="@style/CharacteristicsDiveSpotListTitle"

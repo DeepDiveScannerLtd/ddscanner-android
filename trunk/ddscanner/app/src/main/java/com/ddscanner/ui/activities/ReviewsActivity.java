@@ -24,6 +24,7 @@ import com.ddscanner.entities.errors.ServerInternalErrorException;
 import com.ddscanner.entities.errors.UnknownErrorException;
 import com.ddscanner.entities.errors.UserNotFoundException;
 import com.ddscanner.entities.errors.ValidationErrorException;
+import com.ddscanner.events.DeleteCommentEvent;
 import com.ddscanner.events.IsCommentLikedEvent;
 import com.ddscanner.events.ShowLoginActivityIntent;
 import com.ddscanner.events.ShowUserDialogEvent;
@@ -44,6 +45,7 @@ import java.util.ArrayList;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
@@ -260,6 +262,31 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     @Subscribe
     public void showLoginActivity(ShowLoginActivityIntent event) {
         SocialNetworks.showForResult(ReviewsActivity.this, RC_LOGIN);
+    }
+
+    @Subscribe
+    public void deleteComment(DeleteCommentEvent event) {
+        deleteUsersComment(String.valueOf(event.getCommentId()));
+    }
+
+    private void deleteUsersComment(String id) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().deleteComment(id, helpers.getUserQuryMapRequest());
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    getComments();
+                }
+                if (!response.isSuccessful()) {
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
     }
 
 }

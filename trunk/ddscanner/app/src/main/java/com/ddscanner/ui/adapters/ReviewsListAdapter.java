@@ -1,6 +1,7 @@
 package com.ddscanner.ui.adapters;
 
 import android.content.Context;
+import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.AppCompatDrawableManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
@@ -8,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -28,6 +30,8 @@ import com.ddscanner.entities.errors.ServerInternalErrorException;
 import com.ddscanner.entities.errors.UnknownErrorException;
 import com.ddscanner.entities.errors.UserNotFoundException;
 import com.ddscanner.entities.errors.ValidationErrorException;
+import com.ddscanner.events.DeleteCommentEvent;
+import com.ddscanner.events.EditCommentEvent;
 import com.ddscanner.events.IsCommentLikedEvent;
 import com.ddscanner.events.ShowLoginActivityIntent;
 import com.ddscanner.rest.BaseCallback;
@@ -135,12 +139,16 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
             }
         });
 
-        reviewsListViewHolder.menu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showPopupMenu(reviewsListViewHolder.menu);
-            }
-        });
+        if (comments.get(i).isEdit()) {
+            reviewsListViewHolder.menu.setVisibility(View.VISIBLE);
+            reviewsListViewHolder.menu.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    showPopupMenu(reviewsListViewHolder.menu, Integer.parseInt(comments.get(i).getId()));
+                }
+            });
+        }
+
         reviewsListViewHolder.user_name.setText(comments.get(reviewsListViewHolder.getAdapterPosition()).getUser().getName());
         reviewsListViewHolder.user_review.setText(comments.get(reviewsListViewHolder.getAdapterPosition()).getComment());
         reviewsListViewHolder.likesCount.setText(comments.get(reviewsListViewHolder.getAdapterPosition()).getLikes());
@@ -168,11 +176,12 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         }
     }
 
-    private void showPopupMenu(View view) {
+    private void showPopupMenu(View view, int commentId) {
         // inflate menu
         PopupMenu popup = new PopupMenu(context, view);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.menu_comment, popup.getMenu());
+        popup.setOnMenuItemClickListener(new MenuItemClickListener(commentId));
         popup.show();
     }
 
@@ -354,7 +363,28 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         });
     }
 
+    class MenuItemClickListener implements PopupMenu.OnMenuItemClickListener {
 
+        private int commentId;
+
+        public MenuItemClickListener(int commentId) {
+            this.commentId = commentId;
+        }
+
+        @Override
+        public boolean onMenuItemClick(MenuItem menuItem) {
+            switch (menuItem.getItemId()) {
+                case R.id.comment_edit:
+                    DDScannerApplication.bus.post(new EditCommentEvent(commentId));
+                    return true;
+                case R.id.comment_delete:
+                    DDScannerApplication.bus.post(new DeleteCommentEvent(commentId));
+                    return true;
+                default:
+            }
+            return false;
+        }
+    }
     public class ReviewsListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private ImageView user_avatar;

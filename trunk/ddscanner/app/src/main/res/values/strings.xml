@@ -230,4 +230,5 @@
     <string name="contact_us">Contact Us</string>
     <string name="comment_edit">Edit</string>
     <string name="comment_delete">Delete</string>
+    <string name="was_this_information_useful">Was this information useful?</string>
 </resources>

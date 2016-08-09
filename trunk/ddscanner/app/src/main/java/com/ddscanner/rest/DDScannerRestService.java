@@ -239,4 +239,6 @@ public interface DDScannerRestService {
     @GET("diving/user/{id}/comment/dislikes")
     Call<ResponseBody> getForeignUserDislikes(@Path("id") String userId, @QueryMap Map<String, String> map);
 
+    @DELETE("diving/divespot/comment/{id}")
+    Call<ResponseBody> deleteComment( @Path("id") String id, @QueryMap Map<String, String> map);
 }
