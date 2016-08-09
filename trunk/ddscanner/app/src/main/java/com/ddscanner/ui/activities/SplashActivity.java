@@ -56,13 +56,13 @@ public class SplashActivity extends BaseAppCompatActivity {
 
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
-        if (SharedPreferenceHelper.isFirstLaunch()) {
-            registerForGCM();
-        } else {
-            showMainActivity();
-        }
+//        if (SharedPreferenceHelper.isFirstLaunch()) {
+//            registerForGCM();
+//        } else {
+//            showMainActivity();
+//        }
 
-//        RemoteConfigManager.initRemoteConfig();
+        RemoteConfigManager.initRemoteConfig();
     }
 
     private void registerForGCM() {
@@ -108,6 +108,7 @@ public class SplashActivity extends BaseAppCompatActivity {
     }
 
     private void showMainActivity() {
+        Log.i(TAG, "showMainActivity");
         final boolean isInternet = helpers.hasConnection(this);
         final boolean isLocation = checkIsProvidersEnabled();
         runnable = new Runnable() {

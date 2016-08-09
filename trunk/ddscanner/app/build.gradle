@@ -54,6 +54,9 @@ repositories {
     maven { url "https://jitpack.io" }
 }
 
+def playServicesVersion="9.4.0"
+def supportVersionVersion="24.1.1"
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
@@ -74,11 +77,13 @@ dependencies {
         transitive = true;
     }
     compile 'org.solovyev.android.views:linear-layout-manager:0.5@aar'
-    compile 'com.android.support:appcompat-v7:24.0.0'
-    compile 'com.android.support:recyclerview-v7:24.0.0'
+    compile "com.android.support:appcompat-v7:$supportVersionVersion"
+    compile "com.android.support:recyclerview-v7:$supportVersionVersion"
+    compile "com.android.support:design:$supportVersionVersion"
+    compile "com.android.support:support-v13:$supportVersionVersion"
+    compile "com.android.support:cardview-v7:$supportVersionVersion"
+    compile "com.android.support:percent:$supportVersionVersion"
     compile 'com.facebook.android:facebook-android-sdk:4.9.0'
-    compile 'com.android.support:design:24.0.0'
-    compile 'com.android.support:support-v13:24.0.0'
     compile 'com.squareup:otto:1.3.8'
     compile 'com.google.code.gson:gson:2.4'
     compile 'com.squareup.okhttp3:okhttp:3.4.1'
@@ -89,16 +94,15 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.appyvet:materialrangebar:1.3'
     compile 'com.google.maps.android:android-maps-utils:0.4.3'
-    compile 'com.google.android.gms:play-services-plus:9.2.0'
-    compile 'com.google.android.gms:play-services-auth:9.2.0'
-    compile 'com.google.android.gms:play-services-gcm:9.2.0'
-    compile 'com.google.android.gms:play-services-maps:9.2.0'
-    compile 'com.google.android.gms:play-services-location:9.2.0'
-    compile 'com.google.android.gms:play-services-places:9.2.0'
-    compile 'com.google.firebase:firebase-core:9.2.0'
-    compile 'com.google.firebase:firebase-config:9.2.0'
-    compile 'com.android.support:cardview-v7:24.0.0'
-    compile 'com.android.support:percent:24.0.0'
+    compile "com.google.android.gms:play-services-plus:$playServicesVersion"
+    compile "com.google.android.gms:play-services-auth:$playServicesVersion"
+    compile "com.google.android.gms:play-services-gcm:$playServicesVersion"
+    compile "com.google.android.gms:play-services-maps:$playServicesVersion"
+    compile "com.google.android.gms:play-services-location:$playServicesVersion"
+    compile "com.google.android.gms:play-services-places:$playServicesVersion"
+    compile "com.google.android.gms:play-services-analytics:$playServicesVersion"
+    compile "com.google.firebase:firebase-core:$playServicesVersion"
+    compile "com.google.firebase:firebase-config:$playServicesVersion"
     compile 'com.github.rey5137:material:1.2.2'
     compile 'com.weiwangcn.betterspinner:library-material:1.1.0'
     compile 'com.afollestad.material-dialogs:core:0.8.5.9'
@@ -107,7 +111,6 @@ dependencies {
     compile 'com.github.lovetuzitong:MultiImageSelector:1.1'
     compile 'jp.wasabeef:picasso-transformations:2.1.0'
     compile 'com.flurry.android:analytics:6.4.0'
-    compile 'com.google.android.gms:play-services-analytics:9.2.0'
     compile 'com.appsflyer:af-android-sdk:4+@aar'
 }
 
