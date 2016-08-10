@@ -186,10 +186,11 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         popup.show();
     }
 
-    public static void show(Context context, ArrayList<Image> images, int position) {
+    public static void show(Context context, ArrayList<Image> images, int position, String path) {
         Intent intent = new Intent(context, ImageSliderActivity.class);
         intent.putParcelableArrayListExtra("IMAGES", images);
         intent.putExtra("position", position);
+        intent.putExtra("path", path);
         context.startActivity(intent);
     }
 

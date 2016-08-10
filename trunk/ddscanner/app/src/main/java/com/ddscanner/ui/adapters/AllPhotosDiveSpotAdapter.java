@@ -26,9 +26,10 @@ public class AllPhotosDiveSpotAdapter extends RecyclerView.Adapter<AllPhotosDive
     private Context context;
     private Helpers helpers = new Helpers();
 
-    public AllPhotosDiveSpotAdapter(ArrayList<Image> photos, Context context) {
+    public AllPhotosDiveSpotAdapter(ArrayList<Image> photos, Context context, String path) {
         images = photos;
         this.context = context;
+        this.path = path;
     }
 
     @Override
@@ -66,7 +67,7 @@ public class AllPhotosDiveSpotAdapter extends RecyclerView.Adapter<AllPhotosDive
         @Override
         public void onClick(View v) {
             EventsTracker.trackDiveSpotPhotosView();
-            ImageSliderActivity.show(context, images, getAdapterPosition());
+            ImageSliderActivity.show(context, images, getAdapterPosition(), path);
         }
     }
 

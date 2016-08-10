@@ -64,6 +64,7 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
 
         bundle = new Bundle();
         bundle.putParcelableArrayList("diveSpotImages", diveSpotImages);
+        bundle.putString("path", path);
         diveSpotPhotosFragment.setArguments(bundle);
 
         if (reviewsImages != null) {
@@ -72,12 +73,14 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
 
         bundle = new Bundle();
         bundle.putParcelableArrayList("reviewsImages", reviewsImages);
+        bundle.putString("path", path);
         diveSpotReviewsPhoto.setArguments(bundle);
 
         allPhotos = helpers.compareObjectsArray(reviewsImages, diveSpotImages);
 
         bundle = new Bundle();
         bundle.putParcelableArrayList("images", allPhotos);
+        bundle.putString("path", path);
         diveSpotAllPhotosFragment.setArguments(bundle);
 
         setupViewPager();

@@ -28,6 +28,8 @@ public class DiveSpotAllPhotosFragment extends Fragment {
 
     private Helpers helpers = new Helpers();
 
+    private String path;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,9 +42,10 @@ public class DiveSpotAllPhotosFragment extends Fragment {
         recyclerView = (RecyclerView) view.findViewById(R.id.photos);
         Bundle bundle = getArguments();
         images = bundle.getParcelableArrayList("images");
+        path = bundle.getString("path");
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(),3));
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(3));
-        recyclerView.setAdapter(new AllPhotosDiveSpotAdapter(images, getContext()));
+        recyclerView.setAdapter(new AllPhotosDiveSpotAdapter(images, getContext(), path));
         return view;
     }
 
