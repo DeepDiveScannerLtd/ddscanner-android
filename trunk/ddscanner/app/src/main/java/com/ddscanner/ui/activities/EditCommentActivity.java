@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
@@ -263,6 +264,11 @@ public class EditCommentActivity extends AppCompatActivity implements View.OnCli
 
     private void updateReview() {
         materialDialog.show();
+        if (text.getText().toString().trim().isEmpty() && deleted.size() != 0 && addPhotoToDsListAdapter.getNewFilesUrisList() != null && addPhotoToDsListAdapter.getNewFilesUrisList().size() != 0 ) {
+            Toast.makeText(EditCommentActivity.this, "Please write a review to dive spot", Toast.LENGTH_SHORT).show();
+            materialDialog.dismiss();
+            return;
+        }
         if (SharedPreferenceHelper.isUserLoggedIn()) {
             requestSocial = RequestBody.create(MediaType.parse("multipart/form-data"),
                     SharedPreferenceHelper.getSn());
