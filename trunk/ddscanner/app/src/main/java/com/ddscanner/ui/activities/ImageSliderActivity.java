@@ -226,6 +226,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         public boolean onMenuItemClick(MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.photo_report:
+
                     break;
                 case R.id.photo_delete:
                     break;

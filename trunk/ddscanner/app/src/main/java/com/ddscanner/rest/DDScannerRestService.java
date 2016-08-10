@@ -259,4 +259,7 @@ public interface DDScannerRestService {
 
     @POST("diving/divespot/comment/{id}/report")
     Call<ResponseBody> reportComment(@Path("id") String id, @Body ReportRequest reportRequest);
+
+    @POST("diving/image/report")
+    Call<ResponseBody> reportImage(@Body ReportRequest reportRequest);
 }
