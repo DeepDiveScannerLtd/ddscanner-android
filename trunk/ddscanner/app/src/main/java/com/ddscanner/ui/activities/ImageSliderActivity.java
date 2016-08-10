@@ -63,6 +63,12 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         viewPager.setAdapter(sliderImagesAdapter);
         close.setOnClickListener(this);
         options.setVisibility(View.VISIBLE);
+        changeUiAccrodingPosition(position);
+        setUi();
+
+    }
+
+    private void changeUiAccrodingPosition(int position) {
         userName.setText(images.get(position).getAuthor().getName());
         date.setText(helpers.convertDateToImageSliderActivity(images.get(position).getAuthor().getDate()));
         Picasso.with(this)
@@ -71,8 +77,21 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
                 .placeholder(R.drawable.avatar_profile_default)
                 .transform(new CropCircleTransformation())
                 .into(avatar);
-        setUi();
-
+        if (images.get(position).isReport()) {
+            options.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    showReportMenu(options);
+                }
+            });
+        } else {
+            options.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    showDeleteMenu(options);
+                }
+            });
+        }
     }
 
     private void findViews() {
@@ -129,29 +148,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
             dots[i].setImageDrawable(getResources().getDrawable(R.drawable.nonselecteditem_dot));
         }
         dots[position].setImageDrawable(getResources().getDrawable(R.drawable.selecteditem_dot));
-        userName.setText(images.get(position).getAuthor().getName());
-        date.setText(helpers.convertDateToImageSliderActivity(images.get(position).getAuthor().getDate()));
-        Picasso.with(this)
-                .load(images.get(position).getAuthor().getPhoto())
-                .resize(Math.round(helpers.convertDpToPixel(35, this)), Math.round(helpers.convertDpToPixel(35, this)))
-                .placeholder(R.drawable.avatar_profile_default)
-                .transform(new CropCircleTransformation())
-                .into(avatar);
-        if (images.get(position).isReport()) {
-            options.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    showReportMenu(options);
-                }
-            });
-        } else {
-            options.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    showDeleteMenu(options);
-                }
-            });
-        }
+        changeUiAccrodingPosition(position);
       /*  Picasso.with(this).load("http://www.trizeri.travel/images/divespots/medium/" +images.get(position)).into(new Target() {
             @Override
             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
