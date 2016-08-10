@@ -408,6 +408,10 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     
     private void sendReportRequest(String type, String description) {
         materialDialog.show();
+        if (!SharedPreferenceHelper.isUserLoggedIn()) {
+            SocialNetworks.showForResult(ReviewsActivity.this, RC_LOGIN_TO_LEAVE_REPORT);
+            return;
+        }
         ReportRequest reportRequest = new ReportRequest();
         if (description != null) {
             reportRequest.setDescription(description);
