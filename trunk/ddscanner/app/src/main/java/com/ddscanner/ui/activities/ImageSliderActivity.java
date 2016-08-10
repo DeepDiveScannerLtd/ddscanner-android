@@ -16,16 +16,31 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.Comment;
 import com.ddscanner.entities.FiltersResponseEntity;
 import com.ddscanner.entities.Image;
+import com.ddscanner.entities.errors.BadRequestException;
+import com.ddscanner.entities.errors.CommentNotFoundException;
+import com.ddscanner.entities.errors.DiveSpotNotFoundException;
+import com.ddscanner.entities.errors.NotFoundException;
+import com.ddscanner.entities.errors.ServerInternalErrorException;
+import com.ddscanner.entities.errors.UnknownErrorException;
+import com.ddscanner.entities.errors.UserNotFoundException;
+import com.ddscanner.entities.errors.ValidationErrorException;
+import com.ddscanner.entities.request.ReportRequest;
+import com.ddscanner.rest.BaseCallback;
+import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.SliderImagesAdapter;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
+import com.ddscanner.utils.LogUtils;
+import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -33,6 +48,7 @@ import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
@@ -63,6 +79,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     private Helpers helpers = new Helpers();
     private FiltersResponseEntity filters = new FiltersResponseEntity();
     private String reportName;
+    private String path;
     private String reportType;
     private String reportDescription;
 
@@ -76,6 +93,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         Bundle bundle = getIntent().getExtras();
         images = bundle.getParcelableArrayList("IMAGES");
         position = getIntent().getIntExtra("position", 0);
+        path = getIntent().getStringExtra("path");
         viewPager.addOnPageChangeListener(this);
         sliderImagesAdapter = new SliderImagesAdapter(getFragmentManager(), images);
         viewPager.setAdapter(sliderImagesAdapter);
@@ -86,7 +104,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
 
     }
 
-    private void changeUiAccrodingPosition(int position) {
+    private void changeUiAccrodingPosition(final int position) {
         userName.setText(images.get(position).getAuthor().getName());
         date.setText(helpers.convertDateToImageSliderActivity(images.get(position).getAuthor().getDate()));
         Picasso.with(this)
@@ -99,7 +117,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
             options.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    showReportMenu(options);
+                    showReportMenu(options, position);
                 }
             });
         } else {
@@ -178,11 +196,12 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         popup.show();
     }
 
-    private void showReportMenu(View view) {
+    private void showReportMenu(View view, int position) {
+        reportName = images.get(position).getName();
         PopupMenu popup = new PopupMenu(this, view);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.menu_photo_report, popup.getMenu());
-     //   popup.setOnMenuItemClickListener(new MenuItemClickListener(commentId, comment));
+        popup.setOnMenuItemClickListener(new MenuItemsClickListener(reportName));
         popup.show();
     }
 
@@ -226,13 +245,85 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         public boolean onMenuItemClick(MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.photo_report:
-
+                    reportName = imageName.replace(path, "");
+                    showReportDialog();
                     break;
                 case R.id.photo_delete:
                     break;
             }
             return false;
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == Constants.SLIDER_ACTIVITY_REQUEST_CODE_LOGIN_FOR_REPORT) {
+            if (resultCode == RESULT_OK) {
+                reportImage(reportName, reportType, reportDescription);
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void reportImage(String imageName, String reportType, String reportDescription) {
+        ReportRequest reportRequest = new ReportRequest();
+        if (!SharedPreferenceHelper.isUserLoggedIn() || SharedPreferenceHelper.getToken().isEmpty() || SharedPreferenceHelper.getSn().isEmpty()) {
+            SocialNetworks.showForResult(this, Constants.SLIDER_ACTIVITY_REQUEST_CODE_LOGIN_FOR_REPORT);
+            return;
+        }
+        reportRequest.setName(imageName);
+        reportRequest.setType(reportType);
+        if (reportDescription != null) {
+            reportRequest.setDescription(reportDescription);
+        }
+        reportRequest.setSocial(SharedPreferenceHelper.getSn());
+        reportRequest.setToken(SharedPreferenceHelper.getToken());
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().reportImage(reportRequest);
+        call.enqueue(new BaseCallback() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(ImageSliderActivity.this, "Thank for your report", Toast.LENGTH_SHORT).show();
+                }
+                if (!response.isSuccessful()) {
+                    String responseString = "";
+                    try {
+                        responseString = response.errorBody().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    LogUtils.i("response body is " + responseString);
+                    try {
+                        ErrorsParser.checkForError(response.code(), responseString);
+                    } catch (ServerInternalErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
+                    } catch (BadRequestException e) {
+                        // TODO Handle
+                        helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
+                    } catch (ValidationErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
+                    } catch (NotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
+                    } catch (UnknownErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
+                    } catch (DiveSpotNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
+                    } catch (UserNotFoundException e) {
+                        // TODO Handle
+                        SharedPreferenceHelper.logout();
+                        SocialNetworks.showForResult(ImageSliderActivity.this, Constants.SLIDER_ACTIVITY_REQUEST_CODE_LOGIN_FOR_REPORT);
+                    } catch (CommentNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
+                    }
+                }
+            }
+        });
     }
 
     private void getReportsTypes() {
@@ -261,6 +352,47 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
 
             }
         });
+    }
+
+    public void showReportDialog() {
+        List<String> objects = new ArrayList<String>();
+        for (Map.Entry<String, String> entry : filters.getReport().entrySet()) {
+            objects.add(entry.getValue());
+        }
+        new MaterialDialog.Builder(this)
+                .title("Report")
+                .items(objects)
+                .itemsCallback(new MaterialDialog.ListCallback() {
+                    @Override
+                    public void onSelection(final MaterialDialog dialog, View view, int which, CharSequence text) {
+
+                        reportType = helpers.getMirrorOfHashMap(filters.getReport()).get(text);
+                        if (reportType.equals("other")) {
+                            showOtherReportDialog();
+                            dialog.dismiss();
+                        } else {
+                            reportImage(reportName, reportType, null);
+                        }
+                    }
+                })
+                .show();
+    }
+
+    private void showOtherReportDialog() {
+        new MaterialDialog.Builder(this)
+                .title("Other")
+                .widgetColor(getResources().getColor(R.color.primary))
+                .input("Write reason", "", new MaterialDialog.InputCallback() {
+                    @Override
+                    public void onInput(MaterialDialog dialog, CharSequence input) {
+                        if (input.toString().trim().length() > 1) {
+                            reportImage(reportName, "other", input.toString());
+                            reportDescription = input.toString();
+                        } else {
+                            Toast.makeText(ImageSliderActivity.this, "Write a reason", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }).show();
     }
 
 }

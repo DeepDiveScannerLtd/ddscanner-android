@@ -206,7 +206,7 @@ public class SharedPreferenceHelper {
     }
 
     public static void logout() {
-        SharedPreferenceHelper.setToken("");
+      //  SharedPreferenceHelper.setToken("");
         SharedPreferenceHelper.setUserServerId("");
         SharedPreferenceHelper.setSecret("");
         SharedPreferenceHelper.setIsUserSignedIn(false, null);

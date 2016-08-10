@@ -85,4 +85,7 @@ public class Constants {
     public static final String GUIDE_DESCRIPTION_ACTIVITY_INTENT_ITEM = "ITEM";
 
 
+    /*Image slider activity*/
+    public static final int SLIDER_ACTIVITY_REQUEST_CODE_LOGIN_FOR_REPORT = 1313;
+
 }
