@@ -9,6 +9,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -19,14 +20,26 @@ import android.widget.TextView;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.Comment;
+import com.ddscanner.entities.FiltersResponseEntity;
 import com.ddscanner.entities.Image;
+import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.SliderImagesAdapter;
+import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Map;
 
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by lashket on 4.3.16.
@@ -48,6 +61,10 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     private TextView userName;
     private ImageView options;
     private Helpers helpers = new Helpers();
+    private FiltersResponseEntity filters = new FiltersResponseEntity();
+    private String reportName;
+    private String reportType;
+    private String reportDescription;
 
 
     @Override
@@ -55,6 +72,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_slider);
         findViews();
+        getReportsTypes();
         Bundle bundle = getIntent().getExtras();
         images = bundle.getParcelableArrayList("IMAGES");
         position = getIntent().getIntExtra("position", 0);
@@ -149,24 +167,6 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         }
         dots[position].setImageDrawable(getResources().getDrawable(R.drawable.selecteditem_dot));
         changeUiAccrodingPosition(position);
-      /*  Picasso.with(this).load("http://www.trizeri.travel/images/divespots/medium/" +images.get(position)).into(new Target() {
-            @Override
-            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                drawable = new BitmapDrawable(bitmap);
-                drawable.setColorFilter(Color.parseColor("#99000000"), PorterDuff.Mode.SRC_ATOP);
-                baseLayout.setBackgroundDrawable(drawable);
-            }
-
-            @Override
-            public void onBitmapFailed(Drawable errorDrawable) {
-
-            }
-
-            @Override
-            public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-            }
-        });*/
     }
 
 
@@ -212,6 +212,54 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         if (!helpers.hasConnection(this)) {
             DDScannerApplication.showErrorActivity(this);
         }
+    }
+
+    private class MenuItemsClickListener implements PopupMenu.OnMenuItemClickListener {
+
+        private String imageName;
+
+        public MenuItemsClickListener(String imageName) {
+            this.imageName = imageName;
+        }
+
+        @Override
+        public boolean onMenuItemClick(MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.photo_report:
+                    break;
+                case R.id.photo_delete:
+                    break;
+            }
+            return false;
+        }
+    }
+
+    private void getReportsTypes() {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getFilters();
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    String responseString = "";
+                    try {
+                        responseString = response.body().string();
+                    } catch (IOException e) {
+
+                    }
+                    JsonParser parser = new JsonParser();
+                    JsonObject jsonObject = parser.parse(responseString).getAsJsonObject();
+                    JsonObject currentsJsonObject = jsonObject.getAsJsonObject(Constants.FILTERS_VALUE_REPORT);
+                    for (Map.Entry<String, JsonElement> elementEntry : currentsJsonObject.entrySet()) {
+                        filters.getReport().put(elementEntry.getKey(), elementEntry.getValue().getAsString());
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
     }
 
 }
