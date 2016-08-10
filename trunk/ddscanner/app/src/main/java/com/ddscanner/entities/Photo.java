@@ -8,12 +8,16 @@ import java.io.Serializable;
 public class Photo implements Parcelable{
 
     private String name;
+    private boolean isReport;
     private User user;
 
     protected Photo(Parcel in) {
         name = in.readString();
         user = in.readParcelable(User.class.getClassLoader());
+        isReport = in.readByte() != 0;
     }
+
+
 
     public static final Creator<Photo> CREATOR = new Creator<Photo>() {
         @Override
@@ -36,6 +40,15 @@ public class Photo implements Parcelable{
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(name);
         parcel.writeParcelable(user, i);
+        parcel.writeByte((byte) (isReport ? 1 : 0));
+    }
+
+    public boolean isReport() {
+        return isReport;
+    }
+
+    public void setReport(boolean report) {
+        isReport = report;
     }
 
     public String getName() {

@@ -46,6 +46,7 @@
             </LinearLayout>
         </LinearLayout>
         <ImageView
+            android:visibility="gone"
             android:layout_toLeftOf="@+id/close_btn"
             android:id="@+id/options"
             android:layout_width="30dp"

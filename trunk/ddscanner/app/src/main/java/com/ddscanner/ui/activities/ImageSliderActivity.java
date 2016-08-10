@@ -1,11 +1,14 @@
 package com.ddscanner.ui.activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.PopupMenu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -15,6 +18,7 @@ import android.widget.TextView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.entities.Comment;
 import com.ddscanner.entities.Image;
 import com.ddscanner.ui.adapters.SliderImagesAdapter;
 import com.ddscanner.utils.Helpers;
@@ -42,6 +46,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     private ImageView avatar;
     private TextView date;
     private TextView userName;
+    private ImageView options;
     private Helpers helpers = new Helpers();
 
 
@@ -57,6 +62,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         sliderImagesAdapter = new SliderImagesAdapter(getFragmentManager(), images);
         viewPager.setAdapter(sliderImagesAdapter);
         close.setOnClickListener(this);
+        options.setVisibility(View.VISIBLE);
         userName.setText(images.get(position).getAuthor().getName());
         date.setText(helpers.convertDateToImageSliderActivity(images.get(position).getAuthor().getDate()));
         Picasso.with(this)
@@ -77,6 +83,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         avatar = (ImageView) findViewById(R.id.user_avatar);
         date = (TextView) findViewById(R.id.date);
         userName = (TextView) findViewById(R.id.user_name);
+        options = (ImageView) findViewById(R.id.options);
     }
 
     private void setUi() {
@@ -104,7 +111,8 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.close_btn:
-                onBackPressed();
+                setResult(RESULT_OK);
+                finish();
                 overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
                 break;
         }
@@ -129,6 +137,21 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
                 .placeholder(R.drawable.avatar_profile_default)
                 .transform(new CropCircleTransformation())
                 .into(avatar);
+        if (images.get(position).isReport()) {
+            options.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    showReportMenu(options);
+                }
+            });
+        } else {
+            options.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    showDeleteMenu(options);
+                }
+            });
+        }
       /*  Picasso.with(this).load("http://www.trizeri.travel/images/divespots/medium/" +images.get(position)).into(new Target() {
             @Override
             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
@@ -149,6 +172,22 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         });*/
     }
 
+
+    private void showDeleteMenu(View view) {
+        PopupMenu popup = new PopupMenu(this, view);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.menu_photo_delete, popup.getMenu());
+     //   popup.setOnMenuItemClickListener(new MenuItemClickListener(commentId, comment));
+        popup.show();
+    }
+
+    private void showReportMenu(View view) {
+        PopupMenu popup = new PopupMenu(this, view);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.menu_photo_report, popup.getMenu());
+     //   popup.setOnMenuItemClickListener(new MenuItemClickListener(commentId, comment));
+        popup.show();
+    }
 
     public static void show(Context context, ArrayList<Image> images, int position) {
         Intent intent = new Intent(context, ImageSliderActivity.class);

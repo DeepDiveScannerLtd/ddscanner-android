@@ -11,10 +11,12 @@ public class Image implements Parcelable {
 
     private String name;
     private Author author;
+    private boolean isReport;
 
     protected Image(Parcel in) {
         name = in.readString();
         author = in.readParcelable(Author.class.getClassLoader());
+        isReport = in.readByte() != 0;
     }
 
     public static final Creator<Image> CREATOR = new Creator<Image>() {
@@ -38,6 +40,15 @@ public class Image implements Parcelable {
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(name);
         parcel.writeParcelable(author, i);
+        parcel.writeByte((byte) (isReport ? 1 : 0));
+    }
+
+    public boolean isReport() {
+        return isReport;
+    }
+
+    public void setReport(boolean report) {
+        isReport = report;
     }
 
     public String getName() {
