@@ -1,17 +1,19 @@
 package com.ddscanner.events;
 
+import com.ddscanner.entities.Comment;
+
 /**
  * Created by lashket on 9.8.16.
  */
 public class EditCommentEvent {
 
-    private int commentId;
+    private Comment comment;
 
-    public EditCommentEvent(int commentId) {
-        this.commentId = commentId;
+    public EditCommentEvent(Comment comment) {
+        this.comment = comment;
     }
 
-    public int getCommentId() {
-        return this.commentId;
+    public Comment getComment() {
+        return this.comment;
     }
 }

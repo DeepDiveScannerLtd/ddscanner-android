@@ -241,4 +241,18 @@ public interface DDScannerRestService {
 
     @DELETE("diving/divespot/comment/{id}")
     Call<ResponseBody> deleteComment( @Path("id") String id, @QueryMap Map<String, String> map);
+
+    @POST("diving/divespot/comment/{id}")
+    @Multipart
+    Call<ResponseBody> updateComment(
+            @Path("id") String id,
+            @Part("_method") RequestBody _method,
+            @Part("comment") RequestBody comment,
+            @Part("rating") RequestBody rating,
+            @Part List<MultipartBody.Part> images_new,
+            @Part List<MultipartBody.Part> images_del,
+            @Part("token") RequestBody token,
+            @Part("social") RequestBody sn,
+            @Part("secret") RequestBody secret
+    );
 }

@@ -144,7 +144,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
             reviewsListViewHolder.menu.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    showPopupMenu(reviewsListViewHolder.menu, Integer.parseInt(comments.get(i).getId()));
+                    showPopupMenu(reviewsListViewHolder.menu, Integer.parseInt(comments.get(i).getId()), comments.get(i));
                 }
             });
         }
@@ -176,12 +176,12 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         }
     }
 
-    private void showPopupMenu(View view, int commentId) {
+    private void showPopupMenu(View view, int commentId, Comment comment) {
         // inflate menu
         PopupMenu popup = new PopupMenu(context, view);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.menu_comment, popup.getMenu());
-        popup.setOnMenuItemClickListener(new MenuItemClickListener(commentId));
+        popup.setOnMenuItemClickListener(new MenuItemClickListener(commentId, comment));
         popup.show();
     }
 
@@ -366,16 +366,18 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
     class MenuItemClickListener implements PopupMenu.OnMenuItemClickListener {
 
         private int commentId;
+        private Comment comment;
 
-        public MenuItemClickListener(int commentId) {
+        public MenuItemClickListener(int commentId, Comment comment) {
             this.commentId = commentId;
+            this.comment = comment;
         }
 
         @Override
         public boolean onMenuItemClick(MenuItem menuItem) {
             switch (menuItem.getItemId()) {
                 case R.id.comment_edit:
-                    DDScannerApplication.bus.post(new EditCommentEvent(commentId));
+                    DDScannerApplication.bus.post(new EditCommentEvent(comment));
                     return true;
                 case R.id.comment_delete:
                     DDScannerApplication.bus.post(new DeleteCommentEvent(commentId));

@@ -25,6 +25,7 @@ import com.ddscanner.entities.errors.UnknownErrorException;
 import com.ddscanner.entities.errors.UserNotFoundException;
 import com.ddscanner.entities.errors.ValidationErrorException;
 import com.ddscanner.events.DeleteCommentEvent;
+import com.ddscanner.events.EditCommentEvent;
 import com.ddscanner.events.IsCommentLikedEvent;
 import com.ddscanner.events.ShowLoginActivityIntent;
 import com.ddscanner.events.ShowUserDialogEvent;
@@ -135,6 +136,11 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
             }
         }
         if (requestCode == RC_LOGIN) {
+            if (resultCode == RESULT_OK) {
+                getComments();
+            }
+        }
+        if (requestCode == 3011) {
             if (resultCode == RESULT_OK) {
                 getComments();
             }
@@ -267,6 +273,11 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     @Subscribe
     public void deleteComment(DeleteCommentEvent event) {
         deleteUsersComment(String.valueOf(event.getCommentId()));
+    }
+
+    @Subscribe
+    public void editComment(EditCommentEvent editCommentEvent) {
+        EditCommentActivity.show(this, editCommentEvent.getComment(), path);
     }
 
     private void deleteUsersComment(String id) {
