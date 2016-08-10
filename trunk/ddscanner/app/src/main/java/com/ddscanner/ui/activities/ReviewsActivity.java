@@ -419,6 +419,9 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
         if (!SharedPreferenceHelper.getToken().isEmpty()) {
             reportRequest.setToken(SharedPreferenceHelper.getToken());
             reportRequest.setSocial(SharedPreferenceHelper.getSn());
+        } else {
+            SocialNetworks.showForResult(ReviewsActivity.this, RC_LOGIN_TO_LEAVE_REPORT);
+            return;
         }
         reportRequest.setType(type);
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().reportComment(reportCommentId, reportRequest);

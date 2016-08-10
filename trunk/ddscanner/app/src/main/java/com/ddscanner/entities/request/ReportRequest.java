@@ -9,7 +9,15 @@ public class ReportRequest {
     private String description;
     private String token;
     private String social;
+    private String name;
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public String getType() {
         return type;
