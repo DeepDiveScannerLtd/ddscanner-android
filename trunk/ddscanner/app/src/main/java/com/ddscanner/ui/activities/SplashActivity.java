@@ -14,12 +14,10 @@ import android.view.View;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.events.InstanceIDReceivedEvent;
-import com.ddscanner.events.RemoteConfigFetchedEvent;
 import com.ddscanner.events.UserSuccessfullyIdentifiedEvent;
 import com.ddscanner.services.RegistrationIntentService;
 import com.ddscanner.ui.views.DDProgressBarView;
 import com.ddscanner.utils.Helpers;
-import com.ddscanner.utils.RemoteConfigManager;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -108,6 +106,7 @@ public class SplashActivity extends BaseAppCompatActivity {
     }
 
     private void showMainActivity() {
+        Log.i(TAG, "showMainActivity");
         final boolean isInternet = helpers.hasConnection(this);
         final boolean isLocation = checkIsProvidersEnabled();
         runnable = new Runnable() {
@@ -192,21 +191,6 @@ public class SplashActivity extends BaseAppCompatActivity {
     public void onUserIdentified(UserSuccessfullyIdentifiedEvent event) {
         showMainActivity();
         SharedPreferenceHelper.setIsFirstLaunch(false);
-    }
-
-    @Subscribe
-    public void onRemoteConfigFetched(RemoteConfigFetchedEvent event) {
-        Log.i(TAG, "onRemoteConfigFetched " + RemoteConfigManager.getFirebaseRemoteConfig().getBoolean(RemoteConfigManager.KEY_REQUIRE_APP_UPDATE));
-        if (!RemoteConfigManager.getFirebaseRemoteConfig().getBoolean(RemoteConfigManager.KEY_REQUIRE_APP_UPDATE)) {
-            if (SharedPreferenceHelper.isFirstLaunch()) {
-                registerForGCM();
-            } else {
-                showMainActivity();
-            }
-        } else {
-            APIUpdatedActivity.show(this);
-            finish();
-        }
     }
 
     @Override

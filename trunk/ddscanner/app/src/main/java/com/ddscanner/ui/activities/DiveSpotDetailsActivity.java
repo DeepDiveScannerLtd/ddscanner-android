@@ -530,7 +530,38 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                     usersComments = divespotDetails.getComments();
                     setUi();
                 } else {
-
+                    String responseString = "";
+                    try {
+                        responseString = response.errorBody().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    LogUtils.i("response body is " + responseString);
+                    try {
+                        ErrorsParser.checkForError(response.code(), responseString);
+                    } catch (ServerInternalErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+                    } catch (BadRequestException e) {
+                        // TODO Handle
+                        helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+                    } catch (ValidationErrorException e) {
+                        // TODO Handle
+                    } catch (NotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+                    } catch (UnknownErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+                    } catch (DiveSpotNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+                    } catch (UserNotFoundException e) {
+                        // TODO Handle
+                    } catch (CommentNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+                    }
                 }
             }
         });
