@@ -51,6 +51,7 @@ public class Constants {
     public static final String FILTERS_VALUE_CURRENTS = "currents";
     public static final String FILTERS_VALUE_LEVEL = "level";
     public static final String FILTERS_VALUE_VISIBILITY = "visibility";
+    public static final String FILTERS_VALUE_REPORT = "report";
 
     public static final int REQUEST_CODE_MAP_LIST_FRAGMENT_GET_LOCATION_ON_FRAGMENT_START = 9010;
     public static final int REQUEST_CODE_MAP_LIST_FRAGMENT_GO_TO_CURRENT_LOCATION = 9011;

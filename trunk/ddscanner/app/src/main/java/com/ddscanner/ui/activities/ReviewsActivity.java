@@ -16,6 +16,7 @@ import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.Comment;
 import com.ddscanner.entities.Comments;
+import com.ddscanner.entities.FiltersResponseEntity;
 import com.ddscanner.entities.errors.BadRequestException;
 import com.ddscanner.entities.errors.CommentNotFoundException;
 import com.ddscanner.entities.errors.DiveSpotNotFoundException;
@@ -38,11 +39,15 @@ import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.rey.material.widget.ProgressView;
 import com.squareup.otto.Subscribe;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Map;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -290,6 +295,37 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
                 }
                 if (!response.isSuccessful()) {
 
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private void getReportsTypes() {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getFilters();
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    FiltersResponseEntity filters;
+                    String responseString = "";
+                    try {
+                        responseString = response.body().string().toString();
+                    } catch (IOException e) {
+
+                    }
+                    filters = new FiltersResponseEntity();
+
+                    JsonParser parser = new JsonParser();
+                    JsonObject jsonObject = parser.parse(responseString).getAsJsonObject();
+                    JsonObject currentsJsonObject = jsonObject.getAsJsonObject(Constants.FILTERS_VALUE_REPORT);
+                    for (Map.Entry<String, JsonElement> elementEntry : currentsJsonObject.entrySet()) {
+                        filters.getReport().put(elementEntry.getKey(), elementEntry.getValue().getAsString());
+                    }
                 }
             }
 
