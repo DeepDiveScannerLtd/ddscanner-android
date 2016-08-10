@@ -11,6 +11,7 @@ public class FiltersResponseEntity implements Serializable {
     private Map<String, String> currents;
     private Map<String, String> level;
     private Map<String, String> object;
+    private Map<String, String> report;
     private int[] rating;
     private Map<String, String> visibility;
     private Map<String, String> access;
@@ -21,6 +22,10 @@ public class FiltersResponseEntity implements Serializable {
         object = new HashMap<>();
         visibility = new HashMap<>();
         access = new HashMap<>();
+    }
+
+    public Map<String, String> getReport() {
+        return report;
     }
 
     public Map<String, String> getAccess() {
