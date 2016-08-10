@@ -17,6 +17,7 @@ public class FiltersResponseEntity implements Serializable {
     private Map<String, String> access;
 
     public FiltersResponseEntity() {
+        report = new HashMap<>();
         currents = new HashMap<>();
         level = new HashMap<>();
         object = new HashMap<>();

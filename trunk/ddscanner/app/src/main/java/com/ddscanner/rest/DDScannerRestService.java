@@ -3,6 +3,7 @@ package com.ddscanner.rest;
 
 import com.ddscanner.entities.request.IdentifyRequest;
 import com.ddscanner.entities.request.RegisterRequest;
+import com.ddscanner.entities.request.ReportRequest;
 import com.ddscanner.entities.request.ValidationReguest;
 
 import java.util.List;
@@ -255,4 +256,7 @@ public interface DDScannerRestService {
             @Part("social") RequestBody sn,
             @Part("secret") RequestBody secret
     );
+
+    @POST("diving/divespot/comment/{id}/report")
+    Call<ResponseBody> reportComment(@Path("id") String id, @Body ReportRequest reportRequest);
 }

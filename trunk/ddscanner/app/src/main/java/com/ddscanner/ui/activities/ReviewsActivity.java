@@ -8,9 +8,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
@@ -25,15 +29,18 @@ import com.ddscanner.entities.errors.ServerInternalErrorException;
 import com.ddscanner.entities.errors.UnknownErrorException;
 import com.ddscanner.entities.errors.UserNotFoundException;
 import com.ddscanner.entities.errors.ValidationErrorException;
+import com.ddscanner.entities.request.ReportRequest;
 import com.ddscanner.events.DeleteCommentEvent;
 import com.ddscanner.events.EditCommentEvent;
 import com.ddscanner.events.IsCommentLikedEvent;
+import com.ddscanner.events.ReportCommentEvent;
 import com.ddscanner.events.ShowLoginActivityIntent;
 import com.ddscanner.events.ShowUserDialogEvent;
 import com.ddscanner.rest.BaseCallback;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.ReviewsListAdapter;
+import com.ddscanner.ui.adapters.SpinnerItemsAdapter;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
@@ -47,6 +54,7 @@ import com.squareup.otto.Subscribe;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import okhttp3.ResponseBody;
@@ -60,10 +68,12 @@ import retrofit2.Response;
 public class ReviewsActivity extends AppCompatActivity implements View.OnClickListener{
 
     private static final int RC_LOGIN = 8001;
+    private static final int RC_LOGIN_TO_LEAVE_REPORT = 7070;
 
     private ArrayList<Comment> comments;
     private RecyclerView commentsRc;
     private ProgressView progressView;
+    private MaterialDialog materialDialog;
 
     private Toolbar toolbar;
     private FloatingActionButton leaveReview;
@@ -75,6 +85,15 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
 
     private boolean isHasNewComment = false;
 
+    private FiltersResponseEntity filters = new FiltersResponseEntity();
+
+    private List<String> reportItems = new ArrayList<>();
+
+    private String reportCommentId;
+    private String reportType;
+    private String reportDescription = null;
+    private boolean isClickedReport;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,12 +102,14 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
         comments = (ArrayList<Comment>) bundle.getSerializable("COMMENTS");
         diveSpotId = bundle.getString(Constants.DIVESPOTID);
         path = bundle.getString("PATH");
+        getReportsTypes();
         findViews();
         toolbarSettings();
         setContent();
     }
 
     private void findViews() {
+        materialDialog = helpers.getMaterialDialog(this);
         commentsRc = (RecyclerView) findViewById(R.id.reviews_rc);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         leaveReview = (FloatingActionButton) findViewById(R.id.fab_write_review);
@@ -147,6 +168,14 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
         }
         if (requestCode == 3011) {
             if (resultCode == RESULT_OK) {
+                getComments();
+            }
+        }
+        if (requestCode == RC_LOGIN_TO_LEAVE_REPORT) {
+            if (resultCode == RESULT_OK) {
+                sendReportRequest(reportType, reportDescription);
+            }
+            if (resultCode == RESULT_CANCELED) {
                 getComments();
             }
         }
@@ -311,15 +340,12 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
-                    FiltersResponseEntity filters;
                     String responseString = "";
                     try {
-                        responseString = response.body().string().toString();
+                        responseString = response.body().string();
                     } catch (IOException e) {
 
                     }
-                    filters = new FiltersResponseEntity();
-
                     JsonParser parser = new JsonParser();
                     JsonObject jsonObject = parser.parse(responseString).getAsJsonObject();
                     JsonObject currentsJsonObject = jsonObject.getAsJsonObject(Constants.FILTERS_VALUE_REPORT);
@@ -336,4 +362,109 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
         });
     }
 
+    @Subscribe
+    public void showReportDialog(ReportCommentEvent event) {
+        reportCommentId = event.getCommentId();
+        List<String> objects = new ArrayList<String>();
+        for (Map.Entry<String, String> entry : filters.getReport().entrySet()) {
+            objects.add(entry.getValue());
+        }
+        new MaterialDialog.Builder(this)
+                .title("Report")
+                .items(objects)
+                .itemsCallback(new MaterialDialog.ListCallback() {
+                    @Override
+                    public void onSelection(final MaterialDialog dialog, View view, int which, CharSequence text) {
+                        
+                        isClickedReport = true;
+                        reportType = helpers.getMirrorOfHashMap(filters.getReport()).get(text);
+                        if (reportType.equals("other")) {
+                            showOtherReportDialog();
+                            dialog.dismiss();
+                        } else {
+                            sendReportRequest(reportType, null);
+                        }
+                    }
+                })
+                .show();
+    }
+
+    private void showOtherReportDialog() {
+        new MaterialDialog.Builder(this)
+                .title("Other")
+                .widgetColor(getResources().getColor(R.color.primary))
+                .input("Write reason", "", new MaterialDialog.InputCallback() {
+                    @Override
+                    public void onInput(MaterialDialog dialog, CharSequence input) {
+                        if (input.toString().trim().length() > 1) {
+                            sendReportRequest("other", input.toString());
+                            reportDescription = input.toString();
+                        } else {
+                            Toast.makeText(ReviewsActivity.this, "Write a reason", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }).show();
+    }
+    
+    private void sendReportRequest(String type, String description) {
+        materialDialog.show();
+        ReportRequest reportRequest = new ReportRequest();
+        if (description != null) {
+            reportRequest.setDescription(description);
+        }
+        if (!SharedPreferenceHelper.getToken().isEmpty()) {
+            reportRequest.setToken(SharedPreferenceHelper.getToken());
+            reportRequest.setSocial(SharedPreferenceHelper.getSn());
+        }
+        reportRequest.setType(type);
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().reportComment(reportCommentId, reportRequest);
+        call.enqueue(new BaseCallback() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                materialDialog.dismiss();
+                if (response.isSuccessful()) {
+                    isClickedReport = false;
+                    reportType = null;
+                    reportDescription = null;
+                } else {
+                    String responseString = "";
+                    try {
+                        responseString = response.errorBody().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    LogUtils.i("response body is " + responseString);
+                    try {
+                        ErrorsParser.checkForError(response.code(), responseString);
+                    } catch (ServerInternalErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                    } catch (BadRequestException e) {
+                        // TODO Handle
+                        helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                    } catch (ValidationErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                    } catch (NotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                    } catch (UnknownErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                    } catch (DiveSpotNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                    } catch (UserNotFoundException e) {
+                        // TODO Handle
+                        SharedPreferenceHelper.logout();
+                        SocialNetworks.showForResult(ReviewsActivity.this, RC_LOGIN_TO_LEAVE_REPORT);
+                    } catch (CommentNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                    }
+                }
+            }
+        });
+    }
+    
 }

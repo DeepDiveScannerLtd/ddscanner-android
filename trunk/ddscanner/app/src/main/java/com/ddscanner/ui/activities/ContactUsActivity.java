@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
@@ -187,5 +188,15 @@ public class ContactUsActivity extends AppCompatActivity {
         contactUsEntities.add(new ContactUsEntity("Pinterest", null, R.drawable.ic_social_pint, "pint"));
 
         recyclerView.setAdapter(new SocialListAdapter((ArrayList<ContactUsEntity>) contactUsEntities, this));
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
