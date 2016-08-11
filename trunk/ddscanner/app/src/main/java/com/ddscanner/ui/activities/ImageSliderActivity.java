@@ -82,6 +82,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     private String path;
     private String reportType;
     private String reportDescription;
+    private String deleteImageName;
 
 
     @Override
@@ -105,6 +106,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     }
 
     private void changeUiAccrodingPosition(final int position) {
+        this.position = position;
         userName.setText(images.get(position).getAuthor().getName());
         date.setText(helpers.convertDateToImageSliderActivity(images.get(position).getAuthor().getDate()));
         Picasso.with(this)
@@ -144,7 +146,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     private void setUi() {
         dotsCount = sliderImagesAdapter.getCount();
         dots = new ImageView[dotsCount];
-
+        pager_indicator.removeAllViews();
         for (int i=0; i < dotsCount; i++) {
             dots[i] = new ImageView(this);
             dots[i].setImageDrawable(getResources().getDrawable(R.drawable.nonselecteditem_dot));
@@ -176,6 +178,23 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
+    }
+
+    private void imageDeleted(int position) {
+        images.remove(position);
+        if (images.size() > 0) {
+            sliderImagesAdapter = new SliderImagesAdapter(getFragmentManager(), images);
+            viewPager.setAdapter(sliderImagesAdapter);
+            if (images.size() == 1) {
+                this.position = 0;
+            } else if (position + 1 <= images.size()) {
+                this.position = images.size() - 1;
+            }
+            setUi();
+        } else {
+            setResult(RESULT_OK);
+            finish();
+        }
     }
 
     @Override
@@ -249,10 +268,24 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
                     showReportDialog();
                     break;
                 case R.id.photo_delete:
+                    deleteImageName = imageName.replace(path, "");
+                    deleteImage(deleteImageName);
                     break;
             }
             return false;
         }
+    }
+
+    private void deleteImage(String name) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().deleteImage(name, helpers.getUserQuryMapRequest());
+        call.enqueue(new BaseCallback() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    imageDeleted(ImageSliderActivity.this.position);
+                }
+            }
+        });
     }
 
     @Override
@@ -284,6 +317,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
                     Toast.makeText(ImageSliderActivity.this, "Thank for your report", Toast.LENGTH_SHORT).show();
+                    imageDeleted(ImageSliderActivity.this.position);
                 }
                 if (!response.isSuccessful()) {
                     String responseString = "";

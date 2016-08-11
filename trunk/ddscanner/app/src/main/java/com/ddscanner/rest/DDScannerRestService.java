@@ -262,4 +262,7 @@ public interface DDScannerRestService {
 
     @POST("diving/image/report")
     Call<ResponseBody> reportImage(@Body ReportRequest reportRequest);
+
+    @DELETE("diving/image/{name}")
+    Call<ResponseBody> deleteImage(@Path("name") String imageName, @QueryMap Map<String, String> map);
 }

@@ -321,6 +321,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
                     getComments();
+                    isHasNewComment = true;
                 }
                 if (!response.isSuccessful()) {
 
@@ -433,6 +434,8 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
                     isClickedReport = false;
                     reportType = null;
                     reportDescription = null;
+                    getComments();
+                    isHasNewComment = true;
                 } else {
                     String responseString = "";
                     try {

@@ -328,6 +328,9 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                     progressBar.setVisibility(View.GONE);
                 }
             });
+        } else {
+            progressBar.setVisibility(View.GONE);
+            diveSpotMainPhoto.setImageResource(R.drawable.ds_head_photo_default);
         }
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             boolean isShow = false;
