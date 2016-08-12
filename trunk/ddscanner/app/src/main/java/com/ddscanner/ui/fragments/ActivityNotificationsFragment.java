@@ -1,5 +1,8 @@
 package com.ddscanner.ui.fragments;
 
+import android.annotation.TargetApi;
+import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,6 +16,7 @@ import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.Activity;
 import com.ddscanner.entities.Notification;
+import com.ddscanner.ui.activities.MainActivity;
 import com.ddscanner.ui.adapters.ActivitiesListAdapter;
 import com.ddscanner.ui.adapters.NotificationsListAdapter;
 import com.ddscanner.ui.adapters.SectionedRecyclerViewAdapter;
@@ -57,6 +61,34 @@ public class ActivityNotificationsFragment extends Fragment {
         }
       //  recyclerView.setAdapter(new ActivitiesListAdapter(getContext()));
         return view;
+    }
+
+    @TargetApi(23)
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        onAttachToContext(context);
+    }
+
+    @SuppressWarnings("deprecation")
+    @Override
+    public void onAttach(android.app.Activity context) {
+        super.onAttach(context);
+
+        if (Build.VERSION.SDK_INT < 23) {
+            onAttachToContext(context);
+        }
+    }
+
+    protected void onAttachToContext(Context context) {
+        try {
+            MainActivity mainActivity = (MainActivity) context;
+            mainActivity.setActivityNotificationsFragment(this);
+        } catch (ClassCastException e) {
+            // waaat?
+            e.printStackTrace();
+        }
     }
 
     public void addList(ArrayList<Activity> activities) {

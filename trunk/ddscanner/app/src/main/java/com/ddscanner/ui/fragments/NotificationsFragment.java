@@ -1,11 +1,15 @@
 package com.ddscanner.ui.fragments;
 
+import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +32,7 @@ import com.ddscanner.events.LoggedOutEvent;
 import com.ddscanner.rest.BaseCallback;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
+import com.ddscanner.ui.activities.MainActivity;
 import com.ddscanner.ui.adapters.NotificationsPagerAdapter;
 import com.ddscanner.ui.views.LoginView;
 import com.ddscanner.utils.Constants;
@@ -61,8 +66,8 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
     private ViewPager notificationsViewPager;
     private RelativeLayout loginView;
     private ProgressView progressView;
-    private AllNotificationsFragment allNotificationsFragment;
-    private ActivityNotificationsFragment activityNotificationsFragment;
+    private AllNotificationsFragment allNotificationsFragment = new AllNotificationsFragment();
+    private ActivityNotificationsFragment activityNotificationsFragment = new ActivityNotificationsFragment();
     private boolean isViewNull = true;
 
     @Override
@@ -75,8 +80,6 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_notifications, container, false);
         findViews(view);
-        allNotificationsFragment = new AllNotificationsFragment();
-        activityNotificationsFragment = new ActivityNotificationsFragment();
         setupViewPager();
         if (SharedPreferenceHelper.isUserLoggedIn()) {
             progressView.setVisibility(View.VISIBLE);
@@ -89,6 +92,35 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
             onLoggedOut();
         }
         return view;
+    }
+
+    @TargetApi(23)
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        onAttachToContext(context);
+    }
+
+    @SuppressWarnings("deprecation")
+    @Override
+    public void onAttach(android.app.Activity context) {
+        super.onAttach(context);
+
+        Log.i(TAG, "onAttach(Activity context)");
+        if (Build.VERSION.SDK_INT < 23) {
+            onAttachToContext(context);
+        }
+    }
+
+    protected void onAttachToContext(Context context) {
+        try {
+            MainActivity mainActivity = (MainActivity) context;
+            mainActivity.setNotificationsFragment(this);
+        } catch (ClassCastException e) {
+            // waaat?
+            e.printStackTrace();
+        }
     }
 
     private void findViews(View v) {
@@ -241,6 +273,7 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
     }
 
     private void setData() {
+        Log.i(TAG, "asdf setData this = " + this);
         if (notificationsViewPager.getCurrentItem() == 0) {
             if (allNotificationsFragment != null) {
                 if (notifications.getNotifications() != null) {
@@ -321,5 +354,13 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
             loginView.setVisibility(View.VISIBLE);
             notificationsViewPager.setVisibility(View.GONE);
         }
+    }
+
+    public void setActivityNotificationsFragment(ActivityNotificationsFragment activityNotificationsFragment) {
+        this.activityNotificationsFragment = activityNotificationsFragment;
+    }
+
+    public void setAllNotificationsFragment(AllNotificationsFragment allNotificationsFragment) {
+        this.allNotificationsFragment = allNotificationsFragment;
     }
 }
