@@ -1,5 +1,6 @@
 package com.ddscanner.ui.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.Image;
 import com.ddscanner.ui.activities.ImageSliderActivity;
+import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;
 
@@ -23,10 +25,10 @@ public class AllPhotosDiveSpotAdapter extends RecyclerView.Adapter<AllPhotosDive
 
     private String path;
     private ArrayList<Image> images;
-    private Context context;
+    private Activity context;
     private Helpers helpers = new Helpers();
 
-    public AllPhotosDiveSpotAdapter(ArrayList<Image> photos, Context context, String path) {
+    public AllPhotosDiveSpotAdapter(ArrayList<Image> photos, Activity context, String path) {
         images = photos;
         this.context = context;
         this.path = path;
@@ -67,7 +69,7 @@ public class AllPhotosDiveSpotAdapter extends RecyclerView.Adapter<AllPhotosDive
         @Override
         public void onClick(View v) {
             EventsTracker.trackDiveSpotPhotosView();
-            ImageSliderActivity.show(context, images, getAdapterPosition(), path);
+            ImageSliderActivity.showForResult(context, images, getAdapterPosition(), path, Constants.PHOTOS_ACTIVITY_REQUEST_CODE_SLIDER);
         }
     }
 

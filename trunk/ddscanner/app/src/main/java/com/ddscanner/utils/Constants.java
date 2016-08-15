@@ -88,4 +88,7 @@ public class Constants {
     /*Image slider activity*/
     public static final int SLIDER_ACTIVITY_REQUEST_CODE_LOGIN_FOR_REPORT = 1313;
 
+    /*Photos activity*/
+    public static final int PHOTOS_ACTIVITY_REQUEST_CODE_SLIDER = 8989;
+
 }

@@ -46,7 +46,7 @@ public class DiveSpotReviewsPhoto extends Fragment {
             path = bundle.getString("path");
             recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
             recyclerView.addItemDecoration(new GridSpacingItemDecoration(3));
-            recyclerView.setAdapter(new AllPhotosDiveSpotAdapter(images, getContext(), path));
+            recyclerView.setAdapter(new AllPhotosDiveSpotAdapter(images, getActivity(), path));
         }
         return view;
     }

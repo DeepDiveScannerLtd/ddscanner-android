@@ -14,24 +14,38 @@ import android.view.View;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.entities.DivespotDetails;
 import com.ddscanner.entities.Image;
+import com.ddscanner.rest.BaseCallback;
+import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.PhotosActivityPagerAdapter;
 import com.ddscanner.ui.fragments.DiveSpotAllPhotosFragment;
 import com.ddscanner.ui.fragments.DiveSpotPhotosFragment;
 import com.ddscanner.ui.fragments.DiveSpotReviewsPhoto;
+import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.SharedPreferenceHelper;
+import com.google.gson.Gson;
+import com.rey.material.widget.ProgressView;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import me.nereo.multi_image_selector.MultiImageSelector;
 import me.nereo.multi_image_selector.MultiImageSelectorActivity;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Response;
 
 /**
  * Created by lashket on 11.5.16.
  */
 public class DiveSpotPhotosActivity extends AppCompatActivity implements View.OnClickListener {
+
+    private static final String TAG = DiveSpotPhotosActivity.class.getSimpleName();
 
     private TabLayout tabLayout;
     private ViewPager photosViewPager;
@@ -43,10 +57,13 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
     private Helpers helpers = new Helpers();
     private FloatingActionButton fabAddPhoto;
     private String dsId;
+    private DivespotDetails divespotDetails;
 
     private DiveSpotAllPhotosFragment diveSpotAllPhotosFragment = new DiveSpotAllPhotosFragment();
     private DiveSpotPhotosFragment diveSpotPhotosFragment = new DiveSpotPhotosFragment();
     private DiveSpotReviewsPhoto diveSpotReviewsPhoto = new DiveSpotReviewsPhoto();
+
+    private ProgressView progressView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -66,7 +83,7 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
         bundle.putParcelableArrayList("diveSpotImages", diveSpotImages);
         bundle.putString("path", path);
         diveSpotPhotosFragment.setArguments(bundle);
-
+        Log.i(TAG, String.valueOf(diveSpotPhotosFragment));
         if (reviewsImages != null) {
             reviewsImages = helpers.appendFullImagesWithPath(reviewsImages, path);
         }
@@ -110,6 +127,7 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
     }
 
     private void findViews() {
+        progressView = (ProgressView) findViewById(R.id.progressBar);
         tabLayout = (TabLayout) findViewById(R.id.photos_tab_layout);
         photosViewPager = (ViewPager) findViewById(R.id.photos_view_pager);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -165,6 +183,7 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
             if (resultCode == RESULT_OK) {
                 Intent intent = new Intent();
                 setResult(RESULT_OK, intent);
+                finish();
             }
         }
         if (requestCode == 1) {
@@ -187,6 +206,11 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
                 MultiImageSelector.create(this).start(this, 1);
             }
         }
+        if (requestCode == Constants.PHOTOS_ACTIVITY_REQUEST_CODE_SLIDER) {
+            if (resultCode == RESULT_OK) {
+                getDiveSpotPhotos();
+            }
+        }
     }
 
     @Override
@@ -201,6 +225,72 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
                 }
                 break;
         }
+    }
+
+    private void getDiveSpotPhotos() {
+        progressView.setVisibility(View.VISIBLE);
+        photosViewPager.setVisibility(View.GONE);
+        Map<String, String> map = new HashMap<>();
+        map = helpers.getUserQuryMapRequest();
+        map.put("isImageAuthor", "true");
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveSpotImages(dsId, map);
+        call.enqueue(new BaseCallback() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    String responseString = "";
+                    try {
+                        responseString = response.body().string();
+                        divespotDetails = new Gson().fromJson(responseString, DivespotDetails.class);
+                        updateFragments(divespotDetails);
+                    } catch (IOException e) {
+
+                    }
+                }
+            }
+        });
+    }
+
+    private void updateFragments(DivespotDetails divespotDetails) {
+        diveSpotAllPhotosFragment = new DiveSpotAllPhotosFragment();
+        diveSpotPhotosFragment = new DiveSpotPhotosFragment();
+        diveSpotReviewsPhoto = new DiveSpotReviewsPhoto();
+
+        reviewsImages = (ArrayList<Image>) divespotDetails.getDivespot().getCommentImages();
+        diveSpotImages = (ArrayList<Image>)divespotDetails.getDivespot().getImages();
+        diveSpotImages = helpers.appendFullImagesWithPath(diveSpotImages, path);
+        if (reviewsImages != null) {
+            reviewsImages = helpers.appendFullImagesWithPath(reviewsImages, path);
+        }
+
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList("diveSpotImages", diveSpotImages);
+        bundle.putString("path", path);
+        Log.i(TAG, String.valueOf(diveSpotPhotosFragment));
+        diveSpotPhotosFragment.setArguments(bundle);
+
+        bundle = new Bundle();
+        bundle.putParcelableArrayList("reviewsImages", reviewsImages);
+        bundle.putString("path", path);
+        diveSpotReviewsPhoto.setArguments(bundle);
+
+        allPhotos = new ArrayList<>();
+
+        allPhotos = helpers.compareObjectsArray(reviewsImages, diveSpotImages);
+
+
+
+        bundle = new Bundle();
+        bundle.putParcelableArrayList("images", allPhotos);
+        bundle.putString("path", path);
+        diveSpotAllPhotosFragment.setArguments(bundle);
+
+        setupViewPager();
+        setUi();
+        setUpTabLayout();
+
+        progressView.setVisibility(View.GONE);
+        photosViewPager.setVisibility(View.VISIBLE);
     }
 
 }

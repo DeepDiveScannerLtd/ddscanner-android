@@ -265,4 +265,7 @@ public interface DDScannerRestService {
 
     @DELETE("diving/image/{name}")
     Call<ResponseBody> deleteImage(@Path("name") String imageName, @QueryMap Map<String, String> map);
+
+    @GET("diving/divespot/{id}/images")
+    Call<ResponseBody> getDiveSpotImages(@Path("id") String id, @QueryMap Map<String, String> map);
 }

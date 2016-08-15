@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,8 @@ import java.util.ArrayList;
  * Created by lashket on 11.5.16.
  */
 public class DiveSpotPhotosFragment extends Fragment {
+
+    private static final String TAG = DiveSpotPhotosFragment.class.getSimpleName();
 
     private ArrayList<Image> images;
 
@@ -42,10 +45,11 @@ public class DiveSpotPhotosFragment extends Fragment {
         recyclerView = (RecyclerView) view.findViewById(R.id.photos);
         Bundle bundle = getArguments();
         images = bundle.getParcelableArrayList("diveSpotImages");
+        Log.i(TAG, this.toString());
         path = bundle.getString("path");
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(),3));
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(3));
-        recyclerView.setAdapter(new AllPhotosDiveSpotAdapter(images, getContext(), path));
+        recyclerView.setAdapter(new AllPhotosDiveSpotAdapter(images, getActivity(), path));
         return view;
     }
 
