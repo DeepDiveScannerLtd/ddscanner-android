@@ -1,5 +1,8 @@
 package com.ddscanner.ui.fragments;
 
+import android.annotation.TargetApi;
+import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,6 +19,7 @@ import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.Activity;
 import com.ddscanner.entities.Notification;
+import com.ddscanner.ui.activities.MainActivity;
 import com.ddscanner.ui.adapters.ActivitiesListAdapter;
 import com.ddscanner.ui.adapters.NotificationsListAdapter;
 import com.ddscanner.ui.adapters.SectionedRecyclerViewAdapter;
@@ -30,6 +34,8 @@ import java.util.List;
  * Created by lashket on 25.5.16.
  */
 public class AllNotificationsFragment extends Fragment {
+
+    private static final String TAG = AllNotificationsFragment.class.getName();
 
     private RecyclerView recyclerView;
     private FragmentActivity myContext;
@@ -57,6 +63,34 @@ public class AllNotificationsFragment extends Fragment {
             addList(activities);
         }
         return view;
+    }
+
+    @TargetApi(23)
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        onAttachToContext(context);
+    }
+
+    @SuppressWarnings("deprecation")
+    @Override
+    public void onAttach(android.app.Activity context) {
+        super.onAttach(context);
+
+        if (Build.VERSION.SDK_INT < 23) {
+            onAttachToContext(context);
+        }
+    }
+
+    protected void onAttachToContext(Context context) {
+        try {
+            MainActivity mainActivity = (MainActivity) context;
+            mainActivity.setAllNotificationsFragment(this);
+        } catch (ClassCastException e) {
+            // waaat?
+            e.printStackTrace();
+        }
     }
 
     @Override

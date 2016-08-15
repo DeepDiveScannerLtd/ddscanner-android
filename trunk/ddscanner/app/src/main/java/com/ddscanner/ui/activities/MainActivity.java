@@ -53,6 +53,10 @@ import com.ddscanner.rest.BaseCallback;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.MainActivityPagerAdapter;
+import com.ddscanner.ui.fragments.ActivityNotificationsFragment;
+import com.ddscanner.ui.fragments.AllNotificationsFragment;
+import com.ddscanner.ui.fragments.NotificationsFragment;
+import com.ddscanner.ui.fragments.ProfileFragment;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
@@ -112,6 +116,10 @@ public class MainActivity extends BaseAppCompatActivity
     private ImageView searchLocationBtn;
     private ImageView btnFilter;
     private MainActivityPagerAdapter mainViewPagerAdapter;
+    private ProfileFragment profileFragment;
+    private NotificationsFragment notificationsFragment;
+    private ActivityNotificationsFragment activityNotificationsFragment;
+    private AllNotificationsFragment allNotificationsFragment;
     private ImageView imageView;
     private Helpers helpers = new Helpers();
     private boolean isHasInternetConnection;
@@ -232,6 +240,18 @@ public class MainActivity extends BaseAppCompatActivity
         toolbarTabLayout.setupWithViewPager(mainViewPager);
         mainViewPager.setOffscreenPageLimit(3);
         mainViewPager.addOnPageChangeListener(this);
+        if (profileFragment != null) {
+            mainViewPagerAdapter.setProfileFragment(profileFragment);
+        }
+        if (notificationsFragment != null) {
+            mainViewPagerAdapter.setNotificationsFragment(notificationsFragment);
+        }
+        if (activityNotificationsFragment != null) {
+            mainViewPagerAdapter.setActivityNotificationsFragment(activityNotificationsFragment);
+        }
+        if (allNotificationsFragment != null) {
+            mainViewPagerAdapter.setAllNotificationsFragment(allNotificationsFragment);
+        }
     }
 
     private void findViews() {
@@ -713,5 +733,37 @@ public class MainActivity extends BaseAppCompatActivity
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult result) {
 
+    }
+
+    public void setProfileFragment(ProfileFragment profileFragment) {
+        if (mainViewPagerAdapter != null) {
+            mainViewPagerAdapter.setProfileFragment(profileFragment);
+        } else {
+            this.profileFragment = profileFragment;
+        }
+    }
+
+    public void setNotificationsFragment(NotificationsFragment notificationsFragment) {
+        if (mainViewPagerAdapter != null) {
+            mainViewPagerAdapter.setNotificationsFragment(notificationsFragment);
+        } else {
+            this.notificationsFragment = notificationsFragment;
+        }
+    }
+
+    public void setActivityNotificationsFragment(ActivityNotificationsFragment activityNotificationsFragment) {
+        if (mainViewPagerAdapter != null) {
+            mainViewPagerAdapter.setActivityNotificationsFragment(activityNotificationsFragment);
+        } else {
+            this.activityNotificationsFragment = activityNotificationsFragment;
+        }
+    }
+
+    public void setAllNotificationsFragment(AllNotificationsFragment allNotificationsFragment) {
+        if (mainViewPagerAdapter != null) {
+            mainViewPagerAdapter.setAllNotificationsFragment(allNotificationsFragment);
+        } else {
+            this.allNotificationsFragment = allNotificationsFragment;
+        }
     }
 }

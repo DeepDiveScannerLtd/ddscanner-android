@@ -5,8 +5,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 
 import com.ddscanner.R;
+import com.ddscanner.ui.fragments.ActivityNotificationsFragment;
+import com.ddscanner.ui.fragments.AllNotificationsFragment;
 import com.ddscanner.ui.fragments.MapListFragment;
 import com.ddscanner.ui.fragments.NeedToLoginFragment;
 import com.ddscanner.ui.fragments.NotificationsFragment;
@@ -69,5 +72,21 @@ public class MainActivityPagerAdapter extends FragmentStatePagerAdapter implemen
     public void onLoggedOut() {
         profileFragment.onLoggedOut();
         notificationsFragment.onLoggedOut();
+    }
+
+    public void setProfileFragment(ProfileFragment profileFragment) {
+        this.profileFragment = profileFragment;
+    }
+
+    public void setNotificationsFragment(NotificationsFragment notificationsFragment) {
+        this.notificationsFragment = notificationsFragment;
+    }
+
+    public void setActivityNotificationsFragment(ActivityNotificationsFragment activityNotificationsFragment) {
+        this.notificationsFragment.setActivityNotificationsFragment(activityNotificationsFragment);
+    }
+
+    public void setAllNotificationsFragment(AllNotificationsFragment allNotificationsFragment) {
+        this.notificationsFragment.setAllNotificationsFragment(allNotificationsFragment);
     }
 }

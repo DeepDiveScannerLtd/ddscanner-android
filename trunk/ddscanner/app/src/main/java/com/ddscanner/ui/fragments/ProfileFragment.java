@@ -1,13 +1,17 @@
 package com.ddscanner.ui.fragments;
 
+import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,6 +47,7 @@ import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.activities.AboutActivity;
 import com.ddscanner.ui.activities.DiveSpotsListActivity;
+import com.ddscanner.ui.activities.MainActivity;
 import com.ddscanner.ui.activities.UsersDivespotListSwipableActivity;
 import com.ddscanner.ui.views.LoginView;
 import com.ddscanner.utils.Constants;
@@ -73,6 +78,8 @@ import retrofit2.Response;
  */
 public class ProfileFragment extends Fragment
         implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, LoginView.LoginStateChangeListener {
+
+    private static final String TAG = ProfileFragment.class.getName();
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int MAX_LENGTH_NAME = 30;
@@ -136,6 +143,7 @@ public class ProfileFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        Log.i(TAG, "ProfileFragment onCreateView, this = " + this);
         View v = inflater.inflate(R.layout.fragment_profile, container, false);
         findViews(v);
         editProfile.setOnClickListener(this);
@@ -155,6 +163,36 @@ public class ProfileFragment extends Fragment
             onLoggedOut();
         }
         return v;
+    }
+
+    @TargetApi(23)
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        Log.i(TAG, "onAttach(Context context)");
+        onAttachToContext(context);
+    }
+
+    @SuppressWarnings("deprecation")
+    @Override
+    public void onAttach(Activity context) {
+        super.onAttach(context);
+
+        Log.i(TAG, "onAttach(Activity context)");
+        if (Build.VERSION.SDK_INT < 23) {
+            onAttachToContext(context);
+        }
+    }
+
+    protected void onAttachToContext(Context context) {
+        try {
+            MainActivity mainActivity = (MainActivity) context;
+            mainActivity.setProfileFragment(this);
+        } catch (ClassCastException e) {
+            // waaat?
+            e.printStackTrace();
+        }
     }
 
     private void findViews(View v) {
@@ -300,6 +338,7 @@ public class ProfileFragment extends Fragment
     @Override
     public void onResume() {
         super.onResume();
+        Log.i(TAG, "ProfileFragment onCreateView, this = " + this);
         if (SharedPreferenceHelper.isUserLoggedIn()) {
             if (!isClickedChosingPhotoButton) {
                 getUserDataRequest(SharedPreferenceHelper.getUserServerId());
@@ -313,12 +352,14 @@ public class ProfileFragment extends Fragment
     @Override
     public void onStart() {
         super.onStart();
+        Log.i(TAG, "ProfileFragment onStart, this = " + this);
         DDScannerApplication.bus.register(this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
+        Log.i(TAG, "ProfileFragment onStop, this = " + this);
         DDScannerApplication.bus.unregister(this);
     }
 
@@ -427,6 +468,7 @@ public class ProfileFragment extends Fragment
     @Override
     public void setUserVisibleHint(final boolean visible) {
         super.setUserVisibleHint(visible);
+        Log.i(TAG, "ProfileFragment setUserVisibleHint, this = " + this);
         if (visible) {
             if (SharedPreferenceHelper.isUserLoggedIn()) {
                 getUserDataRequest(SharedPreferenceHelper.getUserServerId());
@@ -611,6 +653,7 @@ public class ProfileFragment extends Fragment
 
     @Override
     public void onLoggedIn() {
+        Log.i(TAG, "ProfileFragment onLoggedIn, this = " + this);
         if (loginView != null && aboutLayout != null) {
             loginView.setVisibility(View.GONE);
             if (editLayout.getVisibility() != View.VISIBLE) {
