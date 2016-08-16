@@ -40,14 +40,9 @@ public class DiveSpotReviewsPhoto extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_reviews_photo, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.photos);
-        if (getArguments().getParcelableArrayList("reviewsImages") != null) {
-            Bundle bundle = getArguments();
-            images = bundle.getParcelableArrayList("reviewsImages");
-            path = bundle.getString("path");
-            recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
-            recyclerView.addItemDecoration(new GridSpacingItemDecoration(3));
-            recyclerView.setAdapter(new AllPhotosDiveSpotAdapter(images, getActivity(), path));
-        }
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
+        recyclerView.addItemDecoration(new GridSpacingItemDecoration(3));
+        recyclerView.setAdapter(new AllPhotosDiveSpotAdapter(images, getActivity(), path));
         return view;
     }
 
@@ -66,5 +61,14 @@ public class DiveSpotReviewsPhoto extends Fragment {
                 outRect.top = Math.round(helpers.convertDpToPixel(Float.valueOf(4), getContext()));
             }
         }
+    }
+
+    public void setList(ArrayList<Image> images, String path) {
+        this.path = path;
+        if (recyclerView == null) {
+            this.images = images;
+            return;
+        }
+        recyclerView.setAdapter(new AllPhotosDiveSpotAdapter(images, getActivity(), path));
     }
 }

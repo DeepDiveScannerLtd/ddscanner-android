@@ -84,27 +84,16 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
         if (diveSpotImages != null) {
             diveSpotImages = helpers.appendFullImagesWithPath(diveSpotImages, path);
         }
+        diveSpotPhotosFragment.setList(diveSpotImages, path);
 
-        bundle = new Bundle();
-        bundle.putParcelableArrayList("diveSpotImages", diveSpotImages);
-        bundle.putString("path", path);
-        diveSpotPhotosFragment.setArguments(bundle);
-        Log.i(TAG, String.valueOf(diveSpotPhotosFragment));
         if (reviewsImages != null) {
             reviewsImages = helpers.appendFullImagesWithPath(reviewsImages, path);
         }
-
-        bundle = new Bundle();
-        bundle.putParcelableArrayList("reviewsImages", reviewsImages);
-        bundle.putString("path", path);
-        diveSpotReviewsPhoto.setArguments(bundle);
+        diveSpotReviewsPhoto.setList(reviewsImages, path);
 
         allPhotos = helpers.compareObjectsArray(reviewsImages, diveSpotImages);
 
-        bundle = new Bundle();
-        bundle.putParcelableArrayList("images", allPhotos);
-        bundle.putString("path", path);
-        diveSpotAllPhotosFragment.setArguments(bundle);
+        diveSpotAllPhotosFragment.setList(allPhotos, path);
 
         setupViewPager();
         setUi();
@@ -256,9 +245,6 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
 
     private void updateFragments(DivespotDetails divespotDetails) {
         isDataChanged = true;
-        diveSpotAllPhotosFragment = new DiveSpotAllPhotosFragment();
-        diveSpotPhotosFragment = new DiveSpotPhotosFragment();
-        diveSpotReviewsPhoto = new DiveSpotReviewsPhoto();
 
         reviewsImages = (ArrayList<Image>) divespotDetails.getDivespot().getCommentImages();
         diveSpotImages = (ArrayList<Image>)divespotDetails.getDivespot().getImages();
@@ -269,31 +255,11 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
             reviewsImages = helpers.appendFullImagesWithPath(reviewsImages, path);
         }
 
-        Bundle bundle = new Bundle();
-        bundle.putParcelableArrayList("diveSpotImages", diveSpotImages);
-        bundle.putString("path", path);
-        Log.i(TAG, String.valueOf(diveSpotPhotosFragment));
-        diveSpotPhotosFragment.setArguments(bundle);
-
-        bundle = new Bundle();
-        bundle.putParcelableArrayList("reviewsImages", reviewsImages);
-        bundle.putString("path", path);
-        diveSpotReviewsPhoto.setArguments(bundle);
-
+        diveSpotReviewsPhoto.setList(reviewsImages, path);
         allPhotos = new ArrayList<>();
-
         allPhotos = helpers.compareObjectsArray(reviewsImages, diveSpotImages);
-
-
-
-        bundle = new Bundle();
-        bundle.putParcelableArrayList("images", allPhotos);
-        bundle.putString("path", path);
-        diveSpotAllPhotosFragment.setArguments(bundle);
-
-        setupViewPager();
-        setUi();
-        setUpTabLayout();
+        diveSpotAllPhotosFragment.setList(allPhotos, path);
+        diveSpotPhotosFragment.setList(diveSpotImages, path);
 
         progressView.setVisibility(View.GONE);
         photosViewPager.setVisibility(View.VISIBLE);

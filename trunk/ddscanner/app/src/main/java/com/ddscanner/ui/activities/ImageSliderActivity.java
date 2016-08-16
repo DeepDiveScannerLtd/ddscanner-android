@@ -83,6 +83,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     private String reportType;
     private String reportDescription;
     private String deleteImageName;
+    private MaterialDialog materialDialog;
 
 
     @Override
@@ -90,6 +91,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_slider);
         findViews();
+        materialDialog = helpers.getMaterialDialog(this);
         getReportsTypes();
         Bundle bundle = getIntent().getExtras();
         images = bundle.getParcelableArrayList("IMAGES");
@@ -280,10 +282,12 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     }
 
     private void deleteImage(String name) {
+        materialDialog.show();
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().deleteImage(name, helpers.getUserQuryMapRequest());
         call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                materialDialog.dismiss();
                 if (response.isSuccessful()) {
                     imageDeleted(ImageSliderActivity.this.position);
                 }
@@ -302,6 +306,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     }
 
     private void reportImage(String imageName, String reportType, String reportDescription) {
+        materialDialog.show();
         ReportRequest reportRequest = new ReportRequest();
         if (!SharedPreferenceHelper.isUserLoggedIn() || SharedPreferenceHelper.getToken().isEmpty() || SharedPreferenceHelper.getSn().isEmpty()) {
             SocialNetworks.showForResult(this, Constants.SLIDER_ACTIVITY_REQUEST_CODE_LOGIN_FOR_REPORT);
@@ -318,6 +323,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                materialDialog.dismiss();
                 if (response.isSuccessful()) {
                     Toast.makeText(ImageSliderActivity.this, "Thank for your report", Toast.LENGTH_SHORT).show();
                     imageDeleted(ImageSliderActivity.this.position);

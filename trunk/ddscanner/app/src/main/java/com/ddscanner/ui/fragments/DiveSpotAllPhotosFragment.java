@@ -16,6 +16,7 @@ import com.ddscanner.ui.adapters.AllPhotosDiveSpotAdapter;
 import com.ddscanner.utils.Helpers;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by lashket on 11.5.16.
@@ -40,9 +41,6 @@ public class DiveSpotAllPhotosFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_all_photos, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.photos);
-        Bundle bundle = getArguments();
-        images = bundle.getParcelableArrayList("images");
-        path = bundle.getString("path");
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(),3));
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(3));
         recyclerView.setAdapter(new AllPhotosDiveSpotAdapter(images, getActivity(), path));
@@ -64,5 +62,14 @@ public class DiveSpotAllPhotosFragment extends Fragment {
                 outRect.top = Math.round(helpers.convertDpToPixel(Float.valueOf(4), getContext()));
             }
         }
+    }
+
+    public void setList(ArrayList<Image> images, String path) {
+        this.path = path;
+        if (recyclerView == null) {
+            this.images = images;
+            return;
+        }
+        recyclerView.setAdapter(new AllPhotosDiveSpotAdapter(images, getActivity(), path));
     }
 }
