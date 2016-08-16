@@ -291,6 +291,43 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
                 if (response.isSuccessful()) {
                     imageDeleted(ImageSliderActivity.this.position);
                 }
+                if (!response.isSuccessful()) {
+                    String responseString = "";
+                    try {
+                        responseString = response.errorBody().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    LogUtils.i("response body is " + responseString);
+                    try {
+                        ErrorsParser.checkForError(response.code(), responseString);
+                    } catch (ServerInternalErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
+                    } catch (BadRequestException e) {
+                        // TODO Handle
+                        helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
+                    } catch (ValidationErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
+                    } catch (NotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
+                    } catch (UnknownErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
+                    } catch (DiveSpotNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
+                    } catch (UserNotFoundException e) {
+                        // TODO Handle
+                        SharedPreferenceHelper.logout();
+                        SocialNetworks.showForResult(ImageSliderActivity.this, Constants.SLIDER_ACTIVITY_REQUEST_CODE_LOGIN_FOR_DELETE);
+                    } catch (CommentNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
+                    }
+                }
             }
         });
     }
@@ -300,6 +337,14 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         if (requestCode == Constants.SLIDER_ACTIVITY_REQUEST_CODE_LOGIN_FOR_REPORT) {
             if (resultCode == RESULT_OK) {
                 reportImage(reportName, reportType, reportDescription);
+            }
+        }
+        if (requestCode == Constants.SLIDER_ACTIVITY_REQUEST_CODE_LOGIN_FOR_DELETE) {
+            if (resultCode == RESULT_OK) {
+                deleteImage(deleteImageName);
+            }
+            if (resultCode == RESULT_CANCELED) {
+
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
