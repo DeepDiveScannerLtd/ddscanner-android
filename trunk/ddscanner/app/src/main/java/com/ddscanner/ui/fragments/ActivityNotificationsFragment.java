@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
@@ -38,6 +39,7 @@ public class ActivityNotificationsFragment extends Fragment {
     private Helpers helpers = new Helpers();
     private ArrayList<Activity> activities;
     private boolean isHasSections = false;
+    private LinearLayout noNotificationsLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,6 +55,7 @@ public class ActivityNotificationsFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragmnet_activity_notifications, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.activity_rc);
+        noNotificationsLayout = (LinearLayout) view.findViewById(R.id.noNotificationsView);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -97,6 +100,11 @@ public class ActivityNotificationsFragment extends Fragment {
             return;
         }
         EventsTracker.trackActivityView();
+        if (activities == null || activities.size() == 0) {
+            noNotificationsLayout.setVisibility(View.VISIBLE);
+        } else {
+            noNotificationsLayout.setVisibility(View.GONE);
+        }
         if (activities == null) {
             recyclerView.setAdapter(new ActivitiesListAdapter(
                     getContext(), activities));
