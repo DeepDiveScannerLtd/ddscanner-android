@@ -162,10 +162,17 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         reviewsListViewHolder.dislikesCount.setText(comments.get(reviewsListViewHolder.getAdapterPosition()).getDislikes());
         isAdapterSet = true;
 
-        Picasso.with(context).load(comments.get(reviewsListViewHolder.getAdapterPosition()).getUser().getPicture()).resize(40, 40).
-                transform(new TransformationRoundImage(50, 0)).centerCrop().
-                into(reviewsListViewHolder.user_avatar);
-        reviewsListViewHolder.rating.removeAllViews();
+        if (comments.get(reviewsListViewHolder.getAdapterPosition()).getUser().getPicture() != null) {
+            Picasso.with(context)
+                    .load(comments.get(reviewsListViewHolder.getAdapterPosition()).getUser().getPicture()).resize(40, 40)
+                    .transform(new TransformationRoundImage(50, 0))
+                    .centerCrop()
+                    .placeholder(R.drawable.avatar_profile_default)
+                    .into(reviewsListViewHolder.user_avatar);
+            reviewsListViewHolder.rating.removeAllViews();
+        } else {
+            reviewsListViewHolder.user_avatar.setImageResource(R.drawable.avatar_profile_default);
+        }
         for (int k = 0; k < Integer.parseInt(comments.get(reviewsListViewHolder.getAdapterPosition()).getRating()); k++) {
             ImageView iv = new ImageView(context);
             iv.setImageResource(R.drawable.ic_list_star_full);

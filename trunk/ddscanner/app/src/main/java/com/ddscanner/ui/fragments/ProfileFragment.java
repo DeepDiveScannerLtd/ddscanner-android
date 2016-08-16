@@ -424,12 +424,10 @@ public class ProfileFragment extends Fragment
                 Picasso.with(getContext()).load(R.drawable.avatar_profile_default)
                         .resize(Math.round(helpers.convertDpToPixel(100, getContext())),
                                 Math.round(helpers.convertDpToPixel(100, getContext()))).centerCrop()
+                        .placeholder(R.drawable.avatar_profile_default)
                         .transform(new CropCircleTransformation()).into(avatar);
             } else {
-                Picasso.with(getContext()).load(user.getPicture())
-                        .resize(Math.round(helpers.convertDpToPixel(100, getContext())),
-                                Math.round(helpers.convertDpToPixel(100, getContext()))).centerCrop()
-                        .transform(new CropCircleTransformation()).into(avatar);
+                avatar.setImageResource(R.drawable.avatar_profile_default);
             }
             userCommentsCount.setText(user.getCountComment());
             userLikesCount.setText(user.getCountLike());
@@ -438,6 +436,7 @@ public class ProfileFragment extends Fragment
                     .resize(Math.round(helpers.convertDpToPixel(80, getContext())),
                             Math.round(helpers.convertDpToPixel(80, getContext()))).centerCrop()
                     .placeholder(R.drawable.avatar_profile_default)
+                    .error(R.drawable.avatar_profile_default)
                     .transform(new CropCircleTransformation()).into(newPhoto);
             if (user.getAbout() != null) {
                 userAbout.setVisibility(View.VISIBLE);
