@@ -53,6 +53,9 @@ public class AllPhotosDiveSpotAdapter extends RecyclerView.Adapter<AllPhotosDive
 
     @Override
     public int getItemCount() {
+        if (images == null) {
+            return 0;
+        }
         return images.size();
     }
 

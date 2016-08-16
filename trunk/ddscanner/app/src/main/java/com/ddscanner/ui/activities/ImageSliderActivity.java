@@ -188,6 +188,8 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
             if (images.size() == 1) {
                 this.position = 0;
             } else if (position + 1 <= images.size()) {
+                this.position = position;
+            } else if (position == images.size()) {
                 this.position = images.size() - 1;
             }
             setUi();
@@ -208,10 +210,11 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
 
 
     private void showDeleteMenu(View view) {
+        deleteImageName = images.get(position).getName();
         PopupMenu popup = new PopupMenu(this, view);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.menu_photo_delete, popup.getMenu());
-     //   popup.setOnMenuItemClickListener(new MenuItemClickListener(commentId, comment));
+        popup.setOnMenuItemClickListener(new MenuItemsClickListener(deleteImageName));
         popup.show();
     }
 

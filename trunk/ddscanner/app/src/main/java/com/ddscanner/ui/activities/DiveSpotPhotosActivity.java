@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -57,7 +59,9 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
     private Helpers helpers = new Helpers();
     private FloatingActionButton fabAddPhoto;
     private String dsId;
+    private PhotosActivityPagerAdapter photosActivityPagerAdapter;
     private DivespotDetails divespotDetails;
+    private boolean isDataChanged = false;
 
     private DiveSpotAllPhotosFragment diveSpotAllPhotosFragment = new DiveSpotAllPhotosFragment();
     private DiveSpotPhotosFragment diveSpotPhotosFragment = new DiveSpotPhotosFragment();
@@ -70,14 +74,16 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_photos);
         findViews();
+        photosActivityPagerAdapter = new PhotosActivityPagerAdapter(getSupportFragmentManager());
         Bundle bundle = getIntent().getExtras();
         diveSpotImages = bundle.getParcelableArrayList("images");
         reviewsImages =  bundle.getParcelableArrayList("reviewsImages");
 
         path = getIntent().getStringExtra("path");
         dsId = getIntent().getStringExtra("id");
-
-        diveSpotImages = helpers.appendFullImagesWithPath(diveSpotImages, path);
+        if (diveSpotImages != null) {
+            diveSpotImages = helpers.appendFullImagesWithPath(diveSpotImages, path);
+        }
 
         bundle = new Bundle();
         bundle.putParcelableArrayList("diveSpotImages", diveSpotImages);
@@ -117,9 +123,6 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
     }
 
     private void setupViewPager() {
-        PhotosActivityPagerAdapter photosActivityPagerAdapter = new PhotosActivityPagerAdapter(
-                getSupportFragmentManager()
-        );
         photosActivityPagerAdapter.addFragment(diveSpotAllPhotosFragment, "all");
         photosActivityPagerAdapter.addFragment(diveSpotPhotosFragment, "divespot");
         photosActivityPagerAdapter.addFragment(diveSpotReviewsPhoto, "reviews");
@@ -155,7 +158,7 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                finish();
+                onBackPressed();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -221,7 +224,7 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
                     Intent intent = new Intent(this, SocialNetworks.class);
                     startActivityForResult(intent, 100);
                 } else {
-                    MultiImageSelector.create(this).start(this, 1);
+                    MultiImageSelector.create(this).count(3).start(this, 1);
                 }
                 break;
         }
@@ -252,13 +255,16 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
     }
 
     private void updateFragments(DivespotDetails divespotDetails) {
+        isDataChanged = true;
         diveSpotAllPhotosFragment = new DiveSpotAllPhotosFragment();
         diveSpotPhotosFragment = new DiveSpotPhotosFragment();
         diveSpotReviewsPhoto = new DiveSpotReviewsPhoto();
 
         reviewsImages = (ArrayList<Image>) divespotDetails.getDivespot().getCommentImages();
         diveSpotImages = (ArrayList<Image>)divespotDetails.getDivespot().getImages();
-        diveSpotImages = helpers.appendFullImagesWithPath(diveSpotImages, path);
+        if (diveSpotImages != null) {
+            diveSpotImages = helpers.appendFullImagesWithPath(diveSpotImages, path);
+        }
         if (reviewsImages != null) {
             reviewsImages = helpers.appendFullImagesWithPath(reviewsImages, path);
         }
@@ -293,4 +299,13 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
         photosViewPager.setVisibility(View.VISIBLE);
     }
 
+    @Override
+    public void onBackPressed() {
+        if (isDataChanged) {
+            setResult(RESULT_OK);
+            finish();
+        } else {
+            finish();
+        }
+    }
 }
