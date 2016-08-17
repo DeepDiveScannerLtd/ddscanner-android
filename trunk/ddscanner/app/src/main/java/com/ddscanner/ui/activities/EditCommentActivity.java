@@ -294,9 +294,11 @@ public class EditCommentActivity extends AppCompatActivity implements View.OnCli
             requestComment = RequestBody.create(MediaType.parse("multipart/form-data"),
                     text.getText().toString().trim());
         }
-
-        List<String> newFilesUrisList = addPhotoToDsListAdapter.getNewFilesUrisList();
-        if (newFilesUrisList == null) {
+        List<String> newFilesUrisList = new ArrayList<>();
+        if (addPhotoToDsListAdapter != null && addPhotoToDsListAdapter.getNewFilesUrisList() != null) {
+            newFilesUrisList = addPhotoToDsListAdapter.getNewFilesUrisList();
+        }
+        if (newFilesUrisList.size() == 0) {
             newImages = null;
         } else {
             newImages = new ArrayList<>();

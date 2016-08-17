@@ -65,21 +65,22 @@ import retrofit2.Response;
 /**
  * Created by lashket on 12.3.16.
  */
-public class ReviewsActivity extends AppCompatActivity implements View.OnClickListener{
+public class ReviewsActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final int RC_LOGIN = 8001;
     private static final int RC_LOGIN_TO_LEAVE_REPORT = 7070;
+    private static final int RC_LOGIN_TO_DELETE_COMMENT = 7078;
 
     private ArrayList<Comment> comments;
     private RecyclerView commentsRc;
     private ProgressView progressView;
-    private MaterialDialog materialDialog;
 
     private Toolbar toolbar;
     private FloatingActionButton leaveReview;
 
     private String diveSpotId;
     private Helpers helpers = new Helpers();
+    private String commentToDelete;
 
     private String path;
 
@@ -92,6 +93,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     private String reportCommentId;
     private String reportType;
     private String reportDescription = null;
+    private MaterialDialog materialDialog;
     private boolean isClickedReport;
 
     @Override
@@ -145,7 +147,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (requestCode == 9001) {
-            if(resultCode == Activity.RESULT_OK){
+            if (resultCode == Activity.RESULT_OK) {
 //                Comment comment = (Comment)data.getSerializableExtra("COMMENT");
 //                if (comments == null) {
 //                    comments = new ArrayList<Comment>();
@@ -175,6 +177,11 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
             }
             if (resultCode == RESULT_CANCELED) {
                 getComments();
+            }
+        }
+        if (requestCode == RC_LOGIN_TO_DELETE_COMMENT) {
+            if (resultCode == RESULT_OK) {
+                deleteUsersComment(commentToDelete);
             }
         }
     }
@@ -272,12 +279,11 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public void onBackPressed() {
-        Intent returnIntent = new Intent();
         if (isHasNewComment) {
-            setResult(RESULT_OK, returnIntent);
+            setResult(RESULT_OK);
             finish();
         } else {
-            setResult(RESULT_CANCELED, returnIntent);
+            setResult(RESULT_CANCELED);
             finish();
         }
     }
@@ -313,6 +319,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void deleteUsersComment(String id) {
+        commentToDelete = id;
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().deleteComment(id, helpers.getUserQuryMapRequest());
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -320,9 +327,42 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
                 if (response.isSuccessful()) {
                     getComments();
                     isHasNewComment = true;
-                }
-                if (!response.isSuccessful()) {
-
+                } else {
+                    String responseString = "";
+                    try {
+                        responseString = response.errorBody().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    LogUtils.i("response body is " + responseString);
+                    try {
+                        ErrorsParser.checkForError(response.code(), responseString);
+                    } catch (ServerInternalErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                    } catch (BadRequestException e) {
+                        // TODO Handle
+                        helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                    } catch (ValidationErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                    } catch (NotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                    } catch (UnknownErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                    } catch (DiveSpotNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                    } catch (UserNotFoundException e) {
+                        // TODO Handle
+                        SharedPreferenceHelper.logout();
+                        SocialNetworks.showForResult(ReviewsActivity.this, RC_LOGIN_TO_DELETE_COMMENT);
+                    } catch (CommentNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                    }
                 }
             }
 
@@ -374,7 +414,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
                 .itemsCallback(new MaterialDialog.ListCallback() {
                     @Override
                     public void onSelection(final MaterialDialog dialog, View view, int which, CharSequence text) {
-                        
+
                         isClickedReport = true;
                         reportType = helpers.getMirrorOfHashMap(filters.getReport()).get(text);
                         if (reportType.equals("other")) {
@@ -404,7 +444,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
                     }
                 }).show();
     }
-    
+
     private void sendReportRequest(String type, String description) {
         materialDialog.show();
         if (!SharedPreferenceHelper.isUserLoggedIn()) {
@@ -474,5 +514,5 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
             }
         });
     }
-    
+
 }
