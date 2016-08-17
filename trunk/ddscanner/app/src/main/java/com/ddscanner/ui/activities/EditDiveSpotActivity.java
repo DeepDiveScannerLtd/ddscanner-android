@@ -107,7 +107,6 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
     private Spinner levelSpinner;
     private Spinner currentsSpinner;
     private Spinner objectSpinner;
-    private Spinner accessSpinner;
     private EditText name;
     private EditText depth;
     private EditText description;
@@ -150,7 +149,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
     private Map<String, TextView> errorsMap = new HashMap<>();
 
     private RequestBody requestName, requestLat, requestLng, requestDepth,
-            requestCurrents, requestLevel, requestObject, requestAccess,
+            requestCurrents, requestLevel, requestObject,
             requestDescription, requestType, requestMinVisibility = null, requestMaxVisibility = null;
     private RequestBody requestSecret = null;
     private RequestBody requestSocial = null;
@@ -184,7 +183,6 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
         levelSpinner = (Spinner) findViewById(R.id.level_spinner);
         objectSpinner = (Spinner) findViewById(R.id.object_spinner);
         currentsSpinner = (Spinner) findViewById(R.id.currents_spinner);
-        accessSpinner = (Spinner) findViewById(R.id.access_spinner);
         pickLocation = (LinearLayout) findViewById(R.id.location_layout);
         locationTitle = (TextView) findViewById(R.id.location);
         btnSave = (Button) findViewById(R.id.button_create);
@@ -450,9 +448,6 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
                 String.valueOf(diveSpotLocation.latitude));
         requestLng = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
                 String.valueOf(diveSpotLocation.longitude));
-        requestAccess = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
-                helpers.getMirrorOfHashMap(filters.getAccess())
-                        .get(accessSpinner.getSelectedItem().toString()));
         requestObject = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
                 helpers.getMirrorOfHashMap(filters.getObject())
                         .get(objectSpinner.getSelectedItem().toString()));
@@ -526,7 +521,6 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
                 requestCurrents,
                 requestLevel,
                 requestObject,
-                requestAccess,
                 requestDescription,
                 sealifeRequest,
                 newImages,
@@ -640,7 +634,6 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
                     setSpinnerValues(objectSpinner, filters.getObject(), diveSpot.getObject());
                     setSpinnerValues(levelSpinner, filters.getLevel(), diveSpot.getLevel());
                     setSpinnerValues(currentsSpinner, filters.getCurrents(), diveSpot.getCurrents());
-                    setSpinnerValues(accessSpinner, filters.getAccess(), diveSpot.getAccess());
 
                 }
             }

@@ -175,7 +175,8 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
             if (resultCode == RESULT_OK) {
                 Intent intent = new Intent();
                 setResult(RESULT_OK, intent);
-                finish();
+                getDiveSpotPhotos();
+             //   finish();
             }
         }
         if (requestCode == 1) {
