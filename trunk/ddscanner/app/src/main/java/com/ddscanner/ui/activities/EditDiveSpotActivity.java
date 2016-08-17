@@ -620,14 +620,6 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
                     for (Map.Entry<String, JsonElement> elementEntry : visibilityJsonObject.entrySet()) {
                         filters.getVisibility().put(elementEntry.getKey(), elementEntry.getValue().getAsString());
                     }
-                    JsonObject accessJsonObject = jsonObject.getAsJsonObject("access");
-                    for (Map.Entry<String, JsonElement> elementEntry : accessJsonObject.entrySet()) {
-                        filters.getAccess().put(elementEntry.getKey(), elementEntry.getValue().getAsString());
-                    }
-                    Gson gson = new Gson();
-                    if (jsonObject.get("rating") != null) {
-                        filters.setRating(gson.fromJson(jsonObject.get("rating").getAsJsonArray(), int[].class));
-                    }
 
                     Log.i(TAG, responseString);
 
