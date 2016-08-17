@@ -134,9 +134,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                Intent returnIntent = new Intent();
-                setResult(Activity.RESULT_OK,returnIntent);
-                finish();
+                onBackPressed();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

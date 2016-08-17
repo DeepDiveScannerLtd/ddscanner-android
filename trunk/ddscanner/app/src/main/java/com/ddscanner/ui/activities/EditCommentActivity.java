@@ -112,11 +112,17 @@ public class EditCommentActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void setUi() {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(EditCommentActivity.this);
+        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        photos_rc.setNestedScrollingEnabled(false);
+        photos_rc.setHasFixedSize(false);
+        photos_rc.setLayoutManager(layoutManager);
         if (comment.getImages() != null) {
             maxPhotos = maxPhotos - comment.getImages().size();
             imageUris = comment.getImages();
             addPhotoToDsListAdapter = new AddPhotoToDsListAdapter(comment.getImages(), this, addPhotoTitle);
-            setRcSettings();
+            photos_rc.setAdapter(addPhotoToDsListAdapter);
+           // setRcSettings();
         }
         ratingBar.setRating(Integer.parseInt(comment.getRating()));
         text.setText(comment.getComment());
@@ -248,6 +254,8 @@ public class EditCommentActivity extends AppCompatActivity implements View.OnCli
                         .EXTRA_RESULT));
                 addPhotoToDsListAdapter = new AddPhotoToDsListAdapter(imageUris,
                         EditCommentActivity.this, addPhotoTitle);
+                addPhotoTitle.setVisibility(View.GONE);
+                photos_rc.setVisibility(View.VISIBLE);
                 photos_rc.setAdapter(addPhotoToDsListAdapter);
             }
         }

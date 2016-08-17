@@ -427,7 +427,12 @@ public class ProfileFragment extends Fragment
                         .placeholder(R.drawable.avatar_profile_default)
                         .transform(new CropCircleTransformation()).into(avatar);
             } else {
-                avatar.setImageResource(R.drawable.avatar_profile_default);
+                Picasso.with(getContext()).load(user.getPicture())
+                        .resize(Math.round(helpers.convertDpToPixel(80, getContext())),
+                                Math.round(helpers.convertDpToPixel(80, getContext()))).centerCrop()
+                        .placeholder(R.drawable.avatar_profile_default)
+                        .error(R.drawable.avatar_profile_default)
+                        .transform(new CropCircleTransformation()).into(avatar);
             }
             userCommentsCount.setText(user.getCountComment());
             userLikesCount.setText(user.getCountLike());
