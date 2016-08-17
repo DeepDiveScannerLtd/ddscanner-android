@@ -77,6 +77,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     private TextView userName;
     private ImageView options;
     private Helpers helpers = new Helpers();
+    private boolean isChanged = false;
     private FiltersResponseEntity filters = new FiltersResponseEntity();
     private String reportName;
     private String path;
@@ -170,12 +171,12 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.close_btn:
-                setResult(RESULT_OK);
-                finish();
-                overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
+                onBackPressed();
                 break;
         }
     }
+
+
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -282,6 +283,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     }
 
     private void deleteImage(String name) {
+        isChanged = true;
         materialDialog.show();
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().deleteImage(name, helpers.getUserQuryMapRequest());
         call.enqueue(new BaseCallback() {
@@ -333,6 +335,19 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     }
 
     @Override
+    public void onBackPressed() {
+        if (isChanged) {
+            setResult(RESULT_OK);
+            finish();
+            overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
+        } else {
+            setResult(RESULT_CANCELED);
+            finish();
+            overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
+        }
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == Constants.SLIDER_ACTIVITY_REQUEST_CODE_LOGIN_FOR_REPORT) {
             if (resultCode == RESULT_OK) {
@@ -351,6 +366,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     }
 
     private void reportImage(String imageName, String reportType, String reportDescription) {
+        isChanged = true;
         materialDialog.show();
         ReportRequest reportRequest = new ReportRequest();
         if (!SharedPreferenceHelper.isUserLoggedIn() || SharedPreferenceHelper.getToken().isEmpty() || SharedPreferenceHelper.getSn().isEmpty()) {
