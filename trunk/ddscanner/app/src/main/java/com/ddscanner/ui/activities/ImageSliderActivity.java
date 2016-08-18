@@ -78,6 +78,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     private ImageView options;
     private Helpers helpers = new Helpers();
     private FiltersResponseEntity filters = new FiltersResponseEntity();
+    private String imageNameForDeletion;
     private String reportName;
     private String path;
     private String reportType;
@@ -206,12 +207,11 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         changeUiAccrodingPosition(position);
     }
 
-
     private void showDeleteMenu(View view) {
         PopupMenu popup = new PopupMenu(this, view);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.menu_photo_delete, popup.getMenu());
-     //   popup.setOnMenuItemClickListener(new MenuItemClickListener(commentId, comment));
+//        popup.setOnMenuItemClickListener(new MenuItemClickListener(commentId, comment));
         popup.show();
     }
 

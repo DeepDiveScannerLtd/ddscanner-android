@@ -1,4 +1,4 @@
-package com.ddscanner;
+package com.ddscanner.entities;
 
 import android.content.Intent;
 
