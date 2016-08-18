@@ -7,5 +7,7 @@
 /build
 /captures
 .idea
-/../../.idea
+/.idea/encodings.xml
+/.idea/gradle.xml
+
 

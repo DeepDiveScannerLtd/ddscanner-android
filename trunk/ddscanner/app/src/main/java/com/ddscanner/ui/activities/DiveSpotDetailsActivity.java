@@ -140,6 +140,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private Button showAllReviews;
     private LinearLayout isInfoValidLayout;
     private LinearLayout thanksLayout;
+    private LinearLayout photos;
     private RelativeLayout accessLayout;
     private Button btnDsDetailsIsValid;
     private Button btnDsDetailsIsInvalid;
@@ -218,6 +219,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
      */
 
     private void findViews() {
+        photos = (LinearLayout) findViewById(R.id.photos);
         diveSpotName = (TextView) findViewById(R.id.dive_spot_name);
         rating = (LinearLayout) findViewById(R.id.stars);
         informationLayout = (LinearLayout) findViewById(R.id.informationLayout);
@@ -292,6 +294,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         showDiveCenters.setOnClickListener(this);
         btnDsDetailsIsValid.setOnClickListener(this);
         btnCheckIn.setOnClickListener(this);
+        photos.setOnClickListener(this);
      //   creatorLayout.setOnClickListener(this);
         ratingBar.setOnRatingBarChangeListener(this);
         //checkInPeoples.setOnClickListener(this);
@@ -630,6 +633,9 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 break;
             case R.id.button_show_divecenters:
                 DiveCentersActivity.show(this, new LatLng(diveSpot.getLat(), diveSpot.getLng()), diveSpot.getName());
+                break;
+            case R.id.photos:
+                DDScannerApplication.bus.post(new OpenPhotosActivityEvent());
                 break;
         }
     }
@@ -1181,8 +1187,10 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             menu.findItem(R.id.favorite).setTitle("Remove from favorites");
             return;
         }
-        if (menu.findItem(R.id.favorite) != null) {
-            menu.findItem(R.id.favorite).setTitle("Add to favorites");
+        if (menu != null) {
+            if (menu.findItem(R.id.favorite) != null) {
+                menu.findItem(R.id.favorite).setTitle("Add to favorites");
+            }
         }
     }
 

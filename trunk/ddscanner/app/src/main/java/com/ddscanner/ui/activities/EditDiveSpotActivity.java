@@ -107,12 +107,12 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
     private Spinner levelSpinner;
     private Spinner currentsSpinner;
     private Spinner objectSpinner;
-    private Spinner accessSpinner;
     private EditText name;
     private EditText depth;
     private EditText description;
     private Button btnSave;
     private RecyclerView sealifesRc;
+    private ArrayList<String> deleted = new ArrayList<>();
     private SealifeListAddingDiveSpotAdapter sealifeListAddingDiveSpotAdapter;
     private ScrollView mainLayout;
     private ProgressView progressView;
@@ -150,7 +150,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
     private Map<String, TextView> errorsMap = new HashMap<>();
 
     private RequestBody requestName, requestLat, requestLng, requestDepth,
-            requestCurrents, requestLevel, requestObject, requestAccess,
+            requestCurrents, requestLevel, requestObject,
             requestDescription, requestType, requestMinVisibility = null, requestMaxVisibility = null;
     private RequestBody requestSecret = null;
     private RequestBody requestSocial = null;
@@ -184,7 +184,6 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
         levelSpinner = (Spinner) findViewById(R.id.level_spinner);
         objectSpinner = (Spinner) findViewById(R.id.object_spinner);
         currentsSpinner = (Spinner) findViewById(R.id.currents_spinner);
-        accessSpinner = (Spinner) findViewById(R.id.access_spinner);
         pickLocation = (LinearLayout) findViewById(R.id.location_layout);
         locationTitle = (TextView) findViewById(R.id.location);
         btnSave = (Button) findViewById(R.id.button_create);
@@ -320,7 +319,9 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
                     divespotDetails = new Gson().fromJson(responseString, EditDiveSpotWrapper.class);
                     diveSpot = divespotDetails.getDivespot();
                     sealifes = divespotDetails.getSealifes();
-                    imageUris = changeImageAddresses(diveSpot.getImages());
+                    if (diveSpot.getImages() != null) {
+                        imageUris = changeImageAddresses(diveSpot.getImages());
+                    }
                     addPhotoToDsListAdapter = new AddPhotoToDsListAdapter(imageUris, EditDiveSpotActivity.this, addPhotoTitle);
                     diveSpotLocation = new LatLng(divespotDetails.getDivespot().getLat(),
                             divespotDetails.getDivespot().getLng());
@@ -450,9 +451,6 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
                 String.valueOf(diveSpotLocation.latitude));
         requestLng = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
                 String.valueOf(diveSpotLocation.longitude));
-        requestAccess = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
-                helpers.getMirrorOfHashMap(filters.getAccess())
-                        .get(accessSpinner.getSelectedItem().toString()));
         requestObject = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
                 helpers.getMirrorOfHashMap(filters.getObject())
                         .get(objectSpinner.getSelectedItem().toString()));
@@ -498,15 +496,13 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
             }
         }
 
-        if (addPhotoToDsListAdapter.getListOfDeletedImages() == null) {
-            deletedImages = null;
-        } else {
-            ArrayList<String> deleted;
-            deleted = (ArrayList<String>) addPhotoToDsListAdapter.getListOfDeletedImages();
+        if (deleted.size() > 0) {
             deleted = removeAdressPart(deleted);
             for (int i = 0; i < deleted.size(); i++) {
                 deletedImages.add(MultipartBody.Part.createFormData("images_del[]", deleted.get(i)));
             }
+        } else {
+            deletedImages = null;
         }
 
         createAddDiveSpotRequest();
@@ -526,7 +522,6 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
                 requestCurrents,
                 requestLevel,
                 requestObject,
-                requestAccess,
                 requestDescription,
                 sealifeRequest,
                 newImages,
@@ -626,21 +621,12 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
                     for (Map.Entry<String, JsonElement> elementEntry : visibilityJsonObject.entrySet()) {
                         filters.getVisibility().put(elementEntry.getKey(), elementEntry.getValue().getAsString());
                     }
-                    JsonObject accessJsonObject = jsonObject.getAsJsonObject("access");
-                    for (Map.Entry<String, JsonElement> elementEntry : accessJsonObject.entrySet()) {
-                        filters.getAccess().put(elementEntry.getKey(), elementEntry.getValue().getAsString());
-                    }
-                    Gson gson = new Gson();
-                    if (jsonObject.get("rating") != null) {
-                        filters.setRating(gson.fromJson(jsonObject.get("rating").getAsJsonArray(), int[].class));
-                    }
 
                     Log.i(TAG, responseString);
 
                     setSpinnerValues(objectSpinner, filters.getObject(), diveSpot.getObject());
                     setSpinnerValues(levelSpinner, filters.getLevel(), diveSpot.getLevel());
                     setSpinnerValues(currentsSpinner, filters.getCurrents(), diveSpot.getCurrents());
-                    setSpinnerValues(accessSpinner, filters.getAccess(), diveSpot.getAccess());
 
                 }
             }
@@ -700,6 +686,9 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
     @Subscribe
     public void deleteImage(ImageDeletedEvent event) {
         imageUris.remove(event.getImageIndex());
+        if (addPhotoToDsListAdapter.getListOfDeletedImages() != null) {
+            deleted.addAll((ArrayList<String>) addPhotoToDsListAdapter.getListOfDeletedImages());
+        }
         AddPhotoToDsListAdapter addPhotoToDsListAdapter = new AddPhotoToDsListAdapter(imageUris,
                 EditDiveSpotActivity.this, addPhotoTitle);
         photos_rc.setAdapter(addPhotoToDsListAdapter);

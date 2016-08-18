@@ -101,7 +101,6 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     private Spinner levelSpinner;
     private Spinner currentsSpinner;
     private Spinner objectSpinner;
-    private Spinner accessSpinner;
     private EditText name;
     private EditText depth;
     private EditText visibilityMin;
@@ -133,7 +132,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
 
     private RequestBody requestName = null, requestLat = null, requestLng = null,
             requestDepth = null, requestCurrents = null,
-            requestLevel = null, requestObject = null, requestAccess = null,
+            requestLevel = null, requestObject = null,
             requestDescription = null, requestSocial = null, requestToken = null,
             requestSecret = null, requestMinVisibility = null, requestMaxVisibility = null;
     private List<MultipartBody.Part> sealife = new ArrayList<>();
@@ -173,7 +172,6 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         levelSpinner = (Spinner) findViewById(R.id.level_spinner);
         objectSpinner = (Spinner) findViewById(R.id.object_spinner);
         currentsSpinner = (Spinner) findViewById(R.id.currents_spinner);
-        accessSpinner = (Spinner) findViewById(R.id.access_spinner);
         pickLocation = (LinearLayout) findViewById(R.id.location_layout);
         locationTitle = (TextView) findViewById(R.id.location);
         btnSave = (Button) findViewById(R.id.button_create);
@@ -377,17 +375,12 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                     for (Map.Entry<String, JsonElement> elementEntry : visibilityJsonObject.entrySet()) {
                         filters.getVisibility().put(elementEntry.getKey(), elementEntry.getValue().getAsString());
                     }
-                    JsonObject accessJsonObject = jsonObject.getAsJsonObject(Constants.FILTERS_VALUE_ACCESS);
-                    for (Map.Entry<String, JsonElement> elementEntry : accessJsonObject.entrySet()) {
-                        filters.getAccess().put(elementEntry.getKey(), elementEntry.getValue().getAsString());
-                    }
 
                     Log.i(TAG, responseString);
 
                     setSpinnerValues(objectSpinner, filters.getObject(), "");
                     setSpinnerValues(levelSpinner, filters.getLevel(), "");
                     setSpinnerValues(currentsSpinner, filters.getCurrents(), "");
-                    setSpinnerValues(accessSpinner, filters.getAccess(), "");
 
                 }
             }
@@ -398,7 +391,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         progressDialogUpload.show();
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().addDiveSpot(
                 requestName, requestLat, requestLng, requestDepth, requestMinVisibility, requestMaxVisibility,
-                requestCurrents, requestLevel, requestObject, requestAccess, requestDescription,
+                requestCurrents, requestLevel, requestObject, requestDescription,
                 sealife, images, requestToken, requestSocial, requestSecret
                 );
         call.enqueue(new BaseCallback() {
@@ -527,9 +520,6 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
             requestLng = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
                     String.valueOf(diveSpotLocation.longitude));
         }
-        requestAccess = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
-                helpers.getMirrorOfHashMap(filters.getAccess())
-                        .get(accessSpinner.getSelectedItem().toString()));
         requestObject = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
                 helpers.getMirrorOfHashMap(filters.getObject())
                         .get(objectSpinner.getSelectedItem().toString()));

@@ -79,6 +79,9 @@ public class DiveSpotsPhotosAdapter extends RecyclerView.Adapter<DiveSpotsPhotos
 
     @Override
     public int getItemCount() {
+        if (photos == null) {
+            return 0;
+        }
         if (photos.size() > 8) {
             return 8;
         }

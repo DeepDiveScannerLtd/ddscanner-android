@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,8 @@ import java.util.ArrayList;
  */
 public class DiveSpotPhotosFragment extends Fragment {
 
+    private static final String TAG = DiveSpotPhotosFragment.class.getSimpleName();
+
     private ArrayList<Image> images;
 
     private RecyclerView recyclerView;
@@ -29,6 +32,8 @@ public class DiveSpotPhotosFragment extends Fragment {
     private Helpers helpers = new Helpers();
 
     private String path;
+
+    private boolean isHasNewImages = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -40,12 +45,10 @@ public class DiveSpotPhotosFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_divespot_photo, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.photos);
-        Bundle bundle = getArguments();
-        images = bundle.getParcelableArrayList("diveSpotImages");
-        path = bundle.getString("path");
+        Log.i(TAG, this.toString());
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(),3));
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(3));
-        recyclerView.setAdapter(new AllPhotosDiveSpotAdapter(images, getContext(), path));
+        recyclerView.setAdapter(new AllPhotosDiveSpotAdapter(images, getActivity(), path));
         return view;
     }
 
@@ -64,5 +67,14 @@ public class DiveSpotPhotosFragment extends Fragment {
                 outRect.top = Math.round(helpers.convertDpToPixel(Float.valueOf(4), getContext()));
             }
         }
+    }
+
+    public void setList(ArrayList<Image> images, String path) {
+        this.path = path;
+        if (recyclerView == null) {
+            this.images = images;
+            return;
+        }
+        recyclerView.setAdapter(new AllPhotosDiveSpotAdapter(images, getActivity(), path));
     }
 }

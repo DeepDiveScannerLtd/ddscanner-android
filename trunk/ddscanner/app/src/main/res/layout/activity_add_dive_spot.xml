@@ -349,46 +349,6 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:background="@color/white"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        style="@style/CharacteristicsDiveSpotListIcons"
-                        android:src="@drawable/ic_ds_access" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:fontFamily="sans-serif-medium"
-                            android:layout_marginTop="3dp"
-                            android:layout_width="match_parent"
-                            android:layout_height="17dp"
-                            android:text="Access"
-                            android:textColor="#B2B2B2"
-                            android:textSize="16sp" />
-
-                        <com.rey.material.widget.Spinner
-                            android:id="@+id/access_spinner"
-                            android:layout_width="match_parent"
-                            android:layout_height="36dp"
-                            android:dropDownWidth="150dp"
-                            android:gravity="center_vertical"
-                            android:popupBackground="@color/white"
-                            app:popupTheme="@style/AppTheme.PopupOverlay"
-                            app:rd_style="@style/Material.Drawable.Ripple.Wave"
-                            app:spn_arrowColor="@android:color/transparent"
-                            app:spn_dividerColor="@android:color/transparent" />
-                    </LinearLayout>
-                </LinearLayout>
-
-                <ImageView style="@style/DividerStyle" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
                     android:orientation="horizontal">

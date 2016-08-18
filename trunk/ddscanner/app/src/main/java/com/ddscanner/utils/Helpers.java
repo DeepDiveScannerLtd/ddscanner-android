@@ -176,7 +176,9 @@ public class Helpers {
             }
             return allPhotos;
         }
-        allPhotos = (ArrayList<Image>) second.clone();
+        if (second != null) {
+            allPhotos = (ArrayList<Image>) second.clone();
+        }
         return allPhotos;
     }
 
@@ -300,7 +302,7 @@ public class Helpers {
                 map.put("secret", SharedPreferenceHelper.getSecret());
             }
         } else {
-            return null;
+            return new HashMap<>();
         }
         return map;
     }

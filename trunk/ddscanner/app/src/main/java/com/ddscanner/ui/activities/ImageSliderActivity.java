@@ -77,6 +77,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     private TextView userName;
     private ImageView options;
     private Helpers helpers = new Helpers();
+    private boolean isChanged = false;
     private FiltersResponseEntity filters = new FiltersResponseEntity();
     private String imageNameForDeletion;
     private String reportName;
@@ -84,6 +85,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     private String reportType;
     private String reportDescription;
     private String deleteImageName;
+    private MaterialDialog materialDialog;
 
 
     @Override
@@ -91,6 +93,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_slider);
         findViews();
+        materialDialog = helpers.getMaterialDialog(this);
         getReportsTypes();
         Bundle bundle = getIntent().getExtras();
         images = bundle.getParcelableArrayList("IMAGES");
@@ -169,12 +172,12 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.close_btn:
-                setResult(RESULT_OK);
-                finish();
-                overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
+                onBackPressed();
                 break;
         }
     }
+
+
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -189,6 +192,8 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
             if (images.size() == 1) {
                 this.position = 0;
             } else if (position + 1 <= images.size()) {
+                this.position = position;
+            } else if (position == images.size()) {
                 this.position = images.size() - 1;
             }
             setUi();
@@ -208,10 +213,11 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     }
 
     private void showDeleteMenu(View view) {
+        deleteImageName = images.get(position).getName();
         PopupMenu popup = new PopupMenu(this, view);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.menu_photo_delete, popup.getMenu());
-//        popup.setOnMenuItemClickListener(new MenuItemClickListener(commentId, comment));
+        popup.setOnMenuItemClickListener(new MenuItemsClickListener(deleteImageName));
         popup.show();
     }
 
@@ -224,12 +230,12 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         popup.show();
     }
 
-    public static void show(Context context, ArrayList<Image> images, int position, String path) {
+    public static void showForResult(Activity context, ArrayList<Image> images, int position, String path, int requestCode) {
         Intent intent = new Intent(context, ImageSliderActivity.class);
         intent.putParcelableArrayListExtra("IMAGES", images);
         intent.putExtra("position", position);
         intent.putExtra("path", path);
-        context.startActivity(intent);
+        context.startActivityForResult(intent, requestCode);
     }
 
 
@@ -277,15 +283,68 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     }
 
     private void deleteImage(String name) {
+        isChanged = true;
+        materialDialog.show();
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().deleteImage(name, helpers.getUserQuryMapRequest());
         call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                materialDialog.dismiss();
                 if (response.isSuccessful()) {
                     imageDeleted(ImageSliderActivity.this.position);
                 }
+                if (!response.isSuccessful()) {
+                    String responseString = "";
+                    try {
+                        responseString = response.errorBody().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    LogUtils.i("response body is " + responseString);
+                    try {
+                        ErrorsParser.checkForError(response.code(), responseString);
+                    } catch (ServerInternalErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
+                    } catch (BadRequestException e) {
+                        // TODO Handle
+                        helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
+                    } catch (ValidationErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
+                    } catch (NotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
+                    } catch (UnknownErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
+                    } catch (DiveSpotNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
+                    } catch (UserNotFoundException e) {
+                        // TODO Handle
+                        SharedPreferenceHelper.logout();
+                        SocialNetworks.showForResult(ImageSliderActivity.this, Constants.SLIDER_ACTIVITY_REQUEST_CODE_LOGIN_FOR_DELETE);
+                    } catch (CommentNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
+                    }
+                }
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (isChanged) {
+            setResult(RESULT_OK);
+            finish();
+            overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
+        } else {
+            setResult(RESULT_CANCELED);
+            finish();
+            overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
+        }
     }
 
     @Override
@@ -295,10 +354,20 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
                 reportImage(reportName, reportType, reportDescription);
             }
         }
+        if (requestCode == Constants.SLIDER_ACTIVITY_REQUEST_CODE_LOGIN_FOR_DELETE) {
+            if (resultCode == RESULT_OK) {
+                deleteImage(deleteImageName);
+            }
+            if (resultCode == RESULT_CANCELED) {
+
+            }
+        }
         super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void reportImage(String imageName, String reportType, String reportDescription) {
+        isChanged = true;
+        materialDialog.show();
         ReportRequest reportRequest = new ReportRequest();
         if (!SharedPreferenceHelper.isUserLoggedIn() || SharedPreferenceHelper.getToken().isEmpty() || SharedPreferenceHelper.getSn().isEmpty()) {
             SocialNetworks.showForResult(this, Constants.SLIDER_ACTIVITY_REQUEST_CODE_LOGIN_FOR_REPORT);
@@ -315,6 +384,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                materialDialog.dismiss();
                 if (response.isSuccessful()) {
                     Toast.makeText(ImageSliderActivity.this, "Thank for your report", Toast.LENGTH_SHORT).show();
                     imageDeleted(ImageSliderActivity.this.position);
