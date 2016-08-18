@@ -79,6 +79,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     private Helpers helpers = new Helpers();
     private boolean isChanged = false;
     private FiltersResponseEntity filters = new FiltersResponseEntity();
+    private String imageNameForDeletion;
     private String reportName;
     private String path;
     private String reportType;
@@ -210,7 +211,6 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         dots[position].setImageDrawable(getResources().getDrawable(R.drawable.selecteditem_dot));
         changeUiAccrodingPosition(position);
     }
-
 
     private void showDeleteMenu(View view) {
         deleteImageName = images.get(position).getName();
