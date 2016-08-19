@@ -128,7 +128,6 @@ public class SearchSealifeActivity extends AppCompatActivity implements SearchVi
         if (filteredModelList.isEmpty()) {
             mRecyclerView.setVisibility(View.GONE);
             notFoundLayout.setVisibility(View.VISIBLE);
-            textNotFound.setText("\"" + query + "\" not found");
         } else {
             mRecyclerView.setVisibility(View.VISIBLE);
             notFoundLayout.setVisibility(View.GONE);
