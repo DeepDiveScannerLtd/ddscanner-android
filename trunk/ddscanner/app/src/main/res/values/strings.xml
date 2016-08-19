@@ -110,10 +110,10 @@
     <string name="title_activity_main2">Main2Activity</string>
     <string name="save_changes">SAVE CHANGES</string>
     <string name="cancel">cancel</string>
-    <string name="question_edit_dive_spot">Do you want to edit this dive spot yourself?</string>
+    <string name="question_edit_dive_spot">Do you want to edit this dive spot?</string>
     <string name="no_just_vote_answer">No, just vote</string>
-    <string name="dialog_title_check_in">Check in</string>
-    <string name="dialog_check_in_content">Do you really want to check in? This spot will be show in your profile</string>
+    <string name="dialog_title_check_in">Checked in</string>
+    <string name="dialog_check_in_content">This dive spot will be shown in your profile</string>
     <string name="dialog_check_in_no">OK</string>
     <string name="dialog_cancel">CANCEL</string>
     <string name="ok">OK</string>
