@@ -16,5 +16,5 @@
         android:layout_height="45dp"
         android:layout_gravity="center_horizontal"
         android:background="@drawable/border_button_orange_2px"
-        android:text="SHARE"/>
+        android:text="@string/add_photos_to_dive_spot"/>
 </LinearLayout>

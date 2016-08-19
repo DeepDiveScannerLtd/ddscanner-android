@@ -236,4 +236,7 @@
     <string name="can_not_locate">Can not locate</string>
     <string name="report_sent">Report sent</string>
     <string name="one_dive_spot">" dive spot"</string>
+    <string name="add_photos_to_dive_spot">Add photos</string>
+    <string name="yoy_cannot_like_review">You cannot like your review</string>
+    <string name="you_cannot_dislike_your_review">You cannot dislike your review</string>
 </resources>

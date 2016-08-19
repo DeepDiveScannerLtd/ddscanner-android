@@ -280,7 +280,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
                         Gson gson = new Gson();
                         GeneralError generalError;
                         generalError = gson.fromJson(responseString, GeneralError.class);
-                        Toast toast = Toast.makeText(context, generalError.getMessage(), Toast.LENGTH_SHORT);
+                        Toast toast = Toast.makeText(context, R.string.yoy_cannot_like_review, Toast.LENGTH_SHORT);
                         toast.show();
                         return;
                     }
@@ -348,7 +348,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
                         Gson gson = new Gson();
                         GeneralError generalError;
                         generalError = gson.fromJson(responseString, GeneralError.class);
-                        Toast toast = Toast.makeText(context, generalError.getMessage(), Toast.LENGTH_SHORT);
+                        Toast toast = Toast.makeText(context, R.string.you_cannot_dislike_your_review, Toast.LENGTH_SHORT);
                         toast.show();
                         return;
                     }
