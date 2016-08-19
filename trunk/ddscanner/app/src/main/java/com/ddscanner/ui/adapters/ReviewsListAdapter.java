@@ -186,7 +186,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
             reviewsListViewHolder.rating.addView(iv);
         }
         if (comments.get(i).getDate() != null && !comments.get(i).getDate().isEmpty()) {
-            reviewsListViewHolder.date.setText(helpers.getDate(comments.get(i).getDate()));
+            reviewsListViewHolder.date.setText(helpers.getCommentDate(comments.get(i).getDate()));
         }
     }
 

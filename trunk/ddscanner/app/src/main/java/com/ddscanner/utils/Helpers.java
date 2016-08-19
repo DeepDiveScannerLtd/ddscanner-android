@@ -363,6 +363,52 @@ public class Helpers {
         return returnString;
     }
 
+    public String getCommentDate(String date) {
+        Date date1 = new Date();
+        long currentDateInMillis = date1.getTime();
+        long differenceOfTime = 0;
+        long incomingDateInMillis = 0;
+        int yearsSeconds = 3600 * 24 * 365;
+        int monthSeconds = 3600 * 24 * 30;
+        int weeksSeconds = 3600 * 24 * 7;
+        int daysSeconds = 3600 * 24;
+        int hourSeconds = 3600;
+        int minuteSeconds = 60;
+        String returnString = "";
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            format.setTimeZone(TimeZone.getTimeZone("GMT+0"));
+            Date incomingDate = format.parse(date);
+            incomingDateInMillis = incomingDate.getTime();
+            differenceOfTime = currentDateInMillis - incomingDateInMillis;
+            differenceOfTime = differenceOfTime / 1000;
+            if ((differenceOfTime / yearsSeconds) > 0) {
+                return String.valueOf(differenceOfTime / yearsSeconds) + " year ago";
+            }
+            if ((differenceOfTime / monthSeconds) > 0) {
+                return String.valueOf(differenceOfTime / monthSeconds) + " month ago";
+            }
+            if ((differenceOfTime / weeksSeconds) > 0) {
+                return String.valueOf(differenceOfTime / weeksSeconds) + " week ago";
+            }
+            if ((differenceOfTime / daysSeconds) > 0) {
+                return String.valueOf(differenceOfTime / daysSeconds) + " day ago";
+            }
+            if ((differenceOfTime / hourSeconds) > 0) {
+                return String.valueOf(differenceOfTime / hourSeconds) + " hour ago";
+            }
+            if ((differenceOfTime / minuteSeconds) > 0) {
+                return String.valueOf(differenceOfTime / minuteSeconds) + " minute age";
+            }
+            if (differenceOfTime > 0 && differenceOfTime < 60) {
+                return String.valueOf(differenceOfTime) + " second ago";
+            }
+        } catch (ParseException e) {
+            return "";
+        }
+        return returnString;
+    }
+
     public boolean comparingTimes(long lastShowingTime, String notificationTime) {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         format.setTimeZone(TimeZone.getTimeZone("GMT+0"));
