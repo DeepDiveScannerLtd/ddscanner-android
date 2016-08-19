@@ -441,12 +441,15 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
 
     @Subscribe
     public void filterChosed(FilterChosedEvent event) {
-        if (event.getLevel() == null) {
-            updateFilter(null, null);
-            requestCityProducts();
-            return;
+        String level = null;
+        String object = null;
+        if (event.getLevel() != null) {
+            level = event.getLevel();
         }
-        updateFilter(event.getLevel(), event.getObject());
+        if (event.getObject() != null) {
+            object = event.getObject();
+        }
+        updateFilter(level, object);
         requestCityProducts();
     }
 

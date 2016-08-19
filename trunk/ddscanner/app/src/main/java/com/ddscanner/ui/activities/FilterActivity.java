@@ -91,6 +91,7 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
 
     private void setFilerGroup(Spinner spinner, Map<String, String> values, String tag) {
         List<String> objects = new ArrayList<String>();
+        objects.add("All");
         for (Map.Entry<String, String> entry : values.entrySet()) {
             objects.add(entry.getValue());
             if (entry.getKey().equals(tag)) {
@@ -104,10 +105,18 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
-        filterChosedEvent.setObject(helpers.getMirrorOfHashMap(objectsMap)
-                .get(objectSpinner.getSelectedItem().toString()));
-        filterChosedEvent.setLevel(helpers.getMirrorOfHashMap(levelsMap)
-                .get(levelSpinner.getSelectedItem().toString()));
+        if (objectSpinner.getSelectedItem().toString().equals("All")) {
+            filterChosedEvent.setObject(null);
+        } else {
+            filterChosedEvent.setObject(helpers.getMirrorOfHashMap(objectsMap)
+                    .get(objectSpinner.getSelectedItem().toString()));
+        }
+        if (levelSpinner.getSelectedItem().toString().equals("All")) {
+            filterChosedEvent.setLevel(null);
+        } else {
+            filterChosedEvent.setLevel(helpers.getMirrorOfHashMap(levelsMap)
+                    .get(levelSpinner.getSelectedItem().toString()));
+        }
         DDScannerApplication.bus.post(filterChosedEvent);
      //   EventsTracker.trackFilterApplyied(helpers.getMirrorOfHashMap(levelsMap).get(levelSpinner.getSelectedItem().toString()), helpers.getMirrorOfHashMap(objectsMap).get(objectSpinner.getSelectedItem().toString()));
         finish();
