@@ -386,7 +386,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 materialDialog.dismiss();
                 if (response.isSuccessful()) {
-                    Toast.makeText(ImageSliderActivity.this, "Thank for your report", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ImageSliderActivity.this, R.string.report_sent, Toast.LENGTH_SHORT).show();
                     imageDeleted(ImageSliderActivity.this.position);
                 }
                 if (!response.isSuccessful()) {

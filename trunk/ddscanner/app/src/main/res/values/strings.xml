@@ -181,7 +181,7 @@
     <string name="locatio_dialog_title">To work with ddscanner you must enable location service. Do you want to do this?</string>
     <string name="add_photos_toolbar_title">Add photos</string>
     <string name="no_notifications">No notifications</string>
-    <string name="here_will_be_displayed_last_notifications">Here will be displayed last notifications</string>
+    <string name="here_will_be_displayed_last_notifications">Last notifications will be displayed here</string>
     <string name="profile">Profile</string>
     <string name="ed">Edited</string>
     <string name="toolbar_title_check_ins">Check Ins</string>
@@ -234,4 +234,5 @@
     <string name="report">Report</string>
     <string name="add_new">ADD NEW</string>
     <string name="can_not_locate">Can not locate</string>
+    <string name="report_sent">Report sent</string>
 </resources>

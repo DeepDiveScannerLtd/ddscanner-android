@@ -474,6 +474,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
                     reportDescription = null;
                     getComments();
                     isHasNewComment = true;
+                    Toast.makeText(ReviewsActivity.this, R.string.report_sent, Toast.LENGTH_SHORT).show();
                 } else {
                     String responseString = "";
                     try {

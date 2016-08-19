@@ -19,6 +19,7 @@
         android:textSize="20sp"
         android:layout_marginTop="20dp"
         android:textColor="@color/black_text"
+        android:fontFamily="sans-serif-medium"
         android:text="@string/no_notifications"/>
     <TextView
         android:layout_width="match_parent"
