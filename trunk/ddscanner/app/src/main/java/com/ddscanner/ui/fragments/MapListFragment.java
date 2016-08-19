@@ -57,6 +57,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.rey.material.widget.Button;
 import com.rey.material.widget.ProgressView;
 import com.squareup.otto.Subscribe;
 
@@ -101,6 +102,7 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
     private Marker myLocationMarker;
     private Circle circle;
     private ProgressView progressBarMyLocation;
+    private android.widget.Button continueShowMap;
 
     public BaseAppCompatActivity baseAppCompatActivity;
 
@@ -205,6 +207,8 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         rc.setLayoutManager(linearLayoutManager);
         rc.setItemAnimator(new DefaultItemAnimator());
+        continueShowMap = (android.widget.Button) view.findViewById(R.id.showMapContinue);
+        continueShowMap.setOnClickListener(this);
     }
 
     private void setMapView(Bundle savedInstanceState) {
@@ -282,12 +286,18 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
                         mapListFAB.setY(mapListFAB.getY() + diveSpotInfo.getHeight());
                         addDsFab.setY(addDsFab.getY() + diveSpotInfo.getHeight());
                     }
+                    if (please.getVisibility() == View.VISIBLE) {
+                        addDsFab.setVisibility(View.GONE);
+                        mapListFAB.setVisibility(View.GONE);
+                    }
                     diveSpotsMapView.setVisibility(View.GONE);
                     EventsTracker.trackDiveSpotListView();
                     diveSpotsListView.setVisibility(View.VISIBLE);
                     DDScannerApplication.bus.post(new ListOpenedEvent());
                     mapListFAB.setImageResource(R.drawable.ic_acb_map);
                 } else {
+                    addDsFab.setVisibility(View.VISIBLE);
+                    mapListFAB.setVisibility(View.VISIBLE);
                     if (diveSpotInfo.getVisibility() == View.VISIBLE) {
                         mapListFAB.setY(mapListFAB.getY() - diveSpotInfo.getHeight());
                         addDsFab.setY(addDsFab.getY() - diveSpotInfo.getHeight());
@@ -319,6 +329,9 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
                 } else {
                     DDScannerApplication.bus.post(new OpenAddDsActivityAfterLogin());
                 }
+                break;
+            case R.id.showMapContinue:
+                mapListFAB.performClick();
                 break;
         }
     }
@@ -437,9 +450,13 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
         if (diveSpots == null || diveSpots.isEmpty() || diveSpots.size() == 0) {
             rc.setVisibility(View.GONE);
             please.setVisibility(View.VISIBLE);
+//            mapListFAB.setVisibility(View.GONE);
+//            addDsFab.setVisibility(View.GONE);
         } else {
             rc.setVisibility(View.VISIBLE);
             please.setVisibility(View.GONE);
+//            mapListFAB.setVisibility(View.VISIBLE);
+//            addDsFab.setVisibility(View.VISIBLE);
         }
 
     }
