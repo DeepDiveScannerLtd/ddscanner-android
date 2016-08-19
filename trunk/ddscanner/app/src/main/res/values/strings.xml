@@ -134,7 +134,7 @@
     <string name="filter_label">Level</string>
     <string name="creator">Creator</string>
     <string name="editor">Editor</string>
-    <string name="error_turn_on_location_provider">Please turn on location providers. You can find this option in your device settings.</string>
+    <string name="error_turn_on_location_provider">Please give the app permission to use your location. You can find this option in your device settings</string>
     <string name="error_no_location_permission">Please give the app permission to use your location. This will be used for "checkin" and "show my location" functionality</string>
     <string name="error_no_internet">No internet connection</string>
     <string name="open_settings">OPEN SETTINGS</string>
@@ -233,4 +233,5 @@
     <string name="was_this_information_useful">Was this information useful?</string>
     <string name="report">Report</string>
     <string name="add_new">ADD NEW</string>
+    <string name="can_not_locate">Can not locate</string>
 </resources>

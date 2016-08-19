@@ -186,6 +186,7 @@
         <item name="android:layout_centerHorizontal">true</item>
     </style>
     <style name="OrangeButtons">
+        <item name="android:textStyle">bold</item>
         <item name="android:layout_height">42dp</item>
         <item name="android:textSize">15sp</item>
         <item name="android:textColor">@color/black_text</item>
