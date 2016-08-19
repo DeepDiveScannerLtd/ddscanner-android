@@ -122,12 +122,12 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
         checkInCount.setText(user.getCountCheckin() + getString(R.string.dive_spos));
         addedCount.setText(user.getCountAdd() + getString(R.string.dive_spos));
         editedCount.setText(user.getCountEdit() + getString(R.string.dive_spos));
-        if (!user.getCountLike().equals("0")) {
-            likeLayout.setOnClickListener(this);
-        }
-        if (!user.getCountDislike().equals("0")) {
-            dislikeLayout.setOnClickListener(this);
-        }
+//        if (!user.getCountLike().equals("0")) {
+//            likeLayout.setOnClickListener(this);
+//        }
+//        if (!user.getCountDislike().equals("0")) {
+//            dislikeLayout.setOnClickListener(this);
+//        }
         if (!user.getCountCheckin().equals("0")) {
             showAllCheckins.setOnClickListener(this);
         }

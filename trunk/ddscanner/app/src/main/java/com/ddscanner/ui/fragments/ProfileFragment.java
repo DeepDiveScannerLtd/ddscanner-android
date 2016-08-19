@@ -47,6 +47,7 @@ import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.activities.AboutActivity;
 import com.ddscanner.ui.activities.DiveSpotsListActivity;
+import com.ddscanner.ui.activities.ForeignUserLikesDislikesActivity;
 import com.ddscanner.ui.activities.MainActivity;
 import com.ddscanner.ui.activities.UsersDivespotListSwipableActivity;
 import com.ddscanner.ui.views.LoginView;
@@ -115,6 +116,8 @@ public class ProfileFragment extends Fragment
     private LinearLayout showAllAdded;
     private LinearLayout showAllEdited;
     private LinearLayout aboutDDsLayout;
+    private LinearLayout likeLayout;
+    private LinearLayout dislikeLayout;
     private SwipeRefreshLayout swipeRefreshLayout;
     private TextView error_name;
     private TextView error_about;
@@ -228,6 +231,8 @@ public class ProfileFragment extends Fragment
         loginView = (RelativeLayout) v.findViewById(R.id.login_view_root);
         aboutDDsLayout = (LinearLayout) v.findViewById(R.id.about_dss_layout);
         aboutDDsLayout.setOnClickListener(this);
+        likeLayout = (LinearLayout) v.findViewById(R.id.likeLayout);
+        dislikeLayout = (LinearLayout) v.findViewById(R.id.dislikeLayout);
 
         aboutEdit.addTextChangedListener(new TextWatcher() {
             @Override
@@ -332,6 +337,12 @@ public class ProfileFragment extends Fragment
             case R.id.about_dss_layout:
                 AboutActivity.show(getContext());
                 break;
+            case R.id.likeLayout:
+                ForeignUserLikesDislikesActivity.show(getActivity(), true, user.getId(), Constants.FOREIGN_USER_REQUEST_CODE_SHOW_LIKES_LIST);
+                break;
+            case R.id.dislikeLayout:
+                ForeignUserLikesDislikesActivity.show(getActivity(), false, user.getId(), Constants.FOREIGN_USER_REQUEST_CODE_SHOW_LIKES_LIST);
+                break;
         }
     }
 
@@ -420,6 +431,12 @@ public class ProfileFragment extends Fragment
             return;
         }
         if (user != null) {
+            if (!user.getCountLike().equals("0")) {
+                likeLayout.setOnClickListener(this);
+            }
+            if (!user.getCountDislike().equals("0")) {
+                dislikeLayout.setOnClickListener(this);
+            }
             if (user.getPicture() == null) {
                 Picasso.with(getContext()).load(R.drawable.avatar_profile_default)
                         .resize(Math.round(helpers.convertDpToPixel(100, getContext())),
