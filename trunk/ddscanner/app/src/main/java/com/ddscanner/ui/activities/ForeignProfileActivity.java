@@ -119,9 +119,9 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
     private void setUi(User user) {
         openOnSocialLayout.setOnClickListener(this);
         userAbout.setVisibility(View.GONE);
-        checkInCount.setText(user.getCountCheckin() + getString(R.string.dive_spos));
-        addedCount.setText(user.getCountAdd() + getString(R.string.dive_spos));
-        editedCount.setText(user.getCountEdit() + getString(R.string.dive_spos));
+        addedCount.setText(user.getCountAdd() + getDiveSpotString(Integer.parseInt(user.getCountAdd())));
+        editedCount.setText(user.getCountEdit() + getDiveSpotString(Integer.parseInt(user.getCountEdit())));
+        checkInCount.setText(user.getCountCheckin() + getDiveSpotString(Integer.parseInt(user.getCountFavorite())));
 //        if (!user.getCountLike().equals("0")) {
 //            likeLayout.setOnClickListener(this);
 //        }
@@ -163,6 +163,16 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
                 openOn.setText(R.string.open_on_google_plus);
                 break;
         }
+    }
+
+    private String getDiveSpotString(int count) {
+        if (count > 1 || count == 0) {
+            return getString(R.string.dive_spos);
+        }
+        if (count == 1) {
+            return getString(R.string.one_dive_spot);
+        }
+        return "";
     }
 
     private void requestUserData() {

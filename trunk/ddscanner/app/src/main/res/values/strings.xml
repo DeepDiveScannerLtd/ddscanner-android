@@ -148,7 +148,7 @@
     <string name="e_mail">E-mail</string>
     <string name="search_sealife">Search sealife</string>
     <string name="favorites">Favorites</string>
-    <string name="checkin">Check In</string>
+    <string name="checkin">Check-ins</string>
     <string name="added_ds">Created</string>
     <string name="edited_ds">Edited</string>
     <string name="toast_server_error">Error. Try again later</string>
@@ -235,4 +235,5 @@
     <string name="add_new">ADD NEW</string>
     <string name="can_not_locate">Can not locate</string>
     <string name="report_sent">Report sent</string>
+    <string name="one_dive_spot">" dive spot"</string>
 </resources>
