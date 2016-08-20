@@ -11,11 +11,13 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.DiveSpot;
 import com.ddscanner.entities.DivespotsWrapper;
 import com.ddscanner.events.GoToMyLocationButtonClickedEvent;
@@ -53,7 +55,9 @@ import retrofit2.Response;
 /**
  * Created by lashket on 15.6.16.
  */
-public class SearchSpotOrLocationActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
+public class SearchSpotOrLocationActivity extends AppCompatActivity implements SearchView.OnQueryTextListener, ViewPager.OnPageChangeListener {
+
+    private static final String TAG = SearchSpotOrLocationActivity.class.getName();
 
     private Menu menu;
     private Toolbar toolbar;
@@ -114,6 +118,7 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
         adapter.addFragment(searchLocationFragment, getString(R.string.location));
         adapter.addFragment(searchDiveSpotFragment, getString(R.string.dive_spot));
         viewPager.setAdapter(adapter);
+        viewPager.addOnPageChangeListener(this);
         tabLayout.setupWithViewPager(viewPager);
         setupTabLayout();
     }
@@ -317,5 +322,29 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
     public void goToMyLocation(GoToMyLocationButtonClickedEvent event) {
         setResult(Constants.SEARCH_ACTIVITY_RESULT_CODE_MY_LOCATION);
         finish();
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        switch (position) {
+            case 0:
+                Log.i(TAG, "trackSearchByDiveSpot");
+                EventsTracker.trackSearchByDiveSpot();
+                break;
+            case 1:
+                Log.i(TAG, "trackSearchByLocation");
+                EventsTracker.trackSearchByLocation();
+                break;
+        }
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
     }
 }

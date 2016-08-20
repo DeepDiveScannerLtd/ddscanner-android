@@ -35,6 +35,8 @@ public class EventsTracker {
     private static final String EVENT_NAME_DIVE_SPOT_SEALIFE_VIEW = "dive_spot_sealife_view";
     private static final String EVENT_NAME_DIVE_SPOT_REVIEWS_VIEW = "dive_spot_reviews_view";
     private static final String EVENT_NAME_REVIEWER_PROFILE_VIEW = "reviewer_profile_view";
+    private static final String EVENT_NAME_SEARCH_BY_DIVE_SPOT = "search_by_dive_spot";
+    private static final String EVENT_NAME_SEARCH_BY_LOCATION = "search_by_location";
 
     private static final String EVENT_NAME_DIVE_SPOT_VIEW = "dive_spot_view";
     private static final String EVENT_NAME_DIVE_CENTER_VIEW = "dive_center_view";
@@ -454,6 +456,28 @@ public class EventsTracker {
 
         // Appsflyer
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_REVIEWER_PROFILE_VIEW, null);
+    }
+
+    public static void trackSearchByDiveSpot() {
+        // Google Firebase
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_SEARCH_BY_DIVE_SPOT, null);
+
+        // Flurry
+        FlurryAgent.logEvent(EVENT_NAME_SEARCH_BY_DIVE_SPOT);
+
+        // Appsflyer
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_SEARCH_BY_DIVE_SPOT, null);
+    }
+
+    public static void trackSearchByLocation() {
+        // Google Firebase
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_SEARCH_BY_LOCATION, null);
+
+        // Flurry
+        FlurryAgent.logEvent(EVENT_NAME_SEARCH_BY_LOCATION);
+
+        // Appsflyer
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_SEARCH_BY_LOCATION, null);
     }
 
     public static void trackUnknownServerError(String url, String errorText) {
