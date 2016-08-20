@@ -3,6 +3,7 @@ package com.ddscanner.analytics;
 import android.os.Bundle;
 
 import com.appsflyer.AppsFlyerLib;
+import com.ddscanner.BuildConfig;
 import com.ddscanner.DDScannerApplication;
 import com.flurry.android.FlurryAgent;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -91,6 +92,10 @@ public class EventsTracker {
     }
 
     public static void trackDiveSpotView(String diveSpotId, SpotViewSource spotViewSource) {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+
         // Google Firebase
         // way 1
 //        Bundle params = new Bundle();
@@ -118,6 +123,10 @@ public class EventsTracker {
     }
 
     public static void trackDiveCenterView(String diveCenterId, SpotViewSource spotViewSource) {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+
         // Google Firebase
         Bundle params = new Bundle();
         params.putString(EVENT_PARAMETER_NAME_DIVE_CENTER_ID, diveCenterId);
@@ -138,6 +147,10 @@ public class EventsTracker {
     }
 
     public static void trackDiveSpotValid() {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+
         // Google Firebase
         AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_DIVE_SPOT_VALID, null);
 
@@ -152,6 +165,10 @@ public class EventsTracker {
     }
 
     public static void trackDiveSpotInvalid() {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+
         // Google Firebase
         AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_DIVE_SPOT_INVALID, null);
 
@@ -166,6 +183,10 @@ public class EventsTracker {
     }
 
     public static void trackDiveSpotEdit() {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+
         // Google Firebase
         AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_EDIT_DIVE_SPOT, null);
 
@@ -177,6 +198,10 @@ public class EventsTracker {
     }
 
     public static void trackDiveSpotCreation() {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+
         // Google Firebase
         AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_CREATE_DIVE_SPOT, null);
 
@@ -188,6 +213,10 @@ public class EventsTracker {
     }
 
     public static void trackCheckIn(CheckInStatus status) {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+
         // Google Firebase
         Bundle params = new Bundle();
         params.putString(EVENT_PARAMETER_NAME_CHECK_IN_STATUS, status.getName());
@@ -205,6 +234,10 @@ public class EventsTracker {
     }
 
     public static void trackCheckOut() {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+
         // Google Firebase
         AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_CHECK_OUT, null);
 
@@ -216,6 +249,10 @@ public class EventsTracker {
     }
 
     public static void trackReviewSending(SendReviewSource sendReviewSource) {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+
         // Google Firebase
         Bundle params = new Bundle();
         params.putString(EVENT_PARAMETER_NAME_SEND_REVIEW_SOURCE, sendReviewSource.getName());
@@ -233,6 +270,10 @@ public class EventsTracker {
     }
 
     public static void trackCommentLiked() {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+
         // Google Firebase
         AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_COMMENT_LIKED, null);
 
@@ -244,6 +285,10 @@ public class EventsTracker {
     }
 
     public static void trackCommentDisliked() {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+
         // Google Firebase
         AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_COMMENT_DISLIKED, null);
 
@@ -255,6 +300,10 @@ public class EventsTracker {
     }
 
     public static void trackDiveSpotPhotoAdded() {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+
         // Google Firebase
         AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_DIVE_SPOT_PHOTO_ADDED, null);
 
@@ -266,6 +315,10 @@ public class EventsTracker {
     }
 
     public static void trackContactDiveCenter(ContactDiveCenterMethod method) {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+
         // Google Firebase
         Bundle params = new Bundle();
         params.putString(EVENT_PARAMETER_NAME_CONTACT_DIVE_CENTER_METHOD, method.getName());
@@ -283,6 +336,10 @@ public class EventsTracker {
     }
 
     public static void trackDiveSpotMapView() {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+
         // Google Firebase
         AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_DIVE_SPOTS_MAP_VIEW, null);
 
@@ -294,6 +351,10 @@ public class EventsTracker {
     }
 
     public static void trackDiveSpotListView() {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+
         // Google Firebase
         AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_DIVE_SPOTS_LIST_VIEW, null);
 
@@ -305,6 +366,10 @@ public class EventsTracker {
     }
 
     public static void trackDiveCentersMapView() {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+
         // Google Firebase
         AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_DIVE_CENTERS_MAP_VIEW, null);
 
@@ -316,6 +381,10 @@ public class EventsTracker {
     }
 
     public static void trackDiveCentersListView() {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+
         // Google Firebase
         AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_DIVE_CENTERS_LIST_VIEW, null);
 
@@ -327,6 +396,10 @@ public class EventsTracker {
     }
 
     public static void trackNotificationsView() {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+
         // Google Firebase
         AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_NOTIFICATIONS_VIEW, null);
 
@@ -338,6 +411,10 @@ public class EventsTracker {
     }
 
     public static void trackActivityView() {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+
         // Google Firebase
         AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_ACTIVITY_VIEW, null);
 
@@ -349,6 +426,10 @@ public class EventsTracker {
     }
 
     public static void trackUserProfileView() {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+
         // Google Firebase
         AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_USER_PROFILE_VIEW, null);
 
@@ -360,6 +441,10 @@ public class EventsTracker {
     }
 
     public static void trackUserCheckinsView() {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+
         // Google Firebase
         AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_USER_CHECK_INS_VIEW, null);
 
@@ -371,6 +456,10 @@ public class EventsTracker {
     }
 
     public static void trackUserEditedView() {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+
         // Google Firebase
         AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_USER_EDITED_VIEW, null);
 
@@ -382,6 +471,10 @@ public class EventsTracker {
     }
 
     public static void trackUserCreatedView() {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+
         // Google Firebase
         AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_USER_CREATED_VIEW, null);
 
@@ -393,6 +486,10 @@ public class EventsTracker {
     }
 
     public static void trackUserFavoritesView() {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+
         // Google Firebase
         AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_USER_FAVORITES_VIEW, null);
 
@@ -404,6 +501,10 @@ public class EventsTracker {
     }
 
     public static void trackDiveSpotCheckinsView() {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+
         // Google Firebase
         AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_DIVE_SPOT_CHECK_INS_VIEW, null);
 
@@ -415,6 +516,10 @@ public class EventsTracker {
     }
 
     public static void trackDiveSpotPhotosView() {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+
         // Google Firebase
         AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_DIVE_SPOT_PHOTOS_VIEW, null);
 
@@ -426,6 +531,10 @@ public class EventsTracker {
     }
 
     public static void trackDiveSpotSealifeView() {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+
         // Google Firebase
         AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_DIVE_SPOT_SEALIFE_VIEW, null);
 
@@ -437,6 +546,10 @@ public class EventsTracker {
     }
 
     public static void trackDeviSpotReviewsView() {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+
         // Google Firebase
         AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_DIVE_SPOT_REVIEWS_VIEW, null);
 
@@ -448,6 +561,10 @@ public class EventsTracker {
     }
 
     public static void trackReviewerProfileView() {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+
         // Google Firebase
         AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_REVIEWER_PROFILE_VIEW, null);
 
@@ -459,6 +576,10 @@ public class EventsTracker {
     }
 
     public static void trackSearchByDiveSpot() {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+
         // Google Firebase
         AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_SEARCH_BY_DIVE_SPOT, null);
 
@@ -470,6 +591,10 @@ public class EventsTracker {
     }
 
     public static void trackSearchByLocation() {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+
         // Google Firebase
         AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_SEARCH_BY_LOCATION, null);
 
@@ -481,6 +606,10 @@ public class EventsTracker {
     }
 
     public static void trackUnknownServerError(String url, String errorText) {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+
         // Google Firebase
 //        Bundle params = new Bundle();
 //        params.putString(EVENT_PARAMETER_NAME_ERROR_TEXT, errorText);

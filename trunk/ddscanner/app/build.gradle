@@ -24,13 +24,13 @@ android {
         targetSdkVersion 23
         multiDexEnabled true
         versionCode 17
-        versionName "2.0.9"
-
+        versionName "2.0.10"
     }
     buildTypes {
         debug {
 //            ext.enableCrashlytics = false
             applicationIdSuffix ".debug"
+            buildConfigField "boolean", "COLLECT_ANALYTICS_DATA", "false"
             resValue "string", "appsflyer_dev_key", "5A7vyAMVwKT4RBiTaxrpSU"
             resValue "string", "flurry_api_key", "DQ8GM2FPPSTBGK7QX4D8"
             resValue "string", "google_maps_api_key", "AIzaSyDt6pJZggDyU-aQy2Ks6i7WgZd6ayKK-I8"
@@ -39,6 +39,7 @@ android {
 //            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules-debug.pro'
         }
         release {
+            buildConfigField "boolean", "COLLECT_ANALYTICS_DATA", "true"
             resValue "string", "appsflyer_dev_key", "5A7vyAMVwKT4RBiTaxrpSU"
             resValue "string", "flurry_api_key", "D45ZMHZZJWDVD8X6G55B"
             resValue "string", "google_maps_api_key", "AIzaSyA5jpAj7uwrxA4oaYvI_bdV9IDbb7gUrZc"

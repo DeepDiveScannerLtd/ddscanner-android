@@ -117,8 +117,9 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
         adapter = new CustomPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(searchLocationFragment, getString(R.string.location));
         adapter.addFragment(searchDiveSpotFragment, getString(R.string.dive_spot));
-        viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(this);
+        viewPager.setAdapter(adapter);
+        EventsTracker.trackSearchByLocation();
         tabLayout.setupWithViewPager(viewPager);
         setupTabLayout();
     }
@@ -333,12 +334,10 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
     public void onPageSelected(int position) {
         switch (position) {
             case 0:
-                Log.i(TAG, "trackSearchByDiveSpot");
-                EventsTracker.trackSearchByDiveSpot();
+                EventsTracker.trackSearchByLocation();
                 break;
             case 1:
-                Log.i(TAG, "trackSearchByLocation");
-                EventsTracker.trackSearchByLocation();
+                EventsTracker.trackSearchByDiveSpot();
                 break;
         }
     }
