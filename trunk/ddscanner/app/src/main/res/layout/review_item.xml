@@ -64,7 +64,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:src="@drawable/ic_ac_more"/>
+                    android:src="@drawable/ic_rw_more"/>
             </RelativeLayout>
         </LinearLayout>
 

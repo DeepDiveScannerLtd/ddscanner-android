@@ -61,7 +61,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="10dp"
                     android:layout_marginTop="15dp"
-                    android:background="@drawable/ic_plus_addds"
+                    android:background="@drawable/ic_addds_plus"
                     android:clickable="true" />
 
                 <android.support.v7.widget.RecyclerView
@@ -419,7 +419,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="10dp"
                     android:layout_marginTop="15dp"
-                    android:src="@drawable/ic_plus_addds" />
+                    android:src="@drawable/ic_addds_plus" />
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/sealifes_rc"
