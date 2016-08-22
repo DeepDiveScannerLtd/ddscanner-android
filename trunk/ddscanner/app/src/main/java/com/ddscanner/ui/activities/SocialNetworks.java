@@ -39,6 +39,7 @@ import com.ddscanner.events.LoggedInEvent;
 import com.ddscanner.rest.BaseCallback;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
+import com.ddscanner.utils.DialogUtils;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
@@ -302,6 +303,11 @@ public class SocialNetworks extends AppCompatActivity
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 super.onFailure(call, t);
                 materialDialog.dismiss();
+            }
+
+            @Override
+            public void onConnectionFailure() {
+                DialogUtils.showConnectionErrorDialog(SocialNetworks.this);
             }
         });
     }

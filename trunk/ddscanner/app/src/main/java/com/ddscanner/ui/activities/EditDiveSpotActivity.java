@@ -47,6 +47,7 @@ import com.ddscanner.ui.adapters.AddPhotoToDsListAdapter;
 import com.ddscanner.ui.adapters.SealifeListAddingDiveSpotAdapter;
 import com.ddscanner.ui.adapters.SpinnerItemsAdapter;
 import com.ddscanner.utils.Constants;
+import com.ddscanner.utils.DialogUtils;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
@@ -330,6 +331,11 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
                 }
 
             }
+
+            @Override
+            public void onConnectionFailure() {
+                DialogUtils.showConnectionErrorDialog(EditDiveSpotActivity.this);
+            }
         });
     }
 
@@ -584,6 +590,11 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
                 super.onFailure(call, t);
                 progressDialogUpload.dismiss();
             }
+
+            @Override
+            public void onConnectionFailure() {
+                DialogUtils.showConnectionErrorDialog(EditDiveSpotActivity.this);
+            }
         });
     }
 
@@ -629,6 +640,11 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
                     setSpinnerValues(currentsSpinner, filters.getCurrents(), diveSpot.getCurrents());
 
                 }
+            }
+
+            @Override
+            public void onConnectionFailure() {
+                DialogUtils.showConnectionErrorDialog(EditDiveSpotActivity.this);
             }
 
         });

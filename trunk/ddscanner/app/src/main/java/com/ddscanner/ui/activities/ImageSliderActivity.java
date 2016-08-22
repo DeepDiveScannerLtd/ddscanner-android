@@ -38,6 +38,7 @@ import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.SliderImagesAdapter;
 import com.ddscanner.utils.Constants;
+import com.ddscanner.utils.DialogUtils;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
@@ -331,6 +332,11 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
                     }
                 }
             }
+
+            @Override
+            public void onConnectionFailure() {
+                DialogUtils.showConnectionErrorDialog(ImageSliderActivity.this);
+            }
         });
     }
 
@@ -426,6 +432,11 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
                         helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
                     }
                 }
+            }
+
+            @Override
+            public void onConnectionFailure() {
+                DialogUtils.showConnectionErrorDialog(ImageSliderActivity.this);
             }
         });
     }

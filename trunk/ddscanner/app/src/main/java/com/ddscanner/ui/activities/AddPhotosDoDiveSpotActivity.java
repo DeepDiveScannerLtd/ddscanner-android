@@ -30,6 +30,7 @@ import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.AddPhotoToDiveSpotAdapter;
 import com.ddscanner.ui.adapters.AllPhotosDiveSpotAdapter;
 import com.ddscanner.utils.Constants;
+import com.ddscanner.utils.DialogUtils;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
@@ -165,6 +166,11 @@ public class AddPhotosDoDiveSpotActivity extends AppCompatActivity implements Vi
                     setResult(Activity.RESULT_OK, returnIntent);
                     finish();
                 }
+            }
+
+            @Override
+            public void onConnectionFailure() {
+                DialogUtils.showConnectionErrorDialog(AddPhotosDoDiveSpotActivity.this);
             }
         });
     }

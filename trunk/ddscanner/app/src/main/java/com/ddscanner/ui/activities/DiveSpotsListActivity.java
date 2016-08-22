@@ -28,6 +28,7 @@ import com.ddscanner.rest.BaseCallback;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.DiveSpotsListAdapter;
+import com.ddscanner.utils.DialogUtils;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
@@ -168,6 +169,11 @@ public class DiveSpotsListActivity extends AppCompatActivity {
                     }
                 }
             }
+
+            @Override
+            public void onConnectionFailure() {
+                DialogUtils.showConnectionErrorDialog(DiveSpotsListActivity.this);
+            }
         });
     }
 
@@ -226,6 +232,11 @@ public class DiveSpotsListActivity extends AppCompatActivity {
                         helpers.showToast(DiveSpotsListActivity.this, R.string.toast_server_error);
                     }
                 }
+            }
+
+            @Override
+            public void onConnectionFailure() {
+                DialogUtils.showConnectionErrorDialog(DiveSpotsListActivity.this);
             }
         });
     }

@@ -16,16 +16,29 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.DiveSpot;
+import com.ddscanner.entities.errors.BadRequestException;
+import com.ddscanner.entities.errors.CommentNotFoundException;
+import com.ddscanner.entities.errors.DiveSpotNotFoundException;
+import com.ddscanner.entities.errors.NotFoundException;
+import com.ddscanner.entities.errors.ServerInternalErrorException;
+import com.ddscanner.entities.errors.UnknownErrorException;
+import com.ddscanner.entities.errors.UserNotFoundException;
+import com.ddscanner.entities.errors.ValidationErrorException;
 import com.ddscanner.events.ShowLoginActivityIntent;
 import com.ddscanner.rest.BaseCallback;
+import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.activities.DiveSpotDetailsActivity;
+import com.ddscanner.ui.activities.SocialNetworks;
 import com.ddscanner.ui.views.TransformationRoundImage;
+import com.ddscanner.utils.DialogUtils;
 import com.ddscanner.utils.Helpers;
+import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import okhttp3.ResponseBody;
@@ -136,10 +149,46 @@ public class SwipableDiveSpotListAdapter
         call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.raw().code() == 422 || response.raw().code() == 404) {
+                String responseString = "";
+                try {
+                    responseString = response.errorBody().string();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                LogUtils.i("response body is " + responseString);
+                try {
+                    ErrorsParser.checkForError(response.code(), responseString);
+                } catch (ServerInternalErrorException e) {
+                    // TODO Handle
+                    helpers.showToast(context, R.string.toast_server_error);
+                } catch (BadRequestException e) {
+                    // TODO Handle
+                    helpers.showToast(context, R.string.toast_server_error);
+                } catch (ValidationErrorException e) {
+                    // TODO Handle
+                    helpers.showToast(context, R.string.toast_server_error);
+                } catch (NotFoundException e) {
+                    // TODO Handle
+                    helpers.showToast(context, R.string.toast_server_error);
+                } catch (UnknownErrorException e) {
+                    // TODO Handle
+                    helpers.showToast(context, R.string.toast_server_error);
+                } catch (DiveSpotNotFoundException e) {
+                    // TODO Handle
+                    helpers.showToast(context, R.string.toast_server_error);
+                } catch (UserNotFoundException e) {
+                    // TODO Handle
                     SharedPreferenceHelper.logout();
                     DDScannerApplication.bus.post(new ShowLoginActivityIntent());
+                } catch (CommentNotFoundException e) {
+                    // TODO Handle
+                    helpers.showToast(context, R.string.toast_server_error);
                 }
+            }
+
+            @Override
+            public void onConnectionFailure() {
+                DialogUtils.showConnectionErrorDialog(context);
             }
         });
     }
@@ -149,10 +198,46 @@ public class SwipableDiveSpotListAdapter
         call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.raw().code() == 422 || response.raw().code() == 404) {
+                String responseString = "";
+                try {
+                    responseString = response.errorBody().string();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                LogUtils.i("response body is " + responseString);
+                try {
+                    ErrorsParser.checkForError(response.code(), responseString);
+                } catch (ServerInternalErrorException e) {
+                    // TODO Handle
+                    helpers.showToast(context, R.string.toast_server_error);
+                } catch (BadRequestException e) {
+                    // TODO Handle
+                    helpers.showToast(context, R.string.toast_server_error);
+                } catch (ValidationErrorException e) {
+                    // TODO Handle
+                    helpers.showToast(context, R.string.toast_server_error);
+                } catch (NotFoundException e) {
+                    // TODO Handle
+                    helpers.showToast(context, R.string.toast_server_error);
+                } catch (UnknownErrorException e) {
+                    // TODO Handle
+                    helpers.showToast(context, R.string.toast_server_error);
+                } catch (DiveSpotNotFoundException e) {
+                    // TODO Handle
+                    helpers.showToast(context, R.string.toast_server_error);
+                } catch (UserNotFoundException e) {
+                    // TODO Handle
                     SharedPreferenceHelper.logout();
                     DDScannerApplication.bus.post(new ShowLoginActivityIntent());
+                } catch (CommentNotFoundException e) {
+                    // TODO Handle
+                    helpers.showToast(context, R.string.toast_server_error);
                 }
+            }
+
+            @Override
+            public void onConnectionFailure() {
+                DialogUtils.showConnectionErrorDialog(context);
             }
         });
     }
@@ -162,10 +247,46 @@ public class SwipableDiveSpotListAdapter
         call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.raw().code() == 422 || response.raw().code() == 404) {
+                String responseString = "";
+                try {
+                    responseString = response.errorBody().string();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                LogUtils.i("response body is " + responseString);
+                try {
+                    ErrorsParser.checkForError(response.code(), responseString);
+                } catch (ServerInternalErrorException e) {
+                    // TODO Handle
+                    helpers.showToast(context, R.string.toast_server_error);
+                } catch (BadRequestException e) {
+                    // TODO Handle
+                    helpers.showToast(context, R.string.toast_server_error);
+                } catch (ValidationErrorException e) {
+                    // TODO Handle
+                    helpers.showToast(context, R.string.toast_server_error);
+                } catch (NotFoundException e) {
+                    // TODO Handle
+                    helpers.showToast(context, R.string.toast_server_error);
+                } catch (UnknownErrorException e) {
+                    // TODO Handle
+                    helpers.showToast(context, R.string.toast_server_error);
+                } catch (DiveSpotNotFoundException e) {
+                    // TODO Handle
+                    helpers.showToast(context, R.string.toast_server_error);
+                } catch (UserNotFoundException e) {
+                    // TODO Handle
                     SharedPreferenceHelper.logout();
                     DDScannerApplication.bus.post(new ShowLoginActivityIntent());
+                } catch (CommentNotFoundException e) {
+                    // TODO Handle
+                    helpers.showToast(context, R.string.toast_server_error);
                 }
+            }
+
+            @Override
+            public void onConnectionFailure() {
+                DialogUtils.showConnectionErrorDialog(context);
             }
         });
     }
@@ -176,10 +297,46 @@ public class SwipableDiveSpotListAdapter
         call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.raw().code() == 422 || response.raw().code() == 404) {
+                String responseString = "";
+                try {
+                    responseString = response.errorBody().string();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                LogUtils.i("response body is " + responseString);
+                try {
+                    ErrorsParser.checkForError(response.code(), responseString);
+                } catch (ServerInternalErrorException e) {
+                    // TODO Handle
+                    helpers.showToast(context, R.string.toast_server_error);
+                } catch (BadRequestException e) {
+                    // TODO Handle
+                    helpers.showToast(context, R.string.toast_server_error);
+                } catch (ValidationErrorException e) {
+                    // TODO Handle
+                    helpers.showToast(context, R.string.toast_server_error);
+                } catch (NotFoundException e) {
+                    // TODO Handle
+                    helpers.showToast(context, R.string.toast_server_error);
+                } catch (UnknownErrorException e) {
+                    // TODO Handle
+                    helpers.showToast(context, R.string.toast_server_error);
+                } catch (DiveSpotNotFoundException e) {
+                    // TODO Handle
+                    helpers.showToast(context, R.string.toast_server_error);
+                } catch (UserNotFoundException e) {
+                    // TODO Handle
                     SharedPreferenceHelper.logout();
                     DDScannerApplication.bus.post(new ShowLoginActivityIntent());
+                } catch (CommentNotFoundException e) {
+                    // TODO Handle
+                    helpers.showToast(context, R.string.toast_server_error);
                 }
+            }
+
+            @Override
+            public void onConnectionFailure() {
+                DialogUtils.showConnectionErrorDialog(context);
             }
         });
     }

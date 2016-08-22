@@ -20,15 +20,27 @@ import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.DiveSpot;
 import com.ddscanner.entities.DivespotsWrapper;
+import com.ddscanner.entities.errors.BadRequestException;
+import com.ddscanner.entities.errors.CommentNotFoundException;
+import com.ddscanner.entities.errors.DiveSpotNotFoundException;
+import com.ddscanner.entities.errors.NotFoundException;
+import com.ddscanner.entities.errors.ServerInternalErrorException;
+import com.ddscanner.entities.errors.UnknownErrorException;
+import com.ddscanner.entities.errors.UserNotFoundException;
+import com.ddscanner.entities.errors.ValidationErrorException;
 import com.ddscanner.events.GoToMyLocationButtonClickedEvent;
 import com.ddscanner.events.LocationChosedEvent;
 import com.ddscanner.events.OpenAddDsActivityAfterLogin;
 import com.ddscanner.rest.BaseCallback;
+import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.CustomPagerAdapter;
 import com.ddscanner.ui.fragments.SearchDiveSpotsFragment;
 import com.ddscanner.ui.fragments.SearchLocationFragment;
 import com.ddscanner.utils.Constants;
+import com.ddscanner.utils.DialogUtils;
+import com.ddscanner.utils.Helpers;
+import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.places.AutocompletePrediction;
@@ -80,6 +92,7 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
     private List<MultipartBody.Part> select = new ArrayList<>();// fields (id,name)
     private boolean isTryToOpenAddDiveSpotActivity = false;
     private long lastEnterDataInMillis;
+    private Helpers helpers = new Helpers();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -216,15 +229,46 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
                     String responseString = "";
                     try {
                         responseString = response.body().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        ErrorsParser.checkForError(response.code(), responseString);
                         DivespotsWrapper divespotsWrapper;
                         divespotsWrapper = new Gson().fromJson(responseString, DivespotsWrapper.class);
                         if (divespotsWrapper.getDiveSpots() != null) {
                             searchDiveSpotFragment.setDiveSpots((ArrayList<DiveSpot>) divespotsWrapper.getDiveSpots());
                         }
-                    } catch (IOException e) {
-
+                    } catch (ServerInternalErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(SearchSpotOrLocationActivity.this, R.string.toast_server_error);
+                    } catch (BadRequestException e) {
+                        // TODO Handle
+                        helpers.showToast(SearchSpotOrLocationActivity.this, R.string.toast_server_error);
+                    } catch (ValidationErrorException e) {
+                        // TODO Handle
+                    } catch (NotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(SearchSpotOrLocationActivity.this, R.string.toast_server_error);
+                    } catch (UnknownErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(SearchSpotOrLocationActivity.this, R.string.toast_server_error);
+                    } catch (DiveSpotNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(SearchSpotOrLocationActivity.this, R.string.toast_server_error);
+                    } catch (UserNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(SearchSpotOrLocationActivity.this, R.string.toast_server_error);
+                    } catch (CommentNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(SearchSpotOrLocationActivity.this, R.string.toast_server_error);
                     }
                 }
+            }
+
+            @Override
+            public void onConnectionFailure() {
+                DialogUtils.showConnectionErrorDialog(SearchSpotOrLocationActivity.this);
             }
         });
     }

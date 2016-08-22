@@ -9,6 +9,7 @@ import com.ddscanner.entities.request.IdentifyRequest;
 import com.ddscanner.events.UserSuccessfullyIdentifiedEvent;
 import com.ddscanner.rest.BaseCallback;
 import com.ddscanner.rest.RestClient;
+import com.ddscanner.utils.DialogUtils;
 import com.ddscanner.utils.LocationHelper;
 import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
@@ -81,6 +82,11 @@ public class BaseAppCompatActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                 }
+            }
+
+            @Override
+            public void onConnectionFailure() {
+                DialogUtils.showConnectionErrorDialog(BaseAppCompatActivity.this);
             }
         });
     }

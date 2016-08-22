@@ -28,6 +28,7 @@ import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.ForeignUserLikesAdapter;
 import com.ddscanner.utils.Constants;
+import com.ddscanner.utils.DialogUtils;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
 import com.google.gson.Gson;
@@ -129,6 +130,11 @@ public class ForeignUserLikesDislikesActivity extends AppCompatActivity {
                     }
                 }
             }
+
+            @Override
+            public void onConnectionFailure() {
+                DialogUtils.showConnectionErrorDialog(ForeignUserLikesDislikesActivity.this);
+            }
         });
     }
 
@@ -184,6 +190,11 @@ public class ForeignUserLikesDislikesActivity extends AppCompatActivity {
                         helpers.showToast(ForeignUserLikesDislikesActivity.this, R.string.toast_server_error);
                     }
                 }
+            }
+
+            @Override
+            public void onConnectionFailure() {
+                DialogUtils.showConnectionErrorDialog(ForeignUserLikesDislikesActivity.this);
             }
         });
     }

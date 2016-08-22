@@ -22,6 +22,7 @@ import com.ddscanner.events.PlaceChoosedEvent;
 import com.ddscanner.rest.BaseCallback;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.fragments.MapListFragment;
+import com.ddscanner.utils.DialogUtils;
 import com.ddscanner.utils.LogUtils;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -347,6 +348,11 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
                     } else {
                         hidePb();
                     }
+                }
+
+                @Override
+                public void onConnectionFailure() {
+                    DialogUtils.showConnectionErrorDialog(context);
                 }
             });
         }

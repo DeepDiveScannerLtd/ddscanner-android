@@ -42,6 +42,7 @@ import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.ReviewsListAdapter;
 import com.ddscanner.ui.adapters.SpinnerItemsAdapter;
 import com.ddscanner.utils.Constants;
+import com.ddscanner.utils.DialogUtils;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
@@ -242,6 +243,11 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
                         helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
                     }
                 }
+            }
+
+            @Override
+            public void onConnectionFailure() {
+                DialogUtils.showConnectionErrorDialog(ReviewsActivity.this);
             }
         });
     }
@@ -512,6 +518,11 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
                         helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
                     }
                 }
+            }
+
+            @Override
+            public void onConnectionFailure() {
+                DialogUtils.showConnectionErrorDialog(ReviewsActivity.this);
             }
         });
     }

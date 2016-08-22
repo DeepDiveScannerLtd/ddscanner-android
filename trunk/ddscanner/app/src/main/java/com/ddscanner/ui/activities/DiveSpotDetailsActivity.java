@@ -67,6 +67,7 @@ import com.ddscanner.ui.adapters.DiveSpotsPhotosAdapter;
 import com.ddscanner.ui.adapters.EditorsListAdapter;
 import com.ddscanner.ui.adapters.SealifeListAdapter;
 import com.ddscanner.utils.Constants;
+import com.ddscanner.utils.DialogUtils;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
@@ -575,6 +576,11 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                     }
                 }
             }
+
+            @Override
+            public void onConnectionFailure() {
+                DialogUtils.showConnectionErrorDialog(DiveSpotDetailsActivity.this);
+            }
         });
     }
 
@@ -775,6 +781,11 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                     }
                 }
             }
+
+            @Override
+            public void onConnectionFailure() {
+                DialogUtils.showConnectionErrorDialog(DiveSpotDetailsActivity.this);
+            }
         });
     }
 
@@ -854,6 +865,11 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                     getCheckins();
                 }
             }
+
+            @Override
+            public void onConnectionFailure() {
+                DialogUtils.showConnectionErrorDialog(DiveSpotDetailsActivity.this);
+            }
         });
     }
 
@@ -925,6 +941,11 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                     }
                 }
             }
+
+            @Override
+            public void onConnectionFailure() {
+                DialogUtils.showConnectionErrorDialog(DiveSpotDetailsActivity.this);
+            }
         });
     }
 
@@ -984,6 +1005,11 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                     }
                 }
             }
+
+            @Override
+            public void onConnectionFailure() {
+                DialogUtils.showConnectionErrorDialog(DiveSpotDetailsActivity.this);
+            }
         });
     }
 
@@ -1040,6 +1066,11 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                     }
                 }
             }
+
+            @Override
+            public void onConnectionFailure() {
+                DialogUtils.showConnectionErrorDialog(DiveSpotDetailsActivity.this);
+            }
         });
     }
 
@@ -1071,6 +1102,11 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                     }
                 }
             }
+
+            @Override
+            public void onConnectionFailure() {
+                DialogUtils.showConnectionErrorDialog(DiveSpotDetailsActivity.this);
+            }
         });
     }
 
@@ -1097,6 +1133,11 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
                     }
                 }
+            }
+
+            @Override
+            public void onConnectionFailure() {
+                DialogUtils.showConnectionErrorDialog(DiveSpotDetailsActivity.this);
             }
         });
     }

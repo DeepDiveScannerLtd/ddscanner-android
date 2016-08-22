@@ -58,6 +58,7 @@ import com.ddscanner.ui.fragments.AllNotificationsFragment;
 import com.ddscanner.ui.fragments.NotificationsFragment;
 import com.ddscanner.ui.fragments.ProfileFragment;
 import com.ddscanner.utils.Constants;
+import com.ddscanner.utils.DialogUtils;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
@@ -544,6 +545,11 @@ public class MainActivity extends BaseAppCompatActivity
                 super.onFailure(call, t);
                 materialDialog.dismiss();
             }
+
+            @Override
+            public void onConnectionFailure() {
+                DialogUtils.showConnectionErrorDialog(MainActivity.this);
+            }
         });
     }
 
@@ -573,6 +579,11 @@ public class MainActivity extends BaseAppCompatActivity
 
                     }
                 }
+            }
+
+            @Override
+            public void onConnectionFailure() {
+                DialogUtils.showConnectionErrorDialog(MainActivity.this);
             }
         });
     }
