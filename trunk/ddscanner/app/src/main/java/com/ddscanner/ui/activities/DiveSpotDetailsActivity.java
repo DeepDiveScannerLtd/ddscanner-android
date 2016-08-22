@@ -440,8 +440,13 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         }
         if (divespotDetails.getCheckins() != null) {
             usersCheckins = divespotDetails.getCheckins();
-            setCheckinsCountPeople(String.valueOf(usersCheckins.size()) + " " +
-                    getString(R.string.peoples_checked_in_here), false);
+            if (usersCheckins.size() == 1) {
+                setCheckinsCountPeople(String.valueOf(usersCheckins.size()) + " " +
+                        getString(R.string.one_person_checked_in), false);
+            } else {
+                setCheckinsCountPeople(String.valueOf(usersCheckins.size()) + " " +
+                        getString(R.string.peoples_checked_in_here), false);
+            }
         }
         if (divespotDetails.getEditors() != null) {
             for (User user : divespotDetails.getEditors()) {
@@ -1051,11 +1056,15 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                         checkins = new Gson().fromJson(responseString, Checkins.class);
                         if (checkins.getCheckins() != null) {
                             usersCheckins = checkins.getCheckins();
-                            setCheckinsCountPeople(String.valueOf(usersCheckins.size()) + " " +
-                                    getString(R.string.peoples_checked_in_here), false);
+                            if (usersCheckins.size() == 1) {
+                                setCheckinsCountPeople(String.valueOf(usersCheckins.size()) + " " +
+                                        getString(R.string.one_person_checked_in), false);
+                            } else {
+                                setCheckinsCountPeople(String.valueOf(usersCheckins.size()) + " " +
+                                        getString(R.string.peoples_checked_in_here), false);
+                            }
                         } else {
-                            setCheckinsCountPeople("No " +
-                                    getString(R.string.peoples_checked_in_here), true);
+                            setCheckinsCountPeople(getString(R.string.no_one_has_checked_in_here), true);
                         }
                     } catch (IOException e) {
 
