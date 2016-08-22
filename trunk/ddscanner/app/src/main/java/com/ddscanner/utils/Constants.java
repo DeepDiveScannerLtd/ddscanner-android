@@ -44,6 +44,7 @@ public class Constants {
     public static final String ADD_DIVE_SPOT_ACTIVITY_DIVESPOT = "divespot";
     public static final String ADD_DIVE_SPOT_ACTIVITY_SEALIFE_ARRAY = "sealife[]";
     public static final String ADD_DIVE_SPOT_ACTIVITY_IMAGES_ARRAY = "images[]";
+    public static final String ADD_DIVE_SPOT_INTENT_LOCATION_NAME = "LOCATIONNAME";
 
     /*Fields in filters*/
     public static final String FILTERS_VALUE_OBJECT = "object";

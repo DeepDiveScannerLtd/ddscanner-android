@@ -30,6 +30,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 
 import java.util.List;
 import java.util.Locale;
@@ -53,6 +54,7 @@ public class PickLocationActivity extends AppCompatActivity implements GoogleMap
     private FloatingActionButton applyLocation;
     private LatLng startLocation;
     private Helpers helpers = new Helpers();
+    private String returnedLocationName = "";
 
     public static void show(Context context) {
         Intent intent = new Intent(context, PickLocationActivity.class);
@@ -111,19 +113,19 @@ public class PickLocationActivity extends AppCompatActivity implements GoogleMap
 
             if (addresses != null) {
                 Address returnedAddress = addresses.get(0);
-                if (returnedAddress.getAddressLine(1) != null) {
+                if (returnedAddress.getAddressLine(0) != null) {
+                    city = returnedAddress.getAddressLine(0);
+                } else if (returnedAddress.getAddressLine(1) != null) {
                     city = returnedAddress.getAddressLine(1);
-                } else if (returnedAddress.getAddressLine(2) != null) {
-                    city = returnedAddress.getAddressLine(2);
                 } else {
-                    city = returnedAddress.getAddressLine(3);
+                    city = returnedAddress.getAddressLine(2);
                 }
 
             }
         } catch (Exception e) {
 
         }
-
+        this.returnedLocationName = city;
         return city;
     }
 
@@ -131,8 +133,15 @@ public class PickLocationActivity extends AppCompatActivity implements GoogleMap
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_PLACE_AUTOCOMPLETE) {
+            if (resultCode == RESULT_OK) {
             Place place = PlacePicker.getPlace(this, data);
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(place.getViewport(),0));
+                if (place.getViewport() != null) {
+                    googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(place.getViewport(),0));
+                } else {
+                    LatLngBounds latLngBounds = new LatLngBounds(new LatLng(place.getLatLng().latitude - 0.2, place.getLatLng().longitude - 0.2), new LatLng(place.getLatLng().latitude + 0.2, place.getLatLng().longitude + 0.2) );
+                    googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds,0));
+                }
+            }
         }
     }
 
@@ -162,6 +171,9 @@ public class PickLocationActivity extends AppCompatActivity implements GoogleMap
             case R.id.apply_location:
                 Intent returnIntent = new Intent();
                 returnIntent.putExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_LATLNG, pickedLatLng);
+                if (!returnedLocationName.equals("")) {
+                    returnIntent.putExtra(Constants.ADD_DIVE_SPOT_INTENT_LOCATION_NAME,returnedLocationName);
+                }
                 setResult(Activity.RESULT_OK, returnIntent);
                 onBackPressed();
                 break;

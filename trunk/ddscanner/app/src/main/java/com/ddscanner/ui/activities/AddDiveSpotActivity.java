@@ -2,8 +2,10 @@ package com.ddscanner.ui.activities;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,6 +23,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
@@ -78,6 +81,7 @@ import retrofit2.Response;
 public class AddDiveSpotActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = AddDiveSpotActivity.class.getSimpleName();
+    private static final String DIVE_SPOT_NAME_PATTERN = "^[a-zA-Z0-9]*$";
     private static final int RC_PICK_SEALIFE = Constants.ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_PICK_SEALIFE;
     private static final int RC_PICK_PHOTO = Constants.ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_PICK_PHOTO;
     private static final int RC_PICK_LOCATION =Constants.ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_PICK_LOCATION;
@@ -240,6 +244,11 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         if (requestCode == RC_PICK_LOCATION) {
             if (resultCode == RESULT_OK) {
                 this.diveSpotLocation = data.getParcelableExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_LATLNG);
+                if (data.getStringExtra(Constants.ADD_DIVE_SPOT_INTENT_LOCATION_NAME) != null) {
+                    locationTitle.setText(data.getStringExtra(Constants.ADD_DIVE_SPOT_INTENT_LOCATION_NAME));
+                } else {
+                    locationTitle.setText(R.string.location);
+                }
                 locationTitle.setTextColor(getResources().getColor(R.color.black_text));
             }
         }
@@ -448,7 +457,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                             }
                             EventsTracker.trackDiveSpotCreation();
                             DiveSpot diveSpot = new Gson().fromJson(responseString, DiveSpot.class);
-                            DiveSpotDetailsActivity.show(AddDiveSpotActivity.this, String.valueOf(diveSpot.getId()), null);
+                            showSuccessDialog(String.valueOf(diveSpot.getId()));
                             finish();
                         } catch (IOException e) {
 
@@ -509,6 +518,12 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void createRequestBodyies() {
+        if (!name.getText().toString().matches(DIVE_SPOT_NAME_PATTERN)) {
+            error_name.setVisibility(View.VISIBLE);
+            error_name.setText("Name field may contain only numbers and letters");
+            return;
+        }
+        error_name.setVisibility(View.GONE);
         createSocialDatarequests();
         requestName = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
                 name.getText().toString().trim());
@@ -613,6 +628,31 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         imageUris.remove(event.getImageIndex());
         photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris,
                 AddDiveSpotActivity.this, addPhotoTitle));
+    }
+
+    private void showSuccessDialog(final String diveSpotId) {
+        MaterialDialog.Builder dialog = new MaterialDialog.Builder(this)
+                .title(R.string.thank_you_title)
+                .title(R.string.thank_you_title)
+                .content(R.string.success_added)
+                .positiveText(R.string.ok)
+                .positiveColor(getResources().getColor(R.color.primary))
+                .cancelable(false)
+                .dismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialogInterface) {
+                        EventsTracker.trackCheckIn(EventsTracker.CheckInStatus.CANCELLED);
+                    }
+                })
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog,
+                                        @NonNull DialogAction which) {
+                        DiveSpotDetailsActivity.show(AddDiveSpotActivity.this, diveSpotId, null);
+                    }
+                });
+
+        dialog.show();
     }
 
 }

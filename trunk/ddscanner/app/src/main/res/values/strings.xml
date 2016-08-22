@@ -239,4 +239,6 @@
     <string name="add_photos_to_dive_spot">Add photos</string>
     <string name="yoy_cannot_like_review">You cannot like your review</string>
     <string name="you_cannot_dislike_your_review">You cannot dislike your review</string>
+    <string name="success_added">New dive spot has been added</string>
+    <string name="thank_you_title">Thank you!</string>
 </resources>
