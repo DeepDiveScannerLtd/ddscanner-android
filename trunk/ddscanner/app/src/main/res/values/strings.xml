@@ -241,4 +241,6 @@
     <string name="you_cannot_dislike_your_review">You cannot dislike your review</string>
     <string name="success_added">New dive spot has been added</string>
     <string name="thank_you_title">Thank you!</string>
+    <string name="no_one_has_checked_in_here">No one has checked in here</string>
+    <string name="one_person_checked_in">person checked in here</string>
 </resources>
