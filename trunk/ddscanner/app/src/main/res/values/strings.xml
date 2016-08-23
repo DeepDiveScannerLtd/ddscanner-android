@@ -243,4 +243,5 @@
     <string name="thank_you_title">Thank you!</string>
     <string name="no_one_has_checked_in_here">No one has checked in here</string>
     <string name="one_person_checked_in">person checked in here</string>
+    <string name="error_connection_failed">Failed to connect to DDScanner service. Please try again later.</string>
 </resources>
