@@ -547,13 +547,8 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         String str = "";
 
         switch (direction) {
-
-            case SimpleGestureFilter.SWIPE_RIGHT:
-                break;
-            case SimpleGestureFilter.SWIPE_LEFT:
-                break;
             case SimpleGestureFilter.SWIPE_DOWN:
-                onBackPressed();
+               // onBackPressed();
                 break;
             case SimpleGestureFilter.SWIPE_UP:
                 onBackPressed();
