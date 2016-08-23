@@ -205,10 +205,10 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     }
 
     public static void showNewDiveSpot(Context context, String id) {
-
         Intent intent = new Intent(context, DiveSpotDetailsActivity.class);
         intent.putExtra(EXTRA_ID, id);
         intent.putExtra(Constants.DIVE_SPOT_DETAILS_ACTIVITY_EXTRA_IS_FROM_AD_DIVE_SPOT, true);
+        intent.putExtra(Constants.IS_HAS_INTERNET, true);
         context.startActivity(intent);
     }
 
@@ -1412,12 +1412,15 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
     @Override
     public void onBackPressed() {
-        if (isNewDiveSpot) {
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.putExtra(Constants.MAIN_ACTIVITY_ACTVITY_EXTRA_LATLNGBOUNDS, new LatLngBounds(new LatLng(diveSpot.getLat() -0.2, diveSpot.getLng() - 0.2), new LatLng(diveSpot.getLat() + 0.2, diveSpot.getLng() + 0.2)));
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
-            finish();
+        if (diveSpot != null) {
+            if (isNewDiveSpot) {
+                Intent intent = new Intent(this, MainActivity.class);
+                intent.putExtra(Constants.MAIN_ACTIVITY_ACTVITY_EXTRA_LATLNGBOUNDS, new LatLngBounds(new LatLng(diveSpot.getLat() - 0.2, diveSpot.getLng() - 0.2), new LatLng(diveSpot.getLat() + 0.2, diveSpot.getLng() + 0.2)));
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.putExtra(Constants.IS_HAS_INTERNET, true);
+                startActivity(intent);
+                finish();
+            }
         }
         finish();
     }

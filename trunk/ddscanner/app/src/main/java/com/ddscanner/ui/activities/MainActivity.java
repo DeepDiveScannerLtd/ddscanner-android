@@ -44,6 +44,7 @@ import com.ddscanner.events.LoggedInEvent;
 import com.ddscanner.events.LoggedOutEvent;
 import com.ddscanner.events.LoginViaFacebookClickEvent;
 import com.ddscanner.events.LoginViaGoogleClickEvent;
+import com.ddscanner.events.MapViewInitializedEvent;
 import com.ddscanner.events.OpenAddDsActivityAfterLogin;
 import com.ddscanner.events.PickPhotoFromGallery;
 import com.ddscanner.events.PlaceChoosedEvent;
@@ -143,6 +144,9 @@ public class MainActivity extends BaseAppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         isHasInternetConnection = getIntent().getBooleanExtra(Constants.IS_HAS_INTERNET, false);
+        if (getIntent().getParcelableExtra(Constants.MAIN_ACTIVITY_ACTVITY_EXTRA_LATLNGBOUNDS) != null) {
+            latLngBounds = getIntent().getParcelableExtra(Constants.MAIN_ACTIVITY_ACTVITY_EXTRA_LATLNGBOUNDS);
+        }
         startActivity();
         if (!isHasInternetConnection) {
             LogUtils.i(TAG, "internetConnectionClosed 2");
@@ -159,10 +163,7 @@ public class MainActivity extends BaseAppCompatActivity
         searchLocationBtn.setOnClickListener(this);
         btnFilter.setOnClickListener(this);
         setupTabLayout();
-        if (getIntent().getParcelableExtra(Constants.MAIN_ACTIVITY_ACTVITY_EXTRA_LATLNGBOUNDS) != null) {
-            latLngBounds = getIntent().getParcelableExtra(Constants.MAIN_ACTIVITY_ACTVITY_EXTRA_LATLNGBOUNDS);
-            DDScannerApplication.bus.post(new PlaceChoosedEvent(latLngBounds));
-        } else  {
+        if (latLngBounds == null) {
             getLocation(Constants.REQUEST_CODE_MAIN_ACTIVITY_GET_LOCATION_ON_ACTIVITY_START);
         }
         EventsTracker.trackDiveSpotMapView();
@@ -257,6 +258,13 @@ public class MainActivity extends BaseAppCompatActivity
         }
         if (allNotificationsFragment != null) {
             mainViewPagerAdapter.setAllNotificationsFragment(allNotificationsFragment);
+        }
+    }
+
+    @Subscribe
+    public void mapViewInitialized(MapViewInitializedEvent event) {
+        if (latLngBounds != null) {
+            DDScannerApplication.bus.post(new PlaceChoosedEvent(latLngBounds));
         }
     }
 

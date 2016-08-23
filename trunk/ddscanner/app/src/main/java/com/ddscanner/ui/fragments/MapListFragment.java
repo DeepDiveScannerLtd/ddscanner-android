@@ -33,6 +33,7 @@ import com.ddscanner.events.CloseListEvent;
 import com.ddscanner.events.InfowWindowOpenedEvent;
 import com.ddscanner.events.ListOpenedEvent;
 import com.ddscanner.events.LocationReadyEvent;
+import com.ddscanner.events.MapViewInitializedEvent;
 import com.ddscanner.events.MarkerClickEvent;
 import com.ddscanner.events.OnMapClickEvent;
 import com.ddscanner.events.OpenAddDsActivityAfterLogin;
@@ -240,6 +241,7 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
                         diveSpotsClusterManager = new DiveSpotsClusterManager(getActivity(), mGoogleMap, toast, progressBar, MapListFragment.this);
                         mGoogleMap.setOnMarkerClickListener(diveSpotsClusterManager);
                         mGoogleMap.setOnCameraChangeListener(diveSpotsClusterManager);
+                        DDScannerApplication.bus.post(new MapViewInitializedEvent());
                         if (userLocationOnFragmentStart == null) {
                             // this means location has not yet been received. do nothing
                         } else {

@@ -458,7 +458,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                             EventsTracker.trackDiveSpotCreation();
                             DiveSpot diveSpot = new Gson().fromJson(responseString, DiveSpot.class);
                             showSuccessDialog(String.valueOf(diveSpot.getId()));
-                            finish();
+                           // finish();
                         } catch (IOException e) {
 
                         }
@@ -518,11 +518,11 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void createRequestBodyies() {
-        if (!name.getText().toString().matches(DIVE_SPOT_NAME_PATTERN)) {
-            error_name.setVisibility(View.VISIBLE);
-            error_name.setText("Name field may contain only numbers and letters");
-            return;
-        }
+//        if (name.getText().toString().matches(DIVE_SPOT_NAME_PATTERN)) {
+//            error_name.setVisibility(View.VISIBLE);
+//            error_name.setText("Name field may contain only numbers and letters");
+//            return;
+//        }
         error_name.setVisibility(View.GONE);
         createSocialDatarequests();
         requestName = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
@@ -648,7 +648,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog,
                                         @NonNull DialogAction which) {
-                        DiveSpotDetailsActivity.show(AddDiveSpotActivity.this, diveSpotId, null);
+                        DiveSpotDetailsActivity.showNewDiveSpot(AddDiveSpotActivity.this, diveSpotId);
                     }
                 });
 
