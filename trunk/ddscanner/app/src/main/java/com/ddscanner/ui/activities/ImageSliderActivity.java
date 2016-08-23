@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -37,6 +38,7 @@ import com.ddscanner.rest.BaseCallback;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.SliderImagesAdapter;
+import com.ddscanner.ui.views.SimpleGestureFilter;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogUtils;
 import com.ddscanner.utils.Helpers;
@@ -61,7 +63,7 @@ import retrofit2.Response;
 /**
  * Created by lashket on 4.3.16.
  */
-public class ImageSliderActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener, View.OnClickListener{
+public class ImageSliderActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener, View.OnClickListener, SimpleGestureFilter.SimpleGestureListener{
 
     private LinearLayout pager_indicator;
     private int dotsCount = 0;
@@ -87,6 +89,9 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     private String reportDescription;
     private String deleteImageName;
     private MaterialDialog materialDialog;
+    private SimpleGestureFilter detector;
+    float x1,x2;
+    float y1, y2;
 
 
     @Override
@@ -94,6 +99,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_slider);
         findViews();
+        detector = new SimpleGestureFilter(this,this);
         materialDialog = helpers.getMaterialDialog(this);
         getReportsTypes();
         Bundle bundle = getIntent().getExtras();
@@ -508,6 +514,57 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
                         }
                     }
                 }).show();
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent touchevent) {
+        switch (touchevent.getAction())
+        {
+            case MotionEvent.ACTION_DOWN:
+            {
+                x1 = touchevent.getX();
+                y1 = touchevent.getY();
+                break;
+            }
+            case MotionEvent.ACTION_UP:
+            {
+                x2 = touchevent.getX();
+                y2 = touchevent.getY();
+                break;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent me){
+        // Call onTouchEvent of SimpleGestureFilter class
+        this.detector.onTouchEvent(me);
+        return super.dispatchTouchEvent(me);
+    }
+    @Override
+    public void onSwipe(int direction) {
+        String str = "";
+
+        switch (direction) {
+
+            case SimpleGestureFilter.SWIPE_RIGHT:
+                break;
+            case SimpleGestureFilter.SWIPE_LEFT:
+                break;
+            case SimpleGestureFilter.SWIPE_DOWN:
+                onBackPressed();
+                break;
+            case SimpleGestureFilter.SWIPE_UP:
+                onBackPressed();
+                break;
+
+        }
+    }
+
+    @Override
+    public void onDoubleTap() {
+
     }
 
 }
