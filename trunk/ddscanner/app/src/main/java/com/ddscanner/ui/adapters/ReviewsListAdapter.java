@@ -41,6 +41,7 @@ import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.activities.ForeignProfileActivity;
 import com.ddscanner.ui.dialogs.ProfileDialog;
 import com.ddscanner.ui.views.TransformationRoundImage;
+import com.ddscanner.utils.DialogUtils;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
@@ -200,7 +201,8 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
 
     private void showReportMenu(View view, int commentId, Comment comment) {
         // inflate menu
-        PopupMenu popup = new PopupMenu(context, view);
+        Context wrapper = new ContextThemeWrapper(context, R.style.popupMenuStyle);
+        PopupMenu popup = new PopupMenu(wrapper, view);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.menu_comment_report, popup.getMenu());
         popup.setOnMenuItemClickListener(new MenuItemClickListener(commentId, comment));
@@ -314,6 +316,11 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
                     }
                 }
             }
+
+            @Override
+            public void onConnectionFailure() {
+                DialogUtils.showConnectionErrorDialog(context);
+            }
         });
     }
 
@@ -381,6 +388,11 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
                         helpers.showToast(context, R.string.toast_server_error);
                     }
                 }
+            }
+
+            @Override
+            public void onConnectionFailure() {
+                DialogUtils.showConnectionErrorDialog(context);
             }
         });
     }

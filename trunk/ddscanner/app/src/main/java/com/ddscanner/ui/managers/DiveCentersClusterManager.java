@@ -21,6 +21,7 @@ import com.ddscanner.events.PutDiveCentersToListEvent;
 import com.ddscanner.rest.BaseCallback;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.activities.DiveCenterDetailsActivity;
+import com.ddscanner.utils.DialogUtils;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -294,6 +295,11 @@ public class DiveCentersClusterManager extends ClusterManager<DiveCenter> implem
 //                        Log.i(TAG, json);
 //                    }
                 }
+            }
+
+            @Override
+            public void onConnectionFailure() {
+                DialogUtils.showConnectionErrorDialog(context);
             }
         });
     }

@@ -29,6 +29,7 @@ import com.ddscanner.rest.BaseCallback;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.utils.Constants;
+import com.ddscanner.utils.DialogUtils;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
 import com.google.gson.Gson;
@@ -233,6 +234,11 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
                         helpers.showToast(ForeignProfileActivity.this, R.string.toast_server_error);
                     }
                 }
+            }
+
+            @Override
+            public void onConnectionFailure() {
+                DialogUtils.showConnectionErrorDialog(ForeignProfileActivity.this);
             }
         });
     }
