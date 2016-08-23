@@ -76,6 +76,7 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
@@ -170,6 +171,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private boolean isFavorite = false;
     private boolean isClickedRemoveFromFavorites = false;
     private boolean isClickedEdit = false;
+    private boolean isNewDiveSpot = false;
 
 
     private List<Comment> usersComments;
@@ -202,12 +204,21 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         context.startActivity(intent);
     }
 
+    public static void showNewDiveSpot(Context context, String id) {
+
+        Intent intent = new Intent(context, DiveSpotDetailsActivity.class);
+        intent.putExtra(EXTRA_ID, id);
+        intent.putExtra(Constants.DIVE_SPOT_DETAILS_ACTIVITY_EXTRA_IS_FROM_AD_DIVE_SPOT, true);
+        context.startActivity(intent);
+    }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dive_spot_details);
         findViews();
         toolbarSettings();
+        isNewDiveSpot = getIntent().getBooleanExtra(Constants.DIVE_SPOT_DETAILS_ACTIVITY_EXTRA_IS_FROM_AD_DIVE_SPOT, false);
         productId = getIntent().getStringExtra(EXTRA_ID);
         requestProductDetails(productId);
     }
@@ -1399,4 +1410,15 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        if (isNewDiveSpot) {
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra(Constants.MAIN_ACTIVITY_ACTVITY_EXTRA_LATLNGBOUNDS, new LatLngBounds(new LatLng(diveSpot.getLat() -0.2, diveSpot.getLng() - 0.2), new LatLng(diveSpot.getLat() + 0.2, diveSpot.getLng() + 0.2)));
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            finish();
+        }
+        finish();
+    }
 }

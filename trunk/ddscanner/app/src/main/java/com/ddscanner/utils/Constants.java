@@ -46,6 +46,9 @@ public class Constants {
     public static final String ADD_DIVE_SPOT_ACTIVITY_IMAGES_ARRAY = "images[]";
     public static final String ADD_DIVE_SPOT_INTENT_LOCATION_NAME = "LOCATIONNAME";
 
+    /*Main activity*/
+    public static final String MAIN_ACTIVITY_ACTVITY_EXTRA_LATLNGBOUNDS = "LATLNGBOUNDS";
+
     /*Fields in filters*/
     public static final String FILTERS_VALUE_OBJECT = "object";
     public static final String FILTERS_VALUE_ACCESS = "access";
@@ -92,5 +95,8 @@ public class Constants {
 
     /*Photos activity*/
     public static final int PHOTOS_ACTIVITY_REQUEST_CODE_SLIDER = 8989;
+
+    /*ive spot details activity*/
+    public static final String DIVE_SPOT_DETAILS_ACTIVITY_EXTRA_IS_FROM_AD_DIVE_SPOT = "ISNEW";
 
 }

@@ -129,6 +129,7 @@ public class MainActivity extends BaseAppCompatActivity
     private boolean isDiveSpotInfoWindowShown = false;
     private boolean isDiveSpotListIsShown = false;
     private int positionToScroll;
+    private LatLngBounds latLngBounds;
 
     private CallbackManager facebookCallbackManager;
     private GoogleApiClient mGoogleApiClient;
@@ -158,7 +159,12 @@ public class MainActivity extends BaseAppCompatActivity
         searchLocationBtn.setOnClickListener(this);
         btnFilter.setOnClickListener(this);
         setupTabLayout();
-        getLocation(Constants.REQUEST_CODE_MAIN_ACTIVITY_GET_LOCATION_ON_ACTIVITY_START);
+        if (getIntent().getParcelableExtra(Constants.MAIN_ACTIVITY_ACTVITY_EXTRA_LATLNGBOUNDS) != null) {
+            latLngBounds = getIntent().getParcelableExtra(Constants.MAIN_ACTIVITY_ACTVITY_EXTRA_LATLNGBOUNDS);
+            DDScannerApplication.bus.post(new PlaceChoosedEvent(latLngBounds));
+        } else  {
+            getLocation(Constants.REQUEST_CODE_MAIN_ACTIVITY_GET_LOCATION_ON_ACTIVITY_START);
+        }
         EventsTracker.trackDiveSpotMapView();
     }
 
