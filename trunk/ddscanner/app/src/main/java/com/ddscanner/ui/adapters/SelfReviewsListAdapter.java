@@ -75,6 +75,7 @@ public class SelfReviewsListAdapter extends RecyclerView.Adapter<SelfReviewsList
                     .load(diveSpotPath + comments.get(position).getDiveSpotImage())
                     .resize(Math.round(helpers.convertDpToPixel(40, context)),Math.round(helpers.convertDpToPixel(40, context)))
                     .centerCrop()
+                    .placeholder(R.drawable.list_photo_default)
                     .transform(new TransformationRoundImage(4,0))
                     .into(holder.user_avatar);
         }

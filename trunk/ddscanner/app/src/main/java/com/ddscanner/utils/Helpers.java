@@ -383,25 +383,48 @@ public class Helpers {
             differenceOfTime = currentDateInMillis - incomingDateInMillis;
             differenceOfTime = differenceOfTime / 1000;
             if ((differenceOfTime / yearsSeconds) > 0) {
-                return String.valueOf(differenceOfTime / yearsSeconds) + " year ago";
+                if ((differenceOfTime / yearsSeconds) == 1) {
+                    return String.valueOf(differenceOfTime / yearsSeconds) + " year ago";
+                }
+                return String.valueOf(differenceOfTime / yearsSeconds) + " years ago";
             }
             if ((differenceOfTime / monthSeconds) > 0) {
-                return String.valueOf(differenceOfTime / monthSeconds) + " month ago";
+                if ((differenceOfTime / monthSeconds) == 1) {
+                    return String.valueOf(differenceOfTime / monthSeconds) + " month ago";
+                }
+                return String.valueOf(differenceOfTime / monthSeconds) + " months ago";
             }
             if ((differenceOfTime / weeksSeconds) > 0) {
-                return String.valueOf(differenceOfTime / weeksSeconds) + " week ago";
+                if ((differenceOfTime / weeksSeconds) == 1) {
+                    return String.valueOf(differenceOfTime / weeksSeconds) + " week ago";
+                }
+                return String.valueOf(differenceOfTime / weeksSeconds) + " weeks ago";
             }
             if ((differenceOfTime / daysSeconds) > 0) {
-                return String.valueOf(differenceOfTime / daysSeconds) + " day ago";
+                if ((differenceOfTime) == 1) {
+                    return String.valueOf(differenceOfTime / daysSeconds) + " day ago";
+                }
+                return String.valueOf(differenceOfTime / daysSeconds) + " days ago";
+
             }
             if ((differenceOfTime / hourSeconds) > 0) {
-                return String.valueOf(differenceOfTime / hourSeconds) + " hour ago";
+                if ((differenceOfTime) == 1) {
+                    return String.valueOf(differenceOfTime / hourSeconds) + " hour ago";
+                }
+                return String.valueOf(differenceOfTime / hourSeconds) + " hours ago";
             }
             if ((differenceOfTime / minuteSeconds) > 0) {
-                return String.valueOf(differenceOfTime / minuteSeconds) + " minute age";
+                if ((differenceOfTime) == 1) {
+                    return String.valueOf(differenceOfTime / minuteSeconds) + " minute age";
+                }
+                return String.valueOf(differenceOfTime / minuteSeconds) + " minutes age";
             }
             if (differenceOfTime > 0 && differenceOfTime < 60) {
-                return String.valueOf(differenceOfTime) + " second ago";
+                if ((differenceOfTime) == 1) {
+                    return String.valueOf(differenceOfTime) + " second ago";
+                }
+                return String.valueOf(differenceOfTime) + " seconds ago";
+
             }
         } catch (ParseException e) {
             return "";
