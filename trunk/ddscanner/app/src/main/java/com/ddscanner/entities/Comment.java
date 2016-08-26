@@ -22,6 +22,33 @@ public class Comment implements Serializable{
     private boolean isLike;
     private boolean isDislike;
     private boolean isEdit;
+    private String diveSpotName;
+    private String diveSpotImage;
+    private String diveSpotId;
+
+    public String getDiveSpotName() {
+        return diveSpotName;
+    }
+
+    public void setDiveSpotName(String diveSpotName) {
+        this.diveSpotName = diveSpotName;
+    }
+
+    public String getDiveSpotImage() {
+        return diveSpotImage;
+    }
+
+    public void setDiveSpotImage(String diveSpotImage) {
+        this.diveSpotImage = diveSpotImage;
+    }
+
+    public String getDiveSpotId() {
+        return diveSpotId;
+    }
+
+    public void setDiveSpotId(String diveSpotId) {
+        this.diveSpotId = diveSpotId;
+    }
 
     public boolean isEdit() {
         return isEdit;

@@ -9,6 +9,15 @@ import java.util.List;
 public class Comments implements Serializable {
 
     private List<Comment> comments;
+    private String diveSpotPathMedium;
+
+    public String getDiveSpotPathMedium() {
+        return diveSpotPathMedium;
+    }
+
+    public void setDiveSpotPathMedium(String diveSpotPathMedium) {
+        this.diveSpotPathMedium = diveSpotPathMedium;
+    }
 
     public List<Comment> getComments() {
         return comments;
