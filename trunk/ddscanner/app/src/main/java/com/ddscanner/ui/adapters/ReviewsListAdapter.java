@@ -165,7 +165,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
 
         if (comments.get(reviewsListViewHolder.getAdapterPosition()).getUser().getPicture() != null) {
             Picasso.with(context)
-                    .load(comments.get(reviewsListViewHolder.getAdapterPosition()).getUser().getPicture()).resize(40, 40)
+                    .load(comments.get(reviewsListViewHolder.getAdapterPosition()).getUser().getPicture()).resize(Math.round(helpers.convertDpToPixel(40, context)), Math.round(helpers.convertDpToPixel(40, context)))
                     .transform(new TransformationRoundImage(50, 0))
                     .centerCrop()
                     .placeholder(R.drawable.avatar_profile_default)

@@ -99,4 +99,7 @@ public class Constants {
     /*ive spot details activity*/
     public static final String DIVE_SPOT_DETAILS_ACTIVITY_EXTRA_IS_FROM_AD_DIVE_SPOT = "ISNEW";
 
+    /*Self reviews*/
+    public static final String SELF_REVIEWS_ACTIVITY_INTENT_USER_ID = "USERID";
+    public static final int SELF_REVIEWS_REQUEST_CODE_LOGIN_TO_VIEW_COMMENTS = 1050;
 }

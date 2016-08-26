@@ -102,13 +102,14 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reviews);
         Bundle bundle = getIntent().getExtras();
-        comments = (ArrayList<Comment>) bundle.getSerializable("COMMENTS");
+       // comments = (ArrayList<Comment>) bundle.getSerializable("COMMENTS");
         diveSpotId = bundle.getString(Constants.DIVESPOTID);
         path = bundle.getString("PATH");
         getReportsTypes();
         findViews();
         toolbarSettings();
         setContent();
+        getComments();
     }
 
     private void findViews() {
@@ -130,7 +131,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     private void setContent() {
         commentsRc.setHasFixedSize(true);
         commentsRc.setLayoutManager(new LinearLayoutManager(this));
-        commentsRc.setAdapter(new ReviewsListAdapter(comments, ReviewsActivity.this, path));
+     //   commentsRc.setAdapter(new ReviewsListAdapter(comments, ReviewsActivity.this, path));
     }
 
     @Override

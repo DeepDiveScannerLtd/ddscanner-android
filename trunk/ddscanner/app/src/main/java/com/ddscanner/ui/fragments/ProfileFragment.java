@@ -49,6 +49,7 @@ import com.ddscanner.ui.activities.AboutActivity;
 import com.ddscanner.ui.activities.DiveSpotsListActivity;
 import com.ddscanner.ui.activities.ForeignUserLikesDislikesActivity;
 import com.ddscanner.ui.activities.MainActivity;
+import com.ddscanner.ui.activities.SelfCommentsActivity;
 import com.ddscanner.ui.activities.UsersDivespotListSwipableActivity;
 import com.ddscanner.ui.views.LoginView;
 import com.ddscanner.utils.Constants;
@@ -119,6 +120,7 @@ public class ProfileFragment extends Fragment
     private LinearLayout aboutDDsLayout;
     private LinearLayout likeLayout;
     private LinearLayout dislikeLayout;
+    private LinearLayout commentsLayout;
     private SwipeRefreshLayout swipeRefreshLayout;
     private TextView error_name;
     private TextView error_about;
@@ -234,6 +236,8 @@ public class ProfileFragment extends Fragment
         aboutDDsLayout.setOnClickListener(this);
         likeLayout = (LinearLayout) v.findViewById(R.id.likeLayout);
         dislikeLayout = (LinearLayout) v.findViewById(R.id.dislikeLayout);
+        commentsLayout = (LinearLayout) v.findViewById(R.id.comments_layout);
+        commentsLayout.setOnClickListener(this);
 
         aboutEdit.addTextChangedListener(new TextWatcher() {
             @Override
@@ -343,6 +347,9 @@ public class ProfileFragment extends Fragment
                 break;
             case R.id.dislikeLayout:
                 ForeignUserLikesDislikesActivity.show(getActivity(), false, user.getId(), Constants.FOREIGN_USER_REQUEST_CODE_SHOW_LIKES_LIST);
+                break;
+            case R.id.comments_layout:
+                SelfCommentsActivity.show(getContext(), user.getId());
                 break;
         }
     }
