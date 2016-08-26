@@ -149,40 +149,42 @@ public class SwipableDiveSpotListAdapter
         call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                String responseString = "";
-                try {
-                    responseString = response.errorBody().string();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                LogUtils.i("response body is " + responseString);
-                try {
-                    ErrorsParser.checkForError(response.code(), responseString);
-                } catch (ServerInternalErrorException e) {
-                    // TODO Handle
-                    helpers.showToast(context, R.string.toast_server_error);
-                } catch (BadRequestException e) {
-                    // TODO Handle
-                    helpers.showToast(context, R.string.toast_server_error);
-                } catch (ValidationErrorException e) {
-                    // TODO Handle
-                    helpers.showToast(context, R.string.toast_server_error);
-                } catch (NotFoundException e) {
-                    // TODO Handle
-                    helpers.showToast(context, R.string.toast_server_error);
-                } catch (UnknownErrorException e) {
-                    // TODO Handle
-                    helpers.showToast(context, R.string.toast_server_error);
-                } catch (DiveSpotNotFoundException e) {
-                    // TODO Handle
-                    helpers.showToast(context, R.string.toast_server_error);
-                } catch (UserNotFoundException e) {
-                    // TODO Handle
-                    SharedPreferenceHelper.logout();
-                    DDScannerApplication.bus.post(new ShowLoginActivityIntent());
-                } catch (CommentNotFoundException e) {
-                    // TODO Handle
-                    helpers.showToast(context, R.string.toast_server_error);
+                if (!response.isSuccessful()) {
+                    String responseString = "";
+                    try {
+                        responseString = response.errorBody().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    LogUtils.i("response body is " + responseString);
+                    try {
+                        ErrorsParser.checkForError(response.code(), responseString);
+                    } catch (ServerInternalErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(context, R.string.toast_server_error);
+                    } catch (BadRequestException e) {
+                        // TODO Handle
+                        helpers.showToast(context, R.string.toast_server_error);
+                    } catch (ValidationErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(context, R.string.toast_server_error);
+                    } catch (NotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(context, R.string.toast_server_error);
+                    } catch (UnknownErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(context, R.string.toast_server_error);
+                    } catch (DiveSpotNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(context, R.string.toast_server_error);
+                    } catch (UserNotFoundException e) {
+                        // TODO Handle
+                        SharedPreferenceHelper.logout();
+                        DDScannerApplication.bus.post(new ShowLoginActivityIntent());
+                    } catch (CommentNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(context, R.string.toast_server_error);
+                    }
                 }
             }
 
@@ -198,40 +200,42 @@ public class SwipableDiveSpotListAdapter
         call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                String responseString = "";
-                try {
-                    responseString = response.errorBody().string();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                LogUtils.i("response body is " + responseString);
-                try {
-                    ErrorsParser.checkForError(response.code(), responseString);
-                } catch (ServerInternalErrorException e) {
-                    // TODO Handle
-                    helpers.showToast(context, R.string.toast_server_error);
-                } catch (BadRequestException e) {
-                    // TODO Handle
-                    helpers.showToast(context, R.string.toast_server_error);
-                } catch (ValidationErrorException e) {
-                    // TODO Handle
-                    helpers.showToast(context, R.string.toast_server_error);
-                } catch (NotFoundException e) {
-                    // TODO Handle
-                    helpers.showToast(context, R.string.toast_server_error);
-                } catch (UnknownErrorException e) {
-                    // TODO Handle
-                    helpers.showToast(context, R.string.toast_server_error);
-                } catch (DiveSpotNotFoundException e) {
-                    // TODO Handle
-                    helpers.showToast(context, R.string.toast_server_error);
-                } catch (UserNotFoundException e) {
-                    // TODO Handle
-                    SharedPreferenceHelper.logout();
-                    DDScannerApplication.bus.post(new ShowLoginActivityIntent());
-                } catch (CommentNotFoundException e) {
-                    // TODO Handle
-                    helpers.showToast(context, R.string.toast_server_error);
+                if (!response.isSuccessful()) {
+                    String responseString = "";
+                    try {
+                        responseString = response.errorBody().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    LogUtils.i("response body is " + responseString);
+                    try {
+                        ErrorsParser.checkForError(response.code(), responseString);
+                    } catch (ServerInternalErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(context, R.string.toast_server_error);
+                    } catch (BadRequestException e) {
+                        // TODO Handle
+                        helpers.showToast(context, R.string.toast_server_error);
+                    } catch (ValidationErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(context, R.string.toast_server_error);
+                    } catch (NotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(context, R.string.toast_server_error);
+                    } catch (UnknownErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(context, R.string.toast_server_error);
+                    } catch (DiveSpotNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(context, R.string.toast_server_error);
+                    } catch (UserNotFoundException e) {
+                        // TODO Handle
+                        SharedPreferenceHelper.logout();
+                        DDScannerApplication.bus.post(new ShowLoginActivityIntent());
+                    } catch (CommentNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(context, R.string.toast_server_error);
+                    }
                 }
             }
 
@@ -247,40 +251,42 @@ public class SwipableDiveSpotListAdapter
         call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                String responseString = "";
-                try {
-                    responseString = response.errorBody().string();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                LogUtils.i("response body is " + responseString);
-                try {
-                    ErrorsParser.checkForError(response.code(), responseString);
-                } catch (ServerInternalErrorException e) {
-                    // TODO Handle
-                    helpers.showToast(context, R.string.toast_server_error);
-                } catch (BadRequestException e) {
-                    // TODO Handle
-                    helpers.showToast(context, R.string.toast_server_error);
-                } catch (ValidationErrorException e) {
-                    // TODO Handle
-                    helpers.showToast(context, R.string.toast_server_error);
-                } catch (NotFoundException e) {
-                    // TODO Handle
-                    helpers.showToast(context, R.string.toast_server_error);
-                } catch (UnknownErrorException e) {
-                    // TODO Handle
-                    helpers.showToast(context, R.string.toast_server_error);
-                } catch (DiveSpotNotFoundException e) {
-                    // TODO Handle
-                    helpers.showToast(context, R.string.toast_server_error);
-                } catch (UserNotFoundException e) {
-                    // TODO Handle
-                    SharedPreferenceHelper.logout();
-                    DDScannerApplication.bus.post(new ShowLoginActivityIntent());
-                } catch (CommentNotFoundException e) {
-                    // TODO Handle
-                    helpers.showToast(context, R.string.toast_server_error);
+                if (!response.isSuccessful()) {
+                    String responseString = "";
+                    try {
+                        responseString = response.errorBody().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    LogUtils.i("response body is " + responseString);
+                    try {
+                        ErrorsParser.checkForError(response.code(), responseString);
+                    } catch (ServerInternalErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(context, R.string.toast_server_error);
+                    } catch (BadRequestException e) {
+                        // TODO Handle
+                        helpers.showToast(context, R.string.toast_server_error);
+                    } catch (ValidationErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(context, R.string.toast_server_error);
+                    } catch (NotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(context, R.string.toast_server_error);
+                    } catch (UnknownErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(context, R.string.toast_server_error);
+                    } catch (DiveSpotNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(context, R.string.toast_server_error);
+                    } catch (UserNotFoundException e) {
+                        // TODO Handle
+                        SharedPreferenceHelper.logout();
+                        DDScannerApplication.bus.post(new ShowLoginActivityIntent());
+                    } catch (CommentNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(context, R.string.toast_server_error);
+                    }
                 }
             }
 
@@ -297,40 +303,42 @@ public class SwipableDiveSpotListAdapter
         call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                String responseString = "";
-                try {
-                    responseString = response.errorBody().string();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                LogUtils.i("response body is " + responseString);
-                try {
-                    ErrorsParser.checkForError(response.code(), responseString);
-                } catch (ServerInternalErrorException e) {
-                    // TODO Handle
-                    helpers.showToast(context, R.string.toast_server_error);
-                } catch (BadRequestException e) {
-                    // TODO Handle
-                    helpers.showToast(context, R.string.toast_server_error);
-                } catch (ValidationErrorException e) {
-                    // TODO Handle
-                    helpers.showToast(context, R.string.toast_server_error);
-                } catch (NotFoundException e) {
-                    // TODO Handle
-                    helpers.showToast(context, R.string.toast_server_error);
-                } catch (UnknownErrorException e) {
-                    // TODO Handle
-                    helpers.showToast(context, R.string.toast_server_error);
-                } catch (DiveSpotNotFoundException e) {
-                    // TODO Handle
-                    helpers.showToast(context, R.string.toast_server_error);
-                } catch (UserNotFoundException e) {
-                    // TODO Handle
-                    SharedPreferenceHelper.logout();
-                    DDScannerApplication.bus.post(new ShowLoginActivityIntent());
-                } catch (CommentNotFoundException e) {
-                    // TODO Handle
-                    helpers.showToast(context, R.string.toast_server_error);
+                if (!response.isSuccessful()) {
+                    String responseString = "";
+                    try {
+                        responseString = response.errorBody().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    LogUtils.i("response body is " + responseString);
+                    try {
+                        ErrorsParser.checkForError(response.code(), responseString);
+                    } catch (ServerInternalErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(context, R.string.toast_server_error);
+                    } catch (BadRequestException e) {
+                        // TODO Handle
+                        helpers.showToast(context, R.string.toast_server_error);
+                    } catch (ValidationErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(context, R.string.toast_server_error);
+                    } catch (NotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(context, R.string.toast_server_error);
+                    } catch (UnknownErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(context, R.string.toast_server_error);
+                    } catch (DiveSpotNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(context, R.string.toast_server_error);
+                    } catch (UserNotFoundException e) {
+                        // TODO Handle
+                        SharedPreferenceHelper.logout();
+                        DDScannerApplication.bus.post(new ShowLoginActivityIntent());
+                    } catch (CommentNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(context, R.string.toast_server_error);
+                    }
                 }
             }
 
