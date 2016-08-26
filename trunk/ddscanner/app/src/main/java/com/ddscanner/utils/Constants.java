@@ -101,5 +101,6 @@ public class Constants {
 
     /*Self reviews*/
     public static final String SELF_REVIEWS_ACTIVITY_INTENT_USER_ID = "USERID";
-    public static final int SELF_REVIEWS_REQUEST_CODE_LOGIN_TO_VIEW_COMMENTS = 1050;
+    public static final int SELF_REVIEWS_REQUEST_CODE_LOGIN_TO_VIEW_COMMENTS = 1070;
+    public static final int SELF_REVIEWS_REQUEST_CODE_LOGIN_TO_DELETE_COMMENTS = 1071;
 }

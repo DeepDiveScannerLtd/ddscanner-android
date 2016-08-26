@@ -2,16 +2,23 @@ package com.ddscanner.ui.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.Comment;
+import com.ddscanner.events.DeleteCommentEvent;
+import com.ddscanner.events.EditCommentEvent;
+import com.ddscanner.events.ReportCommentEvent;
 import com.ddscanner.ui.activities.DiveSpotDetailsActivity;
 import com.ddscanner.ui.views.TransformationRoundImage;
 import com.ddscanner.utils.Helpers;
@@ -46,7 +53,7 @@ public class SelfReviewsListAdapter extends RecyclerView.Adapter<SelfReviewsList
     }
 
     @Override
-    public void onBindViewHolder(SelfReviewsListViewHolder holder, int position) {
+    public void onBindViewHolder(final SelfReviewsListViewHolder holder, final int position) {
         if (comments.get(holder.getAdapterPosition()).getImages() != null) {
             LinearLayoutManager layoutManager = new LinearLayoutManager(context);
             layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -86,6 +93,12 @@ public class SelfReviewsListAdapter extends RecyclerView.Adapter<SelfReviewsList
         if (comments.get(position).getDate() != null && !comments.get(position).getDate().isEmpty()) {
             holder.date.setText(helpers.getCommentDate(comments.get(position).getDate()));
         }
+        holder.menu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showPopupMenu(holder.menu, Integer.parseInt(comments.get(position).getId()), comments.get(position));
+            }
+        });
     }
 
     @Override
@@ -94,6 +107,39 @@ public class SelfReviewsListAdapter extends RecyclerView.Adapter<SelfReviewsList
             return 0;
         }
         return comments.size();
+    }
+
+    private void showPopupMenu(View view, int commentId, Comment comment) {
+        PopupMenu popup = new PopupMenu(context, view);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.menu_comment, popup.getMenu());
+        popup.setOnMenuItemClickListener(new MenuItemClickListener(commentId, comment));
+        popup.show();
+    }
+
+    class MenuItemClickListener implements PopupMenu.OnMenuItemClickListener {
+
+        private int commentId;
+        private Comment comment;
+
+        public MenuItemClickListener(int commentId, Comment comment) {
+            this.commentId = commentId;
+            this.comment = comment;
+        }
+
+        @Override
+        public boolean onMenuItemClick(MenuItem menuItem) {
+            switch (menuItem.getItemId()) {
+                case R.id.comment_edit:
+                    DDScannerApplication.bus.post(new EditCommentEvent(comment));
+                    return true;
+                case R.id.comment_delete:
+                    DDScannerApplication.bus.post(new DeleteCommentEvent(commentId));
+                    return true;
+                default:
+            }
+            return false;
+        }
     }
 
     public class SelfReviewsListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
