@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.DiveSpot;
@@ -328,4 +329,20 @@ public class ForeignUserDiveSpotList extends AppCompatActivity {
             }
         }
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        DDScannerApplication.activityPaused();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        DDScannerApplication.activityResumed();
+        if (!helpers.hasConnection(this)) {
+            DDScannerApplication.showErrorActivity(this);
+        }
+    }
+
 }

@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.ForeignUserDislikesWrapper;
 import com.ddscanner.entities.ForeignUserLike;
@@ -250,4 +251,20 @@ public class ForeignUserLikesDislikesActivity extends AppCompatActivity {
         setResult(RESULT_OK);
         finish();
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        DDScannerApplication.activityPaused();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        DDScannerApplication.activityResumed();
+        if (!helpers.hasConnection(this)) {
+            DDScannerApplication.showErrorActivity(this);
+        }
+    }
+
 }

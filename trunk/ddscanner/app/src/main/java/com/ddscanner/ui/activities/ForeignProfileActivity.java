@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.User;
 import com.ddscanner.entities.errors.BadRequestException;
@@ -351,6 +352,21 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
             }
         } catch (PackageManager.NameNotFoundException e) {
             return FACEBOOK_URL;
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        DDScannerApplication.activityPaused();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        DDScannerApplication.activityResumed();
+        if (!helpers.hasConnection(this)) {
+            DDScannerApplication.showErrorActivity(this);
         }
     }
 }
