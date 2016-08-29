@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -18,6 +19,7 @@ import com.ddscanner.R;
 import com.ddscanner.entities.Image;
 import com.ddscanner.ui.adapters.ReviewImageSLiderAdapter;
 import com.ddscanner.ui.adapters.SliderImagesAdapter;
+import com.ddscanner.ui.views.SimpleGestureFilter;
 import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;
 
@@ -28,7 +30,7 @@ import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 /**
  * Created by lashket on 4.3.16.
  */
-public class ReviewImageSliderActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener, View.OnClickListener{
+public class ReviewImageSliderActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener, View.OnClickListener , SimpleGestureFilter.SimpleGestureListener{
 
     private LinearLayout pager_indicator;
     private int dotsCount = 0;
@@ -41,6 +43,9 @@ public class ReviewImageSliderActivity extends AppCompatActivity implements View
     private Drawable drawable;
     private int position;
     private Helpers helpers = new Helpers();
+    private SimpleGestureFilter detector;
+    float x1,x2;
+    float y1, y2;
 
 
     @Override
@@ -149,6 +154,53 @@ public class ReviewImageSliderActivity extends AppCompatActivity implements View
         if (!helpers.hasConnection(this)) {
             DDScannerApplication.showErrorActivity(this);
         }
+    }
+
+
+    @Override
+    public boolean onTouchEvent(MotionEvent touchevent) {
+        switch (touchevent.getAction())
+        {
+            case MotionEvent.ACTION_DOWN:
+            {
+                x1 = touchevent.getX();
+                y1 = touchevent.getY();
+                break;
+            }
+            case MotionEvent.ACTION_UP:
+            {
+                x2 = touchevent.getX();
+                y2 = touchevent.getY();
+                break;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent me){
+        // Call onTouchEvent of SimpleGestureFilter class
+        this.detector.onTouchEvent(me);
+        return super.dispatchTouchEvent(me);
+    }
+    @Override
+    public void onSwipe(int direction) {
+        String str = "";
+
+        switch (direction) {
+            case SimpleGestureFilter.SWIPE_DOWN:
+                // onBackPressed();
+                break;
+            case SimpleGestureFilter.SWIPE_UP:
+                onBackPressed();
+                break;
+
+        }
+    }
+
+    @Override
+    public void onDoubleTap() {
+
     }
 
 }
