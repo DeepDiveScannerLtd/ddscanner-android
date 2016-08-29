@@ -20,6 +20,7 @@ import com.ddscanner.entities.Image;
 import com.ddscanner.ui.adapters.ReviewImageSLiderAdapter;
 import com.ddscanner.ui.adapters.SliderImagesAdapter;
 import com.ddscanner.ui.views.SimpleGestureFilter;
+import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;
 
@@ -53,8 +54,9 @@ public class ReviewImageSliderActivity extends AppCompatActivity implements View
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_slider);
         findViews();
-        images = (ArrayList<String>) getIntent().getSerializableExtra("IMAGES");
-        position = getIntent().getIntExtra("position", 0);
+        images = (ArrayList<String>) getIntent().getSerializableExtra(Constants.REVIEWS_IMAGES_SLIDE_INTENT_IMAGES);
+        detector = new SimpleGestureFilter(this,this);
+        position = getIntent().getIntExtra(Constants.REVIEWS_IMAGES_SLIDE_INTENT_POSITION, 0);
         viewPager.addOnPageChangeListener(this);
         sliderImagesAdapter = new ReviewImageSLiderAdapter(getFragmentManager(), images);
         viewPager.setAdapter(sliderImagesAdapter);
@@ -131,8 +133,8 @@ public class ReviewImageSliderActivity extends AppCompatActivity implements View
 
     public static void show(Context context, ArrayList<String> images, int position) {
         Intent intent = new Intent(context, ReviewImageSliderActivity.class);
-        intent.putExtra("IMAGES", images);
-        intent.putExtra("position", position);
+        intent.putExtra(Constants.REVIEWS_IMAGES_SLIDE_INTENT_IMAGES, images);
+        intent.putExtra(Constants.REVIEWS_IMAGES_SLIDE_INTENT_POSITION, position);
         context.startActivity(intent);
     }
 

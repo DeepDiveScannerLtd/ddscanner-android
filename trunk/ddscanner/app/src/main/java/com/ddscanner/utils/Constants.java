@@ -96,11 +96,15 @@ public class Constants {
     /*Photos activity*/
     public static final int PHOTOS_ACTIVITY_REQUEST_CODE_SLIDER = 8989;
 
-    /*ive spot details activity*/
+    /*Dive spot details activity*/
     public static final String DIVE_SPOT_DETAILS_ACTIVITY_EXTRA_IS_FROM_AD_DIVE_SPOT = "ISNEW";
 
     /*Self reviews*/
     public static final String SELF_REVIEWS_ACTIVITY_INTENT_USER_ID = "USERID";
     public static final int SELF_REVIEWS_REQUEST_CODE_LOGIN_TO_VIEW_COMMENTS = 1070;
     public static final int SELF_REVIEWS_REQUEST_CODE_LOGIN_TO_DELETE_COMMENTS = 1071;
+
+    /*Review slider activity*/
+    public static final String REVIEWS_IMAGES_SLIDE_INTENT_IMAGES = "IMAGES";
+    public static final String REVIEWS_IMAGES_SLIDE_INTENT_POSITION = "POSITION";
 }
