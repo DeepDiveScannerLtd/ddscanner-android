@@ -48,6 +48,7 @@ public class Constants {
 
     /*Main activity*/
     public static final String MAIN_ACTIVITY_ACTVITY_EXTRA_LATLNGBOUNDS = "LATLNGBOUNDS";
+    public static final int MAIN_ACTIVITY_ACTVITY_REQUEST_PERMISSION_READ_STORAGE = 2010;
 
     /*Fields in filters*/
     public static final String FILTERS_VALUE_OBJECT = "object";

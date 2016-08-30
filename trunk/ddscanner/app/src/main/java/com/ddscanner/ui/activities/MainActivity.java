@@ -1,9 +1,11 @@
 package com.ddscanner.ui.activities;
 
+import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -12,11 +14,13 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.percent.PercentRelativeLayout;
+import android.support.v13.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
@@ -673,9 +677,24 @@ public class MainActivity extends BaseAppCompatActivity
 
     @Subscribe
     public void pickPhotoFromGallery(PickPhotoFromGallery event) {
+        if (checkPermissionReadStorage()) {
+            pickphotoFromGallery();
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, Constants.MAIN_ACTIVITY_ACTVITY_REQUEST_PERMISSION_READ_STORAGE);
+        }
+    }
+
+    private void pickphotoFromGallery() {
         Intent i = new Intent(Intent.ACTION_PICK,
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(i, REQUEST_CODE_PICK_PHOTO);
+    }
+
+    private boolean checkPermissionReadStorage() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            return false;
+        }
+        return true;
     }
 
     @Subscribe
@@ -789,6 +808,21 @@ public class MainActivity extends BaseAppCompatActivity
             mainViewPagerAdapter.setAllNotificationsFragment(allNotificationsFragment);
         } else {
             this.allNotificationsFragment = allNotificationsFragment;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case Constants.MAIN_ACTIVITY_ACTVITY_REQUEST_PERMISSION_READ_STORAGE: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    pickphotoFromGallery();
+                } else {
+                    Toast.makeText(MainActivity.this, "Grand permission to pick photo from gallery!", Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+
         }
     }
 }
