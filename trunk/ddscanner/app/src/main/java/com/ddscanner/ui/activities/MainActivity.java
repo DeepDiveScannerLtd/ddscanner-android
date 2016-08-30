@@ -672,12 +672,25 @@ public class MainActivity extends BaseAppCompatActivity
 
     @Subscribe
     public void changeProfileFragmentView(TakePhotoFromCameraEvent event) {
-        dispatchTakePictureIntent();
+        if (checkCameraPermissions(this) && checkWriteStoragePermision(this)) {
+            dispatchTakePictureIntent();
+        } else {
+            if (!checkCameraPermissions(this) && !checkWriteStoragePermision(this)) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, Constants.MAIN_ACTIVITY_ACTVITY_REQUEST_PERMISSION_CAMERA_AND_WRITE_STORAGE);
+            }
+            if (!checkCameraPermissions(this) && checkWriteStoragePermision(this)) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, Constants.MAIN_ACTIVITY_ACTVITY_REQUEST_PERMISSION_CAMERA);
+            }
+            if (checkCameraPermissions(this) && !checkWriteStoragePermision(this)) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.MAIN_ACTIVITY_ACTVITY_REQUEST_PERMISSION_WRITE_STORAGE);
+            }
+
+        }
     }
 
     @Subscribe
     public void pickPhotoFromGallery(PickPhotoFromGallery event) {
-        if (checkPermissionReadStorage()) {
+        if (checkReadStoragePermission(this)) {
             pickphotoFromGallery();
         } else {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, Constants.MAIN_ACTIVITY_ACTVITY_REQUEST_PERMISSION_READ_STORAGE);
@@ -819,6 +832,30 @@ public class MainActivity extends BaseAppCompatActivity
                     pickphotoFromGallery();
                 } else {
                     Toast.makeText(MainActivity.this, "Grand permission to pick photo from gallery!", Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+            case Constants.MAIN_ACTIVITY_ACTVITY_REQUEST_PERMISSION_CAMERA:{
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    dispatchTakePictureIntent();
+                } else {
+                    Toast.makeText(MainActivity.this, "Grand permission to pick photo from camera!", Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+            case Constants.MAIN_ACTIVITY_ACTVITY_REQUEST_PERMISSION_CAMERA_AND_WRITE_STORAGE:{
+                if (grantResults.length > 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                    dispatchTakePictureIntent();
+                } else {
+                    Toast.makeText(MainActivity.this, "Grand permissions to pick photo from camera!", Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+            case Constants.MAIN_ACTIVITY_ACTVITY_REQUEST_PERMISSION_WRITE_STORAGE:{
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    dispatchTakePictureIntent();
+                } else {
+                    Toast.makeText(MainActivity.this, "Grand permission to pick photo from camera!", Toast.LENGTH_SHORT).show();
                 }
                 return;
             }
