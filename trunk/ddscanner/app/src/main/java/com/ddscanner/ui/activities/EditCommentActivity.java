@@ -28,6 +28,7 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.Comment;
 import com.ddscanner.entities.errors.BadRequestException;
 import com.ddscanner.entities.errors.CommentNotFoundException;
@@ -355,6 +356,7 @@ public class EditCommentActivity extends AppCompatActivity implements View.OnCli
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 materialDialog.dismiss();
                 if (response.isSuccessful()) {
+                    EventsTracker.trackReviewEdited();
                     setResult(RESULT_OK);
                     finish();
                 }

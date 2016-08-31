@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.Comment;
 import com.ddscanner.entities.FiltersResponseEntity;
 import com.ddscanner.entities.Image;
@@ -277,6 +278,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         public boolean onMenuItemClick(MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.photo_report:
+                    EventsTracker.trackPhotoReport();
                     reportName = imageName.replace(path, "");
                     showReportDialog();
                     break;
@@ -398,6 +400,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 materialDialog.dismiss();
                 if (response.isSuccessful()) {
+                    EventsTracker.trackDiveSpotphotoReportSent();
                     Toast.makeText(ImageSliderActivity.this, R.string.report_sent, Toast.LENGTH_SHORT).show();
                     imageDeleted(ImageSliderActivity.this.position);
                 }

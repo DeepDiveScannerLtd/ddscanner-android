@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.Sealife;
 import com.ddscanner.entities.errors.BadRequestException;
 import com.ddscanner.entities.errors.CommentNotFoundException;
@@ -125,6 +126,7 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
         findViews();
         setUi();
         makeErrorsMap();
+        EventsTracker.trackSealifeCreation();
     }
 
     /**
@@ -354,6 +356,7 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
                     }
                 }
                 if(response.isSuccessful()) {
+                    EventsTracker.trackSealifeCreated();
                     try {
                         String responseString = "";
                         responseString = response.body().string();

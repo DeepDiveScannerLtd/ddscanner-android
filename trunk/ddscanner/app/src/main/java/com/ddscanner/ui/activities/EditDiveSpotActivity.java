@@ -171,6 +171,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
         toolbarSettings();
         getDsInfoRequest();
         makeErrorsMap();
+        EventsTracker.trackDiveSpotEdit();
     }
 
     /**
@@ -597,7 +598,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
                     }
                 }
                 if (response.isSuccessful()) {
-                    EventsTracker.trackDiveSpotEdit();
+                    EventsTracker.trackDivespotEdited();
                     Intent intent = new Intent();
                     setResult(RESULT_OK, intent);
                     finish();

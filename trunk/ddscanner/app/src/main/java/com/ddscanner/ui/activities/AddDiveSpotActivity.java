@@ -156,6 +156,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_dive_spot);
+        EventsTracker.trackDiveSpotCreation();
         findViews();
         setUi();
         loadFiltersDataRequest();
@@ -465,7 +466,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                             } catch (JSONException e) {
 
                             }
-                            EventsTracker.trackDiveSpotCreation();
+                            EventsTracker.trackDivespotCreated();
                             DiveSpot diveSpot = new Gson().fromJson(responseString, DiveSpot.class);
                             showSuccessDialog(String.valueOf(diveSpot.getId()));
                            // finish();

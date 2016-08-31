@@ -343,9 +343,11 @@ public class ProfileFragment extends Fragment
                 AboutActivity.show(getContext());
                 break;
             case R.id.likeLayout:
+                EventsTracker.trackUserLikesView();
                 ForeignUserLikesDislikesActivity.show(getActivity(), true, user.getId(), Constants.FOREIGN_USER_REQUEST_CODE_SHOW_LIKES_LIST);
                 break;
             case R.id.dislikeLayout:
+                EventsTracker.trackUserDislikesView();
                 ForeignUserLikesDislikesActivity.show(getActivity(), false, user.getId(), Constants.FOREIGN_USER_REQUEST_CODE_SHOW_LIKES_LIST);
                 break;
             case R.id.comments_layout:

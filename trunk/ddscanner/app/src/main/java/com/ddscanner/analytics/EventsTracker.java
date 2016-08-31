@@ -38,6 +38,12 @@ public class EventsTracker {
     private static final String EVENT_NAME_REVIEWER_PROFILE_VIEW = "reviewer_profile_view";
     private static final String EVENT_NAME_SEARCH_BY_DIVE_SPOT = "search_by_dive_spot";
     private static final String EVENT_NAME_SEARCH_BY_LOCATION = "search_by_location";
+    private static final String EVENT_NAME_SEARCH_SEA_LIFE = "search_sea_life";
+    private static final String EVENT_NAME_USER_LIKES_VIEW = "user_likes_view";
+    private static final String EVENT_NAME_USER_DISLIKES_VIEW = "user_dislikes_view";
+    private static final String EVENT_NAME_REVIEWER_CREATED_VIEW = "reviewer_created_view";
+    private static final String EVENT_NAME_REVIEWER_EDITED_VIEW = "reviewer_edited_view";
+    private static final String EVENT_NAME_REVIEWER_CHECK_INS_VIEW = "reviewer_check_ins_view";
 
     private static final String EVENT_NAME_DIVE_SPOT_VIEW = "dive_spot_view";
     private static final String EVENT_NAME_DIVE_CENTER_VIEW = "dive_center_view";
@@ -56,6 +62,19 @@ public class EventsTracker {
     private static final String EVENT_NAME_EDIT_DIVE_SPOT = "edit_dive_spot";
 
     private static final String EVENT_NAME_CREATE_DIVE_SPOT = "create_dive_spot";
+    private static final String EVENT_NAME_DIVE_SPOT_REPORT_PHOTO = "dive_spot_photo_report";
+    private static final String EVENT_NAME_DIVE_SPOT_EDITED = "dive_spot_edited";
+    private static final String EVENT_NAME_DIVE_SPOT_CREATED = "dive_spot_created";
+    private static final String EVENT_NAME_SEALIFE_CREATE = "create_sea_life";
+    private static final String EVENT_NAME_SEALIFE_CREATED = "sea_life_created";
+    private static final String EVENT_NAME_REPORT_REVIEW = "reviewer_review_report";
+    private static final String EVENT_NAME_DELETE_REVIEW = "user_review_delete";
+    private static final String EVENT_NAME_EDIT_REVIEW = "user_review_edit";
+    private static final String EVENT_NAME_EDITED_REVIEW = "user_review_edited";
+    private static final String EVENT_NAME_REVIEWER_FACEBOOK_OPENED = "reviewer_facebook_open";
+    private static final String EVENT_NAME_DIVE_SPOT__PHOTO_REPORT_SENT = "dive_spot_photo_report_sent";
+    private static final String EVENT_NAME_REVIEWER_REVIEW_REPORT_SENT = "reviewer_review_report_sent";
+    private static final String EVENT_NAME_REVIEW_SHOW_ALL = "review_show_all";
 
     // ----------------------------------------------------
     // User activity
@@ -211,6 +230,142 @@ public class EventsTracker {
         // Appsflyer
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_CREATE_DIVE_SPOT, null);
     }
+
+    public static void trackSealifeCreation() {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+
+        // Google Firebase
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_SEALIFE_CREATE, null);
+
+        // Flurry
+        FlurryAgent.logEvent(EVENT_NAME_SEALIFE_CREATE);
+
+        // Appsflyer
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_SEALIFE_CREATE, null);
+    }
+
+    public static void trackSealifeCreated() {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+
+        // Google Firebase
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_SEALIFE_CREATED, null);
+
+        // Flurry
+        FlurryAgent.logEvent(EVENT_NAME_SEALIFE_CREATED);
+
+        // Appsflyer
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_SEALIFE_CREATED, null);
+    }
+
+    public static void trackReviewEdited() {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+
+        // Google Firebase
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_EDITED_REVIEW, null);
+
+        // Flurry
+        FlurryAgent.logEvent(EVENT_NAME_EDITED_REVIEW);
+
+        // Appsflyer
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_EDITED_REVIEW, null);
+    }
+
+    public static void trackReviewrFacebookOpened() {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+
+        // Google Firebase
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_REVIEWER_FACEBOOK_OPENED, null);
+
+        // Flurry
+        FlurryAgent.logEvent(EVENT_NAME_REVIEWER_FACEBOOK_OPENED);
+
+        // Appsflyer
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_REVIEWER_FACEBOOK_OPENED, null);
+    }
+
+    public static void trackDiveSpotReviewReportSent() {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+
+        // Google Firebase
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_REVIEWER_REVIEW_REPORT_SENT, null);
+
+        // Flurry
+        FlurryAgent.logEvent(EVENT_NAME_REVIEWER_REVIEW_REPORT_SENT);
+
+        // Appsflyer
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_REVIEWER_REVIEW_REPORT_SENT, null);
+    }
+
+    public static void trackDiveSpotphotoReportSent() {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+
+        // Google Firebase
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_DIVE_SPOT__PHOTO_REPORT_SENT, null);
+
+        // Flurry
+        FlurryAgent.logEvent(EVENT_NAME_DIVE_SPOT__PHOTO_REPORT_SENT);
+
+        // Appsflyer
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_DIVE_SPOT__PHOTO_REPORT_SENT, null);
+    }
+
+    public static void trackDivespotCreated() {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+
+        // Google Firebase
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_DIVE_SPOT_CREATED, null);
+
+        // Flurry
+        FlurryAgent.logEvent(EVENT_NAME_DIVE_SPOT_CREATED);
+
+        // Appsflyer
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_DIVE_SPOT_CREATED, null);
+    }
+
+     public static void trackDivespotEdited() {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+
+        // Google Firebase
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_DIVE_SPOT_EDITED, null);
+
+        // Flurry
+        FlurryAgent.logEvent(EVENT_NAME_DIVE_SPOT_EDITED);
+
+        // Appsflyer
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_DIVE_SPOT_EDITED, null);
+    }
+
+    public static void trackReviewShowAll() {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+
+        // Google Firebase
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_REVIEW_SHOW_ALL, null);
+
+        // Flurry
+        FlurryAgent.logEvent(EVENT_NAME_REVIEW_SHOW_ALL);
+
+        // Appsflyer
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_REVIEW_SHOW_ALL, null);
+    }
+
 
     public static void trackCheckIn(CheckInStatus status) {
         if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
@@ -603,6 +758,156 @@ public class EventsTracker {
 
         // Appsflyer
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_SEARCH_BY_LOCATION, null);
+    }
+
+    public static void trackSearchSeaLife() {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+
+        // Google Firebase
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_SEARCH_SEA_LIFE, null);
+
+        // Flurry
+        FlurryAgent.logEvent(EVENT_NAME_SEARCH_SEA_LIFE);
+
+        // Appsflyer
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_SEARCH_SEA_LIFE, null);
+    }
+
+    public static void trackPhotoReport() {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+
+        // Google Firebase
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_DIVE_SPOT_REPORT_PHOTO, null);
+
+        // Flurry
+        FlurryAgent.logEvent(EVENT_NAME_DIVE_SPOT_REPORT_PHOTO);
+
+        // Appsflyer
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_DIVE_SPOT_REPORT_PHOTO, null);
+    }
+
+    public static void trackReviewReport() {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+
+        // Google Firebase
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_REPORT_REVIEW, null);
+
+        // Flurry
+        FlurryAgent.logEvent(EVENT_NAME_REPORT_REVIEW);
+
+        // Appsflyer
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_REPORT_REVIEW, null);
+    }
+
+    public static void trackDeleteReview() {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+
+        // Google Firebase
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_DELETE_REVIEW, null);
+
+        // Flurry
+        FlurryAgent.logEvent(EVENT_NAME_DELETE_REVIEW);
+
+        // Appsflyer
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_DELETE_REVIEW, null);
+    }
+
+    public static void trackEditReview() {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+
+        // Google Firebase
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_EDIT_REVIEW, null);
+
+        // Flurry
+        FlurryAgent.logEvent(EVENT_NAME_EDIT_REVIEW);
+
+        // Appsflyer
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_EDIT_REVIEW, null);
+    }
+
+    public static void trackUserLikesView() {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+
+        // Google Firebase
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_USER_LIKES_VIEW, null);
+
+        // Flurry
+        FlurryAgent.logEvent(EVENT_NAME_USER_LIKES_VIEW);
+
+        // Appsflyer
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_USER_LIKES_VIEW, null);
+    }
+
+    public static void trackUserDislikesView() {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+
+        // Google Firebase
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_USER_DISLIKES_VIEW, null);
+
+        // Flurry
+        FlurryAgent.logEvent(EVENT_NAME_USER_DISLIKES_VIEW);
+
+        // Appsflyer
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_USER_DISLIKES_VIEW, null);
+    }
+
+    public static void trackReviewerCreatedView() {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+
+        // Google Firebase
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_REVIEWER_CREATED_VIEW, null);
+
+        // Flurry
+        FlurryAgent.logEvent(EVENT_NAME_REVIEWER_CREATED_VIEW);
+
+        // Appsflyer
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_REVIEWER_CREATED_VIEW, null);
+    }
+
+    public static void trackReviewerEditedView() {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+
+        // Google Firebase
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_REVIEWER_EDITED_VIEW, null);
+
+        // Flurry
+        FlurryAgent.logEvent(EVENT_NAME_REVIEWER_EDITED_VIEW);
+
+        // Appsflyer
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_REVIEWER_EDITED_VIEW, null);
+    }
+
+    public static void trackReviewerCheckInsView() {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+
+        // Google Firebase
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_REVIEWER_CHECK_INS_VIEW, null);
+
+        // Flurry
+        FlurryAgent.logEvent(EVENT_NAME_REVIEWER_CHECK_INS_VIEW);
+
+        // Appsflyer
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_REVIEWER_CHECK_INS_VIEW, null);
     }
 
     public static void trackUnknownServerError(String url, String errorText) {

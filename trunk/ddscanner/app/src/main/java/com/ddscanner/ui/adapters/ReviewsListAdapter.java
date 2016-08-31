@@ -411,12 +411,15 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         public boolean onMenuItemClick(MenuItem menuItem) {
             switch (menuItem.getItemId()) {
                 case R.id.comment_edit:
+                    EventsTracker.trackEditReview();
                     DDScannerApplication.bus.post(new EditCommentEvent(comment));
                     return true;
                 case R.id.comment_delete:
+                    EventsTracker.trackDeleteReview();
                     DDScannerApplication.bus.post(new DeleteCommentEvent(commentId));
                     return true;
                 case R.id.comment_report:
+                    EventsTracker.trackReviewReport();
                     DDScannerApplication.bus.post(new ReportCommentEvent(String.valueOf(commentId)));
                     return true;
                 default:

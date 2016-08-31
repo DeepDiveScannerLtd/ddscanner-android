@@ -476,6 +476,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 materialDialog.dismiss();
                 if (response.isSuccessful()) {
+                    EventsTracker.trackDiveSpotReviewReportSent();
                     isClickedReport = false;
                     reportType = null;
                     reportDescription = null;

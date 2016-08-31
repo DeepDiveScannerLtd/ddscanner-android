@@ -620,8 +620,8 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 }
                 break;
             case R.id.btn_show_all_reviews:
-                EventsTracker.trackDeviSpotReviewsView();
                 if (divespotDetails.getComments() != null || usersComments != null) {
+                    EventsTracker.trackDeviSpotReviewsView();
                     Intent reviewsIntent = new Intent(DiveSpotDetailsActivity.this, ReviewsActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("COMMENTS", (ArrayList<Comment>) usersComments);

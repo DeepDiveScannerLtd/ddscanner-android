@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.User;
 import com.ddscanner.entities.errors.BadRequestException;
 import com.ddscanner.entities.errors.CommentNotFoundException;
@@ -288,12 +289,15 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.checkins_activity:
+                EventsTracker.trackReviewerCheckInsView();
                 ForeignUserDiveSpotList.show(this, false, false, true, userId, Constants.FOREIGN_USER_REQUEST_CODE_SHOW_LIST);
                 break;
             case R.id.created_activity:
+                EventsTracker.trackUserCreatedView();
                 ForeignUserDiveSpotList.show(this, false, true, false, userId, Constants.FOREIGN_USER_REQUEST_CODE_SHOW_LIST);
                 break;
             case R.id.edited_activity:
+                EventsTracker.trackReviewerEditedView();
                 ForeignUserDiveSpotList.show(this, true, false, false, userId, Constants.FOREIGN_USER_REQUEST_CODE_SHOW_LIST);
                 break;
             case R.id.likeLayout:
@@ -333,6 +337,7 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
                 }
                 break;
             case "fb":
+                EventsTracker.trackReviewrFacebookOpened();
                 Intent facebookIntent = new Intent(Intent.ACTION_VIEW);
                 String facebookUrl = getFacebookPageURL(this);
                 facebookIntent.setData(Uri.parse(facebookUrl));

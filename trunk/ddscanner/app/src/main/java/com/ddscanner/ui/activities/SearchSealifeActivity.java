@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.Sealife;
 import com.ddscanner.entities.SealifeResponseEntity;
 import com.ddscanner.entities.errors.BadRequestException;
@@ -75,6 +76,7 @@ public class SearchSealifeActivity extends AppCompatActivity implements SearchVi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_sealife);
+        EventsTracker.trackSearchSeaLife();
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         notFoundLayout = (RelativeLayout) findViewById(R.id.not_found_layout);
