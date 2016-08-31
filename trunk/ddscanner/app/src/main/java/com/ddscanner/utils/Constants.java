@@ -41,6 +41,7 @@ public class Constants {
     public static final int ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_LOGIN = 1004;
     public static final int ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_LOGIN_TO_SEND = 1005;
     public static final int ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_LOGIN_TO_GET_DATA = 1006;
+    public static final int ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_PERMISSION_READ_STORAGE = 1007;
     public static final String ADD_DIVE_SPOT_ACTIVITY_DIVESPOT = "divespot";
     public static final String ADD_DIVE_SPOT_ACTIVITY_SEALIFE_ARRAY = "sealife[]";
     public static final String ADD_DIVE_SPOT_ACTIVITY_IMAGES_ARRAY = "images[]";
@@ -111,4 +112,10 @@ public class Constants {
     /*Review slider activity*/
     public static final String REVIEWS_IMAGES_SLIDE_INTENT_IMAGES = "IMAGES";
     public static final String REVIEWS_IMAGES_SLIDE_INTENT_POSITION = "POSITION";
+
+    /*Leave review activity*/
+    public static final int LEAVE_REVIEW_ACTIVITY_REQUEST_CODE_PERMISSION_READ_STORAGE = 1090;
+
+    /*Add sealife activity*/
+    public static final int ADD_SEALIFE_ACTIVITY_REQUEST_CODE_PERMISSION_READ_STORAGE = 5500;
 }

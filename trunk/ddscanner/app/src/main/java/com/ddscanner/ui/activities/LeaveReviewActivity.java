@@ -1,10 +1,14 @@
 package com.ddscanner.ui.activities;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v13.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -344,36 +348,32 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
                         .EXTRA_RESULT));
                 photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris,
                         LeaveReviewActivity.this, addPhotoTitle));
-//                ClipData clipData = data.getClipData();
-//                if (clipData != null) {
-//                    for (int i = 0; i < clipData.getItemCount(); i++) {
-//                        ClipData.Item item = clipData.getItemAt(i);
-//                        Uri uri = item.getUri();
-//                        imageUris.add(helpers.getRealPathFromURI(LeaveReviewActivity.this, uri));
-//                    }
-//                    photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris, LeaveReviewActivity.this, addPhotoTitle));
-//                } else {
-//                    Uri uri = data.getData();
-//                    imageUris.add(helpers.getRealPathFromURI(LeaveReviewActivity.this, uri));
-//                    photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris, LeaveReviewActivity.this, addPhotoTitle));
-//                }
             }
         }
+    }
+
+    private void pickPhotoFromGallery() {
+        if (checkReadStoragePermission()) {
+            MultiImageSelector.create(this)
+                    .count(maxPhotos)
+                    .start(this, RC_PICK_PHOTO);
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, Constants.LEAVE_REVIEW_ACTIVITY_REQUEST_CODE_PERMISSION_READ_STORAGE);
+        }
+    }
+
+    public boolean checkReadStoragePermission() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            return false;
+        }
+        return true;
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_add_photo:
-//                Intent i = new Intent(Intent.ACTION_PICK,
-//                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-//                    i.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-//                }
-//                startActivityForResult(i, RC_PICK_PHOTO);
-                MultiImageSelector.create(this)
-                        .count(maxPhotos)
-                        .start(this, RC_PICK_PHOTO);
+                pickPhotoFromGallery();
                 break;
         }
     }
@@ -411,6 +411,21 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
         imageUris.remove(event.getImageIndex());
         photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris,
                 LeaveReviewActivity.this, addPhotoTitle));
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case Constants.LEAVE_REVIEW_ACTIVITY_REQUEST_CODE_PERMISSION_READ_STORAGE: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    pickPhotoFromGallery();
+                } else {
+                    Toast.makeText(LeaveReviewActivity.this, "Grand permission to pick photo from gallery!", Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+
+        }
     }
 
 }

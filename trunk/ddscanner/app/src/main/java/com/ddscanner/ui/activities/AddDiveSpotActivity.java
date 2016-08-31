@@ -1,11 +1,15 @@
 package com.ddscanner.ui.activities;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v13.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -486,13 +490,28 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         });
     }
 
+    private void pickPhotoFromGallery() {
+        if (checkReadStoragePermission()) {
+            MultiImageSelector.create(this)
+                    .count(maxPhotos)
+                    .start(this, RC_PICK_PHOTO);
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, Constants.ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_PERMISSION_READ_STORAGE);
+        }
+    }
+
+    public boolean checkReadStoragePermission() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            return false;
+        }
+        return true;
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_add_photo:
-                MultiImageSelector.create(this)
-                        .count(maxPhotos)
-                        .start(this, RC_PICK_PHOTO);
+                pickPhotoFromGallery();
                 break;
             case R.id.location_layout:
                 Intent intent = new Intent(AddDiveSpotActivity.this,
@@ -663,6 +682,21 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                 });
 
         dialog.show();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case Constants.ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_PERMISSION_READ_STORAGE: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    pickPhotoFromGallery();
+                } else {
+                    Toast.makeText(AddDiveSpotActivity.this, "Grand permission to pick photo from gallery!", Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+
+        }
     }
 
 }

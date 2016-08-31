@@ -673,18 +673,10 @@ public class MainActivity extends BaseAppCompatActivity
 
     @Subscribe
     public void changeProfileFragmentView(TakePhotoFromCameraEvent event) {
-        if (checkCameraPermissions(this) && checkWriteStoragePermision(this)) {
+        if (checkWriteStoragePermision(this)) {
             dispatchTakePictureIntent();
         } else {
-            if (!checkCameraPermissions(this) && !checkWriteStoragePermision(this)) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, Constants.MAIN_ACTIVITY_ACTVITY_REQUEST_PERMISSION_CAMERA_AND_WRITE_STORAGE);
-            }
-            if (!checkCameraPermissions(this) && checkWriteStoragePermision(this)) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, Constants.MAIN_ACTIVITY_ACTVITY_REQUEST_PERMISSION_CAMERA);
-            }
-            if (checkCameraPermissions(this) && !checkWriteStoragePermision(this)) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.MAIN_ACTIVITY_ACTVITY_REQUEST_PERMISSION_WRITE_STORAGE);
-            }
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, Constants.MAIN_ACTIVITY_ACTVITY_REQUEST_PERMISSION_CAMERA_AND_WRITE_STORAGE);
 
         }
     }

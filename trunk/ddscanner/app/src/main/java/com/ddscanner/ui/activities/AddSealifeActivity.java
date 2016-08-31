@@ -1,11 +1,15 @@
 package com.ddscanner.ui.activities;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v13.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.Toolbar;
@@ -17,6 +21,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
@@ -52,6 +57,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import me.nereo.multi_image_selector.MultiImageSelector;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -218,9 +224,7 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.add_photo_layout:
-                Intent i = new Intent(Intent.ACTION_PICK,
-                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(i, RC_PICK_PHOTO);
+                pickPhotoFromGallery();
                 break;
             case R.id.delete_photo:
                 addPhoto.setBackground(null);
@@ -234,6 +238,24 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
                 break;
         }
     }
+
+    private void pickPhotoFromGallery() {
+        if (checkReadStoragePermission()) {
+            Intent i = new Intent(Intent.ACTION_PICK,
+                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            startActivityForResult(i, RC_PICK_PHOTO);
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, Constants.ADD_SEALIFE_ACTIVITY_REQUEST_CODE_PERMISSION_READ_STORAGE);
+        }
+    }
+
+    public boolean checkReadStoragePermission() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            return false;
+        }
+        return true;
+    }
+
 
     /**
      * Put data to request body
@@ -394,6 +416,21 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
         DDScannerApplication.activityResumed();
         if (!helpers.hasConnection(this)) {
             DDScannerApplication.showErrorActivity(this);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case Constants.ADD_SEALIFE_ACTIVITY_REQUEST_CODE_PERMISSION_READ_STORAGE: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    pickPhotoFromGallery();
+                } else {
+                    Toast.makeText(AddSealifeActivity.this, "Grand permission to pick photo from gallery!", Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+
         }
     }
 }
