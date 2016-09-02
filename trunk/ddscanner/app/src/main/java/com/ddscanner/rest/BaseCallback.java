@@ -11,6 +11,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
+import com.ddscanner.events.UnknownErrorCatchedEvent;
 import com.ddscanner.ui.activities.DiveSpotDetailsActivity;
 
 import java.net.ConnectException;
@@ -31,6 +32,7 @@ public abstract class BaseCallback implements Callback<ResponseBody> {
             Log.i(TAG, call.request().url().toString() + ": " + t.getMessage());
             EventsTracker.trackUnknownServerError(call.request().url().toString(), t.getMessage());
             Toast.makeText(DDScannerApplication.getInstance(), DDScannerApplication.getInstance().getText(R.string.unknown_error), Toast.LENGTH_LONG).show();
+            DDScannerApplication.bus.post(new UnknownErrorCatchedEvent());
         }
     }
 
