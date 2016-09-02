@@ -1,8 +1,5 @@
 package com.ddscanner.rest;
 
-import android.content.Context;
-import android.content.DialogInterface;
-import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -20,21 +17,17 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 
-public abstract class BaseCallback implements Callback<ResponseBody> {
+public abstract class ServerErrorCallback implements Callback<ResponseBody> {
 
-    private static final String TAG = BaseCallback.class.getName();
 
     @Override
     public void onFailure(Call<ResponseBody> call, Throwable t) {
         if (t instanceof ConnectException) {
             onConnectionFailure();
         } else {
-            Log.i(TAG, call.request().url().toString() + ": " + t.getMessage());
-            EventsTracker.trackUnknownServerError(call.request().url().toString(), t.getMessage());
-            Toast.makeText(DDScannerApplication.getInstance(), DDScannerApplication.getInstance().getText(R.string.unknown_error), Toast.LENGTH_LONG).show();
+            DDScannerApplication.bus.post(new UnknownErrorCatchedEvent());
         }
     }
 
     public abstract void onConnectionFailure();
-
 }
