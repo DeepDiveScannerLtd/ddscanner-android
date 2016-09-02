@@ -73,13 +73,13 @@ public class GuideDescriptionActivity extends AppCompatActivity implements View.
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.yes:
-                buttonYes.setBackground(getResources().getDrawable(R.drawable.ic_smile_active));
+                buttonYes.setImageDrawable(getResources().getDrawable(R.drawable.ic_smile_active));
                 thnaks.setText(R.string.thank_you_title);
                 buttonYes.setOnClickListener(null);
                 buttonNo.setOnClickListener(null);
                 break;
             case R.id.no:
-                buttonNo.setBackground(getResources().getDrawable(R.drawable.ic_sad_active));
+                buttonNo.setImageDrawable(getResources().getDrawable(R.drawable.ic_sad_active));
                 thnaks.setText(R.string.thank_you_title);
                 buttonYes.setOnClickListener(null);
                 buttonNo.setOnClickListener(null);
