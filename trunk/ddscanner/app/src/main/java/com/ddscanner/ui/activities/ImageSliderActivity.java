@@ -230,6 +230,10 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     }
 
     private void showReportMenu(View view, int position) {
+        if (images.size() == 0) {
+            position = 0;
+            this.position = 0;
+        }
         reportName = images.get(position).getName();
         PopupMenu popup = new PopupMenu(this, view);
         MenuInflater inflater = popup.getMenuInflater();
