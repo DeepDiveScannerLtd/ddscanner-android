@@ -403,7 +403,7 @@ public class ProfileFragment extends Fragment
     }
 
     private void getUserDataRequest(String id) {
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserInfo(id);
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserInfo(id, helpers.getUserQuryMapRequest());
         call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

@@ -179,7 +179,7 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
     }
 
     private void requestUserData() {
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserInfo(userId);
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserInfo(userId, helpers.getUserQuryMapRequest());
         call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

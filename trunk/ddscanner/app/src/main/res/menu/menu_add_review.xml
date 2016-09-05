@@ -4,6 +4,6 @@
     <item
         android:id="@+id/send_review"
         android:orderInCategory="100"
-        android:title="SEND"
+        android:title="@string/send"
         app:showAsAction= "ifRoom"/>
 </menu>

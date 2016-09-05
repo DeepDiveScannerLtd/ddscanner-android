@@ -246,4 +246,6 @@
     <string name="error_connection_failed">Failed to connect to DDScanner service. Please try again later.</string>
     <string name="there_are_no_dive_spots_here">There are no dive spots here</string>
     <string name="please_choose_another_location">Please choose another location</string>
+    <string name="send">SEND</string>
+    <string name="write_a_review">Write a review</string>
 </resources>

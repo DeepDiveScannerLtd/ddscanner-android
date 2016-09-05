@@ -169,7 +169,7 @@ public interface DDScannerRestService {
     Call<ResponseBody> getComments(@Path("id") String id, @QueryMap Map<String, String> map);
 
     @GET("diving/user/{id}")
-    Call<ResponseBody> getUserInfo(@Path("id") String id);
+    Call<ResponseBody> getUserInfo(@Path("id") String id, @QueryMap Map<String, String> map);
 
     @POST("diving/user/{id}")
     @Multipart

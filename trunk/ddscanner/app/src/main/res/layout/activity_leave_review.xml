@@ -14,7 +14,6 @@
             android:layout_centerInParent="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
             android:textColor="#b2b2b2"
             android:text="@string/add_photos"/>
 
@@ -25,8 +24,7 @@
             android:layout_marginTop="15dp"
             android:fontFamily="sans-serif-medium"
             android:text="@string/photos"
-            android:textColor="@color/black_text"
-            android:textSize="15sp" />
+            android:textColor="@color/black_text" />
 
         <ImageButton
             android:id="@+id/btn_add_photo"
@@ -97,12 +95,10 @@
             android:id="@+id/review_text"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:hint="Write a review"
+            android:hint="@string/write_a_review"
             android:layout_marginTop="13dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:textSize="19sp"
-            android:layout_weight="1"
             android:maxLength="250"
             android:textColorHint="#9f9f9f"
             android:background="@android:color/transparent"
