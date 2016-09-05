@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
@@ -33,6 +34,7 @@ import com.ddscanner.utils.DialogUtils;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
+import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -95,9 +97,6 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
         objects.add("All");
         for (Map.Entry<String, String> entry : values.entrySet()) {
             objects.add(entry.getValue());
-            if (entry.getKey().equals(tag)) {
-
-            }
         }
         ArrayAdapter<String> adapter = new SpinnerItemsAdapter(this, R.layout.spinner_item, objects);
         spinner.setAdapter(adapter);
@@ -144,24 +143,24 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
                     }
 
                     filters = new FiltersResponseEntity();
-
-                    JsonParser parser = new JsonParser();
-                    JsonObject jsonObject = parser.parse(responseString).getAsJsonObject();
-                    JsonObject levelJsonObject = jsonObject.getAsJsonObject(Constants.FILTERS_VALUE_LEVEL);
-                    for (Map.Entry<String, JsonElement> elementEntry : levelJsonObject.entrySet()) {
-                        filters.getLevel().put(elementEntry.getKey(), elementEntry.getValue().getAsString());
-                    }
-                    JsonObject objectJsonObject = jsonObject.getAsJsonObject(Constants.FILTERS_VALUE_OBJECT);
-                    for (Map.Entry<String, JsonElement> elementEntry : objectJsonObject.entrySet()) {
-                        filters.getObject().put(elementEntry.getKey(), elementEntry.getValue().getAsString());
-                    }
+                    filters = new Gson().fromJson(responseString, FiltersResponseEntity.class);
 
                     Log.i(TAG, responseString);
-                    objectsMap = filters.getObject();
-                    levelsMap = filters.getLevel();
-                    setFilerGroup(objectSpinner, filters.getObject(), SharedPreferenceHelper.getCurrents());
-                    setFilerGroup(levelSpinner, filters.getLevel(), SharedPreferenceHelper.getCurrents());
-                    save.setVisibility(View.VISIBLE);
+                    if (filters.getObject() != null) {
+                        objectsMap = filters.getObject();
+                        setFilerGroup(objectSpinner, filters.getObject(), SharedPreferenceHelper.getCurrents());
+                    }
+                    if (filters.getLevel() != null) {
+                        levelsMap = filters.getLevel();
+                        setFilerGroup(levelSpinner, filters.getLevel(), SharedPreferenceHelper.getCurrents());
+                    }
+
+                    if (filters.getObject() == null || filters.getLevel() == null) {
+                        Toast.makeText(FilterActivity.this, R.string.toast_server_error, Toast.LENGTH_SHORT).show();
+                        onBackPressed();
+                    } else {
+                        save.setVisibility(View.VISIBLE);
+                    }
                 }
                 if (!response.isSuccessful()) {
                     String responseString = "";
