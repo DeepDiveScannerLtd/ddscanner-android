@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -39,6 +40,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.rey.material.widget.Button;
+import com.rey.material.widget.ProgressView;
 import com.rey.material.widget.Spinner;
 
 import java.io.IOException;
@@ -68,6 +70,8 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
     private Map<String, String> levelsMap = new HashMap<>();
     private FilterChosedEvent filterChosedEvent = new FilterChosedEvent();
     private MaterialDialog materialDialog;
+    private ProgressView progressView;
+    private LinearLayout mainLayout;
 
     @Override
     protected void onCreate(Bundle savedInstance) {
@@ -83,6 +87,8 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
 
     private void findViews() {
         materialDialog = helpers.getMaterialDialog(this);
+        progressView = (ProgressView) findViewById(R.id.progressBar);
+        mainLayout = (LinearLayout) findViewById(R.id.main_layout);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         objectSpinner = (Spinner) findViewById(R.id.object_spinner);
         levelSpinner = (Spinner) findViewById(R.id.level_spinner);
@@ -128,13 +134,15 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void request() {
-        materialDialog.show();
+       // materialDialog.show();
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getFilters();
         call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                materialDialog.dismiss();
+            //    materialDialog.dismiss();
                 if (response.isSuccessful()) {
+                    progressView.setVisibility(View.GONE);
+                    mainLayout.setVisibility(View.VISIBLE);
                     String responseString = "";
                     try {
                         responseString = response.body().string();
