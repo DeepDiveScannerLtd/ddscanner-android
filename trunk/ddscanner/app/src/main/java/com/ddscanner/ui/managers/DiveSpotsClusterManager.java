@@ -290,7 +290,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
 
     public void updateFilter(String level, String object) {
         lastClickedMarker = null;
-        if (level == null) {
+        if (level == null && object == null) {
             this.level = "";
             this.object = "";
             return;

@@ -150,6 +150,7 @@ public class MainActivity extends BaseAppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         isHasInternetConnection = getIntent().getBooleanExtra(Constants.IS_HAS_INTERNET, false);
+        clearFilterSharedPrefences();
         if (getIntent().getParcelableExtra(Constants.MAIN_ACTIVITY_ACTVITY_EXTRA_LATLNGBOUNDS) != null) {
             latLngBounds = getIntent().getParcelableExtra(Constants.MAIN_ACTIVITY_ACTVITY_EXTRA_LATLNGBOUNDS);
         }
@@ -882,5 +883,10 @@ public class MainActivity extends BaseAppCompatActivity
             return false;
         }
         return true;
+    }
+
+    private void clearFilterSharedPrefences() {
+        SharedPreferenceHelper.setObject("");
+        SharedPreferenceHelper.setLevel("");
     }
 }

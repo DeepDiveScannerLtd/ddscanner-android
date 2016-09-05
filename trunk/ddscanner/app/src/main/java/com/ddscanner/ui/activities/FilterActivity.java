@@ -101,11 +101,16 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
     private void setFilerGroup(Spinner spinner, Map<String, String> values, String tag) {
         List<String> objects = new ArrayList<String>();
         objects.add("All");
+        int selectedIndex = 0;
         for (Map.Entry<String, String> entry : values.entrySet()) {
             objects.add(entry.getValue());
+            if (entry.getKey().equals(SharedPreferenceHelper.getObject()) || entry.getKey().equals(SharedPreferenceHelper.getLevel())) {
+                selectedIndex = objects.size() - 1;
+            }
         }
         ArrayAdapter<String> adapter = new SpinnerItemsAdapter(this, R.layout.spinner_item, objects);
         spinner.setAdapter(adapter);
+        spinner.setSelection(selectedIndex);
     }
 
 
@@ -113,14 +118,20 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
     public void onClick(View v) {
         if (objectSpinner.getSelectedItem().toString().equals("All")) {
             filterChosedEvent.setObject(null);
+            SharedPreferenceHelper.setObject("");
         } else {
             filterChosedEvent.setObject(helpers.getMirrorOfHashMap(objectsMap)
+                    .get(objectSpinner.getSelectedItem().toString()));
+            SharedPreferenceHelper.setObject(helpers.getMirrorOfHashMap(objectsMap)
                     .get(objectSpinner.getSelectedItem().toString()));
         }
         if (levelSpinner.getSelectedItem().toString().equals("All")) {
             filterChosedEvent.setLevel(null);
+            SharedPreferenceHelper.setLevel("");
         } else {
             filterChosedEvent.setLevel(helpers.getMirrorOfHashMap(levelsMap)
+                    .get(levelSpinner.getSelectedItem().toString()));
+            SharedPreferenceHelper.setLevel(helpers.getMirrorOfHashMap(levelsMap)
                     .get(levelSpinner.getSelectedItem().toString()));
         }
         DDScannerApplication.bus.post(filterChosedEvent);
@@ -222,6 +233,7 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
             case R.id.reset_filters:
                 filterChosedEvent.setLevel(null);
                 filterChosedEvent.setObject(null);
+                clearFilterSharedPrefences();
                 DDScannerApplication.bus.post(filterChosedEvent);
                 finish();
             default:
