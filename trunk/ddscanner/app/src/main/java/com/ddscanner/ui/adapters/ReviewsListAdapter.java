@@ -51,6 +51,7 @@ import com.squareup.picasso.Picasso;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -166,7 +167,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         if (comments.get(reviewsListViewHolder.getAdapterPosition()).getUser().getPicture() != null) {
             Picasso.with(context)
                     .load(comments.get(reviewsListViewHolder.getAdapterPosition()).getUser().getPicture()).resize(Math.round(helpers.convertDpToPixel(40, context)), Math.round(helpers.convertDpToPixel(40, context)))
-                    .transform(new TransformationRoundImage(50, 0))
+                    .transform(new CropCircleTransformation())
                     .centerCrop()
                     .placeholder(R.drawable.avatar_profile_default)
                     .into(reviewsListViewHolder.user_avatar);

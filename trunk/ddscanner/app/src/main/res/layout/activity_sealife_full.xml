@@ -65,13 +65,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="20dp">
-            <TextView
-                android:layout_marginTop="23dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#afafaf"
-                android:textSize="15sp"
-                android:text="Information"/>
             <LinearLayout
                 android:orientation="vertical"
                 android:visibility="visible"
@@ -171,103 +164,37 @@
                     android:id="@+id/scclass"
                     style="@style/SealifeCharachteristicValue"/>
             </LinearLayout>
+            <LinearLayout
+                android:orientation="vertical"
+                android:id="@+id/char_distribution"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/title_distribution"
+                    style="@style/SealifeCharachteristicTitle"
+                    android:text="@string/distribution"/>
+                <TextView
+                    android:id="@+id/distribution"
+                    style="@style/SealifeCharachteristicValue"/>
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="vertical"
+                android:id="@+id/char_habitat"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/title_habitat"
+                    style="@style/SealifeCharachteristicTitle"
+                    android:text="@string/habitat"/>
+                <TextView
+                    android:id="@+id/habitat"
+                    style="@style/SealifeCharachteristicValue"/>
+            </LinearLayout>
         </LinearLayout>
             <ImageView
                 style="@style/DividerStyleFull" />
-            <LinearLayout
-                android:visibility="gone"
-                android:id="@+id/char_distribution"
-                android:layout_marginTop="15dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-                <ImageView
-                    style="@style/DividerStyleFull" />
-            <LinearLayout
-                android:background="@color/white"
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_marginTop="20dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="#afafaf"
-                        android:textSize="15sp"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginRight="20dp"
-                        android:id="@+id/title_distribution"
-                        android:text="@string/distribution"
-                        />
-
-                    <TextView
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginRight="20dp"
-                        android:id="@+id/distribution"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:layout_marginBottom="20dp"
-                        android:textColor="@color/black_text"
-                        android:textSize="14sp" />
-                </LinearLayout>
-                <ImageView
-                    style="@style/DividerStyleFull" />
-            </LinearLayout>
-            </LinearLayout>
-            <LinearLayout
-                android:visibility="gone"
-                android:id="@+id/char_habitat"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-                <ImageView
-                    style="@style/DividerStyleFull" />
-            <LinearLayout
-                android:background="@color/white"
-                android:layout_marginTop="15dp"
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_marginTop="20dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="#afafaf"
-                        android:textSize="15sp"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginRight="20dp"
-                        android:text="@string/habitat"
-                        />
-
-                    <TextView
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginRight="20dp"
-                        android:id="@+id/habitat"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:layout_marginBottom="20dp"
-                        android:textColor="@color/black_text"
-                        android:textSize="14sp" />
-                </LinearLayout>
-                <ImageView
-                    style="@style/DividerStyleFull" />
-            </LinearLayout>
-            </LinearLayout>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 </android.support.design.widget.CoordinatorLayout>

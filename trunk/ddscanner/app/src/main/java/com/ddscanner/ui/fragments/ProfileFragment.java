@@ -126,6 +126,8 @@ public class ProfileFragment extends Fragment
     private TextView error_about;
     private RelativeLayout loginView;
     private boolean isClickedChosingPhotoButton = false;
+    private boolean isAboutChanged = false;
+    private boolean isNamChanged = false;
 
     private RequestBody requestSecret = null;
     private RequestBody requestSocial = null;
@@ -247,12 +249,16 @@ public class ProfileFragment extends Fragment
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (isAboutChanged) {
+                    aboutLeftSymbols.setVisibility(View.VISIBLE);
+                }
                 if (MAX_LENGTH_ABOUT - aboutEdit.length() < 10) {
                     aboutLeftSymbols.setTextColor(getResources().getColor(R.color.tw__composer_red));
                 } else {
                     aboutLeftSymbols.setTextColor(Color.parseColor("#b2b2b2"));
                 }
                 aboutLeftSymbols.setText(String.valueOf(MAX_LENGTH_ABOUT - aboutEdit.length()));
+                isAboutChanged = true;
             }
 
             @Override
@@ -269,12 +275,16 @@ public class ProfileFragment extends Fragment
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (isNamChanged) {
+                    nameLeftSymbols.setVisibility(View.VISIBLE);
+                }
                 if (MAX_LENGTH_NAME - fullNameEdit.length() < 10) {
                     nameLeftSymbols.setTextColor(getResources().getColor(R.color.tw__composer_red));
                 } else {
                     nameLeftSymbols.setTextColor(Color.parseColor("#b2b2b2"));
                 }
                 nameLeftSymbols.setText(String.valueOf(MAX_LENGTH_NAME - fullNameEdit.length()));
+                isNamChanged = true;
             }
 
             @Override

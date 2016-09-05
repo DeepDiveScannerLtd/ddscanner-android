@@ -118,7 +118,7 @@
     <string name="dialog_cancel">CANCEL</string>
     <string name="ok">OK</string>
     
-    <string name="user_made_checkin">%1$s also checked in %2$s</string>
+    <string name="user_made_checkin">%1$s also checked in at %2$s</string>
     <string name="divespot_was_changed">%1$s has been changed</string>
     <string name="new_dive_spothas_been_added_near">New dive spot has been added near you %1$s</string>
     <string name="user_dislike_your_review">%1$s disliked your review %2$s</string>
@@ -151,7 +151,7 @@
     <string name="checkin">Check-ins</string>
     <string name="added_ds">Created</string>
     <string name="edited_ds">Edited</string>
-    <string name="toast_server_error">Error. Try again later</string>
+    <string name="toast_server_error">Try again later</string>
     <string name="sealife_already_added">It has already been added</string>
     <string name="please_connect_to_a_network_to_continue">Please connect to a network to continue</string>
     <string name="refresh">REFRESH</string>
@@ -210,7 +210,7 @@
     <string name="terms">Terms and Conditions of Use</string>
     <string name="min">Min</string>
     <string name="max">Max</string>
-    <string name="guide_to_dds">Guide to DDscanner</string>
+    <string name="guide_to_dds">Guide to DDScanner</string>
     <string name="terms_of_use">Terms of Use</string>
     <string name="privacy_policy">Privacy Policy</string>
     <string name="about_dds">About DDScanner</string>
@@ -244,4 +244,6 @@
     <string name="no_one_has_checked_in_here">No one has checked in here</string>
     <string name="one_person_checked_in">person checked in here</string>
     <string name="error_connection_failed">Failed to connect to DDScanner service. Please try again later.</string>
+    <string name="there_are_no_dive_spots_here">There are no dive spots here</string>
+    <string name="please_choose_another_location">Please choose another location</string>
 </resources>
