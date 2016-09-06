@@ -248,4 +248,5 @@
     <string name="please_choose_another_location">Please choose another location</string>
     <string name="send">SEND</string>
     <string name="write_a_review">Write a review</string>
+    <string name="please_zoom_in_to_request_dive_spots">Please zoom in to request dive spots</string>
 </resources>
