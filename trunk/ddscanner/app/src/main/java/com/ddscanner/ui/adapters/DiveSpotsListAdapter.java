@@ -17,6 +17,7 @@ import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.DiveSpot;
 import com.ddscanner.ui.activities.DiveSpotDetailsActivity;
 import com.ddscanner.ui.views.TransformationRoundImage;
+import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -33,6 +34,7 @@ public class DiveSpotsListAdapter
     public ArrayList<DiveSpot> divespots;
     private Context context;
     private EventsTracker.SpotViewSource spotViewSource;
+    private Helpers helpers = new Helpers();
 
     public DiveSpotsListAdapter(ArrayList<DiveSpot> divespots, Context context, EventsTracker.SpotViewSource spotViewSource) {
         this.divespots = divespots;
@@ -57,7 +59,7 @@ public class DiveSpotsListAdapter
                 setColorFilter(context.getResources().getColor(R.color.primary),
                         PorterDuff.Mode.MULTIPLY);
         if (divespot.getImage() != null) {
-            Picasso.with(context).load(divespot.getImage()).resize(130, 130).centerCrop()
+            Picasso.with(context).load(divespot.getImage()).resize(Math.round(helpers.convertDpToPixel(130, context)), Math.round(helpers.convertDpToPixel(130, context))).centerCrop()
                     .transform(new TransformationRoundImage(2,0))
                     .into(productListViewHolder.imageView,
                             new ImageLoadedCallback(productListViewHolder.progressBar) {
