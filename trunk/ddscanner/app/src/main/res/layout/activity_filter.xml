@@ -80,7 +80,7 @@
             app:spn_dividerColor="@android:color/transparent"
             app:spn_label="@string/filter_object"
             app:spn_labelEnable="true"
-            app:spn_labelTextColor="@color/black_text"
+            app:spn_labelTextColor="@color/defaultGrayTitleColor"
             app:spn_labelTextSize="16sp"
             app:spn_popupItemAnimation="@null" />
 
@@ -107,7 +107,7 @@
             app:spn_dividerColor="@android:color/transparent"
             app:spn_label="@string/filter_label"
             app:spn_labelEnable="true"
-            app:spn_labelTextColor="@color/black_text"
+            app:spn_labelTextColor="@color/defaultGrayTitleColor"
             app:spn_labelTextSize="16sp"
             app:spn_popupItemAnimation="@null" />
     </LinearLayout>
@@ -124,6 +124,7 @@
         android:layout_marginTop="20dp"
         android:background="@color/orange"
         android:text="@string/btn_save"
+        style="@style/OrangeButtons"
         app:rd_style="@style/Material.Drawable.Ripple.Touch.MatchView" />
     </LinearLayout>
 </LinearLayout>
