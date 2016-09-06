@@ -33,11 +33,11 @@
             android:layout_height="wrap_content"
             android:textSize="18sp"
             android:textColor="#939393"
-            android:text="Sorry! There are no dive centers here."/>
+            android:text="@string/sorry_there_are_no_dive_centers_here"/>
         <Button
             android:id="@+id/btn_back_to_map"
             android:layout_below="@+id/text"
-            android:text="BACK TO MAP"
+            android:text="@string/back_to_map"
             android:textSize="15sp"
             android:layout_width="150dp"
             android:layout_height="40dp"

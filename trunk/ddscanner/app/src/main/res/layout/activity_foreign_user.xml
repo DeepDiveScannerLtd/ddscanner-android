@@ -146,7 +146,7 @@
                         <TextView
                             android:id="@+id/user_dislikes"
                             style="@style/ProfileNumberDivespotsSrtyle"
-                            android:text="9" />
+                            tools:text="9" />
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>

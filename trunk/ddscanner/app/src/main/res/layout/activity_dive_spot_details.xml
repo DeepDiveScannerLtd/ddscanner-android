@@ -109,7 +109,7 @@
                         android:id="@+id/dive_spot_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Racha Yai Wrecks"
+                        tools:text="Racha Yai Wrecks"
                         android:textColor="@color/black_text"
                         android:textSize="20sp" />
 
@@ -142,7 +142,7 @@
                     android:background="@color/white"
                     android:paddingLeft="15dp"
                     android:paddingTop="5dp"
-                    android:text="Show more"
+                    android:text="@string/show_more"
                     android:textColor="@color/primary"
                     android:visibility="gone" />
 
@@ -333,7 +333,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_below="@+id/object_title"
-                                android:text="wall" />
+                                tools:text="wall" />
                         </RelativeLayout>
                     </RelativeLayout>
 
@@ -363,7 +363,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_below="@+id/level_title"
-                                android:text="Advanced+" />
+                                tools:text="Advanced+" />
                         </RelativeLayout>
                     </RelativeLayout>
 
@@ -393,7 +393,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_below="@+id/depth_title"
-                                android:text="Advanced+" />
+                                tools:text="Advanced+" />
                         </RelativeLayout>
                     </RelativeLayout>
 
@@ -423,7 +423,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_below="@+id/visibility_title"
-                                android:text="Advanced+" />
+                                tools:text="Advanced+" />
                         </RelativeLayout>
                     </RelativeLayout>
 
@@ -453,7 +453,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_below="@+id/currents_title"
-                                android:text="Advanced+" />
+                                tools:text="Advanced+" />
                         </RelativeLayout>
                     </RelativeLayout>
 
@@ -484,7 +484,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_below="@+id/access_title"
-                                android:text="Advanced+" />
+                                tools:text="Advanced+" />
                         </RelativeLayout>
                     </RelativeLayout>
                 </LinearLayout>
@@ -673,7 +673,7 @@
                         android:layout_marginBottom="22dp"
                         android:layout_marginTop="22dp"
                         android:background="@drawable/border_button_blue_2px"
-                        android:text="Show all reviews (7)"
+                        tools:text="Show all reviews (7)"
                         android:textAllCaps="false"
                         android:textColor="@color/white"
                         android:textSize="15sp" />

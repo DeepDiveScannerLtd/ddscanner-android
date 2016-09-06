@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <include layout="@layout/view_toolbar" />
@@ -95,7 +96,7 @@
                 android:layout_marginTop="20dp"
                 android:ellipsize="end"
                 android:lines="1"
-                android:text="Racha yai wrecks fds fds fds fsdf sdf sd ds"
+                tools:text="Racha yai wrecks fds fds fds fsdf sdf sd ds"
                 android:textColor="@color/white"
                 android:textSize="22sp" />
 
@@ -168,7 +169,7 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="15dp"
                 android:gravity="center"
-                android:text="Sorry! There are no spots here"
+                android:text="@string/sorry_there_are_no_spots_here"
                 android:textColor="#939393"
                 android:textSize="18sp" />
         </RelativeLayout>
@@ -200,7 +201,7 @@
             android:layout_marginTop="15dp"
             android:background="@drawable/border"
             android:gravity="center"
-            android:text="Please zoom in to see dive spots"
+            android:text="@string/please_zoom_in_to_see_dive_spots"
             android:textSize="16sp" />
     </RelativeLayout>
 

@@ -49,7 +49,7 @@
             android:id="@+id/add_manualy"
             android:layout_width="180dp"
             android:layout_height="45dp"
-            android:text="ADD NEW"
+            android:text="@string/add_new"
             style="@style/OrangeButtons"
             android:textSize="15sp"
             android:layout_centerInParent="true" />

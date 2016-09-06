@@ -29,7 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/title"
         android:layout_centerHorizontal="true"
-        android:text="Your personal dive guide"
+        android:text="@string/your_personal_dive_guide"
         android:textColor="#f6f6f6"
         android:textSize="17sp" />
 

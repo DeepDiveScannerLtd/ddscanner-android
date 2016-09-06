@@ -40,7 +40,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:text="Add divespot's photo"
+                    android:text="@string/add_divespot_s_photo"
                     android:textColor="#b2b2b2"
                     android:textSize="14sp" />
 
@@ -244,7 +244,7 @@
                             android:layout_marginTop="3dp"
                             android:layout_width="match_parent"
                             android:layout_height="17dp"
-                            android:text="Current"
+                            android:text="@string/current"
                             android:textColor="#B2B2B2"
                             android:textSize="16sp" />
 
@@ -285,7 +285,7 @@
                             android:layout_marginTop="3dp"
                             android:layout_width="match_parent"
                             android:layout_height="17dp"
-                            android:text="Level"
+                            android:text="@string/level"
                             android:textColor="#B2B2B2"
                             android:textSize="16sp" />
 
@@ -326,7 +326,7 @@
                             android:layout_marginTop="3dp"
                             android:layout_width="match_parent"
                             android:layout_height="17dp"
-                            android:text="Object"
+                            android:text="@string/object"
                             android:textColor="#B2B2B2"
                             android:textSize="16sp" />
 
@@ -389,7 +389,6 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/characteristics_layout"
                 android:background="@color/white">
 
                 <TextView

@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="285dp"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="285dp"
     android:layout_height="wrap_content"
     android:background="@color/white">
     <ImageView
@@ -36,7 +38,7 @@
                 android:fontFamily="sans-serif-medium"
                 android:textSize="12sp"
                 android:textColor="#616161"
-                android:text="200"/>
+                tools:text="200"/>
         </LinearLayout>
         <ImageView
             android:id="@+id/userAvatar"
@@ -62,7 +64,7 @@
                 android:fontFamily="sans-serif-medium"
                 android:textSize="12sp"
                 android:textColor="#616161"
-                android:text="200"/>
+                tools:text="200"/>
         </LinearLayout>
     </LinearLayout>
     <TextView
@@ -70,7 +72,7 @@
         android:layout_marginTop="9dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Jason statham"
+        tools:text="Jason statham"
         android:textSize="18sp"
         android:textColor="@color/black_text"
         android:gravity="center"/>
@@ -91,7 +93,7 @@
             android:textColor="#ed1b24"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="expert"/>
+            tools:text="expert"/>
     </LinearLayout>
     <TextView
         android:id="@+id/about"
@@ -103,7 +105,7 @@
         android:layout_height="wrap_content"
         android:textSize="12sp"
         android:textColor="#616161"
-        android:text="Info about me"/>
+        tools:text="Info about me"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -143,7 +145,7 @@
                 android:id="@+id/checkIn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="890"
+                tools:text="890"
                 android:fontFamily="sans-serif-medium"
                 android:textSize="16sp"
                 android:textColor="@color/primary"/>
@@ -169,7 +171,7 @@
                 android:id="@+id/added"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="20"
+                tools:text="20"
                 android:fontFamily="sans-serif-medium"
                 android:textSize="16sp"
                 android:textColor="@color/primary"/>
@@ -195,7 +197,7 @@
                 android:id="@+id/edited"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="55"
+                tools:text="55"
                 android:fontFamily="sans-serif-medium"
                 android:textSize="16sp"
                 android:textColor="@color/primary"/>
@@ -222,7 +224,7 @@
             android:id="@+id/linkText"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="OPEN ON FACEBOOK"
+            tools:text="OPEN ON FACEBOOK"
             android:fontFamily="sans-serif-medium"
             android:textSize="14sp"
             android:textColor="@color/primary"

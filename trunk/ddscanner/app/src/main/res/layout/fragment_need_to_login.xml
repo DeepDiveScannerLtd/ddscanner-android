@@ -24,7 +24,7 @@
         android:layout_marginTop="14dp"
         android:fontFamily="sans-serif"
         android:gravity="center"
-        android:text="Login to view profile"
+        android:text="@string/login_to_view_profile"
         android:textColor="@color/black_text"
         android:textSize="20sp" />
 

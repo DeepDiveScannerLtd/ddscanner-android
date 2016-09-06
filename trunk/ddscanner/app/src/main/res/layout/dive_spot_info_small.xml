@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_layout"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="110dp"
     android:background="@drawable/iw_card_wreck"
     android:layout_marginLeft="5dp"
@@ -14,7 +16,7 @@
         android:layout_height="wrap_content"
         android:lines="1"
         android:ellipsize="end"
-        android:text="Racha yai wrecks fds fds fds fsdf sdf sd ds"
+        tools:text="Racha yai wrecks fds fds fds fsdf sdf sd ds"
         android:layout_marginRight="30dp"
         android:textColor="@color/white"
         android:textSize="22sp"
@@ -38,7 +40,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/white"
-        android:text="Wreck"/>
+        tools:text="Wreck"/>
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="match_parent"

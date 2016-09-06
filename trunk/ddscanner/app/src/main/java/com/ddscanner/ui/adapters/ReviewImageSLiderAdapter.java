@@ -5,7 +5,6 @@ import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v13.app.FragmentStatePagerAdapter;
 
-import com.ddscanner.ui.fragments.PlaceImageFragment;
 import com.ddscanner.ui.fragments.SLiderImagesFragment;
 
 import java.util.ArrayList;

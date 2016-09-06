@@ -251,4 +251,18 @@
     <string name="start_process_register_for_gcm">Registering for Google services</string>
     <string name="please_zoom_in_to_request_dive_spots">Please zoom in to request dive spots</string>
     <string name="start_process_register_for_ddscanner">Registering for DDScanner services</string>
+    <string name="add_divespot_s_photo">Add divespot\'s photo</string>
+    <string name="current">Current</string>
+    <string name="level">Level</string>
+    <string name="object">Object</string>
+    <string name="sorry_there_are_no_spots_here">Sorry! There are no spots here</string>
+    <string name="please_zoom_in_to_see_dive_spots">Please zoom in to see dive spots</string>
+    <string name="show_more">Show more</string>
+    <string name="symbols_left">symbols left</string>
+    <string name="login_to_view_profile">Login to view profile</string>
+    <string name="your_personal_dive_guide">Your personal dive guide</string>
+    <string name="sorry_there_are_no_dive_centers_here">Sorry! There are no dive centers here.</string>
+    <string name="back_to_map">BACK TO MAP</string>
+    <string name="_1">+1</string>
+    <string name="continue_search">continue</string>
 </resources>

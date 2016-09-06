@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_marginBottom="15dp"
     android:background="@color/white"
     android:orientation="vertical">
@@ -45,7 +46,7 @@
                         android:layout_marginRight="10dp"
                         android:ellipsize="end"
                         android:lines="1"
-                        android:text="Andrei Lashkevich"
+                        tools:text="Andrei Lashkevich"
                         android:textColor="@color/black_text"
                         android:textSize="18sp" />
 
@@ -73,7 +74,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="5dp"
-            android:text="Vwry very good spot in whateewer very good play market bla bla bla bla "
+            tools:text="Vwry very good spot in whateewer very good play market bla bla bla bla "
             android:textColor="@color/black_text"
             android:textSize="14sp" />
 
@@ -89,7 +90,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:layout_marginTop="5dp"
-            android:text="1231332312"
+            tools:text="1231332312"
             android:textColor="#a3a3a3"
             android:textSize="13sp" />
     </LinearLayout>
@@ -127,7 +128,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
-                android:text="9"
+                tools:text="9"
                 android:textColor="#a3a3a3"
                 android:textSize="14sp" />
         </LinearLayout>
@@ -153,7 +154,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
-                android:text="9"
+                tools:text="9"
                 android:textColor="#a3a3a3"
                 android:textSize="14sp" />
         </LinearLayout>

@@ -124,6 +124,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         Picasso.with(this)
                 .load(images.get(position).getAuthor().getPhoto())
                 .resize(Math.round(helpers.convertDpToPixel(35, this)), Math.round(helpers.convertDpToPixel(35, this)))
+                .centerCrop()
                 .placeholder(R.drawable.avatar_profile_default)
                 .transform(new CropCircleTransformation())
                 .into(avatar);

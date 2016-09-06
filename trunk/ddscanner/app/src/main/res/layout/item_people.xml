@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="58dp">
+    android:layout_height="58dp"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <ImageView
         android:id="@+id/user_avatar"
@@ -25,7 +26,7 @@
             android:lines="1"
             android:ellipsize="end"
             android:layout_marginRight="10dp"
-            android:text="Andrei lashkevich"
+            tools:text="Andrei lashkevich"
             android:textColor="@color/black_text"
             android:textSize="16sp" />
 
@@ -34,7 +35,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="1dp"
-            android:text="159reviews, 31 likes"
+            tools:text="159reviews, 31 likes"
             android:textColor="#a3a3a3"
             android:textSize="13sp" />
     </LinearLayout>
