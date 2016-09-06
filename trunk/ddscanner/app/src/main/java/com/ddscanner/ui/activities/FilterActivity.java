@@ -228,14 +228,15 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                onBackPressed();
                 finish();
+                return true;
             case R.id.reset_filters:
                 filterChosedEvent.setLevel(null);
                 filterChosedEvent.setObject(null);
                 clearFilterSharedPrefences();
                 DDScannerApplication.bus.post(filterChosedEvent);
                 finish();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
