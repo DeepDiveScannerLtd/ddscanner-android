@@ -10,13 +10,16 @@ import android.os.Handler;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.events.InstanceIDReceivedEvent;
+import com.ddscanner.events.UserIdentificationFailedEvent;
 import com.ddscanner.events.UserSuccessfullyIdentifiedEvent;
 import com.ddscanner.services.RegistrationIntentService;
 import com.ddscanner.ui.views.DDProgressBarView;
+import com.ddscanner.utils.DialogUtils;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.android.gms.common.ConnectionResult;
@@ -39,6 +42,8 @@ public class SplashActivity extends BaseAppCompatActivity {
     private Runnable runnable;
     private long activityShowTimestamp;
 
+    private TextView progressMessage;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +57,8 @@ public class SplashActivity extends BaseAppCompatActivity {
 
         setContentView(R.layout.activity_splash);
 
+        progressMessage = (TextView) findViewById(R.id.message);
+
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
         if (SharedPreferenceHelper.isFirstLaunch()) {
@@ -64,9 +71,18 @@ public class SplashActivity extends BaseAppCompatActivity {
     }
 
     private void registerForGCM() {
-        if (!SharedPreferenceHelper.isUserAppIdReceived() && checkPlayServices()) {
-            Intent intent = new Intent(this, RegistrationIntentService.class);
-            startService(intent);
+        if (!SharedPreferenceHelper.isUserAppIdReceived()) {
+            if (checkPlayServices()) {
+                progressMessage.setText(R.string.start_process_register_for_gcm);
+                Intent intent = new Intent(this, RegistrationIntentService.class);
+                startService(intent);
+            } else {
+                // No need to handle. This case was handled in checkPlayServices()
+            }
+        } else {
+            // This means we've received appId but failed to make identify request.Try again
+            progressMessage.setText(R.string.start_process_register_for_ddscanner);
+            identifyUser("", "");
         }
     }
 
@@ -184,13 +200,21 @@ public class SplashActivity extends BaseAppCompatActivity {
 
     @Subscribe
     public void onAppInstanceIdReceived(InstanceIDReceivedEvent event) {
+        progressMessage.setText(R.string.start_process_register_for_ddscanner);
         identifyUser("", "");
     }
 
     @Subscribe
     public void onUserIdentified(UserSuccessfullyIdentifiedEvent event) {
+        progressMessage.setText("");
         showMainActivity();
         SharedPreferenceHelper.setIsFirstLaunch(false);
+    }
+
+    @Subscribe
+    public void onUserIdentificationFailed(UserIdentificationFailedEvent event) {
+        DialogUtils.showConnectionErrorDialog(SplashActivity.this);
+        finish();
     }
 
     @Override

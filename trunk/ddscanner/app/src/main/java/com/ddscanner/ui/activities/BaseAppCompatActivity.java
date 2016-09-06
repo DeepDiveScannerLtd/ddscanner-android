@@ -9,7 +9,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.ddscanner.DDScannerApplication;
+import com.ddscanner.R;
 import com.ddscanner.entities.request.IdentifyRequest;
+import com.ddscanner.events.UserIdentificationFailedEvent;
 import com.ddscanner.events.UserSuccessfullyIdentifiedEvent;
 import com.ddscanner.rest.BaseCallback;
 import com.ddscanner.rest.RestClient;
@@ -85,6 +87,8 @@ public class BaseAppCompatActivity extends AppCompatActivity {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+                } else {
+                    DDScannerApplication.bus.post(new UserIdentificationFailedEvent());
                 }
             }
 

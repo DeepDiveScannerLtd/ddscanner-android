@@ -8,26 +8,38 @@
         android:id="@+id/logo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/splash_logo"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="164dp"/>
+        android:layout_marginTop="164dp"
+        android:src="@drawable/splash_logo" />
+
     <TextView
         android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/logo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
-        android:layout_centerHorizontal="true"
         android:fontFamily="sans-serif-medium"
-        android:textSize="26sp"
+        android:text="@string/deep_dive_scanner"
         android:textColor="@color/white"
-        android:text="@string/deep_dive_scanner"/>
+        android:textSize="26sp" />
+
     <TextView
-        android:layout_below="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/title"
         android:layout_centerHorizontal="true"
-        android:textSize="17sp"
+        android:text="Your personal dive guide"
         android:textColor="#f6f6f6"
-        android:text="Your personal dive guide"/>
+        android:textSize="17sp" />
+
+    <TextView
+        android:id="@+id/message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"
+        android:layout_centerHorizontal="true"
+        android:textColor="#f6f6f6"
+        android:textSize="14sp" />
 </RelativeLayout>

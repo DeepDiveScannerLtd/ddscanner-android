@@ -248,4 +248,6 @@
     <string name="please_choose_another_location">Please choose another location</string>
     <string name="send">SEND</string>
     <string name="write_a_review">Write a review</string>
+    <string name="start_process_register_for_gcm">Registering for Google services</string>
+    <string name="start_process_register_for_ddscanner">Registering for DDScanner services</string>
 </resources>
