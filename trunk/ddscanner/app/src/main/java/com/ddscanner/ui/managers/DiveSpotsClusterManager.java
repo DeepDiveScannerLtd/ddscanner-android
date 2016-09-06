@@ -24,6 +24,7 @@ import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.fragments.MapListFragment;
 import com.ddscanner.utils.DialogUtils;
 import com.ddscanner.utils.LogUtils;
+import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -79,6 +80,8 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
 
     private Marker lastClickedMarker;
     private Marker userCurrentLocationMarker;
+    private LatLng lastKnownSouthWest;
+    private LatLng lastKnownNorthEast;
 
     public DiveSpotsClusterManager(Context context, GoogleMap googleMap, RelativeLayout toast, ProgressBar progressBar, MapListFragment parentFragment) {
         super(context, googleMap);
@@ -111,7 +114,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         setRenderer(new IconRenderer(context, googleMap, this));
         setOnClusterClickListener(this);
         if (checkArea(googleMap.getProjection().getVisibleRegion().latLngBounds.southwest, googleMap.getProjection().getVisibleRegion().latLngBounds.northeast)) {
-            requestCityProducts();
+            requestCityProducts(false);
         } else {
             showToast();
         }
@@ -122,13 +125,13 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         lastClickedMarker = null;
         DDScannerApplication.bus.post(new CloseInfoWindowEvent());
         toast.setVisibility(View.VISIBLE);
-        android.os.Handler handler = new android.os.Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                hideToast();
-            }
-        }, 1700);
+//        android.os.Handler handler = new android.os.Handler();
+//        handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                hideToast();
+//            }
+//        }, 1700);
     }
 
     private void showPb() {
@@ -191,15 +194,16 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
             diveSpotsRequestMap.putNorthEastLng(northeast.longitude + Math.abs(northeast.longitude - southwest.longitude));
         }
         if (checkArea(southwest, northeast)) {
+            hideToast();
             if (isCanMakeRequest) {
                 if (southwest.latitude <= diveSpotsRequestMap.getSouthWestLat() ||
                         southwest.longitude <= diveSpotsRequestMap.getSouthWestLng() ||
                         northeast.latitude >= diveSpotsRequestMap.getNorthEastLat() ||
                         northeast.longitude >= diveSpotsRequestMap.getNorthEastLng()) {
-                    requestCityProducts();
+                    requestCityProducts(false);
                 }
             } else {
-                requestCityProducts();
+                requestCityProducts(false);
             }
         } else {
             showToast();
@@ -300,13 +304,19 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
     }
 
 
-    public void requestCityProducts() {
+    public void requestCityProducts(boolean isFromFilters) {
         diveSpotsRequestMap.clear();
         LatLng southwest = googleMap.getProjection().getVisibleRegion().latLngBounds.southwest;
         LatLng northeast = googleMap.getProjection().getVisibleRegion().latLngBounds.northeast;
+        if (!checkArea(southwest, northeast) && isFromFilters && lastKnownNorthEast != null && lastKnownSouthWest != null) {
+            southwest = lastKnownSouthWest;
+            northeast = lastKnownNorthEast;
+        }
         if (checkArea(southwest, northeast)) {
             showPb();
             isCanMakeRequest = true;
+            lastKnownSouthWest = southwest;
+            lastKnownNorthEast = northeast;
             diveSpotsRequestMap.putSouthWestLat(southwest.latitude - Math.abs(northeast.latitude - southwest.latitude));
             diveSpotsRequestMap.putSouthWestLng(southwest.longitude - Math.abs(northeast.longitude - southwest.longitude));
             diveSpotsRequestMap.putNorthEastLat(northeast.latitude + Math.abs(northeast.latitude - southwest.latitude));
@@ -314,11 +324,11 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
             if (!TextUtils.isEmpty(currents)) {
                 diveSpotsRequestMap.putCurrents(currents);
             }
-            if (!TextUtils.isEmpty(level)) {
-                diveSpotsRequestMap.putLevel(level);
+            if (!TextUtils.isEmpty(SharedPreferenceHelper.getLevel())) {
+                diveSpotsRequestMap.putLevel(SharedPreferenceHelper.getLevel());
             }
-            if (!TextUtils.isEmpty(object)) {
-                diveSpotsRequestMap.putObject(object);
+            if (!TextUtils.isEmpty(SharedPreferenceHelper.getObject())) {
+                diveSpotsRequestMap.putObject(SharedPreferenceHelper.getObject());
             }
             if (rating != -1) {
                 diveSpotsRequestMap.putRating(rating);
@@ -456,7 +466,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
             object = event.getObject();
         }
         updateFilter(level, object);
-        requestCityProducts();
+        requestCityProducts(true);
     }
 
     public void setUserCurrentLocationMarker(Marker userCurrentLocationMarker) {
