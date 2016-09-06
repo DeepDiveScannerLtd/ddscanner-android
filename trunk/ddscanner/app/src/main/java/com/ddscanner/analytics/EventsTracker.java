@@ -92,6 +92,10 @@ public class EventsTracker {
 
     private static final String EVENT_NAME_DIVE_SPOT_PHOTO_ADDED = "dive_spot_photo_added";
 
+    private static final String EVENT_NAME_GUIDE_USEFUL = "guide_useful";
+    private static final String EVENT_NAME_GUIDE_NOT_USEFUL = "guide_not_useful";
+    private static final String EVENT_PARAMETER_NAME_QUESTION = "question";
+
     private static final String EVENT_NAME_USER_PROFILE_EDITED = "user_profile_edited";
 
     // ----------------------------------------------------
@@ -163,6 +167,53 @@ public class EventsTracker {
         appsflyerParams.put(EVENT_PARAMETER_NAME_DIVE_CENTER_ID, diveCenterId);
         appsflyerParams.put(EVENT_PARAMETER_NAME_VIEW_SOURCE, spotViewSource.getName());
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_DIVE_CENTER_VIEW, appsflyerParams);
+    }
+
+    public static void trackGuideUseful(String question) {
+
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+
+        // Google Firebase
+        Bundle params = new Bundle();
+        params.putString(EVENT_PARAMETER_NAME_QUESTION, question);
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_GUIDE_USEFUL, params);
+
+        // Flurry
+        Map<String, String> flurryParams = new HashMap<>();
+        flurryParams.put(EVENT_PARAMETER_NAME_QUESTION, question);
+        FlurryAgent.logEvent(EVENT_NAME_GUIDE_USEFUL, flurryParams);
+
+        // Appsflyer
+        Map<String, Object> appsflyerParams = new HashMap<>();
+        appsflyerParams.put(EVENT_PARAMETER_NAME_QUESTION, question);
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_GUIDE_USEFUL, appsflyerParams);
+
+    }
+
+    public static void trackGuideNotUseful(String question) {
+
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+
+        // Google Firebase
+        Bundle params = new Bundle();
+        params.putString(EVENT_PARAMETER_NAME_QUESTION, question);
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_GUIDE_NOT_USEFUL, params);
+
+        // Flurry
+        Map<String, String> flurryParams = new HashMap<>();
+        flurryParams.put(EVENT_PARAMETER_NAME_QUESTION, question);
+        FlurryAgent.logEvent(EVENT_NAME_GUIDE_NOT_USEFUL, flurryParams);
+
+        // Appsflyer
+        Map<String, Object> appsflyerParams = new HashMap<>();
+        appsflyerParams.put(EVENT_PARAMETER_NAME_QUESTION, question);
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_GUIDE_NOT_USEFUL, appsflyerParams);
+
+
     }
 
     public static void trackDiveSpotValid() {

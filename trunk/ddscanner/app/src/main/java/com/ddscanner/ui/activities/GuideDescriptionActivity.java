@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.GuideItem;
 import com.ddscanner.utils.Constants;
 
@@ -75,12 +76,14 @@ public class GuideDescriptionActivity extends AppCompatActivity implements View.
             case R.id.yes:
                 buttonYes.setImageDrawable(getResources().getDrawable(R.drawable.ic_smile_active));
                 thnaks.setText(R.string.thank_you_title);
+                EventsTracker.trackGuideUseful(item.getTitle());
                 buttonYes.setOnClickListener(null);
                 buttonNo.setOnClickListener(null);
                 break;
             case R.id.no:
                 buttonNo.setImageDrawable(getResources().getDrawable(R.drawable.ic_sad_active));
                 thnaks.setText(R.string.thank_you_title);
+                EventsTracker.trackGuideNotUseful(item.getTitle());
                 buttonYes.setOnClickListener(null);
                 buttonNo.setOnClickListener(null);
                 break;
