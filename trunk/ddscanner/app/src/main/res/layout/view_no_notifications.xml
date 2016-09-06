@@ -13,20 +13,9 @@
         android:layout_height="wrap_content"
         android:src="@drawable/ic_nonotif"/>
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textSize="20sp"
-        android:layout_marginTop="20dp"
-        android:textColor="@color/black_text"
-        android:fontFamily="sans-serif-medium"
+        style="@style/ErrorsViewTitleStyle"
         android:text="@string/no_notifications"/>
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textSize="15sp"
-        android:layout_marginTop="5dp"
-        android:textColor="#a3a3a3"
+        style="@style/ErrorsViewSubTitleStyle"
         android:text="@string/here_will_be_displayed_last_notifications"/>
 </LinearLayout>

@@ -38,17 +38,10 @@
             android:layout_height="wrap_content"
             android:src="@drawable/ic_nosealife"/>
         <TextView
-            android:layout_marginTop="10dp"
             android:layout_below="@+id/icon"
             android:id="@+id/text_not_found"
-            android:layout_gravity="center"
-            android:layout_width="match_parent"
-            android:gravity="center"
-            android:layout_height="wrap_content"
+            style="@style/ErrorsViewTitleStyle"
             android:text="@string/no_results"
-            android:textSize="20sp"
-            android:fontFamily="sans-seif-medium"
-            android:textColor="@color/black_text"
             />
         <Button
             android:layout_marginTop="170dp"

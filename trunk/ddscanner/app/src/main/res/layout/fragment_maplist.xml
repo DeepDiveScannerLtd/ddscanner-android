@@ -155,29 +155,19 @@
 
             <TextView
                 android:id="@+id/text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                style="@style/ErrorsViewTitleStyle"
                 android:layout_below="@+id/sad"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:layout_marginTop="15dp"
-                android:gravity="center"
-                android:text="@string/there_are_no_dive_spots_here"
-                android:textColor="@color/black_text"
-                android:fontFamily="sans-serif-medum"
-                android:textSize="20sp" />
+                android:text="@string/there_are_no_dive_spots_here" />
 
             <TextView
                 android:id="@+id/subtext"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                style="@style/ErrorsViewSubTitleStyle"
                 android:layout_below="@+id/text"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:gravity="center"
-                android:text="@string/please_choose_another_location"
-                android:layout_marginTop="5dp"
-                android:textSize="15sp" />
+                android:text="@string/please_choose_another_location" />
             <Button
                 android:visibility="visible"
                 android:id="@+id/showMapContinue"
