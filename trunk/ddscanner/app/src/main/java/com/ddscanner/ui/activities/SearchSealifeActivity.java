@@ -1,5 +1,6 @@
 package com.ddscanner.ui.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
@@ -11,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -131,6 +133,7 @@ public class SearchSealifeActivity extends AppCompatActivity implements SearchVi
         if (filteredModelList.isEmpty()) {
             mRecyclerView.setVisibility(View.GONE);
             notFoundLayout.setVisibility(View.VISIBLE);
+            hideKeyboard();
         } else {
             mRecyclerView.setVisibility(View.VISIBLE);
             notFoundLayout.setVisibility(View.GONE);
@@ -275,4 +278,13 @@ public class SearchSealifeActivity extends AppCompatActivity implements SearchVi
             }
         }
     }
+
+    private void hideKeyboard() {
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
 }

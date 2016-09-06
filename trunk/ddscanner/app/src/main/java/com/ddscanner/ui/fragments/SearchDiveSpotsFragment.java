@@ -1,5 +1,6 @@
 package com.ddscanner.ui.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -8,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ScrollView;
 
@@ -47,6 +49,7 @@ public class SearchDiveSpotsFragment extends Fragment implements View.OnClickLis
         if (diveSpots == null || diveSpots.size() == 0) {
             noResultsView.setVisibility(View.VISIBLE);
             diveSpotsListRc.setVisibility(View.GONE);
+            hideKeyboard();
         } else {
             noResultsView.setVisibility(View.GONE);
             diveSpotsListRc.setVisibility(View.VISIBLE);
@@ -64,6 +67,14 @@ public class SearchDiveSpotsFragment extends Fragment implements View.OnClickLis
                     DDScannerApplication.bus.post(new OpenAddDsActivityAfterLogin());
                 }
                 break;
+        }
+    }
+
+    private void hideKeyboard() {
+        View view = getActivity().getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
 }
