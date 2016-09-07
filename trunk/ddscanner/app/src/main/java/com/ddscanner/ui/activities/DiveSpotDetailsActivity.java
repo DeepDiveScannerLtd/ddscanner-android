@@ -25,12 +25,14 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
@@ -93,6 +95,8 @@ import java.util.List;
 import java.util.Map;
 
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
+import me.nereo.multi_image_selector.MultiImageSelector;
+import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -153,6 +157,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private TextView creatorName;
     private TextView newDiveSpotView;
     private ImageView creatorAvatar;
+    private ImageButton btnAddPhoto;
     private int avatarImageSize;
     private int avatarImageRadius;
     private ImageView expandEditorsArrow;
@@ -273,6 +278,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         access = (TextView) findViewById(R.id.access);
         accessLayout = (RelativeLayout) findViewById(R.id.acces_layout);
         newDiveSpotView = (TextView) findViewById(R.id.newDiveSpot);
+        btnAddPhoto = (ImageButton) findViewById(R.id.btn_add_photo);
     }
 
     /**
@@ -299,7 +305,9 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
     private void setUi() {
         avatarImageRadius = (int) getResources().getDimension(R.dimen.editor_avatar_radius);
+        rating.removeAllViews();
         avatarImageSize = 2 * avatarImageRadius;
+        btnAddPhoto.setOnClickListener(this);
         materialDialog = helpers.getMaterialDialog(this);
         thanksClose.setOnClickListener(this);
         btnDsDetailsIsInvalid.setOnClickListener(this);
@@ -388,6 +396,11 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             iv.setImageResource(R.drawable.ic_ds_star_empty);
             iv.setPadding(0, 0, 5, 0);
             rating.addView(iv);
+        }
+
+        if (diveSpot.getImages() != null) {
+            btnAddPhoto.setVisibility(View.GONE);
+            photosRecyclerView.setVisibility(View.VISIBLE);
         }
 
         photosRecyclerView.setLayoutManager(new GridLayoutManager(DiveSpotDetailsActivity.this, 4));
@@ -658,6 +671,13 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 break;
             case R.id.photos:
                 DDScannerApplication.bus.post(new OpenPhotosActivityEvent());
+                break;
+            case R.id.btn_add_photo:
+                if (!SharedPreferenceHelper.isUserLoggedIn()) {
+                    SocialNetworks.showForResult(this, Constants.DIVE_SPOT_DETAILS_ACTIVITY_REQUEST_CODE_LOGIN_TO_PICK_PHOTOS);
+                } else {
+                    MultiImageSelector.create(this).count(3).start(this, Constants.DIVE_SPOT_DETAILS_ACTIVITY_REQUEST_CODE_PICK_PHOTOS);
+                }
                 break;
         }
     }
@@ -1227,7 +1247,28 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                     thanksLayout.setVisibility(View.GONE);
                 }
             }
-
+        }
+        if (requestCode == Constants.DIVE_SPOT_DETAILS_ACTIVITY_REQUEST_CODE_PICK_PHOTOS) {
+            if (resultCode == RESULT_OK) {
+                List<String> path = data.getStringArrayListExtra(MultiImageSelectorActivity
+                        .EXTRA_RESULT);
+                Intent intent = new Intent(this, AddPhotosDoDiveSpotActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("IMAGES", (ArrayList<String>)path);
+                bundle.putString("id", String.valueOf(diveSpot.getId()));
+                intent.putExtras(bundle);
+                startActivityForResult(intent, Constants.DIVE_SPOT_DETAILS_ACTIVITY_REQUEST_CODE_ADD_PHOTOS_ACTIVITY);
+            }
+        }
+        if (requestCode == Constants.DIVE_SPOT_DETAILS_ACTIVITY_REQUEST_CODE_ADD_PHOTOS_ACTIVITY) {
+            if (resultCode == RESULT_OK) {
+                requestProductDetails(String.valueOf(diveSpot.getId()));
+            }
+        }
+        if (requestCode == Constants.DIVE_SPOT_DETAILS_ACTIVITY_REQUEST_CODE_LOGIN_TO_PICK_PHOTOS) {
+            if (resultCode == RESULT_OK) {
+                MultiImageSelector.create(this).count(3).start(this, Constants.DIVE_SPOT_DETAILS_ACTIVITY_REQUEST_CODE_ADD_PHOTOS_ACTIVITY);
+            }
         }
     }
 

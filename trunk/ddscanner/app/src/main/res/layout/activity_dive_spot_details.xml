@@ -282,8 +282,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white">
-
+                    <ImageButton
+                        android:id="@+id/btn_add_photo"
+                        android:visibility="visible"
+                        android:layout_width="75dp"
+                        android:layout_height="75dp"
+                        android:background="#F8F8F8"
+                        android:src="@drawable/ic_plus_addds"
+                        android:layout_margin="20dp"/>
                     <android.support.v7.widget.RecyclerView
+                        android:visibility="gone"
                         android:id="@+id/photos_rc"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
