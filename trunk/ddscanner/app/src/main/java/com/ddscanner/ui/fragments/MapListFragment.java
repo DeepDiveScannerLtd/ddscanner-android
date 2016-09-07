@@ -36,6 +36,7 @@ import com.ddscanner.events.LocationReadyEvent;
 import com.ddscanner.events.MapViewInitializedEvent;
 import com.ddscanner.events.MarkerClickEvent;
 import com.ddscanner.events.OnMapClickEvent;
+import com.ddscanner.events.OpenAddDiveSpotActivity;
 import com.ddscanner.events.OpenAddDsActivityAfterLogin;
 import com.ddscanner.ui.activities.AddDiveSpotActivity;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
@@ -326,11 +327,12 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
                 DiveSpotDetailsActivity.show(getActivity(), String.valueOf(lastDiveSpotId), EventsTracker.SpotViewSource.FROM_MAP);
                 break;
             case R.id.add_ds_fab:
-                if (SharedPreferenceHelper.isUserLoggedIn()) {
-                    AddDiveSpotActivity.show(getActivity());
-                } else {
-                    DDScannerApplication.bus.post(new OpenAddDsActivityAfterLogin());
-                }
+//                if (SharedPreferenceHelper.isUserLoggedIn()) {
+//                    AddDiveSpotActivity.show(getActivity());
+//                } else {
+//                    DDScannerApplication.bus.post(new OpenAddDsActivityAfterLogin());
+//                }
+                DDScannerApplication.bus.post(new OpenAddDiveSpotActivity());
                 break;
             case R.id.showMapContinue:
                 mapListFAB.performClick();

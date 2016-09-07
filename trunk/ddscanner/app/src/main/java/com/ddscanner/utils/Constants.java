@@ -34,6 +34,7 @@ public class Constants {
 
     /*Add dive spot activity*/
     public static final String ADD_DIVE_SPOT_ACTIVITY_LATLNG = "location";
+    public static final String ADD_DIVE_SPOT_ACTIVITY_RESULT_LAT_LNG = "new_spot_location";
     public static final String ADD_DIVE_SPOT_ACTIVITY_SEALIFE = "sealife";
     public static final int ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_PICK_PHOTO = 1001;
     public static final int ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_PICK_SEALIFE = 1002;
@@ -46,6 +47,7 @@ public class Constants {
     public static final String ADD_DIVE_SPOT_ACTIVITY_SEALIFE_ARRAY = "sealife[]";
     public static final String ADD_DIVE_SPOT_ACTIVITY_IMAGES_ARRAY = "images[]";
     public static final String ADD_DIVE_SPOT_INTENT_LOCATION_NAME = "LOCATIONNAME";
+    public static final String ADD_DIVE_SPOT_INTENT_DIVESPOT_ID = "divespot_id";
 
     /*Main activity*/
     public static final String MAIN_ACTIVITY_ACTVITY_EXTRA_LATLNGBOUNDS = "LATLNGBOUNDS";
@@ -53,6 +55,7 @@ public class Constants {
     public static final int MAIN_ACTIVITY_ACTVITY_REQUEST_PERMISSION_CAMERA = 2011;
     public static final int MAIN_ACTIVITY_ACTVITY_REQUEST_PERMISSION_WRITE_STORAGE = 2012;
     public static final int MAIN_ACTIVITY_ACTVITY_REQUEST_PERMISSION_CAMERA_AND_WRITE_STORAGE = 2013;
+    public static final int MAIN_ACTIVITY_ACTVITY_REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY = 2014;
 
     /*Fields in filters*/
     public static final String FILTERS_VALUE_OBJECT = "object";

@@ -50,6 +50,8 @@ import com.ddscanner.events.LoggedOutEvent;
 import com.ddscanner.events.LoginViaFacebookClickEvent;
 import com.ddscanner.events.LoginViaGoogleClickEvent;
 import com.ddscanner.events.MapViewInitializedEvent;
+import com.ddscanner.events.NewDiveSpotAddedEvent;
+import com.ddscanner.events.OpenAddDiveSpotActivity;
 import com.ddscanner.events.OpenAddDsActivityAfterLogin;
 import com.ddscanner.events.PickPhotoFromGallery;
 import com.ddscanner.events.PlaceChoosedEvent;
@@ -408,7 +410,7 @@ public class MainActivity extends BaseAppCompatActivity
             case REQUEST_CODE_LOGIN:
                 if (resultCode == RESULT_OK) {
                     if (isTryToOpenAddDiveSpotActivity) {
-                        AddDiveSpotActivity.show(this);
+                        AddDiveSpotActivity.showForResult(this, Constants.MAIN_ACTIVITY_ACTVITY_REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY);
                         isTryToOpenAddDiveSpotActivity = false;
                         return;
                     }
@@ -427,6 +429,13 @@ public class MainActivity extends BaseAppCompatActivity
                     GoogleSignInAccount acct = result.getSignInAccount();
                     String idToken = acct.getIdToken();
                     sendRegisterRequest(putTokensToMap(SharedPreferenceHelper.getUserAppId(), "go", idToken), SignInType.GOOGLE);
+                }
+                break;
+            case Constants.MAIN_ACTIVITY_ACTVITY_REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY:
+                LatLng latLng = data.getParcelableExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_RESULT_LAT_LNG);
+                String diveSpotId = data.getStringExtra(Constants.ADD_DIVE_SPOT_INTENT_DIVESPOT_ID);
+                if (latLng != null) {
+                    DDScannerApplication.bus.post(new NewDiveSpotAddedEvent(latLng, diveSpotId));
                 }
                 break;
             default:
@@ -883,6 +892,17 @@ public class MainActivity extends BaseAppCompatActivity
             return false;
         }
         return true;
+    }
+
+    @Subscribe
+    public void openAddDiveSpotActivity(OpenAddDiveSpotActivity event) {
+        if (SharedPreferenceHelper.isUserLoggedIn()) {
+            AddDiveSpotActivity.showForResult(this, Constants.MAIN_ACTIVITY_ACTVITY_REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY);
+        } else {
+            isTryToOpenAddDiveSpotActivity = true;
+            Intent intent = new Intent(MainActivity.this, SocialNetworks.class);
+            startActivityForResult(intent, REQUEST_CODE_LOGIN);
+        }
     }
 
     private void clearFilterSharedPrefences() {

@@ -678,7 +678,13 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog,
                                         @NonNull DialogAction which) {
-                        DiveSpotDetailsActivity.showNewDiveSpot(AddDiveSpotActivity.this, diveSpotId);
+                      //  DiveSpotDetailsActivity.showNewDiveSpot(AddDiveSpotActivity.this, diveSpotId);
+                        Intent intent = new Intent();
+                        LatLng latLng = new LatLng(diveSpotLocation.latitude, diveSpotLocation.longitude);
+                        intent.putExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_RESULT_LAT_LNG, latLng);
+                        intent.putExtra(Constants.ADD_DIVE_SPOT_INTENT_DIVESPOT_ID, diveSpotId);
+                        setResult(RESULT_OK, intent);
+                        finish();
                     }
                 });
 
@@ -698,6 +704,11 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
             }
 
         }
+    }
+
+    public static void showForResult(Activity context, int requestCode) {
+        Intent intent = new Intent(context, AddDiveSpotActivity.class);
+        context.startActivityForResult(intent, requestCode);
     }
 
 }

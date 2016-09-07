@@ -17,6 +17,7 @@ import com.ddscanner.entities.request.DiveSpotsRequestMap;
 import com.ddscanner.events.CloseInfoWindowEvent;
 import com.ddscanner.events.FilterChosedEvent;
 import com.ddscanner.events.MarkerClickEvent;
+import com.ddscanner.events.NewDiveSpotAddedEvent;
 import com.ddscanner.events.OnMapClickEvent;
 import com.ddscanner.events.PlaceChoosedEvent;
 import com.ddscanner.rest.BaseCallback;
@@ -82,6 +83,9 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
     private Marker userCurrentLocationMarker;
     private LatLng lastKnownSouthWest;
     private LatLng lastKnownNorthEast;
+    private LatLng newDiveSpotLatLng;
+
+    private int newDiveSpotId = 0;
 
     public DiveSpotsClusterManager(Context context, GoogleMap googleMap, RelativeLayout toast, ProgressBar progressBar, MapListFragment parentFragment) {
         super(context, googleMap);
@@ -313,58 +317,50 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
             northeast = lastKnownNorthEast;
         }
         if (checkArea(southwest, northeast)) {
-            showPb();
-            isCanMakeRequest = true;
-            lastKnownSouthWest = southwest;
-            lastKnownNorthEast = northeast;
-            diveSpotsRequestMap.putSouthWestLat(southwest.latitude - Math.abs(northeast.latitude - southwest.latitude));
-            diveSpotsRequestMap.putSouthWestLng(southwest.longitude - Math.abs(northeast.longitude - southwest.longitude));
-            diveSpotsRequestMap.putNorthEastLat(northeast.latitude + Math.abs(northeast.latitude - southwest.latitude));
-            diveSpotsRequestMap.putNorthEastLng(northeast.longitude + Math.abs(northeast.longitude - southwest.longitude));
-            if (!TextUtils.isEmpty(currents)) {
-                diveSpotsRequestMap.putCurrents(currents);
-            }
-            if (!TextUtils.isEmpty(SharedPreferenceHelper.getLevel())) {
-                diveSpotsRequestMap.putLevel(SharedPreferenceHelper.getLevel());
-            }
-            if (!TextUtils.isEmpty(SharedPreferenceHelper.getObject())) {
-                diveSpotsRequestMap.putObject(SharedPreferenceHelper.getObject());
-            }
-            if (rating != -1) {
-                diveSpotsRequestMap.putRating(rating);
-            }
-            if (!TextUtils.isEmpty(visibility)) {
-                diveSpotsRequestMap.putVisibility(visibility);
-            }
-            for (Map.Entry<String, Object> entry : diveSpotsRequestMap.entrySet()) {
-                LogUtils.i(TAG, "get dive spots request parameter: " + entry.getKey() + " " + entry.getValue());
-            }
-            Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDivespots(diveSpotsRequestMap);
-            call.enqueue(new BaseCallback() {
-                @Override
-                public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                    if (response.isSuccessful()) {
-                        String responseString = "";
-                        try {
-                            responseString = response.body().string();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        LogUtils.i(TAG, "response body is " + responseString);
-                        divespotsWrapper = new Gson().fromJson(responseString, DivespotsWrapper.class);
-                        updateDiveSpots((ArrayList<DiveSpot>) divespotsWrapper.getDiveSpots());
-                        parentFragment.fillDiveSpots(getVisibleMarkersList(diveSpots));
-                        hidePb();
-                    } else {
-                        hidePb();
-                    }
-                }
-
-                @Override
-                public void onConnectionFailure() {
-                    DialogUtils.showConnectionErrorDialog(context);
-                }
-            });
+            sendRequest(northeast, southwest);
+//            showPb();
+//            isCanMakeRequest = true;
+//            lastKnownSouthWest = southwest;
+//            lastKnownNorthEast = northeast;
+//            diveSpotsRequestMap.putSouthWestLat(southwest.latitude - Math.abs(northeast.latitude - southwest.latitude));
+//            diveSpotsRequestMap.putSouthWestLng(southwest.longitude - Math.abs(northeast.longitude - southwest.longitude));
+//            diveSpotsRequestMap.putNorthEastLat(northeast.latitude + Math.abs(northeast.latitude - southwest.latitude));
+//            diveSpotsRequestMap.putNorthEastLng(northeast.longitude + Math.abs(northeast.longitude - southwest.longitude));
+//            if (!TextUtils.isEmpty(SharedPreferenceHelper.getLevel())) {
+//                diveSpotsRequestMap.putLevel(SharedPreferenceHelper.getLevel());
+//            }
+//            if (!TextUtils.isEmpty(SharedPreferenceHelper.getObject())) {
+//                diveSpotsRequestMap.putObject(SharedPreferenceHelper.getObject());
+//            }
+//            for (Map.Entry<String, Object> entry : diveSpotsRequestMap.entrySet()) {
+//                LogUtils.i(TAG, "get dive spots request parameter: " + entry.getKey() + " " + entry.getValue());
+//            }
+//            Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDivespots(diveSpotsRequestMap);
+//            call.enqueue(new BaseCallback() {
+//                @Override
+//                public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+//                    if (response.isSuccessful()) {
+//                        String responseString = "";
+//                        try {
+//                            responseString = response.body().string();
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
+//                        LogUtils.i(TAG, "response body is " + responseString);
+//                        divespotsWrapper = new Gson().fromJson(responseString, DivespotsWrapper.class);
+//                        updateDiveSpots((ArrayList<DiveSpot>) divespotsWrapper.getDiveSpots());
+//                        parentFragment.fillDiveSpots(getVisibleMarkersList(diveSpots));
+//                        hidePb();
+//                    } else {
+//                        hidePb();
+//                    }
+//                }
+//
+//                @Override
+//                public void onConnectionFailure() {
+//                    DialogUtils.showConnectionErrorDialog(context);
+//                }
+//            });
         }
     }
 
@@ -411,6 +407,13 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
                     marker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_ds_new)));
                 } else {
                     marker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_ds)));
+                }
+
+                if (newDiveSpotId != 0) {
+                    if (diveSpot.getId() == newDiveSpotId) {
+                        onMarkerClick(marker);
+                        newDiveSpotId = 0;
+                    }
                 }
                 if (lastClickedMarker != null && lastClickedMarker.getPosition().equals(marker.getPosition()) && lastClickedMarker.isInfoWindowShown()) {
                     //      marker.showInfoWindow();
@@ -480,4 +483,63 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
     public boolean isLastClickedMarkerNew() {
         return diveSpotsMap.get(lastClickedMarker.getPosition()).getStatus().equals("waiting");
     }
+
+    private void sendRequest(LatLng northeast, LatLng southwest) {
+        diveSpotsRequestMap.clear();
+        showPb();
+        isCanMakeRequest = true;
+        lastKnownSouthWest = southwest;
+        lastKnownNorthEast = northeast;
+        diveSpotsRequestMap.putSouthWestLat(southwest.latitude - Math.abs(northeast.latitude - southwest.latitude));
+        diveSpotsRequestMap.putSouthWestLng(southwest.longitude - Math.abs(northeast.longitude - southwest.longitude));
+        diveSpotsRequestMap.putNorthEastLat(northeast.latitude + Math.abs(northeast.latitude - southwest.latitude));
+        diveSpotsRequestMap.putNorthEastLng(northeast.longitude + Math.abs(northeast.longitude - southwest.longitude));
+        if (!TextUtils.isEmpty(SharedPreferenceHelper.getLevel())) {
+            diveSpotsRequestMap.putLevel(SharedPreferenceHelper.getLevel());
+        }
+        if (!TextUtils.isEmpty(SharedPreferenceHelper.getObject())) {
+            diveSpotsRequestMap.putObject(SharedPreferenceHelper.getObject());
+        }
+        for (Map.Entry<String, Object> entry : diveSpotsRequestMap.entrySet()) {
+            LogUtils.i(TAG, "get dive spots request parameter: " + entry.getKey() + " " + entry.getValue());
+        }
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDivespots(diveSpotsRequestMap);
+        call.enqueue(new BaseCallback() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    String responseString = "";
+                    try {
+                        responseString = response.body().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    LogUtils.i(TAG, "response body is " + responseString);
+                    divespotsWrapper = new Gson().fromJson(responseString, DivespotsWrapper.class);
+                    updateDiveSpots((ArrayList<DiveSpot>) divespotsWrapper.getDiveSpots());
+                    parentFragment.fillDiveSpots(getVisibleMarkersList(diveSpots));
+                    hidePb();
+                } else {
+                    hidePb();
+                }
+            }
+
+            @Override
+            public void onConnectionFailure() {
+                DialogUtils.showConnectionErrorDialog(context);
+            }
+        });
+    }
+
+
+
+    @Subscribe
+    public void newDiveSpotAdded(NewDiveSpotAddedEvent event) {
+        googleMap.setOnCameraChangeListener(null);
+        newDiveSpotId = Integer.parseInt(event.getDiveSpotId());
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(new LatLngBounds(new LatLng(event.getLatLng().latitude - 0.2, event.getLatLng().longitude - 0.2), new LatLng(event.getLatLng().latitude + 0.2, event.getLatLng().longitude + 0.2)),0));
+        sendRequest(new LatLng(event.getLatLng().latitude - 0.2, event.getLatLng().longitude - 0.2), new LatLng(event.getLatLng().latitude + 0.2, event.getLatLng().longitude + 0.2));
+        googleMap.setOnCameraChangeListener(this);
+    }
+
 }
