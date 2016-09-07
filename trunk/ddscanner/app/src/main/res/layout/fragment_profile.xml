@@ -400,13 +400,14 @@
                 android:orientation="horizontal">
 
                 <LinearLayout
+                    android:id="@+id/capture_photo"
                     android:layout_width="47dp"
                     android:layout_height="47dp"
+                    android:padding="15dp"
                     android:background="@drawable/shape_gray_oval"
                     android:gravity="center">
 
                     <ImageView
-                        android:id="@+id/capture_photo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/ic_attach_camera" />
@@ -415,8 +416,8 @@
                 <LinearLayout
                     android:layout_width="80dp"
                     android:layout_height="80dp"
-                    android:layout_marginLeft="46dp"
-                    android:layout_marginRight="46dp"
+                    android:layout_marginLeft="31dp"
+                    android:layout_marginRight="31dp"
                     android:background="@drawable/shape_gray_oval"
                     android:gravity="center">
 
@@ -427,13 +428,14 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/pick_photo_from_gallery"
                     android:layout_width="47dp"
                     android:layout_height="47dp"
+                    android:padding="15dp"
                     android:background="@drawable/shape_gray_oval"
                     android:gravity="center">
 
                     <ImageView
-                        android:id="@+id/pick_photo_from_gallery"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/ic_attach_gallery" />

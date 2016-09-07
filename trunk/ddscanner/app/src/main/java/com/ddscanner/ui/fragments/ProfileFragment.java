@@ -92,7 +92,7 @@ public class ProfileFragment extends Fragment
     private ScrollView aboutLayout;
     private ScrollView editLayout;
     private LinearLayout logout;
-    private ImageView capturePhoto;
+    private LinearLayout capturePhoto;
     private ImageView newPhoto;
     private com.rey.material.widget.Button cancelButton;
     private Helpers helpers = new Helpers();
@@ -112,7 +112,7 @@ public class ProfileFragment extends Fragment
     private TextView favouriteCount;
     private TextView addedCount;
     private TextView editedCount;
-    private ImageView pickPhotoFromGallery;
+    private LinearLayout pickPhotoFromGallery;
     private LinearLayout showAllCheckins;
     private LinearLayout showAllFavorites;
     private LinearLayout showAllAdded;
@@ -211,7 +211,7 @@ public class ProfileFragment extends Fragment
         aboutLayout = (ScrollView) v.findViewById(R.id.about);
         editLayout = (ScrollView) v.findViewById(R.id.editProfile);
         editProfile = (LinearLayout) v.findViewById(R.id.edit_profile);
-        capturePhoto = (ImageView) v.findViewById(R.id.capture_photo);
+        capturePhoto = (LinearLayout) v.findViewById(R.id.capture_photo);
         newPhoto = (ImageView) v.findViewById(R.id.user_chosed_photo);
         cancelButton = (com.rey.material.widget.Button) v.findViewById(R.id.cancel_button);
         userCommentsCount = (TextView) v.findViewById(R.id.user_comments);
@@ -223,7 +223,7 @@ public class ProfileFragment extends Fragment
         saveChanges = (Button) v.findViewById(R.id.button_save);
         userFullName = (TextView) v.findViewById(R.id.user_name);
         userAbout = (TextView) v.findViewById(R.id.user_about);
-        pickPhotoFromGallery = (ImageView) v.findViewById(R.id.pick_photo_from_gallery);
+        pickPhotoFromGallery = (LinearLayout) v.findViewById(R.id.pick_photo_from_gallery);
         logout = (LinearLayout) v.findViewById(R.id.logout);
         showAllCheckins = (LinearLayout) v.findViewById(R.id.checkins_activity);
         showAllFavorites = (LinearLayout) v.findViewById(R.id.favorites_activity);
