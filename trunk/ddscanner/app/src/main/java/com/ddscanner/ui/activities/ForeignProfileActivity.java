@@ -145,9 +145,9 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
             userAbout.setVisibility(View.VISIBLE);
             userAbout.setText(user.getAbout());
         }
-        userCommentsCount.setText(user.getCountComment());
-        userDislikesCount.setText(user.getCountDislike());
-        userLikesCount.setText(user.getCountLike());
+        userCommentsCount.setText(helpers.formatLikesCommentsCountNumber(user.getCountComment()));
+        userDislikesCount.setText(helpers.formatLikesCommentsCountNumber(user.getCountDislike()));
+        userLikesCount.setText(helpers.formatLikesCommentsCountNumber(user.getCountLike()));
         Picasso.with(this).load(user.getPicture())
                 .resize(Math.round(helpers.convertDpToPixel(100, this)),
                         Math.round(helpers.convertDpToPixel(100, this))).centerCrop()

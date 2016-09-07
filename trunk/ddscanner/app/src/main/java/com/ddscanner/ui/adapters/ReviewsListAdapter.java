@@ -160,8 +160,8 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
 
         reviewsListViewHolder.user_name.setText(comments.get(reviewsListViewHolder.getAdapterPosition()).getUser().getName());
         reviewsListViewHolder.user_review.setText(comments.get(reviewsListViewHolder.getAdapterPosition()).getComment());
-        reviewsListViewHolder.likesCount.setText(comments.get(reviewsListViewHolder.getAdapterPosition()).getLikes());
-        reviewsListViewHolder.dislikesCount.setText(comments.get(reviewsListViewHolder.getAdapterPosition()).getDislikes());
+        reviewsListViewHolder.likesCount.setText(helpers.formatLikesCommentsCountNumber(comments.get(reviewsListViewHolder.getAdapterPosition()).getLikes()));
+        reviewsListViewHolder.dislikesCount.setText(helpers.formatLikesCommentsCountNumber(comments.get(reviewsListViewHolder.getAdapterPosition()).getDislikes()));
         isAdapterSet = true;
 
         if (comments.get(reviewsListViewHolder.getAdapterPosition()).getUser().getPicture() != null) {
@@ -223,12 +223,12 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
             dislikeImage.setImageDrawable(AppCompatDrawableManager.get().getDrawable(
                     context, R.drawable.ic_review_dislike_empty
             ));
-            dislikesCount.setText(String.valueOf(Integer.parseInt(dislikesCount.getText().toString()) - 1));
+            dislikesCount.setText(helpers.formatLikesCommentsCountNumber(String.valueOf(Integer.parseInt(dislikesCount.getText().toString()) - 1)));
         }
         likeImage.setImageDrawable(AppCompatDrawableManager.get().getDrawable(
                 context, R.drawable.ic_like_review
         ));
-        likesCount.setText(String.valueOf(Integer.parseInt(likesCount.getText().toString()) + 1));
+        likesCount.setText(helpers.formatLikesCommentsCountNumber(String.valueOf(Integer.parseInt(likesCount.getText().toString()) + 1)));
         comments.get(position).setLikes(likesCount.getText().toString());
         comments.get(position).setDislikes(dislikesCount.getText().toString());
         comments.get(position).setDislike(false);
@@ -240,12 +240,12 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
             likeImage.setImageDrawable(AppCompatDrawableManager.get().getDrawable(
                     context, R.drawable.ic_review_like_empty
             ));
-            likesCount.setText(String.valueOf(Integer.parseInt(likesCount.getText().toString()) - 1));
+            likesCount.setText(helpers.formatLikesCommentsCountNumber(String.valueOf(Integer.parseInt(likesCount.getText().toString()) - 1)));
         }
 
         dislikeImage.setImageDrawable(AppCompatDrawableManager.get()
                 .getDrawable(context, R.drawable.ic_review_dislike));
-        dislikesCount.setText(String.valueOf(Integer.parseInt(dislikesCount.getText().toString()) + 1));
+        dislikesCount.setText(helpers.formatLikesCommentsCountNumber(String.valueOf(Integer.parseInt(dislikesCount.getText().toString()) + 1)));
         comments.get(position).setLikes(likesCount.getText().toString());
         comments.get(position).setDislikes(dislikesCount.getText().toString());
         comments.get(position).setLike(false);

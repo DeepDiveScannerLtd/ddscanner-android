@@ -489,4 +489,14 @@ public class Helpers {
         toast.show();
     }
 
+    public String formatLikesCommentsCountNumber(String count) {
+        int itemsCount = Integer.parseInt(count);
+        String returnedString = "";
+        if (itemsCount > 999) {
+            return String.valueOf(itemsCount/1000) + "K";
+        } else {
+            return count;
+        }
+    }
+
 }

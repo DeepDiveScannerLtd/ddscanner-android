@@ -66,8 +66,8 @@ public class SelfReviewsListAdapter extends RecyclerView.Adapter<SelfReviewsList
         }
         holder.user_name.setText(comments.get(holder.getAdapterPosition()).getDiveSpotName());
         holder.user_review.setText(comments.get(holder.getAdapterPosition()).getComment());
-        holder.likesCount.setText(comments.get(holder.getAdapterPosition()).getLikes());
-        holder.dislikesCount.setText(comments.get(holder.getAdapterPosition()).getDislikes());
+        holder.likesCount.setText(helpers.formatLikesCommentsCountNumber(comments.get(holder.getAdapterPosition()).getLikes()));
+        holder.dislikesCount.setText(helpers.formatLikesCommentsCountNumber(comments.get(holder.getAdapterPosition()).getDislikes()));
         if (comments.get(position).getDiveSpotImage() == null) {
             holder.user_avatar.setImageResource(R.drawable.list_photo_default);
         } else {

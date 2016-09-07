@@ -476,9 +476,9 @@ public class ProfileFragment extends Fragment
                         .error(R.drawable.avatar_profile_default)
                         .transform(new CropCircleTransformation()).into(avatar);
             }
-            userCommentsCount.setText(user.getCountComment());
-            userLikesCount.setText(user.getCountLike());
-            userDislikesCount.setText(user.getCountDislike());
+            userCommentsCount.setText(helpers.formatLikesCommentsCountNumber(user.getCountComment()));
+            userLikesCount.setText(helpers.formatLikesCommentsCountNumber(user.getCountLike()));
+            userDislikesCount.setText(helpers.formatLikesCommentsCountNumber(user.getCountDislike()));
             Picasso.with(getContext()).load(user.getPicture())
                     .resize(Math.round(helpers.convertDpToPixel(80, getContext())),
                             Math.round(helpers.convertDpToPixel(80, getContext()))).centerCrop()
@@ -492,7 +492,7 @@ public class ProfileFragment extends Fragment
                 userAbout.setVisibility(View.GONE);
             }
             userFullName.setText(user.getName());
-            addedCount.setText(user.getCountAdd() + getDiveSpotString(Integer.parseInt(user.getCountAdd())));
+            addedCount.setText( user.getCountAdd() + getDiveSpotString(Integer.parseInt(user.getCountAdd())));
             editedCount.setText(user.getCountEdit() + getDiveSpotString(Integer.parseInt(user.getCountEdit())));
             favouriteCount.setText(user.getCountFavorite() + getDiveSpotString(Integer.parseInt(user.getCountFavorite())));
             checkInCount.setText(user.getCountCheckin() + getDiveSpotString(Integer.parseInt(user.getCountFavorite())));
