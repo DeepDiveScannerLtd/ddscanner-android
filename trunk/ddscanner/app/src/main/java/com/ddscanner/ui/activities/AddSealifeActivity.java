@@ -19,6 +19,7 @@ import android.view.Display;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -99,6 +100,7 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
     private TextView habitat_error;
     private TextView distribution_error;
     private TextView image_error;
+    private ImageView sealifePhoto;
     private Helpers helpers = new Helpers();
     private MaterialDialog progressDialogUpload;
 
@@ -136,6 +138,7 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
 
     private void findViews() {
         btnDelete = (AppCompatImageButton) findViewById(R.id.delete_photo);
+        sealifePhoto = (ImageView) findViewById(R.id.sealife_photo);
         centerLayout = (RelativeLayout) findViewById(R.id.add_photo_center_layout);
         addPhoto = (RelativeLayout) findViewById(R.id.add_photo_layout);
         btnSaveSealife = (Button) findViewById(R.id.btn_save_sealife);
@@ -200,26 +203,10 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
         display.getMetrics(outMetrics);
         float density = getResources().getDisplayMetrics().density;
         float dpWidth = outMetrics.widthPixels / density;
-        Picasso.with(this).load(uri).memoryPolicy(MemoryPolicy.NO_CACHE).resize(Math.round(dpWidth), 230).centerCrop().into(new Target() {
-            @Override
-            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                BitmapDrawable ob = new BitmapDrawable(getResources(), bitmap);
-                centerLayout.setVisibility(View.GONE);
-                btnDelete.setVisibility(View.VISIBLE);
-                addPhoto.setBackground(ob);
-                addPhoto.setOnClickListener(null);
-            }
-
-            @Override
-            public void onBitmapFailed(Drawable errorDrawable) {
-                Log.i(TAG, "onBitmapFailed");
-            }
-
-            @Override
-            public void onPrepareLoad(Drawable placeHolderDrawable) {
-                Log.i(TAG, "onPrepareLoad");
-            }
-        });
+        Picasso.with(this).load(uri).resize(Math.round(helpers.convertDpToPixel(dpWidth, this)), Math.round(helpers.convertDpToPixel(230, this))).centerCrop().into(sealifePhoto);
+        centerLayout.setVisibility(View.GONE);
+        btnDelete.setVisibility(View.VISIBLE);
+        addPhoto.setOnClickListener(null);
     }
 
     @Override
@@ -229,7 +216,7 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
                 pickPhotoFromGallery();
                 break;
             case R.id.delete_photo:
-                addPhoto.setBackground(null);
+                sealifePhoto.setImageDrawable(null);
                 addPhoto.setBackgroundColor(getResources().getColor(R.color.white));
                 btnDelete.setVisibility(View.GONE);
                 centerLayout.setVisibility(View.VISIBLE);

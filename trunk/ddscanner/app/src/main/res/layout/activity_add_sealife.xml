@@ -21,7 +21,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="230dp"
                 android:background="@color/white">
-
+                <ImageView
+                    android:id="@+id/sealife_photo"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
                 <android.support.v7.widget.AppCompatImageButton
                     android:id="@+id/delete_photo"
                     android:layout_width="wrap_content"
