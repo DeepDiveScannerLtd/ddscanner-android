@@ -146,6 +146,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
             requestSecret = null, requestMinVisibility = null, requestMaxVisibility = null;
     private List<MultipartBody.Part> sealife = new ArrayList<>();
     private List<MultipartBody.Part> images = new ArrayList<>();
+    private boolean isFromMap;
 
     public static void show(Context context) {
         Intent intent = new Intent(context, AddDiveSpotActivity.class);
@@ -157,6 +158,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_dive_spot);
         EventsTracker.trackDiveSpotCreation();
+        isFromMap = getIntent().getBooleanExtra(Constants.ADD_DIVE_SPOT_INTENT_IS_FROM_MAP, false);
         findViews();
         setUi();
         loadFiltersDataRequest();
@@ -678,13 +680,17 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog,
                                         @NonNull DialogAction which) {
-                      //  DiveSpotDetailsActivity.showNewDiveSpot(AddDiveSpotActivity.this, diveSpotId);
-                        Intent intent = new Intent();
-                        LatLng latLng = new LatLng(diveSpotLocation.latitude, diveSpotLocation.longitude);
-                        intent.putExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_RESULT_LAT_LNG, latLng);
-                        intent.putExtra(Constants.ADD_DIVE_SPOT_INTENT_DIVESPOT_ID, diveSpotId);
-                        setResult(RESULT_OK, intent);
-                        finish();
+                        if (!isFromMap) {
+                            DiveSpotDetailsActivity.show(AddDiveSpotActivity.this, diveSpotId, null);
+                            finish();
+                        } else {
+                            Intent intent = new Intent();
+                            LatLng latLng = new LatLng(diveSpotLocation.latitude, diveSpotLocation.longitude);
+                            intent.putExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_RESULT_LAT_LNG, latLng);
+                            intent.putExtra(Constants.ADD_DIVE_SPOT_INTENT_DIVESPOT_ID, diveSpotId);
+                            setResult(RESULT_OK, intent);
+                            finish();
+                        }
                     }
                 });
 
@@ -706,8 +712,9 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         }
     }
 
-    public static void showForResult(Activity context, int requestCode) {
+    public static void showForResult(Activity context, int requestCode, boolean isFromMap) {
         Intent intent = new Intent(context, AddDiveSpotActivity.class);
+        intent.putExtra(Constants.ADD_DIVE_SPOT_INTENT_IS_FROM_MAP, isFromMap);
         context.startActivityForResult(intent, requestCode);
     }
 

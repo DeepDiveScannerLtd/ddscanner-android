@@ -410,7 +410,7 @@ public class MainActivity extends BaseAppCompatActivity
             case REQUEST_CODE_LOGIN:
                 if (resultCode == RESULT_OK) {
                     if (isTryToOpenAddDiveSpotActivity) {
-                        AddDiveSpotActivity.showForResult(this, Constants.MAIN_ACTIVITY_ACTVITY_REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY);
+                        AddDiveSpotActivity.showForResult(this, Constants.MAIN_ACTIVITY_ACTVITY_REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY, true);
                         isTryToOpenAddDiveSpotActivity = false;
                         return;
                     }
@@ -899,7 +899,7 @@ public class MainActivity extends BaseAppCompatActivity
     @Subscribe
     public void openAddDiveSpotActivity(OpenAddDiveSpotActivity event) {
         if (SharedPreferenceHelper.isUserLoggedIn()) {
-            AddDiveSpotActivity.showForResult(this, Constants.MAIN_ACTIVITY_ACTVITY_REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY);
+            AddDiveSpotActivity.showForResult(this, Constants.MAIN_ACTIVITY_ACTVITY_REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY, true);
         } else {
             isTryToOpenAddDiveSpotActivity = true;
             Intent intent = new Intent(MainActivity.this, SocialNetworks.class);

@@ -48,6 +48,7 @@ public class Constants {
     public static final String ADD_DIVE_SPOT_ACTIVITY_IMAGES_ARRAY = "images[]";
     public static final String ADD_DIVE_SPOT_INTENT_LOCATION_NAME = "LOCATIONNAME";
     public static final String ADD_DIVE_SPOT_INTENT_DIVESPOT_ID = "divespot_id";
+    public static final String ADD_DIVE_SPOT_INTENT_IS_FROM_MAP = "is_from_map";
 
     /*Main activity*/
     public static final String MAIN_ACTIVITY_ACTVITY_EXTRA_LATLNGBOUNDS = "LATLNGBOUNDS";
