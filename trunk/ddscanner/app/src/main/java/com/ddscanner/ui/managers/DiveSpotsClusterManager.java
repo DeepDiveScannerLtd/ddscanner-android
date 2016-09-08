@@ -84,8 +84,9 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
     private LatLng lastKnownSouthWest;
     private LatLng lastKnownNorthEast;
     private LatLng newDiveSpotLatLng;
+    private boolean isNewDiveSpotMarkerClicked;
 
-    private int newDiveSpotId = 0;
+    private int newDiveSpotId = -1;
 
     public DiveSpotsClusterManager(Context context, GoogleMap googleMap, RelativeLayout toast, ProgressBar progressBar, MapListFragment parentFragment) {
         super(context, googleMap);
@@ -400,19 +401,23 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         @Override
         protected void onClusterItemRendered(DiveSpot diveSpot, final Marker marker) {
             super.onClusterItemRendered(diveSpot, marker);
+            Log.i(TAG, "Marker id- " + marker.toString());
             try {
                 // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
 //                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
                 if (diveSpot.getStatus().equals("waiting")) {
-                    marker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_ds_new)));
+                    if (lastClickedMarker != null && !lastClickedMarker.equals(marker)) {
+                        marker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_ds_new)));
+                    }
                 } else {
                     marker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_ds)));
                 }
 
-                if (newDiveSpotId != 0) {
+                if (newDiveSpotId != -1) {
                     if (diveSpot.getId() == newDiveSpotId) {
+                        Log.i(TAG, "New marker id - " + marker.toString());
                         onMarkerClick(marker);
-                        newDiveSpotId = 0;
+                        newDiveSpotId = -1;
                     }
                 }
                 if (lastClickedMarker != null && lastClickedMarker.getPosition().equals(marker.getPosition()) && lastClickedMarker.isInfoWindowShown()) {
@@ -537,8 +542,10 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
     public void newDiveSpotAdded(NewDiveSpotAddedEvent event) {
         googleMap.setOnCameraChangeListener(null);
         newDiveSpotId = Integer.parseInt(event.getDiveSpotId());
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(new LatLngBounds(new LatLng(event.getLatLng().latitude - 0.2, event.getLatLng().longitude - 0.2), new LatLng(event.getLatLng().latitude + 0.2, event.getLatLng().longitude + 0.2)),0));
-        sendRequest(new LatLng(event.getLatLng().latitude - 0.2, event.getLatLng().longitude - 0.2), new LatLng(event.getLatLng().latitude + 0.2, event.getLatLng().longitude + 0.2));
+        lastClickedMarker = null;
+        isNewDiveSpotMarkerClicked = true;
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(new LatLngBounds(new LatLng(event.getLatLng().latitude - 0.05, event.getLatLng().longitude - 0.05), new LatLng(event.getLatLng().latitude + 0.05, event.getLatLng().longitude + 0.05)),0));
+        sendRequest(new LatLng(event.getLatLng().latitude - 0.05, event.getLatLng().longitude - 0.05), new LatLng(event.getLatLng().latitude + 0.05, event.getLatLng().longitude + 0.05));
         googleMap.setOnCameraChangeListener(this);
     }
 

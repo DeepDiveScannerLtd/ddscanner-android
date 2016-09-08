@@ -175,7 +175,7 @@
     <string name="login_to_continue">Login to continue</string>
     <string name="deep_dive_scanner">Deep Dive Scanner</string>
     <string name="new_dive_spot">NEW DIVE SPOT</string>
-    <string name="open_on_facebook">Open on facebook</string>
+    <string name="open_on_facebook">Open on Facebook</string>
     <string name="open_on_twitter">Open on twitter</string>
     <string name="open_on_google_plus">Open on Google+</string>
     <string name="locatio_dialog_title">To work with ddscanner you must enable location service. Do you want to do this?</string>
