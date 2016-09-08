@@ -432,10 +432,12 @@ public class MainActivity extends BaseAppCompatActivity
                 }
                 break;
             case Constants.MAIN_ACTIVITY_ACTVITY_REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY:
-                LatLng latLng = data.getParcelableExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_RESULT_LAT_LNG);
-                String diveSpotId = data.getStringExtra(Constants.ADD_DIVE_SPOT_INTENT_DIVESPOT_ID);
-                if (latLng != null) {
-                    DDScannerApplication.bus.post(new NewDiveSpotAddedEvent(latLng, diveSpotId));
+                if (resultCode == RESULT_OK) {
+                    LatLng latLng = data.getParcelableExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_RESULT_LAT_LNG);
+                    String diveSpotId = data.getStringExtra(Constants.ADD_DIVE_SPOT_INTENT_DIVESPOT_ID);
+                    if (latLng != null) {
+                        DDScannerApplication.bus.post(new NewDiveSpotAddedEvent(latLng, diveSpotId));
+                    }
                 }
                 break;
             default:

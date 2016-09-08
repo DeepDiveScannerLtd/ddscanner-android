@@ -726,7 +726,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
         if (addPhotoToDsListAdapter.getListOfDeletedImages() != null) {
             deleted.addAll((ArrayList<String>) addPhotoToDsListAdapter.getListOfDeletedImages());
         }
-        AddPhotoToDsListAdapter addPhotoToDsListAdapter = new AddPhotoToDsListAdapter(imageUris,
+        addPhotoToDsListAdapter = new AddPhotoToDsListAdapter(imageUris,
                 EditDiveSpotActivity.this, addPhotoTitle);
         photos_rc.setAdapter(addPhotoToDsListAdapter);
         if (addPhotoToDsListAdapter.getNewFilesUrisList() != null) {

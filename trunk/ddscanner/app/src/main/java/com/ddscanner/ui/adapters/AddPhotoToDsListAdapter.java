@@ -33,7 +33,7 @@ public class AddPhotoToDsListAdapter extends RecyclerView.Adapter<AddPhotoToDsLi
         this.context = context;
         this.uris = uris;
         this.textView = textView;
-
+        this.deletedImages = new ArrayList<>();
         for (String uri : uris) {
             if (!uri.contains(Constants.images)) {
                 this.newImagesUriList.add(uri);
