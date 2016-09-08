@@ -265,4 +265,6 @@
     <string name="back_to_map">BACK TO MAP</string>
     <string name="_1">+1</string>
     <string name="continue_search">continue</string>
+    <string name="sorry_connection_lost">Sorry! Connection lost</string>
+    <string name="please_refresh_activity">Please, refresh to reconnect</string>
 </resources>
