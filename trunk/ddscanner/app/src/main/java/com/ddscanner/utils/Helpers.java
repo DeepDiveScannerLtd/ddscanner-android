@@ -169,6 +169,9 @@ public class Helpers {
 
     public ArrayList<Image> compareObjectsArray(ArrayList<Image> first, ArrayList<Image> second) {
         ArrayList<Image> allPhotos = new ArrayList<>();
+        if (first == null && second == null) {
+            return allPhotos;
+        }
         if (first != null) {
             allPhotos = (ArrayList<Image>) first.clone();
             for (int i = 0; i < second.size(); i++) {

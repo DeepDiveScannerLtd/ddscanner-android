@@ -288,7 +288,7 @@
                         android:layout_width="75dp"
                         android:layout_height="75dp"
                         android:background="#F8F8F8"
-                        android:src="@drawable/ic_plus_addds"
+                        android:src="@drawable/ic_addds_plus"
                         android:layout_margin="20dp"/>
                     <android.support.v7.widget.RecyclerView
                         android:visibility="gone"
