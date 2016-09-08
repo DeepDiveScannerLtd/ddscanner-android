@@ -16,6 +16,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatDrawableManager;
@@ -62,9 +63,11 @@ import com.ddscanner.entities.errors.UserNotFoundException;
 import com.ddscanner.entities.errors.ValidationErrorException;
 import com.ddscanner.entities.request.ValidationReguest;
 import com.ddscanner.events.OpenPhotosActivityEvent;
+import com.ddscanner.events.UnknownErrorCatchedEvent;
 import com.ddscanner.rest.BaseCallback;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
+import com.ddscanner.rest.ServerErrorCallback;
 import com.ddscanner.ui.adapters.DiveSpotsPhotosAdapter;
 import com.ddscanner.ui.adapters.EditorsListAdapter;
 import com.ddscanner.ui.adapters.SealifeListAdapter;
@@ -178,7 +181,9 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private boolean isClickedRemoveFromFavorites = false;
     private boolean isClickedEdit = false;
     private boolean isNewDiveSpot = false;
-
+    private LinearLayout serveConnectionErrorLayout;
+    private Button btnRefreshLayout;
+    private CoordinatorLayout mainLayout;
 
     private List<Comment> usersComments;
     private List<User> usersCheckins;
@@ -236,6 +241,9 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
      */
 
     private void findViews() {
+        serveConnectionErrorLayout = (LinearLayout) findViewById(R.id.server_error);
+        btnRefreshLayout =(Button) findViewById(R.id.button_refresh);
+        mainLayout = (CoordinatorLayout) findViewById(R.id.main_layout);
         photos = (LinearLayout) findViewById(R.id.photos);
         diveSpotName = (TextView) findViewById(R.id.dive_spot_name);
         rating = (LinearLayout) findViewById(R.id.stars);
@@ -307,6 +315,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         avatarImageRadius = (int) getResources().getDimension(R.dimen.editor_avatar_radius);
         rating.removeAllViews();
         avatarImageSize = 2 * avatarImageRadius;
+        btnRefreshLayout.setOnClickListener(this);
         btnAddPhoto.setOnClickListener(this);
         materialDialog = helpers.getMaterialDialog(this);
         thanksClose.setOnClickListener(this);
@@ -549,7 +558,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             }
         }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveSpotById(productId, map);
-        call.enqueue(new BaseCallback() {
+        call.enqueue(new ServerErrorCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
@@ -611,6 +620,11 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.button_refresh:
+                mainLayout.setVisibility(View.VISIBLE);
+                serveConnectionErrorLayout.setVisibility(View.GONE);
+                requestProductDetails(productId);
+                break;
             case R.id.map_layout:
                 Intent intent = new Intent(DiveSpotDetailsActivity.this, ShowDsLocationActivity.class);
                 intent.putExtra("LATLNG", new LatLng(divespotDetails.getDivespot().getLat(), divespotDetails.getDivespot().getLng()));
@@ -1506,4 +1520,11 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         }
         finish();
     }
+
+    @Subscribe
+    public void serverConnectionError(UnknownErrorCatchedEvent event) {
+        mainLayout.setVisibility(View.GONE);
+        serveConnectionErrorLayout.setVisibility(View.VISIBLE);
+    }
+
 }
