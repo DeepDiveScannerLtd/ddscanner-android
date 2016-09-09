@@ -104,12 +104,14 @@ public class Constants {
 
     /*Photos activity*/
     public static final int PHOTOS_ACTIVITY_REQUEST_CODE_SLIDER = 8989;
+    public static final int PHOTOS_ACTIVITY_REQUEST_CODE_PERMISSION_READ_STORAGE = 8988;
 
     /*Dive spot details activity*/
     public static final String DIVE_SPOT_DETAILS_ACTIVITY_EXTRA_IS_FROM_AD_DIVE_SPOT = "ISNEW";
     public static final int DIVE_SPOT_DETAILS_ACTIVITY_REQUEST_CODE_PICK_PHOTOS = 1080;
     public static final int DIVE_SPOT_DETAILS_ACTIVITY_REQUEST_CODE_LOGIN_TO_PICK_PHOTOS = 1081;
     public static final int DIVE_SPOT_DETAILS_ACTIVITY_REQUEST_CODE_ADD_PHOTOS_ACTIVITY = 1082;
+    public static final int DIVE_SPOT_DETAILS_ACTIVITY_REQUEST_CODE_PERMISSION_READ_STORAGE = 1083;
 
     /*Self reviews*/
     public static final String SELF_REVIEWS_ACTIVITY_INTENT_USER_ID = "USERID";

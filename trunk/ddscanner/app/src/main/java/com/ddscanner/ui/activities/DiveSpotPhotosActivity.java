@@ -1,10 +1,15 @@
 package com.ddscanner.ui.activities;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
+import android.support.v13.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
@@ -13,6 +18,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
@@ -211,13 +217,21 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fab_add_photo:
-                if (!SharedPreferenceHelper.isUserLoggedIn()) {
-                    Intent intent = new Intent(this, SocialNetworks.class);
-                    startActivityForResult(intent, 100);
+                if (checkReadStoragePermission(this)) {
+                    addPhotosToDiveSpot();
                 } else {
-                    MultiImageSelector.create(this).count(3).start(this, 1);
+                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, Constants.PHOTOS_ACTIVITY_REQUEST_CODE_PERMISSION_READ_STORAGE);
                 }
                 break;
+        }
+    }
+
+    private void addPhotosToDiveSpot() {
+        if (!SharedPreferenceHelper.isUserLoggedIn()) {
+            Intent intent = new Intent(this, SocialNetworks.class);
+            startActivityForResult(intent, 100);
+        } else {
+            MultiImageSelector.create(this).count(3).start(this, 1);
         }
     }
 
@@ -279,6 +293,27 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
             finish();
         } else {
             finish();
+        }
+    }
+
+    public boolean checkReadStoragePermission(Activity context) {
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case Constants.PHOTOS_ACTIVITY_REQUEST_CODE_PERMISSION_READ_STORAGE: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    addPhotosToDiveSpot();
+                } else {
+                    Toast.makeText(DiveSpotPhotosActivity.this, "Grand permission to pick photo from gallery!", Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
         }
     }
 }

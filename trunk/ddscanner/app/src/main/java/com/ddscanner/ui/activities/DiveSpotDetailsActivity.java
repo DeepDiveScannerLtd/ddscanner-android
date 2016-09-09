@@ -1,11 +1,14 @@
 package com.ddscanner.ui.activities;
 
+import android.Manifest;
 import android.animation.Animator;
 import android.animation.ValueAnimator;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.BitmapFactory;
@@ -18,6 +21,7 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v13.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatDrawableManager;
 import android.support.v7.widget.GridLayoutManager;
@@ -39,6 +43,7 @@ import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -683,12 +688,41 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 DDScannerApplication.bus.post(new OpenPhotosActivityEvent());
                 break;
             case R.id.btn_add_photo:
-                if (!SharedPreferenceHelper.isUserLoggedIn()) {
-                    SocialNetworks.showForResult(this, Constants.DIVE_SPOT_DETAILS_ACTIVITY_REQUEST_CODE_LOGIN_TO_PICK_PHOTOS);
+                if (checkReadStoragePermission(this)) {
+                    addPhotosToDiveSpot();
                 } else {
-                    MultiImageSelector.create(this).count(3).start(this, Constants.DIVE_SPOT_DETAILS_ACTIVITY_REQUEST_CODE_PICK_PHOTOS);
+                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, Constants.DIVE_SPOT_DETAILS_ACTIVITY_REQUEST_CODE_PERMISSION_READ_STORAGE);
                 }
                 break;
+        }
+    }
+
+    public boolean checkReadStoragePermission(Activity context) {
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case Constants.DIVE_SPOT_DETAILS_ACTIVITY_REQUEST_CODE_PERMISSION_READ_STORAGE: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    addPhotosToDiveSpot();
+                } else {
+                    Toast.makeText(DiveSpotDetailsActivity.this, "Grand permission to pick photo from gallery!", Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+        }
+    }
+
+    private void addPhotosToDiveSpot() {
+        if (!SharedPreferenceHelper.isUserLoggedIn()) {
+            SocialNetworks.showForResult(this, Constants.DIVE_SPOT_DETAILS_ACTIVITY_REQUEST_CODE_LOGIN_TO_PICK_PHOTOS);
+        } else {
+            MultiImageSelector.create(this).count(3).start(this, Constants.DIVE_SPOT_DETAILS_ACTIVITY_REQUEST_CODE_PICK_PHOTOS);
         }
     }
 
