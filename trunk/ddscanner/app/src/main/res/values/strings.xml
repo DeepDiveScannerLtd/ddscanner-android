@@ -104,7 +104,8 @@
     <string name="full_name">Full name</string>
     <string name="about">About</string>
     <string name="write_review">Write a review</string>
-    <string name="show_all">Show all reviews (</string>
+    <string name="show_all">Show all reviews (%1$s)</string>
+    <string name="visibility_pattern">%1$s - %2$s meters</string>
     <string name="skobka">)</string>
     <string name="peoples_checked_in_here"> people checked in here</string>
     <string name="title_activity_main2">Main2Activity</string>
@@ -267,4 +268,7 @@
     <string name="continue_search">continue</string>
     <string name="sorry_connection_lost">Sorry! Connection lost</string>
     <string name="please_refresh_activity">Please, refresh to reconnect</string>
+    <string name="review_sent">Review sent</string>
+    <string name="add_to_favorite">Add to favorite</string>
+    <string name="edit_dive_spot_details">Edit dive spot</string>
 </resources>

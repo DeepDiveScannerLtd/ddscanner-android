@@ -333,9 +333,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         isFavorite = diveSpot.getIsFavorite();
         updateMenuItems(menu, isFavorite);
         if (divespotDetails.getComments() != null) {
-            showAllReviews.setText(getString(R.string.show_all)
-                    + String.valueOf(divespotDetails.getComments().size())
-                    + getString(R.string.skobka));
+            showAllReviews.setText(getString(R.string.show_all, String.valueOf(divespotDetails.getComments().size())));
         } else {
             showAllReviews.setText(R.string.write_review);
         }
@@ -350,7 +348,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         object.setText(diveSpot.getObject());
         level.setText(diveSpot.getLevel());
         depth.setText(diveSpot.getDepth());
-        visibility.setText(diveSpot.getVisibilityMin() + getString(R.string.symbol_nimus) + diveSpot.getVisibilityMax() + getString(R.string.meters));
+        visibility.setText(getString(R.string.visibility_pattern, diveSpot.getVisibilityMin(), diveSpot.getVisibilityMax()));
         currents.setText(diveSpot.getCurrents());
         if (diveSpot.getImages() != null && !diveSpot.getImages().isEmpty()) {
             Picasso.with(this).load(diveSpot.getDiveSpotPathMedium() + diveSpot.getImages().get(0).getName()).into(diveSpotMainPhoto, new ImageLoadedCallback(progressBar) {
@@ -470,8 +468,13 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                         isInfoValidLayout.setVisibility(View.VISIBLE);
                     }
                 });
+            } else {
+                if (menu != null && menu.findItem(R.id.edit_dive_spot) != null) {
+                    menu.findItem(R.id.edit_dive_spot).setVisible(false);
+                }
             }
         }
+
         if (divespotDetails.getCheckins() != null) {
             usersCheckins = divespotDetails.getCheckins();
             if (usersCheckins.size() == 1) {
@@ -549,14 +552,15 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
      */
     private void requestProductDetails(String productId) {
         Map<String, String> map = new HashMap<>();
+        map = helpers.getUserQuryMapRequest();
         map.put("isImageAuthor", "true");
-        if (SharedPreferenceHelper.isUserLoggedIn()) {
-            map.put("social", SharedPreferenceHelper.getSn());
-            map.put("token", SharedPreferenceHelper.getToken());
-            if (SharedPreferenceHelper.getSn().equals("tw")) {
-                map.put("secret", SharedPreferenceHelper.getSecret());
-            }
-        }
+//        if (SharedPreferenceHelper.isUserLoggedIn()) {
+//            map.put("social", SharedPreferenceHelper.getSn());
+//            map.put("token", SharedPreferenceHelper.getToken());
+//            if (SharedPreferenceHelper.getSn().equals("tw")) {
+//                map.put("secret", SharedPreferenceHelper.getSecret());
+//            }
+//        }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveSpotById(productId, map);
         call.enqueue(new ServerErrorCallback() {
             @Override
@@ -670,14 +674,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 thanksLayout.setVisibility(View.GONE);
                 break;
             case R.id.creator:
-//                helpers.showDialog(diveSpot.getCreator(), getFragmentManager());
-//                if (divespotDetails.getEditors() != null) {
-//                    for (User user : divespotDetails.getEditors()) {
-//                        creatorsEditorsList.add(user);
-//                    }
-//                    EditorsListActivity.show(DiveSpotDetailsActivity.this, (ArrayList<User>) creatorsEditorsList);
-//                    break;
-//                }
                 EditorsListActivity.show(DiveSpotDetailsActivity.this, (ArrayList<User>) creatorsEditorsList);
                 break;
             case R.id.button_show_divecenters:
@@ -696,6 +692,19 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         }
     }
 
+    private void tryToCallEditDiveSpotActivity() {
+        if (SharedPreferenceHelper.isUserLoggedIn()) {
+            Intent editDiveSpotIntent = new Intent(DiveSpotDetailsActivity.this,
+                    EditDiveSpotActivity.class);
+            editDiveSpotIntent
+                    .putExtra(Constants.DIVESPOTID, String.valueOf(diveSpot.getId()));
+            startActivityForResult(editDiveSpotIntent, RC_EDIT_DIVE_SPOT);
+        } else {
+            isClickedEdit = true;
+            showLoginActivity();
+        }
+    }
+
     private void showEditDiveSpotDialog() {
         MaterialDialog.Builder dialog = new MaterialDialog.Builder(this)
                 .title(R.string.edit)
@@ -708,16 +717,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog,
                                         @NonNull DialogAction which) {
-                        if (SharedPreferenceHelper.isUserLoggedIn()) {
-                            Intent editDiveSpotIntent = new Intent(DiveSpotDetailsActivity.this,
-                                    EditDiveSpotActivity.class);
-                            editDiveSpotIntent
-                                    .putExtra(Constants.DIVESPOTID, String.valueOf(diveSpot.getId()));
-                            startActivityForResult(editDiveSpotIntent, RC_EDIT_DIVE_SPOT);
-                        } else {
-                            isClickedEdit = true;
-                            showLoginActivity();
-                        }
+                        tryToCallEditDiveSpotActivity();
                     }
                 })
                 .onNegative(new MaterialDialog.SingleButtonCallback() {
@@ -936,6 +936,9 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                     removeFromFavorites(String.valueOf(diveSpot.getId()));
                 }
                 break;
+            case R.id.edit_dive_spot:
+                tryToCallEditDiveSpotActivity();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -958,6 +961,9 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 materialDialog.dismiss();
                 if (response.isSuccessful()) {
+                    if (menu != null && menu.findItem(R.id.edit_dive_spot) != null) {
+                        menu.findItem(R.id.edit_dive_spot).setVisible(false);
+                    }
                     isInfoValidLayout.setVisibility(View.GONE);
                     thanksLayout.setVisibility(View.VISIBLE);
                     if (isValid) {

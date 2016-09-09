@@ -9,10 +9,14 @@
         app:showAsAction= "ifRoom">
         <menu>
             <item
-
                 android:id="@+id/favorite"
                 android:orderInCategory="100"
-                android:title="Add to favorite"
+                android:title="@string/add_to_favorite"
+                app:showAsAction= "ifRoom"/>
+            <item
+                android:id="@+id/edit_dive_spot"
+                android:orderInCategory="200"
+                android:title="@string/edit_dive_spot_details"
                 app:showAsAction= "ifRoom"/>
         </menu>
     </item>

@@ -252,7 +252,7 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-
+                    Toast.makeText(LeaveReviewActivity.this, R.string.review_sent, Toast.LENGTH_SHORT).show();
                     EventsTracker.trackReviewSending(sendReviewSource);
 //                    comment = new Gson().fromJson(responseString, Comment.class);
                     Intent returnIntent = new Intent();
