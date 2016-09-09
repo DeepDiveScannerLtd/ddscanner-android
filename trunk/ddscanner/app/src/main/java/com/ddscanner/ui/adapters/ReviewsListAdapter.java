@@ -12,6 +12,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.OvershootInterpolator;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -51,6 +53,7 @@ import com.squareup.picasso.Picasso;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import at.blogc.android.views.ExpandableTextView;
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -190,6 +193,26 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         if (comments.get(i).getDate() != null && !comments.get(i).getDate().isEmpty()) {
             reviewsListViewHolder.date.setText(helpers.getCommentDate(comments.get(i).getDate()));
         }
+
+        if (reviewsListViewHolder.user_review.post(new Runnable() {
+            @Override
+            public void run() {
+                if (reviewsListViewHolder.user_review.getLineCount() > 5) {
+                    reviewsListViewHolder.user_review.setMaxLines(5);
+                    reviewsListViewHolder.expand.setVisibility(View.VISIBLE);
+                }
+            }
+        }))
+
+        reviewsListViewHolder.expand.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                reviewsListViewHolder.user_review.setMaxLines(1000);
+//                reviewsListViewHolder.user_review.toggle();
+//                reviewsListViewHolder.expand.setText(reviewsListViewHolder.user_review.isExpanded() ? "Collapse" : "Expand");
+                reviewsListViewHolder.expand.setVisibility(View.GONE);
+            }
+        });
     }
 
     private void showPopupMenu(View view, int commentId, Comment comment) {
@@ -433,7 +456,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         private ImageView user_avatar;
         private LinearLayout rating;
         private TextView user_name;
-        private TextView user_review;
+        private ExpandableTextView user_review;
         private RecyclerView photos;
         private LinearLayout like;
         private LinearLayout dislike;
@@ -444,6 +467,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         private LinearLayout stars;
         private TextView date;
         private ImageView menu;
+        private TextView expand;
         private boolean isLiked = false;
         private boolean isDisliked = false;
 
@@ -451,11 +475,12 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         public ReviewsListViewHolder(View v) {
             super(v);
             menu = (ImageView) v.findViewById(R.id.overflow);
+            expand = (TextView) v.findViewById(R.id.button_toggle);
             date = (TextView) v.findViewById(R.id.date);
             user_avatar = (ImageView) v.findViewById(R.id.user_avatar);
             rating = (LinearLayout) v.findViewById(R.id.stars);
             user_name = (TextView) v.findViewById(R.id.user_name);
-            user_review = (TextView) v.findViewById(R.id.review);
+            user_review = (ExpandableTextView) v.findViewById(R.id.review);
             photos = (RecyclerView) v.findViewById(R.id.review_photos_rc);
             like = (LinearLayout) v.findViewById(R.id.like_layout);
             dislike = (LinearLayout) v.findViewById(R.id.dislike_layout);

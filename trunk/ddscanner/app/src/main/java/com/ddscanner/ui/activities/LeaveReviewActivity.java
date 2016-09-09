@@ -120,25 +120,25 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
         setProgressDialog();
         addPhotoToDsListAdapter = new AddPhotoToDsListAdapter
                 (imageUris, LeaveReviewActivity.this, addPhotoTitle);
-        text.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (COMMENT_MAX_LENGTH - text.length() < 10) {
-                    symbolNumberLeft.setTextColor(getResources().getColor(R.color.tw__composer_red));
-                } else {
-                    symbolNumberLeft.setTextColor(Color.parseColor("#9f9f9f"));
-                }
-                symbolNumberLeft.setText(String.valueOf(COMMENT_MAX_LENGTH - text.length()));
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-        });
+//        text.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                if (COMMENT_MAX_LENGTH - text.length() < 10) {
+//                    symbolNumberLeft.setTextColor(getResources().getColor(R.color.tw__composer_red));
+//                } else {
+//                    symbolNumberLeft.setTextColor(Color.parseColor("#9f9f9f"));
+//                }
+//                symbolNumberLeft.setText(String.valueOf(COMMENT_MAX_LENGTH - text.length()));
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable s) {
+//            }
+//        });
     }
 
     private void findViews() {
@@ -212,6 +212,10 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
         }
         if (text.getText().toString().trim().isEmpty() && images.size() != 0) {
             Toast.makeText(LeaveReviewActivity.this, "Please write a review to dive spot", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (text.getText().toString().trim().length() < 30) {
+            Toast.makeText(LeaveReviewActivity.this, "Review must contains at least 30 characters", Toast.LENGTH_SHORT).show();
             return;
         }
         materialDialog.show();

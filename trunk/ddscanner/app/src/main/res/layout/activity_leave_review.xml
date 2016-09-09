@@ -12,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="150dp">
         <TextView
+            android:textSize="14sp"
             android:id="@+id/add_photo_title"
             android:layout_centerInParent="true"
             android:layout_width="wrap_content"
@@ -79,6 +80,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <TextView
+                android:visibility="gone"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="5dp"
                 android:layout_toLeftOf="@+id/left_text"
@@ -89,6 +91,7 @@
                 android:textColor="#9f9f9f"
                 tools:text="250"/>
         <EditText
+            android:textSize="14sp"
             android:inputType="text|textFilter|textMultiLine"
             android:gravity="top"
             android:layout_below="@id/left_number"
@@ -101,12 +104,12 @@
             android:layout_marginTop="13dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:maxLength="250"
             android:textColorHint="#9f9f9f"
             android:background="@android:color/transparent"
             android:scrollbars="vertical"
             />
         <TextView
+            android:visibility="gone"
             android:layout_marginTop="10dp"
             android:layout_marginRight="10dp"
             android:id="@+id/left_text"

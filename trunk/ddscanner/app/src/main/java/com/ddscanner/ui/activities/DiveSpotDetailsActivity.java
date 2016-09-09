@@ -1210,9 +1210,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                             usersComments = comments.getComments();
                         }
                         if (usersComments != null) {
-                            setReviewsCount(getString(R.string.show_all)
-                                    + String.valueOf(usersComments.size())
-                                    + getString(R.string.skobka));
+                            setReviewsCount(getString(R.string.show_all,String.valueOf(usersComments.size())));
                         }
                     } catch (IOException e) {
 

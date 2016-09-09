@@ -9,6 +9,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -26,6 +27,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import at.blogc.android.views.ExpandableTextView;
 import jp.wasabeef.picasso.transformations.CropSquareTransformation;
 
 /**
@@ -54,6 +56,10 @@ public class SelfReviewsListAdapter extends RecyclerView.Adapter<SelfReviewsList
 
     @Override
     public void onBindViewHolder(final SelfReviewsListViewHolder holder, final int position) {
+//        holder.user_review.setAnimationDuration(1000L);
+//        holder.user_review.setInterpolator(new OvershootInterpolator());
+//        holder.user_review.setExpandInterpolator(new OvershootInterpolator());
+//        holder.user_review.setCollapseInterpolator(new OvershootInterpolator());
         if (comments.get(holder.getAdapterPosition()).getImages() != null) {
             LinearLayoutManager layoutManager = new LinearLayoutManager(context);
             layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -100,6 +106,28 @@ public class SelfReviewsListAdapter extends RecyclerView.Adapter<SelfReviewsList
                 showPopupMenu(holder.menu, Integer.parseInt(comments.get(position).getId()), comments.get(position));
             }
         });
+
+
+        if (holder.user_review.post(new Runnable() {
+            @Override
+            public void run() {
+                if (holder.user_review.getLineCount() > 5) {
+                    holder.user_review.setMaxLines(5);
+                    holder.expand.setVisibility(View.VISIBLE);
+                }
+            }
+        }))
+
+            holder.expand.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    holder.user_review.setMaxLines(1000);
+//                    holder.user_review.toggle();
+//                    holder.expand.setText(holder.user_review.isExpanded() ? "Collapse" : "Expand");
+                    holder.expand.setVisibility(View.GONE);
+                }
+            });
+        
     }
 
     @Override
@@ -148,7 +176,7 @@ public class SelfReviewsListAdapter extends RecyclerView.Adapter<SelfReviewsList
         private ImageView user_avatar;
         private LinearLayout rating;
         private TextView user_name;
-        private TextView user_review;
+        private ExpandableTextView user_review;
         private RecyclerView photos;
         private LinearLayout like;
         private LinearLayout dislike;
@@ -159,16 +187,17 @@ public class SelfReviewsListAdapter extends RecyclerView.Adapter<SelfReviewsList
         private LinearLayout stars;
         private TextView date;
         private ImageView menu;
+        private TextView expand;
 
         public SelfReviewsListViewHolder(View v) {
             super(v);
-
+            expand = (TextView) v.findViewById(R.id.button_toggle);
             menu = (ImageView) v.findViewById(R.id.overflow);
             date = (TextView) v.findViewById(R.id.date);
             user_avatar = (ImageView) v.findViewById(R.id.user_avatar);
             rating = (LinearLayout) v.findViewById(R.id.stars);
             user_name = (TextView) v.findViewById(R.id.user_name);
-            user_review = (TextView) v.findViewById(R.id.review);
+            user_review = (ExpandableTextView) v.findViewById(R.id.review);
             photos = (RecyclerView) v.findViewById(R.id.review_photos_rc);
             like = (LinearLayout) v.findViewById(R.id.like_layout);
             dislike = (LinearLayout) v.findViewById(R.id.dislike_layout);
