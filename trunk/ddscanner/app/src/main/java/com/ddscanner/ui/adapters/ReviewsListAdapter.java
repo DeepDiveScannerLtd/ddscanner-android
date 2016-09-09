@@ -91,25 +91,16 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
     public void onBindViewHolder(final ReviewsListViewHolder reviewsListViewHolder, final int i) {
         boolean isLiked;
         boolean isDisliked;
+        reviewsListViewHolder.rating.removeAllViews();
         isLiked = comments.get(reviewsListViewHolder.getAdapterPosition()).isLike();
         isDisliked = comments.get(reviewsListViewHolder.getAdapterPosition()).isDislike();
         if (isLiked) {
-//            likeUi(reviewsListViewHolder.dislikeImage,
-//                    reviewsListViewHolder.likeImage,
-//                    reviewsListViewHolder.likesCount,
-//                    reviewsListViewHolder.dislikesCount,
-//                    i);
             reviewsListViewHolder.likeImage.setImageDrawable(AppCompatDrawableManager.get().getDrawable(
                     context, R.drawable.ic_like_review));
         }
         if (isDisliked) {
             reviewsListViewHolder.dislikeImage.setImageDrawable(AppCompatDrawableManager.get()
                     .getDrawable(context, R.drawable.ic_review_dislike));
-//            dislikeUi(reviewsListViewHolder.dislikeImage,
-//                    reviewsListViewHolder.likeImage,
-//                    reviewsListViewHolder.likesCount,
-//                    reviewsListViewHolder.dislikesCount,
-//                    i);
         }
         if (comments.get(reviewsListViewHolder.getAdapterPosition()).getImages() != null) {
             LinearLayoutManager layoutManager = new LinearLayoutManager(context);
@@ -193,26 +184,6 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         if (comments.get(i).getDate() != null && !comments.get(i).getDate().isEmpty()) {
             reviewsListViewHolder.date.setText(helpers.getCommentDate(comments.get(i).getDate()));
         }
-
-        if (reviewsListViewHolder.user_review.post(new Runnable() {
-            @Override
-            public void run() {
-                if (reviewsListViewHolder.user_review.getLineCount() > 5) {
-                    reviewsListViewHolder.user_review.setMaxLines(5);
-                    reviewsListViewHolder.expand.setVisibility(View.VISIBLE);
-                }
-            }
-        }))
-
-        reviewsListViewHolder.expand.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                reviewsListViewHolder.user_review.setMaxLines(1000);
-//                reviewsListViewHolder.user_review.toggle();
-//                reviewsListViewHolder.expand.setText(reviewsListViewHolder.user_review.isExpanded() ? "Collapse" : "Expand");
-                reviewsListViewHolder.expand.setVisibility(View.GONE);
-            }
-        });
     }
 
     private void showPopupMenu(View view, int commentId, Comment comment) {
