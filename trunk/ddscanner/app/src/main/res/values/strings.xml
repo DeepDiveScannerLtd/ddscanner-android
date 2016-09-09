@@ -271,4 +271,8 @@
     <string name="review_sent">Review sent</string>
     <string name="add_to_favorite">Add to favorite</string>
     <string name="edit_dive_spot_details">Edit dive spot</string>
+    <string name="reviews_tab">Reviews</string>
+    <string name="dive_spot_tab">Dive Spot</string>
+    <string name="all">All</string>
+    <string name="pick_location_on_the_map">Pick location on the map</string>
 </resources>

@@ -108,9 +108,9 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
     }
 
     private void setUpTabLayout() {
-        tabLayout.getTabAt(2).setText("Reviews");
-        tabLayout.getTabAt(1).setText("Dive Spot");
-        tabLayout.getTabAt(0).setText("All");
+        tabLayout.getTabAt(2).setText(R.string.reviews_tab);
+        tabLayout.getTabAt(1).setText(R.string.dive_spot_tab);
+        tabLayout.getTabAt(0).setText(R.string.all);
     }
 
     private void setUi() {
