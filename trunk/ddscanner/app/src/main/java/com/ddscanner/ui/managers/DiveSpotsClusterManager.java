@@ -406,7 +406,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
                 // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
 //                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
                 if (diveSpot.getStatus().equals("waiting")) {
-                    if (lastClickedMarker != null && !lastClickedMarker.equals(marker)) {
+                    if (lastClickedMarker == null || !lastClickedMarker.equals(marker)) {
                         marker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_ds_new)));
                     }
                 } else {
