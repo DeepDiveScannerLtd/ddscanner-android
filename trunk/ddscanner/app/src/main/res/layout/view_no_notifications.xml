@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:visibility="visible"
+    android:id="@+id/noNotificationsView"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <ImageView
+        android:layout_marginTop="100dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_nonotif"/>
+    <TextView
+        style="@style/ErrorsViewTitleStyle"
+        android:text="@string/no_notifications"/>
+    <TextView
+        style="@style/ErrorsViewSubTitleStyle"
+        android:text="@string/here_will_be_displayed_last_notifications"/>
+</LinearLayout>

@@ -1,45 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#f6f6f6">
     <include layout="@layout/view_toolbar" />
-    <FrameLayout
-        android:id="@+id/header"
+    <RelativeLayout
+        android:id="@+id/add_photo_layout"
+        android:background="@color/white"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:background="@color/white">
-        <RatingBar
-            android:id="@+id/rating_bar"
-            android:layout_marginTop="17dp"
-            style="@style/CustomRatingBar"
-            android:rating="1"
+        android:layout_height="150dp">
+        <TextView
+            android:textSize="14sp"
+            android:id="@+id/add_photo_title"
+            android:layout_centerInParent="true"
             android:layout_width="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_height="20dp"
-            android:stepSize="1.0"
-            android:numStars="5"/>
+            android:layout_height="wrap_content"
+            android:textColor="#b2b2b2"
+            android:text="@string/add_photos"/>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="15dp"
+            android:fontFamily="sans-serif-medium"
+            android:text="@string/photos"
+            android:textColor="@color/black_text" />
+
+        <ImageButton
+            android:id="@+id/btn_add_photo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="15dp"
+            android:clickable="true"
+            android:background="@drawable/ic_addds_plus" />
+        <android.support.v7.widget.RecyclerView
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="15dp"
+            android:layout_below="@+id/btn_add_photo"
+            android:layout_width="wrap_content"
+            android:layout_height="90dp"
+            android:id="@+id/photos_rc"/>
+
+    </RelativeLayout>
+    <FrameLayout
+        android:layout_marginTop="15dp"
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/white"
+        android:layout_marginBottom="15dp">
+        <RatingBar
+            android:id="@+id/rating_bar"
+            style="@style/CustomRatingBar"
+            android:rating="1"
+            android:layout_width="wrap_content"
             android:layout_gravity="center"
-            android:text="Tap a flag to rate"
-            android:textSize="13sp"
-            android:textColor="#9f9f9f"
-            android:layout_marginTop="15dp" />
+            android:layout_height="29dp"
+
+            android:stepSize="1.0"
+            android:numStars="5"/>
     </FrameLayout>
+    <TextView
+        android:id="@+id/comment_error"
+        android:layout_marginLeft="15dp"
+        style="@style/ValidationErrorTextView"
+        android:layout_marginBottom="5dp"/>
     <LinearLayout
-        android:layout_below="@+id/header"
         android:id="@+id/message_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <TextView
+                android:visibility="gone"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="5dp"
                 android:layout_toLeftOf="@+id/left_text"
@@ -48,28 +89,27 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#9f9f9f"
-                android:text="250"/>
+                tools:text="250"/>
         <EditText
+            android:textSize="14sp"
             android:inputType="text|textFilter|textMultiLine"
+            android:gravity="top"
             android:layout_below="@id/left_number"
             android:layout_gravity="center"
             android:cursorVisible="true"
             android:id="@+id/review_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="Write a review"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="@string/write_a_review"
             android:layout_marginTop="13dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:textSize="19sp"
-            android:layout_weight="1"
-            android:maxLength="250"
             android:textColorHint="#9f9f9f"
             android:background="@android:color/transparent"
             android:scrollbars="vertical"
-            android:autoText="true"
             />
         <TextView
+            android:visibility="gone"
             android:layout_marginTop="10dp"
             android:layout_marginRight="10dp"
             android:id="@+id/left_text"
@@ -78,8 +118,7 @@
             android:textColor="#9f9f9f"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
-            android:text="symbols left"/>
+            android:text="@string/symbols_left"/>
         </RelativeLayout>
     </LinearLayout>
 </LinearLayout>

@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="100dp"
-    android:layout_height="80dp">
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="125dp"
+    android:layout_height="100dp"
+    android:layout_marginRight="10dp">
     <android.support.v7.widget.AppCompatImageView
         android:id="@+id/seaife_logo"
-        android:layout_width="80dp"
-        android:layout_height="60dp" />
+        android:layout_width="125dp"
+        android:layout_height="70dp"
+        android:scaleType="center" />
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/sealife_name"
-        android:layout_width="80dp"
-        android:layout_height="wrap_content"
-        android:text="octopus octopus"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        tools:text="Murena"
         android:ellipsize="end"
         android:lines="1"
         android:gravity="center"
-        android:layout_below="@+id/seaife_logo"
+        android:textSize="13sp"
         android:textColor="@color/black_text"/>
-    </RelativeLayout>
-</RelativeLayout>
+</LinearLayout>

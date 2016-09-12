@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/server_error"
+    android:visibility="gone"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center">
+    <LinearLayout
+        android:gravity="center_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_lostconnect"/>
+        <TextView
+            style="@style/ErrorsViewTitleStyle"
+            android:text="@string/sorry_connection_lost"/>
+        <TextView
+            style="@style/ErrorsViewSubTitleStyle"
+            android:text="@string/please_refresh_activity"/>
+        <Button
+            android:id="@+id/button_refresh"
+            android:layout_marginTop="200dp"
+            android:layout_width="190dp"
+            android:layout_height="wrap_content"
+            style="@style/OrangeButtons"
+            android:text="@string/refresh"/>
+    </LinearLayout>
+</LinearLayout>

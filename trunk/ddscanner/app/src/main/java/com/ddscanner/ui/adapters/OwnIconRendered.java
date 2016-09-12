@@ -2,10 +2,8 @@ package com.ddscanner.ui.adapters;
 
 import android.content.Context;
 
-import com.ddscanner.R;
 import com.ddscanner.entities.ClusterItemImplementation;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Marker;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
@@ -24,7 +22,7 @@ public class OwnIconRendered extends DefaultClusterRenderer<ClusterItemImplement
     protected void onClusterItemRendered(ClusterItemImplementation clusterItem, final Marker marker) {
         super.onClusterItemRendered(clusterItem, marker);
         try {
-            marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.icon_dc));
+//                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.icon_dc));
         } catch (Exception e) {
             e.printStackTrace();
         }

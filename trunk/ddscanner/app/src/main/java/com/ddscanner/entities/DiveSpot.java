@@ -16,13 +16,49 @@ public class DiveSpot implements Serializable, ClusterItem {
     private static final String TAG = DiveSpot.class.getName();
     private long id;
     private String name;
-    private int rating;
+    private float rating;
     private String description;
     private String lat;
     private String lng;
     private List<String> images;
     private LatLng latLng;
     private String reviews;
+    private String image;
+    private String object;
+    private String path;
+    private String status;
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public String getObject() {
+        return object;
+    }
+
+    public void setObject(String object) {
+        this.object = object;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
 
     public String getReviews() {
         return reviews;
@@ -77,11 +113,11 @@ public class DiveSpot implements Serializable, ClusterItem {
         this.images = images;
     }
 
-    public int getRating() {
+    public float getRating() {
         return rating;
     }
 
-    public void setRating(int rating) {
+    public void setRating(float rating) {
         this.rating = rating;
     }
 

@@ -1,58 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!---
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-   android:orientation="vertical" android:layout_width="match_parent"
-   android:layout_height="match_parent"
-   android:background="@color/white">
-  <FrameLayout
-       android:id="@+id/logo"
-       android:layout_width="match_parent"
-       android:layout_height="400dp"
-       android:background="@color/black_text">
-       <ImageView
-           android:id="@+id/sealife_close"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:src="@drawable/ic_close"
-           android:padding="10dp"
-           android:layout_gravity="right"/>
-       <ImageView
-           android:id="@+id/sealife_full_photo"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:src="@drawable/top_photo"
-           android:layout_gravity="center"/>
-   </FrameLayout>
-   <ScrollView
-       android:layout_below="@+id/logo"
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
-       >
-   <RelativeLayout
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       >
-       <TextView
-           android:padding="13dp"
-           android:id="@+id/sealife_name"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:text="Moray eel"
-           android:textSize="20sp"
-           android:textColor="@color/black_text"
-           android:fontFamily="sans-serif-medium"/>
-
-       <TextView
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:layout_below="@+id/sealife_name"
-           android:textColor="@color/black_text"
-           android:layout_marginLeft="13dp"
-           android:text="Halfway between the two entries to the parking lot for the Christo Rei statue climb there is a small tree with a rock step stone going to the beach. The entry is characterized by a good distance of broken coral bottom marked by locally made rock-walled fish traps. During low tide, one must walk quite some distance before reaching adequate depth."/>
-   </RelativeLayout>
-   </ScrollView>
-</RelativeLayout>
- -->
 
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -61,7 +7,7 @@
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
-        android:layout_height="460dp"
+        android:layout_height="239dp"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         android:background="@color/black_text"
        >
@@ -89,7 +35,7 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_gravity="center"
-                android:visibility="visible"
+                android:visibility="gone"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:layout_marginTop="20dp"
@@ -106,204 +52,149 @@
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
-        <RelativeLayout
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <RelativeLayout
+        <LinearLayout
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="20dp">
+            <LinearLayout
+                android:orientation="vertical"
+                android:visibility="visible"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <TextView
+                    style="@style/SealifeCharachteristicTitle"
+                    android:text="@string/name"/>
+                <TextView
+                    android:id="@+id/name"
+                    style="@style/SealifeCharachteristicValue"
+                    />
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="vertical"
                 android:id="@+id/char_length"
-                android:layout_marginTop="20dp"
                 android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
-                <android.support.v7.widget.AppCompatTextView
+                <TextView
                     android:id="@+id/title_length"
-                    android:textSize="16sp"
-                    android:fontFamily="sans-serif-medium"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="LENGTH"/>
-                <android.support.v7.widget.AppCompatTextView
+                    style="@style/SealifeCharachteristicTitle"
+                    android:text="@string/length"/>
+                <TextView
                     android:id="@+id/length"
-                    android:layout_below="@+id/title_length"
-                    android:layout_marginTop="5dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/black_text"
-                    android:textSize="14sp"
-                    android:text="-"/>
-            </RelativeLayout>
-            <RelativeLayout
-                android:layout_below="@+id/char_length"
+                    style="@style/SealifeCharachteristicValue"
+                    />
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="vertical"
                 android:id="@+id/char_weight"
                 android:visibility="gone"
-                android:layout_marginTop="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
-                <android.support.v7.widget.AppCompatTextView
+                <TextView
                     android:id="@+id/title_weight"
-                    android:textSize="16sp"
-                    android:fontFamily="sans-serif-medium"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="WEIGHT"/>
-                <android.support.v7.widget.AppCompatTextView
+                    style="@style/SealifeCharachteristicTitle"
+                    android:text="@string/weight"/>
+                <TextView
                     android:id="@+id/weight"
-                    android:layout_below="@+id/title_weight"
-                    android:layout_marginTop="5dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/black_text"
-                    android:textSize="14sp"
-                    android:text="-"/>
-            </RelativeLayout>
-            <RelativeLayout
-                android:layout_below="@+id/char_weight"
+                    style="@style/SealifeCharachteristicValue"/>
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="vertical"
                 android:id="@+id/char_depth"
                 android:visibility="gone"
-                android:layout_marginTop="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
-                <android.support.v7.widget.AppCompatTextView
+                <TextView
                     android:id="@+id/title_depth"
-                    android:textSize="16sp"
-                    android:fontFamily="sans-serif-medium"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="DEPTH"/>
-                <android.support.v7.widget.AppCompatTextView
+                    style="@style/SealifeCharachteristicTitle"
+                    android:text="@string/depth"/>
+                <TextView
                     android:id="@+id/depth"
-                    android:layout_below="@+id/title_depth"
-                    android:layout_marginTop="5dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/black_text"
-                    android:textSize="14sp"
-                    android:text="-"/>
-            </RelativeLayout>
-            <RelativeLayout
+                    style="@style/SealifeCharachteristicValue"/>
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="vertical"
                 android:layout_below="@+id/char_depth"
                 android:id="@+id/char_scname"
                 android:visibility="gone"
-                android:layout_marginTop="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
-                <android.support.v7.widget.AppCompatTextView
+                <TextView
                     android:id="@+id/title_scname"
-                    android:textSize="16sp"
-                    android:fontFamily="sans-serif-medium"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="SC NAME"/>
-                <android.support.v7.widget.AppCompatTextView
+                    style="@style/SealifeCharachteristicTitle"
+                    android:text="@string/sc_name"/>
+                <TextView
                     android:id="@+id/scname"
-                    android:layout_below="@+id/title_scname"
-                    android:layout_marginTop="5dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/black_text"
-                    android:textSize="14sp"
-                    android:text="-"/>
-            </RelativeLayout>
-            <RelativeLayout
-                android:layout_below="@+id/char_scname"
+                    style="@style/SealifeCharachteristicValue"/>
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="vertical"
                 android:id="@+id/char_order"
-                android:layout_marginTop="20dp"
                 android:layout_width="wrap_content"
                 android:visibility="gone"
                 android:layout_height="wrap_content">
-                <android.support.v7.widget.AppCompatTextView
+                <TextView
                     android:id="@+id/title_order"
-                    android:textSize="16sp"
-                    android:fontFamily="sans-serif-medium"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="ORDER"/>
-                <android.support.v7.widget.AppCompatTextView
+                    style="@style/SealifeCharachteristicTitle"
+                    android:text="@string/order"/>
+                <TextView
                     android:id="@+id/order"
-                    android:layout_below="@+id/title_order"
-                    android:layout_marginTop="5dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/black_text"
-                    android:textSize="14sp"
-                    android:text="-"/>
-            </RelativeLayout>
-            <RelativeLayout
-                android:layout_below="@+id/char_order"
+                    style="@style/SealifeCharachteristicValue"/>
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="vertical"
+                android:id="@+id/char_scclass"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/title_scclass"
+                    style="@style/SealifeCharachteristicTitle"
+                    android:text="@string/scclass"/>
+                <TextView
+                    android:id="@+id/scclass"
+                    style="@style/SealifeCharachteristicValue"/>
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="vertical"
                 android:id="@+id/char_distribution"
                 android:visibility="gone"
-                android:layout_marginTop="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
-                <android.support.v7.widget.AppCompatTextView
+                <TextView
                     android:id="@+id/title_distribution"
-                    android:textSize="16sp"
-                    android:fontFamily="sans-serif-medium"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="DISTRIBUTION"/>
-                <android.support.v7.widget.AppCompatTextView
+                    style="@style/SealifeCharachteristicTitle"
+                    android:text="@string/distribution"/>
+                <TextView
                     android:id="@+id/distribution"
-                    android:layout_below="@+id/title_distribution"
-                    android:layout_marginTop="5dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/black_text"
-                    android:textSize="14sp"
-                    android:text="-"/>
-            </RelativeLayout>
-            <RelativeLayout
-                android:layout_below="@+id/char_distribution"
-                android:id="@+id/char_scclass"
-                android:layout_marginTop="20dp"
-                android:visibility="gone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-                <android.support.v7.widget.AppCompatTextView
-                    android:id="@+id/title_scclass"
-                    android:textSize="16sp"
-                    android:fontFamily="sans-serif-medium"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="SC CLASS"/>
-                <android.support.v7.widget.AppCompatTextView
-                    android:id="@+id/scclass"
-                    android:layout_below="@+id/title_scclass"
-                    android:layout_marginTop="5dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/black_text"
-                    android:textSize="14sp"
-                    android:text="-"/>
-            </RelativeLayout>
-            <RelativeLayout
-                android:layout_below="@+id/char_scclass"
+                    style="@style/SealifeCharachteristicValue"/>
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="vertical"
                 android:id="@+id/char_habitat"
-                android:layout_marginTop="20dp"
                 android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
-                <android.support.v7.widget.AppCompatTextView
+                <TextView
                     android:id="@+id/title_habitat"
-                    android:textSize="16sp"
-                    android:fontFamily="sans-serif-medium"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="HABITAT"/>
-                <android.support.v7.widget.AppCompatTextView
+                    style="@style/SealifeCharachteristicTitle"
+                    android:text="@string/habitat"/>
+                <TextView
                     android:id="@+id/habitat"
-                    android:layout_below="@+id/title_habitat"
-                    android:layout_marginTop="5dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/black_text"
-                    android:textSize="14sp"
-                    android:text="-"/>
-            </RelativeLayout>
-        </RelativeLayout>
+                    style="@style/SealifeCharachteristicValue"/>
+            </LinearLayout>
+        </LinearLayout>
+            <ImageView
+                style="@style/DividerStyleFull" />
+        </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 </android.support.design.widget.CoordinatorLayout>

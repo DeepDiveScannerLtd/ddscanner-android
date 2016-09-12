@@ -5,7 +5,7 @@ import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v13.app.FragmentStatePagerAdapter;
 
-import com.ddscanner.ui.fragments.PlaceImageFragment;
+import com.ddscanner.entities.Image;
 import com.ddscanner.ui.fragments.SLiderImagesFragment;
 
 import java.util.ArrayList;
@@ -15,9 +15,9 @@ import java.util.ArrayList;
  */
 public class SliderImagesAdapter extends FragmentStatePagerAdapter {
 
-    private ArrayList<String> productsImages;
+    private ArrayList<Image> productsImages;
 
-    public SliderImagesAdapter(FragmentManager fm, ArrayList<String> productsImages) {
+    public SliderImagesAdapter(FragmentManager fm, ArrayList<Image> productsImages) {
         super(fm);
 
         this.productsImages = productsImages;
@@ -27,7 +27,7 @@ public class SliderImagesAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         Fragment fragment = new SLiderImagesFragment();
         Bundle args = new Bundle();
-        args.putString(PlaceImageFragment.IMAGE_URL,"http://www.trizeri.travel/images/divespots/medium/" + productsImages.get(position));
+        args.putString(SLiderImagesFragment.IMAGE_URL, productsImages.get(position).getName());
         fragment.setArguments(args);
         return fragment;
     }

@@ -20,11 +20,14 @@ import android.view.Display;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.Sealife;
+import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -34,7 +37,7 @@ import com.squareup.picasso.Target;
  */
 public class SealifeDetails extends AppCompatActivity {
 
-    private TextView length, weight, depth, scname, order, distribution, scclass, habitat;
+    private TextView length, weight, depth, scname, order, distribution, scclass, habitat,name;
     private ImageView photo;
     private Sealife sealife;
     private String pathMedium;
@@ -45,6 +48,7 @@ public class SealifeDetails extends AppCompatActivity {
     private Toolbar toolbar;
     private ImageView backgroundImage;
     private ProgressBar progressBar;
+    private Helpers helpers = new Helpers();
 
     public static void show(Context context, Sealife sealife, String pathMedium) {
         Intent intent = new Intent(context, SealifeDetails.class);
@@ -60,7 +64,18 @@ public class SealifeDetails extends AppCompatActivity {
         findViews();
         sealife = (Sealife) getIntent().getSerializableExtra("SEALIFE");
         pathMedium = getIntent().getStringExtra("PATH");
-        Picasso.with(this).load(pathMedium + sealife.getImage()).into(photo, new ImageLoadedCallback(progressBar) {
+        Log.i("SEALIFEFULL", pathMedium + sealife.getImage());
+        setSupportActionBar(toolbar);
+        //getSupportActionBar().setTitle(sealife.getName());
+        getSupportActionBar().setTitle("");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);
+        Display display = getWindowManager().getDefaultDisplay();
+        DisplayMetrics outMetrics = new DisplayMetrics();
+        display.getMetrics(outMetrics);
+        float density = getResources().getDisplayMetrics().density;
+        float dpWidth = outMetrics.widthPixels / density;
+        Picasso.with(this).load(pathMedium + sealife.getImage()).resize(Math.round(dpWidth), 239).centerCrop().into(photo, new ImageLoadedCallback(progressBar) {
             @Override
             public void onSuccess() {
                 if (this.progressBar != null) {
@@ -69,23 +84,14 @@ public class SealifeDetails extends AppCompatActivity {
             }
 
         });
-        Log.i("SEALIFEFULL", pathMedium + sealife.getImage());
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(sealife.getName());
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_actionbar_back);
-        Display display = getWindowManager().getDefaultDisplay();
-        DisplayMetrics outMetrics = new DisplayMetrics();
-        display.getMetrics(outMetrics);
-        float density = getResources().getDisplayMetrics().density;
-        float dpWidth = outMetrics.widthPixels / density;
-        Picasso.with(this).load(pathMedium + sealife.getImage()).resize(Math.round(dpWidth), 460).centerCrop().into(backgroundImage);
+     //   Picasso.with(this).load(pathMedium + sealife.getImage()).resize(Math.round(dpWidth), 239).centerCrop().into(backgroundImage);
         backgroundImage.setColorFilter(Color.parseColor("#99000000"), PorterDuff.Mode.SRC_ATOP);
         setContent();
     }
 
     public void findViews() {
         collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+        name = (TextView) findViewById(R.id.name);
         toolbar = (Toolbar) findViewById(R.id.toolbar_collapse);
         photo = (ImageView) findViewById(R.id.sealife_full_photo);
         length = (TextView) findViewById(R.id.length);
@@ -98,68 +104,89 @@ public class SealifeDetails extends AppCompatActivity {
         habitat = (TextView) findViewById(R.id.habitat);
         backgroundImage = (ImageView) findViewById(R.id.background_photo);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
+        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            boolean isShow = false;
+            int scrollRange = -1;
+
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                if (scrollRange == -1) {
+                    scrollRange = appBarLayout.getTotalScrollRange();
+                }
+                if (scrollRange + verticalOffset == 0) {
+                    collapsingToolbarLayout.setTitle("Details");
+                    isShow = true;
+                } else if (isShow) {
+                    collapsingToolbarLayout.setTitle("");
+                    isShow = false;
+                }
+            }
+        });
     }
 
     private void setContent() {
+        name.setText(sealife.getName());
+        name.setVisibility(View.VISIBLE);
         if (sealife.getLength() != null) {
             if (!sealife.getLength().equals("")) {
-                System.out.println(sealife.getLength());
+                LinearLayout linearLayout = (LinearLayout) findViewById(R.id.char_length);
+                linearLayout.setVisibility(View.VISIBLE);
                 length.setText(sealife.getLength());
-                findViewById(R.id.char_length).setVisibility(View.VISIBLE);
             }
         }
 
         if (sealife.getWeight() != null) {
             if (!sealife.getWeight().equals("")) {
-                System.out.println(sealife.getWeight());
-                weight.setText(sealife.getWeight());
-                findViewById(R.id.char_weight).setVisibility(View.VISIBLE);
+                LinearLayout linearLayout = (LinearLayout) findViewById(R.id.char_weight);
+                linearLayout.setVisibility(View.VISIBLE);
+                weight.setText(sealife.getWeight().trim());
             }
         }
 
         if (sealife.getDepth() != null) {
             if (!sealife.getDepth().equals("")) {
-                System.out.println(sealife.getDepth());
-                depth.setText(sealife.getDepth());
-                findViewById(R.id.char_depth).setVisibility(View.VISIBLE);
+                LinearLayout linearLayout = (LinearLayout) findViewById(R.id.char_depth);
+                linearLayout.setVisibility(View.VISIBLE);
+                depth.setText(sealife.getDepth().trim());
             }
         }
 
         if (sealife.getScName() != null) {
             if (!sealife.getScName().equals("")) {
-                System.out.println(sealife.getScName());
-                scname.setText(sealife.getScName());
-                findViewById(R.id.char_scname).setVisibility(View.VISIBLE);
+                LinearLayout linearLayout = (LinearLayout) findViewById(R.id.char_scname);
+                linearLayout.setVisibility(View.VISIBLE);
+                scname.setText(sealife.getScName().trim());
             }
         }
 
         if (sealife.getOrder() != null) {
             if (!sealife.getOrder().equals("")) {
-                System.out.println(sealife.getOrder());
-                order.setText(sealife.getOrder());
-                findViewById(R.id.char_order).setVisibility(View.VISIBLE);
+                LinearLayout linearLayout = (LinearLayout) findViewById(R.id.char_order);
+                linearLayout.setVisibility(View.VISIBLE);
+                order.setText(sealife.getOrder().trim());
             }
         }
 
         if (sealife.getDistribution() != null) {
-            System.out.println(sealife.getDistribution());
-            distribution.setText(sealife.getDistribution());
-            findViewById(R.id.char_distribution).setVisibility(View.VISIBLE);
+            LinearLayout linearLayout = (LinearLayout) findViewById(R.id.char_distribution);
+            linearLayout.setVisibility(View.VISIBLE);
+            distribution.setText(sealife.getDistribution().trim());
         }
 
         if (sealife.getScCLass() != null) {
             if (!sealife.getScCLass().equals("")) {
-                System.out.println(sealife.getScCLass());
-                scclass.setText(sealife.getScCLass());
-                findViewById(R.id.char_scclass).setVisibility(View.VISIBLE);
+                LinearLayout linearLayout = (LinearLayout) findViewById(R.id.char_scclass);
+                linearLayout.setVisibility(View.VISIBLE);
+                scclass.setText(sealife.getScCLass().trim());
             }
         }
 
         if (sealife.getHabitat() != null) {
             if (!sealife.getHabitat().equals("")) {
-                System.out.println(sealife.getHabitat());
-                habitat.setText(sealife.getHabitat());
-                findViewById(R.id.char_habitat).setVisibility(View.VISIBLE);
+                LinearLayout linearLayout = (LinearLayout) findViewById(R.id.char_habitat);
+                linearLayout.setVisibility(View.VISIBLE);
+                habitat.setText(sealife.getHabitat().trim());
             }
         }
     }
@@ -207,5 +234,20 @@ public class SealifeDetails extends AppCompatActivity {
             return null;
         }
     }*/
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        DDScannerApplication.activityPaused();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        DDScannerApplication.activityResumed();
+        if (!helpers.hasConnection(this)) {
+            DDScannerApplication.showErrorActivity(this);
+        }
+    }
 
 }

@@ -8,6 +8,15 @@ public class RegisterRequest {
     private String social;
     private String token;
     private String secret;
+    private String push;
+
+    public String getpush() {
+        return push;
+    }
+
+    public void setpush(String push) {
+        this.push = push;
+    }
 
     public String getAppId() {
         return appId;

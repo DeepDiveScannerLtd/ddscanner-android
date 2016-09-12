@@ -1,41 +1,34 @@
 package com.ddscanner.ui.managers;
 
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Point;
-import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
+import android.graphics.BitmapFactory;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.DiveSpot;
 import com.ddscanner.entities.DivespotsWrapper;
 import com.ddscanner.entities.request.DiveSpotsRequestMap;
+import com.ddscanner.events.CloseInfoWindowEvent;
+import com.ddscanner.events.FilterChosedEvent;
+import com.ddscanner.events.MarkerClickEvent;
+import com.ddscanner.events.NewDiveSpotAddedEvent;
+import com.ddscanner.events.OnMapClickEvent;
+import com.ddscanner.events.PlaceChoosedEvent;
+import com.ddscanner.rest.BaseCallback;
 import com.ddscanner.rest.RestClient;
-import com.ddscanner.ui.activities.CityActivity;
-import com.ddscanner.ui.activities.DivePlaceActivity;
-import com.ddscanner.ui.adapters.PlacesPagerAdapter;
-import com.ddscanner.ui.views.TransformationRoundImage;
-import com.ddscanner.utils.EventTrackerHelper;
+import com.ddscanner.ui.fragments.MapListFragment;
+import com.ddscanner.utils.DialogUtils;
 import com.ddscanner.utils.LogUtils;
+import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -49,85 +42,107 @@ import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.algo.GridBasedAlgorithm;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
-import com.google.maps.android.ui.SquareTextView;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
+import com.squareup.otto.Subscribe;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import retrofit.RetrofitError;
-import retrofit.client.Response;
-import retrofit.mime.TypedByteArray;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
 
-public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements ClusterManager.OnClusterClickListener<DiveSpot> {
+public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements ClusterManager.OnClusterClickListener<DiveSpot>, GoogleMap.OnMapClickListener {
 
     private static final String TAG = DiveSpotsClusterManager.class.getName();
     private static final int CAMERA_ANIMATION_DURATION = 300;
-    private final IconGenerator clusterIconGenerator;
+    private final IconGenerator clusterIconGenerator1Symbol;
+    private final IconGenerator clusterIconGenerator2Symbols;
+    private final IconGenerator clusterIconGenerator3Symbols;
     private Context context;
     private GoogleMap googleMap;
-    private Marker lastClickedMarker;
+    private MapListFragment parentFragment;
     private DiveSpotsRequestMap diveSpotsRequestMap = new DiveSpotsRequestMap();
     private DivespotsWrapper divespotsWrapper;
     private ArrayList<DiveSpot> diveSpots = new ArrayList<>();
     private HashMap<LatLng, DiveSpot> diveSpotsMap = new HashMap<>();
-    private PlacesPagerAdapter placesPagerAdapter;
-    private Drawable clusterBackgroundDrawable;
-    // filter
+    private float lastZoom;
+
     private String currents;
     private String level;
     private String object;
     private int rating = -1;
     private String visibility;
-    private HashMap<Marker, Bitmap> markerBitmapCache = new HashMap<>();
-    private TextView toolbarTitle;
 
-    private InfoWindowRefresher infoWindowRefresher;
     private boolean isCanMakeRequest = false;
 
     private ProgressBar progressBar;
     private RelativeLayout toast;
 
-    public DiveSpotsClusterManager(Context context, GoogleMap googleMap, PlacesPagerAdapter placesPagerAdapter, RelativeLayout toast, ProgressBar progressBar, TextView toolbarTitle) {
+    private Marker lastClickedMarker;
+    private Marker userCurrentLocationMarker;
+    private LatLng lastKnownSouthWest;
+    private LatLng lastKnownNorthEast;
+    private LatLng newDiveSpotLatLng;
+    private boolean isNewDiveSpotMarkerClicked;
+
+    private int newDiveSpotId = -1;
+
+    public DiveSpotsClusterManager(Context context, GoogleMap googleMap, RelativeLayout toast, ProgressBar progressBar, MapListFragment parentFragment) {
         super(context, googleMap);
         this.context = context;
         this.googleMap = googleMap;
-        this.placesPagerAdapter = placesPagerAdapter;
-        this.clusterBackgroundDrawable = ContextCompat.getDrawable(context, R.drawable.ic_number);
-        this.clusterIconGenerator = new IconGenerator(context);
-        this.clusterIconGenerator.setContentView(this.makeSquareTextView(context));
-        this.clusterIconGenerator.setTextAppearance(com.google.maps.android.R.style.ClusterIcon_TextAppearance);
-        this.clusterIconGenerator.setBackground(clusterBackgroundDrawable);
+        this.parentFragment = parentFragment;
+
+        View clusterView;
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        clusterIconGenerator1Symbol = new IconGenerator(context);
+        clusterView = inflater.inflate(R.layout.cluster_view_1_symbol, null);
+        clusterView.findViewById(R.id.cluster_label).setId(com.google.maps.android.R.id.text);
+        clusterIconGenerator1Symbol.setContentView(clusterView);
+        clusterIconGenerator1Symbol.setBackground(null);
+        clusterIconGenerator2Symbols = new IconGenerator(context);
+        clusterView = inflater.inflate(R.layout.cluster_view_2_symbols, null);
+        clusterView.findViewById(R.id.cluster_label).setId(com.google.maps.android.R.id.text);
+        clusterIconGenerator2Symbols.setContentView(clusterView);
+        clusterIconGenerator2Symbols.setBackground(null);
+        clusterIconGenerator3Symbols = new IconGenerator(context);
+        clusterView = inflater.inflate(R.layout.cluster_view_3_symbols, null);
+        clusterView.findViewById(R.id.cluster_label).setId(com.google.maps.android.R.id.text);
+        clusterIconGenerator3Symbols.setContentView(clusterView);
+        clusterIconGenerator3Symbols.setBackground(null);
+
         this.toast = toast;
         this.progressBar = progressBar;
-        this.toolbarTitle = toolbarTitle;
-
+        googleMap.setOnMapClickListener(this);
         setAlgorithm(new GridBasedAlgorithm<DiveSpot>());
         setRenderer(new IconRenderer(context, googleMap, this));
         setOnClusterClickListener(this);
-        getMarkerCollection().setOnInfoWindowAdapter(new InfoWindowAdapter(context));
         if (checkArea(googleMap.getProjection().getVisibleRegion().latLngBounds.southwest, googleMap.getProjection().getVisibleRegion().latLngBounds.northeast)) {
-            requestCityProducts();
+            requestCityProducts(false);
         } else {
-           showToast();
+            showToast();
         }
+        DDScannerApplication.bus.register(this);
     }
 
     private void showToast() {
+        lastClickedMarker = null;
+        DDScannerApplication.bus.post(new CloseInfoWindowEvent());
         toast.setVisibility(View.VISIBLE);
-        android.os.Handler handler = new android.os.Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                hideToast();
-            }
-        }, 1700);
+//        android.os.Handler handler = new android.os.Handler();
+//        handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                hideToast();
+//            }
+//        }, 1700);
     }
 
     private void showPb() {
-        progressBar.setVisibility(View.VISIBLE);
+        if (progressBar != null) {
+            progressBar.setVisibility(View.VISIBLE);
+        }
     }
 
     private void hidePb() {
@@ -145,61 +160,87 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
     }
 
     @Override
+    public void onMapClick(LatLng latLng) {
+        if (lastClickedMarker != null) {
+            // lastClickedMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
+            if (diveSpotsMap.get(lastClickedMarker.getPosition()) != null) {
+                if (diveSpotsMap.get(lastClickedMarker.getPosition()).getStatus() != null) {
+                    if (diveSpotsMap.get(lastClickedMarker.getPosition()).getStatus().equals("waiting")) {
+                        DDScannerApplication.bus.post(new OnMapClickEvent(lastClickedMarker, true));
+                    } else {
+                        DDScannerApplication.bus.post(new OnMapClickEvent(lastClickedMarker, false));
+                    }
+                } else {
+                    DDScannerApplication.bus.post(new OnMapClickEvent(lastClickedMarker, false));
+                }
+            } else {
+                DDScannerApplication.bus.post(new OnMapClickEvent(lastClickedMarker, false));
+            }
+            lastClickedMarker = null;
+        } else {
+            DDScannerApplication.bus.post(new OnMapClickEvent(lastClickedMarker, false));
+        }
+    }
+
+    @Override
     public void onCameraChange(CameraPosition cameraPosition) {
         super.onCameraChange(cameraPosition);
-
+        if (lastZoom != googleMap.getCameraPosition().zoom && lastClickedMarker != null) {
+            lastZoom = googleMap.getCameraPosition().zoom;
+            DDScannerApplication.bus.post(new OnMapClickEvent(null, false));
+        }
         LatLng southwest = googleMap.getProjection().getVisibleRegion().latLngBounds.southwest;
         LatLng northeast = googleMap.getProjection().getVisibleRegion().latLngBounds.northeast;
-        placesPagerAdapter.populateDiveSpotsList(changeListToListFragment(diveSpots));
-        if (checkArea(southwest,northeast)) {
+        parentFragment.fillDiveSpots(getVisibleMarkersList(diveSpots));
+        if (diveSpotsRequestMap.size() == 0) {
+            diveSpotsRequestMap.putSouthWestLat(southwest.latitude - Math.abs(northeast.latitude - southwest.latitude));
+            diveSpotsRequestMap.putSouthWestLng(southwest.longitude - Math.abs(northeast.longitude - southwest.longitude));
+            diveSpotsRequestMap.putNorthEastLat(northeast.latitude + Math.abs(northeast.latitude - southwest.latitude));
+            diveSpotsRequestMap.putNorthEastLng(northeast.longitude + Math.abs(northeast.longitude - southwest.longitude));
+        }
+        if (checkArea(southwest, northeast)) {
+            hideToast();
             if (isCanMakeRequest) {
                 if (southwest.latitude <= diveSpotsRequestMap.getSouthWestLat() ||
                         southwest.longitude <= diveSpotsRequestMap.getSouthWestLng() ||
                         northeast.latitude >= diveSpotsRequestMap.getNorthEastLat() ||
                         northeast.longitude >= diveSpotsRequestMap.getNorthEastLng()) {
-                    requestCityProducts();
-                    if (!toolbarTitle.getText().toString().equals("DDSCANNER")) {
-                        toolbarTitle.setText("DDScanner");
-                    }
+                    requestCityProducts(false);
                 }
             } else {
-                requestCityProducts();
+                requestCityProducts(false);
             }
         } else {
-          showToast();
+            showToast();
         }
     }
 
     @Override
     public boolean onMarkerClick(final Marker marker) {
-        if (super.onMarkerClick(marker)) {
+        if (super.onMarkerClick(marker) || marker.equals(userCurrentLocationMarker)) {
             return true;
         }
-
-        AppsFlyerLib.getInstance().trackEvent(context, EventTrackerHelper
-                .EVENT_MARKER_CLICK, new HashMap<String, Object>() {{
-            put(EventTrackerHelper.PARAM_MARKER_CLICK_TYPE, "dive_site");
-            put(EventTrackerHelper.PARAM_MARKER_CLICK_PLACE_ID, String.valueOf(diveSpotsMap.get(marker.getPosition()).getId()));
-        }});
-        marker.showInfoWindow();
+        if (lastClickedMarker != null) {
+            try {
+                // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
+//                lastClickedMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
+                if (diveSpotsMap.get(marker.getPosition()).getStatus().equals("waiting")) {
+                    lastClickedMarker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_ds_new)));
+                } else {
+                    lastClickedMarker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_ds)));
+                }
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
+            }
+        }
         lastClickedMarker = marker;
-        Projection projection = googleMap.getProjection();
-        Point mapCenteringPoint = projection.toScreenLocation(marker.getPosition());
-        mapCenteringPoint.y = mapCenteringPoint.y - DDScannerApplication.getInstance().getResources().getDimensionPixelSize(R.dimen.info_window_height) / 2;
-        googleMap.animateCamera(CameraUpdateFactory.newLatLng(projection.fromScreenLocation(mapCenteringPoint)), CAMERA_ANIMATION_DURATION, null);
+        // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
+//                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds_selected));
+        marker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_ds_selected)));
+        if (diveSpotsMap.get(marker.getPosition()) != null) {
+            DDScannerApplication.bus.post(new MarkerClickEvent(diveSpotsMap.get(marker.getPosition())));
+        }
         return true;
-    }
-
-    @Override
-    public void onInfoWindowClick(final Marker marker) {
-        Intent i = new Intent(context, DivePlaceActivity.class);
-        i.putExtra(InfoWindowAdapter.PRODUCT, String.valueOf(diveSpotsMap.get(marker.getPosition()).getId()));
-        AppsFlyerLib.getInstance().trackEvent(context, EventTrackerHelper
-                .EVENT_INFOWINDOW_CLICK, new HashMap<String, Object>() {{
-            put(EventTrackerHelper.PARAM_INFOWINDOW_CLICK_TYPE, "dive_site");
-            put(EventTrackerHelper.PARAM_INFOWINDOW_CLICK_PLACE_ID, String.valueOf(diveSpotsMap.get(marker.getPosition()).getId()));
-        }});
-        context.startActivity(i);
     }
 
     @Override
@@ -212,14 +253,6 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 0);
         googleMap.animateCamera(cu, CAMERA_ANIMATION_DURATION, null);
         return true;
-    }
-
-    private SquareTextView makeSquareTextView(Context context) {
-        SquareTextView squareTextView = new SquareTextView(context);
-        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        squareTextView.setLayoutParams(layoutParams);
-        squareTextView.setId(com.google.maps.android.R.id.text);
-        return squareTextView;
     }
 
     public void updateDiveSpots(ArrayList<DiveSpot> diveSpots) {
@@ -246,7 +279,6 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
             LogUtils.i(TAG, "addNewDiveSpot diveSpot.getPosition() == null");
         } else {
             addItem(diveSpot);
-
             diveSpotsMap.put(diveSpot.getPosition(), diveSpot);
             diveSpots.add(diveSpot);
         }
@@ -254,7 +286,6 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
 
     private void removeDiveSpot(DiveSpot diveSpot) {
         removeItem(diveSpot);
-
         diveSpotsMap.remove(new LatLng(Double.valueOf(diveSpot.getLat()), Double.valueOf(diveSpot.getLng())));
         diveSpots.remove(diveSpot);
     }
@@ -266,69 +297,71 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         return true;
     }
 
-    public void updateFilter(String currents, String level, String object, int rating, String visibility) {
-        this.currents = currents;
+    public void updateFilter(String level, String object) {
+        lastClickedMarker = null;
+        if (level == null && object == null) {
+            this.level = "";
+            this.object = "";
+            return;
+        }
         this.level = level;
         this.object = object;
-        this.rating = rating;
-        this.visibility = visibility;
     }
 
 
-
-    public void requestCityProducts() {
+    public void requestCityProducts(boolean isFromFilters) {
         diveSpotsRequestMap.clear();
         LatLng southwest = googleMap.getProjection().getVisibleRegion().latLngBounds.southwest;
         LatLng northeast = googleMap.getProjection().getVisibleRegion().latLngBounds.northeast;
+        if (!checkArea(southwest, northeast) && isFromFilters && lastKnownNorthEast != null && lastKnownSouthWest != null) {
+            southwest = lastKnownSouthWest;
+            northeast = lastKnownNorthEast;
+        }
         if (checkArea(southwest, northeast)) {
-            showPb();
-            isCanMakeRequest = true;
-            diveSpotsRequestMap.putSouthWestLat(southwest.latitude - Math.abs(northeast.latitude - southwest.latitude));
-            diveSpotsRequestMap.putSouthWestLng(southwest.longitude - Math.abs(northeast.longitude - southwest.longitude));
-            diveSpotsRequestMap.putNorthEastLat(northeast.latitude + Math.abs(northeast.latitude - southwest.latitude));
-            diveSpotsRequestMap.putNorthEastLng(northeast.longitude + Math.abs(northeast.longitude - southwest.longitude));
-            if (!TextUtils.isEmpty(currents)) {
-                diveSpotsRequestMap.putCurrents(currents);
-            }
-            if (!TextUtils.isEmpty(level)) {
-                diveSpotsRequestMap.putLevel(level);
-            }
-            if (!TextUtils.isEmpty(object)) {
-                diveSpotsRequestMap.putObject(object);
-            }
-            if (rating != -1) {
-                diveSpotsRequestMap.putRating(rating);
-            }
-            if (!TextUtils.isEmpty(visibility)) {
-                diveSpotsRequestMap.putVisibility(visibility);
-            }
-            for (Map.Entry<String, Object> entry : diveSpotsRequestMap.entrySet()) {
-                LogUtils.i(TAG, "get dive spots request parameter: " + entry.getKey() + " " + entry.getValue());
-            }
-            RestClient.getServiceInstance().getDivespots(diveSpotsRequestMap, new retrofit.Callback<Response>() {
-                @Override
-                public void success(Response s, Response response) {
-                    String responseString = new String(((TypedByteArray) s.getBody()).getBytes());
-                    LogUtils.i(TAG, "response code is " + s.getStatus());
-                    LogUtils.i(TAG, "response body is " + responseString);
-                    divespotsWrapper = new Gson().fromJson(responseString, DivespotsWrapper.class);
-                    updateDiveSpots((ArrayList<DiveSpot>) divespotsWrapper.getDiveSpots());
-                    placesPagerAdapter.populateDiveSpotsList(changeListToListFragment((ArrayList<DiveSpot>)divespotsWrapper.getDiveSpots()));
-                    hidePb();
-                }
-
-                @Override
-                public void failure(RetrofitError error) {
-                    if (error.getKind().equals(RetrofitError.Kind.NETWORK)) {
-                        Toast.makeText(DDScannerApplication.getInstance(), "Please check your internet connection", Toast.LENGTH_SHORT).show();
-                    } else if (error.getKind().equals(RetrofitError.Kind.HTTP)) {
-                        Toast.makeText(DDScannerApplication.getInstance(), "Server is not responsible, please try later", Toast.LENGTH_SHORT).show();
-                    }
-                    hidePb();
-//               String json =  new String(((TypedByteArray)error.getResponse().getBody()).getBytes());
-                    //      System.out.println("failure" + json.toString());
-                }
-            });
+            sendRequest(northeast, southwest);
+//            showPb();
+//            isCanMakeRequest = true;
+//            lastKnownSouthWest = southwest;
+//            lastKnownNorthEast = northeast;
+//            diveSpotsRequestMap.putSouthWestLat(southwest.latitude - Math.abs(northeast.latitude - southwest.latitude));
+//            diveSpotsRequestMap.putSouthWestLng(southwest.longitude - Math.abs(northeast.longitude - southwest.longitude));
+//            diveSpotsRequestMap.putNorthEastLat(northeast.latitude + Math.abs(northeast.latitude - southwest.latitude));
+//            diveSpotsRequestMap.putNorthEastLng(northeast.longitude + Math.abs(northeast.longitude - southwest.longitude));
+//            if (!TextUtils.isEmpty(SharedPreferenceHelper.getLevel())) {
+//                diveSpotsRequestMap.putLevel(SharedPreferenceHelper.getLevel());
+//            }
+//            if (!TextUtils.isEmpty(SharedPreferenceHelper.getObject())) {
+//                diveSpotsRequestMap.putObject(SharedPreferenceHelper.getObject());
+//            }
+//            for (Map.Entry<String, Object> entry : diveSpotsRequestMap.entrySet()) {
+//                LogUtils.i(TAG, "get dive spots request parameter: " + entry.getKey() + " " + entry.getValue());
+//            }
+//            Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDivespots(diveSpotsRequestMap);
+//            call.enqueue(new BaseCallback() {
+//                @Override
+//                public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+//                    if (response.isSuccessful()) {
+//                        String responseString = "";
+//                        try {
+//                            responseString = response.body().string();
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
+//                        LogUtils.i(TAG, "response body is " + responseString);
+//                        divespotsWrapper = new Gson().fromJson(responseString, DivespotsWrapper.class);
+//                        updateDiveSpots((ArrayList<DiveSpot>) divespotsWrapper.getDiveSpots());
+//                        parentFragment.fillDiveSpots(getVisibleMarkersList(diveSpots));
+//                        hidePb();
+//                    } else {
+//                        hidePb();
+//                    }
+//                }
+//
+//                @Override
+//                public void onConnectionFailure() {
+//                    DialogUtils.showConnectionErrorDialog(context);
+//                }
+//            });
         }
     }
 
@@ -340,8 +373,27 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
 
         @Override
         protected void onBeforeClusterRendered(Cluster<DiveSpot> cluster, MarkerOptions markerOptions) {
+            BitmapDescriptor descriptor = null;
+
             int bucket = this.getBucket(cluster);
-            BitmapDescriptor descriptor = BitmapDescriptorFactory.fromBitmap(clusterIconGenerator.makeIcon(this.getClusterText(bucket)));
+            String clusterLabel = getClusterText(bucket);
+            int symbolsCount = clusterLabel.length();
+            switch (symbolsCount) {
+                case 0:
+                case 1:
+                    descriptor = BitmapDescriptorFactory.fromBitmap(clusterIconGenerator1Symbol.makeIcon(clusterLabel));
+                    break;
+                case 2:
+                    descriptor = BitmapDescriptorFactory.fromBitmap(clusterIconGenerator2Symbols.makeIcon(clusterLabel));
+                    break;
+                case 3:
+                    descriptor = BitmapDescriptorFactory.fromBitmap(clusterIconGenerator3Symbols.makeIcon(clusterLabel));
+                    break;
+                default:
+                    clusterLabel = "99+";
+                    descriptor = BitmapDescriptorFactory.fromBitmap(clusterIconGenerator3Symbols.makeIcon(clusterLabel));
+                    break;
+            }
 
             markerOptions.icon(descriptor);
         }
@@ -349,10 +401,27 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         @Override
         protected void onClusterItemRendered(DiveSpot diveSpot, final Marker marker) {
             super.onClusterItemRendered(diveSpot, marker);
+            Log.i(TAG, "Marker id- " + marker.toString());
             try {
-                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
+                // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
+//                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
+                if (diveSpot.getStatus().equals("waiting")) {
+                    if (lastClickedMarker == null || !lastClickedMarker.equals(marker)) {
+                        marker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_ds_new)));
+                    }
+                } else {
+                    marker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_ds)));
+                }
+
+                if (newDiveSpotId != -1) {
+                    if (diveSpot.getId() == newDiveSpotId) {
+                        Log.i(TAG, "New marker id - " + marker.toString());
+                        onMarkerClick(marker);
+                        newDiveSpotId = -1;
+                    }
+                }
                 if (lastClickedMarker != null && lastClickedMarker.getPosition().equals(marker.getPosition()) && lastClickedMarker.isInfoWindowShown()) {
-                    marker.showInfoWindow();
+                    //      marker.showInfoWindow();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -360,7 +429,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         }
     }
 
-    private ArrayList<DiveSpot> changeListToListFragment(ArrayList<DiveSpot> oldList) {
+    private ArrayList<DiveSpot> getVisibleMarkersList(ArrayList<DiveSpot> oldList) {
         ArrayList<DiveSpot> newList = new ArrayList<>();
         for (DiveSpot diveSpot : oldList) {
             if (isSpotVisibleOnScreen(Float.valueOf(diveSpot.getLat()), Float.valueOf(diveSpot.getLng()))) {
@@ -381,91 +450,103 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         return false;
     }
 
-
-    private class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
-
-        public static final String PRODUCT = "PRODUCT";
-
-        private Context mContext;
-
-        public InfoWindowAdapter(Context context) {
-            this.mContext = context;
-        }
-
-        @Override
-        public View getInfoWindow(Marker marker) {
-            LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View view = inflater.inflate(R.layout.ds_info_window, null);
-            DiveSpot diveSpot = diveSpotsMap.get(marker.getPosition());
-            Bitmap bitmap = markerBitmapCache.get(marker);
-            if (bitmap == null) {
-                infoWindowRefresher = new InfoWindowRefresher(marker);
-                if (diveSpot.getImages() != null) {
-                    LogUtils.i(TAG, "getInfoWindow image=" + diveSpot.getImages().get(0));
-                    Picasso.with(mContext).load(diveSpot.getImages().get(0)).resize(70, 70).centerCrop().transform(new TransformationRoundImage(4,0)).into(infoWindowRefresher);
-                }
-            } else {
-                ImageView photo = (ImageView) view.findViewById(R.id.popup_photo);
-                photo.setAlpha(1f);
-                photo.setImageBitmap(bitmap);
-            }
-            TextView reviews = ((TextView) view.findViewById(R.id.reviews));
-            reviews.setText(diveSpot.getReviews() + " reviews");
-            TextView description = ((TextView) view.findViewById(R.id.description_popup));
-            TextView title = ((TextView) view.findViewById(R.id.popup_product_name));
-            title.setText(diveSpot.getName());
-            description.setText(diveSpot.getDescription());
-            // from = ((TextView)view.findViewById(R.id.price1));
-            LinearLayout stars = (LinearLayout) view.findViewById(R.id.stars);
-            stars.removeAllViews();
-            for (int i = 0; i < diveSpot.getRating(); i++) {
-                ImageView iv = new ImageView(mContext);
-                iv.setImageResource(R.drawable.ic_flag_full_small);
-                iv.setPadding(1, 0, 0, 0);
-                stars.addView(iv);
-            }
-            for (int i = 0; i < 5 - diveSpot.getRating(); i++) {
-                ImageView iv = new ImageView(mContext);
-                iv.setImageResource(R.drawable.ic_flag_empty_small);
-                iv.setPadding(1, 0, 0, 0);
-                stars.addView(iv);
-            }
-            return view;
-        }
-
-        @Override
-        public View getInfoContents(Marker marker) {
-            return null;
-        }
-
+    public void mapZoomPlus() {
+        googleMap.animateCamera(CameraUpdateFactory.zoomIn());
     }
 
-    private class InfoWindowRefresher implements Target {
-        private Marker markerToRefresh;
+    public void mapZoomMinus() {
+        googleMap.animateCamera(CameraUpdateFactory.zoomOut());
+    }
 
-        private InfoWindowRefresher(Marker markerToRefresh) {
-            this.markerToRefresh = markerToRefresh;
+    @Subscribe
+    public void moveCameraByChosedLocation(PlaceChoosedEvent event) {
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(event.getLatLngBounds(), 0));
+    }
+
+    @Subscribe
+    public void filterChosed(FilterChosedEvent event) {
+        String level = null;
+        String object = null;
+        if (event.getLevel() != null) {
+            level = event.getLevel();
         }
+        if (event.getObject() != null) {
+            object = event.getObject();
+        }
+        updateFilter(level, object);
+        requestCityProducts(true);
+    }
 
-        @Override
-        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-            LogUtils.i(TAG, "InfoWindowRefresher onSuccess markerToRefresh=" + markerToRefresh + " markerToRefresh.isInfoWindowShown()=" + markerToRefresh.isInfoWindowShown());
-            if (markerToRefresh != null && markerToRefresh.isInfoWindowShown()) {
-                markerBitmapCache.put(markerToRefresh, bitmap);
-//                markerToRefresh.hideInfoWindow();
-                markerToRefresh.showInfoWindow();
+    public void setUserCurrentLocationMarker(Marker userCurrentLocationMarker) {
+        this.userCurrentLocationMarker = userCurrentLocationMarker;
+    }
+
+    public Marker getLastClickedMarker() {
+        return lastClickedMarker;
+    }
+
+    public boolean isLastClickedMarkerNew() {
+        return diveSpotsMap.get(lastClickedMarker.getPosition()).getStatus().equals("waiting");
+    }
+
+    private void sendRequest(LatLng northeast, LatLng southwest) {
+        diveSpotsRequestMap.clear();
+        showPb();
+        isCanMakeRequest = true;
+        lastKnownSouthWest = southwest;
+        lastKnownNorthEast = northeast;
+        diveSpotsRequestMap.putSouthWestLat(southwest.latitude - Math.abs(northeast.latitude - southwest.latitude));
+        diveSpotsRequestMap.putSouthWestLng(southwest.longitude - Math.abs(northeast.longitude - southwest.longitude));
+        diveSpotsRequestMap.putNorthEastLat(northeast.latitude + Math.abs(northeast.latitude - southwest.latitude));
+        diveSpotsRequestMap.putNorthEastLng(northeast.longitude + Math.abs(northeast.longitude - southwest.longitude));
+        if (!TextUtils.isEmpty(SharedPreferenceHelper.getLevel())) {
+            diveSpotsRequestMap.putLevel(SharedPreferenceHelper.getLevel());
+        }
+        if (!TextUtils.isEmpty(SharedPreferenceHelper.getObject())) {
+            diveSpotsRequestMap.putObject(SharedPreferenceHelper.getObject());
+        }
+        for (Map.Entry<String, Object> entry : diveSpotsRequestMap.entrySet()) {
+            LogUtils.i(TAG, "get dive spots request parameter: " + entry.getKey() + " " + entry.getValue());
+        }
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDivespots(diveSpotsRequestMap);
+        call.enqueue(new BaseCallback() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    String responseString = "";
+                    try {
+                        responseString = response.body().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    LogUtils.i(TAG, "response body is " + responseString);
+                    divespotsWrapper = new Gson().fromJson(responseString, DivespotsWrapper.class);
+                    updateDiveSpots((ArrayList<DiveSpot>) divespotsWrapper.getDiveSpots());
+                    parentFragment.fillDiveSpots(getVisibleMarkersList(diveSpots));
+                    hidePb();
+                } else {
+                    hidePb();
+                }
             }
-        }
 
-        @Override
-        public void onBitmapFailed(Drawable errorDrawable) {
-            LogUtils.i(getClass().getSimpleName(), "Error loading thumbnail!");
-        }
+            @Override
+            public void onConnectionFailure() {
+                DialogUtils.showConnectionErrorDialog(context);
+            }
+        });
+    }
 
-        @Override
-        public void onPrepareLoad(Drawable placeHolderDrawable) {
 
-        }
+
+    @Subscribe
+    public void newDiveSpotAdded(NewDiveSpotAddedEvent event) {
+        googleMap.setOnCameraChangeListener(null);
+        newDiveSpotId = Integer.parseInt(event.getDiveSpotId());
+        lastClickedMarker = null;
+        isNewDiveSpotMarkerClicked = true;
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(new LatLngBounds(new LatLng(event.getLatLng().latitude - 0.05, event.getLatLng().longitude - 0.05), new LatLng(event.getLatLng().latitude + 0.05, event.getLatLng().longitude + 0.05)),0));
+        sendRequest(new LatLng(event.getLatLng().latitude - 0.05, event.getLatLng().longitude - 0.05), new LatLng(event.getLatLng().latitude + 0.05, event.getLatLng().longitude + 0.05));
+        googleMap.setOnCameraChangeListener(this);
     }
 
 }

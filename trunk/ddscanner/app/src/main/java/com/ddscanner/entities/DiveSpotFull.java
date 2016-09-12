@@ -12,19 +12,116 @@ public class DiveSpotFull {
     private String description;
     private float lat;
     private float lng;
-    private int rating;
+    private float rating;
     private String depth;
     private String visibility;
     private String currents;
     private String level;
-    private List<String> images;
-    private String diveSpotPathSmall;
+    private List<Image> images;
     private String diveSpotPathMedium;
     private String diveSpotPathOrigin;
-    private String sealifePathSmall;
     private String sealifePathMedium;
     private String sealifePathOrigin;
     private String object;
+    private String access;
+    private String status;
+    private boolean isCheckin;
+    private boolean isFavorite;
+    private String visibilityMin;
+
+    private boolean divespotPathSmallContainsHttp = true;
+    private boolean divespotPathMediumContainsHttp = true;
+    private boolean divespotPathOriginContainsHttp = true;
+    private boolean sealifePathSmallContainsHttp = true;
+    private boolean sealifePathMediumContainsHttp = true;
+    private boolean sealifePathOriginContainsHttp = true;
+
+    public String getVisibilityMax() {
+        return visibilityMax;
+    }
+
+    public void setVisibilityMax(String visibilityMax) {
+        this.visibilityMax = visibilityMax;
+    }
+
+    public String getVisibilityMin() {
+        return visibilityMin;
+    }
+
+    public void setVisibilityMin(String visibilityMin) {
+        this.visibilityMin = visibilityMin;
+    }
+
+    private String visibilityMax;
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getAccess() {
+        return access;
+    }
+
+    public void setAccess(String access) {
+        this.access = access;
+    }
+
+    public boolean getIsFavorite() {
+        return isFavorite;
+    }
+
+    public void setIsFavorite(boolean favorite) {
+        isFavorite = favorite;
+    }
+
+    public Boolean getValidation() {
+        return isValidation;
+    }
+
+    public void setValidation(Boolean validation) {
+        isValidation = validation;
+    }
+
+    public Boolean getCheckin() {
+        return isCheckin;
+    }
+
+    public void setCheckin(Boolean checkin) {
+        isCheckin = checkin;
+    }
+
+    private Boolean isValidation;
+
+    public User getCreator() {
+        return creator;
+    }
+
+    public void setCreator(User creator) {
+        this.creator = creator;
+    }
+
+    public List<Image> getCommentImages() {
+        return commentImages;
+    }
+
+    public void setCommentImages(List<Image> commentImages) {
+        this.commentImages = commentImages;
+    }
+
+    public void setLat(float lat) {
+        this.lat = lat;
+    }
+
+    public void setLng(float lng) {
+        this.lng = lng;
+    }
+
+    private User creator;
+    private List<Image> commentImages;
 
     public String getObject() {
         return object;
@@ -34,72 +131,139 @@ public class DiveSpotFull {
         this.object = object;
     }
 
-    public int getId() { return id; }
+    public int getId() {
+        return id;
+    }
 
-    public void setId(int id) { this.id = id; }
+    public void setId(int id) {
+        this.id = id;
+    }
 
-    public String getName() { return name; }
+    public String getName() {
+        return name;
+    }
 
-    public void setName(String name) { this.name = name; }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    public String getDescription() { return description; }
+    public String getDescription() {
+        return description;
+    }
 
-    public void setDescription(String description) { this.description = description; }
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-    public float getLat() { return lat; }
+    public float getLat() {
+        return lat;
+    }
 
-    public void setLat(Float lat) { this.lat = lat; }
+    public void setLat(Float lat) {
+        this.lat = lat;
+    }
 
-    public float getLng() { return lng; }
+    public float getLng() {
+        return lng;
+    }
 
-    public void setLng(Float lng) { this.lng = lng; }
+    public void setLng(Float lng) {
+        this.lng = lng;
+    }
 
-    public int getRating() { return rating; }
+    public float getRating() {
+        return rating;
+    }
 
-    public void setRating(int rating) { this.rating = rating; }
+    public void setRating(float rating) {
+        this.rating = rating;
+    }
 
-    public String getDepth() { return depth; }
+    public String getDepth() {
+        return depth;
+    }
 
-    public void setDepth(String depth) { this.depth = depth; }
+    public void setDepth(String depth) {
+        this.depth = depth;
+    }
 
-    public String getVisibility() { return visibility; }
+    public String getVisibility() {
+        return visibility;
+    }
 
-    public void setVisibility(String visibility) { this.visibility = visibility; }
+    public void setVisibility(String visibility) {
+        this.visibility = visibility;
+    }
 
-    public String getCurrents() { return currents; }
+    public String getCurrents() {
+        return currents;
+    }
 
-    public void setCurrents(String currents) { this.currents = currents; }
+    public void setCurrents(String currents) {
+        this.currents = currents;
+    }
 
-    public String getLevel() { return level; }
+    public String getLevel() {
+        return level;
+    }
 
-    public void setLevel(String level) { this.level = level; }
+    public void setLevel(String level) {
+        this.level = level;
+    }
 
-    public List<String> getImages() { return images; }
+    public List<Image> getImages() {
+        return images;
+    }
 
-    public void setImages(List<String> images) { this.images = images; }
+    public void setImages(List<Image> images) {
+        this.images = images;
+    }
 
-    public String getDiveSpotPathSmall() { return diveSpotPathSmall; }
+    public String getDiveSpotPathMedium() {
+        if (diveSpotPathMedium != null && divespotPathMediumContainsHttp) {
+            diveSpotPathMedium = diveSpotPathMedium.replace("http:", "https:");
+            divespotPathMediumContainsHttp = false;
+        }
+        return diveSpotPathMedium;
+    }
 
-    public void setDiveSpotPathSmall(String diveSpotPathSmall) { this.diveSpotPathSmall = diveSpotPathSmall; }
+    public void setDiveSpotPathMedium(String diveSpotPathMedium) {
+        this.diveSpotPathMedium = diveSpotPathMedium;
+    }
 
-    public String getDiveSpotPathMedium() { return diveSpotPathMedium; }
+    public String getDiveSpotPathOrigin() {
+        if (diveSpotPathOrigin != null && divespotPathOriginContainsHttp) {
+            diveSpotPathOrigin = diveSpotPathOrigin.replace("http:", "https:");
+            divespotPathOriginContainsHttp = false;
+        }
+        return diveSpotPathOrigin;
+    }
 
-    public void setDiveSpotPathMedium(String diveSpotPathMedium) { this.diveSpotPathMedium = diveSpotPathMedium; }
+    public void setDiveSpotPathOrigin(String diveSpotPathOrigin) {
+        this.diveSpotPathOrigin = diveSpotPathOrigin;
+    }
 
-    public String getDiveSpotPathOrigin() { return diveSpotPathOrigin; }
+    public String getSealifePathMedium() {
+        if (sealifePathMedium != null && sealifePathMediumContainsHttp) {
+            sealifePathMedium = sealifePathMedium.replace("http:", "https:");
+            sealifePathMediumContainsHttp = false;
+        }
+        return sealifePathMedium;
+    }
 
-    public void setDiveSpotPathOrigin(String diveSpotPathOrigin) { this.diveSpotPathOrigin = diveSpotPathOrigin; }
+    public void setSealifePathMedium(String sealifePathMedium) {
+        this.sealifePathMedium = sealifePathMedium;
+    }
 
+    public String getSealifePathOrigin() {
+        if (sealifePathOrigin != null && sealifePathOriginContainsHttp) {
+            sealifePathOrigin = sealifePathOrigin.replace("http:", "https:");
+            sealifePathOriginContainsHttp = false;
+        }
+        return sealifePathOrigin;
+    }
 
-    public String getSealifePathSmall() { return sealifePathSmall; }
-
-    public void setSealifePathSmall(String sealifePathSmall) { this.sealifePathSmall = sealifePathSmall; }
-
-    public String getSealifePathMedium() { return sealifePathMedium; }
-
-    public void setSealifePathMedium(String sealifePathMedium) { this.sealifePathMedium = sealifePathMedium; }
-
-    public String getSealifePathOrigin() { return sealifePathOrigin; }
-
-    public void setSealifePathOrigin(String sealifePathOrigin) { this.sealifePathOrigin = sealifePathOrigin; }
+    public void setSealifePathOrigin(String sealifePathOrigin) {
+        this.sealifePathOrigin = sealifePathOrigin;
+    }
 }

@@ -14,7 +14,7 @@ public class Sealife implements Serializable {
     private String scName;
     private String order;
     private String distribution;
-    private String scCLass;
+    private String scClass;
     private String habitat;
     private String image;
 
@@ -50,9 +50,9 @@ public class Sealife implements Serializable {
 
     public void setDistribution(String distribution) { this.distribution = distribution; }
 
-    public String getScCLass() { return scCLass; }
+    public String getScCLass() { return scClass; }
 
-    public void setScCLass(String scCLass) { this.scCLass = scCLass; }
+    public void setScCLass(String scCLass) { this.scClass = scCLass; }
 
     public String getHabitat() { return habitat; }
 

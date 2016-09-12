@@ -4,26 +4,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.appsflyer.AppsFlyerLib;
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.DiveCenter;
-import com.ddscanner.utils.EventTrackerHelper;
+import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;
-
-import java.io.Serializable;
-import java.util.HashMap;
 
 /**
  * Created by lashket on 31.3.16.
@@ -36,10 +31,11 @@ public class DiveCenterDetailsActivity extends AppCompatActivity {
     private TextView dc_address;
     private TextView dc_phone;
     private TextView dc_email;
-    private RelativeLayout addressLayout, phoneLayout, emailLayout;
+    private LinearLayout addressLayout, phoneLayout, emailLayout;
     private Toolbar toolbar;
     private LinearLayout stars;
     private String path;
+    private Helpers helpers = new Helpers();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,10 +67,7 @@ public class DiveCenterDetailsActivity extends AppCompatActivity {
             phoneLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    AppsFlyerLib.getInstance().trackEvent(getApplicationContext(),
-                            EventTrackerHelper.EVENT_CALL_NUMBER_CLICK, new HashMap<String, Object>() {{
-                                put(EventTrackerHelper.PARAM_CALL_NUMBER_CLICK, diveCenter.getId());
-                            }});
+                    EventsTracker.trackContactDiveCenter(EventsTracker.ContactDiveCenterMethod.PHONE_CALL);
                     try {
                         String uri = "tel:" + diveCenter.getPhone();
                         Intent intent = new Intent(Intent.ACTION_DIAL);
@@ -93,10 +86,7 @@ public class DiveCenterDetailsActivity extends AppCompatActivity {
             emailLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    AppsFlyerLib.getInstance().trackEvent(getApplicationContext(),
-                            EventTrackerHelper.EVENT_WRITE_EMAIL_CLICK, new HashMap<String, Object>() {{
-                                put(EventTrackerHelper.PARAM_WRITE_EMAIL_CLICK, diveCenter.getId());
-                            }});
+                    EventsTracker.trackContactDiveCenter(EventsTracker.ContactDiveCenterMethod.EMAIL);
                     Intent intent = new Intent(Intent.ACTION_SENDTO);
                     intent.setData(Uri.parse("mailto:"));
                     intent.putExtra(Intent.EXTRA_EMAIL, new String[]{diveCenter.getEmail()});
@@ -107,13 +97,13 @@ public class DiveCenterDetailsActivity extends AppCompatActivity {
 
         for (int k = 0; k < diveCenter.getRating(); k++) {
             ImageView iv = new ImageView(this);
-            iv.setImageResource(R.drawable.ic_flag_full_small);
+            iv.setImageResource(R.drawable.ic_list_star_full);
             iv.setPadding(10, 0, 0, 0);
             stars.addView(iv);
         }
         for (int k = 0; k < 5 - diveCenter.getRating(); k++) {
             ImageView iv = new ImageView(this);
-            iv.setImageResource(R.drawable.ic_flag_empty_small);
+            iv.setImageResource(R.drawable.ic_list_star_empty);
             iv.setPadding(10, 0, 0, 0);
             stars.addView(iv);
         }
@@ -127,9 +117,9 @@ public class DiveCenterDetailsActivity extends AppCompatActivity {
         dc_address = (TextView) findViewById(R.id.dc_address);
         dc_phone = (TextView) findViewById(R.id.dc_phone);
         dc_email = (TextView) findViewById(R.id.dc_email);
-        addressLayout = (RelativeLayout) findViewById(R.id.dc_address_layout);
-        phoneLayout = (RelativeLayout) findViewById(R.id.dc_phone_layout);
-        emailLayout = (RelativeLayout) findViewById(R.id.dc_email_layout);
+        addressLayout = (LinearLayout) findViewById(R.id.dc_address_layout);
+        phoneLayout = (LinearLayout) findViewById(R.id.dc_phone_layout);
+        emailLayout = (LinearLayout) findViewById(R.id.dc_email_layout);
         stars = (LinearLayout) findViewById(R.id.stars);
     }
 
@@ -146,16 +136,34 @@ public class DiveCenterDetailsActivity extends AppCompatActivity {
 
     private void toolbarSettings() {
         setSupportActionBar(toolbar);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_actionbar_back);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Dive center");
+        getSupportActionBar().setTitle(R.string.dive_center);
     }
 
-    public static void show(Context context, DiveCenter diveCenter, String path) {
+    public static void show(Context context, DiveCenter diveCenter, String path, EventsTracker.SpotViewSource spotViewSource) {
+        if (spotViewSource != null) {
+            EventsTracker.trackDiveCenterView(diveCenter.getId(), spotViewSource);
+        }
         Intent intent = new Intent(context, DiveCenterDetailsActivity.class);
         intent.putExtra("DC", diveCenter);
         intent.putExtra("PATH", path);
         context.startActivity(intent);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        DDScannerApplication.activityPaused();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        DDScannerApplication.activityResumed();
+        if (!helpers.hasConnection(this)) {
+            DDScannerApplication.showErrorActivity(this);
+        }
     }
 
 }

@@ -10,4 +10,20 @@
     <dimen name="dc_top_margin_divider_text">16dp</dimen>
     <dimen name="dc_text_size">16sp</dimen>
     <dimen name="dc_name_title">22sp</dimen>
+
+    <!-- Add dive spot -->
+    <dimen name="add_ds_char_title">16sp</dimen>
+    <dimen name="add_ds_margin_left">23dp</dimen>
+    <dimen name="add_ds_margin_right_icon">25dp</dimen>
+    <dimen name="add_ds_char_height">55dp</dimen>
+    <dimen name="add_ds_char_width">63dp</dimen>
+
+    <dimen name="rc_photos_dimen">0px</dimen>
+    <dimen name="margin_betweens_blocks">15dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+
+    <dimen name="editor_item_height">58dp</dimen>
+    <dimen name="editor_avatar_radius">20dp</dimen>
+
+    <dimen name="image_in_divespot_small">75dp</dimen>
 </resources>

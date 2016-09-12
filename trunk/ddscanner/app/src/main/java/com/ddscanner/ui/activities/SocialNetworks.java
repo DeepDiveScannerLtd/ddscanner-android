@@ -3,19 +3,45 @@ package com.ddscanner.ui.activities;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Selection;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
-import com.appsflyer.AppsFlyerLib;
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
-import com.ddscanner.entities.DivespotDetails;
 import com.ddscanner.entities.RegisterResponse;
+import com.ddscanner.entities.SignInType;
+import com.ddscanner.entities.errors.BadRequestException;
+import com.ddscanner.entities.errors.CommentNotFoundException;
+import com.ddscanner.entities.errors.DiveSpotNotFoundException;
+import com.ddscanner.entities.errors.NotFoundException;
+import com.ddscanner.entities.errors.ServerInternalErrorException;
+import com.ddscanner.entities.errors.UnknownErrorException;
+import com.ddscanner.entities.errors.UserNotFoundException;
+import com.ddscanner.entities.errors.ValidationErrorException;
 import com.ddscanner.entities.request.RegisterRequest;
+import com.ddscanner.events.LoggedInEvent;
+import com.ddscanner.rest.BaseCallback;
+import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
-import com.ddscanner.utils.EventTrackerHelper;
+import com.ddscanner.utils.DialogUtils;
+import com.ddscanner.utils.Helpers;
+import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -25,57 +51,42 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.gson.Gson;
-import com.twitter.sdk.android.Twitter;
-import com.twitter.sdk.android.core.Callback;
-import com.twitter.sdk.android.core.Result;
-import com.twitter.sdk.android.core.TwitterAuthToken;
-import com.twitter.sdk.android.core.TwitterException;
-import com.twitter.sdk.android.core.TwitterSession;
-import com.twitter.sdk.android.core.identity.TwitterLoginButton;
-import com.twitter.sdk.android.core.models.User;
 
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.Arrays;
-import java.util.HashMap;
 
-import retrofit.RetrofitError;
-import retrofit.client.Response;
-import retrofit.mime.TypedByteArray;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
 
-/**
- * Created by lashket on 24.2.16.
- */
-public class SocialNetworks extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener{
+public class SocialNetworks extends AppCompatActivity
+        implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
 
     private static final int RC_SIGN_IN = 0;
 
     private static final String TAG = "SOCIAL";
 
-    private TwitterLoginButton loginButton;
-    private Button twitterCustomBtn;
-
     private CallbackManager callbackManager;
-    private LoginButton fbLoginButton;
     private Button fbCustomLogin;
 
-    private SignInButton googleSignIn;
-    private Button signIn;
+    private Button googleCustomSignIn;
     private GoogleApiClient mGoogleApiClient;
-    private String appId;
     private com.ddscanner.entities.User selfProfile;
     private RegisterResponse registerResponse = new RegisterResponse();
+    private MaterialDialog materialDialog;
+    private Helpers helpers = new Helpers();
+    private TextView privacyPolicy;
+    private ImageView close;
 
     public static void show(Context context) {
         Intent intent = new Intent(context, SocialNetworks.class);
@@ -86,52 +97,29 @@ public class SocialNetworks extends AppCompatActivity implements GoogleApiClient
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_social_login);
-        AppsFlyerLib.getInstance().trackEvent(getApplicationContext(),
-                EventTrackerHelper.EVENT_SIGN_IN_OPENED, new HashMap<String, Object>());
-        appId = SharedPreferenceHelper.getGcmId();
-        /*TWITTER*/
-        twitterCustomBtn = (Button) findViewById(R.id.twitter_custom);
-        loginButton = (TwitterLoginButton) findViewById(R.id.twitter_login_button);
-        loginButton.setCallback(new Callback<TwitterSession>() {
+        privacyPolicy = (TextView) findViewById(R.id.privacy_policy);
+        close = (ImageView) findViewById(R.id.close);
+        materialDialog = helpers.getMaterialDialog(this);
+        close.setOnClickListener(this);
+        int color = getResources().getColor(R.color.primary);
+        final SpannableString spannableString = new SpannableString(privacyPolicy.getText());
+        privacyPolicy.setHighlightColor(Color.TRANSPARENT);
+        spannableString.setSpan(new MyClickableSpan(privacyPolicy.getText().toString()) {
             @Override
-            public void success(Result<TwitterSession> result) {
-
-                TwitterSession session = result.data;
-                // TODO: Remove toast and use the TwitterSession's userID
-                String msg = "@" + session.getUserName() + " logged in! (#" + session.getUserId() + ")";
-                //  Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
-                Twitter.getApiClient(session).getAccountService().verifyCredentials(true, false, new Callback<User>() {
-                    @Override
-                    public void success(Result<User> result) {
-                        SharedPreferenceHelper.setIsUserSignedIn(true);
-                    }
-
-                    @Override
-                    public void failure(TwitterException e) {
-
-                    }
-                });
-                TwitterAuthToken authToken = session.getAuthToken();
-                Log.i(TAG, session.getAuthToken().secret + "\n" + session.getAuthToken().token);
-                AppsFlyerLib.getInstance().trackEvent(getApplicationContext(), EventTrackerHelper
-                        .EVENT_SIGN_IN_BTN_CLICK, new HashMap<String, Object>(){{
-                    put(EventTrackerHelper.PARAM_SIGN_IN_BTN_CLICK, "twitter");
-                }});
-                sendRegisterRequest(putTokensToMap(appId, "tw", authToken.token, authToken.secret));
+            public void onClick(View tv) {
+                TermsOfServiceActivity.show(SocialNetworks.this);
             }
-
+        }, 32,48, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(new MyClickableSpan(privacyPolicy.getText().toString()) {
             @Override
-            public void failure(TwitterException exception) {
-                Log.d("TwitterKit", "Login with Twitter failure", exception);
+            public void onClick(View tv) {
+                PrivacyPolicyActivity.show(SocialNetworks.this);
+                tv.invalidate();
             }
-        });
-        twitterCustomBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loginButton.performClick();
-            }
-        });
-        /*FACEBOOK*/
+        }, 53, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        privacyPolicy.setMovementMethod(LinkMovementMethod.getInstance());
+        privacyPolicy.setText(spannableString);
+
         callbackManager = CallbackManager.Factory.create();
         fbCustomLogin = (Button) findViewById(R.id.fb_custom);
         fbCustomLogin.setOnClickListener(new View.OnClickListener() {
@@ -148,17 +136,18 @@ public class SocialNetworks extends AppCompatActivity implements GoogleApiClient
             }
         });
         /*Google plus*/
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        GoogleSignInOptions gso = new GoogleSignInOptions
+                .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken("195706914618-ist9f8ins485k2gglbomgdp4l2pn57iq.apps.googleusercontent.com")
                 .requestEmail()
                 .build();
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, this )
+                .enableAutoManage(this, this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
-        signIn = (Button) findViewById(R.id.custom_google);
-        signIn.setOnClickListener(new View.OnClickListener() {
+        googleCustomSignIn = (Button) findViewById(R.id.custom_google);
+        googleCustomSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 signIn();
@@ -168,22 +157,17 @@ public class SocialNetworks extends AppCompatActivity implements GoogleApiClient
 
     private void fbLogin() {
         callbackManager = CallbackManager.Factory.create();
-        LoginManager.getInstance().logInWithReadPermissions(SocialNetworks.this, Arrays.asList("email", "public_profile"));
-        LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+        LoginManager.getInstance().logInWithReadPermissions(SocialNetworks.this,
+                Arrays.asList("email", "public_profile"));
+        LoginManager.getInstance().registerCallback(callbackManager,
+                new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(final LoginResult loginResult) {
                 GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
                     @Override
                     public void onCompleted(JSONObject object, GraphResponse response) {
-                        Log.i(TAG, loginResult.getAccessToken().toString());
-                        String result = String.valueOf(object);
-                        System.out.println(result);
-                        Log.i(TAG, "FB - " + loginResult.getAccessToken().getToken());
-                        AppsFlyerLib.getInstance().trackEvent(getApplicationContext(), EventTrackerHelper
-                                .EVENT_SIGN_IN_BTN_CLICK, new HashMap<String, Object>() {{
-                            put(EventTrackerHelper.PARAM_SIGN_IN_BTN_CLICK, "facebook");
-                        }});
-                        sendRegisterRequest(putTokensToMap(appId, "fb", loginResult.getAccessToken().getToken()));
+                        sendRegisterRequest(putTokensToMap(SharedPreferenceHelper.getUserAppId(),
+                                "fb", loginResult.getAccessToken().getToken()), SignInType.FACEBOOK);
 
                     }
                 }).executeAsync();
@@ -203,34 +187,19 @@ public class SocialNetworks extends AppCompatActivity implements GoogleApiClient
 
     /*Google plus*/
     private void signIn() {
-        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-        startActivityForResult(signInIntent, RC_SIGN_IN);
-    }
-    private void signOut() {
         Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
                 new ResultCallback<Status>() {
                     @Override
                     public void onResult(Status status) {
-                        // [START_EXCLUDE]
-                        Log.i(TAG, "Logout");
-                        // [END_EXCLUDE]
+                        // ...
                     }
                 });
+        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+        startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
-    private void revokeAccess() {
-        Auth.GoogleSignInApi.revokeAccess(mGoogleApiClient).setResultCallback(
-                new ResultCallback<Status>() {
-                    @Override
-                    public void onResult(Status status) {
-                        // [START_EXCLUDE]
-                        Log.i(TAG, "revoking");
-                        // [END_EXCLUDE]
-                    }
-                });
-    }
     @Override
-    public void onConnectionFailed(ConnectionResult result) {
+    public void onConnectionFailed(@NonNull ConnectionResult result) {
 
     }
 
@@ -238,22 +207,15 @@ public class SocialNetworks extends AppCompatActivity implements GoogleApiClient
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == 140) {
-            loginButton.onActivityResult(requestCode, resultCode, data);
-        }
-         else if(requestCode == RC_SIGN_IN) {
+
+        if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             Log.d(TAG, "onActivityResult:GET_TOKEN:success:" + result.getStatus().isSuccess());
             if (result.isSuccess()) {
                 GoogleSignInAccount acct = result.getSignInAccount();
                 String idToken = acct.getIdToken();
-                Log.d(TAG, "idToken:" + idToken);
-                AppsFlyerLib.getInstance().trackEvent(getApplicationContext(), EventTrackerHelper
-                        .EVENT_SIGN_IN_BTN_CLICK, new HashMap<String, Object>() {{
-                    put(EventTrackerHelper.PARAM_SIGN_IN_BTN_CLICK, "google");
-                }});
-                sendRegisterRequest(putTokensToMap(appId, "go", idToken));
-                // TODO(user): send token to server and validate server-side
+                sendRegisterRequest(putTokensToMap(SharedPreferenceHelper.getUserAppId(),
+                        "go", idToken), SignInType.GOOGLE);
             }
         } else {
             callbackManager.onActivityResult(requestCode, resultCode, data);
@@ -265,45 +227,87 @@ public class SocialNetworks extends AppCompatActivity implements GoogleApiClient
         registerRequest.setAppId(args[0]);
         registerRequest.setSocial(args[1]);
         registerRequest.setToken(args[2]);
-
         if (args.length == 4) {
             registerRequest.setSecret(args[3]);
         }
         return registerRequest;
     }
 
-    private void sendRegisterRequest(final RegisterRequest userData) {
-        RestClient.getServiceInstance().registerUser(userData, new retrofit.Callback<Response>() {
+    private void sendRegisterRequest(final RegisterRequest userData, final SignInType signInType) {
+        materialDialog.show();
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().registerUser(userData);
+        call.enqueue(new BaseCallback() {
             @Override
-            public void success(Response s, Response response) {
-                String responseString = new String(((TypedByteArray) s.getBody()).getBytes());
-                Log.i(TAG, responseString);
-                SharedPreferenceHelper.setIsUserSignedIn(true);
-                SharedPreferenceHelper.setToken(userData.getToken());
-                SharedPreferenceHelper.setSn(userData.getSocial());
-                if (userData.getSocial().equals("tw")) {
-                    SharedPreferenceHelper.setSecret(userData.getSecret());
+            public void onResponse(Call<ResponseBody> call,
+                                   retrofit2.Response<ResponseBody> response) {
+                materialDialog.dismiss();
+                if (response.isSuccessful()) {
+                    String responseString = "";
+                    try {
+                        responseString = response.body().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    Log.i(TAG, responseString);
+                    SharedPreferenceHelper.setToken(userData.getToken());
+                    SharedPreferenceHelper.setSn(userData.getSocial());
+                    if (userData.getSocial().equals("tw")) {
+                        SharedPreferenceHelper.setSecret(userData.getSecret());
+                    }
+                    registerResponse = new Gson().fromJson(responseString, RegisterResponse.class);
+                    selfProfile = registerResponse.getUser();
+                    SharedPreferenceHelper.setUserServerId(selfProfile.getId());
+                    SharedPreferenceHelper.setIsUserSignedIn(true, signInType);
+                    DDScannerApplication.bus.post(new LoggedInEvent());
+                    Intent returnIntent = new Intent();
+                    setResult(Activity.RESULT_OK, returnIntent);
+                    finish();
                 }
-                registerResponse = new Gson().fromJson(responseString, RegisterResponse.class);
-                selfProfile = registerResponse.getUser();
-                SharedPreferenceHelper.setUserid(selfProfile.getId());
-                SharedPreferenceHelper.setPhotolink(selfProfile.getPicture());
-                SharedPreferenceHelper.setUsername(selfProfile.getName());
-                SharedPreferenceHelper.setLink(selfProfile.getLink());
-                Intent returnIntent = new Intent();
-                setResult(Activity.RESULT_OK, returnIntent);
-                AppsFlyerLib.getInstance().trackEvent(getApplicationContext(), EventTrackerHelper
-                        .EVENT_SIGN_IN_OPENED, new HashMap<String, Object>());
-                finish();
+                if (!response.isSuccessful()) {
+                    String responseString = "";
+                    try {
+                        responseString = response.errorBody().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    LogUtils.i("response body is " + responseString);
+                    try {
+                        ErrorsParser.checkForError(response.code(), responseString);
+                    } catch (ServerInternalErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(SocialNetworks.this, R.string.toast_server_error);
+                    } catch (BadRequestException e) {
+                        // TODO Handle
+                        helpers.showToast(SocialNetworks.this, R.string.toast_server_error);
+                    } catch (ValidationErrorException e) {
+                        // TODO Handle
+                    } catch (NotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(SocialNetworks.this, R.string.toast_server_error);
+                    } catch (UnknownErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(SocialNetworks.this, R.string.toast_server_error);
+                    } catch (DiveSpotNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(SocialNetworks.this, R.string.toast_server_error);
+                    } catch (UserNotFoundException e) {
+                        // TODO Handle
+                    } catch (CommentNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(SocialNetworks.this, R.string.toast_server_error);
+                    }
+                }
             }
 
             @Override
-            public void failure(RetrofitError error) {
-                if (error != null) {
-                    Log.i(TAG, error.getMessage());
-                    String json = new String(((TypedByteArray) error.getResponse().getBody()).getBytes());
-                    Log.i(TAG, json.toString());
-                }
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                super.onFailure(call, t);
+                materialDialog.dismiss();
+            }
+
+            @Override
+            public void onConnectionFailure() {
+                DialogUtils.showConnectionErrorDialog(SocialNetworks.this);
             }
         });
     }
@@ -312,9 +316,57 @@ public class SocialNetworks extends AppCompatActivity implements GoogleApiClient
     public void onBackPressed() {
         Intent returnIntent = new Intent();
         setResult(Activity.RESULT_CANCELED, returnIntent);
-        AppsFlyerLib.getInstance().trackEvent(getApplicationContext(), EventTrackerHelper
-                .EVENT_SIGN_IN_CANCELLED, new HashMap<String, Object>());
         finish();
     }
 
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        DDScannerApplication.activityPaused();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        DDScannerApplication.activityResumed();
+        if (!helpers.hasConnection(this)) {
+            DDScannerApplication.showErrorActivity(this);
+        }
+    }
+
+    public static void showForResult(Activity context, int code) {
+        Intent intent = new Intent(context, SocialNetworks.class);
+        context.startActivityForResult(intent, code);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.privacy_policy:
+                PrivacyPolicyActivity.show(SocialNetworks.this);
+                break;
+            case R.id.close:
+                onBackPressed();
+                break;
+        }
+    }
+
+    class MyClickableSpan extends ClickableSpan{
+
+        String clicked;
+        public MyClickableSpan(String string) {
+            super();
+            clicked = string;
+        }
+
+        public void onClick(View tv) {
+
+        }
+
+        public void updateDrawState(TextPaint ds) {
+            ds.setColor(getResources().getColor(R.color.primary));
+            ds.setUnderlineText(false);
+        }
+    }
 }

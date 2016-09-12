@@ -3,12 +3,16 @@ package com.ddscanner.services;
 import android.app.IntentService;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Handler;
+import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
-import com.ddscanner.ui.activities.CityActivity;
+import com.ddscanner.analytics.AnalyticsSystemsManager;
+import com.ddscanner.events.InstanceIDReceivedEvent;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.android.gms.gcm.GcmPubSub;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -25,6 +29,8 @@ public class RegistrationIntentService extends IntentService {
 
     private static final String TAG = "RegIntentService";
     private static final String[] TOPICS = {"global"};
+
+    private final Handler handler = new Handler(Looper.getMainLooper());
 
     public RegistrationIntentService() {
         super(TAG);
@@ -47,9 +53,9 @@ public class RegistrationIntentService extends IntentService {
             // [END get_token]
             Log.i(TAG, "GCM Registration Token: " + token);
             SharedPreferenceHelper.setGcmId(token);
-            CityActivity.checkGcm();
-            // TODO: Implement this method to send any registration to your app's servers.
-            sendRegistrationToServer(token);
+            SharedPreferenceHelper.setUserAppId(instanceID.getId());
+            SharedPreferenceHelper.setUserAppIdReceived();
+            AnalyticsSystemsManager.setUserIdForAnalytics(instanceID.getId());
 
             // Subscribe to topic channels
             subscribeTopics(token);
@@ -66,20 +72,12 @@ public class RegistrationIntentService extends IntentService {
             sharedPreferences.edit().putBoolean(SENT_TOKEN_TO_SERVER, false).apply();
         }
         // Notify UI that registration has completed, so the progress indicator can be hidden.
-        Intent registrationComplete = new Intent(REGISTRATION_COMPLETE);
-        LocalBroadcastManager.getInstance(this).sendBroadcast(registrationComplete);
-    }
-
-    /**
-     * Persist registration to third-party servers.
-     * <p/>
-     * Modify this method to associate the user's GCM registration token with any server-side account
-     * maintained by your application.
-     *
-     * @param token The new token.
-     */
-    private void sendRegistrationToServer(String token) {
-        // Add custom implementation, as needed.
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                DDScannerApplication.bus.post(new InstanceIDReceivedEvent());
+            }
+        });
     }
 
     /**

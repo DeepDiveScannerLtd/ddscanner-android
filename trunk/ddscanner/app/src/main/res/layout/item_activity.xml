@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="65dp"
+    android:background="#fbfbfb">
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?attr/selectableItemBackground">
+        <ImageView
+            android:layout_margin="12dp"
+            android:id="@+id/image"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_notif_divespot"
+            android:scaleType="center"/>
+        <android.support.percent.PercentRelativeLayout
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:paddingTop="12dp"
+                android:id="@+id/text"
+                app:layout_widthPercent="70%"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:textColor="@color/black_text"
+                android:textSize="15sp"
+                android:paddingBottom="10dp"/>
+            <TextView
+                android:id="@+id/time_ago"
+                android:layout_toRightOf="@+id/text"
+                android:gravity="center"
+                app:layout_widthPercent="13%"
+                android:layout_marginTop="25dp"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:textColor="#a3a3a3"
+                tools:text="1w"/>
+            <ImageView
+                android:id="@+id/ds_logo"
+                android:layout_toRightOf="@+id/time_ago"
+                android:gravity="center"
+                app:layout_widthPercent="17%"
+                android:layout_marginTop="10dp"
+                android:layout_height="wrap_content" />
+        </android.support.percent.PercentRelativeLayout>
+    </LinearLayout>
+    <ImageView
+        style="@style/DividerStyleFull" />
+</LinearLayout>

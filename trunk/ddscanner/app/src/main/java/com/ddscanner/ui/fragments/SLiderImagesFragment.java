@@ -1,8 +1,10 @@
 package com.ddscanner.ui.fragments;
 
 import android.app.Fragment;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.ddscanner.R;
+import com.ddscanner.ui.views.TransformationRoundImage;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -19,6 +22,7 @@ import com.squareup.picasso.Picasso;
  */
 public class SLiderImagesFragment extends Fragment {
 
+    private static final String TAG = SLiderImagesFragment.class.getName();
     public static final String IMAGE_URL = "IMAGE_URL";
 
     @Override
@@ -26,21 +30,14 @@ public class SLiderImagesFragment extends Fragment {
         String imageUrl = getArguments().getString(IMAGE_URL);
         View view = inflater.inflate(R.layout.slider_image_fragment, container, false);
 
-        ImageView imageView = (ImageView)view.findViewById(R.id.slider_image);
+        ImageView imageView = (ImageView) view.findViewById(R.id.slider_image);
         ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         Display display = getActivity().getWindowManager().getDefaultDisplay();
         DisplayMetrics outMetrics = new DisplayMetrics();
         display.getMetrics(outMetrics);
         float density = getResources().getDisplayMetrics().density;
         float dpWidth = outMetrics.widthPixels / density;
-        Picasso.with(getActivity()).load(imageUrl).into(imageView, new ImageLoadedCallback(progressBar) {
-            @Override
-        public void onSuccess() {
-                if (this.progressBar != null) {
-                    this.progressBar.setVisibility(View.GONE);
-                }
-            }
-        });
+        Picasso.with(getActivity()).load(imageUrl).into(imageView, new ImageLoadedCallback(progressBar));
 
         return view;
     }
@@ -54,12 +51,14 @@ public class SLiderImagesFragment extends Fragment {
 
         @Override
         public void onSuccess() {
-
+            if (this.progressBar != null) {
+                this.progressBar.setVisibility(View.GONE);
+            }
         }
 
         @Override
         public void onError() {
-
+            Log.i(TAG, "image loading failed");
         }
     }
 

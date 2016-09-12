@@ -1,27 +1,78 @@
 package com.ddscanner.rest;
 
-import retrofit.RequestInterceptor;
-import retrofit.RestAdapter;
+
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public abstract class RestClient {
 
-    private static DDScannerRestService serviceInstance;
+    private static DDScannerRestService ddscannerServiceInstance;
+    private static GoogleApisRestService googleApisServiceInstance;
 
-    public static DDScannerRestService getServiceInstance() {
-        RequestInterceptor requestInterceptor = new RequestInterceptor() {
-            @Override
-            public void intercept(RequestInterceptor.RequestFacade request) {
-                request.addHeader("Accept","application/vnd.trizeri.v1+json");
-                request.addHeader("Content-Type", "application/json;charset=utf-8");
-            }
-        };
-        if (serviceInstance == null) {
-            RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint("http://api.trizeri.com").setRequestInterceptor(requestInterceptor)
+    public static DDScannerRestService getDdscannerServiceInstance() {
+        if (ddscannerServiceInstance == null) {
+            Interceptor interceptor = new Interceptor() {
+                @Override
+                public Response intercept(Chain chain) throws IOException {
+                    Request request = chain.request();
+                    request = request.newBuilder()
+                            .addHeader("Accept", "application/vnd.trizeri.v1+json") // dev
+                         //   .addHeader("Content-Type", "application/json;charset=utf-8")
+                            .build();
+                    Response response = chain.proceed(request);
+                    return response;
+                }
+            };
+
+            OkHttpClient.Builder builder = new OkHttpClient.Builder();
+            builder.interceptors().add(interceptor);
+            builder.readTimeout(10, TimeUnit.MINUTES);
+            builder.writeTimeout(10, TimeUnit.MINUTES);
+            HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+            logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+            builder.interceptors().add(logging);
+
+            OkHttpClient client = builder.build();
+
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl("https://api.ddscanner.com")
+//                    .baseUrl("https://ddsapi.ilave.pro") // dev
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .client(client)
                     .build();
-            serviceInstance = restAdapter.create(DDScannerRestService.class);
+            ddscannerServiceInstance = retrofit.create(DDScannerRestService.class);
         }
-        return serviceInstance;
+        return ddscannerServiceInstance;
     }
 
+    public static GoogleApisRestService getGoogleApisServiceInstance() {
+        if (googleApisServiceInstance == null) {
+            OkHttpClient.Builder builder = new OkHttpClient.Builder();
+            builder.readTimeout(10, TimeUnit.SECONDS);
+            builder.writeTimeout(10, TimeUnit.SECONDS);
+            HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+            logging.setLevel(HttpLoggingInterceptor.Level.BODY);
 
+            builder.interceptors().add(logging);
+
+            OkHttpClient client = builder.build();
+
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl("https://www.googleapis.com")
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .client(client)
+                    .build();
+            googleApisServiceInstance = retrofit.create(GoogleApisRestService.class);
+        }
+        return googleApisServiceInstance;
+    }
 }

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:background="?attr/selectableItemBackground"
+    android:layout_height="54dp">
+    <TextView
+        android:id="@+id/diveSpotName"
+        tools:text = "Good spot"
+        android:paddingLeft="20dp"
+        android:fontFamily="sans-serif-medium"
+        android:textColor="@color/black_text"
+        android:gravity="center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="53dp" />
+    <ImageView
+        android:paddingLeft="20dp"
+        style="@style/DividerStyleFull" />
+</LinearLayout>
