@@ -9,5 +9,8 @@
 .idea
 /.idea/encodings.xml
 /.idea/gradle.xml
+projectFilesBackup/
 
 
+
+app/app-release.apk
