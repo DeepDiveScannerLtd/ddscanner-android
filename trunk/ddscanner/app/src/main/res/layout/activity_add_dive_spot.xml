@@ -366,7 +366,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="18dp"
                         android:fontFamily="sans-serif"
-                        android:hint="@string/description"
+                        android:hint="Description (At least 150 symbols)"
                         android:paddingBottom="7dp" />
                 </LinearLayout>
 

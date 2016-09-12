@@ -86,7 +86,7 @@ import retrofit2.Response;
 public class AddDiveSpotActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = AddDiveSpotActivity.class.getSimpleName();
-    private static final String DIVE_SPOT_NAME_PATTERN = "^[a-zA-Z0-9]*$";
+    private static final String DIVE_SPOT_NAME_PATTERN = "^[a-zA-Z0-9 ]*$";
     private static final int RC_PICK_SEALIFE = Constants.ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_PICK_SEALIFE;
     private static final int RC_PICK_PHOTO = Constants.ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_PICK_PHOTO;
     private static final int RC_PICK_LOCATION =Constants.ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_PICK_LOCATION;
@@ -551,11 +551,17 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void createRequestBodyies() {
-//        if (name.getText().toString().matches(DIVE_SPOT_NAME_PATTERN)) {
-//            error_name.setVisibility(View.VISIBLE);
-//            error_name.setText("Name field may contain only numbers and letters");
-//            return;
-//        }
+        hideErrorsFields();
+        if (!name.getText().toString().matches(DIVE_SPOT_NAME_PATTERN)) {
+            error_name.setVisibility(View.VISIBLE);
+            error_name.setText(R.string.errr);
+            return;
+        }
+        if (description.getText().toString().length() < 150) {
+            error_description.setVisibility(View.VISIBLE);
+            error_description.setText(R.string.description_length_error);
+            return;
+        }
         error_name.setVisibility(View.GONE);
         createSocialDatarequests();
         requestName = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
@@ -615,6 +621,12 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void hideErrorsFields() {
+        for (Map.Entry<String, TextView> entry : errorsMap.entrySet()) {
+            entry.getValue().setVisibility(View.GONE);
+        }
     }
 
     private void makeErrorsMap() {

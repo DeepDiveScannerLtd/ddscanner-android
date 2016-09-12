@@ -94,6 +94,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
     private static final int RC_PICK_SEALIFE = 7001;
     private static final int RC_LOGIN_TO_SEND = 6001;
     private static final int RC_LOGIN_TO_GET_DATA = 5001;
+    private static final String DIVE_SPOT_NAME_PATTERN = "^[a-zA-Z0-9 ]*$";
 
     private int maxPhotosCount = 3;
 
@@ -470,6 +471,17 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
     }
 
     private void createRequestBodyies() {
+        hideErrorsFields();
+        if (!name.getText().toString().matches(DIVE_SPOT_NAME_PATTERN)) {
+            error_name.setVisibility(View.VISIBLE);
+            error_name.setText(R.string.errr);
+            return;
+        }
+        if (description.getText().toString().length() < 150) {
+            error_description.setVisibility(View.VISIBLE);
+            error_description.setText(R.string.description_length_error);
+            return;
+        }
         requestName = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
                 name.getText().toString());
         requestDepth = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
@@ -534,6 +546,12 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
 
         createAddDiveSpotRequest();
 
+    }
+
+    private void hideErrorsFields() {
+        for (Map.Entry<String, TextView> entry : errorsMap.entrySet()) {
+            entry.getValue().setVisibility(View.GONE);
+        }
     }
 
     private void createAddDiveSpotRequest() {
