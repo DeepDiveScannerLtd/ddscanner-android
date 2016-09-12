@@ -8,6 +8,7 @@ import android.net.Network;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -24,6 +25,10 @@ import com.ddscanner.entities.Sealife;
 import com.ddscanner.entities.User;
 import com.ddscanner.entities.request.RegisterRequest;
 import com.ddscanner.ui.dialogs.ProfileDialog;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.api.OptionalPendingResult;
+import com.google.android.gms.common.api.ResultCallback;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -498,5 +503,4 @@ public class Helpers {
             return count;
         }
     }
-
 }

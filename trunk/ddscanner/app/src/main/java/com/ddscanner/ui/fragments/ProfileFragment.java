@@ -496,22 +496,19 @@ public class ProfileFragment extends Fragment
             editedCount.setText(user.getCountEdit() + getDiveSpotString(Integer.parseInt(user.getCountEdit())));
             favouriteCount.setText(user.getCountFavorite() + getDiveSpotString(Integer.parseInt(user.getCountFavorite())));
             checkInCount.setText(user.getCountCheckin() + getDiveSpotString(Integer.parseInt(user.getCountFavorite())));
-            showAllCheckins.setOnClickListener(this);
-            if (Integer.parseInt(user.getCountCheckin()) == 0) {
-                showAllCheckins.setOnClickListener(null);
-            }
-            showAllFavorites.setOnClickListener(this);
 
-            if (user.getCountFavorite() == null || Integer.parseInt(user.getCountFavorite()) == 0) {
-                showAllFavorites.setOnClickListener(null);
+            if (Integer.parseInt(user.getCountCheckin()) != 0) {
+                showAllCheckins.setOnClickListener(this);
             }
-            showAllEdited.setOnClickListener(this);
-            if (Integer.parseInt(user.getCountEdit()) == 0) {
-                showAllEdited.setOnClickListener(null);
+
+            if (user.getCountFavorite() != null && Integer.parseInt(user.getCountFavorite()) != 0) {
+                showAllFavorites.setOnClickListener(this);
             }
-            showAllAdded.setOnClickListener(this);
-            if (Integer.parseInt(user.getCountAdd()) == 0) {
-                showAllAdded.setOnClickListener(null);
+            if (Integer.parseInt(user.getCountEdit()) != 0) {
+                showAllEdited.setOnClickListener(this);
+            }
+            if (Integer.parseInt(user.getCountAdd()) != 0) {
+                showAllAdded.setOnClickListener(this);
             }
         } else {
             SharedPreferenceHelper.logout();

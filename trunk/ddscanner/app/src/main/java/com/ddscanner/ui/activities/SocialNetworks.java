@@ -4,17 +4,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Selection;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
-import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -167,7 +164,7 @@ public class SocialNetworks extends AppCompatActivity
                     @Override
                     public void onCompleted(JSONObject object, GraphResponse response) {
                         sendRegisterRequest(putTokensToMap(SharedPreferenceHelper.getUserAppId(),
-                                "fb", loginResult.getAccessToken().getToken()), SignInType.FACEBOOK);
+                                SignInType.FACEBOOK.getName(), loginResult.getAccessToken().getToken()), SignInType.FACEBOOK);
 
                     }
                 }).executeAsync();
