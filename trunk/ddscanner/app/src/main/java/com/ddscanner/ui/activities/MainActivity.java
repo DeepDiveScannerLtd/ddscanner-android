@@ -76,6 +76,7 @@ import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
+import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.google.android.gms.auth.api.Auth;
@@ -468,12 +469,14 @@ public class MainActivity extends BaseAppCompatActivity
     @Override
     protected void onPause() {
         super.onPause();
+        AppEventsLogger.deactivateApp(this);
         DDScannerApplication.activityPaused();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        AppEventsLogger.activateApp(this);
         DDScannerApplication.activityResumed();
         if (!helpers.hasConnection(this)) {
             DDScannerApplication.showErrorActivity(this);
