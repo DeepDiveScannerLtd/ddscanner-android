@@ -275,6 +275,6 @@
     <string name="dive_spot_tab">Dive Spot</string>
     <string name="all">All</string>
     <string name="pick_location_on_the_map">Pick location on the map</string>
-    <string name="errr">Name field may contain only numbers and letters</string>
+    <string name="errr">Name may contain only numbers and letters</string>
     <string name="description_length_error">Description should contain at least 150 symbols</string>
 </resources>
