@@ -1196,6 +1196,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     }
 
     private void getComments() {
+
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance()
                 .getComments(String.valueOf(diveSpot.getId()), helpers.getUserQuryMapRequest());
         call.enqueue(new BaseCallback() {
@@ -1229,12 +1230,16 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == RC_LEAVE_REVIEW_ACTIVITY) {
             if (resultCode == RESULT_OK) {
-                getComments();
+                if (diveSpot != null) {
+                    getComments();
+                }
             }
         }
         if (requestCode == 9001) {
             if (resultCode == RESULT_OK) {
-                getComments();
+                if (diveSpot != null) {
+                    getComments();
+                }
             }
         }
         if (requestCode == RC_PHOTOS && resultCode == RESULT_OK) {
@@ -1546,16 +1551,16 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
     @Override
     public void onBackPressed() {
-        if (diveSpot != null) {
-            if (isNewDiveSpot) {
-                Intent intent = new Intent(this, MainActivity.class);
-                intent.putExtra(Constants.MAIN_ACTIVITY_ACTVITY_EXTRA_LATLNGBOUNDS, new LatLngBounds(new LatLng(diveSpot.getLat() - 0.2, diveSpot.getLng() - 0.2), new LatLng(diveSpot.getLat() + 0.2, diveSpot.getLng() + 0.2)));
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent.putExtra(Constants.IS_HAS_INTERNET, true);
-                startActivity(intent);
-                finish();
-            }
-        }
+//        if (diveSpot != null) {
+//            if (isNewDiveSpot) {
+//                Intent intent = new Intent(this, MainActivity.class);
+//                intent.putExtra(Constants.MAIN_ACTIVITY_ACTVITY_EXTRA_LATLNGBOUNDS, new LatLngBounds(new LatLng(diveSpot.getLat() - 0.2, diveSpot.getLng() - 0.2), new LatLng(diveSpot.getLat() + 0.2, diveSpot.getLng() + 0.2)));
+//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                intent.putExtra(Constants.IS_HAS_INTERNET, true);
+//                startActivity(intent);
+//                finish();
+//            }
+//        }
         finish();
     }
 

@@ -105,6 +105,7 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
     private Circle circle;
     private ProgressView progressBarMyLocation;
     private android.widget.Button continueShowMap;
+    private boolean isToastMessageVisible;
 
     public BaseAppCompatActivity baseAppCompatActivity;
 
@@ -289,6 +290,10 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
                         mapListFAB.setY(mapListFAB.getY() + diveSpotInfo.getHeight());
                         addDsFab.setY(addDsFab.getY() + diveSpotInfo.getHeight());
                     }
+                    if (toast.getVisibility() == View.VISIBLE) {
+                        isToastMessageVisible = true;
+                    }
+                    toast.setVisibility(View.GONE);
                     if (please.getVisibility() == View.VISIBLE) {
                         addDsFab.setVisibility(View.GONE);
                         mapListFAB.setVisibility(View.GONE);
@@ -299,6 +304,10 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
                     DDScannerApplication.bus.post(new ListOpenedEvent());
                     mapListFAB.setImageResource(R.drawable.ic_acb_map);
                 } else {
+                    if (isToastMessageVisible) {
+                        toast.setVisibility(View.VISIBLE);
+                        isToastMessageVisible = false;
+                    }
                     addDsFab.setVisibility(View.VISIBLE);
                     mapListFAB.setVisibility(View.VISIBLE);
                     if (diveSpotInfo.getVisibility() == View.VISIBLE) {

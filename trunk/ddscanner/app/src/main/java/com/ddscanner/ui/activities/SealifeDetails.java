@@ -140,7 +140,7 @@ public class SealifeDetails extends AppCompatActivity {
             if (!sealife.getWeight().equals("")) {
                 LinearLayout linearLayout = (LinearLayout) findViewById(R.id.char_weight);
                 linearLayout.setVisibility(View.VISIBLE);
-                weight.setText(sealife.getWeight());
+                weight.setText(sealife.getWeight().trim());
             }
         }
 
@@ -148,7 +148,7 @@ public class SealifeDetails extends AppCompatActivity {
             if (!sealife.getDepth().equals("")) {
                 LinearLayout linearLayout = (LinearLayout) findViewById(R.id.char_depth);
                 linearLayout.setVisibility(View.VISIBLE);
-                depth.setText(sealife.getDepth());
+                depth.setText(sealife.getDepth().trim());
             }
         }
 
@@ -156,7 +156,7 @@ public class SealifeDetails extends AppCompatActivity {
             if (!sealife.getScName().equals("")) {
                 LinearLayout linearLayout = (LinearLayout) findViewById(R.id.char_scname);
                 linearLayout.setVisibility(View.VISIBLE);
-                scname.setText(sealife.getScName());
+                scname.setText(sealife.getScName().trim());
             }
         }
 
@@ -164,21 +164,21 @@ public class SealifeDetails extends AppCompatActivity {
             if (!sealife.getOrder().equals("")) {
                 LinearLayout linearLayout = (LinearLayout) findViewById(R.id.char_order);
                 linearLayout.setVisibility(View.VISIBLE);
-                order.setText(sealife.getOrder());
+                order.setText(sealife.getOrder().trim());
             }
         }
 
         if (sealife.getDistribution() != null) {
             LinearLayout linearLayout = (LinearLayout) findViewById(R.id.char_distribution);
             linearLayout.setVisibility(View.VISIBLE);
-            distribution.setText(sealife.getDistribution());
+            distribution.setText(sealife.getDistribution().trim());
         }
 
         if (sealife.getScCLass() != null) {
             if (!sealife.getScCLass().equals("")) {
                 LinearLayout linearLayout = (LinearLayout) findViewById(R.id.char_scclass);
                 linearLayout.setVisibility(View.VISIBLE);
-                scclass.setText(sealife.getScCLass());
+                scclass.setText(sealife.getScCLass().trim());
             }
         }
 
@@ -186,7 +186,7 @@ public class SealifeDetails extends AppCompatActivity {
             if (!sealife.getHabitat().equals("")) {
                 LinearLayout linearLayout = (LinearLayout) findViewById(R.id.char_habitat);
                 linearLayout.setVisibility(View.VISIBLE);
-                habitat.setText(sealife.getHabitat());
+                habitat.setText(sealife.getHabitat().trim());
             }
         }
     }

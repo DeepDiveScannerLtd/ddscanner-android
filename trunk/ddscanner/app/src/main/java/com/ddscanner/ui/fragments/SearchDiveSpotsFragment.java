@@ -22,6 +22,7 @@ import com.ddscanner.ui.adapters.SearchDiveSpotListAdapter;
 import com.ddscanner.utils.SharedPreferenceHelper;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by lashket on 15.6.16.
@@ -31,6 +32,7 @@ public class SearchDiveSpotsFragment extends Fragment implements View.OnClickLis
     private RecyclerView diveSpotsListRc;
     private ScrollView noResultsView;
     private Button addManually;
+    private ArrayList<DiveSpot> diveSpots;
 
     @Nullable
     @Override
@@ -42,10 +44,17 @@ public class SearchDiveSpotsFragment extends Fragment implements View.OnClickLis
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         diveSpotsListRc.setLayoutManager(linearLayoutManager);
         addManually.setOnClickListener(this);
+        if (diveSpots != null) {
+            setDiveSpots(diveSpots);
+        }
         return view;
     }
 
     public void setDiveSpots(ArrayList<DiveSpot> diveSpots) {
+        if (diveSpotsListRc == null) {
+            this.diveSpots = diveSpots;
+            return;
+        }
         if (diveSpots == null || diveSpots.size() == 0) {
             noResultsView.setVisibility(View.VISIBLE);
             diveSpotsListRc.setVisibility(View.GONE);

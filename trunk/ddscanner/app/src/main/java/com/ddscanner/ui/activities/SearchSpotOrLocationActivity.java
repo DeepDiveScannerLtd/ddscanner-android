@@ -308,6 +308,13 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
     @Override
     protected void onResume() {
         super.onResume();
+        if (googleApiClient == null) {
+            googleApiClient = new GoogleApiClient
+                    .Builder(this)
+                    .addApi(Places.GEO_DATA_API)
+                    .addApi(Places.PLACE_DETECTION_API)
+                    .build();
+        }
         DDScannerApplication.activityResumed();
     }
 
