@@ -14,7 +14,6 @@ import android.content.res.Resources;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.os.Parcel;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -30,7 +29,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -76,6 +74,7 @@ import com.ddscanner.rest.ServerErrorCallback;
 import com.ddscanner.ui.adapters.DiveSpotsPhotosAdapter;
 import com.ddscanner.ui.adapters.EditorsListAdapter;
 import com.ddscanner.ui.adapters.SealifeListAdapter;
+import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogUtils;
 import com.ddscanner.utils.Helpers;
@@ -720,9 +719,9 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
     private void addPhotosToDiveSpot() {
         if (!SharedPreferenceHelper.isUserLoggedIn()) {
-            SocialNetworks.showForResult(this, Constants.DIVE_SPOT_DETAILS_ACTIVITY_REQUEST_CODE_LOGIN_TO_PICK_PHOTOS);
+            SocialNetworks.showForResult(this, ActivitiesRequestCodes.DIVE_SPOT_DETAILS_ACTIVITY_REQUEST_CODE_LOGIN_TO_PICK_PHOTOS);
         } else {
-            MultiImageSelector.create(this).count(3).start(this, Constants.DIVE_SPOT_DETAILS_ACTIVITY_REQUEST_CODE_PICK_PHOTOS);
+            MultiImageSelector.create(this).count(3).start(this, ActivitiesRequestCodes.DIVE_SPOT_DETAILS_ACTIVITY_REQUEST_CODE_PICK_PHOTOS);
         }
     }
 
@@ -1305,7 +1304,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 }
             }
         }
-        if (requestCode == Constants.DIVE_SPOT_DETAILS_ACTIVITY_REQUEST_CODE_PICK_PHOTOS) {
+        if (requestCode == ActivitiesRequestCodes.DIVE_SPOT_DETAILS_ACTIVITY_REQUEST_CODE_PICK_PHOTOS) {
             if (resultCode == RESULT_OK) {
                 List<String> path = data.getStringArrayListExtra(MultiImageSelectorActivity
                         .EXTRA_RESULT);
@@ -1314,17 +1313,17 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 bundle.putSerializable("IMAGES", (ArrayList<String>)path);
                 bundle.putString("id", String.valueOf(diveSpot.getId()));
                 intent.putExtras(bundle);
-                startActivityForResult(intent, Constants.DIVE_SPOT_DETAILS_ACTIVITY_REQUEST_CODE_ADD_PHOTOS_ACTIVITY);
+                startActivityForResult(intent, ActivitiesRequestCodes.DIVE_SPOT_DETAILS_ACTIVITY_REQUEST_CODE_ADD_PHOTOS_ACTIVITY);
             }
         }
-        if (requestCode == Constants.DIVE_SPOT_DETAILS_ACTIVITY_REQUEST_CODE_ADD_PHOTOS_ACTIVITY) {
+        if (requestCode == ActivitiesRequestCodes.DIVE_SPOT_DETAILS_ACTIVITY_REQUEST_CODE_ADD_PHOTOS_ACTIVITY) {
             if (resultCode == RESULT_OK) {
                 requestProductDetails(String.valueOf(diveSpot.getId()));
             }
         }
-        if (requestCode == Constants.DIVE_SPOT_DETAILS_ACTIVITY_REQUEST_CODE_LOGIN_TO_PICK_PHOTOS) {
+        if (requestCode == ActivitiesRequestCodes.DIVE_SPOT_DETAILS_ACTIVITY_REQUEST_CODE_LOGIN_TO_PICK_PHOTOS) {
             if (resultCode == RESULT_OK) {
-                MultiImageSelector.create(this).count(3).start(this, Constants.DIVE_SPOT_DETAILS_ACTIVITY_REQUEST_CODE_ADD_PHOTOS_ACTIVITY);
+                MultiImageSelector.create(this).count(3).start(this, ActivitiesRequestCodes.DIVE_SPOT_DETAILS_ACTIVITY_REQUEST_CODE_ADD_PHOTOS_ACTIVITY);
             }
         }
     }

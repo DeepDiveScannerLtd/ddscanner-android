@@ -135,7 +135,7 @@
     <string name="filter_label">Level</string>
     <string name="creator">Creator</string>
     <string name="editor">Editor</string>
-    <string name="error_turn_on_location_provider">Please give the app permission to use your location. You can find this option in your device settings</string>
+    <string name="error_turn_on_location_provider">Please turn on GPS. You can find this option in your device settings</string>
     <string name="error_no_location_permission">Please give the app permission to use your location. This will be used for "checkin" and "show my location" functionality</string>
     <string name="error_no_internet">No internet connection</string>
     <string name="open_settings">OPEN SETTINGS</string>

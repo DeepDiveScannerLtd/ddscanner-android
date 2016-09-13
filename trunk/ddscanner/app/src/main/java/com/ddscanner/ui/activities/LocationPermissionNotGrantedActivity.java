@@ -92,6 +92,12 @@ public class LocationPermissionNotGrantedActivity extends AppCompatActivity impl
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        setResult(RESULT_CANCELED);
+        super.onBackPressed();
+    }
+
     public static void showForResult(Activity context, int requestCode) {
         Intent intent = new Intent(context, LocationPermissionNotGrantedActivity.class);
         context.startActivityForResult(intent, requestCode);

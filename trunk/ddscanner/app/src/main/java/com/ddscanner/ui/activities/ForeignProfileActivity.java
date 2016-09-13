@@ -30,6 +30,7 @@ import com.ddscanner.entities.errors.ValidationErrorException;
 import com.ddscanner.rest.BaseCallback;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
+import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogUtils;
 import com.ddscanner.utils.Helpers;
@@ -230,7 +231,7 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
                         helpers.showToast(ForeignProfileActivity.this, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
-                        SocialNetworks.showForResult(ForeignProfileActivity.this, Constants.FOREIGN_USER_REQUEST_CODE_LOGIN);
+                        SocialNetworks.showForResult(ForeignProfileActivity.this, ActivitiesRequestCodes.FOREIGN_USER_REQUEST_CODE_LOGIN);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
                         helpers.showToast(ForeignProfileActivity.this, R.string.toast_server_error);
@@ -265,19 +266,19 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case Constants.FOREIGN_USER_REQUEST_CODE_LOGIN:
+            case ActivitiesRequestCodes.FOREIGN_USER_REQUEST_CODE_LOGIN:
                 if (resultCode == RESULT_OK) {
                     requestUserData();
                 } else {
                     finish();
                 }
                 break;
-            case Constants.FOREIGN_USER_REQUEST_CODE_SHOW_LIST:
+            case ActivitiesRequestCodes.FOREIGN_USER_REQUEST_CODE_SHOW_LIST:
                 if (resultCode == RESULT_CANCELED) {
                     finish();
                 }
                 break;
-            case Constants.FOREIGN_USER_REQUEST_CODE_SHOW_LIKES_LIST:
+            case ActivitiesRequestCodes.FOREIGN_USER_REQUEST_CODE_SHOW_LIKES_LIST:
                 if (resultCode == RESULT_CANCELED) {
                     finish();
                 }
@@ -290,21 +291,21 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
         switch (view.getId()) {
             case R.id.checkins_activity:
                 EventsTracker.trackReviewerCheckInsView();
-                ForeignUserDiveSpotList.show(this, false, false, true, userId, Constants.FOREIGN_USER_REQUEST_CODE_SHOW_LIST);
+                ForeignUserDiveSpotList.show(this, false, false, true, userId, ActivitiesRequestCodes.FOREIGN_USER_REQUEST_CODE_SHOW_LIST);
                 break;
             case R.id.created_activity:
                 EventsTracker.trackUserCreatedView();
-                ForeignUserDiveSpotList.show(this, false, true, false, userId, Constants.FOREIGN_USER_REQUEST_CODE_SHOW_LIST);
+                ForeignUserDiveSpotList.show(this, false, true, false, userId, ActivitiesRequestCodes.FOREIGN_USER_REQUEST_CODE_SHOW_LIST);
                 break;
             case R.id.edited_activity:
                 EventsTracker.trackReviewerEditedView();
-                ForeignUserDiveSpotList.show(this, true, false, false, userId, Constants.FOREIGN_USER_REQUEST_CODE_SHOW_LIST);
+                ForeignUserDiveSpotList.show(this, true, false, false, userId, ActivitiesRequestCodes.FOREIGN_USER_REQUEST_CODE_SHOW_LIST);
                 break;
             case R.id.likeLayout:
-                ForeignUserLikesDislikesActivity.show(this, true, userId, Constants.FOREIGN_USER_REQUEST_CODE_SHOW_LIKES_LIST);
+                ForeignUserLikesDislikesActivity.show(this, true, userId, ActivitiesRequestCodes.FOREIGN_USER_REQUEST_CODE_SHOW_LIKES_LIST);
                 break;
             case R.id.dislikeLayout:
-                ForeignUserLikesDislikesActivity.show(this, false, userId, Constants.FOREIGN_USER_REQUEST_CODE_SHOW_LIKES_LIST);
+                ForeignUserLikesDislikesActivity.show(this, false, userId, ActivitiesRequestCodes.FOREIGN_USER_REQUEST_CODE_SHOW_LIKES_LIST);
                 break;
             case R.id.openSocialNetwork:
                 openLink(user.getSocialId(), user.getType());

@@ -28,6 +28,7 @@ import com.ddscanner.rest.BaseCallback;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.ForeignUserLikesAdapter;
+import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogUtils;
 import com.ddscanner.utils.Helpers;
@@ -124,7 +125,7 @@ public class ForeignUserLikesDislikesActivity extends AppCompatActivity {
                         helpers.showToast(ForeignUserLikesDislikesActivity.this, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
-                        SocialNetworks.showForResult(ForeignUserLikesDislikesActivity.this, Constants.FOREIGN_USER_SPOT_LIST_REQUEST_CODE_LOGIN);
+                        SocialNetworks.showForResult(ForeignUserLikesDislikesActivity.this, ActivitiesRequestCodes.FOREIGN_USER_SPOT_LIST_REQUEST_CODE_LOGIN);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
                         helpers.showToast(ForeignUserLikesDislikesActivity.this, R.string.toast_server_error);
@@ -185,7 +186,7 @@ public class ForeignUserLikesDislikesActivity extends AppCompatActivity {
                         helpers.showToast(ForeignUserLikesDislikesActivity.this, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
-                        SocialNetworks.showForResult(ForeignUserLikesDislikesActivity.this, Constants.FOREIGN_USER_SPOT_LIST_REQUEST_CODE_LOGIN);
+                        SocialNetworks.showForResult(ForeignUserLikesDislikesActivity.this, ActivitiesRequestCodes.FOREIGN_USER_SPOT_LIST_REQUEST_CODE_LOGIN);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
                         helpers.showToast(ForeignUserLikesDislikesActivity.this, R.string.toast_server_error);
@@ -232,7 +233,7 @@ public class ForeignUserLikesDislikesActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == Constants.FOREIGN_USER_SPOT_LIST_REQUEST_CODE_LOGIN) {
+        if (requestCode == ActivitiesRequestCodes.FOREIGN_USER_SPOT_LIST_REQUEST_CODE_LOGIN) {
             if (resultCode == RESULT_OK) {
                 if (isLikes) {
                     getUserLikes();
