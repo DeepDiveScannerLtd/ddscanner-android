@@ -11,7 +11,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -37,10 +36,10 @@ import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.CustomPagerAdapter;
 import com.ddscanner.ui.fragments.SearchDiveSpotsFragment;
 import com.ddscanner.ui.fragments.SearchLocationFragment;
+import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogUtils;
 import com.ddscanner.utils.Helpers;
-import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.places.AutocompletePrediction;
@@ -80,7 +79,7 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
     private CustomPagerAdapter adapter;
     private Handler handler = new Handler();
     private List<String> placeList = new ArrayList<>();
-    private static final int REQUEST_CODE_LOGIN = Constants.SEARCH_ACTIVITY_REQUEST_CODE_LOGIN;
+    private static final int REQUEST_CODE_LOGIN = ActivitiesRequestCodes.SEARCH_ACTIVITY_REQUEST_CODE_LOGIN;
 
     private GoogleApiClient googleApiClient;
 
@@ -365,7 +364,7 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
 
     @Subscribe
     public void goToMyLocation(GoToMyLocationButtonClickedEvent event) {
-        setResult(Constants.SEARCH_ACTIVITY_RESULT_CODE_MY_LOCATION);
+        setResult(ActivitiesRequestCodes.SEARCH_ACTIVITY_RESULT_CODE_MY_LOCATION);
         finish();
     }
 

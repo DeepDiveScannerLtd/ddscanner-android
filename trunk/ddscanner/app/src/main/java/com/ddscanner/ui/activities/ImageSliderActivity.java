@@ -1,7 +1,6 @@
 package com.ddscanner.ui.activities;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -15,7 +14,6 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,7 +21,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
-import com.ddscanner.entities.Comment;
 import com.ddscanner.entities.FiltersResponseEntity;
 import com.ddscanner.entities.Image;
 import com.ddscanner.entities.errors.BadRequestException;
@@ -40,6 +37,7 @@ import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.SliderImagesAdapter;
 import com.ddscanner.ui.views.SimpleGestureFilter;
+import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogUtils;
 import com.ddscanner.utils.Helpers;
@@ -338,7 +336,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         SharedPreferenceHelper.logout();
-                        SocialNetworks.showForResult(ImageSliderActivity.this, Constants.SLIDER_ACTIVITY_REQUEST_CODE_LOGIN_FOR_DELETE);
+                        SocialNetworks.showForResult(ImageSliderActivity.this, ActivitiesRequestCodes.SLIDER_ACTIVITY_REQUEST_CODE_LOGIN_FOR_DELETE);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
                         helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
@@ -368,12 +366,12 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == Constants.SLIDER_ACTIVITY_REQUEST_CODE_LOGIN_FOR_REPORT) {
+        if (requestCode == ActivitiesRequestCodes.SLIDER_ACTIVITY_REQUEST_CODE_LOGIN_FOR_REPORT) {
             if (resultCode == RESULT_OK) {
                 reportImage(reportName, reportType, reportDescription);
             }
         }
-        if (requestCode == Constants.SLIDER_ACTIVITY_REQUEST_CODE_LOGIN_FOR_DELETE) {
+        if (requestCode == ActivitiesRequestCodes.SLIDER_ACTIVITY_REQUEST_CODE_LOGIN_FOR_DELETE) {
             if (resultCode == RESULT_OK) {
                 deleteImage(deleteImageName);
             }
@@ -389,7 +387,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         materialDialog.show();
         ReportRequest reportRequest = new ReportRequest();
         if (!SharedPreferenceHelper.isUserLoggedIn() || SharedPreferenceHelper.getToken().isEmpty() || SharedPreferenceHelper.getSn().isEmpty()) {
-            SocialNetworks.showForResult(this, Constants.SLIDER_ACTIVITY_REQUEST_CODE_LOGIN_FOR_REPORT);
+            SocialNetworks.showForResult(this, ActivitiesRequestCodes.SLIDER_ACTIVITY_REQUEST_CODE_LOGIN_FOR_REPORT);
             return;
         }
         reportRequest.setName(imageName);
@@ -440,7 +438,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         SharedPreferenceHelper.logout();
-                        SocialNetworks.showForResult(ImageSliderActivity.this, Constants.SLIDER_ACTIVITY_REQUEST_CODE_LOGIN_FOR_REPORT);
+                        SocialNetworks.showForResult(ImageSliderActivity.this, ActivitiesRequestCodes.SLIDER_ACTIVITY_REQUEST_CODE_LOGIN_FOR_REPORT);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
                         helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);

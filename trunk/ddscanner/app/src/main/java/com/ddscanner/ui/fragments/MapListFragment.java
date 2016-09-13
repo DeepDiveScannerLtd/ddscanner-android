@@ -15,6 +15,7 @@ import android.support.v7.widget.AppCompatDrawableManager;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +43,7 @@ import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.activities.DiveSpotDetailsActivity;
 import com.ddscanner.ui.adapters.DiveSpotsListAdapter;
 import com.ddscanner.ui.managers.DiveSpotsClusterManager;
+import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
@@ -58,7 +60,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.rey.material.widget.Button;
 import com.rey.material.widget.ProgressView;
 import com.squareup.otto.Subscribe;
 
@@ -173,7 +174,8 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
         view = inflater.inflate(R.layout.fragment_maplist, container, false);
         findViews();
         setMapView(savedInstanceState);
-        baseAppCompatActivity.getLocation(Constants.REQUEST_CODE_MAP_LIST_FRAGMENT_GET_LOCATION_ON_FRAGMENT_START);
+        Log.i(TAG, "MapListFragment getLocation 1");
+        baseAppCompatActivity.getLocation(ActivitiesRequestCodes.REQUEST_CODE_MAP_LIST_FRAGMENT_GET_LOCATION_ON_FRAGMENT_START);
         return view;
     }
 
@@ -319,7 +321,8 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
             case R.id.go_to_my_location:
                 goToMyLocation.setVisibility(View.GONE);
                 progressBarMyLocation.setVisibility(View.VISIBLE);
-                baseAppCompatActivity.getLocation(Constants.REQUEST_CODE_MAP_LIST_FRAGMENT_GO_TO_CURRENT_LOCATION);
+                Log.i(TAG, "MapListFragment getLocation 2");
+                baseAppCompatActivity.getLocation(ActivitiesRequestCodes.REQUEST_CODE_MAP_LIST_FRAGMENT_GO_TO_CURRENT_LOCATION);
                 break;
             case R.id.dive_spot_info_layout:
                 DiveSpotDetailsActivity.show(getActivity(), String.valueOf(lastDiveSpotId), EventsTracker.SpotViewSource.FROM_MAP);
@@ -467,7 +470,7 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
         LogUtils.i(TAG, "location check: onLocationReady, request codes = " + event.getRequestCodes());
         for (Integer code : event.getRequestCodes()) {
             switch (code) {
-                case Constants.REQUEST_CODE_MAP_LIST_FRAGMENT_GO_TO_CURRENT_LOCATION:
+                case ActivitiesRequestCodes.REQUEST_CODE_MAP_LIST_FRAGMENT_GO_TO_CURRENT_LOCATION:
                     LatLng myLocation = new LatLng(event.getLocation().getLatitude(), event.getLocation().getLongitude());
                     CameraPosition cameraPosition = new CameraPosition.Builder()
                             .target(myLocation)
@@ -500,7 +503,7 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
                     }
                     break;
 
-                case Constants.REQUEST_CODE_MAP_LIST_FRAGMENT_GET_LOCATION_ON_FRAGMENT_START:
+                case ActivitiesRequestCodes.REQUEST_CODE_MAP_LIST_FRAGMENT_GET_LOCATION_ON_FRAGMENT_START:
                     LogUtils.i(TAG, "location check: GET_LOCATION_ON_FRAGMENT_START: event.getLocation() = " + event.getLocation() + " diveSpotsClusterManager = " + diveSpotsClusterManager);
                     if (diveSpotsClusterManager == null) {
                         // this means map has not yet been initialized. we need to remember location.

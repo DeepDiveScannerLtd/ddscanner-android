@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -29,7 +30,7 @@ public class LocationProvidersNotAvailableActivity extends AppCompatActivity imp
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        LogUtils.i(TAG, "onCreate " + this);
+        LogUtils.i(TAG, "LocationProvidersNotAvailableActivity onCreate " + this);
         setContentView(R.layout.activity_no_location_providers);
 
         findViewById(R.id.btn_open_settings).setOnClickListener(this);
@@ -79,7 +80,14 @@ public class LocationProvidersNotAvailableActivity extends AppCompatActivity imp
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        setResult(RESULT_CANCELED);
+        super.onBackPressed();
+    }
+
     public static void showForResult(Activity context, int requestCode) {
+        Log.i(TAG, "LocationProvidersNotAvailableActivity showForResult");
         Intent intent = new Intent(context, LocationProvidersNotAvailableActivity.class);
         context.startActivityForResult(intent, requestCode);
     }

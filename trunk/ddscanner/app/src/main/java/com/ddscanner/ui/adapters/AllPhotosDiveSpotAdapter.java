@@ -1,7 +1,6 @@
 package com.ddscanner.ui.adapters;
 
 import android.app.Activity;
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +11,7 @@ import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.Image;
 import com.ddscanner.ui.activities.ImageSliderActivity;
-import com.ddscanner.utils.Constants;
+import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;
 
@@ -72,7 +71,7 @@ public class AllPhotosDiveSpotAdapter extends RecyclerView.Adapter<AllPhotosDive
         @Override
         public void onClick(View v) {
             EventsTracker.trackDiveSpotPhotosView();
-            ImageSliderActivity.showForResult(context, images, getAdapterPosition(), path, Constants.PHOTOS_ACTIVITY_REQUEST_CODE_SLIDER);
+            ImageSliderActivity.showForResult(context, images, getAdapterPosition(), path, ActivitiesRequestCodes.PHOTOS_ACTIVITY_REQUEST_CODE_SLIDER);
         }
     }
 

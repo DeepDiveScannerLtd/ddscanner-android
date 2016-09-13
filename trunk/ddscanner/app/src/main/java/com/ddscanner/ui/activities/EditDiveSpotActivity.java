@@ -30,8 +30,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
-import com.ddscanner.entities.DiveSpotFull;
-import com.ddscanner.entities.DivespotDetails;
 import com.ddscanner.entities.EditDiveSpotEntity;
 import com.ddscanner.entities.EditDiveSpotWrapper;
 import com.ddscanner.entities.FiltersResponseEntity;
@@ -51,6 +49,7 @@ import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.AddPhotoToDsListAdapter;
 import com.ddscanner.ui.adapters.SealifeListAddingDiveSpotAdapter;
 import com.ddscanner.ui.adapters.SpinnerItemsAdapter;
+import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogUtils;
 import com.ddscanner.utils.Helpers;
@@ -64,9 +63,6 @@ import com.google.gson.JsonParser;
 import com.rey.material.widget.ProgressView;
 import com.rey.material.widget.Spinner;
 import com.squareup.otto.Subscribe;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -365,7 +361,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
                     .count(maxPhotosCount)
                     .start(this, RC_PICK_PHOTO);
         } else {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, Constants.ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_PERMISSION_READ_STORAGE);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, ActivitiesRequestCodes.ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_PERMISSION_READ_STORAGE);
         }
     }
 
@@ -737,7 +733,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
-            case Constants.ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_PERMISSION_READ_STORAGE: {
+            case ActivitiesRequestCodes.ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_PERMISSION_READ_STORAGE: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     pickPhotoFromGallery();
                 } else {

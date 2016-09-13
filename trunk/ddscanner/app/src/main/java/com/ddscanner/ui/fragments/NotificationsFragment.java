@@ -7,7 +7,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -35,7 +34,7 @@ import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.activities.MainActivity;
 import com.ddscanner.ui.adapters.NotificationsPagerAdapter;
 import com.ddscanner.ui.views.LoginView;
-import com.ddscanner.utils.Constants;
+import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogUtils;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
@@ -338,7 +337,7 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case Constants.REQUEST_CODE_OPEN_LOGIN_SCREEN:
+            case ActivitiesRequestCodes.REQUEST_CODE_OPEN_LOGIN_SCREEN:
                 if (resultCode == android.app.Activity.RESULT_OK) {
                     tabLayout.setVisibility(View.VISIBLE);
                 }
