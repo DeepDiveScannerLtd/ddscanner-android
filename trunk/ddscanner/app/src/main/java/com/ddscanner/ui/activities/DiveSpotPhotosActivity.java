@@ -29,6 +29,7 @@ import com.ddscanner.ui.fragments.DiveSpotAllPhotosFragment;
 import com.ddscanner.ui.fragments.DiveSpotPhotosFragment;
 import com.ddscanner.ui.fragments.DiveSpotReviewsPhoto;
 import com.ddscanner.utils.ActivitiesRequestCodes;
+import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogUtils;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.SharedPreferenceHelper;

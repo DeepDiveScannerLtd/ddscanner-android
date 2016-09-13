@@ -881,7 +881,7 @@ public class MainActivity extends BaseAppCompatActivity
         } else {
             isTryToOpenAddDiveSpotActivity = true;
             Intent intent = new Intent(MainActivity.this, SocialNetworks.class);
-            startActivityForResult(intent, REQUEST_CODE_LOGIN);
+            startActivityForResult(intent, ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_LOGIN);
         }
     }
 
