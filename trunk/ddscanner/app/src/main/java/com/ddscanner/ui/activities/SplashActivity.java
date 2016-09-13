@@ -10,6 +10,9 @@ import android.os.Handler;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ddscanner.DDScannerApplication;
@@ -42,6 +45,9 @@ public class SplashActivity extends BaseAppCompatActivity {
     private Runnable runnable;
     private long activityShowTimestamp;
 
+    private LinearLayout mainLayout;
+    private Animation fadeInAnimation;
+
     private TextView progressMessage;
 
     @Override
@@ -59,6 +65,12 @@ public class SplashActivity extends BaseAppCompatActivity {
         activityShowTimestamp = System.currentTimeMillis();
 
         progressMessage = (TextView) findViewById(R.id.message);
+
+        mainLayout = (LinearLayout) findViewById(R.id.main);
+
+        fadeInAnimation = AnimationUtils.loadAnimation(this, R.anim.fadein);
+
+        mainLayout.startAnimation(fadeInAnimation);
 
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
