@@ -12,6 +12,12 @@
         <item name="android:windowContentTransitions">true</item>
     </style>
 
+    <style name="ToolbarMenuStyle" parent="ThemeOverlay.AppCompat.Light">
+        <item name="android:colorBackground">@color/white</item>
+        <item name="android:textColor">@color/black_text</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
     <style name="popupMenuStyle" parent="@android:style/Widget.PopupMenu">
         <item name="android:popupBackground">@color/white</item>
     </style>
