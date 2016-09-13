@@ -56,6 +56,7 @@ public class SplashActivity extends BaseAppCompatActivity {
                         | View.SYSTEM_UI_FLAG_IMMERSIVE);
 
         setContentView(R.layout.activity_splash);
+        activityShowTimestamp = System.currentTimeMillis();
 
         progressMessage = (TextView) findViewById(R.id.message);
 
@@ -179,7 +180,6 @@ public class SplashActivity extends BaseAppCompatActivity {
         if (!helpers.hasConnection(this)) {
             DDScannerApplication.showErrorActivity(this);
         }
-        activityShowTimestamp = System.currentTimeMillis();
     }
 
 
