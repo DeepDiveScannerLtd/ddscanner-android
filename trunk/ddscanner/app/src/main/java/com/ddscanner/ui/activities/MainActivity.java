@@ -174,7 +174,7 @@ public class MainActivity extends BaseAppCompatActivity
                 .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
                     @Override
                     public void onConnected(@Nullable Bundle bundle) {
-//                        refreshIdTokenSilently();
+                        refreshIdTokenSilently();
                         if (needToClearDefaultAccount) {
                             Auth.GoogleSignInApi.signOut(mGoogleApiClient);
                             mGoogleApiClient.clearDefaultAccountAndReconnect();
@@ -215,7 +215,8 @@ public class MainActivity extends BaseAppCompatActivity
                         GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
                             @Override
                             public void onCompleted(JSONObject object, GraphResponse response) {
-                                sendRegisterRequest(putTokensToMap(SharedPreferenceHelper.getUserAppId(), SignInType.FACEBOOK.getName(), loginResult.getAccessToken().getToken()), SignInType.FACEBOOK);
+                                sendRegisterRequest(putTokensToMap(SharedPreferenceHelper.getUserAppId(), "fb", loginResult.getAccessToken().getToken()), SignInType.FACEBOOK);
+
                             }
                         }).executeAsync();
                     }
@@ -403,7 +404,7 @@ public class MainActivity extends BaseAppCompatActivity
                 if (result.isSuccess()) {
                     GoogleSignInAccount acct = result.getSignInAccount();
                     String idToken = acct.getIdToken();
-                    sendRegisterRequest(putTokensToMap(SharedPreferenceHelper.getUserAppId(), SignInType.GOOGLE.getName(), idToken), SignInType.GOOGLE);
+                    sendRegisterRequest(putTokensToMap(SharedPreferenceHelper.getUserAppId(), "go", idToken), SignInType.GOOGLE);
                 }
                 break;
             default:
@@ -757,7 +758,7 @@ public class MainActivity extends BaseAppCompatActivity
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult result) {
-        // TODO Implement
+
     }
 
     public void setProfileFragment(ProfileFragment profileFragment) {

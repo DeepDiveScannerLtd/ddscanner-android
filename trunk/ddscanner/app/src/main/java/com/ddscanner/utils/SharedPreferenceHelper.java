@@ -14,6 +14,7 @@ public class SharedPreferenceHelper {
     private static final String TOKEN = "TOKEN";
     private static final String IS_USER_SIGNED_IN = "ISLOGINED";
     private static final String IS_FIRST_LAUNCH = "IS_FIRST_LAUNCH";
+    private static final String SIGN_IN_TYPE = "SIGN_IN_TYPE";
     private static final String SN = "SOCIALNETWORK";
     private static final String SECRET = "SECRET";
     private static final String CURRENTS = "CURRENTS";
@@ -132,8 +133,10 @@ public class SharedPreferenceHelper {
                 throw new RuntimeException("signInType must not be null when isUserSignedIn = true");
             }
             editor.putString(IS_USER_SIGNED_IN, "1");
+            editor.putString(SIGN_IN_TYPE, signInType.getName());
         } else {
             editor.putString(IS_USER_SIGNED_IN, "0");
+            editor.remove(SIGN_IN_TYPE);
         }
         System.out.println("LOGINED");
         editor.commit();

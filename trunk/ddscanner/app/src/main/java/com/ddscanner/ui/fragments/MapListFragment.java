@@ -203,6 +203,7 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
         rc = (RecyclerView) view.findViewById(R.id.cv);
         please = (RelativeLayout) view.findViewById(R.id.please);
         mapListFAB = (FloatingActionButton) view.findViewById(R.id.map_list_fab);
+        addDsFab = (FloatingActionButton) view.findViewById(R.id.add_ds_fab);
         addDsFab.setOnClickListener(this);
         mapListFAB.setOnClickListener(this);
         rc.setHasFixedSize(true);

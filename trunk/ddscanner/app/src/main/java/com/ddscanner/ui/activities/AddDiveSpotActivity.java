@@ -448,8 +448,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                         // TODO Handle
                         helpers.showToast(AddDiveSpotActivity.this, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
-                        // TODO Try silent login
-
+                        // TODO Handle
                         SharedPreferenceHelper.logout();
                         SocialNetworks.showForResult(AddDiveSpotActivity.this, RC_LOGIN_TO_SEND);
                     } catch (CommentNotFoundException e) {
