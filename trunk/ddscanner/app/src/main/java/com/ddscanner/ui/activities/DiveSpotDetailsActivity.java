@@ -449,12 +449,12 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         } else {
             creatorName.setText("DDScanner");
             creatorLayout.setVisibility(View.VISIBLE);
-            Picasso.with(this).load(R.drawable.logo)
+            Picasso.with(this).load(R.drawable.avatar_profile_dds)
                     .resize(Math.round(helpers.convertDpToPixel(avatarImageSize, this)), Math.round(helpers.convertDpToPixel(avatarImageSize, this)))
                     .centerCrop()
                     .placeholder(R.drawable.avatar_profile_default)
                     .transform(new CropCircleTransformation()).into(creatorAvatar);
-            User user = new User("DDScanner", String.valueOf(R.drawable.logo));
+            User user = new User("DDScanner", String.valueOf(R.drawable.avatar_profile_dds));
             creatorsEditorsList.add(user);
         }
 

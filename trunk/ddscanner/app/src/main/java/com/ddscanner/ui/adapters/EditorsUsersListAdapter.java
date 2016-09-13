@@ -46,7 +46,7 @@ public class EditorsUsersListAdapter extends RecyclerView.Adapter<EditorsUsersLi
     public void onBindViewHolder(EditorsUsersListViewHolder holder, final int position) {
         if (!userArrayList.get(position).getPicture().contains("http")) {
             Picasso.with(context)
-                    .load(R.drawable.logo)
+                    .load(R.drawable.avatar_profile_dds)
                     .resize(Math.round(helpers.convertDpToPixel(58, context)), Math.round(helpers.convertDpToPixel(58, context)))
                     .centerCrop()
                     .transform(new CropCircleTransformation())
