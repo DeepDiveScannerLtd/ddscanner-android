@@ -65,6 +65,7 @@ import com.ddscanner.ui.fragments.ActivityNotificationsFragment;
 import com.ddscanner.ui.fragments.AllNotificationsFragment;
 import com.ddscanner.ui.fragments.NotificationsFragment;
 import com.ddscanner.ui.fragments.ProfileFragment;
+import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogUtils;
 import com.ddscanner.utils.Helpers;
@@ -104,19 +105,10 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 
-/**
- * Created by lashket on 20.4.16.
- */
 public class MainActivity extends BaseAppCompatActivity
         implements ViewPager.OnPageChangeListener, View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
 
     private static final String TAG = MainActivity.class.getName();
-
-    private static final int REQUEST_CODE_PLACE_AUTOCOMPLETE = 1000;
-    private static final int REQUEST_CODE_PICK_PHOTO = 8000;
-    private static final int REQUEST_CODE_LOGIN = 7000;
-    private static final int REQUEST_CODE_IMAGE_CAPTURE = 6000;
-    private static final int REQUEST_CODE_TURN_ON_LOCATION_PROVIDERS = 5000;
 
     private Uri capturedImageUri;
 
@@ -139,7 +131,6 @@ public class MainActivity extends BaseAppCompatActivity
     private boolean isDiveSpotInfoWindowShown = false;
     private boolean isDiveSpotListIsShown = false;
     private int positionToScroll;
-    private LatLngBounds latLngBounds;
 
     private CallbackManager facebookCallbackManager;
     private GoogleApiClient mGoogleApiClient;
@@ -154,9 +145,6 @@ public class MainActivity extends BaseAppCompatActivity
         super.onCreate(savedInstanceState);
         isHasInternetConnection = getIntent().getBooleanExtra(Constants.IS_HAS_INTERNET, false);
         clearFilterSharedPrefences();
-        if (getIntent().getParcelableExtra(Constants.MAIN_ACTIVITY_ACTVITY_EXTRA_LATLNGBOUNDS) != null) {
-            latLngBounds = getIntent().getParcelableExtra(Constants.MAIN_ACTIVITY_ACTVITY_EXTRA_LATLNGBOUNDS);
-        }
         startActivity();
         if (!isHasInternetConnection) {
             LogUtils.i(TAG, "internetConnectionClosed 2");
@@ -173,9 +161,6 @@ public class MainActivity extends BaseAppCompatActivity
         searchLocationBtn.setOnClickListener(this);
         btnFilter.setOnClickListener(this);
         setupTabLayout();
-        if (latLngBounds == null) {
-            getLocation(Constants.REQUEST_CODE_MAIN_ACTIVITY_GET_LOCATION_ON_ACTIVITY_START);
-        }
         EventsTracker.trackDiveSpotMapView();
     }
 
@@ -212,13 +197,13 @@ public class MainActivity extends BaseAppCompatActivity
         facebookCallbackManager = CallbackManager.Factory.create();
     }
 
-    /*Google plus*/
+    /*Google*/
     private void googleSignIn() {
         if (mGoogleApiClient == null) {
             initGoogleLoginManager();
         }
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-        startActivityForResult(signInIntent, Constants.REQUEST_CODE_NEED_TO_LOGIN);
+        startActivityForResult(signInIntent, ActivitiesRequestCodes.REQUEST_CODE_NEED_TO_LOGIN);
     }
 
     private void fbLogin() {
@@ -271,13 +256,6 @@ public class MainActivity extends BaseAppCompatActivity
         }
     }
 
-    @Subscribe
-    public void mapViewInitialized(MapViewInitializedEvent event) {
-        if (latLngBounds != null) {
-            DDScannerApplication.bus.post(new PlaceChoosedEvent(latLngBounds));
-        }
-    }
-
     private void findViews() {
         materialDialog = helpers.getMaterialDialog(this);
         toolbarTabLayout = (TabLayout) findViewById(R.id.toolbar_tablayout);
@@ -295,10 +273,9 @@ public class MainActivity extends BaseAppCompatActivity
         mainViewPager.setCurrentItem(0);
     }
 
-    public static void show(Context context, boolean isHasInternet, boolean isHasLocation) {
+    public static void show(Context context, boolean isHasInternet) {
         Intent intent = new Intent(context, MainActivity.class);
         intent.putExtra(Constants.IS_HAS_INTERNET, isHasInternet);
-        intent.putExtra(Constants.IS_LOCATION, isHasLocation);
         context.startActivity(intent);
     }
 
@@ -342,7 +319,7 @@ public class MainActivity extends BaseAppCompatActivity
 //        if ((position == 2 || position == 1) && !SharedPreferenceHelper.isUserLoggedIn()) {
 //            positionToScroll = position;
 //            Intent intent = new Intent(MainActivity.this, SocialNetworks.class);
-//            startActivityForResult(intent, REQUEST_CODE_LOGIN);
+//            startActivityForResult(intent, REQUEST_CODE_MAIN_ACTIVITY_LOGIN);
 //        }
     }
 
@@ -353,7 +330,7 @@ public class MainActivity extends BaseAppCompatActivity
 //                materialDialog.show();
 //                openSearchLocationWindow();
 
-                SearchSpotOrLocationActivity.showForResult(MainActivity.this, REQUEST_CODE_PLACE_AUTOCOMPLETE);
+                SearchSpotOrLocationActivity.showForResult(MainActivity.this, ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_PLACE_AUTOCOMPLETE);
         //        EventsTracker.trackSearchActivityOpened();
                 break;
             case R.id.filter_menu_button:
@@ -378,7 +355,7 @@ public class MainActivity extends BaseAppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case REQUEST_CODE_PLACE_AUTOCOMPLETE:
+            case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_PLACE_AUTOCOMPLETE:
                 materialDialog.dismiss();
                 switch (resultCode) {
                     case RESULT_OK:
@@ -391,24 +368,25 @@ public class MainActivity extends BaseAppCompatActivity
 //                        DDScannerApplication.bus.post(new PlaceChoosedEvent(latLngBounds));
 //                    }
                         break;
-                    case Constants.SEARCH_ACTIVITY_RESULT_CODE_MY_LOCATION:
-                        getLocation(Constants.MAIN_ACTIVITY_REQUEST_CODE_GO_TO_MY_LOCATION);
+                    case ActivitiesRequestCodes.SEARCH_ACTIVITY_RESULT_CODE_MY_LOCATION:
+                        Log.i(TAG, "MainActivity getLocation 2");
+                        getLocation(ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_GO_TO_MY_LOCATION);
                         break;
                 }
 
                 break;
-            case REQUEST_CODE_IMAGE_CAPTURE:
+            case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_IMAGE_CAPTURE:
                 if (resultCode == RESULT_OK) {
                     mainViewPagerAdapter.setProfileImage(capturedImageUri);
                 }
                 break;
-            case REQUEST_CODE_PICK_PHOTO:
+            case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_PICK_PHOTO:
                 if (resultCode == RESULT_OK) {
                     Uri uri = data.getData();
                     mainViewPagerAdapter.setProfileImage(uri);
                 }
                 break;
-            case REQUEST_CODE_LOGIN:
+            case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_LOGIN:
                 if (resultCode == RESULT_OK) {
                     if (isTryToOpenAddDiveSpotActivity) {
                         AddDiveSpotActivity.showForResult(this, Constants.MAIN_ACTIVITY_ACTVITY_REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY, true);
@@ -423,7 +401,7 @@ public class MainActivity extends BaseAppCompatActivity
                     mainViewPager.setCurrentItem(0, false);
                 }
                 break;
-            case Constants.REQUEST_CODE_NEED_TO_LOGIN:
+            case ActivitiesRequestCodes.REQUEST_CODE_NEED_TO_LOGIN:
                 GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
                 Log.d(TAG, "onActivityResult:GET_TOKEN:success:" + result.getStatus().isSuccess());
                 if (result.isSuccess()) {
@@ -497,7 +475,7 @@ public class MainActivity extends BaseAppCompatActivity
         capturedImageUri = Uri.fromFile(image);
         takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, capturedImageUri);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(takePictureIntent, REQUEST_CODE_IMAGE_CAPTURE);
+            startActivityForResult(takePictureIntent, ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_IMAGE_CAPTURE);
         }
     }
 
@@ -673,13 +651,10 @@ public class MainActivity extends BaseAppCompatActivity
         LogUtils.i(TAG, "location check: onLocationReady request codes = " + event.getRequestCodes());
         for (Integer code : event.getRequestCodes()) {
             switch (code) {
-                case Constants.REQUEST_CODE_MAIN_ACTIVITY_GET_LOCATION_ON_ACTIVITY_START:
+                case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_GO_TO_MY_LOCATION:
                     if (SharedPreferenceHelper.isUserAppIdReceived()) {
                         identifyUser(String.valueOf(event.getLocation().getLatitude()), String.valueOf(event.getLocation().getLongitude()));
-                        DDScannerApplication.bus.post(new PlaceChoosedEvent(new LatLngBounds(new LatLng(event.getLocation().getLatitude() - 1, event.getLocation().getLongitude() - 1), new LatLng(event.getLocation().getLatitude() + 1, event.getLocation().getLongitude() + 1))));
                     }
-                    break;
-                case Constants.MAIN_ACTIVITY_REQUEST_CODE_GO_TO_MY_LOCATION:
                     DDScannerApplication.bus.post(new PlaceChoosedEvent(new LatLngBounds(new LatLng(event.getLocation().getLatitude() - 1, event.getLocation().getLongitude() - 1), new LatLng(event.getLocation().getLatitude() + 1, event.getLocation().getLongitude() + 1))));
                     break;
             }
@@ -691,7 +666,7 @@ public class MainActivity extends BaseAppCompatActivity
         if (checkWriteStoragePermision(this)) {
             dispatchTakePictureIntent();
         } else {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, Constants.MAIN_ACTIVITY_ACTVITY_REQUEST_PERMISSION_CAMERA_AND_WRITE_STORAGE);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_PERMISSION_CAMERA_AND_WRITE_STORAGE);
 
         }
     }
@@ -701,14 +676,14 @@ public class MainActivity extends BaseAppCompatActivity
         if (checkReadStoragePermission(this)) {
             pickphotoFromGallery();
         } else {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, Constants.MAIN_ACTIVITY_ACTVITY_REQUEST_PERMISSION_READ_STORAGE);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_PERMISSION_READ_STORAGE);
         }
     }
 
     private void pickphotoFromGallery() {
         Intent i = new Intent(Intent.ACTION_PICK,
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(i, REQUEST_CODE_PICK_PHOTO);
+        startActivityForResult(i, ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_PICK_PHOTO);
     }
 
     private boolean checkPermissionReadStorage() {
@@ -732,14 +707,14 @@ public class MainActivity extends BaseAppCompatActivity
     @Subscribe
     public void showLoginActivity(ShowLoginActivityIntent event) {
         Intent intent = new Intent(MainActivity.this, SocialNetworks.class);
-        startActivityForResult(intent, REQUEST_CODE_LOGIN);
+        startActivityForResult(intent, ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_LOGIN);
     }
 
     @Subscribe
     public void openLoginWindowToAdd(OpenAddDsActivityAfterLogin event) {
         isTryToOpenAddDiveSpotActivity = true;
         Intent intent = new Intent(MainActivity.this, SocialNetworks.class);
-        startActivityForResult(intent, REQUEST_CODE_LOGIN);
+        startActivityForResult(intent, ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_LOGIN);
     }
 
     @Subscribe
@@ -835,7 +810,7 @@ public class MainActivity extends BaseAppCompatActivity
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
-            case Constants.MAIN_ACTIVITY_ACTVITY_REQUEST_PERMISSION_READ_STORAGE: {
+            case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_PERMISSION_READ_STORAGE: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     pickphotoFromGallery();
                 } else {
@@ -843,7 +818,7 @@ public class MainActivity extends BaseAppCompatActivity
                 }
                 return;
             }
-            case Constants.MAIN_ACTIVITY_ACTVITY_REQUEST_PERMISSION_CAMERA:{
+            case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_PERMISSION_CAMERA:{
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     dispatchTakePictureIntent();
                 } else {
@@ -851,7 +826,7 @@ public class MainActivity extends BaseAppCompatActivity
                 }
                 return;
             }
-            case Constants.MAIN_ACTIVITY_ACTVITY_REQUEST_PERMISSION_CAMERA_AND_WRITE_STORAGE:{
+            case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_PERMISSION_CAMERA_AND_WRITE_STORAGE:{
                 if (grantResults.length > 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
                     dispatchTakePictureIntent();
                 } else {
@@ -859,7 +834,7 @@ public class MainActivity extends BaseAppCompatActivity
                 }
                 return;
             }
-            case Constants.MAIN_ACTIVITY_ACTVITY_REQUEST_PERMISSION_WRITE_STORAGE:{
+            case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_PERMISSION_WRITE_STORAGE:{
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     dispatchTakePictureIntent();
                 } else {
@@ -906,7 +881,7 @@ public class MainActivity extends BaseAppCompatActivity
         } else {
             isTryToOpenAddDiveSpotActivity = true;
             Intent intent = new Intent(MainActivity.this, SocialNetworks.class);
-            startActivityForResult(intent, REQUEST_CODE_LOGIN);
+            startActivityForResult(intent, ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_LOGIN);
         }
     }
 

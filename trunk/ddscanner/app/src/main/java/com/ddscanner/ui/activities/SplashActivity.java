@@ -1,10 +1,8 @@
 package com.ddscanner.ui.activities;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
@@ -22,27 +20,23 @@ import com.ddscanner.events.UserIdentificationFailedEvent;
 import com.ddscanner.events.UserSuccessfullyIdentifiedEvent;
 import com.ddscanner.services.RegistrationIntentService;
 import com.ddscanner.ui.views.DDProgressBarView;
+import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogUtils;
 import com.ddscanner.utils.Helpers;
+import com.ddscanner.utils.LocationHelper;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.squareup.otto.Subscribe;
 
-/**
- * Created by Vitaly on 29.11.2015.
- */
 public class SplashActivity extends BaseAppCompatActivity {
 
     private static final String TAG = SplashActivity.class.getName();
-    private static final int REQUEST_CODE_PLAY_SERVICES_RESOLUTION = 9000;
-
-    private LocationManager locationManager;
 
     private Helpers helpers = new Helpers();
 
-    private Handler h = new Handler();
-    private Runnable runnable;
+    private Handler handler = new Handler();
+    private Runnable showMainActivityRunnable;
     private long activityShowTimestamp;
 
     private LinearLayout mainLayout;
@@ -71,8 +65,6 @@ public class SplashActivity extends BaseAppCompatActivity {
         fadeInAnimation = AnimationUtils.loadAnimation(this, R.anim.fadein);
 
         mainLayout.startAnimation(fadeInAnimation);
-
-        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
         if (SharedPreferenceHelper.isFirstLaunch()) {
             registerForGCM();
@@ -104,7 +96,7 @@ public class SplashActivity extends BaseAppCompatActivity {
         int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
         if (resultCode != ConnectionResult.SUCCESS) {
             if (apiAvailability.isUserResolvableError(resultCode)) {
-                apiAvailability.getErrorDialog(this, resultCode, REQUEST_CODE_PLAY_SERVICES_RESOLUTION).show();
+                apiAvailability.getErrorDialog(this, resultCode, ActivitiesRequestCodes.REQUEST_CODE_SPLASH_ACTIVITY_PLAY_SERVICES_RESOLUTION).show();
             } else {
                 finish();
             }
@@ -113,75 +105,27 @@ public class SplashActivity extends BaseAppCompatActivity {
         return true;
     }
 
-    private boolean checkIsProvidersEnabled() {
-        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) &&
-                !locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1) {
-            if (checkIsProvidersEnabled()) {
-                showMainActivity();
-            } else {
-                showAlertDialog();
-            }
-        }
-    }
-
     private void showMainActivity() {
         Log.i(TAG, "showMainActivity");
         final boolean isInternet = helpers.hasConnection(this);
-        final boolean isLocation = checkIsProvidersEnabled();
-        runnable = new Runnable() {
+        showMainActivityRunnable = new Runnable() {
             @Override
             public void run() {
-                MainActivity.show(SplashActivity.this, isInternet, isLocation);
+                MainActivity.show(SplashActivity.this, isInternet);
                 SplashActivity.this.finish();
             }
         };
         if (System.currentTimeMillis() - activityShowTimestamp < DDProgressBarView.ANIMATION_DURATION) {
-            h.postDelayed(runnable, DDProgressBarView.ANIMATION_DURATION - (System.currentTimeMillis() - activityShowTimestamp));
+            handler.postDelayed(showMainActivityRunnable, DDProgressBarView.ANIMATION_DURATION - (System.currentTimeMillis() - activityShowTimestamp));
         } else {
-            h.post(runnable);
+            handler.post(showMainActivityRunnable);
         }
-    }
-
-    private void showAlertDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(
-                R.string.locatio_dialog_title)
-                .setCancelable(false)
-                .setPositiveButton(R.string.btn_yes,
-                        new DialogInterface.OnClickListener() {
-
-                            public void onClick(DialogInterface dialog, int id) {
-                                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                                startActivityForResult(intent, 1);
-                                dialog.dismiss();
-                            }
-                        })
-                .setNegativeButton(R.string.btn_no,
-                        new DialogInterface.OnClickListener() {
-
-                            public void onClick(DialogInterface dialog,
-                                                int id) {
-                                dialog.cancel();
-                            }
-                        });
-        AlertDialog alert = builder.create();
-        alert.show();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-       // h.removeCallbacks(runnable);
+       // handler.removeCallbacks(showMainActivityRunnable);
         DDScannerApplication.activityPaused();
     }
 
@@ -194,12 +138,10 @@ public class SplashActivity extends BaseAppCompatActivity {
         }
     }
 
-
-
     @Override
     protected void onStop() {
         super.onStop();
-     //   h.removeCallbacks(runnable);
+     //   handler.removeCallbacks(showMainActivityRunnable);
         DDScannerApplication.bus.unregister(this);
     }
 
@@ -232,9 +174,8 @@ public class SplashActivity extends BaseAppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        h.removeCallbacks(runnable);
+        handler.removeCallbacks(showMainActivityRunnable);
         finish();
     }
-
 
 }

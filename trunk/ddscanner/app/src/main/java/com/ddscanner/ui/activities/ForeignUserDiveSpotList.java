@@ -28,6 +28,7 @@ import com.ddscanner.rest.BaseCallback;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.DiveSpotsListAdapter;
+import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogUtils;
 import com.ddscanner.utils.Helpers;
@@ -127,7 +128,7 @@ public class ForeignUserDiveSpotList extends AppCompatActivity {
                         helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
-                        SocialNetworks.showForResult(ForeignUserDiveSpotList.this, Constants.FOREIGN_USER_SPOT_LIST_REQUEST_CODE_LOGIN);
+                        SocialNetworks.showForResult(ForeignUserDiveSpotList.this, ActivitiesRequestCodes.FOREIGN_USER_SPOT_LIST_REQUEST_CODE_LOGIN);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
                         helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
@@ -188,7 +189,7 @@ public class ForeignUserDiveSpotList extends AppCompatActivity {
                         helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
-                        SocialNetworks.showForResult(ForeignUserDiveSpotList.this, Constants.FOREIGN_USER_SPOT_LIST_REQUEST_CODE_LOGIN);
+                        SocialNetworks.showForResult(ForeignUserDiveSpotList.this, ActivitiesRequestCodes.FOREIGN_USER_SPOT_LIST_REQUEST_CODE_LOGIN);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
                         helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
@@ -249,7 +250,7 @@ public class ForeignUserDiveSpotList extends AppCompatActivity {
                         helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
-                        SocialNetworks.showForResult(ForeignUserDiveSpotList.this, Constants.FOREIGN_USER_SPOT_LIST_REQUEST_CODE_LOGIN);
+                        SocialNetworks.showForResult(ForeignUserDiveSpotList.this, ActivitiesRequestCodes.FOREIGN_USER_SPOT_LIST_REQUEST_CODE_LOGIN);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
                         helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
@@ -312,7 +313,7 @@ public class ForeignUserDiveSpotList extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == Constants.FOREIGN_USER_SPOT_LIST_REQUEST_CODE_LOGIN) {
+        if (requestCode == ActivitiesRequestCodes.FOREIGN_USER_SPOT_LIST_REQUEST_CODE_LOGIN) {
             if (resultCode == RESULT_OK) {
                 if (isCheckIn) {
                     getUsersCheckinList();

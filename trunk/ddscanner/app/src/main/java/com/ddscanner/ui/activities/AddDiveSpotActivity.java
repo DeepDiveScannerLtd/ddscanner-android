@@ -50,6 +50,7 @@ import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.AddPhotoToDsListAdapter;
 import com.ddscanner.ui.adapters.SealifeListAddingDiveSpotAdapter;
 import com.ddscanner.ui.adapters.SpinnerItemsAdapter;
+import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogUtils;
 import com.ddscanner.utils.Helpers;
@@ -87,12 +88,12 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
 
     private static final String TAG = AddDiveSpotActivity.class.getSimpleName();
     private static final String DIVE_SPOT_NAME_PATTERN = "^[a-zA-Z0-9 ]*$";
-    private static final int RC_PICK_SEALIFE = Constants.ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_PICK_SEALIFE;
-    private static final int RC_PICK_PHOTO = Constants.ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_PICK_PHOTO;
-    private static final int RC_PICK_LOCATION =Constants.ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_PICK_LOCATION;
-    private static final int RC_LOGIN = Constants.ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_LOGIN;
-    private static final int RC_LOGIN_TO_SEND = Constants.ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_LOGIN_TO_SEND;
-    private static final int RC_LOGIN_TO_GET_DATA = Constants.ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_LOGIN_TO_GET_DATA;
+    private static final int RC_PICK_SEALIFE = ActivitiesRequestCodes.ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_PICK_SEALIFE;
+    private static final int RC_PICK_PHOTO = ActivitiesRequestCodes.ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_PICK_PHOTO;
+    private static final int RC_PICK_LOCATION = ActivitiesRequestCodes.ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_PICK_LOCATION;
+    private static final int RC_LOGIN = ActivitiesRequestCodes.ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_LOGIN;
+    private static final int RC_LOGIN_TO_SEND = ActivitiesRequestCodes.ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_LOGIN_TO_SEND;
+    private static final int RC_LOGIN_TO_GET_DATA = ActivitiesRequestCodes.ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_LOGIN_TO_GET_DATA;
 
     private ProgressDialog progressDialog;
 
@@ -499,7 +500,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                     .count(maxPhotos)
                     .start(this, RC_PICK_PHOTO);
         } else {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, Constants.ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_PERMISSION_READ_STORAGE);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, ActivitiesRequestCodes.ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_PERMISSION_READ_STORAGE);
         }
     }
 
@@ -712,7 +713,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
-            case Constants.ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_PERMISSION_READ_STORAGE: {
+            case ActivitiesRequestCodes.ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_PERMISSION_READ_STORAGE: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     pickPhotoFromGallery();
                 } else {

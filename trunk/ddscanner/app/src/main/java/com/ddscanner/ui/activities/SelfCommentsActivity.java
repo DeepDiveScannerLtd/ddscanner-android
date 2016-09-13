@@ -30,23 +30,19 @@ import com.ddscanner.events.ShowLoginActivityIntent;
 import com.ddscanner.rest.BaseCallback;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
-import com.ddscanner.ui.adapters.ReviewsListAdapter;
 import com.ddscanner.ui.adapters.SelfReviewsListAdapter;
+import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogUtils;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.rey.material.widget.ProgressView;
 import com.squareup.otto.Subscribe;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Map;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -145,7 +141,7 @@ public class SelfCommentsActivity extends AppCompatActivity {
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         SharedPreferenceHelper.logout();
-                        SocialNetworks.showForResult(SelfCommentsActivity.this, Constants.SELF_REVIEWS_REQUEST_CODE_LOGIN_TO_VIEW_COMMENTS);
+                        SocialNetworks.showForResult(SelfCommentsActivity.this, ActivitiesRequestCodes.SELF_REVIEWS_REQUEST_CODE_LOGIN_TO_VIEW_COMMENTS);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
                         helpers.showToast(SelfCommentsActivity.this, R.string.toast_server_error);
@@ -169,7 +165,7 @@ public class SelfCommentsActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-            case Constants.SELF_REVIEWS_REQUEST_CODE_LOGIN_TO_VIEW_COMMENTS:
+            case ActivitiesRequestCodes.SELF_REVIEWS_REQUEST_CODE_LOGIN_TO_VIEW_COMMENTS:
                 if (resultCode == RESULT_OK) {
                     getComments();
                 }
@@ -177,7 +173,7 @@ public class SelfCommentsActivity extends AppCompatActivity {
                     finish();
                 }
                 break;
-            case Constants.SELF_REVIEWS_REQUEST_CODE_LOGIN_TO_DELETE_COMMENTS:
+            case ActivitiesRequestCodes.SELF_REVIEWS_REQUEST_CODE_LOGIN_TO_DELETE_COMMENTS:
                 if (resultCode == RESULT_OK) {
                     deleteUsersComment(commentToDelete);
                 }
@@ -245,7 +241,7 @@ public class SelfCommentsActivity extends AppCompatActivity {
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         SharedPreferenceHelper.logout();
-                        SocialNetworks.showForResult(SelfCommentsActivity.this, Constants.SELF_REVIEWS_REQUEST_CODE_LOGIN_TO_DELETE_COMMENTS);
+                        SocialNetworks.showForResult(SelfCommentsActivity.this, ActivitiesRequestCodes.SELF_REVIEWS_REQUEST_CODE_LOGIN_TO_DELETE_COMMENTS);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
                         helpers.showToast(SelfCommentsActivity.this, R.string.toast_server_error);

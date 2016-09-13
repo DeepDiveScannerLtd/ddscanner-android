@@ -10,8 +10,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v13.app.ActivityCompat;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -30,6 +28,7 @@ import com.ddscanner.ui.adapters.PhotosActivityPagerAdapter;
 import com.ddscanner.ui.fragments.DiveSpotAllPhotosFragment;
 import com.ddscanner.ui.fragments.DiveSpotPhotosFragment;
 import com.ddscanner.ui.fragments.DiveSpotReviewsPhoto;
+import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogUtils;
 import com.ddscanner.utils.Helpers;
@@ -206,7 +205,7 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
                 MultiImageSelector.create(this).start(this, 1);
             }
         }
-        if (requestCode == Constants.PHOTOS_ACTIVITY_REQUEST_CODE_SLIDER) {
+        if (requestCode == ActivitiesRequestCodes.PHOTOS_ACTIVITY_REQUEST_CODE_SLIDER) {
             if (resultCode == RESULT_OK) {
                 getDiveSpotPhotos();
             }
