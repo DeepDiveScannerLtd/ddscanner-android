@@ -11,6 +11,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -86,8 +87,8 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
     private List<MultipartBody.Part> like = new ArrayList<>(); // name - оп имени
     private List<MultipartBody.Part> select = new ArrayList<>();// fields (id,name)
     private boolean isTryToOpenAddDiveSpotActivity = false;
-    private long lastEnterDataInMillis;
     private Helpers helpers = new Helpers();
+    private Runnable sendingSearchRequestRunnable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,9 +149,6 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
         MenuItem item = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
         searchView.setIconified(false);
-        //searchView.setIconifiedByDefault(false);
-      //  searchView.requestFocus();
-      //  item.expandActionView();
         searchView.setQueryHint(getString(R.string.search));
         searchView.setOnQueryTextListener(this);
         return true;
@@ -163,40 +161,51 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        if (!newText.isEmpty()) {
-            name = RequestBody.create(MediaType.parse("multipart/form-data"), newText);
-            createRequestBodyies();
-            placeList = new ArrayList<String>();
-            Places.GeoDataApi.getAutocompletePredictions(googleApiClient, newText, new LatLngBounds(new LatLng(-180, -180), new LatLng(180, 180)), null).setResultCallback(
-                    new ResultCallback<AutocompletePredictionBuffer>() {
-                        @Override
-                        public void onResult(@NonNull AutocompletePredictionBuffer autocompletePredictions) {
-                            if (autocompletePredictions.getStatus().isSuccess()) {
-                                for (AutocompletePrediction prediction : autocompletePredictions) {
-                                    placeList.add(prediction.getPlaceId());
-                                    Places.GeoDataApi.getPlaceById(googleApiClient, prediction.getPlaceId()).setResultCallback(new ResultCallback<PlaceBuffer>() {
-                                        @Override
-                                        public void onResult(PlaceBuffer places) {
-                                            if (places.getStatus().isSuccess()) {
-                                                try {
-                                                    Place place = places.get(0);
-                                                   // placeList.add(place);
-                                                } catch (IllegalStateException e) {
-
-                                                }
-                                            }
-                                            places.release();
-                                        }
-                                    });
-                                   // searchLocationFragment.setList((ArrayList<Place>) placeList, googleApiClient);
-                                }
-                                searchLocationFragment.setList((ArrayList<String>) placeList, googleApiClient);
-                            }
-                        }
-                    });
-
-        }
+        tryToSendRquest(newText);
         return true;
+    }
+
+    private void tryToSendRquest(final String newText) {
+        handler.removeCallbacks(sendingSearchRequestRunnable);
+        sendingSearchRequestRunnable = new Runnable() {
+            @Override
+            public void run() {
+                if (!newText.isEmpty()) {
+                    name = RequestBody.create(MediaType.parse("multipart/form-data"), newText);
+                    createRequestBodyies();
+                    placeList = new ArrayList<String>();
+                    Places.GeoDataApi.getAutocompletePredictions(googleApiClient, newText, new LatLngBounds(new LatLng(-180, -180), new LatLng(180, 180)), null).setResultCallback(
+                            new ResultCallback<AutocompletePredictionBuffer>() {
+                                @Override
+                                public void onResult(@NonNull AutocompletePredictionBuffer autocompletePredictions) {
+                                    if (autocompletePredictions.getStatus().isSuccess()) {
+                                        for (AutocompletePrediction prediction : autocompletePredictions) {
+                                            placeList.add(prediction.getPlaceId());
+                                            Places.GeoDataApi.getPlaceById(googleApiClient, prediction.getPlaceId()).setResultCallback(new ResultCallback<PlaceBuffer>() {
+                                                @Override
+                                                public void onResult(PlaceBuffer places) {
+                                                    if (places.getStatus().isSuccess()) {
+                                                        try {
+                                                            Place place = places.get(0);
+                                                            // placeList.add(place);
+                                                        } catch (IllegalStateException e) {
+
+                                                        }
+                                                    }
+                                                    places.release();
+                                                }
+                                            });
+                                            // searchLocationFragment.setList((ArrayList<Place>) placeList, googleApiClient);
+                                        }
+                                        searchLocationFragment.setList((ArrayList<String>) placeList, googleApiClient);
+                                    }
+                                }
+                            });
+
+                }
+            }
+        };
+        handler.postDelayed(sendingSearchRequestRunnable, 630);
     }
 
     @Override
