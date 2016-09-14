@@ -95,7 +95,7 @@ public class ProfileFragment extends Fragment
     private LinearLayout logout;
     private LinearLayout capturePhoto;
     private ImageView newPhoto;
-    private com.rey.material.widget.Button cancelButton;
+    private Button cancelButton;
     private Helpers helpers = new Helpers();
     private User user;
     private TextView userCommentsCount;
@@ -215,7 +215,7 @@ public class ProfileFragment extends Fragment
         editProfile = (LinearLayout) v.findViewById(R.id.edit_profile);
         capturePhoto = (LinearLayout) v.findViewById(R.id.capture_photo);
         newPhoto = (ImageView) v.findViewById(R.id.user_chosed_photo);
-        cancelButton = (com.rey.material.widget.Button) v.findViewById(R.id.cancel_button);
+        cancelButton = (Button) v.findViewById(R.id.cancel_button);
         userCommentsCount = (TextView) v.findViewById(R.id.user_comments);
         userLikesCount = (TextView) v.findViewById(R.id.user_likes);
         userDislikesCount = (TextView) v.findViewById(R.id.user_dislikes);
