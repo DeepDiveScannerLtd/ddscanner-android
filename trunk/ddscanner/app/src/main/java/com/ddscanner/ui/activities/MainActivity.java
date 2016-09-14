@@ -100,7 +100,10 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
+import me.nereo.multi_image_selector.MultiImageSelector;
+import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -377,13 +380,14 @@ public class MainActivity extends BaseAppCompatActivity
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_IMAGE_CAPTURE:
                 if (resultCode == RESULT_OK) {
-                    mainViewPagerAdapter.setProfileImage(capturedImageUri);
+                    mainViewPagerAdapter.setProfileImageFromCamera(capturedImageUri);
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_PICK_PHOTO:
                 if (resultCode == RESULT_OK) {
-                    Uri uri = data.getData();
-                    mainViewPagerAdapter.setProfileImage(uri);
+                    List<String> path = data.getStringArrayListExtra(MultiImageSelectorActivity
+                            .EXTRA_RESULT);
+                    mainViewPagerAdapter.setProfileImage(path.get(0));
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_LOGIN:
@@ -681,9 +685,7 @@ public class MainActivity extends BaseAppCompatActivity
     }
 
     private void pickphotoFromGallery() {
-        Intent i = new Intent(Intent.ACTION_PICK,
-                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(i, ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_PICK_PHOTO);
+        MultiImageSelector.create(this).count(1).start(this, ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_PICK_PHOTO);
     }
 
     private boolean checkPermissionReadStorage() {

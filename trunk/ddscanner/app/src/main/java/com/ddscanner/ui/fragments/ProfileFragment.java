@@ -141,7 +141,8 @@ public class ProfileFragment extends Fragment
     private MaterialDialog materialDialog;
     private Map<String, TextView> errorsMap = new HashMap<>();
 
-    private Uri uri = null;
+    private String uri = null;
+    private Uri uriFromCamera = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -306,6 +307,8 @@ public class ProfileFragment extends Fragment
                 if (user.getAbout() != null) {
                     aboutEdit.setText(user.getAbout());
                 }
+                nameLeftSymbols.setVisibility(View.GONE);
+                aboutLeftSymbols.setVisibility(View.GONE);
                 break;
             case R.id.capture_photo:
                 isClickedChosingPhotoButton = true;
@@ -395,13 +398,25 @@ public class ProfileFragment extends Fragment
         DDScannerApplication.bus.unregister(this);
     }
 
+    public void setImage(String uri) {
+        Picasso.with(getContext()).load("file://" + uri)
+                .resize(Math.round(helpers.convertDpToPixel(80, getContext())),
+                        Math.round(helpers.convertDpToPixel(80, getContext()))).centerCrop()
+                .transform(new CropCircleTransformation()).into(newPhoto);
+        this.uri = uri;
+        this.uriFromCamera = null;
+    }
+
     public void setImage(Uri uri) {
         Picasso.with(getContext()).load(uri)
                 .resize(Math.round(helpers.convertDpToPixel(80, getContext())),
                         Math.round(helpers.convertDpToPixel(80, getContext()))).centerCrop()
                 .transform(new CropCircleTransformation()).into(newPhoto);
-        this.uri = uri;
+        this.uriFromCamera = uri;
+        this.uri = null;
     }
+
+
 
     private void getUserDataRequest(String id) {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserInfo(id, helpers.getUserQuryMapRequest());
@@ -566,9 +581,20 @@ public class ProfileFragment extends Fragment
         if (uri != null) {
             File file;
             if (!uri.toString().contains("file:")) {
-                file = new File(helpers.getRealPathFromURI(getContext(), uri));
+                file = new File(uri);
             } else {
-                file = new File(uri.getPath());
+                file = new File(uri);
+            }
+            RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
+            image = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
+        }
+
+        if (uriFromCamera != null) {
+            File file;
+            if (!uriFromCamera.toString().contains("file:")) {
+                file = new File(helpers.getRealPathFromURI(getContext(), uriFromCamera));
+            } else {
+                file = new File(uriFromCamera.getPath());
             }
             RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
             image = MultipartBody.Part.createFormData("image", file.getName(), requestFile);

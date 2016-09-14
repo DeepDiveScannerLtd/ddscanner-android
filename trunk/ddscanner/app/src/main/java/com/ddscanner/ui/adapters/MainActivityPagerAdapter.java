@@ -58,7 +58,11 @@ public class MainActivityPagerAdapter extends FragmentStatePagerAdapter implemen
         return null;
     }
 
-    public void setProfileImage(Uri uri) {
+    public void setProfileImage(String uri) {
+        profileFragment.setImage(uri);
+    }
+
+    public void setProfileImageFromCamera(Uri uri) {
         profileFragment.setImage(uri);
     }
 
