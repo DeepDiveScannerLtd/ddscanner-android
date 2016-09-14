@@ -51,10 +51,7 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 
-/**
- * Created by lashket on 20.4.16.
- */
-public class NotificationsFragment extends Fragment implements ViewPager.OnPageChangeListener, View.OnClickListener, LoginView.LoginStateChangeListener {
+public class NotificationsFragment extends Fragment implements ViewPager.OnPageChangeListener, LoginView.LoginStateChangeListener {
 
     private static final String TAG = NotificationsFragment.class.getName();
 
@@ -325,12 +322,6 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
     @Override
     public void onPageScrollStateChanged(int state) {
 
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-        }
     }
 
     @Override

@@ -287,7 +287,7 @@ public class ForeignUserDiveSpotList extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public static void show(Activity context, boolean isEdited, boolean isCreated, boolean isCheckin, String userId, int requestCode) {
+    public static void show(Activity context, boolean isEdited, boolean isCreated, boolean isCheckin, String userId) {
         Intent intent = new Intent(context, ForeignUserDiveSpotList.class);
         intent.putExtra(Constants.FOREIGN_USER_ACTIVITY_INTENT_USER_ID, userId);
         if (isEdited) {
@@ -299,7 +299,7 @@ public class ForeignUserDiveSpotList extends AppCompatActivity {
         if (isCheckin) {
             intent.putExtra(Constants.FOREIGN_USER_ACTIVITY_INTENT_ISCHECKIN, true);
         }
-        context.startActivityForResult(intent, requestCode);
+        context.startActivity(intent);
     }
 
     @Override

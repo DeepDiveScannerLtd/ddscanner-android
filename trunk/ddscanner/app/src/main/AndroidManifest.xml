@@ -224,7 +224,7 @@
             android:name=".ui.activities.ForeignUserDiveSpotList"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activities.ForeignUserLikesDislikesActivity"
+            android:name=".ui.activities.UserLikesDislikesActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activities.AboutActivity"

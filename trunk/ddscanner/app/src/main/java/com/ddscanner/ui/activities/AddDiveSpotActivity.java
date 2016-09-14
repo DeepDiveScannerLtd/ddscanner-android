@@ -279,16 +279,15 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                 sealifesRc.setAdapter(sealifeListAddingDiveSpotAdapter);
             }
         }
-        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_LOGIN) {
-            if (resultCode == RESULT_OK) {
-                createSocialDatarequests();
-                createAddDiveSpotRequest();
-            } else {
-                Toast toast = Toast.makeText(this, R.string.you_must_login_to_add_divespot, Toast.LENGTH_SHORT);
-                toast.show();
-            }
-
-        }
+//        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_LOGIN) {
+//            if (resultCode == RESULT_OK) {
+//                createSocialDatarequests();
+//                createAddDiveSpotRequest();
+//            } else {
+//                Toast toast = Toast.makeText(this, R.string.you_must_login_to_add_divespot, Toast.LENGTH_SHORT);
+//                toast.show();
+//            }
+//        }
         if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_LOGIN_TO_SEND) {
             if (resultCode == RESULT_OK) {
                 createAddDiveSpotRequest();
@@ -297,8 +296,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_LOGIN_TO_GET_DATA) {
             if (resultCode == RESULT_OK) {
                 loadFiltersDataRequest();
-            }
-            if (resultCode == RESULT_CANCELED) {
+            } else {
                 finish();
             }
         }
@@ -522,12 +520,12 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                 startActivityForResult(sealifeIntent, ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_SEALIFE);
                 break;
             case R.id.button_create:
-                if (SharedPreferenceHelper.isUserLoggedIn()) {
+//                if (SharedPreferenceHelper.isUserLoggedIn()) {
                     createRequestBodyies();
-                } else {
-                    Intent loginIntent = new Intent(this, SocialNetworks.class);
-                    startActivityForResult(loginIntent, ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_LOGIN);
-                }
+//                } else {
+//                    Intent loginIntent = new Intent(this, SocialNetworks.class);
+//                    startActivityForResult(loginIntent, ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_LOGIN);
+//                }
                 break;
         }
     }

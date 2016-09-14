@@ -47,7 +47,7 @@ import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.activities.AboutActivity;
 import com.ddscanner.ui.activities.DiveSpotsListActivity;
-import com.ddscanner.ui.activities.ForeignUserLikesDislikesActivity;
+import com.ddscanner.ui.activities.UserLikesDislikesActivity;
 import com.ddscanner.ui.activities.MainActivity;
 import com.ddscanner.ui.activities.SelfCommentsActivity;
 import com.ddscanner.ui.activities.UsersDivespotListSwipableActivity;
@@ -355,11 +355,11 @@ public class ProfileFragment extends Fragment
                 break;
             case R.id.likeLayout:
                 EventsTracker.trackUserLikesView();
-                ForeignUserLikesDislikesActivity.show(getActivity(), true, user.getId(), ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_SHOW_LIKES_LIST);
+                UserLikesDislikesActivity.show(getActivity(), true, user.getId());
                 break;
             case R.id.dislikeLayout:
                 EventsTracker.trackUserDislikesView();
-                ForeignUserLikesDislikesActivity.show(getActivity(), false, user.getId(), ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_SHOW_LIKES_LIST);
+                UserLikesDislikesActivity.show(getActivity(), false, user.getId());
                 break;
             case R.id.comments_layout:
                 SelfCommentsActivity.show(getContext(), user.getId());

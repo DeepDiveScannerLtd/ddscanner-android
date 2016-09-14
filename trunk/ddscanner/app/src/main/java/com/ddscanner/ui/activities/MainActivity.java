@@ -142,6 +142,7 @@ public class MainActivity extends BaseAppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        LogUtils.i(TAG, "onCreate");
         isHasInternetConnection = getIntent().getBooleanExtra(Constants.IS_HAS_INTERNET, false);
         clearFilterSharedPrefences();
         startActivity();
@@ -176,11 +177,12 @@ public class MainActivity extends BaseAppCompatActivity
                 .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
                     @Override
                     public void onConnected(@Nullable Bundle bundle) {
-                        refreshIdTokenSilently();
                         if (needToClearDefaultAccount) {
                             Auth.GoogleSignInApi.signOut(mGoogleApiClient);
                             mGoogleApiClient.clearDefaultAccountAndReconnect();
                             needToClearDefaultAccount = false;
+                            Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+                            startActivityForResult(signInIntent, ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_CHOSE_GOOGLE_ACCOUNT);
                         }
                     }
 
@@ -200,9 +202,10 @@ public class MainActivity extends BaseAppCompatActivity
     private void googleSignIn() {
         if (mGoogleApiClient == null) {
             initGoogleLoginManager();
+        } else if (mGoogleApiClient.isConnected()) {
+            needToClearDefaultAccount = true;
+            mGoogleApiClient.clearDefaultAccountAndReconnect();
         }
-        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-        startActivityForResult(signInIntent, ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_NEED_TO_LOGIN);
     }
 
     private void fbLogin() {
@@ -367,7 +370,7 @@ public class MainActivity extends BaseAppCompatActivity
 //                        DDScannerApplication.bus.post(new PlaceChoosedEvent(latLngBounds));
 //                    }
                         break;
-                    case ActivitiesRequestCodes.SEARCH_ACTIVITY_RESULT_CODE_MY_LOCATION:
+                    case ActivitiesRequestCodes.RESULT_CODE_SEARCH_ACTIVITY_MY_LOCATION:
                         Log.i(TAG, "MainActivity getLocation 2");
                         getLocation(ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_GO_TO_MY_LOCATION);
                         break;
@@ -400,7 +403,7 @@ public class MainActivity extends BaseAppCompatActivity
                     mainViewPager.setCurrentItem(0, false);
                 }
                 break;
-            case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_NEED_TO_LOGIN:
+            case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_CHOSE_GOOGLE_ACCOUNT:
                 GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
                 Log.d(TAG, "onActivityResult:GET_TOKEN:success:" + result.getStatus().isSuccess());
                 if (result.isSuccess()) {
@@ -429,6 +432,7 @@ public class MainActivity extends BaseAppCompatActivity
     @Override
     public void onStart() {
         super.onStart();
+        LogUtils.i(TAG, "onStart");
         DDScannerApplication.bus.register(this);
         if (loggedInDuringLastOnStart != SharedPreferenceHelper.isUserLoggedIn()) {
             mainViewPagerAdapter.notifyDataSetChanged();
@@ -440,12 +444,14 @@ public class MainActivity extends BaseAppCompatActivity
     @Override
     public void onStop() {
         super.onStop();
+        LogUtils.i(TAG, "onStop");
         DDScannerApplication.bus.unregister(this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        LogUtils.i(TAG, "onPause");
         AppEventsLogger.deactivateApp(this);
         DDScannerApplication.activityPaused();
     }
@@ -453,6 +459,7 @@ public class MainActivity extends BaseAppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
+        LogUtils.i(TAG, "onResume");
         AppEventsLogger.activateApp(this);
         DDScannerApplication.activityResumed();
         if (!helpers.hasConnection(this)) {

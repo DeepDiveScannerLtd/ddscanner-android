@@ -64,9 +64,6 @@ import retrofit2.Response;
 
 import static com.ddscanner.utils.Constants.MULTIPART_TYPE_TEXT;
 
-/**
- * Created by lashket on 8.4.16.
- */
 public class AddSealifeActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = AddSealifeActivity.class.getSimpleName();

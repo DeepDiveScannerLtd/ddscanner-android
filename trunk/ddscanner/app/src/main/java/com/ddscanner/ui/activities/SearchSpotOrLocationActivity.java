@@ -76,7 +76,6 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
     private CustomPagerAdapter adapter;
     private Handler handler = new Handler();
     private List<String> placeList = new ArrayList<>();
-    private static final int REQUEST_CODE_LOGIN = ActivitiesRequestCodes.SEARCH_ACTIVITY_REQUEST_CODE_LOGIN;
 
     private GoogleApiClient googleApiClient;
 
@@ -348,14 +347,14 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
     public void openLoginWindowToAdd(OpenAddDsActivityAfterLogin event) {
         isTryToOpenAddDiveSpotActivity = true;
         Intent intent = new Intent(SearchSpotOrLocationActivity.this, SocialNetworks.class);
-        startActivityForResult(intent, REQUEST_CODE_LOGIN);
+        startActivityForResult(intent, ActivitiesRequestCodes.REQUEST_CODE_SEARCH_ACTIVITY_LOGIN);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case REQUEST_CODE_LOGIN:
+            case ActivitiesRequestCodes.REQUEST_CODE_SEARCH_ACTIVITY_LOGIN:
                 if (resultCode == RESULT_OK) {
                     if (isTryToOpenAddDiveSpotActivity) {
                         isTryToOpenAddDiveSpotActivity = false;
@@ -368,7 +367,7 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
 
     @Subscribe
     public void goToMyLocation(GoToMyLocationButtonClickedEvent event) {
-        setResult(ActivitiesRequestCodes.SEARCH_ACTIVITY_RESULT_CODE_MY_LOCATION);
+        setResult(ActivitiesRequestCodes.RESULT_CODE_SEARCH_ACTIVITY_MY_LOCATION);
         finish();
     }
 

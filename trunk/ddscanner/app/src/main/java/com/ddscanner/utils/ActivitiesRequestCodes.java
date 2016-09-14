@@ -3,10 +3,10 @@ package com.ddscanner.utils;
 public class ActivitiesRequestCodes {
 
     /**
-     * Store here all the activities request codes.
-     *
+     * Store here all the activities request and result codes.
+     * <p/>
      * Request code naming rules: REQUEST_CODE_<activity name>_<request name>
-     *
+     * Result code naming rules: RESULT_CODE_<activity name>_<request name>
      * Request int value convention: XXYY, where XX - unique "id" of activity/screen, YY - unique "id" of request code
      */
 
@@ -27,17 +27,17 @@ public class ActivitiesRequestCodes {
     public static final int REQUEST_CODE_MAIN_ACTIVITY_PERMISSION_CAMERA = 1307;
     public static final int REQUEST_CODE_MAIN_ACTIVITY_PERMISSION_WRITE_STORAGE = 1308;
     public static final int REQUEST_CODE_MAIN_ACTIVITY_PERMISSION_CAMERA_AND_WRITE_STORAGE = 1309;
-    public static final int REQUEST_CODE_MAIN_ACTIVITY_NEED_TO_LOGIN = 1310;
+    public static final int REQUEST_CODE_MAIN_ACTIVITY_CHOSE_GOOGLE_ACCOUNT = 1310;
 
     //    SearchActivity
-    public static final int SEARCH_ACTIVITY_REQUEST_CODE_LOGIN = 1401;
-    public static final int SEARCH_ACTIVITY_RESULT_CODE_MY_LOCATION = 1402;
+    public static final int REQUEST_CODE_SEARCH_ACTIVITY_LOGIN = 1401;
+    public static final int RESULT_CODE_SEARCH_ACTIVITY_MY_LOCATION = 1402;
 
     //    AddDiveSpotActivity
     public static final int REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_PHOTO = 1501;
     public static final int REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_SEALIFE = 1502;
     public static final int REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_LOCATION = 1503;
-    public static final int REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_LOGIN = 1504;
+    //    public static final int REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_LOGIN = 1504;
     public static final int REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_LOGIN_TO_SEND = 1505;
     public static final int REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_LOGIN_TO_GET_DATA = 1506;
     public static final int REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PERMISSION_READ_STORAGE = 1507;
@@ -54,9 +54,9 @@ public class ActivitiesRequestCodes {
 
     //    ForeignProfileActivity
     public static final int REQUEST_CODE_FOREIGN_USER_LOGIN = 1901;
-    public static final int REQUEST_CODE_FOREIGN_USER_SHOW_LIST = 1902;
-    public static final int REQUEST_CODE_FOREIGN_USER_SHOW_LIKES_LIST = 1903;
-    public static final int REQUEST_CODE_FOREIGN_USER_SPOT_LIST_LOGIN = 1904;
+    public static final int REQUEST_CODE_FOREIGN_USER_LOGIN_TO_SEE_CHECKINS = 1902;
+    public static final int REQUEST_CODE_FOREIGN_USER_LOGIN_TO_SEE_CREATED = 1903;
+    public static final int REQUEST_CODE_FOREIGN_USER_LOGIN_TO_SEE_EDITED = 1904;
 
     //    ImageSliderActivity
     public static final int REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_REPORT = 2001;
@@ -81,21 +81,24 @@ public class ActivitiesRequestCodes {
     //    SelfCommentsActivity
     public static final int REQUEST_CODE_SELF_REVIEWS_LOGIN_TO_VIEW_COMMENTS = 2301;
     public static final int REQUEST_CODE_SELF_REVIEWS_LOGIN_TO_DELETE_COMMENTS = 2302;
+    // TODO Get rid of this code. It is impossible to face case when it is used
     public static final int REQUEST_CODE_SELF_REVIEWS_EDIT_MY_REVIEW = 2303;
 
     //    LeaveReviewActivity
     public static final int REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_PERMISSION_READ_STORAGE = 2401;
     public static final int REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_LOGIN = 2402;
+    public static final int REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_PICK_PHOTO = 2403;
 
     //    AddSealifeActivity
     public static final int REQUEST_CODE_ADD_SEALIFE_ACTIVITY_PERMISSION_READ_STORAGE = 2501;
+    public static final int REQUEST_CODE_ADD_SEALIFE_ACTIVITY_PICK_PHOTO = 2502;
+    public static final int REQUEST_CODE_ADD_SEALIFE_ACTIVITY_LOGIN_TO_SEND = 2503;
 
     //    AddPhotosDoDiveSpotActivity
     public static final int REQUEST_CODE_ADD_PHOTOS_DO_DIVE_SPOT_ACTIVITY_LOGIN_TO_SEND = 2601;
 
-    //    AddSealifeActivity
-    public static final int REQUEST_CODE_ADD_SEALIFE_ACTIVITY_PICK_PHOTO = 2701;
-    public static final int REQUEST_CODE_ADD_SEALIFE_ACTIVITY_LOGIN_TO_SEND = 2702;
+    //    ForeignUserDiveSpotList
+    public static final int REQUEST_CODE_FOREIGN_USER_SPOT_LIST_LOGIN = 2701;
 
     //    DiveSpotsListActivity
     public static final int REQUEST_CODE_DIVE_SPOTS_LIST_ACTIVITY_LOGIN = 2801;
@@ -110,8 +113,8 @@ public class ActivitiesRequestCodes {
     public static final int REQUEST_CODE_EDIT_DIVE_SPOT_ACTIVITY_LOGIN_TO_SEND = 3004;
     public static final int REQUEST_CODE_EDIT_DIVE_SPOT_ACTIVITY_LOGIN_TO_GET_DATA = 3005;
 
-    //    LeaveReviewActivity
-    public static final int REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_PICK_PHOTO = 3101;
+    //    UserLikesDislikesActivity
+    public static final int REQUEST_CODE_USER_LIKES_DISLIKES_ACTIVITY_LOGIN = 3101;
 
     //    LocationPermissionNotGrantedActivity
     public static final int REQUEST_CODE_LOCATION_PERMISSION_NOT_GRANTED_ACTIVITY_LOCATION_PERMISSION = 3201;
