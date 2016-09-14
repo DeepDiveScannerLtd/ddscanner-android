@@ -61,6 +61,7 @@ public class ActivitiesListAdapter
             Picasso.with(context)
                     .load(activity.getDiveSpot().getPath() + activity.getDiveSpot().getImage())
                     .resize(Math.round(helpers.convertDpToPixel(40, context)),Math.round(helpers.convertDpToPixel(40, context)))
+                    .centerCrop()
                     .transform(new TransformationRoundImage(2,0))
                     .into(holder.dsLogo);
             if (activity.getType().equals("checkin")) {

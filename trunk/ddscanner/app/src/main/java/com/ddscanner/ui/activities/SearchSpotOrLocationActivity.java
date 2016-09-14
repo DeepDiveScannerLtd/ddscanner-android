@@ -209,7 +209,7 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
                 }
             }
         };
-        handler.postDelayed(sendingSearchRequestRunnable, 1000);
+        handler.postDelayed(sendingSearchRequestRunnable, 630);
     }
 
     @Override

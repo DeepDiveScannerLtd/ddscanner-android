@@ -391,7 +391,6 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
                 startActivityForResult(sealifeIntent, RC_PICK_SEALIFE);
                 break;
             case R.id.button_create:
-                progressDialogUpload.show();
                 createRequestBodyies();
                 break;
         }
@@ -478,6 +477,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
             error_description.setText(R.string.description_length_error);
             return;
         }
+        progressDialogUpload.show();
         requestName = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
                 name.getText().toString());
         requestDepth = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
