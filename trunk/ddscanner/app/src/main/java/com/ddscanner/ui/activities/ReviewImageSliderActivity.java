@@ -28,9 +28,6 @@ import java.util.ArrayList;
 
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
-/**
- * Created by lashket on 4.3.16.
- */
 public class ReviewImageSliderActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener, View.OnClickListener , SimpleGestureFilter.SimpleGestureListener{
 
     private LinearLayout pager_indicator;

@@ -25,9 +25,6 @@ import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 
-/**
- * Created by lashket on 2.7.16.
- */
 public class EditorsListActivity extends AppCompatActivity {
 
     private RecyclerView usersRecyclerView;

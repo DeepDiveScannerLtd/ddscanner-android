@@ -49,9 +49,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.rey.material.widget.ProgressView;
 import com.squareup.otto.Subscribe;
 
-/**
- * Created by lashket on 29.1.16.
- */
 public class DiveCentersActivity extends BaseAppCompatActivity implements View.OnClickListener {
     private static final String TAG = "DiveCentersActivity";
     private Toolbar toolbar;

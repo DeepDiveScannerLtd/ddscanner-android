@@ -53,9 +53,6 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 
-/**
- * Created by lashket on 22.1.16.
- */
 public class FilterActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = FilterActivity.class.getSimpleName();

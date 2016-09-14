@@ -8,10 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.InputType;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -40,7 +38,7 @@ import com.ddscanner.rest.BaseCallback;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.ReviewsListAdapter;
-import com.ddscanner.ui.adapters.SpinnerItemsAdapter;
+import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogUtils;
 import com.ddscanner.utils.Helpers;
@@ -63,14 +61,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/**
- * Created by lashket on 12.3.16.
- */
 public class ReviewsActivity extends AppCompatActivity implements View.OnClickListener {
-
-    private static final int RC_LOGIN = 8001;
-    private static final int RC_LOGIN_TO_LEAVE_REPORT = 7070;
-    private static final int RC_LOGIN_TO_DELETE_COMMENT = 7078;
 
     private ArrayList<Comment> comments;
     private RecyclerView commentsRc;
@@ -147,15 +138,8 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        if (requestCode == 9001) {
+        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_WRITE_REVIEW) {
             if (resultCode == Activity.RESULT_OK) {
-//                Comment comment = (Comment)data.getSerializableExtra("COMMENT");
-//                if (comments == null) {
-//                    comments = new ArrayList<Comment>();
-//                }
-//                comments.add(0, comment);
-//                commentsRc.setAdapter(new ReviewsListAdapter(comments, ReviewsActivity.this, path));
                 getComments();
                 isHasNewComment = true;
             }
@@ -163,17 +147,17 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
                 //Write your code if there's no result
             }
         }
-        if (requestCode == RC_LOGIN) {
+        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN) {
             if (resultCode == RESULT_OK) {
                 getComments();
             }
         }
-        if (requestCode == 3011) {
+        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_EDIT_MY_REVIEW) {
             if (resultCode == RESULT_OK) {
                 getComments();
             }
         }
-        if (requestCode == RC_LOGIN_TO_LEAVE_REPORT) {
+        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_LEAVE_REPORT) {
             if (resultCode == RESULT_OK) {
                 sendReportRequest(reportType, reportDescription);
             }
@@ -181,7 +165,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
                 getComments();
             }
         }
-        if (requestCode == RC_LOGIN_TO_DELETE_COMMENT) {
+        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_DELETE_COMMENT) {
             if (resultCode == RESULT_OK) {
                 deleteUsersComment(commentToDelete);
             }
@@ -238,7 +222,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         SharedPreferenceHelper.logout();
-                        SocialNetworks.showForResult(ReviewsActivity.this, RC_LOGIN);
+                        SocialNetworks.showForResult(ReviewsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
                         helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
@@ -257,7 +241,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.fab_write_review:
-                LeaveReviewActivity.showForResult(this, diveSpotId, 0f, EventsTracker.SendReviewSource.FROM_REVIEWS_LIST, 9001);
+                LeaveReviewActivity.showForResult(this, diveSpotId, 0f, EventsTracker.SendReviewSource.FROM_REVIEWS_LIST, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_WRITE_REVIEW);
                 break;
         }
     }
@@ -312,7 +296,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
 
     @Subscribe
     public void showLoginActivity(ShowLoginActivityIntent event) {
-        SocialNetworks.showForResult(ReviewsActivity.this, RC_LOGIN);
+        SocialNetworks.showForResult(ReviewsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN);
     }
 
     @Subscribe
@@ -322,7 +306,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
 
     @Subscribe
     public void editComment(EditCommentEvent editCommentEvent) {
-        EditCommentActivity.show(this, editCommentEvent.getComment(), path);
+        EditCommentActivity.showForResult(this, editCommentEvent.getComment(), path, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_EDIT_MY_REVIEW);
     }
 
     private void deleteUsersComment(String id) {
@@ -365,7 +349,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         SharedPreferenceHelper.logout();
-                        SocialNetworks.showForResult(ReviewsActivity.this, RC_LOGIN_TO_DELETE_COMMENT);
+                        SocialNetworks.showForResult(ReviewsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_DELETE_COMMENT);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
                         helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
@@ -455,7 +439,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     private void sendReportRequest(String type, String description) {
         materialDialog.show();
         if (!SharedPreferenceHelper.isUserLoggedIn()) {
-            SocialNetworks.showForResult(ReviewsActivity.this, RC_LOGIN_TO_LEAVE_REPORT);
+            SocialNetworks.showForResult(ReviewsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_LEAVE_REPORT);
             return;
         }
         ReportRequest reportRequest = new ReportRequest();
@@ -466,7 +450,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
             reportRequest.setToken(SharedPreferenceHelper.getToken());
             reportRequest.setSocial(SharedPreferenceHelper.getSn());
         } else {
-            SocialNetworks.showForResult(ReviewsActivity.this, RC_LOGIN_TO_LEAVE_REPORT);
+            SocialNetworks.showForResult(ReviewsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_LEAVE_REPORT);
             return;
         }
         reportRequest.setType(type);
@@ -514,7 +498,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         SharedPreferenceHelper.logout();
-                        SocialNetworks.showForResult(ReviewsActivity.this, RC_LOGIN_TO_LEAVE_REPORT);
+                        SocialNetworks.showForResult(ReviewsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_LEAVE_REPORT);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
                         helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);

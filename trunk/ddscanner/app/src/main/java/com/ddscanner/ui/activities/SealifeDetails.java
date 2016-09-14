@@ -32,9 +32,6 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
-/**
- * Created by lashket on 17.2.16.
- */
 public class SealifeDetails extends AppCompatActivity {
 
     private TextView length, weight, depth, scname, order, distribution, scclass, habitat,name;

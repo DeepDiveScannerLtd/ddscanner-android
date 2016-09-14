@@ -4,17 +4,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Selection;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
-import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -39,6 +36,7 @@ import com.ddscanner.events.LoggedInEvent;
 import com.ddscanner.rest.BaseCallback;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
+import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogUtils;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
@@ -71,8 +69,6 @@ import retrofit2.Call;
 
 public class SocialNetworks extends AppCompatActivity
         implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
-
-    private static final int RC_SIGN_IN = 0;
 
     private static final String TAG = "SOCIAL";
 
@@ -195,7 +191,7 @@ public class SocialNetworks extends AppCompatActivity
                     }
                 });
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-        startActivityForResult(signInIntent, RC_SIGN_IN);
+        startActivityForResult(signInIntent, ActivitiesRequestCodes.REQUEST_CODE_SOCIAL_NETWORKS_SIGN_IN);
     }
 
     @Override
@@ -206,9 +202,7 @@ public class SocialNetworks extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-
-        if (requestCode == RC_SIGN_IN) {
+        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_SOCIAL_NETWORKS_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             Log.d(TAG, "onActivityResult:GET_TOKEN:success:" + result.getStatus().isSuccess());
             if (result.isSuccess()) {

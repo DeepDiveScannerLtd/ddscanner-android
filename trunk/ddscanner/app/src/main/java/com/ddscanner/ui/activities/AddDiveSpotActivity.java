@@ -88,12 +88,6 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
 
     private static final String TAG = AddDiveSpotActivity.class.getSimpleName();
     private static final String DIVE_SPOT_NAME_PATTERN = "^[a-zA-Z0-9 ]*$";
-    private static final int RC_PICK_SEALIFE = ActivitiesRequestCodes.ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_PICK_SEALIFE;
-    private static final int RC_PICK_PHOTO = ActivitiesRequestCodes.ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_PICK_PHOTO;
-    private static final int RC_PICK_LOCATION = ActivitiesRequestCodes.ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_PICK_LOCATION;
-    private static final int RC_LOGIN = ActivitiesRequestCodes.ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_LOGIN;
-    private static final int RC_LOGIN_TO_SEND = ActivitiesRequestCodes.ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_LOGIN_TO_SEND;
-    private static final int RC_LOGIN_TO_GET_DATA = ActivitiesRequestCodes.ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_LOGIN_TO_GET_DATA;
 
     private ProgressDialog progressDialog;
 
@@ -250,7 +244,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RC_PICK_LOCATION) {
+        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_LOCATION) {
             if (resultCode == RESULT_OK) {
                 this.diveSpotLocation = data.getParcelableExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_LATLNG);
                 if (data.getStringExtra(Constants.ADD_DIVE_SPOT_INTENT_LOCATION_NAME) != null) {
@@ -261,7 +255,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                 locationTitle.setTextColor(getResources().getColor(R.color.black_text));
             }
         }
-        if (requestCode == RC_PICK_PHOTO) {
+        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_PHOTO) {
             if (resultCode == RESULT_OK) {
                 maxPhotos = maxPhotos - data.getStringArrayListExtra(MultiImageSelectorActivity
                         .EXTRA_RESULT).size();
@@ -271,7 +265,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                         AddDiveSpotActivity.this, addPhotoTitle));
             }
         }
-        if (requestCode == RC_PICK_SEALIFE) {
+        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_SEALIFE) {
             if (resultCode == RESULT_OK) {
                 Sealife sealife =(Sealife) data.getSerializableExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_SEALIFE);
 
@@ -285,7 +279,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                 sealifesRc.setAdapter(sealifeListAddingDiveSpotAdapter);
             }
         }
-        if (requestCode == RC_LOGIN) {
+        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_LOGIN) {
             if (resultCode == RESULT_OK) {
                 createSocialDatarequests();
                 createAddDiveSpotRequest();
@@ -295,12 +289,12 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
             }
 
         }
-        if (requestCode == RC_LOGIN_TO_SEND) {
+        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_LOGIN_TO_SEND) {
             if (resultCode == RESULT_OK) {
                 createAddDiveSpotRequest();
             }
         }
-        if (requestCode == RC_LOGIN_TO_GET_DATA) {
+        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_LOGIN_TO_GET_DATA) {
             if (resultCode == RESULT_OK) {
                 loadFiltersDataRequest();
             }
@@ -359,7 +353,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         SharedPreferenceHelper.logout();
-                        SocialNetworks.showForResult(AddDiveSpotActivity.this, RC_LOGIN_TO_GET_DATA);
+                        SocialNetworks.showForResult(AddDiveSpotActivity.this, ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_LOGIN_TO_GET_DATA);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
                         helpers.showToast(AddDiveSpotActivity.this, R.string.toast_server_error);
@@ -453,7 +447,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         SharedPreferenceHelper.logout();
-                        SocialNetworks.showForResult(AddDiveSpotActivity.this, RC_LOGIN_TO_SEND);
+                        SocialNetworks.showForResult(AddDiveSpotActivity.this, ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_LOGIN_TO_SEND);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
                         helpers.showToast(AddDiveSpotActivity.this, R.string.toast_server_error);
@@ -498,9 +492,9 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         if (checkReadStoragePermission()) {
             MultiImageSelector.create(this)
                     .count(maxPhotos)
-                    .start(this, RC_PICK_PHOTO);
+                    .start(this, ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_PHOTO);
         } else {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, ActivitiesRequestCodes.ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_PERMISSION_READ_STORAGE);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PERMISSION_READ_STORAGE);
         }
     }
 
@@ -520,19 +514,19 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
             case R.id.location_layout:
                 Intent intent = new Intent(AddDiveSpotActivity.this,
                         PickLocationActivity.class);
-                startActivityForResult(intent, RC_PICK_LOCATION);
+                startActivityForResult(intent, ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_LOCATION);
                 break;
             case R.id.btn_add_sealife:
                 Intent sealifeIntent = new Intent(AddDiveSpotActivity.this,
                         SearchSealifeActivity.class);
-                startActivityForResult(sealifeIntent, RC_PICK_SEALIFE);
+                startActivityForResult(sealifeIntent, ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_SEALIFE);
                 break;
             case R.id.button_create:
                 if (SharedPreferenceHelper.isUserLoggedIn()) {
                     createRequestBodyies();
                 } else {
                     Intent loginIntent = new Intent(this, SocialNetworks.class);
-                    startActivityForResult(loginIntent, RC_LOGIN);
+                    startActivityForResult(loginIntent, ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_LOGIN);
                 }
                 break;
         }
@@ -713,7 +707,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
-            case ActivitiesRequestCodes.ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_PERMISSION_READ_STORAGE: {
+            case ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PERMISSION_READ_STORAGE: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     pickPhotoFromGallery();
                 } else {

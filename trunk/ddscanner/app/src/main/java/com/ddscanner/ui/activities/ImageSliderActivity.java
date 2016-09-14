@@ -59,9 +59,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/**
- * Created by lashket on 4.3.16.
- */
 public class ImageSliderActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener, View.OnClickListener, SimpleGestureFilter.SimpleGestureListener{
 
     private LinearLayout pager_indicator;
@@ -336,7 +333,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         SharedPreferenceHelper.logout();
-                        SocialNetworks.showForResult(ImageSliderActivity.this, ActivitiesRequestCodes.SLIDER_ACTIVITY_REQUEST_CODE_LOGIN_FOR_DELETE);
+                        SocialNetworks.showForResult(ImageSliderActivity.this, ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_DELETE);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
                         helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
@@ -366,12 +363,12 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == ActivitiesRequestCodes.SLIDER_ACTIVITY_REQUEST_CODE_LOGIN_FOR_REPORT) {
+        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_REPORT) {
             if (resultCode == RESULT_OK) {
                 reportImage(reportName, reportType, reportDescription);
             }
         }
-        if (requestCode == ActivitiesRequestCodes.SLIDER_ACTIVITY_REQUEST_CODE_LOGIN_FOR_DELETE) {
+        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_DELETE) {
             if (resultCode == RESULT_OK) {
                 deleteImage(deleteImageName);
             }
@@ -387,7 +384,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         materialDialog.show();
         ReportRequest reportRequest = new ReportRequest();
         if (!SharedPreferenceHelper.isUserLoggedIn() || SharedPreferenceHelper.getToken().isEmpty() || SharedPreferenceHelper.getSn().isEmpty()) {
-            SocialNetworks.showForResult(this, ActivitiesRequestCodes.SLIDER_ACTIVITY_REQUEST_CODE_LOGIN_FOR_REPORT);
+            SocialNetworks.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_REPORT);
             return;
         }
         reportRequest.setName(imageName);
@@ -438,7 +435,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         SharedPreferenceHelper.logout();
-                        SocialNetworks.showForResult(ImageSliderActivity.this, ActivitiesRequestCodes.SLIDER_ACTIVITY_REQUEST_CODE_LOGIN_FOR_REPORT);
+                        SocialNetworks.showForResult(ImageSliderActivity.this, ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_REPORT);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
                         helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);

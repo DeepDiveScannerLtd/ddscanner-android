@@ -64,9 +64,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/**
- * Created by lashket on 9.8.16.
- */
 public class EditCommentActivity extends AppCompatActivity implements View.OnClickListener{
 
     private static final int RC_PICK_PHOTO = 9001;
@@ -75,7 +72,6 @@ public class EditCommentActivity extends AppCompatActivity implements View.OnCli
     private static final String ID = "ID";
     private static final String RATING = "RATING";
     private static final String SOURCE = "SOURCE";
-    private static final int RC_LOGIN = 8001;
     private static final int COMMENT_MAX_LENGTH = 250;
 
     private Toolbar toolbar;
@@ -225,7 +221,7 @@ public class EditCommentActivity extends AppCompatActivity implements View.OnCli
                     .count(maxPhotos)
                     .start(this, RC_PICK_PHOTO);
         } else {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, ActivitiesRequestCodes.LEAVE_REVIEW_ACTIVITY_REQUEST_CODE_PERMISSION_READ_STORAGE);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, ActivitiesRequestCodes.REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_PERMISSION_READ_STORAGE);
         }
     }
 
@@ -236,11 +232,11 @@ public class EditCommentActivity extends AppCompatActivity implements View.OnCli
         return true;
     }
 
-    public static void show(Activity context, Comment comment, String path) {
+    public static void showForResult(Activity context, Comment comment, String path, int requestCode) {
         Intent intent = new Intent(context, EditCommentActivity.class);
         intent.putExtra("COMMENT", comment);
         intent.putExtra("PATH", path);
-        context.startActivityForResult(intent, 3011);
+        context.startActivityForResult(intent, requestCode);
     }
 
     @Override
@@ -279,7 +275,7 @@ public class EditCommentActivity extends AppCompatActivity implements View.OnCli
                 photos_rc.setAdapter(addPhotoToDsListAdapter);
             }
         }
-        if (requestCode == RC_LOGIN) {
+        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_EDIT_COMMENT_ACTIVITY_LOGIN) {
             if (resultCode == RESULT_OK) {
                 updateReview();
             }
@@ -390,7 +386,7 @@ public class EditCommentActivity extends AppCompatActivity implements View.OnCli
                         helpers.showToast(EditCommentActivity.this, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
-                        SocialNetworks.showForResult(EditCommentActivity.this, RC_LOGIN);
+                        SocialNetworks.showForResult(EditCommentActivity.this, ActivitiesRequestCodes.REQUEST_CODE_EDIT_COMMENT_ACTIVITY_LOGIN);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
                         helpers.showToast(EditCommentActivity.this, R.string.toast_server_error);
@@ -432,7 +428,7 @@ public class EditCommentActivity extends AppCompatActivity implements View.OnCli
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
-            case ActivitiesRequestCodes.LEAVE_REVIEW_ACTIVITY_REQUEST_CODE_PERMISSION_READ_STORAGE: {
+            case ActivitiesRequestCodes.REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_PERMISSION_READ_STORAGE: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     pickPhotoFromGallery();
                 } else {

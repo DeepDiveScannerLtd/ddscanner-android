@@ -28,6 +28,7 @@ import com.ddscanner.rest.BaseCallback;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.DiveSpotsListAdapter;
+import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogUtils;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
@@ -43,12 +44,8 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 
-/**
- * Created by lashket on 20.5.16.
- */
 public class DiveSpotsListActivity extends AppCompatActivity {
 
-    private static final int RC_LOGIN = 9001;
     private static final String BUNDLE_KEY_SPOT_VIEW_SOURCE = "BUNDLE_KEY_SPOT_VIEW_SOURCE";
     
     private RecyclerView rc;
@@ -76,7 +73,7 @@ public class DiveSpotsListActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RC_LOGIN) {
+        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOTS_LIST_ACTIVITY_LOGIN) {
             if (resultCode == RESULT_OK) {
                 if (isAdded) {
                     getAddedList();
@@ -162,7 +159,7 @@ public class DiveSpotsListActivity extends AppCompatActivity {
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         SharedPreferenceHelper.logout();
-                        SocialNetworks.showForResult(DiveSpotsListActivity.this, RC_LOGIN);
+                        SocialNetworks.showForResult(DiveSpotsListActivity.this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOTS_LIST_ACTIVITY_LOGIN);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
                         helpers.showToast(DiveSpotsListActivity.this, R.string.toast_server_error);
@@ -226,7 +223,7 @@ public class DiveSpotsListActivity extends AppCompatActivity {
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         SharedPreferenceHelper.logout();
-                        SocialNetworks.showForResult(DiveSpotsListActivity.this, RC_LOGIN);
+                        SocialNetworks.showForResult(DiveSpotsListActivity.this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOTS_LIST_ACTIVITY_LOGIN);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
                         helpers.showToast(DiveSpotsListActivity.this, R.string.toast_server_error);

@@ -71,7 +71,7 @@ public class AllPhotosDiveSpotAdapter extends RecyclerView.Adapter<AllPhotosDive
         @Override
         public void onClick(View v) {
             EventsTracker.trackDiveSpotPhotosView();
-            ImageSliderActivity.showForResult(context, images, getAdapterPosition(), path, ActivitiesRequestCodes.PHOTOS_ACTIVITY_REQUEST_CODE_SLIDER);
+            ImageSliderActivity.showForResult(context, images, getAdapterPosition(), path, ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_ACTIVITY_SLIDER);
         }
     }
 

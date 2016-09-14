@@ -49,9 +49,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/**
- * Created by Lenovo on 26.08.2016.
- */
 public class SelfCommentsActivity extends AppCompatActivity {
 
     private ArrayList<Comment> comments;
@@ -141,7 +138,7 @@ public class SelfCommentsActivity extends AppCompatActivity {
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         SharedPreferenceHelper.logout();
-                        SocialNetworks.showForResult(SelfCommentsActivity.this, ActivitiesRequestCodes.SELF_REVIEWS_REQUEST_CODE_LOGIN_TO_VIEW_COMMENTS);
+                        SocialNetworks.showForResult(SelfCommentsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_SELF_REVIEWS_LOGIN_TO_VIEW_COMMENTS);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
                         helpers.showToast(SelfCommentsActivity.this, R.string.toast_server_error);
@@ -165,7 +162,7 @@ public class SelfCommentsActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-            case ActivitiesRequestCodes.SELF_REVIEWS_REQUEST_CODE_LOGIN_TO_VIEW_COMMENTS:
+            case ActivitiesRequestCodes.REQUEST_CODE_SELF_REVIEWS_LOGIN_TO_VIEW_COMMENTS:
                 if (resultCode == RESULT_OK) {
                     getComments();
                 }
@@ -173,7 +170,7 @@ public class SelfCommentsActivity extends AppCompatActivity {
                     finish();
                 }
                 break;
-            case ActivitiesRequestCodes.SELF_REVIEWS_REQUEST_CODE_LOGIN_TO_DELETE_COMMENTS:
+            case ActivitiesRequestCodes.REQUEST_CODE_SELF_REVIEWS_LOGIN_TO_DELETE_COMMENTS:
                 if (resultCode == RESULT_OK) {
                     deleteUsersComment(commentToDelete);
                 }
@@ -181,7 +178,7 @@ public class SelfCommentsActivity extends AppCompatActivity {
                     finish();
                 }
                 break;
-            case 3011:
+            case ActivitiesRequestCodes.REQUEST_CODE_SELF_REVIEWS_EDIT_MY_REVIEW:
                 if (resultCode == RESULT_OK) {
                     getComments();
                 }
@@ -241,7 +238,7 @@ public class SelfCommentsActivity extends AppCompatActivity {
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         SharedPreferenceHelper.logout();
-                        SocialNetworks.showForResult(SelfCommentsActivity.this, ActivitiesRequestCodes.SELF_REVIEWS_REQUEST_CODE_LOGIN_TO_DELETE_COMMENTS);
+                        SocialNetworks.showForResult(SelfCommentsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_SELF_REVIEWS_LOGIN_TO_DELETE_COMMENTS);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
                         helpers.showToast(SelfCommentsActivity.this, R.string.toast_server_error);
@@ -268,7 +265,7 @@ public class SelfCommentsActivity extends AppCompatActivity {
 
     @Subscribe
     public void editComment(EditCommentEvent editCommentEvent) {
-        EditCommentActivity.show(this, editCommentEvent.getComment(), path);
+        EditCommentActivity.showForResult(this, editCommentEvent.getComment(), path, ActivitiesRequestCodes.REQUEST_CODE_SELF_REVIEWS_EDIT_MY_REVIEW);
     }
 
     @Override

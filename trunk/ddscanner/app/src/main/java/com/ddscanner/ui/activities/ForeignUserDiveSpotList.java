@@ -43,9 +43,6 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 
-/**
- * Created by lashket on 18.7.16.
- */
 public class ForeignUserDiveSpotList extends AppCompatActivity {
 
     private RecyclerView rc;
@@ -128,7 +125,7 @@ public class ForeignUserDiveSpotList extends AppCompatActivity {
                         helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
-                        SocialNetworks.showForResult(ForeignUserDiveSpotList.this, ActivitiesRequestCodes.FOREIGN_USER_SPOT_LIST_REQUEST_CODE_LOGIN);
+                        SocialNetworks.showForResult(ForeignUserDiveSpotList.this, ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_SPOT_LIST_LOGIN);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
                         helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
@@ -189,7 +186,7 @@ public class ForeignUserDiveSpotList extends AppCompatActivity {
                         helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
-                        SocialNetworks.showForResult(ForeignUserDiveSpotList.this, ActivitiesRequestCodes.FOREIGN_USER_SPOT_LIST_REQUEST_CODE_LOGIN);
+                        SocialNetworks.showForResult(ForeignUserDiveSpotList.this, ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_SPOT_LIST_LOGIN);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
                         helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
@@ -250,7 +247,7 @@ public class ForeignUserDiveSpotList extends AppCompatActivity {
                         helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
-                        SocialNetworks.showForResult(ForeignUserDiveSpotList.this, ActivitiesRequestCodes.FOREIGN_USER_SPOT_LIST_REQUEST_CODE_LOGIN);
+                        SocialNetworks.showForResult(ForeignUserDiveSpotList.this, ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_SPOT_LIST_LOGIN);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
                         helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
@@ -313,7 +310,7 @@ public class ForeignUserDiveSpotList extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == ActivitiesRequestCodes.FOREIGN_USER_SPOT_LIST_REQUEST_CODE_LOGIN) {
+        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_SPOT_LIST_LOGIN) {
             if (resultCode == RESULT_OK) {
                 if (isCheckIn) {
                     getUsersCheckinList();

@@ -13,7 +13,7 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.ddscanner.R;
-import com.ddscanner.utils.Helpers;
+import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.LocationHelper;
 import com.ddscanner.utils.LogUtils;
 
@@ -23,9 +23,6 @@ import com.ddscanner.utils.LogUtils;
 public class LocationProvidersNotAvailableActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = LocationProvidersNotAvailableActivity.class.getName();
-    private static final int REQUEST_CODE_TURN_ON_LOCATION_SETTINGS = 5000;
-
-    private Helpers helpers = new Helpers();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,7 +48,7 @@ public class LocationProvidersNotAvailableActivity extends AppCompatActivity imp
     @Override
     public void onClick(View v) {
         Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-        startActivityForResult(intent, REQUEST_CODE_TURN_ON_LOCATION_SETTINGS);
+        startActivityForResult(intent, ActivitiesRequestCodes.REQUEST_CODE_LOCATION_PROVIDERS_NOT_AVAILABLE_ACTIVITY_TURN_ON_LOCATION_SETTINGS);
     }
 
     @Override
@@ -69,7 +66,7 @@ public class LocationProvidersNotAvailableActivity extends AppCompatActivity imp
         super.onActivityResult(requestCode, resultCode, data);
         LogUtils.i(TAG, "onActivityResult requestCode = " + requestCode + " resultCode = " + resultCode + " " + this);
         switch (requestCode) {
-            case REQUEST_CODE_TURN_ON_LOCATION_SETTINGS:
+            case ActivitiesRequestCodes.REQUEST_CODE_LOCATION_PROVIDERS_NOT_AVAILABLE_ACTIVITY_TURN_ON_LOCATION_SETTINGS:
                 if (LocationHelper.isLocationProvidersAvailable(this)) {
                     setResult(RESULT_OK);
                     finish();

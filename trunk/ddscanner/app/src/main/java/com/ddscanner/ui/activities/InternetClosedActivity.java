@@ -17,9 +17,6 @@ import com.ddscanner.events.InternerConnectionOpenedEvent;
 import com.ddscanner.utils.Helpers;
 import com.squareup.otto.Subscribe;
 
-/**
- * Created by lashket on 19.5.16.
- */
 public class InternetClosedActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Helpers helpers = new Helpers();

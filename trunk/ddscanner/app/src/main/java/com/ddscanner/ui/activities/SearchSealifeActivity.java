@@ -35,6 +35,7 @@ import com.ddscanner.rest.BaseCallback;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.SealifeSearchAdapter;
+import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogUtils;
 import com.ddscanner.utils.Helpers;
@@ -51,12 +52,7 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 
-/**
- * Created by lashket on 7.4.16.
- */
 public class SearchSealifeActivity extends AppCompatActivity implements SearchView.OnQueryTextListener, View.OnClickListener {
-
-    private static final int RC_ADD_SEALIFE = 8001;
 
     private Toolbar toolbar;
     private RecyclerView mRecyclerView;
@@ -146,7 +142,7 @@ public class SearchSealifeActivity extends AppCompatActivity implements SearchVi
         switch (v.getId()) {
             case R.id.add_manualy:
                 Intent i = new Intent(SearchSealifeActivity.this, AddSealifeActivity.class);
-                startActivityForResult(i, RC_ADD_SEALIFE);
+                startActivityForResult(i, ActivitiesRequestCodes.REQUEST_CODE_SEARCH_SEALIFE_ACTIVITY_ADD_SEALIFE);
                 break;
         }
     }
@@ -268,7 +264,7 @@ public class SearchSealifeActivity extends AppCompatActivity implements SearchVi
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RC_ADD_SEALIFE) {
+        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_SEARCH_SEALIFE_ACTIVITY_ADD_SEALIFE) {
             if (resultCode == RESULT_OK) {
                 Sealife sealife = (Sealife) data.getSerializableExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_SEALIFE);
                 Intent intent = new Intent();

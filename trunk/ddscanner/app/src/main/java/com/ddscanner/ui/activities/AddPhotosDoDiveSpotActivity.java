@@ -28,7 +28,7 @@ import com.ddscanner.rest.BaseCallback;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.AddPhotoToDiveSpotAdapter;
-import com.ddscanner.ui.adapters.AllPhotosDiveSpotAdapter;
+import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogUtils;
 import com.ddscanner.utils.Helpers;
@@ -51,8 +51,6 @@ import retrofit2.Response;
  * Created by lashket on 26.5.16.
  */
 public class AddPhotosDoDiveSpotActivity extends AppCompatActivity implements View.OnClickListener{
-
-    private static final int RC_LOGIN_TO_SEND = 4001;
 
     private RecyclerView recyclerView;
     private Button button;
@@ -155,7 +153,7 @@ public class AddPhotosDoDiveSpotActivity extends AppCompatActivity implements Vi
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         SharedPreferenceHelper.logout();
-                        SocialNetworks.showForResult(AddPhotosDoDiveSpotActivity.this, RC_LOGIN_TO_SEND);
+                        SocialNetworks.showForResult(AddPhotosDoDiveSpotActivity.this, ActivitiesRequestCodes.REQUEST_CODE_ADD_PHOTOS_DO_DIVE_SPOT_ACTIVITY_LOGIN_TO_SEND);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
                         helpers.showToast(AddPhotosDoDiveSpotActivity.this, R.string.toast_server_error);
@@ -197,7 +195,7 @@ public class AddPhotosDoDiveSpotActivity extends AppCompatActivity implements Vi
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RC_LOGIN_TO_SEND) {
+        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_ADD_PHOTOS_DO_DIVE_SPOT_ACTIVITY_LOGIN_TO_SEND) {
             if (resultCode == RESULT_OK) {
                 sendRequest();
             }

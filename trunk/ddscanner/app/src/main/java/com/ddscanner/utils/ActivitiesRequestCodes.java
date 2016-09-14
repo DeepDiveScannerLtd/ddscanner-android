@@ -2,59 +2,139 @@ package com.ddscanner.utils;
 
 public class ActivitiesRequestCodes {
 
+    /**
+     * Store here all the activities request codes.
+     *
+     * Request code naming rules: REQUEST_CODE_<activity name>_<request name>
+     *
+     * Request int value convention: XXYY, where XX - unique "id" of activity/screen, YY - unique "id" of request code
+     */
+
     //    BaseAppCompatActivity
-    public static final int REQUEST_CODE_LOCATION_PERMISSION = 1301;
-    public static final int REQUEST_CODE_LOCATION_PROVIDERS = 1302;
+    public static final int REQUEST_CODE_LOCATION_PERMISSION = 1101;
+    public static final int REQUEST_CODE_LOCATION_PROVIDERS = 1102;
 
     //    SplashActivity
-    public static final int REQUEST_CODE_SPLASH_ACTIVITY_PLAY_SERVICES_RESOLUTION = 9000;
+    public static final int REQUEST_CODE_SPLASH_ACTIVITY_PLAY_SERVICES_RESOLUTION = 1201;
 
     //    MainActivity
-    public static final int REQUEST_CODE_MAIN_ACTIVITY_GO_TO_MY_LOCATION = 1012;
-    public static final int REQUEST_CODE_MAIN_ACTIVITY_PLACE_AUTOCOMPLETE = 1000;
-    public static final int REQUEST_CODE_MAIN_ACTIVITY_PICK_PHOTO = 8000;
-    public static final int REQUEST_CODE_MAIN_ACTIVITY_LOGIN = 7000;
-    public static final int REQUEST_CODE_MAIN_ACTIVITY_IMAGE_CAPTURE = 6000;
-    public static final int REQUEST_CODE_MAIN_ACTIVITY_PERMISSION_READ_STORAGE = 2010;
-    public static final int REQUEST_CODE_MAIN_ACTIVITY_PERMISSION_CAMERA = 2011;
-    public static final int REQUEST_CODE_MAIN_ACTIVITY_PERMISSION_WRITE_STORAGE = 2012;
-    public static final int REQUEST_CODE_MAIN_ACTIVITY_PERMISSION_CAMERA_AND_WRITE_STORAGE = 2013;
+    public static final int REQUEST_CODE_MAIN_ACTIVITY_GO_TO_MY_LOCATION = 1301;
+    public static final int REQUEST_CODE_MAIN_ACTIVITY_PLACE_AUTOCOMPLETE = 1302;
+    public static final int REQUEST_CODE_MAIN_ACTIVITY_PICK_PHOTO = 1303;
+    public static final int REQUEST_CODE_MAIN_ACTIVITY_LOGIN = 1304;
+    public static final int REQUEST_CODE_MAIN_ACTIVITY_IMAGE_CAPTURE = 1305;
+    public static final int REQUEST_CODE_MAIN_ACTIVITY_PERMISSION_READ_STORAGE = 1306;
+    public static final int REQUEST_CODE_MAIN_ACTIVITY_PERMISSION_CAMERA = 1307;
+    public static final int REQUEST_CODE_MAIN_ACTIVITY_PERMISSION_WRITE_STORAGE = 1308;
+    public static final int REQUEST_CODE_MAIN_ACTIVITY_PERMISSION_CAMERA_AND_WRITE_STORAGE = 1309;
+    public static final int REQUEST_CODE_MAIN_ACTIVITY_NEED_TO_LOGIN = 1310;
 
     //    SearchActivity
-    public static final int SEARCH_ACTIVITY_REQUEST_CODE_LOGIN = 1010;
-    public static final int SEARCH_ACTIVITY_RESULT_CODE_MY_LOCATION = 1011;
+    public static final int SEARCH_ACTIVITY_REQUEST_CODE_LOGIN = 1401;
+    public static final int SEARCH_ACTIVITY_RESULT_CODE_MY_LOCATION = 1402;
 
-    //
-    public static final int ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_PICK_PHOTO = 1001;
-    public static final int ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_PICK_SEALIFE = 1002;
-    public static final int ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_PICK_LOCATION = 1003;
-    public static final int ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_LOGIN = 1004;
-    public static final int ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_LOGIN_TO_SEND = 1005;
-    public static final int ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_LOGIN_TO_GET_DATA = 1006;
-    public static final int ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_PERMISSION_READ_STORAGE = 1007;
-    public static final int REQUEST_CODE_MAP_LIST_FRAGMENT_GET_LOCATION_ON_FRAGMENT_START = 9010;
-    public static final int REQUEST_CODE_MAP_LIST_FRAGMENT_GO_TO_CURRENT_LOCATION = 9011;
-    public static final int REQUEST_CODE_DIVE_CENTERS_MAP_GO_TO_CURRENT_LOCATION = 9009;
-    public static final int REQUEST_CODE_MAIN_ACTIVITY_GET_LOCATION_ON_ACTIVITY_START = 9012;
-    public static final int REQUEST_CODE_OPEN_LOGIN_SCREEN = 9013;
-    public static final int REQUEST_CODE_NEED_TO_LOGIN = 9014;
-    public static final int FOREIGN_USER_REQUEST_CODE_LOGIN = 1040;
-    public static final int FOREIGN_USER_REQUEST_CODE_SHOW_LIST = 1042;
-    public static final int FOREIGN_USER_REQUEST_CODE_SHOW_LIKES_LIST = 1043;
-    public static final int FOREIGN_USER_SPOT_LIST_REQUEST_CODE_LOGIN = 1041;
-    public static final int USER_LIKES_ACTIVITY_REQUEST_CODE_LOGIN = 1050;
-    /*Image slider activity*/
-    public static final int SLIDER_ACTIVITY_REQUEST_CODE_LOGIN_FOR_REPORT = 1313;
-    public static final int SLIDER_ACTIVITY_REQUEST_CODE_LOGIN_FOR_DELETE = 1314;
-    /*Photos activity*/
-    public static final int PHOTOS_ACTIVITY_REQUEST_CODE_SLIDER = 8989;
-    public static final int DIVE_SPOT_DETAILS_ACTIVITY_REQUEST_CODE_PICK_PHOTOS = 1080;
-    public static final int DIVE_SPOT_DETAILS_ACTIVITY_REQUEST_CODE_LOGIN_TO_PICK_PHOTOS = 1081;
-    public static final int DIVE_SPOT_DETAILS_ACTIVITY_REQUEST_CODE_ADD_PHOTOS_ACTIVITY = 1082;
-    public static final int SELF_REVIEWS_REQUEST_CODE_LOGIN_TO_VIEW_COMMENTS = 1070;
-    public static final int SELF_REVIEWS_REQUEST_CODE_LOGIN_TO_DELETE_COMMENTS = 1071;
-    /*Leave review activity*/
-    public static final int LEAVE_REVIEW_ACTIVITY_REQUEST_CODE_PERMISSION_READ_STORAGE = 1090;
-    /*Add sealife activity*/
-    public static final int ADD_SEALIFE_ACTIVITY_REQUEST_CODE_PERMISSION_READ_STORAGE = 5500;
+    //    AddDiveSpotActivity
+    public static final int REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_PHOTO = 1501;
+    public static final int REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_SEALIFE = 1502;
+    public static final int REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_LOCATION = 1503;
+    public static final int REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_LOGIN = 1504;
+    public static final int REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_LOGIN_TO_SEND = 1505;
+    public static final int REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_LOGIN_TO_GET_DATA = 1506;
+    public static final int REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PERMISSION_READ_STORAGE = 1507;
+
+    //    MapListFragment
+    public static final int REQUEST_CODE_MAP_LIST_FRAGMENT_GET_LOCATION_ON_FRAGMENT_START = 1601;
+    public static final int REQUEST_CODE_MAP_LIST_FRAGMENT_GO_TO_CURRENT_LOCATION = 1602;
+
+    //    DiveCentersActivity
+    public static final int REQUEST_CODE_DIVE_CENTERS_MAP_GO_TO_CURRENT_LOCATION = 1701;
+
+    //    NotificationsFragment
+    public static final int REQUEST_CODE_OPEN_LOGIN_SCREEN = 1801;
+
+    //    ForeignProfileActivity
+    public static final int REQUEST_CODE_FOREIGN_USER_LOGIN = 1901;
+    public static final int REQUEST_CODE_FOREIGN_USER_SHOW_LIST = 1902;
+    public static final int REQUEST_CODE_FOREIGN_USER_SHOW_LIKES_LIST = 1903;
+    public static final int REQUEST_CODE_FOREIGN_USER_SPOT_LIST_LOGIN = 1904;
+
+    //    ImageSliderActivity
+    public static final int REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_REPORT = 2001;
+    public static final int REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_DELETE = 2002;
+
+    //    DiveSpotPhotosActivity
+    public static final int REQUEST_CODE_PHOTOS_ACTIVITY_SLIDER = 2101;
+    public static final int REQUEST_CODE_PHOTOS_ADD_PHOTOS = 2102;
+    public static final int REQUEST_CODE_PHOTOS_LOGIN = 2103;
+    public static final int REQUEST_CODE_PHOTOS_SELECT_PHOTOS = 2104;
+
+    //    DiveSpotDetailsActivity
+    public static final int REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_PICK_PHOTOS = 2201;
+    public static final int REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_PICK_PHOTOS = 2202;
+    public static final int REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_ADD_PHOTOS_ACTIVITY = 2203;
+    public static final int REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LEAVE_REVIEW = 2204;
+    public static final int REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_EDIT_DIVE_SPOT = 2205;
+    public static final int REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN = 2206;
+    public static final int REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_PHOTOS = 2207;
+    public static final int REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_REVIEWS = 2208;
+
+    //    SelfCommentsActivity
+    public static final int REQUEST_CODE_SELF_REVIEWS_LOGIN_TO_VIEW_COMMENTS = 2301;
+    public static final int REQUEST_CODE_SELF_REVIEWS_LOGIN_TO_DELETE_COMMENTS = 2302;
+    public static final int REQUEST_CODE_SELF_REVIEWS_EDIT_MY_REVIEW = 2303;
+
+    //    LeaveReviewActivity
+    public static final int REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_PERMISSION_READ_STORAGE = 2401;
+    public static final int REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_LOGIN = 2402;
+
+    //    AddSealifeActivity
+    public static final int REQUEST_CODE_ADD_SEALIFE_ACTIVITY_PERMISSION_READ_STORAGE = 2501;
+
+    //    AddPhotosDoDiveSpotActivity
+    public static final int REQUEST_CODE_ADD_PHOTOS_DO_DIVE_SPOT_ACTIVITY_LOGIN_TO_SEND = 2601;
+
+    //    AddSealifeActivity
+    public static final int REQUEST_CODE_ADD_SEALIFE_ACTIVITY_PICK_PHOTO = 2701;
+    public static final int REQUEST_CODE_ADD_SEALIFE_ACTIVITY_LOGIN_TO_SEND = 2702;
+
+    //    DiveSpotsListActivity
+    public static final int REQUEST_CODE_DIVE_SPOTS_LIST_ACTIVITY_LOGIN = 2801;
+
+    //    EditCommentActivity
+    public static final int REQUEST_CODE_EDIT_COMMENT_ACTIVITY_LOGIN = 2901;
+
+    //    EditDiveSpotActivity
+    public static final int REQUEST_CODE_EDIT_DIVE_SPOT_ACTIVITY_PICK_PHOTO = 3001;
+    public static final int REQUEST_CODE_EDIT_DIVE_SPOT_ACTIVITY_PICK_LOCATION = 3002;
+    public static final int REQUEST_CODE_EDIT_DIVE_SPOT_ACTIVITY_PICK_SEALIFE = 3003;
+    public static final int REQUEST_CODE_EDIT_DIVE_SPOT_ACTIVITY_LOGIN_TO_SEND = 3004;
+    public static final int REQUEST_CODE_EDIT_DIVE_SPOT_ACTIVITY_LOGIN_TO_GET_DATA = 3005;
+
+    //    LeaveReviewActivity
+    public static final int REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_PICK_PHOTO = 3101;
+
+    //    LocationPermissionNotGrantedActivity
+    public static final int REQUEST_CODE_LOCATION_PERMISSION_NOT_GRANTED_ACTIVITY_LOCATION_PERMISSION = 3201;
+
+    //    LocationProvidersNotAvailableActivity
+    public static final int REQUEST_CODE_LOCATION_PROVIDERS_NOT_AVAILABLE_ACTIVITY_TURN_ON_LOCATION_SETTINGS = 3301;
+
+    //    PickLocationActivity
+    public static final int REQUEST_CODE_PICK_LOCATION_ACTIVITY_PLACE_AUTOCOMPLETE = 3401;
+
+    //    ReviewsActivity
+    public static final int REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN = 3501;
+    public static final int REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_LEAVE_REPORT = 3502;
+    public static final int REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_DELETE_COMMENT = 3503;
+    public static final int REQUEST_CODE_REVIEWS_ACTIVITY_WRITE_REVIEW = 3504;
+    public static final int REQUEST_CODE_REVIEWS_ACTIVITY_EDIT_MY_REVIEW = 3505;
+
+    //    SearchSealifeActivity
+    public static final int REQUEST_CODE_SEARCH_SEALIFE_ACTIVITY_ADD_SEALIFE = 3601;
+
+    //    SocialNetworks
+    public static final int REQUEST_CODE_SOCIAL_NETWORKS_SIGN_IN = 3701;
+
+    //    UsersDivespotListSwipableActivity
+    public static final int REQUEST_CODE_USERS_DIVESPOT_LIST_SWIPABLE_ACTIVITY_LOGIN = 3801;
 }

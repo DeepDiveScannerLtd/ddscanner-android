@@ -86,7 +86,6 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
@@ -113,10 +112,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private static final String TAG = DiveSpotDetailsActivity.class.getName();
 
     private static final String EXTRA_ID = "ID";
-    private static final int RC_LEAVE_REVIEW_ACTIVITY = 1001;
-    private static final int RC_EDIT_DIVE_SPOT = 2001;
-    private static final int RC_LOGIN = 2000;
-    private static final int RC_PHOTOS = 3001;
 
     private DivespotDetails divespotDetails;
     private ProgressDialog progressDialog;
@@ -208,7 +203,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
      * @param id
      * Andrei Lashkevich
      */
-
     public static void show(Context context, String id, EventsTracker.SpotViewSource spotViewSource) {
         if (spotViewSource != null) {
             EventsTracker.trackDiveSpotView(id, spotViewSource);
@@ -663,9 +657,9 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                     bundle.putString(Constants.DIVESPOTID, String.valueOf(divespotDetails.getDivespot().getId()));
                     bundle.putString("PATH", divespotDetails.getDivespot().getDiveSpotPathMedium());
                     reviewsIntent.putExtras(bundle);
-                    startActivityForResult(reviewsIntent, 9001);
+                    startActivityForResult(reviewsIntent, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_REVIEWS);
                 } else {
-                    LeaveReviewActivity.showForResult(this, String.valueOf(diveSpot.getId()), 0f, EventsTracker.SendReviewSource.FROM_EMPTY_REVIEWS_LIST, RC_LEAVE_REVIEW_ACTIVITY);
+                    LeaveReviewActivity.showForResult(this, String.valueOf(diveSpot.getId()), 0f, EventsTracker.SendReviewSource.FROM_EMPTY_REVIEWS_LIST, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LEAVE_REVIEW);
                 }
                 break;
             case R.id.yes_button:
@@ -719,9 +713,9 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
     private void addPhotosToDiveSpot() {
         if (!SharedPreferenceHelper.isUserLoggedIn()) {
-            SocialNetworks.showForResult(this, ActivitiesRequestCodes.DIVE_SPOT_DETAILS_ACTIVITY_REQUEST_CODE_LOGIN_TO_PICK_PHOTOS);
+            SocialNetworks.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_PICK_PHOTOS);
         } else {
-            MultiImageSelector.create(this).count(3).start(this, ActivitiesRequestCodes.DIVE_SPOT_DETAILS_ACTIVITY_REQUEST_CODE_PICK_PHOTOS);
+            MultiImageSelector.create(this).count(3).start(this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_PICK_PHOTOS);
         }
     }
 
@@ -731,7 +725,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                     EditDiveSpotActivity.class);
             editDiveSpotIntent
                     .putExtra(Constants.DIVESPOTID, String.valueOf(diveSpot.getId()));
-            startActivityForResult(editDiveSpotIntent, RC_EDIT_DIVE_SPOT);
+            startActivityForResult(editDiveSpotIntent, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_EDIT_DIVE_SPOT);
         } else {
             isClickedEdit = true;
             showLoginActivity();
@@ -953,7 +947,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
     @Override
     public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-        LeaveReviewActivity.showForResult(this, String.valueOf(diveSpot.getId()), rating, EventsTracker.SendReviewSource.FROM_RATING_BAR, RC_LEAVE_REVIEW_ACTIVITY);
+        LeaveReviewActivity.showForResult(this, String.valueOf(diveSpot.getId()), rating, EventsTracker.SendReviewSource.FROM_RATING_BAR, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LEAVE_REVIEW);
     }
 
     @Override
@@ -1227,31 +1221,31 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == RC_LEAVE_REVIEW_ACTIVITY) {
+        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LEAVE_REVIEW) {
             if (resultCode == RESULT_OK) {
                 if (diveSpot != null) {
                     getComments();
                 }
             }
         }
-        if (requestCode == 9001) {
+        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_REVIEWS) {
             if (resultCode == RESULT_OK) {
                 if (diveSpot != null) {
                     getComments();
                 }
             }
         }
-        if (requestCode == RC_PHOTOS && resultCode == RESULT_OK) {
+        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_PHOTOS && resultCode == RESULT_OK) {
             Intent intent = getIntent();
             startActivity(intent);
             finish();
         }
-        if (requestCode == RC_EDIT_DIVE_SPOT && resultCode == RESULT_OK) {
+        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_EDIT_DIVE_SPOT && resultCode == RESULT_OK) {
             Intent intent = getIntent();
             startActivity(intent);
             finish();
         }
-        if (requestCode == RC_LOGIN) {
+        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN) {
             if (resultCode == RESULT_OK) {
                 if (isClickedCHeckin) {
                     checkIn();
@@ -1280,7 +1274,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                             EditDiveSpotActivity.class);
                     editDiveSpotIntent
                             .putExtra(Constants.DIVESPOTID, String.valueOf(diveSpot.getId()));
-                    startActivityForResult(editDiveSpotIntent, RC_EDIT_DIVE_SPOT);
+                    startActivityForResult(editDiveSpotIntent, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_EDIT_DIVE_SPOT);
                     isClickedEdit = false;
                 }
             } else {
@@ -1304,7 +1298,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 }
             }
         }
-        if (requestCode == ActivitiesRequestCodes.DIVE_SPOT_DETAILS_ACTIVITY_REQUEST_CODE_PICK_PHOTOS) {
+        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_PICK_PHOTOS) {
             if (resultCode == RESULT_OK) {
                 List<String> path = data.getStringArrayListExtra(MultiImageSelectorActivity
                         .EXTRA_RESULT);
@@ -1313,17 +1307,17 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 bundle.putSerializable("IMAGES", (ArrayList<String>)path);
                 bundle.putString("id", String.valueOf(diveSpot.getId()));
                 intent.putExtras(bundle);
-                startActivityForResult(intent, ActivitiesRequestCodes.DIVE_SPOT_DETAILS_ACTIVITY_REQUEST_CODE_ADD_PHOTOS_ACTIVITY);
+                startActivityForResult(intent, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_ADD_PHOTOS_ACTIVITY);
             }
         }
-        if (requestCode == ActivitiesRequestCodes.DIVE_SPOT_DETAILS_ACTIVITY_REQUEST_CODE_ADD_PHOTOS_ACTIVITY) {
+        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_ADD_PHOTOS_ACTIVITY) {
             if (resultCode == RESULT_OK) {
                 requestProductDetails(String.valueOf(diveSpot.getId()));
             }
         }
-        if (requestCode == ActivitiesRequestCodes.DIVE_SPOT_DETAILS_ACTIVITY_REQUEST_CODE_LOGIN_TO_PICK_PHOTOS) {
+        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_PICK_PHOTOS) {
             if (resultCode == RESULT_OK) {
-                MultiImageSelector.create(this).count(3).start(this, ActivitiesRequestCodes.DIVE_SPOT_DETAILS_ACTIVITY_REQUEST_CODE_ADD_PHOTOS_ACTIVITY);
+                MultiImageSelector.create(this).count(3).start(this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_ADD_PHOTOS_ACTIVITY);
             }
         }
     }
@@ -1354,7 +1348,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
     private void showLoginActivity() {
         Intent intent = new Intent(this, SocialNetworks.class);
-        startActivityForResult(intent, RC_LOGIN);
+        startActivityForResult(intent, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN);
     }
 
     @Override
@@ -1396,7 +1390,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         bundle.putParcelableArrayList("reviewsImages", (ArrayList<Image>) diveSpot.getCommentImages());
         bundle.putString("id", String.valueOf(diveSpot.getId()));
         intent.putExtras(bundle);
-        startActivityForResult(intent, RC_PHOTOS);
+        startActivityForResult(intent, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_PHOTOS);
     }
 
     private void showEditorsList() {

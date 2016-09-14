@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v13.app.ActivityCompat;
@@ -13,8 +12,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -67,18 +64,12 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 
-/**
- * Created by lashket on 12.3.16.
- */
 public class LeaveReviewActivity extends AppCompatActivity implements View.OnClickListener {
-
-    private static final int RC_PICK_PHOTO = 9001;
 
     private static final String TAG = LeaveReviewActivity.class.getSimpleName();
     private static final String ID = "ID";
     private static final String RATING = "RATING";
     private static final String SOURCE = "SOURCE";
-    private static final int RC_LOGIN = 8001;
     private static final int COMMENT_MAX_LENGTH = 250;
 
     private Toolbar toolbar;
@@ -199,7 +190,7 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
 
     private void sendReview() {
         if (!SharedPreferenceHelper.isUserLoggedIn()) {
-            SocialNetworks.showForResult(LeaveReviewActivity.this, RC_LOGIN);
+            SocialNetworks.showForResult(LeaveReviewActivity.this, ActivitiesRequestCodes.REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_LOGIN);
             return;
         }
         List<MultipartBody.Part> images = new ArrayList<>();
@@ -296,7 +287,7 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
                         helpers.showToast(LeaveReviewActivity.this, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
-                        SocialNetworks.showForResult(LeaveReviewActivity.this, RC_LOGIN);
+                        SocialNetworks.showForResult(LeaveReviewActivity.this, ActivitiesRequestCodes.REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_LOGIN);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
                         helpers.showToast(LeaveReviewActivity.this, R.string.toast_server_error);
@@ -336,7 +327,7 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RC_LOGIN) {
+        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_LOGIN) {
             if (resultCode == RESULT_OK) {
                 sendReview();
             }
@@ -345,7 +336,7 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
                 materialDialog.dismiss();
             }
         }
-        if (requestCode == RC_PICK_PHOTO) {
+        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_PICK_PHOTO) {
             if (resultCode == RESULT_OK) {
                 maxPhotos = maxPhotos - data.getStringArrayListExtra(MultiImageSelectorActivity
                         .EXTRA_RESULT).size();
@@ -361,9 +352,9 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
         if (checkReadStoragePermission()) {
             MultiImageSelector.create(this)
                     .count(maxPhotos)
-                    .start(this, RC_PICK_PHOTO);
+                    .start(this, ActivitiesRequestCodes.REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_PICK_PHOTO);
         } else {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, ActivitiesRequestCodes.LEAVE_REVIEW_ACTIVITY_REQUEST_CODE_PERMISSION_READ_STORAGE);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, ActivitiesRequestCodes.REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_PERMISSION_READ_STORAGE);
         }
     }
 
@@ -421,7 +412,7 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
-            case ActivitiesRequestCodes.LEAVE_REVIEW_ACTIVITY_REQUEST_CODE_PERMISSION_READ_STORAGE: {
+            case ActivitiesRequestCodes.REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_PERMISSION_READ_STORAGE: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     pickPhotoFromGallery();
                 } else {

@@ -22,7 +22,6 @@ import com.ddscanner.utils.LogUtils;
 public class APIUpdatedActivity extends AppCompatActivity {
 
     private static final String TAG = APIUpdatedActivity.class.getName();
-    private static final int REQUEST_CODE_TURN_ON_LOCATION_SETTINGS = 5000;
 
     private Helpers helpers = new Helpers();
 

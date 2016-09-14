@@ -37,6 +37,7 @@ import com.ddscanner.rest.BaseCallback;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.SwipableDiveSpotListAdapter;
+import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogUtils;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
@@ -54,12 +55,8 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 
-/**
- * Created by lashket on 18.5.16.
- */
 public class UsersDivespotListSwipableActivity extends AppCompatActivity {
 
-    private static final int RC_LOGIN = 9001;
     private static final String BUNDLE_KEY_SPOT_VIEW_SOURCE = "BUNDLE_KEY_SPOT_VIEW_SOURCE";
 
     private RecyclerView rc;
@@ -89,7 +86,7 @@ public class UsersDivespotListSwipableActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RC_LOGIN) {
+        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_USERS_DIVESPOT_LIST_SWIPABLE_ACTIVITY_LOGIN) {
             if (resultCode == RESULT_OK) {
                 if (isCheckin) {
                     getListOfDiveSPotsCheckins();
@@ -185,7 +182,7 @@ public class UsersDivespotListSwipableActivity extends AppCompatActivity {
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         SharedPreferenceHelper.logout();
-                        SocialNetworks.showForResult(UsersDivespotListSwipableActivity.this, RC_LOGIN);
+                        SocialNetworks.showForResult(UsersDivespotListSwipableActivity.this, ActivitiesRequestCodes.REQUEST_CODE_USERS_DIVESPOT_LIST_SWIPABLE_ACTIVITY_LOGIN);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
                         helpers.showToast(UsersDivespotListSwipableActivity.this, R.string.toast_server_error);
@@ -257,7 +254,7 @@ public class UsersDivespotListSwipableActivity extends AppCompatActivity {
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         SharedPreferenceHelper.logout();
-                        SocialNetworks.showForResult(UsersDivespotListSwipableActivity.this, RC_LOGIN);
+                        SocialNetworks.showForResult(UsersDivespotListSwipableActivity.this, ActivitiesRequestCodes.REQUEST_CODE_USERS_DIVESPOT_LIST_SWIPABLE_ACTIVITY_LOGIN);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
                         helpers.showToast(UsersDivespotListSwipableActivity.this, R.string.toast_server_error);

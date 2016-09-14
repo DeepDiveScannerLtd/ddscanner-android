@@ -20,9 +20,6 @@ import com.ddscanner.entities.DiveCenter;
 import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;
 
-/**
- * Created by lashket on 31.3.16.
- */
 public class DiveCenterDetailsActivity extends AppCompatActivity {
 
     private DiveCenter diveCenter;

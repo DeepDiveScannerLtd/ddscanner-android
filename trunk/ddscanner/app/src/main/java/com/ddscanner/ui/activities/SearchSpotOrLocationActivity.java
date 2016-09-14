@@ -63,9 +63,6 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 
-/**
- * Created by lashket on 15.6.16.
- */
 public class SearchSpotOrLocationActivity extends AppCompatActivity implements SearchView.OnQueryTextListener, ViewPager.OnPageChangeListener {
 
     private static final String TAG = SearchSpotOrLocationActivity.class.getName();

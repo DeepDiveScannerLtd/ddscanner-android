@@ -23,16 +23,10 @@ import com.squareup.otto.Subscribe;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by lashket on 6.8.16.
- */
 public class ContactUsActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
-    private Toolbar toolbar;
     private List<ContactUsEntity> contactUsEntities = new ArrayList<>();
-    private String FACEBOOK_URL;
-    private String FACEBOOK_PAGE_ID;
 
     @Override
     protected void onCreate( Bundle savedInstanceState) {
@@ -40,9 +34,8 @@ public class ContactUsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_contact_us);
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
 
-        setSupportActionBar(toolbar);
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);
         getSupportActionBar().setTitle(R.string.contact_us);
@@ -54,8 +47,8 @@ public class ContactUsActivity extends AppCompatActivity {
     }
 
     public String getFacebookPageURL(Context context) {
-        FACEBOOK_PAGE_ID = "DDScanner";
-        FACEBOOK_URL = Constants.PROFILE_DIALOG_FACEBOOK_URL + "DDScanner";
+        String FACEBOOK_PAGE_ID = "DDScanner";
+        String FACEBOOK_URL = Constants.PROFILE_DIALOG_FACEBOOK_URL + "DDScanner";
         PackageManager packageManager = context.getPackageManager();
         try {
             int versionCode = packageManager.getPackageInfo("com.facebook.katana", 0).versionCode;
@@ -110,7 +103,7 @@ public class ContactUsActivity extends AppCompatActivity {
     }
 
     private void openYoutubeApp() {
-        Intent intent=null;
+        Intent intent;
         try {
             intent =new Intent(Intent.ACTION_VIEW);
             intent.setPackage("com.google.android.youtube");

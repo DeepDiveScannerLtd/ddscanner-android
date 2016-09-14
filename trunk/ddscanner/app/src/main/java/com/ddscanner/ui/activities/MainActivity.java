@@ -49,7 +49,6 @@ import com.ddscanner.events.LoggedInEvent;
 import com.ddscanner.events.LoggedOutEvent;
 import com.ddscanner.events.LoginViaFacebookClickEvent;
 import com.ddscanner.events.LoginViaGoogleClickEvent;
-import com.ddscanner.events.MapViewInitializedEvent;
 import com.ddscanner.events.NewDiveSpotAddedEvent;
 import com.ddscanner.events.OpenAddDiveSpotActivity;
 import com.ddscanner.events.OpenAddDsActivityAfterLogin;
@@ -203,7 +202,7 @@ public class MainActivity extends BaseAppCompatActivity
             initGoogleLoginManager();
         }
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-        startActivityForResult(signInIntent, ActivitiesRequestCodes.REQUEST_CODE_NEED_TO_LOGIN);
+        startActivityForResult(signInIntent, ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_NEED_TO_LOGIN);
     }
 
     private void fbLogin() {
@@ -401,7 +400,7 @@ public class MainActivity extends BaseAppCompatActivity
                     mainViewPager.setCurrentItem(0, false);
                 }
                 break;
-            case ActivitiesRequestCodes.REQUEST_CODE_NEED_TO_LOGIN:
+            case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_NEED_TO_LOGIN:
                 GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
                 Log.d(TAG, "onActivityResult:GET_TOKEN:success:" + result.getStatus().isSuccess());
                 if (result.isSuccess()) {

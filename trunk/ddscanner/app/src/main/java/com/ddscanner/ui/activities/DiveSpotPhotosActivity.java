@@ -48,9 +48,6 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 
-/**
- * Created by lashket on 11.5.16.
- */
 public class DiveSpotPhotosActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = DiveSpotPhotosActivity.class.getSimpleName();
@@ -177,7 +174,7 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 10) {
+        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_ADD_PHOTOS) {
             if (resultCode == RESULT_OK) {
                 Intent intent = new Intent();
                 setResult(RESULT_OK, intent);
@@ -185,7 +182,7 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
              //   finish();
             }
         }
-        if (requestCode == 1) {
+        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_SELECT_PHOTOS) {
             if (resultCode == RESULT_OK) {
                 List<String> path = data.getStringArrayListExtra(MultiImageSelectorActivity
                         .EXTRA_RESULT);
@@ -194,18 +191,18 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
                 bundle.putSerializable("IMAGES", (ArrayList<String>)path);
                 bundle.putString("id", dsId);
                 intent.putExtras(bundle);
-                startActivityForResult(intent, 10);
+                startActivityForResult(intent, ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_ADD_PHOTOS);
                 for (int i = 0; i < path.size(); i++) {
                     Log.i("ADDRESS", path.get(i));
                 }
             }
         }
-        if (requestCode == 100) {
+        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_LOGIN) {
             if (resultCode == RESULT_OK) {
-                MultiImageSelector.create(this).start(this, 1);
+                MultiImageSelector.create(this).start(this, ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_SELECT_PHOTOS);
             }
         }
-        if (requestCode == ActivitiesRequestCodes.PHOTOS_ACTIVITY_REQUEST_CODE_SLIDER) {
+        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_ACTIVITY_SLIDER) {
             if (resultCode == RESULT_OK) {
                 getDiveSpotPhotos();
             }
@@ -228,9 +225,9 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
     private void addPhotosToDiveSpot() {
         if (!SharedPreferenceHelper.isUserLoggedIn()) {
             Intent intent = new Intent(this, SocialNetworks.class);
-            startActivityForResult(intent, 100);
+            startActivityForResult(intent, ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_LOGIN);
         } else {
-            MultiImageSelector.create(this).count(3).start(this, 1);
+            MultiImageSelector.create(this).count(3).start(this, ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_SELECT_PHOTOS);
         }
     }
 

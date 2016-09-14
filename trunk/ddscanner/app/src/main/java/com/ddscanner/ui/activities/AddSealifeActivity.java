@@ -71,11 +71,7 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
 
     private static final String TAG = AddSealifeActivity.class.getSimpleName();
 
-    private static final int RC_LOGIN = 8001;
-    private static final int RC_PICK_PHOTO = 1001;
-    private static final int RC_LOGIN_TO_SEND = 4001;
     private Uri filePath;
-
 
     private RelativeLayout addPhoto;
     private RelativeLayout centerLayout;
@@ -115,7 +111,6 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
     private RequestBody requestSocial = null;
     private RequestBody requestToken = null;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,11 +120,6 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
         makeErrorsMap();
         EventsTracker.trackSealifeCreation();
     }
-
-    /**
-     * Find views in current activity_add_sealife
-     * @author Andrei Lashkevich
-     */
 
     private void findViews() {
         btnDelete = (AppCompatImageButton) findViewById(R.id.delete_photo);
@@ -157,8 +147,6 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
      * Set UI settings
      * @author Andrei Lashkevich
      */
-
-
     private void setUi() {
         progressDialogUpload = helpers.getMaterialDialog(this);
         btnSaveSealife.setOnClickListener(this);
@@ -173,12 +161,12 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RC_PICK_PHOTO && resultCode == RESULT_OK) {
+        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_ADD_SEALIFE_ACTIVITY_PICK_PHOTO && resultCode == RESULT_OK) {
             Uri uri = data.getData();
             filePath = uri;
             setBackImage(uri);
         }
-        if (requestCode == RC_LOGIN_TO_SEND) {
+        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_ADD_SEALIFE_ACTIVITY_LOGIN_TO_SEND) {
             if (resultCode == RESULT_OK) {
                 sendRequestToAddSealife(filePath);
             }
@@ -191,7 +179,6 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
      * @param uri
      * @author Andrei Lashkevich
      */
-
     private void setBackImage(Uri uri) {
         Display display = getWindowManager().getDefaultDisplay();
         DisplayMetrics outMetrics = new DisplayMetrics();
@@ -227,9 +214,9 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
         if (checkReadStoragePermission()) {
             Intent i = new Intent(Intent.ACTION_PICK,
                     android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            startActivityForResult(i, RC_PICK_PHOTO);
+            startActivityForResult(i, ActivitiesRequestCodes.REQUEST_CODE_ADD_SEALIFE_ACTIVITY_PICK_PHOTO);
         } else {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, ActivitiesRequestCodes.ADD_SEALIFE_ACTIVITY_REQUEST_CODE_PERMISSION_READ_STORAGE);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, ActivitiesRequestCodes.REQUEST_CODE_ADD_SEALIFE_ACTIVITY_PERMISSION_READ_STORAGE);
         }
     }
 
@@ -246,7 +233,6 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
      *
      * @author Andrei Lashkevich
      */
-
     private void createRequestBody() {
         progressDialogUpload.show();
         requestName = RequestBody.create(MediaType.parse(MULTIPART_TYPE_TEXT),
@@ -284,7 +270,6 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
      * Make request to server for adding sealife
      * @author Andrei Lashkevich
      */
-
     private void sendRequestToAddSealife(Uri imageFileUri) {
         MultipartBody.Part body = null;
         if (imageFileUri != null) {
@@ -331,7 +316,7 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         SharedPreferenceHelper.logout();
-                        SocialNetworks.showForResult(AddSealifeActivity.this, RC_LOGIN_TO_SEND);
+                        SocialNetworks.showForResult(AddSealifeActivity.this, ActivitiesRequestCodes.REQUEST_CODE_ADD_SEALIFE_ACTIVITY_LOGIN_TO_SEND);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
                         helpers.showToast(AddSealifeActivity.this, R.string.toast_server_error);
@@ -371,7 +356,6 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
      * Create map to store errors textViews with their keys
      * @author Andrei Lashkevich
      */
-
     private void makeErrorsMap() {
         errorsMap.put("name", name_error);
         errorsMap.put("distribution", distribution_error);
@@ -407,7 +391,7 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
-            case ActivitiesRequestCodes.ADD_SEALIFE_ACTIVITY_REQUEST_CODE_PERMISSION_READ_STORAGE: {
+            case ActivitiesRequestCodes.REQUEST_CODE_ADD_SEALIFE_ACTIVITY_PERMISSION_READ_STORAGE: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     pickPhotoFromGallery();
                 } else {

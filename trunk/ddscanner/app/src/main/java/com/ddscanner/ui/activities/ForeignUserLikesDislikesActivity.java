@@ -43,9 +43,6 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 
-/**
- * Created by lashket on 19.7.16.
- */
 public class ForeignUserLikesDislikesActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
@@ -125,7 +122,7 @@ public class ForeignUserLikesDislikesActivity extends AppCompatActivity {
                         helpers.showToast(ForeignUserLikesDislikesActivity.this, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
-                        SocialNetworks.showForResult(ForeignUserLikesDislikesActivity.this, ActivitiesRequestCodes.FOREIGN_USER_SPOT_LIST_REQUEST_CODE_LOGIN);
+                        SocialNetworks.showForResult(ForeignUserLikesDislikesActivity.this, ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_SPOT_LIST_LOGIN);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
                         helpers.showToast(ForeignUserLikesDislikesActivity.this, R.string.toast_server_error);
@@ -186,7 +183,7 @@ public class ForeignUserLikesDislikesActivity extends AppCompatActivity {
                         helpers.showToast(ForeignUserLikesDislikesActivity.this, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
-                        SocialNetworks.showForResult(ForeignUserLikesDislikesActivity.this, ActivitiesRequestCodes.FOREIGN_USER_SPOT_LIST_REQUEST_CODE_LOGIN);
+                        SocialNetworks.showForResult(ForeignUserLikesDislikesActivity.this, ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_SPOT_LIST_LOGIN);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
                         helpers.showToast(ForeignUserLikesDislikesActivity.this, R.string.toast_server_error);
@@ -233,7 +230,7 @@ public class ForeignUserLikesDislikesActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == ActivitiesRequestCodes.FOREIGN_USER_SPOT_LIST_REQUEST_CODE_LOGIN) {
+        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_SPOT_LIST_LOGIN) {
             if (resultCode == RESULT_OK) {
                 if (isLikes) {
                     getUserLikes();
