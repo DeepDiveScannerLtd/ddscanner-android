@@ -14,6 +14,7 @@ import android.content.res.Resources;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -153,7 +154,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private Button btnDsDetailsIsValid;
     private Button btnDsDetailsIsInvalid;
     private Button showDiveCenters;
-    private ImageView thanksClose;
     private RelativeLayout creatorLayout;
     private TextView numberOfCheckinPeoplesHere;
     private TextView creatorName;
@@ -272,7 +272,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         thanksLayout = (LinearLayout) findViewById(R.id.thanks_layout);
         btnDsDetailsIsValid = (Button) findViewById(R.id.yes_button);
         btnDsDetailsIsInvalid = (Button) findViewById(R.id.no_button);
-        thanksClose = (ImageView) findViewById(R.id.thank_close);
         creatorLayout = (RelativeLayout) findViewById(R.id.creator);
         numberOfCheckinPeoplesHere = (TextView) findViewById(R.id.number_of_checking_people);
         creatorName = (TextView) findViewById(R.id.creator_name);
@@ -316,7 +315,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         btnRefreshLayout.setOnClickListener(this);
         btnAddPhoto.setOnClickListener(this);
         materialDialog = helpers.getMaterialDialog(this);
-        thanksClose.setOnClickListener(this);
         btnDsDetailsIsInvalid.setOnClickListener(this);
         showDiveCenters.setOnClickListener(this);
         btnDsDetailsIsValid.setOnClickListener(this);
@@ -668,9 +666,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             case R.id.no_button:
                 showEditDiveSpotDialog();
                 break;
-            case R.id.thank_close:
-                thanksLayout.setVisibility(View.GONE);
-                break;
             case R.id.creator:
                 EditorsListActivity.show(DiveSpotDetailsActivity.this, (ArrayList<User>) creatorsEditorsList);
                 break;
@@ -993,6 +988,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                     }
                     isInfoValidLayout.setVisibility(View.GONE);
                     thanksLayout.setVisibility(View.VISIBLE);
+                    hideThanksLayout();
                     if (isValid) {
                         EventsTracker.trackDiveSpotValid();
                     } else {
@@ -1025,6 +1021,16 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 DialogUtils.showConnectionErrorDialog(DiveSpotDetailsActivity.this);
             }
         });
+    }
+
+    private void hideThanksLayout() {
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+               thanksLayout.setVisibility(View.GONE);
+            }
+        }, 3000);
     }
 
     private void addDiveSpotToFavorites() {
