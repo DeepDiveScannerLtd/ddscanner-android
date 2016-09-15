@@ -96,7 +96,7 @@
     <string name="location">Location</string>
     <string name="add_manually">ADD MANUALLY</string>
     <string name="sealife">Sea Life</string>
-    <string name="edit_dive_spot">Edit dive spot</string>
+    <string name="edit_dive_spot">Edit Dive Spot</string>
     <string name="edit_profile">Edit profile</string>
     <string name="created">Created</string>
     <string name="edited_low">Edited</string>
@@ -277,4 +277,5 @@
     <string name="pick_location_on_the_map">Pick location on the map</string>
     <string name="errr">Name may contain only numbers and letters</string>
     <string name="description_length_error">Description should contain at least 150 symbols</string>
+    <string name="also_added_to_favorites">Dive spot has already been added to favorite</string>
 </resources>

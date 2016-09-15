@@ -1060,7 +1060,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                         helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
                     } catch (BadRequestException e) {
                         // TODO Handle
-                        helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+                        helpers.showToast(DiveSpotDetailsActivity.this, R.string.also_added_to_favorites);
                     } catch (ValidationErrorException e) {
                         // TODO Handle
 
