@@ -70,6 +70,7 @@ public class NotificationsListAdapter
                     Picasso.with(context)
                             .load(notification.getUser().getPicture())
                             .resize(Math.round(Helpers.convertDpToPixel(64, context)),Math.round(Helpers.convertDpToPixel(64, context)))
+                            .centerCrop()
                             .transform(new CropCircleTransformation())
                             .into(holder.image);
                     String name = notification.getUser().getName();

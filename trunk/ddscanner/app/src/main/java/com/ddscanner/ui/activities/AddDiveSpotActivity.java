@@ -364,25 +364,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                     }
 
                     filters = new FiltersResponseEntity();
-
-                    JsonParser parser = new JsonParser();
-                    JsonObject jsonObject = parser.parse(responseString).getAsJsonObject();
-                    JsonObject currentsJsonObject = jsonObject.getAsJsonObject(Constants.FILTERS_VALUE_CURRENTS);
-                    for (Map.Entry<String, JsonElement> elementEntry : currentsJsonObject.entrySet()) {
-                        filters.getCurrents().put(elementEntry.getKey(), elementEntry.getValue().getAsString());
-                    }
-                    JsonObject levelJsonObject = jsonObject.getAsJsonObject(Constants.FILTERS_VALUE_LEVEL);
-                    for (Map.Entry<String, JsonElement> elementEntry : levelJsonObject.entrySet()) {
-                        filters.getLevel().put(elementEntry.getKey(), elementEntry.getValue().getAsString());
-                    }
-                    JsonObject objectJsonObject = jsonObject.getAsJsonObject(Constants.FILTERS_VALUE_OBJECT);
-                    for (Map.Entry<String, JsonElement> elementEntry : objectJsonObject.entrySet()) {
-                        filters.getObject().put(elementEntry.getKey(), elementEntry.getValue().getAsString());
-                    }
-                    JsonObject visibilityJsonObject = jsonObject.getAsJsonObject(Constants.FILTERS_VALUE_VISIBILITY);
-                    for (Map.Entry<String, JsonElement> elementEntry : visibilityJsonObject.entrySet()) {
-                        filters.getVisibility().put(elementEntry.getKey(), elementEntry.getValue().getAsString());
-                    }
+                    filters = new Gson().fromJson(responseString, FiltersResponseEntity.class);
 
                     Log.i(TAG, responseString);
 
@@ -548,11 +530,11 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
             error_name.setText(R.string.errr);
             return;
         }
-        if (description.getText().toString().length() < 150) {
-            error_description.setVisibility(View.VISIBLE);
-            error_description.setText(R.string.description_length_error);
-            return;
-        }
+//        if (description.getText().toString().length() < 150) {
+//            error_description.setVisibility(View.VISIBLE);
+//            error_description.setText(R.string.description_length_error);
+//            return;
+//        }
         error_name.setVisibility(View.GONE);
         createSocialDatarequests();
         requestName = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),

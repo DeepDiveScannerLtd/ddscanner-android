@@ -14,6 +14,7 @@ import android.content.res.Resources;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -153,7 +154,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private Button btnDsDetailsIsValid;
     private Button btnDsDetailsIsInvalid;
     private Button showDiveCenters;
-    private ImageView thanksClose;
     private RelativeLayout creatorLayout;
     private TextView numberOfCheckinPeoplesHere;
     private TextView creatorName;
@@ -271,7 +271,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         thanksLayout = (LinearLayout) findViewById(R.id.thanks_layout);
         btnDsDetailsIsValid = (Button) findViewById(R.id.yes_button);
         btnDsDetailsIsInvalid = (Button) findViewById(R.id.no_button);
-        thanksClose = (ImageView) findViewById(R.id.thank_close);
         creatorLayout = (RelativeLayout) findViewById(R.id.creator);
         numberOfCheckinPeoplesHere = (TextView) findViewById(R.id.number_of_checking_people);
         creatorName = (TextView) findViewById(R.id.creator_name);
@@ -315,7 +314,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         btnRefreshLayout.setOnClickListener(this);
         btnAddPhoto.setOnClickListener(this);
         materialDialog = Helpers.getMaterialDialog(this);
-        thanksClose.setOnClickListener(this);
         btnDsDetailsIsInvalid.setOnClickListener(this);
         showDiveCenters.setOnClickListener(this);
         btnDsDetailsIsValid.setOnClickListener(this);
@@ -667,9 +665,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             case R.id.no_button:
                 showEditDiveSpotDialog();
                 break;
-            case R.id.thank_close:
-                thanksLayout.setVisibility(View.GONE);
-                break;
             case R.id.creator:
                 EditorsListActivity.show(DiveSpotDetailsActivity.this, (ArrayList<User>) creatorsEditorsList);
                 break;
@@ -992,6 +987,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                     }
                     isInfoValidLayout.setVisibility(View.GONE);
                     thanksLayout.setVisibility(View.VISIBLE);
+                    hideThanksLayout();
                     if (isValid) {
                         EventsTracker.trackDiveSpotValid();
                     } else {
@@ -1026,6 +1022,16 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         });
     }
 
+    private void hideThanksLayout() {
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+               thanksLayout.setVisibility(View.GONE);
+            }
+        }, 3000);
+    }
+
     private void addDiveSpotToFavorites() {
         if (!SharedPreferenceHelper.isUserLoggedIn()) {
             isCLickedFavorite = true;
@@ -1042,6 +1048,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 if (response.raw().code() == 200) {
                     isFavorite = true;
                     updateMenuItems(menu, isFavorite);
+                    Toast.makeText(DiveSpotDetailsActivity.this, R.string.added_to_favorites, Toast.LENGTH_SHORT).show();
                 }
                 if (!response.isSuccessful()) {
                     String responseString = "";
@@ -1058,7 +1065,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                         Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
                     } catch (BadRequestException e) {
                         // TODO Handle
-                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.also_added_to_favorites);
                     } catch (ValidationErrorException e) {
                         // TODO Handle
 
@@ -1103,6 +1110,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 if (response.raw().code() == 200) {
                     isFavorite = false;
                     updateMenuItems(menu, isFavorite);
+                    Toast.makeText(DiveSpotDetailsActivity.this, R.string.removed_from_favorites, Toast.LENGTH_SHORT).show();
                 }
                 if (!response.isSuccessful()) {
                     String responseString = "";
@@ -1196,13 +1204,16 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 String responseString = "";
                 if (response.isSuccessful()) {
                     try {
+                        usersComments = null;
                         responseString = response.body().string();
                         Comments comments = new Gson().fromJson(responseString, Comments.class);
                         if (comments.getComments() != null) {
                             usersComments = comments.getComments();
                         }
-                        if (usersComments != null) {
+                        if (usersComments != null && usersComments.size() > 0) {
                             setReviewsCount(getString(R.string.show_all,String.valueOf(usersComments.size())));
+                        } else {
+                            setReviewsCount(getString(R.string.write_review));
                         }
                     } catch (IOException e) {
 

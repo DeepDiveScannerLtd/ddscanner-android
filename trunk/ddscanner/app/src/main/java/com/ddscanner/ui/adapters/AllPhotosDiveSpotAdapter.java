@@ -36,7 +36,7 @@ public class AllPhotosDiveSpotAdapter extends RecyclerView.Adapter<AllPhotosDive
     public void onBindViewHolder(AllPhotosDIveSpotViewHolder holder, int position) {
         Picasso.with(context)
                 .load(images.get(position).getName())
-                .placeholder(R.drawable.list_photo_default)
+             //   .placeholder(R.drawable.list_photo_default)
                 .resize(Math.round(Helpers.convertDpToPixel(115, context)), Math.round(Helpers.convertDpToPixel(115, context)))
                 .centerCrop()
                 .into(holder.image);
