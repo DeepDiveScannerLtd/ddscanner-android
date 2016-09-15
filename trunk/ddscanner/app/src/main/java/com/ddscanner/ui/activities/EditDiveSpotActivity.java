@@ -642,25 +642,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
                     }
 
                     filters = new FiltersResponseEntity();
-
-                    JsonParser parser = new JsonParser();
-                    JsonObject jsonObject = parser.parse(responseString).getAsJsonObject();
-                    JsonObject currentsJsonObject = jsonObject.getAsJsonObject("currents");
-                    for (Map.Entry<String, JsonElement> elementEntry : currentsJsonObject.entrySet()) {
-                        filters.getCurrents().put(elementEntry.getKey(), elementEntry.getValue().getAsString());
-                    }
-                    JsonObject levelJsonObject = jsonObject.getAsJsonObject("level");
-                    for (Map.Entry<String, JsonElement> elementEntry : levelJsonObject.entrySet()) {
-                        filters.getLevel().put(elementEntry.getKey(), elementEntry.getValue().getAsString());
-                    }
-                    JsonObject objectJsonObject = jsonObject.getAsJsonObject("object");
-                    for (Map.Entry<String, JsonElement> elementEntry : objectJsonObject.entrySet()) {
-                        filters.getObject().put(elementEntry.getKey(), elementEntry.getValue().getAsString());
-                    }
-                    JsonObject visibilityJsonObject = jsonObject.getAsJsonObject("visibility");
-                    for (Map.Entry<String, JsonElement> elementEntry : visibilityJsonObject.entrySet()) {
-                        filters.getVisibility().put(elementEntry.getKey(), elementEntry.getValue().getAsString());
-                    }
+                    filters = new Gson().fromJson(responseString, FiltersResponseEntity.class);
 
                     Log.i(TAG, responseString);
 
