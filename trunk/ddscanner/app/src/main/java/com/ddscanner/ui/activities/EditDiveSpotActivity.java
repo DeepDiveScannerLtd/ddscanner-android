@@ -466,11 +466,11 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
             error_name.setText(R.string.errr);
             return;
         }
-        if (description.getText().toString().length() < 150) {
-            error_description.setVisibility(View.VISIBLE);
-            error_description.setText(R.string.description_length_error);
-            return;
-        }
+//        if (description.getText().toString().length() < 150) {
+//            error_description.setVisibility(View.VISIBLE);
+//            error_description.setText(R.string.description_length_error);
+//            return;
+//        }
         progressDialogUpload.show();
         requestName = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
                 name.getText().toString());

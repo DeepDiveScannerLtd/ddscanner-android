@@ -550,11 +550,11 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
             error_name.setText(R.string.errr);
             return;
         }
-        if (description.getText().toString().length() < 150) {
-            error_description.setVisibility(View.VISIBLE);
-            error_description.setText(R.string.description_length_error);
-            return;
-        }
+//        if (description.getText().toString().length() < 150) {
+//            error_description.setVisibility(View.VISIBLE);
+//            error_description.setText(R.string.description_length_error);
+//            return;
+//        }
         error_name.setVisibility(View.GONE);
         createSocialDatarequests();
         requestName = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
