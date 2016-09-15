@@ -58,7 +58,6 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
     private List<Activity> activities = new ArrayList<>();
     private List<Notification> notificationList = new ArrayList<>();
     private Notifications notifications = new Notifications();
-    private Helpers helpers = new Helpers();
     private TabLayout tabLayout;
     private ViewPager notificationsViewPager;
     private RelativeLayout loginView;
@@ -203,7 +202,7 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
 
     private void getUserNotifications() {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getNotifications(
-                SharedPreferenceHelper.getUserServerId(), helpers.getUserQuryMapRequest());
+                SharedPreferenceHelper.getUserServerId(), Helpers.getUserQuryMapRequest());
         call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -241,28 +240,28 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
                         ErrorsParser.checkForError(response.code(), responseString);
                     } catch (ServerInternalErrorException e) {
                         // TODO Handle
-                        helpers.showToast(getContext(), R.string.toast_server_error);
+                        Helpers.showToast(getContext(), R.string.toast_server_error);
                     } catch (BadRequestException e) {
                         // TODO Handle
-                        helpers.showToast(getContext(), R.string.toast_server_error);
+                        Helpers.showToast(getContext(), R.string.toast_server_error);
                     } catch (ValidationErrorException e) {
                         // TODO Handle
                     } catch (NotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(getContext(), R.string.toast_server_error);
+                        Helpers.showToast(getContext(), R.string.toast_server_error);
                     } catch (UnknownErrorException e) {
                         // TODO Handle
-                        helpers.showToast(getContext(), R.string.toast_server_error);
+                        Helpers.showToast(getContext(), R.string.toast_server_error);
                     } catch (DiveSpotNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(getContext(), R.string.toast_server_error);
+                        Helpers.showToast(getContext(), R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         SharedPreferenceHelper.logout();
                         DDScannerApplication.bus.post(new LoggedOutEvent());
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(getContext(), R.string.toast_server_error);
+                        Helpers.showToast(getContext(), R.string.toast_server_error);
                     }
                 }
             }

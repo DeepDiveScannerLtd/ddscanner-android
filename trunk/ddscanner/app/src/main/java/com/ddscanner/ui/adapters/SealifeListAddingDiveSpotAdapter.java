@@ -24,7 +24,6 @@ public class SealifeListAddingDiveSpotAdapter extends RecyclerView.Adapter<Seali
     private Context context;
     private ArrayList<Sealife> sealifes;
     private TextView title;
-    private Helpers helpers = new Helpers();
 
     public SealifeListAddingDiveSpotAdapter(ArrayList<Sealife> sealifes, Context context, TextView title) {
         this.sealifes = sealifes;
@@ -64,8 +63,8 @@ public class SealifeListAddingDiveSpotAdapter extends RecyclerView.Adapter<Seali
     }
 
     public void add(Sealife sealife) {
-        if (helpers.checkIsSealifeAlsoInList(sealifes, sealife.getId())) {
-            helpers.showToast(context, R.string.sealife_already_added);
+        if (Helpers.checkIsSealifeAlsoInList(sealifes, sealife.getId())) {
+            Helpers.showToast(context, R.string.sealife_already_added);
             return;
         }
         sealifes.add(sealife);

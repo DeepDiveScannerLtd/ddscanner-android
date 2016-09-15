@@ -26,8 +26,6 @@ public class DiveSpotReviewsPhoto extends Fragment {
 
     private RecyclerView recyclerView;
 
-    private Helpers helpers = new Helpers();
-
     private String path;
 
     @Override
@@ -58,7 +56,7 @@ public class DiveSpotReviewsPhoto extends Fragment {
         public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
             int position = parent.getChildAdapterPosition(view);
             if (position >= spanCount) {
-                outRect.top = Math.round(helpers.convertDpToPixel(Float.valueOf(4), getContext()));
+                outRect.top = Math.round(Helpers.convertDpToPixel(Float.valueOf(4), getContext()));
             }
         }
     }

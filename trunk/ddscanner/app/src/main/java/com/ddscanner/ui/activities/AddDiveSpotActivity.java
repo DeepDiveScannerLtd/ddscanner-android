@@ -127,8 +127,6 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     private TextView error_visibility_max;
     private int maxPhotos = 3;
 
-
-    private Helpers helpers = new Helpers();
     private List<String> imageUris = new ArrayList<>();
     private List<Sealife> sealifes = new ArrayList<>();
     private Map<String, TextView> errorsMap = new HashMap<>();
@@ -205,7 +203,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
      */
 
     private void setUi() {
-        progressDialogUpload = helpers.getMaterialDialog(this);
+        progressDialogUpload = Helpers.getMaterialDialog(this);
         progressDialog = new ProgressDialog(this);
         btnSave.setOnClickListener(this);
         pickLocation.setOnClickListener(this);
@@ -269,8 +267,8 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
             if (resultCode == RESULT_OK) {
                 Sealife sealife =(Sealife) data.getSerializableExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_SEALIFE);
 
-                if (helpers.checkIsSealifeAlsoInList((ArrayList<Sealife>) sealifes, sealife.getId())) {
-                    helpers.showToast(AddDiveSpotActivity.this, R.string.sealife_already_added);
+                if (Helpers.checkIsSealifeAlsoInList((ArrayList<Sealife>) sealifes, sealife.getId())) {
+                    Helpers.showToast(AddDiveSpotActivity.this, R.string.sealife_already_added);
                     return;
                 }
                 sealifes.add(sealife);
@@ -332,29 +330,29 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                         ErrorsParser.checkForError(response.code(), responseString);
                     } catch (ServerInternalErrorException e) {
                         // TODO Handle
-                        helpers.showToast(AddDiveSpotActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(AddDiveSpotActivity.this, R.string.toast_server_error);
                     } catch (BadRequestException e) {
                         // TODO Handle
-                        helpers.showToast(AddDiveSpotActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(AddDiveSpotActivity.this, R.string.toast_server_error);
                     } catch (ValidationErrorException e) {
                         // TODO Handle
-                        helpers.errorHandling(AddDiveSpotActivity.this, errorsMap, responseString);
+                        Helpers.errorHandling(AddDiveSpotActivity.this, errorsMap, responseString);
                     } catch (NotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(AddDiveSpotActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(AddDiveSpotActivity.this, R.string.toast_server_error);
                     } catch (UnknownErrorException e) {
                         // TODO Handle
-                        helpers.showToast(AddDiveSpotActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(AddDiveSpotActivity.this, R.string.toast_server_error);
                     } catch (DiveSpotNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(AddDiveSpotActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(AddDiveSpotActivity.this, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         SharedPreferenceHelper.logout();
                         SocialNetworks.showForResult(AddDiveSpotActivity.this, ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_LOGIN_TO_GET_DATA);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(AddDiveSpotActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(AddDiveSpotActivity.this, R.string.toast_server_error);
                     }
                 }
                 if (response.isSuccessful()) {
@@ -408,29 +406,29 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                         ErrorsParser.checkForError(response.code(), responseString);
                     } catch (ServerInternalErrorException e) {
                         // TODO Handle
-                        helpers.showToast(AddDiveSpotActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(AddDiveSpotActivity.this, R.string.toast_server_error);
                     } catch (BadRequestException e) {
                         // TODO Handle
-                        helpers.showToast(AddDiveSpotActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(AddDiveSpotActivity.this, R.string.toast_server_error);
                     } catch (ValidationErrorException e) {
                         // TODO Handle
-                        helpers.errorHandling(AddDiveSpotActivity.this, errorsMap, responseString);
+                        Helpers.errorHandling(AddDiveSpotActivity.this, errorsMap, responseString);
                     } catch (NotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(AddDiveSpotActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(AddDiveSpotActivity.this, R.string.toast_server_error);
                     } catch (UnknownErrorException e) {
                         // TODO Handle
-                        helpers.showToast(AddDiveSpotActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(AddDiveSpotActivity.this, R.string.toast_server_error);
                     } catch (DiveSpotNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(AddDiveSpotActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(AddDiveSpotActivity.this, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         SharedPreferenceHelper.logout();
                         SocialNetworks.showForResult(AddDiveSpotActivity.this, ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_LOGIN_TO_SEND);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(AddDiveSpotActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(AddDiveSpotActivity.this, R.string.toast_server_error);
                     }
                 } else {
                     if (response.raw().code() == 200) {
@@ -550,13 +548,13 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                     String.valueOf(diveSpotLocation.longitude));
         }
         requestObject = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
-                helpers.getMirrorOfHashMap(filters.getObject())
+                Helpers.getMirrorOfHashMap(filters.getObject())
                         .get(objectSpinner.getSelectedItem().toString()));
         requestCurrents = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
-                helpers.getMirrorOfHashMap(filters.getCurrents())
+                Helpers.getMirrorOfHashMap(filters.getCurrents())
                         .get(currentsSpinner.getSelectedItem().toString()));
         requestLevel = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
-                helpers.getMirrorOfHashMap(filters.getLevel())
+                Helpers.getMirrorOfHashMap(filters.getLevel())
                         .get(levelSpinner.getSelectedItem().toString()));
         requestMinVisibility = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), visibilityMin.getText().toString());
         requestMaxVisibility = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), visibilityMax.getText().toString());
@@ -625,7 +623,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     protected void onResume() {
         super.onResume();
         DDScannerApplication.activityResumed();
-        if (!helpers.hasConnection(this)) {
+        if (!Helpers.hasConnection(this)) {
             DDScannerApplication.showErrorActivity(this);
         }
     }

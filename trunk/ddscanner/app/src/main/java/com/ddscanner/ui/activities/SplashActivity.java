@@ -33,8 +33,6 @@ public class SplashActivity extends BaseAppCompatActivity {
 
     private static final String TAG = SplashActivity.class.getName();
 
-    private Helpers helpers = new Helpers();
-
     private Handler handler = new Handler();
     private Runnable showMainActivityRunnable;
     private long activityShowTimestamp;
@@ -107,11 +105,10 @@ public class SplashActivity extends BaseAppCompatActivity {
 
     private void showMainActivity() {
         Log.i(TAG, "showMainActivity");
-        final boolean isInternet = helpers.hasConnection(this);
         showMainActivityRunnable = new Runnable() {
             @Override
             public void run() {
-                MainActivity.show(SplashActivity.this, isInternet);
+                MainActivity.show(SplashActivity.this, Helpers.hasConnection(SplashActivity.this));
                 SplashActivity.this.finish();
             }
         };
@@ -133,7 +130,7 @@ public class SplashActivity extends BaseAppCompatActivity {
     protected void onResume() {
         super.onResume();
         DDScannerApplication.activityResumed();
-        if (!helpers.hasConnection(this)) {
+        if (!Helpers.hasConnection(this)) {
             DDScannerApplication.showErrorActivity(this);
         }
     }

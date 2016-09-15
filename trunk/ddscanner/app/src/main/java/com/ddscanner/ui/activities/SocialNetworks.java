@@ -80,7 +80,6 @@ public class SocialNetworks extends AppCompatActivity
     private com.ddscanner.entities.User selfProfile;
     private RegisterResponse registerResponse = new RegisterResponse();
     private MaterialDialog materialDialog;
-    private Helpers helpers = new Helpers();
     private TextView privacyPolicy;
     private ImageView close;
 
@@ -95,7 +94,7 @@ public class SocialNetworks extends AppCompatActivity
         setContentView(R.layout.activity_social_login);
         privacyPolicy = (TextView) findViewById(R.id.privacy_policy);
         close = (ImageView) findViewById(R.id.close);
-        materialDialog = helpers.getMaterialDialog(this);
+        materialDialog = Helpers.getMaterialDialog(this);
         close.setOnClickListener(this);
         int color = getResources().getColor(R.color.primary);
         final SpannableString spannableString = new SpannableString(privacyPolicy.getText());
@@ -269,26 +268,26 @@ public class SocialNetworks extends AppCompatActivity
                         ErrorsParser.checkForError(response.code(), responseString);
                     } catch (ServerInternalErrorException e) {
                         // TODO Handle
-                        helpers.showToast(SocialNetworks.this, R.string.toast_server_error);
+                        Helpers.showToast(SocialNetworks.this, R.string.toast_server_error);
                     } catch (BadRequestException e) {
                         // TODO Handle
-                        helpers.showToast(SocialNetworks.this, R.string.toast_server_error);
+                        Helpers.showToast(SocialNetworks.this, R.string.toast_server_error);
                     } catch (ValidationErrorException e) {
                         // TODO Handle
                     } catch (NotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(SocialNetworks.this, R.string.toast_server_error);
+                        Helpers.showToast(SocialNetworks.this, R.string.toast_server_error);
                     } catch (UnknownErrorException e) {
                         // TODO Handle
-                        helpers.showToast(SocialNetworks.this, R.string.toast_server_error);
+                        Helpers.showToast(SocialNetworks.this, R.string.toast_server_error);
                     } catch (DiveSpotNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(SocialNetworks.this, R.string.toast_server_error);
+                        Helpers.showToast(SocialNetworks.this, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(SocialNetworks.this, R.string.toast_server_error);
+                        Helpers.showToast(SocialNetworks.this, R.string.toast_server_error);
                     }
                 }
             }
@@ -324,7 +323,7 @@ public class SocialNetworks extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         DDScannerApplication.activityResumed();
-        if (!helpers.hasConnection(this)) {
+        if (!Helpers.hasConnection(this)) {
             DDScannerApplication.showErrorActivity(this);
         }
     }

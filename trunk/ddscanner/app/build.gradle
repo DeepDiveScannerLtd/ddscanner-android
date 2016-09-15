@@ -24,7 +24,7 @@ android {
         targetSdkVersion 23
         multiDexEnabled true
         versionCode 20
-        versionName "2.0.13"
+        versionName "2.0.14"
     }
     buildTypes {
         debug {

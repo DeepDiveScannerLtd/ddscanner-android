@@ -25,7 +25,6 @@ public class AllPhotosDiveSpotAdapter extends RecyclerView.Adapter<AllPhotosDive
     private String path;
     private ArrayList<Image> images;
     private Activity context;
-    private Helpers helpers = new Helpers();
 
     public AllPhotosDiveSpotAdapter(ArrayList<Image> photos, Activity context, String path) {
         images = photos;
@@ -38,7 +37,7 @@ public class AllPhotosDiveSpotAdapter extends RecyclerView.Adapter<AllPhotosDive
         Picasso.with(context)
                 .load(images.get(position).getName())
              //   .placeholder(R.drawable.list_photo_default)
-                .resize(Math.round(helpers.convertDpToPixel(115, context)),Math.round(helpers.convertDpToPixel(115, context)))
+                .resize(Math.round(Helpers.convertDpToPixel(115, context)), Math.round(Helpers.convertDpToPixel(115, context)))
                 .centerCrop()
                 .into(holder.image);
     }

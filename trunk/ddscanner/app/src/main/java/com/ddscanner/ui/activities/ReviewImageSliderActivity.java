@@ -40,7 +40,6 @@ public class ReviewImageSliderActivity extends AppCompatActivity implements View
     private ArrayList<String> images;
     private Drawable drawable;
     private int position;
-    private Helpers helpers = new Helpers();
     private SimpleGestureFilter detector;
     float x1,x2;
     float y1, y2;
@@ -150,7 +149,7 @@ public class ReviewImageSliderActivity extends AppCompatActivity implements View
     protected void onResume() {
         super.onResume();
         DDScannerApplication.activityResumed();
-        if (!helpers.hasConnection(this)) {
+        if (!Helpers.hasConnection(this)) {
             DDScannerApplication.showErrorActivity(this);
         }
     }

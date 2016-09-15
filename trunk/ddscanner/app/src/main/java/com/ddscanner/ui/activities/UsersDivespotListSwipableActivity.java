@@ -65,7 +65,6 @@ public class UsersDivespotListSwipableActivity extends AppCompatActivity {
     private List<DiveSpot> diveSpots = new ArrayList<>();
     private boolean isCheckin = false;
     private ProgressView progressBarFull;
-    private Helpers helpers = new Helpers();
     private EventsTracker.SpotViewSource spotViewSource;
 
     @Override
@@ -164,28 +163,28 @@ public class UsersDivespotListSwipableActivity extends AppCompatActivity {
                         ErrorsParser.checkForError(response.code(), responseString);
                     } catch (ServerInternalErrorException e) {
                         // TODO Handle
-                        helpers.showToast(UsersDivespotListSwipableActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(UsersDivespotListSwipableActivity.this, R.string.toast_server_error);
                     } catch (BadRequestException e) {
                         // TODO Handle
-                        helpers.showToast(UsersDivespotListSwipableActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(UsersDivespotListSwipableActivity.this, R.string.toast_server_error);
                     } catch (ValidationErrorException e) {
                         // TODO Handle
                     } catch (NotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(UsersDivespotListSwipableActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(UsersDivespotListSwipableActivity.this, R.string.toast_server_error);
                     } catch (UnknownErrorException e) {
                         // TODO Handle
-                        helpers.showToast(UsersDivespotListSwipableActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(UsersDivespotListSwipableActivity.this, R.string.toast_server_error);
                     } catch (DiveSpotNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(UsersDivespotListSwipableActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(UsersDivespotListSwipableActivity.this, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         SharedPreferenceHelper.logout();
                         SocialNetworks.showForResult(UsersDivespotListSwipableActivity.this, ActivitiesRequestCodes.REQUEST_CODE_USERS_DIVESPOT_LIST_SWIPABLE_ACTIVITY_LOGIN);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(UsersDivespotListSwipableActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(UsersDivespotListSwipableActivity.this, R.string.toast_server_error);
                     }
                 }
             }
@@ -236,28 +235,28 @@ public class UsersDivespotListSwipableActivity extends AppCompatActivity {
                         ErrorsParser.checkForError(response.code(), responseString);
                     } catch (ServerInternalErrorException e) {
                         // TODO Handle
-                        helpers.showToast(UsersDivespotListSwipableActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(UsersDivespotListSwipableActivity.this, R.string.toast_server_error);
                     } catch (BadRequestException e) {
                         // TODO Handle
-                        helpers.showToast(UsersDivespotListSwipableActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(UsersDivespotListSwipableActivity.this, R.string.toast_server_error);
                     } catch (ValidationErrorException e) {
                         // TODO Handle
                     } catch (NotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(UsersDivespotListSwipableActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(UsersDivespotListSwipableActivity.this, R.string.toast_server_error);
                     } catch (UnknownErrorException e) {
                         // TODO Handle
-                        helpers.showToast(UsersDivespotListSwipableActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(UsersDivespotListSwipableActivity.this, R.string.toast_server_error);
                     } catch (DiveSpotNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(UsersDivespotListSwipableActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(UsersDivespotListSwipableActivity.this, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         SharedPreferenceHelper.logout();
                         SocialNetworks.showForResult(UsersDivespotListSwipableActivity.this, ActivitiesRequestCodes.REQUEST_CODE_USERS_DIVESPOT_LIST_SWIPABLE_ACTIVITY_LOGIN);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(UsersDivespotListSwipableActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(UsersDivespotListSwipableActivity.this, R.string.toast_server_error);
                     }
                 }
             }
@@ -356,7 +355,7 @@ public class UsersDivespotListSwipableActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         DDScannerApplication.activityResumed();
-        if (!helpers.hasConnection(this)) {
+        if (!Helpers.hasConnection(this)) {
             DDScannerApplication.showErrorActivity(this);
         }
     }

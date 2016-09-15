@@ -25,7 +25,6 @@ public class ShowDsLocationActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private MapFragment mapFragment;
     private LatLng latLng;
-    private Helpers helpers = new Helpers();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -74,7 +73,7 @@ public class ShowDsLocationActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         DDScannerApplication.activityResumed();
-        if (!helpers.hasConnection(this)) {
+        if (!Helpers.hasConnection(this)) {
             DDScannerApplication.showErrorActivity(this);
         }
     }

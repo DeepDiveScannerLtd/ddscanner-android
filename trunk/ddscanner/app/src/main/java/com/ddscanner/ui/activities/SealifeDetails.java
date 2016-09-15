@@ -45,7 +45,6 @@ public class SealifeDetails extends AppCompatActivity {
     private Toolbar toolbar;
     private ImageView backgroundImage;
     private ProgressBar progressBar;
-    private Helpers helpers = new Helpers();
 
     public static void show(Context context, Sealife sealife, String pathMedium) {
         Intent intent = new Intent(context, SealifeDetails.class);
@@ -242,7 +241,7 @@ public class SealifeDetails extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         DDScannerApplication.activityResumed();
-        if (!helpers.hasConnection(this)) {
+        if (!Helpers.hasConnection(this)) {
             DDScannerApplication.showErrorActivity(this);
         }
     }

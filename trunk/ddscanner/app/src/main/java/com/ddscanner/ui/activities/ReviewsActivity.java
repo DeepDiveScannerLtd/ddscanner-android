@@ -76,7 +76,6 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     private FloatingActionButton leaveReview;
 
     private String diveSpotId;
-    private Helpers helpers = new Helpers();
     private String commentToDelete;
 
     private String path;
@@ -111,7 +110,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void findViews() {
-        materialDialog = helpers.getMaterialDialog(this);
+        materialDialog = Helpers.getMaterialDialog(this);
         commentsRc = (RecyclerView) findViewById(R.id.reviews_rc);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         leaveReview = (FloatingActionButton) findViewById(R.id.fab_write_review);
@@ -195,7 +194,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
         commentsRc.setVisibility(View.GONE);
         progressView.setVisibility(View.VISIBLE);
         isHasNewComment = true;
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getComments(diveSpotId, helpers.getUserQuryMapRequest());
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getComments(diveSpotId, Helpers.getUserQuryMapRequest());
         call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -225,28 +224,28 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
                         ErrorsParser.checkForError(response.code(), responseString);
                     } catch (ServerInternalErrorException e) {
                         // TODO Handle
-                        helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
                     } catch (BadRequestException e) {
                         // TODO Handle
-                        helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
                     } catch (ValidationErrorException e) {
                         // TODO Handle
                     } catch (NotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
                     } catch (UnknownErrorException e) {
                         // TODO Handle
-                        helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
                     } catch (DiveSpotNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         SharedPreferenceHelper.logout();
                         SocialNetworks.showForResult(ReviewsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
                     }
                 }
             }
@@ -281,7 +280,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
 
     @Subscribe
     public void showDialog(ShowUserDialogEvent event) {
-        helpers.showDialog(event.getUser(), getSupportFragmentManager());
+        Helpers.showDialog(event.getUser(), getSupportFragmentManager());
     }
 
     @Subscribe
@@ -310,7 +309,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     protected void onResume() {
         super.onResume();
         DDScannerApplication.activityResumed();
-        if (!helpers.hasConnection(this)) {
+        if (!Helpers.hasConnection(this)) {
             DDScannerApplication.showErrorActivity(this);
         }
     }
@@ -332,7 +331,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
 
     private void deleteUsersComment(String id) {
         commentToDelete = id;
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().deleteComment(id, helpers.getUserQuryMapRequest());
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().deleteComment(id, Helpers.getUserQuryMapRequest());
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -351,29 +350,29 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
                         ErrorsParser.checkForError(response.code(), responseString);
                     } catch (ServerInternalErrorException e) {
                         // TODO Handle
-                        helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
                     } catch (BadRequestException e) {
                         // TODO Handle
-                        helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
                     } catch (ValidationErrorException e) {
                         // TODO Handle
-                        helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
                     } catch (NotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
                     } catch (UnknownErrorException e) {
                         // TODO Handle
-                        helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
                     } catch (DiveSpotNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         SharedPreferenceHelper.logout();
                         SocialNetworks.showForResult(ReviewsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_DELETE_COMMENT);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
                     }
                 }
             }
@@ -428,7 +427,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
                     public void onSelection(final MaterialDialog dialog, View view, int which, CharSequence text) {
 
                         isClickedReport = true;
-                        reportType = helpers.getMirrorOfHashMap(filters.getReport()).get(text);
+                        reportType = Helpers.getMirrorOfHashMap(filters.getReport()).get(text);
                         if (reportType.equals("other")) {
                             showOtherReportDialog();
                             dialog.dismiss();
@@ -500,29 +499,29 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
                         ErrorsParser.checkForError(response.code(), responseString);
                     } catch (ServerInternalErrorException e) {
                         // TODO Handle
-                        helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
                     } catch (BadRequestException e) {
                         // TODO Handle
-                        helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
                     } catch (ValidationErrorException e) {
                         // TODO Handle
-                        helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
                     } catch (NotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
                     } catch (UnknownErrorException e) {
                         // TODO Handle
-                        helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
                     } catch (DiveSpotNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         SharedPreferenceHelper.logout();
                         SocialNetworks.showForResult(ReviewsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_LEAVE_REPORT);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
                     }
                 }
             }

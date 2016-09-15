@@ -72,7 +72,6 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
     private String path;
     private boolean isAdapterSet = false;
     private static ProfileDialog profileDialog = new ProfileDialog();
-    private Helpers helpers = new Helpers();
 
     public ReviewsListAdapter(ArrayList<Comment> comments, Context context, String path) {
         this.path = path;
@@ -147,13 +146,13 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
 
         reviewsListViewHolder.user_name.setText(comments.get(reviewsListViewHolder.getAdapterPosition()).getUser().getName());
         reviewsListViewHolder.user_review.setText(comments.get(reviewsListViewHolder.getAdapterPosition()).getComment());
-        reviewsListViewHolder.likesCount.setText(helpers.formatLikesCommentsCountNumber(comments.get(reviewsListViewHolder.getAdapterPosition()).getLikes()));
-        reviewsListViewHolder.dislikesCount.setText(helpers.formatLikesCommentsCountNumber(comments.get(reviewsListViewHolder.getAdapterPosition()).getDislikes()));
+        reviewsListViewHolder.likesCount.setText(Helpers.formatLikesCommentsCountNumber(comments.get(reviewsListViewHolder.getAdapterPosition()).getLikes()));
+        reviewsListViewHolder.dislikesCount.setText(Helpers.formatLikesCommentsCountNumber(comments.get(reviewsListViewHolder.getAdapterPosition()).getDislikes()));
         isAdapterSet = true;
 
         if (comments.get(reviewsListViewHolder.getAdapterPosition()).getUser().getPicture() != null) {
             Picasso.with(context)
-                    .load(comments.get(reviewsListViewHolder.getAdapterPosition()).getUser().getPicture()).resize(Math.round(helpers.convertDpToPixel(40, context)), Math.round(helpers.convertDpToPixel(40, context)))
+                    .load(comments.get(reviewsListViewHolder.getAdapterPosition()).getUser().getPicture()).resize(Math.round(Helpers.convertDpToPixel(40, context)), Math.round(Helpers.convertDpToPixel(40, context)))
                     .transform(new CropCircleTransformation())
                     .centerCrop()
                     .placeholder(R.drawable.avatar_profile_default)
@@ -175,7 +174,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
             reviewsListViewHolder.rating.addView(iv);
         }
         if (comments.get(i).getDate() != null && !comments.get(i).getDate().isEmpty()) {
-            reviewsListViewHolder.date.setText(helpers.getCommentDate(comments.get(i).getDate()));
+            reviewsListViewHolder.date.setText(Helpers.getCommentDate(comments.get(i).getDate()));
         }
     }
 

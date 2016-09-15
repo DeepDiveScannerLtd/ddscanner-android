@@ -75,7 +75,6 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     private TextView date;
     private TextView userName;
     private ImageView options;
-    private Helpers helpers = new Helpers();
     private boolean isChanged = false;
     private FiltersResponseEntity filters = new FiltersResponseEntity();
     private String imageNameForDeletion;
@@ -96,7 +95,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         setContentView(R.layout.activity_slider);
         findViews();
         detector = new SimpleGestureFilter(this,this);
-        materialDialog = helpers.getMaterialDialog(this);
+        materialDialog = Helpers.getMaterialDialog(this);
         getReportsTypes();
         Bundle bundle = getIntent().getExtras();
         images = bundle.getParcelableArrayList("IMAGES");
@@ -115,10 +114,10 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     private void changeUiAccrodingPosition(final int position) {
         this.position = position;
         userName.setText(images.get(position).getAuthor().getName());
-        date.setText(helpers.convertDateToImageSliderActivity(images.get(position).getAuthor().getDate()));
+        date.setText(Helpers.convertDateToImageSliderActivity(images.get(position).getAuthor().getDate()));
         Picasso.with(this)
                 .load(images.get(position).getAuthor().getPhoto())
-                .resize(Math.round(helpers.convertDpToPixel(35, this)), Math.round(helpers.convertDpToPixel(35, this)))
+                .resize(Math.round(Helpers.convertDpToPixel(35, this)), Math.round(Helpers.convertDpToPixel(35, this)))
                 .centerCrop()
                 .placeholder(R.drawable.avatar_profile_default)
                 .transform(new CropCircleTransformation())
@@ -261,7 +260,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     protected void onResume() {
         super.onResume();
         DDScannerApplication.activityResumed();
-        if (!helpers.hasConnection(this)) {
+        if (!Helpers.hasConnection(this)) {
             DDScannerApplication.showErrorActivity(this);
         }
     }
@@ -294,7 +293,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     private void deleteImage(String name) {
         isChanged = true;
         materialDialog.show();
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().deleteImage(name, helpers.getUserQuryMapRequest());
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().deleteImage(name, Helpers.getUserQuryMapRequest());
         call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -314,29 +313,29 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
                         ErrorsParser.checkForError(response.code(), responseString);
                     } catch (ServerInternalErrorException e) {
                         // TODO Handle
-                        helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
                     } catch (BadRequestException e) {
                         // TODO Handle
-                        helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
                     } catch (ValidationErrorException e) {
                         // TODO Handle
-                        helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
                     } catch (NotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
                     } catch (UnknownErrorException e) {
                         // TODO Handle
-                        helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
                     } catch (DiveSpotNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         SharedPreferenceHelper.logout();
                         SocialNetworks.showForResult(ImageSliderActivity.this, ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_DELETE);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
                     }
                 }
             }
@@ -416,29 +415,29 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
                         ErrorsParser.checkForError(response.code(), responseString);
                     } catch (ServerInternalErrorException e) {
                         // TODO Handle
-                        helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
                     } catch (BadRequestException e) {
                         // TODO Handle
-                        helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
                     } catch (ValidationErrorException e) {
                         // TODO Handle
-                        helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
                     } catch (NotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
                     } catch (UnknownErrorException e) {
                         // TODO Handle
-                        helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
                     } catch (DiveSpotNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         SharedPreferenceHelper.logout();
                         SocialNetworks.showForResult(ImageSliderActivity.this, ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_REPORT);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
                     }
                 }
             }
@@ -490,7 +489,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
                     @Override
                     public void onSelection(final MaterialDialog dialog, View view, int which, CharSequence text) {
 
-                        reportType = helpers.getMirrorOfHashMap(filters.getReport()).get(text);
+                        reportType = Helpers.getMirrorOfHashMap(filters.getReport()).get(text);
                         if (reportType.equals("other")) {
                             showOtherReportDialog();
                             dialog.dismiss();

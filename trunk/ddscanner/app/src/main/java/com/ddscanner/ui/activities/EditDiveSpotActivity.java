@@ -143,7 +143,6 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
     private EditDiveSpotEntity diveSpot;
     private AddPhotoToDsListAdapter addPhotoToDsListAdapter;
     private ProgressDialog progressDialog;
-    private Helpers helpers = new Helpers();
     private Map<String, TextView> errorsMap = new HashMap<>();
 
     private RequestBody requestName, requestLat, requestLng, requestDepth,
@@ -169,7 +168,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
      * Find views in current activity_add_dive_spot
      */
     private void findViews() {
-        progressDialogUpload = helpers.getMaterialDialog(this);
+        progressDialogUpload = Helpers.getMaterialDialog(this);
         progressDialog = new ProgressDialog(this);
         name = (EditText) findViewById(R.id.name);
         depth = (EditText) findViewById(R.id.depth);
@@ -265,7 +264,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
     private void getDsInfoRequest() {
 
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveSpotForEdit(
-                diveSpotId, helpers.getUserQuryMapRequest());
+                diveSpotId, Helpers.getUserQuryMapRequest());
         call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -281,28 +280,28 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
                         ErrorsParser.checkForError(response.code(), responseString);
                     } catch (ServerInternalErrorException e) {
                         // TODO Handle
-                        helpers.showToast(EditDiveSpotActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(EditDiveSpotActivity.this, R.string.toast_server_error);
                     } catch (BadRequestException e) {
                         // TODO Handle
-                        helpers.showToast(EditDiveSpotActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(EditDiveSpotActivity.this, R.string.toast_server_error);
                     } catch (ValidationErrorException e) {
                         // TODO Handle
                     } catch (NotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(EditDiveSpotActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(EditDiveSpotActivity.this, R.string.toast_server_error);
                     } catch (UnknownErrorException e) {
                         // TODO Handle
-                        helpers.showToast(EditDiveSpotActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(EditDiveSpotActivity.this, R.string.toast_server_error);
                     } catch (DiveSpotNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(EditDiveSpotActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(EditDiveSpotActivity.this, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         SharedPreferenceHelper.logout();
                         SocialNetworks.showForResult(EditDiveSpotActivity.this, ActivitiesRequestCodes.REQUEST_CODE_EDIT_DIVE_SPOT_ACTIVITY_LOGIN_TO_GET_DATA);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(EditDiveSpotActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(EditDiveSpotActivity.this, R.string.toast_server_error);
                     } finally {
                         // This will be called only if response code is 200
                     }
@@ -481,13 +480,13 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
         requestLng = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
                 String.valueOf(diveSpotLocation.longitude));
         requestObject = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
-                helpers.getMirrorOfHashMap(filters.getObject())
+                Helpers.getMirrorOfHashMap(filters.getObject())
                         .get(objectSpinner.getSelectedItem().toString()));
         requestCurrents = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
-                helpers.getMirrorOfHashMap(filters.getCurrents())
+                Helpers.getMirrorOfHashMap(filters.getCurrents())
                         .get(currentsSpinner.getSelectedItem().toString()));
         requestLevel = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
-                helpers.getMirrorOfHashMap(filters.getLevel())
+                Helpers.getMirrorOfHashMap(filters.getLevel())
                         .get(levelSpinner.getSelectedItem().toString()));
         requestMinVisibility = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), visibilityMin.getText().toString());
         requestMaxVisibility = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), visibilityMax.getText().toString());
@@ -580,29 +579,29 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
                         ErrorsParser.checkForError(response.code(), responseString);
                     } catch (ServerInternalErrorException e) {
                         // TODO Handle
-                        helpers.showToast(EditDiveSpotActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(EditDiveSpotActivity.this, R.string.toast_server_error);
                     } catch (BadRequestException e) {
                         // TODO Handle
-                        helpers.showToast(EditDiveSpotActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(EditDiveSpotActivity.this, R.string.toast_server_error);
                     } catch (ValidationErrorException e) {
                         // TODO Handle
-                        helpers.errorHandling(EditDiveSpotActivity.this, errorsMap, responseString);
+                        Helpers.errorHandling(EditDiveSpotActivity.this, errorsMap, responseString);
                     } catch (NotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(EditDiveSpotActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(EditDiveSpotActivity.this, R.string.toast_server_error);
                     } catch (UnknownErrorException e) {
                         // TODO Handle
-                        helpers.showToast(EditDiveSpotActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(EditDiveSpotActivity.this, R.string.toast_server_error);
                     } catch (DiveSpotNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(EditDiveSpotActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(EditDiveSpotActivity.this, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         SharedPreferenceHelper.logout();
                         SocialNetworks.showForResult(EditDiveSpotActivity.this, ActivitiesRequestCodes.REQUEST_CODE_EDIT_DIVE_SPOT_ACTIVITY_LOGIN_TO_SEND);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(EditDiveSpotActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(EditDiveSpotActivity.this, R.string.toast_server_error);
                     }
                 }
                 if (response.isSuccessful()) {
@@ -692,7 +691,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
     protected void onResume() {
         super.onResume();
         DDScannerApplication.activityResumed();
-        if (!helpers.hasConnection(this)) {
+        if (!Helpers.hasConnection(this)) {
             DDScannerApplication.showErrorActivity(this);
         }
     }

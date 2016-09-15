@@ -169,7 +169,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private RelativeLayout editorsWrapperView;
     private RecyclerView editorsRecyclerView;
     private MaterialDialog materialDialog;
-    private Helpers helpers = new Helpers();
 
     private boolean isCLickedFavorite = false;
     private boolean isClickedCHeckin = false;
@@ -314,7 +313,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         avatarImageSize = 2 * avatarImageRadius;
         btnRefreshLayout.setOnClickListener(this);
         btnAddPhoto.setOnClickListener(this);
-        materialDialog = helpers.getMaterialDialog(this);
+        materialDialog = Helpers.getMaterialDialog(this);
         btnDsDetailsIsInvalid.setOnClickListener(this);
         showDiveCenters.setOnClickListener(this);
         btnDsDetailsIsValid.setOnClickListener(this);
@@ -429,7 +428,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             creatorsEditorsList.add(diveSpot.getCreator());
             creatorLayout.setVisibility(View.VISIBLE);
             Picasso.with(this).load(diveSpot.getCreator().getPicture())
-                    .resize(Math.round(helpers.convertDpToPixel(avatarImageSize, this)), Math.round(helpers.convertDpToPixel(avatarImageSize, this)))
+                    .resize(Math.round(Helpers.convertDpToPixel(avatarImageSize, this)), Math.round(Helpers.convertDpToPixel(avatarImageSize, this)))
                     .centerCrop()
                     .transform(new CropCircleTransformation()).into(creatorAvatar);
             if (diveSpot.getCreator().getAuthor() != null && diveSpot.getCreator().getAuthor().equals("social")) {
@@ -441,7 +440,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             creatorName.setText("DDScanner");
             creatorLayout.setVisibility(View.VISIBLE);
             Picasso.with(this).load(R.drawable.avatar_profile_dds)
-                    .resize(Math.round(helpers.convertDpToPixel(avatarImageSize, this)), Math.round(helpers.convertDpToPixel(avatarImageSize, this)))
+                    .resize(Math.round(Helpers.convertDpToPixel(avatarImageSize, this)), Math.round(Helpers.convertDpToPixel(avatarImageSize, this)))
                     .centerCrop()
                     .placeholder(R.drawable.avatar_profile_default)
                     .transform(new CropCircleTransformation()).into(creatorAvatar);
@@ -548,7 +547,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
      */
     private void requestProductDetails(String productId) {
         Map<String, String> map = new HashMap<>();
-        map = helpers.getUserQuryMapRequest();
+        map = Helpers.getUserQuryMapRequest();
         map.put("isImageAuthor", "true");
 //        if (SharedPreferenceHelper.isUserLoggedIn()) {
 //            map.put("social", SharedPreferenceHelper.getSn());
@@ -586,26 +585,26 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                         ErrorsParser.checkForError(response.code(), responseString);
                     } catch (ServerInternalErrorException e) {
                         // TODO Handle
-                        helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
                     } catch (BadRequestException e) {
                         // TODO Handle
-                        helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
                     } catch (ValidationErrorException e) {
                         // TODO Handle
                     } catch (NotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
                     } catch (UnknownErrorException e) {
                         // TODO Handle
-                        helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
                     } catch (DiveSpotNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
                     }
                 }
             }
@@ -801,7 +800,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().checkIn(
                 String.valueOf(divespotDetails.getDivespot().getId()),
-                helpers.getRegisterRequest()
+                Helpers.getRegisterRequest()
         );
         call.enqueue(new BaseCallback() {
             @Override
@@ -822,29 +821,29 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                         ErrorsParser.checkForError(response.code(), responseString);
                     } catch (ServerInternalErrorException e) {
                         // TODO Handle
-                        helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
                     } catch (BadRequestException e) {
                         // TODO Handle
-                        helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
                     } catch (ValidationErrorException e) {
                         // TODO Handle
 
                     } catch (NotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
                     } catch (UnknownErrorException e) {
                         // TODO Handle
-                        helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
                     } catch (DiveSpotNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         isClickedCHeckin = true;
                         showLoginActivity();
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
                     }
                 }
             }
@@ -885,7 +884,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().checkOutUser(
                 String.valueOf(divespotDetails.getDivespot().getId()),
-                helpers.getUserQuryMapRequest()
+                Helpers.getUserQuryMapRequest()
         );
         call.enqueue(new BaseCallback() {
             @Override
@@ -903,29 +902,29 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                         ErrorsParser.checkForError(response.code(), responseString);
                     } catch (ServerInternalErrorException e) {
                         // TODO Handle
-                        helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
                     } catch (BadRequestException e) {
                         // TODO Handle
-                        helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
                     } catch (ValidationErrorException e) {
                         // TODO Handle
 
                     } catch (NotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
                     } catch (UnknownErrorException e) {
                         // TODO Handle
-                        helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
                     } catch (DiveSpotNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         isClickedCheckOut = true;
                         showLoginActivity();
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
                     }
                 } else {
                     EventsTracker.trackCheckOut();
@@ -968,11 +967,11 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private void diveSpotValidation(final boolean isValid) {
         materialDialog.show();
         ValidationReguest validationReguest = new ValidationReguest();
-        validationReguest.setAppId(helpers.getRegisterRequest().getAppId());
-        validationReguest.setToken(helpers.getRegisterRequest().getToken());
-        validationReguest.setSocial(helpers.getRegisterRequest().getSocial());
+        validationReguest.setAppId(Helpers.getRegisterRequest().getAppId());
+        validationReguest.setToken(Helpers.getRegisterRequest().getToken());
+        validationReguest.setSocial(Helpers.getRegisterRequest().getSocial());
         if (SharedPreferenceHelper.getSn().equals("tw")) {
-            validationReguest.setSecret(helpers.getRegisterRequest().getSecret());
+            validationReguest.setSecret(Helpers.getRegisterRequest().getSecret());
         }
         validationReguest.setValid(isValid);
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance()
@@ -999,7 +998,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                         String error = "";
                         try {
                             error = response.errorBody().string();
-                            if (helpers.checkIsErrorByLogin(error)) {
+                            if (Helpers.checkIsErrorByLogin(error)) {
                                 if (isValid) {
                                     isClickedYesValidation = true;
                                     isClickedNoValidation = false;
@@ -1039,10 +1038,9 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             showLoginActivity();
             return;
         }
-        final Helpers helpers = new Helpers();
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().addDiveSpotToFavourites(
                 String.valueOf(diveSpot.getId()),
-                helpers.getRegisterRequest()
+                Helpers.getRegisterRequest()
         );
         call.enqueue(new BaseCallback() {
             @Override
@@ -1064,29 +1062,29 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                         ErrorsParser.checkForError(response.code(), responseString);
                     } catch (ServerInternalErrorException e) {
                         // TODO Handle
-                        helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
                     } catch (BadRequestException e) {
                         // TODO Handle
-                        helpers.showToast(DiveSpotDetailsActivity.this, R.string.also_added_to_favorites);
+                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.also_added_to_favorites);
                     } catch (ValidationErrorException e) {
                         // TODO Handle
 
                     } catch (NotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
                     } catch (UnknownErrorException e) {
                         // TODO Handle
-                        helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
                     } catch (DiveSpotNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         isCLickedFavorite = true;
                         showLoginActivity();
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
                     }
                 }
             }
@@ -1105,7 +1103,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             return;
         }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance()
-                .removeSpotFromFavorites(id, helpers.getUserQuryMapRequest());
+                .removeSpotFromFavorites(id, Helpers.getUserQuryMapRequest());
         call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -1126,29 +1124,29 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                         ErrorsParser.checkForError(response.code(), responseString);
                     } catch (ServerInternalErrorException e) {
                         // TODO Handle
-                        helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
                     } catch (BadRequestException e) {
                         // TODO Handle
-                        helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
                     } catch (ValidationErrorException e) {
                         // TODO Handle
 
                     } catch (NotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
                     } catch (UnknownErrorException e) {
                         // TODO Handle
-                        helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
                     } catch (DiveSpotNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         isClickedRemoveFromFavorites = true;
                         showLoginActivity();
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
                     }
                 }
             }
@@ -1199,7 +1197,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private void getComments() {
 
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance()
-                .getComments(String.valueOf(diveSpot.getId()), helpers.getUserQuryMapRequest());
+                .getComments(String.valueOf(diveSpot.getId()), Helpers.getUserQuryMapRequest());
         call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -1372,7 +1370,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     protected void onResume() {
         super.onResume();
         DDScannerApplication.activityResumed();
-        if (!helpers.hasConnection(this)) {
+        if (!Helpers.hasConnection(this)) {
             DDScannerApplication.showErrorActivity(this);
         }
     }

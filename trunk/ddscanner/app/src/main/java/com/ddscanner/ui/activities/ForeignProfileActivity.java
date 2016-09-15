@@ -77,8 +77,6 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
     private LinearLayout dislikeLayout;
     private LinearLayout openOnSocialLayout;
 
-    private Helpers helpers = new Helpers();
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -138,12 +136,12 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
             userAbout.setVisibility(View.VISIBLE);
             userAbout.setText(user.getAbout());
         }
-        userCommentsCount.setText(helpers.formatLikesCommentsCountNumber(user.getCountComment()));
-        userDislikesCount.setText(helpers.formatLikesCommentsCountNumber(user.getCountDislike()));
-        userLikesCount.setText(helpers.formatLikesCommentsCountNumber(user.getCountLike()));
+        userCommentsCount.setText(Helpers.formatLikesCommentsCountNumber(user.getCountComment()));
+        userDislikesCount.setText(Helpers.formatLikesCommentsCountNumber(user.getCountDislike()));
+        userLikesCount.setText(Helpers.formatLikesCommentsCountNumber(user.getCountLike()));
         Picasso.with(this).load(user.getPicture())
-                .resize(Math.round(helpers.convertDpToPixel(100, this)),
-                        Math.round(helpers.convertDpToPixel(100, this))).centerCrop()
+                .resize(Math.round(Helpers.convertDpToPixel(100, this)),
+                        Math.round(Helpers.convertDpToPixel(100, this))).centerCrop()
                 .transform(new CropCircleTransformation()).into(avatar);
         userFullName.setText(user.getName());
         progressView.setVisibility(View.GONE);
@@ -172,7 +170,7 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
     }
 
     private void requestUserData() {
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserInfo(userId, helpers.getUserQuryMapRequest());
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserInfo(userId, Helpers.getUserQuryMapRequest());
         call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -206,27 +204,27 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
                         ErrorsParser.checkForError(response.code(), responseString);
                     } catch (ServerInternalErrorException e) {
                         // TODO Handle
-                        helpers.showToast(ForeignProfileActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ForeignProfileActivity.this, R.string.toast_server_error);
                     } catch (BadRequestException e) {
                         // TODO Handle
-                        helpers.showToast(ForeignProfileActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ForeignProfileActivity.this, R.string.toast_server_error);
                     } catch (ValidationErrorException e) {
                         // TODO Handle
                     } catch (NotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(ForeignProfileActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ForeignProfileActivity.this, R.string.toast_server_error);
                     } catch (UnknownErrorException e) {
                         // TODO Handle
-                        helpers.showToast(ForeignProfileActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ForeignProfileActivity.this, R.string.toast_server_error);
                     } catch (DiveSpotNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(ForeignProfileActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ForeignProfileActivity.this, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         SocialNetworks.showForResult(ForeignProfileActivity.this, ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_LOGIN);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(ForeignProfileActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ForeignProfileActivity.this, R.string.toast_server_error);
                     }
                 }
             }
@@ -378,7 +376,7 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
     protected void onResume() {
         super.onResume();
         DDScannerApplication.activityResumed();
-        if (!helpers.hasConnection(this)) {
+        if (!Helpers.hasConnection(this)) {
             DDScannerApplication.showErrorActivity(this);
         }
     }

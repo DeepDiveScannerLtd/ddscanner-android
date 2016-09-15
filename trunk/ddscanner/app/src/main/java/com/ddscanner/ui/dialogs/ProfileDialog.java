@@ -44,7 +44,6 @@ public class ProfileDialog extends DialogFragment implements View.OnClickListene
     private TextView link;
     private LinearLayout open;
     private ImageView closeDialog;
-    private Helpers helpers = new Helpers();
 
     public static ProfileDialog newInstance(User user) {
         ProfileDialog profileDialog = new ProfileDialog();
@@ -229,7 +228,7 @@ public class ProfileDialog extends DialogFragment implements View.OnClickListene
         super.onStart();
         if (getDialog() == null)
             return;
-        int dialogWidth = Math.round(helpers.convertDpToPixel(285, getActivity()));
+        int dialogWidth = Math.round(Helpers.convertDpToPixel(285, getActivity()));
         int dialogHeight = LinearLayout.LayoutParams.WRAP_CONTENT;
         getDialog().getWindow().setLayout(dialogWidth, dialogHeight);
     }

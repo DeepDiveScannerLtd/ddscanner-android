@@ -125,7 +125,6 @@ public class MainActivity extends BaseAppCompatActivity
     private ActivityNotificationsFragment activityNotificationsFragment;
     private AllNotificationsFragment allNotificationsFragment;
     private ImageView imageView;
-    private Helpers helpers = new Helpers();
     private boolean isHasInternetConnection;
     private boolean isHasLocation;
     private MaterialDialog materialDialog;
@@ -262,7 +261,7 @@ public class MainActivity extends BaseAppCompatActivity
     }
 
     private void findViews() {
-        materialDialog = helpers.getMaterialDialog(this);
+        materialDialog = Helpers.getMaterialDialog(this);
         toolbarTabLayout = (TabLayout) findViewById(R.id.toolbar_tablayout);
         mainViewPager = (ViewPager) findViewById(R.id.main_viewpager);
         menuItemsLayout = (PercentRelativeLayout) findViewById(R.id.menu_items_layout);
@@ -466,7 +465,7 @@ public class MainActivity extends BaseAppCompatActivity
         LogUtils.i(TAG, "onResume");
         AppEventsLogger.activateApp(this);
         DDScannerApplication.activityResumed();
-        if (!helpers.hasConnection(this)) {
+        if (!Helpers.hasConnection(this)) {
             DDScannerApplication.showErrorActivity(this);
         }
         if (SharedPreferenceHelper.isUserLoggedIn()) {
@@ -538,26 +537,26 @@ public class MainActivity extends BaseAppCompatActivity
                         ErrorsParser.checkForError(response.code(), responseString);
                     } catch (ServerInternalErrorException e) {
                         // TODO Handle
-                        helpers.showToast(MainActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(MainActivity.this, R.string.toast_server_error);
                     } catch (BadRequestException e) {
                         // TODO Handle
-                        helpers.showToast(MainActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(MainActivity.this, R.string.toast_server_error);
                     } catch (ValidationErrorException e) {
                         // TODO Handle
                     } catch (NotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(MainActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(MainActivity.this, R.string.toast_server_error);
                     } catch (UnknownErrorException e) {
                         // TODO Handle
-                        helpers.showToast(MainActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(MainActivity.this, R.string.toast_server_error);
                     } catch (DiveSpotNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(MainActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(MainActivity.this, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(MainActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(MainActivity.this, R.string.toast_server_error);
                     }
                 }
             }

@@ -62,7 +62,6 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
     private Spinner objectSpinner;
     private Spinner levelSpinner;
     private Button save;
-    private Helpers helpers = new Helpers();
     private Map<String,String> objectsMap = new HashMap<>();
     private Map<String, String> levelsMap = new HashMap<>();
     private FilterChosedEvent filterChosedEvent = new FilterChosedEvent();
@@ -83,7 +82,7 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void findViews() {
-        materialDialog = helpers.getMaterialDialog(this);
+        materialDialog = Helpers.getMaterialDialog(this);
         progressView = (ProgressView) findViewById(R.id.progressBar);
         mainLayout = (LinearLayout) findViewById(R.id.main_layout);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -117,22 +116,22 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
             filterChosedEvent.setObject(null);
             SharedPreferenceHelper.setObject("");
         } else {
-            filterChosedEvent.setObject(helpers.getMirrorOfHashMap(objectsMap)
+            filterChosedEvent.setObject(Helpers.getMirrorOfHashMap(objectsMap)
                     .get(objectSpinner.getSelectedItem().toString()));
-            SharedPreferenceHelper.setObject(helpers.getMirrorOfHashMap(objectsMap)
+            SharedPreferenceHelper.setObject(Helpers.getMirrorOfHashMap(objectsMap)
                     .get(objectSpinner.getSelectedItem().toString()));
         }
         if (levelSpinner.getSelectedItem().toString().equals("All")) {
             filterChosedEvent.setLevel(null);
             SharedPreferenceHelper.setLevel("");
         } else {
-            filterChosedEvent.setLevel(helpers.getMirrorOfHashMap(levelsMap)
+            filterChosedEvent.setLevel(Helpers.getMirrorOfHashMap(levelsMap)
                     .get(levelSpinner.getSelectedItem().toString()));
-            SharedPreferenceHelper.setLevel(helpers.getMirrorOfHashMap(levelsMap)
+            SharedPreferenceHelper.setLevel(Helpers.getMirrorOfHashMap(levelsMap)
                     .get(levelSpinner.getSelectedItem().toString()));
         }
         DDScannerApplication.bus.post(filterChosedEvent);
-     //   EventsTracker.trackFilterApplyied(helpers.getMirrorOfHashMap(levelsMap).get(levelSpinner.getSelectedItem().toString()), helpers.getMirrorOfHashMap(objectsMap).get(objectSpinner.getSelectedItem().toString()));
+     //   EventsTracker.trackFilterApplyied(Helpers.getMirrorOfHashMap(levelsMap).get(levelSpinner.getSelectedItem().toString()), Helpers.getMirrorOfHashMap(objectsMap).get(objectSpinner.getSelectedItem().toString()));
         finish();
     }
 
@@ -190,26 +189,26 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
                         ErrorsParser.checkForError(response.code(), responseString);
                     } catch (ServerInternalErrorException e) {
                         // TODO Handle
-                        helpers.showToast(FilterActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(FilterActivity.this, R.string.toast_server_error);
                     } catch (BadRequestException e) {
                         // TODO Handle
-                        helpers.showToast(FilterActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(FilterActivity.this, R.string.toast_server_error);
                     } catch (ValidationErrorException e) {
                         // TODO Handle
                     } catch (NotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(FilterActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(FilterActivity.this, R.string.toast_server_error);
                     } catch (UnknownErrorException e) {
                         // TODO Handle
-                        helpers.showToast(FilterActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(FilterActivity.this, R.string.toast_server_error);
                     } catch (DiveSpotNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(FilterActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(FilterActivity.this, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(FilterActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(FilterActivity.this, R.string.toast_server_error);
                     }
                 }
             }
@@ -260,7 +259,7 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
     protected void onResume() {
         super.onResume();
         DDScannerApplication.activityResumed();
-        if (!helpers.hasConnection(this)) {
+        if (!Helpers.hasConnection(this)) {
             DDScannerApplication.showErrorActivity(this);
         }
     }
