@@ -10,6 +10,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -22,6 +24,7 @@ import com.ddscanner.entities.FiltersResponseEntity;
 import com.ddscanner.entities.errors.BadRequestException;
 import com.ddscanner.entities.errors.CommentNotFoundException;
 import com.ddscanner.entities.errors.DiveSpotNotFoundException;
+import com.ddscanner.entities.errors.GeneralError;
 import com.ddscanner.entities.errors.NotFoundException;
 import com.ddscanner.entities.errors.ServerInternalErrorException;
 import com.ddscanner.entities.errors.UnknownErrorException;
@@ -29,8 +32,10 @@ import com.ddscanner.entities.errors.UserNotFoundException;
 import com.ddscanner.entities.errors.ValidationErrorException;
 import com.ddscanner.entities.request.ReportRequest;
 import com.ddscanner.events.DeleteCommentEvent;
+import com.ddscanner.events.DislikeCommentEvent;
 import com.ddscanner.events.EditCommentEvent;
 import com.ddscanner.events.IsCommentLikedEvent;
+import com.ddscanner.events.LikeCommentEvent;
 import com.ddscanner.events.ReportCommentEvent;
 import com.ddscanner.events.ShowLoginActivityIntent;
 import com.ddscanner.events.ShowUserDialogEvent;
@@ -79,6 +84,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     private boolean isHasNewComment = false;
 
     private FiltersResponseEntity filters = new FiltersResponseEntity();
+    private ReviewsListAdapter reviewsListAdapter;
 
     private List<String> reportItems = new ArrayList<>();
 
@@ -87,6 +93,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     private String reportDescription = null;
     private MaterialDialog materialDialog;
     private boolean isClickedReport;
+    private int reviewPositionToRate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,37 +145,49 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_WRITE_REVIEW) {
-            if (resultCode == Activity.RESULT_OK) {
-                getComments();
-                isHasNewComment = true;
-            }
-            if (resultCode == Activity.RESULT_CANCELED) {
-                //Write your code if there's no result
-            }
-        }
-        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN) {
-            if (resultCode == RESULT_OK) {
-                getComments();
-            }
-        }
-        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_EDIT_MY_REVIEW) {
-            if (resultCode == RESULT_OK) {
-                getComments();
-            }
-        }
-        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_LEAVE_REPORT) {
-            if (resultCode == RESULT_OK) {
-                sendReportRequest(reportType, reportDescription);
-            }
-            if (resultCode == RESULT_CANCELED) {
-                getComments();
-            }
-        }
-        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_DELETE_COMMENT) {
-            if (resultCode == RESULT_OK) {
-                deleteUsersComment(commentToDelete);
-            }
+        switch (requestCode) {
+            case ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_WRITE_REVIEW:
+                if (resultCode == Activity.RESULT_OK) {
+                    getComments();
+                    isHasNewComment = true;
+                }
+                if (resultCode == Activity.RESULT_CANCELED) {
+                    //Write your code if there's no result
+                }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN:
+                if (resultCode == RESULT_OK) {
+                    getComments();
+                }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_EDIT_MY_REVIEW:
+                if (resultCode == RESULT_OK) {
+                    getComments();
+                }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_LEAVE_REPORT:
+                if (resultCode == RESULT_OK) {
+                    sendReportRequest(reportType, reportDescription);
+                }
+                if (resultCode == RESULT_CANCELED) {
+                    getComments();
+                }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_DELETE_COMMENT:
+                if (resultCode == RESULT_OK) {
+                    deleteUsersComment(commentToDelete);
+                }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_LIKE_REVIEW:
+                if (resultCode == RESULT_OK) {
+                    likeComment(comments.get(reviewPositionToRate).getId(), reviewPositionToRate);
+                }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_DISLIKE_REVIEW:
+                if (resultCode == RESULT_OK) {
+                    dislikeComment(comments.get(reviewPositionToRate).getId(), reviewPositionToRate);
+                }
+                break;
         }
     }
 
@@ -188,9 +207,11 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
                         e.printStackTrace();
                     }
                     Comments comments = new Gson().fromJson(responseString, Comments.class);
+                    ReviewsActivity.this.comments = (ArrayList<Comment>) comments.getComments();
                     progressView.setVisibility(View.GONE);
                     commentsRc.setVisibility(View.VISIBLE);
-                    commentsRc.setAdapter(new ReviewsListAdapter((ArrayList<Comment>) comments.getComments(), ReviewsActivity.this, path));
+                    reviewsListAdapter = new ReviewsListAdapter((ArrayList<Comment>) comments.getComments(), ReviewsActivity.this, path);
+                    commentsRc.setAdapter(reviewsListAdapter);
                 }
                 if (!response.isSuccessful()) {
                     String responseString = "";
@@ -513,4 +534,157 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
         });
     }
 
+    private void likeComment(String id, final int position) {
+        if (!SharedPreferenceHelper.isUserLoggedIn()) {
+            SocialNetworks.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_LIKE_REVIEW);
+            return;
+        }
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().likeComment(
+                id, helpers.getRegisterRequest()
+        );
+        call.enqueue(new BaseCallback() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    if (response.raw().code() == 200) {
+                        EventsTracker.trackCommentLiked();
+                        isHasNewComment = true;
+                        reviewsListAdapter.commentLiked(position);
+                    }
+                }
+                if (!response.isSuccessful()) {
+                    String responseString = "";
+                    try {
+                        responseString = response.errorBody().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    if (response.raw().code() == 403) {
+                        Gson gson = new Gson();
+                        GeneralError generalError;
+                        generalError = gson.fromJson(responseString, GeneralError.class);
+                        Toast toast = Toast.makeText(ReviewsActivity.this, R.string.yoy_cannot_like_review, Toast.LENGTH_SHORT);
+                        toast.show();
+                        return;
+                    }
+                    LogUtils.i("response body is " + responseString);
+                    try {
+                        ErrorsParser.checkForError(response.code(), responseString);
+                    } catch (ServerInternalErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                    } catch (BadRequestException e) {
+                        // TODO Handle
+                        helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                    } catch (ValidationErrorException e) {
+                        // TODO Handle
+                    } catch (NotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                    } catch (UnknownErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                    } catch (DiveSpotNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                    } catch (UserNotFoundException e) {
+                        // TODO Handle
+                        SharedPreferenceHelper.logout();
+                        SocialNetworks.showForResult(ReviewsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_LIKE_REVIEW);
+                    } catch (CommentNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                    }
+                }
+            }
+
+            @Override
+            public void onConnectionFailure() {
+                DialogUtils.showConnectionErrorDialog(ReviewsActivity.this);
+            }
+        });
+    }
+
+    private void dislikeComment(String id, final int position) {
+        if (!SharedPreferenceHelper.isUserLoggedIn()) {
+            SocialNetworks.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_DISLIKE_REVIEW);
+            return;
+        }
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().dislikeComment(
+                id, helpers.getRegisterRequest()
+        );
+        call.enqueue(new BaseCallback() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    if (response.raw().code() == 200) {
+                        EventsTracker.trackCommentLiked();
+                        isHasNewComment = true;
+                        reviewsListAdapter.commentDisliked(position);
+                    }
+                }
+                if (!response.isSuccessful()) {
+                    String responseString = "";
+                    try {
+                        responseString = response.errorBody().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    if (response.raw().code() == 403) {
+                        Gson gson = new Gson();
+                        GeneralError generalError;
+                        generalError = gson.fromJson(responseString, GeneralError.class);
+                        Toast toast = Toast.makeText(ReviewsActivity.this, R.string.yoy_cannot_like_review, Toast.LENGTH_SHORT);
+                        toast.show();
+                        return;
+                    }
+                    LogUtils.i("response body is " + responseString);
+                    try {
+                        ErrorsParser.checkForError(response.code(), responseString);
+                    } catch (ServerInternalErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                    } catch (BadRequestException e) {
+                        // TODO Handle
+                        helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                    } catch (ValidationErrorException e) {
+                        // TODO Handle
+                    } catch (NotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                    } catch (UnknownErrorException e) {
+                        // TODO Handle
+                        helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                    } catch (DiveSpotNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                    } catch (UserNotFoundException e) {
+                        // TODO Handle
+                        SharedPreferenceHelper.logout();
+                        SocialNetworks.showForResult(ReviewsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_DISLIKE_REVIEW);
+                    } catch (CommentNotFoundException e) {
+                        // TODO Handle
+                        helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                    }
+                }
+            }
+
+            @Override
+            public void onConnectionFailure() {
+                DialogUtils.showConnectionErrorDialog(ReviewsActivity.this);
+            }
+        });
+    }
+
+    @Subscribe
+    public void likeComment(LikeCommentEvent event) {
+        this.reviewPositionToRate = event.getPosition();
+        likeComment(comments.get(event.getPosition()).getId(), event.getPosition());
+    }
+
+    @Subscribe
+    public void dislikeComment(DislikeCommentEvent event) {
+        this.reviewPositionToRate = event.getPosition();
+        dislikeComment(comments.get(event.getPosition()).getId(), event.getPosition());
+    }
 }

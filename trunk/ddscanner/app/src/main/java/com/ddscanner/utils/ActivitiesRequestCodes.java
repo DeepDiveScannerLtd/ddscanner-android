@@ -131,6 +131,8 @@ public class ActivitiesRequestCodes {
     public static final int REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_DELETE_COMMENT = 3503;
     public static final int REQUEST_CODE_REVIEWS_ACTIVITY_WRITE_REVIEW = 3504;
     public static final int REQUEST_CODE_REVIEWS_ACTIVITY_EDIT_MY_REVIEW = 3505;
+    public static final int REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_LIKE_REVIEW = 3506;
+    public static final int REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_DISLIKE_REVIEW = 3507;
 
     //    SearchSealifeActivity
     public static final int REQUEST_CODE_SEARCH_SEALIFE_ACTIVITY_ADD_SEALIFE = 3601;

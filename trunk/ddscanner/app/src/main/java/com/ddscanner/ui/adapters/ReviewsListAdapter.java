@@ -33,8 +33,10 @@ import com.ddscanner.entities.errors.UnknownErrorException;
 import com.ddscanner.entities.errors.UserNotFoundException;
 import com.ddscanner.entities.errors.ValidationErrorException;
 import com.ddscanner.events.DeleteCommentEvent;
+import com.ddscanner.events.DislikeCommentEvent;
 import com.ddscanner.events.EditCommentEvent;
 import com.ddscanner.events.IsCommentLikedEvent;
+import com.ddscanner.events.LikeCommentEvent;
 import com.ddscanner.events.ReportCommentEvent;
 import com.ddscanner.events.ShowLoginActivityIntent;
 import com.ddscanner.rest.BaseCallback;
@@ -116,23 +118,14 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         reviewsListViewHolder.like.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                likeComment(comments.get(reviewsListViewHolder.getAdapterPosition()).getId(), reviewsListViewHolder.dislikeImage,
-                        reviewsListViewHolder.likeImage,
-                        reviewsListViewHolder.likesCount,
-                        reviewsListViewHolder.dislikesCount,
-                        i);
+                DDScannerApplication.bus.post(new LikeCommentEvent(i));
             }
         });
 
         reviewsListViewHolder.dislike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dislikeComment(comments.get(reviewsListViewHolder.getAdapterPosition()).getId(), reviewsListViewHolder.dislikeImage,
-                        reviewsListViewHolder.likeImage,
-                        reviewsListViewHolder.likesCount,
-                        reviewsListViewHolder.dislikesCount,
-                        i);
-
+                DDScannerApplication.bus.post(new DislikeCommentEvent(i));
             }
         });
 
@@ -186,6 +179,26 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         }
     }
 
+    public void commentLiked(int position) {
+        if (comments.get(position).isDislike()) {
+            comments.get(position).setDislikes(String.valueOf(Integer.parseInt(comments.get(position).getDislikes()) - 1));
+            comments.get(position).setDislike(false);
+        }
+        comments.get(position).setLikes(String.valueOf(Integer.parseInt(comments.get(position).getLikes()) + 1));
+        comments.get(position).setLike(true);
+        notifyItemChanged(position);
+    }
+
+    public void commentDisliked(int position) {
+        if (comments.get(position).isLike()) {
+            comments.get(position).setLikes(String.valueOf(Integer.parseInt(comments.get(position).getLikes()) - 1));
+            comments.get(position).setLike(false);
+        }
+        comments.get(position).setDislikes(String.valueOf(Integer.parseInt(comments.get(position).getDislikes()) + 1));
+        comments.get(position).setDislike(true);
+        notifyItemChanged(position);
+    }
+
     private void showPopupMenu(View view, int commentId, Comment comment) {
         PopupMenu popup = new PopupMenu(context, view);
         MenuInflater inflater = popup.getMenuInflater();
@@ -210,186 +223,6 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
             return 0;
         }
         return comments.size();
-    }
-
-    private void likeUi(ImageView dislikeImage, ImageView likeImage, TextView likesCount, TextView dislikesCount, int position) {
-        if (comments.get(position).isDislike()) {
-            dislikeImage.setImageDrawable(AppCompatDrawableManager.get().getDrawable(
-                    context, R.drawable.ic_review_dislike_empty
-            ));
-            dislikesCount.setText(helpers.formatLikesCommentsCountNumber(String.valueOf(Integer.parseInt(dislikesCount.getText().toString()) - 1)));
-        }
-        likeImage.setImageDrawable(AppCompatDrawableManager.get().getDrawable(
-                context, R.drawable.ic_like_review
-        ));
-        likesCount.setText(helpers.formatLikesCommentsCountNumber(String.valueOf(Integer.parseInt(likesCount.getText().toString()) + 1)));
-        comments.get(position).setLikes(likesCount.getText().toString());
-        comments.get(position).setDislikes(dislikesCount.getText().toString());
-        comments.get(position).setDislike(false);
-        comments.get(position).setLike(true);
-    }
-
-    private void dislikeUi(ImageView dislikeImage, ImageView likeImage, TextView likesCount, TextView dislikesCount, int position) {
-        if (comments.get(position).isLike()) {
-            likeImage.setImageDrawable(AppCompatDrawableManager.get().getDrawable(
-                    context, R.drawable.ic_review_like_empty
-            ));
-            likesCount.setText(helpers.formatLikesCommentsCountNumber(String.valueOf(Integer.parseInt(likesCount.getText().toString()) - 1)));
-        }
-
-        dislikeImage.setImageDrawable(AppCompatDrawableManager.get()
-                .getDrawable(context, R.drawable.ic_review_dislike));
-        dislikesCount.setText(helpers.formatLikesCommentsCountNumber(String.valueOf(Integer.parseInt(dislikesCount.getText().toString()) + 1)));
-        comments.get(position).setLikes(likesCount.getText().toString());
-        comments.get(position).setDislikes(dislikesCount.getText().toString());
-        comments.get(position).setLike(false);
-        comments.get(position).setDislike(true);
-    }
-
-    private void likeComment(String id, final ImageView dislikeImage,
-                             final ImageView likeImage,
-                             final TextView likesCount, final TextView dislikesCount, final int position) {
-        if (!SharedPreferenceHelper.isUserLoggedIn()) {
-            DDScannerApplication.bus.post(new ShowLoginActivityIntent());
-            return;
-        }
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().likeComment(
-                id, helpers.getRegisterRequest()
-        );
-        call.enqueue(new BaseCallback() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    if (response.raw().code() == 200) {
-                        EventsTracker.trackCommentLiked();
-                        DDScannerApplication.bus.post(new IsCommentLikedEvent());
-                        likeUi(dislikeImage, likeImage, likesCount, dislikesCount, position);
-                    }
-                }
-                if (!response.isSuccessful()) {
-                    String responseString = "";
-                    try {
-                        responseString = response.errorBody().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    if (response.raw().code() == 403) {
-                        Gson gson = new Gson();
-                        GeneralError generalError;
-                        generalError = gson.fromJson(responseString, GeneralError.class);
-                        Toast toast = Toast.makeText(context, R.string.yoy_cannot_like_review, Toast.LENGTH_SHORT);
-                        toast.show();
-                        return;
-                    }
-                    LogUtils.i("response body is " + responseString);
-                    try {
-                        ErrorsParser.checkForError(response.code(), responseString);
-                    } catch (ServerInternalErrorException e) {
-                        // TODO Handle
-                        helpers.showToast(context, R.string.toast_server_error);
-                    } catch (BadRequestException e) {
-                        // TODO Handle
-                        helpers.showToast(context, R.string.toast_server_error);
-                    } catch (ValidationErrorException e) {
-                        // TODO Handle
-                    } catch (NotFoundException e) {
-                        // TODO Handle
-                        helpers.showToast(context, R.string.toast_server_error);
-                    } catch (UnknownErrorException e) {
-                        // TODO Handle
-                        helpers.showToast(context, R.string.toast_server_error);
-                    } catch (DiveSpotNotFoundException e) {
-                        // TODO Handle
-                        helpers.showToast(context, R.string.toast_server_error);
-                    } catch (UserNotFoundException e) {
-                        // TODO Handle
-                        SharedPreferenceHelper.logout();
-                        DDScannerApplication.bus.post(new ShowLoginActivityIntent());
-                    } catch (CommentNotFoundException e) {
-                        // TODO Handle
-                        helpers.showToast(context, R.string.toast_server_error);
-                    }
-                }
-            }
-
-            @Override
-            public void onConnectionFailure() {
-                DialogUtils.showConnectionErrorDialog(context);
-            }
-        });
-    }
-
-    private void dislikeComment(String id, final ImageView dislikeImage,
-                                final ImageView likeImage,
-                                final TextView likesCount, final TextView dislikesCount, final int position) {
-        if (!SharedPreferenceHelper.isUserLoggedIn()) {
-            DDScannerApplication.bus.post(new ShowLoginActivityIntent());
-            return;
-        }
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().dislikeComment(
-                id, helpers.getRegisterRequest()
-        );
-        call.enqueue(new BaseCallback() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    if (response.raw().code() == 200) {
-                        EventsTracker.trackCommentDisliked();
-                        DDScannerApplication.bus.post(new IsCommentLikedEvent());
-                        dislikeUi(dislikeImage, likeImage, likesCount, dislikesCount, position);
-                    }
-                }
-                if (!response.isSuccessful()) {
-                    String responseString = "";
-                    try {
-                        responseString = response.errorBody().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    if (response.raw().code() == 403) {
-                        Gson gson = new Gson();
-                        GeneralError generalError;
-                        generalError = gson.fromJson(responseString, GeneralError.class);
-                        Toast toast = Toast.makeText(context, R.string.you_cannot_dislike_your_review, Toast.LENGTH_SHORT);
-                        toast.show();
-                        return;
-                    }
-                    LogUtils.i("response body is " + responseString);
-                    try {
-                        ErrorsParser.checkForError(response.code(), responseString);
-                    } catch (ServerInternalErrorException e) {
-                        // TODO Handle
-                        helpers.showToast(context, R.string.toast_server_error);
-                    } catch (BadRequestException e) {
-                        // TODO Handle
-                        helpers.showToast(context, R.string.toast_server_error);
-                    } catch (ValidationErrorException e) {
-                        // TODO Handle
-                    } catch (NotFoundException e) {
-                        // TODO Handle
-                        helpers.showToast(context, R.string.toast_server_error);
-                    } catch (UnknownErrorException e) {
-                        // TODO Handle
-                        helpers.showToast(context, R.string.toast_server_error);
-                    } catch (DiveSpotNotFoundException e) {
-                        // TODO Handle
-                        helpers.showToast(context, R.string.toast_server_error);
-                    } catch (UserNotFoundException e) {
-                        // TODO Handle
-                        SharedPreferenceHelper.logout();
-                        DDScannerApplication.bus.post(new ShowLoginActivityIntent());
-                    } catch (CommentNotFoundException e) {
-                        // TODO Handle
-                        helpers.showToast(context, R.string.toast_server_error);
-                    }
-                }
-            }
-
-            @Override
-            public void onConnectionFailure() {
-                DialogUtils.showConnectionErrorDialog(context);
-            }
-        });
     }
 
     class MenuItemClickListener implements PopupMenu.OnMenuItemClickListener {
