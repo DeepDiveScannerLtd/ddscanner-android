@@ -278,4 +278,10 @@
     <string name="errr">Name may contain only numbers and letters</string>
     <string name="description_length_error">Description should contain at least 150 symbols</string>
     <string name="also_added_to_favorites">Dive spot has already been added to favorite</string>
+    <string name="description_at_least_150_symbols">Description (At least 150 symbols)</string>
+    <string name="added_to_favorites">Added to favorites</string>
+    <string name="removed_from_favorites">Removed from favorites</string>
+    <string name="review_error">Review must contain at least 30 characters</string>
+    <string name="please_write_a_review">Please write a review to dive spot</string>
+    <string name="new_review">New Review</string>
 </resources>

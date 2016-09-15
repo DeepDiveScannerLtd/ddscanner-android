@@ -1050,6 +1050,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 if (response.raw().code() == 200) {
                     isFavorite = true;
                     updateMenuItems(menu, isFavorite);
+                    Toast.makeText(DiveSpotDetailsActivity.this, R.string.added_to_favorites, Toast.LENGTH_SHORT).show();
                 }
                 if (!response.isSuccessful()) {
                     String responseString = "";
@@ -1111,6 +1112,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 if (response.raw().code() == 200) {
                     isFavorite = false;
                     updateMenuItems(menu, isFavorite);
+                    Toast.makeText(DiveSpotDetailsActivity.this, R.string.removed_from_favorites, Toast.LENGTH_SHORT).show();
                 }
                 if (!response.isSuccessful()) {
                     String responseString = "";
@@ -1204,13 +1206,16 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 String responseString = "";
                 if (response.isSuccessful()) {
                     try {
+                        usersComments = null;
                         responseString = response.body().string();
                         Comments comments = new Gson().fromJson(responseString, Comments.class);
                         if (comments.getComments() != null) {
                             usersComments = comments.getComments();
                         }
-                        if (usersComments != null) {
+                        if (usersComments != null && usersComments.size() > 0) {
                             setReviewsCount(getString(R.string.show_all,String.valueOf(usersComments.size())));
+                        } else {
+                            setReviewsCount(getString(R.string.write_review));
                         }
                     } catch (IOException e) {
 
