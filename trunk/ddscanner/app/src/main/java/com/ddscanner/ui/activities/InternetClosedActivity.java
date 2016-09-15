@@ -19,8 +19,6 @@ import com.squareup.otto.Subscribe;
 
 public class InternetClosedActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private Helpers helpers = new Helpers();
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,7 +37,7 @@ public class InternetClosedActivity extends AppCompatActivity implements View.On
 
     @Override
     public void onClick(View v) {
-        if (helpers.hasConnection(this)) {
+        if (Helpers.hasConnection(this)) {
             finish();
         }
     }

@@ -32,7 +32,6 @@ public class EditorsListAdapter extends RecyclerView.Adapter<EditorsListAdapter.
     private List<User> userArrayList;
     private int avatarImageSize;
     private int avatarImageRadius;
-    private Helpers helpers = new Helpers();
 
     public EditorsListAdapter(Context context, List<User> users) {
         userArrayList = users;
@@ -52,7 +51,7 @@ public class EditorsListAdapter extends RecyclerView.Adapter<EditorsListAdapter.
     @Override
     public void onBindViewHolder(UserListViewHolder holder, int position) {
         Picasso.with(context).load(userArrayList.get(position).getPicture())
-                .resize(Math.round(helpers.convertDpToPixel(avatarImageSize, context)), Math.round(helpers.convertDpToPixel(avatarImageSize, context)))
+                .resize(Math.round(Helpers.convertDpToPixel(avatarImageSize, context)), Math.round(Helpers.convertDpToPixel(avatarImageSize, context)))
                 .centerCrop()
                 .transform(new CropCircleTransformation())
                 .into(holder.userAvatar);

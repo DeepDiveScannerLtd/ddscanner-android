@@ -27,7 +27,6 @@ public class EditorsUsersListAdapter extends RecyclerView.Adapter<EditorsUsersLi
 
     private Context context;
     private ArrayList<User> userArrayList;
-    private Helpers helpers = new Helpers();
 
     public EditorsUsersListAdapter(Context context, ArrayList<User> users) {
         userArrayList = users;
@@ -47,14 +46,14 @@ public class EditorsUsersListAdapter extends RecyclerView.Adapter<EditorsUsersLi
         if (!userArrayList.get(position).getPicture().contains("http")) {
             Picasso.with(context)
                     .load(R.drawable.avatar_profile_dds)
-                    .resize(Math.round(helpers.convertDpToPixel(58, context)), Math.round(helpers.convertDpToPixel(58, context)))
+                    .resize(Math.round(Helpers.convertDpToPixel(58, context)), Math.round(Helpers.convertDpToPixel(58, context)))
                     .centerCrop()
                     .transform(new CropCircleTransformation())
                     .into(holder.userAvatar);
         } else {
             Picasso.with(context)
                     .load(userArrayList.get(position).getPicture())
-                    .resize(Math.round(helpers.convertDpToPixel(58, context)), Math.round(helpers.convertDpToPixel(58, context)))
+                    .resize(Math.round(Helpers.convertDpToPixel(58, context)), Math.round(Helpers.convertDpToPixel(58, context)))
                     .centerCrop()
                     .transform(new CropCircleTransformation())
                     .into(holder.userAvatar);

@@ -50,7 +50,6 @@ public class UserLikesDislikesActivity extends AppCompatActivity {
     private boolean isLikes;
     private String userId;
     private ProgressView progressView;
-    private Helpers helpers = new Helpers();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -77,7 +76,7 @@ public class UserLikesDislikesActivity extends AppCompatActivity {
     }
 
     private void getUserDislikes() {
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getForeignUserDislikes(userId, helpers.getUserQuryMapRequest());
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getForeignUserDislikes(userId, Helpers.getUserQuryMapRequest());
         call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -105,27 +104,27 @@ public class UserLikesDislikesActivity extends AppCompatActivity {
                         ErrorsParser.checkForError(response.code(), responseString);
                     } catch (ServerInternalErrorException e) {
                         // TODO Handle
-                        helpers.showToast(UserLikesDislikesActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(UserLikesDislikesActivity.this, R.string.toast_server_error);
                     } catch (BadRequestException e) {
                         // TODO Handle
-                        helpers.showToast(UserLikesDislikesActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(UserLikesDislikesActivity.this, R.string.toast_server_error);
                     } catch (ValidationErrorException e) {
                         // TODO Handle
                     } catch (NotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(UserLikesDislikesActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(UserLikesDislikesActivity.this, R.string.toast_server_error);
                     } catch (UnknownErrorException e) {
                         // TODO Handle
-                        helpers.showToast(UserLikesDislikesActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(UserLikesDislikesActivity.this, R.string.toast_server_error);
                     } catch (DiveSpotNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(UserLikesDislikesActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(UserLikesDislikesActivity.this, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         SocialNetworks.showForResult(UserLikesDislikesActivity.this, ActivitiesRequestCodes.REQUEST_CODE_USER_LIKES_DISLIKES_ACTIVITY_LOGIN);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(UserLikesDislikesActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(UserLikesDislikesActivity.this, R.string.toast_server_error);
                     }
                 }
             }
@@ -138,7 +137,7 @@ public class UserLikesDislikesActivity extends AppCompatActivity {
     }
 
     private void getUserLikes() {
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getForeignUserLikes(userId, helpers.getUserQuryMapRequest());
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getForeignUserLikes(userId, Helpers.getUserQuryMapRequest());
         call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -166,27 +165,27 @@ public class UserLikesDislikesActivity extends AppCompatActivity {
                         ErrorsParser.checkForError(response.code(), responseString);
                     } catch (ServerInternalErrorException e) {
                         // TODO Handle
-                        helpers.showToast(UserLikesDislikesActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(UserLikesDislikesActivity.this, R.string.toast_server_error);
                     } catch (BadRequestException e) {
                         // TODO Handle
-                        helpers.showToast(UserLikesDislikesActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(UserLikesDislikesActivity.this, R.string.toast_server_error);
                     } catch (ValidationErrorException e) {
                         // TODO Handle
                     } catch (NotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(UserLikesDislikesActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(UserLikesDislikesActivity.this, R.string.toast_server_error);
                     } catch (UnknownErrorException e) {
                         // TODO Handle
-                        helpers.showToast(UserLikesDislikesActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(UserLikesDislikesActivity.this, R.string.toast_server_error);
                     } catch (DiveSpotNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(UserLikesDislikesActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(UserLikesDislikesActivity.this, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         SocialNetworks.showForResult(UserLikesDislikesActivity.this, ActivitiesRequestCodes.REQUEST_CODE_USER_LIKES_DISLIKES_ACTIVITY_LOGIN);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(UserLikesDislikesActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(UserLikesDislikesActivity.this, R.string.toast_server_error);
                     }
                 }
             }
@@ -267,7 +266,7 @@ public class UserLikesDislikesActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         DDScannerApplication.activityResumed();
-        if (!helpers.hasConnection(this)) {
+        if (!Helpers.hasConnection(this)) {
             DDScannerApplication.showErrorActivity(this);
         }
     }

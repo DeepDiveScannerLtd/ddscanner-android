@@ -24,7 +24,6 @@ public class AddPhotoToDiveSpotAdapter extends RecyclerView.Adapter<AddPhotoToDi
     private String path;
     private ArrayList<String> images;
     private Context context;
-    private Helpers helpers = new Helpers();
 
     public AddPhotoToDiveSpotAdapter(ArrayList<String> photos, Context context) {
         images = photos;
@@ -35,7 +34,7 @@ public class AddPhotoToDiveSpotAdapter extends RecyclerView.Adapter<AddPhotoToDi
     public void onBindViewHolder(AddPhotoToDiveSpotViewHolder holder, int position) {
         Picasso.with(context)
                 .load(images.get(position))
-                .resize(Math.round(helpers.convertDpToPixel(115, context)),Math.round(helpers.convertDpToPixel(115, context)))
+                .resize(Math.round(Helpers.convertDpToPixel(115, context)), Math.round(Helpers.convertDpToPixel(115, context)))
                 .centerCrop()
                 .into(holder.image);
     }

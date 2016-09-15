@@ -70,7 +70,6 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
     private String path;
     private boolean isAdapterSet = false;
     private static ProfileDialog profileDialog = new ProfileDialog();
-    private Helpers helpers = new Helpers();
 
     public ReviewsListAdapter(ArrayList<Comment> comments, Context context, String path) {
         this.path = path;
@@ -154,13 +153,13 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
 
         reviewsListViewHolder.user_name.setText(comments.get(reviewsListViewHolder.getAdapterPosition()).getUser().getName());
         reviewsListViewHolder.user_review.setText(comments.get(reviewsListViewHolder.getAdapterPosition()).getComment());
-        reviewsListViewHolder.likesCount.setText(helpers.formatLikesCommentsCountNumber(comments.get(reviewsListViewHolder.getAdapterPosition()).getLikes()));
-        reviewsListViewHolder.dislikesCount.setText(helpers.formatLikesCommentsCountNumber(comments.get(reviewsListViewHolder.getAdapterPosition()).getDislikes()));
+        reviewsListViewHolder.likesCount.setText(Helpers.formatLikesCommentsCountNumber(comments.get(reviewsListViewHolder.getAdapterPosition()).getLikes()));
+        reviewsListViewHolder.dislikesCount.setText(Helpers.formatLikesCommentsCountNumber(comments.get(reviewsListViewHolder.getAdapterPosition()).getDislikes()));
         isAdapterSet = true;
 
         if (comments.get(reviewsListViewHolder.getAdapterPosition()).getUser().getPicture() != null) {
             Picasso.with(context)
-                    .load(comments.get(reviewsListViewHolder.getAdapterPosition()).getUser().getPicture()).resize(Math.round(helpers.convertDpToPixel(40, context)), Math.round(helpers.convertDpToPixel(40, context)))
+                    .load(comments.get(reviewsListViewHolder.getAdapterPosition()).getUser().getPicture()).resize(Math.round(Helpers.convertDpToPixel(40, context)), Math.round(Helpers.convertDpToPixel(40, context)))
                     .transform(new CropCircleTransformation())
                     .centerCrop()
                     .placeholder(R.drawable.avatar_profile_default)
@@ -182,7 +181,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
             reviewsListViewHolder.rating.addView(iv);
         }
         if (comments.get(i).getDate() != null && !comments.get(i).getDate().isEmpty()) {
-            reviewsListViewHolder.date.setText(helpers.getCommentDate(comments.get(i).getDate()));
+            reviewsListViewHolder.date.setText(Helpers.getCommentDate(comments.get(i).getDate()));
         }
     }
 
@@ -217,12 +216,12 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
             dislikeImage.setImageDrawable(AppCompatDrawableManager.get().getDrawable(
                     context, R.drawable.ic_review_dislike_empty
             ));
-            dislikesCount.setText(helpers.formatLikesCommentsCountNumber(String.valueOf(Integer.parseInt(dislikesCount.getText().toString()) - 1)));
+            dislikesCount.setText(Helpers.formatLikesCommentsCountNumber(String.valueOf(Integer.parseInt(dislikesCount.getText().toString()) - 1)));
         }
         likeImage.setImageDrawable(AppCompatDrawableManager.get().getDrawable(
                 context, R.drawable.ic_like_review
         ));
-        likesCount.setText(helpers.formatLikesCommentsCountNumber(String.valueOf(Integer.parseInt(likesCount.getText().toString()) + 1)));
+        likesCount.setText(Helpers.formatLikesCommentsCountNumber(String.valueOf(Integer.parseInt(likesCount.getText().toString()) + 1)));
         comments.get(position).setLikes(likesCount.getText().toString());
         comments.get(position).setDislikes(dislikesCount.getText().toString());
         comments.get(position).setDislike(false);
@@ -234,12 +233,12 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
             likeImage.setImageDrawable(AppCompatDrawableManager.get().getDrawable(
                     context, R.drawable.ic_review_like_empty
             ));
-            likesCount.setText(helpers.formatLikesCommentsCountNumber(String.valueOf(Integer.parseInt(likesCount.getText().toString()) - 1)));
+            likesCount.setText(Helpers.formatLikesCommentsCountNumber(String.valueOf(Integer.parseInt(likesCount.getText().toString()) - 1)));
         }
 
         dislikeImage.setImageDrawable(AppCompatDrawableManager.get()
                 .getDrawable(context, R.drawable.ic_review_dislike));
-        dislikesCount.setText(helpers.formatLikesCommentsCountNumber(String.valueOf(Integer.parseInt(dislikesCount.getText().toString()) + 1)));
+        dislikesCount.setText(Helpers.formatLikesCommentsCountNumber(String.valueOf(Integer.parseInt(dislikesCount.getText().toString()) + 1)));
         comments.get(position).setLikes(likesCount.getText().toString());
         comments.get(position).setDislikes(dislikesCount.getText().toString());
         comments.get(position).setLike(false);
@@ -254,7 +253,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
             return;
         }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().likeComment(
-                id, helpers.getRegisterRequest()
+                id, Helpers.getRegisterRequest()
         );
         call.enqueue(new BaseCallback() {
             @Override
@@ -286,28 +285,28 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
                         ErrorsParser.checkForError(response.code(), responseString);
                     } catch (ServerInternalErrorException e) {
                         // TODO Handle
-                        helpers.showToast(context, R.string.toast_server_error);
+                        Helpers.showToast(context, R.string.toast_server_error);
                     } catch (BadRequestException e) {
                         // TODO Handle
-                        helpers.showToast(context, R.string.toast_server_error);
+                        Helpers.showToast(context, R.string.toast_server_error);
                     } catch (ValidationErrorException e) {
                         // TODO Handle
                     } catch (NotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(context, R.string.toast_server_error);
+                        Helpers.showToast(context, R.string.toast_server_error);
                     } catch (UnknownErrorException e) {
                         // TODO Handle
-                        helpers.showToast(context, R.string.toast_server_error);
+                        Helpers.showToast(context, R.string.toast_server_error);
                     } catch (DiveSpotNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(context, R.string.toast_server_error);
+                        Helpers.showToast(context, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         SharedPreferenceHelper.logout();
                         DDScannerApplication.bus.post(new ShowLoginActivityIntent());
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(context, R.string.toast_server_error);
+                        Helpers.showToast(context, R.string.toast_server_error);
                     }
                 }
             }
@@ -327,7 +326,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
             return;
         }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().dislikeComment(
-                id, helpers.getRegisterRequest()
+                id, Helpers.getRegisterRequest()
         );
         call.enqueue(new BaseCallback() {
             @Override
@@ -359,28 +358,28 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
                         ErrorsParser.checkForError(response.code(), responseString);
                     } catch (ServerInternalErrorException e) {
                         // TODO Handle
-                        helpers.showToast(context, R.string.toast_server_error);
+                        Helpers.showToast(context, R.string.toast_server_error);
                     } catch (BadRequestException e) {
                         // TODO Handle
-                        helpers.showToast(context, R.string.toast_server_error);
+                        Helpers.showToast(context, R.string.toast_server_error);
                     } catch (ValidationErrorException e) {
                         // TODO Handle
                     } catch (NotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(context, R.string.toast_server_error);
+                        Helpers.showToast(context, R.string.toast_server_error);
                     } catch (UnknownErrorException e) {
                         // TODO Handle
-                        helpers.showToast(context, R.string.toast_server_error);
+                        Helpers.showToast(context, R.string.toast_server_error);
                     } catch (DiveSpotNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(context, R.string.toast_server_error);
+                        Helpers.showToast(context, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         SharedPreferenceHelper.logout();
                         DDScannerApplication.bus.post(new ShowLoginActivityIntent());
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(context, R.string.toast_server_error);
+                        Helpers.showToast(context, R.string.toast_server_error);
                     }
                 }
             }

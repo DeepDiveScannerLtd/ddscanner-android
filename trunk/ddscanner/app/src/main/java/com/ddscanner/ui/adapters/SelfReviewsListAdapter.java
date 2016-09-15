@@ -38,7 +38,6 @@ public class SelfReviewsListAdapter extends RecyclerView.Adapter<SelfReviewsList
     private ArrayList<Comment> comments;
     private Context context;
     private String diveSpotPath;
-    private Helpers helpers = new Helpers();
 
     public SelfReviewsListAdapter(ArrayList<Comment> comments, Context context, String diveSpotPath) {
         this.comments = comments;
@@ -69,14 +68,14 @@ public class SelfReviewsListAdapter extends RecyclerView.Adapter<SelfReviewsList
         }
         holder.user_name.setText(comments.get(holder.getAdapterPosition()).getDiveSpotName());
         holder.user_review.setText(comments.get(holder.getAdapterPosition()).getComment());
-        holder.likesCount.setText(helpers.formatLikesCommentsCountNumber(comments.get(holder.getAdapterPosition()).getLikes()));
-        holder.dislikesCount.setText(helpers.formatLikesCommentsCountNumber(comments.get(holder.getAdapterPosition()).getDislikes()));
+        holder.likesCount.setText(Helpers.formatLikesCommentsCountNumber(comments.get(holder.getAdapterPosition()).getLikes()));
+        holder.dislikesCount.setText(Helpers.formatLikesCommentsCountNumber(comments.get(holder.getAdapterPosition()).getDislikes()));
         if (comments.get(position).getDiveSpotImage() == null) {
             holder.user_avatar.setImageResource(R.drawable.list_photo_default);
         } else {
             Picasso.with(context)
                     .load(diveSpotPath + comments.get(position).getDiveSpotImage())
-                    .resize(Math.round(helpers.convertDpToPixel(40, context)),Math.round(helpers.convertDpToPixel(40, context)))
+                    .resize(Math.round(Helpers.convertDpToPixel(40, context)),Math.round(Helpers.convertDpToPixel(40, context)))
                     .centerCrop()
                     .placeholder(R.drawable.list_photo_default)
                     .transform(new TransformationRoundImage(4,0))
@@ -95,7 +94,7 @@ public class SelfReviewsListAdapter extends RecyclerView.Adapter<SelfReviewsList
             holder.rating.addView(iv);
         }
         if (comments.get(position).getDate() != null && !comments.get(position).getDate().isEmpty()) {
-            holder.date.setText(helpers.getCommentDate(comments.get(position).getDate()));
+            holder.date.setText(Helpers.getCommentDate(comments.get(position).getDate()));
         }
         holder.menu.setOnClickListener(new View.OnClickListener() {
             @Override

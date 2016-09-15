@@ -50,7 +50,6 @@ public class PickLocationActivity extends AppCompatActivity implements GoogleMap
     private ChangeDataInTextView changeDataInTextView;
     private FloatingActionButton applyLocation;
     private LatLng startLocation;
-    private Helpers helpers = new Helpers();
     private String returnedLocationName = "";
 
     public static void show(Context context) {
@@ -224,7 +223,7 @@ public class PickLocationActivity extends AppCompatActivity implements GoogleMap
     protected void onResume() {
         super.onResume();
         DDScannerApplication.activityResumed();
-        if (!helpers.hasConnection(this)) {
+        if (!Helpers.hasConnection(this)) {
             DDScannerApplication.showErrorActivity(this);
         }
     }

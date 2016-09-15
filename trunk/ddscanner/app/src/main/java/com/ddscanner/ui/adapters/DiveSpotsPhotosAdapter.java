@@ -30,7 +30,6 @@ public class DiveSpotsPhotosAdapter extends RecyclerView.Adapter<DiveSpotsPhotos
     public Context context;
     public ArrayList<Image> reviewsImages;
     private int photoSize;
-    private Helpers helpers = new Helpers();
 
     public DiveSpotsPhotosAdapter(ArrayList<Image> photos, String path,
                                   Context context,ArrayList<Image> reviewsImages) {
@@ -55,7 +54,7 @@ public class DiveSpotsPhotosAdapter extends RecyclerView.Adapter<DiveSpotsPhotos
             Picasso.with(context)
                     .load(path + photos.get(position).getName())
                     .transform(new TransformationRoundImage(2,0))
-                    .resize(Math.round(helpers.convertDpToPixel(photoSize, context)),Math.round(helpers.convertDpToPixel(photoSize, context)))
+                    .resize(Math.round(Helpers.convertDpToPixel(photoSize, context)),Math.round(Helpers.convertDpToPixel(photoSize, context)))
                     .centerCrop()
                     .into(holder.photo);
             holder.morePhotos.setText("+" + String.valueOf(photos.size() - 8));
@@ -64,7 +63,7 @@ public class DiveSpotsPhotosAdapter extends RecyclerView.Adapter<DiveSpotsPhotos
             Picasso.with(context)
                     .load(path + photos.get(position).getName())
                     .transform(new TransformationRoundImage(2,0))
-                    .resize(Math.round(helpers.convertDpToPixel(photoSize, context)),Math.round(helpers.convertDpToPixel(photoSize, context)))
+                    .resize(Math.round(Helpers.convertDpToPixel(photoSize, context)),Math.round(Helpers.convertDpToPixel(photoSize, context)))
                     .centerCrop()
                     .into(holder.photo, new ImageLoadedCallback(holder.progressBar){
                         @Override

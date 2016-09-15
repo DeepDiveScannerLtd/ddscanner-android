@@ -32,7 +32,6 @@ public class DiveCenterDetailsActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private LinearLayout stars;
     private String path;
-    private Helpers helpers = new Helpers();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,7 +157,7 @@ public class DiveCenterDetailsActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         DDScannerApplication.activityResumed();
-        if (!helpers.hasConnection(this)) {
+        if (!Helpers.hasConnection(this)) {
             DDScannerApplication.showErrorActivity(this);
         }
     }

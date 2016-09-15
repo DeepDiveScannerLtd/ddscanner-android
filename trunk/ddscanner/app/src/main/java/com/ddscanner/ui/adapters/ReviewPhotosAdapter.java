@@ -29,14 +29,13 @@ public class ReviewPhotosAdapter extends RecyclerView.Adapter<ReviewPhotosAdapte
     public String reviewId;
     public String path;
     public Context context;
-    public Helpers helpers = new Helpers();
 
     public ReviewPhotosAdapter(ArrayList<String> photos, Context context, String path) {
         this.photos = photos;
         this.context = context;
         this.path = path;
 
-        helpers.appendImagesWithPath(photos, path);
+        Helpers.appendImagesWithPath(photos, path);
     }
 
     @Override

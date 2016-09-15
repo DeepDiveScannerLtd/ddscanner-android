@@ -97,7 +97,6 @@ public class EditCommentActivity extends AppCompatActivity implements View.OnCli
     private RequestBody requestSocial = null;
     private RequestBody requestSecret = null;
     private RequestBody _method = null;
-    private Helpers helpers = new Helpers();
     private int maxPhotos = 3;
     private Comment comment;
     private ArrayList<String> deleted = new ArrayList<>();
@@ -131,7 +130,7 @@ public class EditCommentActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void findViews() {
-        materialDialog = helpers.getMaterialDialog(this);
+        materialDialog = Helpers.getMaterialDialog(this);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         text = (EditText) findViewById(R.id.review_text);
         text.setTag("comment");
@@ -188,7 +187,7 @@ public class EditCommentActivity extends AppCompatActivity implements View.OnCli
     protected void onResume() {
         super.onResume();
         DDScannerApplication.activityResumed();
-        if (!helpers.hasConnection(this)) {
+        if (!Helpers.hasConnection(this)) {
             DDScannerApplication.showErrorActivity(this);
         }
     }
@@ -368,28 +367,28 @@ public class EditCommentActivity extends AppCompatActivity implements View.OnCli
                         ErrorsParser.checkForError(response.code(), responseString);
                     } catch (ServerInternalErrorException e) {
                         // TODO Handle
-                        helpers.showToast(EditCommentActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(EditCommentActivity.this, R.string.toast_server_error);
                     } catch (BadRequestException e) {
                         // TODO Handle
-                        helpers.showToast(EditCommentActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(EditCommentActivity.this, R.string.toast_server_error);
                     } catch (ValidationErrorException e) {
                         // TODO Handle
-                        helpers.errorHandling(EditCommentActivity.this, errorsMap, responseString);
+                        Helpers.errorHandling(EditCommentActivity.this, errorsMap, responseString);
                     } catch (NotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(EditCommentActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(EditCommentActivity.this, R.string.toast_server_error);
                     } catch (UnknownErrorException e) {
                         // TODO Handle
-                        helpers.showToast(EditCommentActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(EditCommentActivity.this, R.string.toast_server_error);
                     } catch (DiveSpotNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(EditCommentActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(EditCommentActivity.this, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         SocialNetworks.showForResult(EditCommentActivity.this, ActivitiesRequestCodes.REQUEST_CODE_EDIT_COMMENT_ACTIVITY_LOGIN);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(EditCommentActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(EditCommentActivity.this, R.string.toast_server_error);
                     }
                 }
             }

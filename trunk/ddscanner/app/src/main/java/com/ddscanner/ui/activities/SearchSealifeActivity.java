@@ -61,7 +61,6 @@ public class SearchSealifeActivity extends AppCompatActivity implements SearchVi
     private RelativeLayout notFoundLayout;
     private TextView textNotFound;
     private Button addManually;
-    private Helpers helpers = new Helpers();
     private Menu menu;
     private ProgressView progressView;
     private RelativeLayout contentLayout;
@@ -179,31 +178,31 @@ public class SearchSealifeActivity extends AppCompatActivity implements SearchVi
                         ErrorsParser.checkForError(response.code(), responseString);
                     } catch (ServerInternalErrorException e) {
                         // TODO Handle
-                        helpers.showToast(SearchSealifeActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(SearchSealifeActivity.this, R.string.toast_server_error);
                         finish();
                     } catch (BadRequestException e) {
                         // TODO Handle
-                        helpers.showToast(SearchSealifeActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(SearchSealifeActivity.this, R.string.toast_server_error);
                         finish();
                     } catch (ValidationErrorException e) {
                         // TODO Handle
                     } catch (NotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(SearchSealifeActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(SearchSealifeActivity.this, R.string.toast_server_error);
                         finish();
                     } catch (UnknownErrorException e) {
                         // TODO Handle
-                        helpers.showToast(SearchSealifeActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(SearchSealifeActivity.this, R.string.toast_server_error);
                         finish();
                     } catch (DiveSpotNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(SearchSealifeActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(SearchSealifeActivity.this, R.string.toast_server_error);
                         finish();
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(SearchSealifeActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(SearchSealifeActivity.this, R.string.toast_server_error);
                         finish();
                     }
                 }
@@ -226,7 +225,7 @@ public class SearchSealifeActivity extends AppCompatActivity implements SearchVi
     protected void onResume() {
         super.onResume();
         DDScannerApplication.activityResumed();
-        if (!helpers.hasConnection(this)) {
+        if (!Helpers.hasConnection(this)) {
             DDScannerApplication.showErrorActivity(this);
         }
     }

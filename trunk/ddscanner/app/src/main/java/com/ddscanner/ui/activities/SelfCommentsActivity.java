@@ -58,7 +58,6 @@ public class SelfCommentsActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private FloatingActionButton leaveReview;
 
-    private Helpers helpers = new Helpers();
     private String commentToDelete;
     private String userId;
     private String path;
@@ -91,7 +90,7 @@ public class SelfCommentsActivity extends AppCompatActivity {
     private void getComments() {
         commentsRc.setVisibility(View.GONE);
         progressView.setVisibility(View.VISIBLE);
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserComments(userId, helpers.getUserQuryMapRequest());
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserComments(userId, Helpers.getUserQuryMapRequest());
         call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -120,28 +119,28 @@ public class SelfCommentsActivity extends AppCompatActivity {
                         ErrorsParser.checkForError(response.code(), responseString);
                     } catch (ServerInternalErrorException e) {
                         // TODO Handle
-                        helpers.showToast(SelfCommentsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(SelfCommentsActivity.this, R.string.toast_server_error);
                     } catch (BadRequestException e) {
                         // TODO Handle
-                        helpers.showToast(SelfCommentsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(SelfCommentsActivity.this, R.string.toast_server_error);
                     } catch (ValidationErrorException e) {
                         // TODO Handle
                     } catch (NotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(SelfCommentsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(SelfCommentsActivity.this, R.string.toast_server_error);
                     } catch (UnknownErrorException e) {
                         // TODO Handle
-                        helpers.showToast(SelfCommentsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(SelfCommentsActivity.this, R.string.toast_server_error);
                     } catch (DiveSpotNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(SelfCommentsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(SelfCommentsActivity.this, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         SharedPreferenceHelper.logout();
                         SocialNetworks.showForResult(SelfCommentsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_SELF_REVIEWS_LOGIN_TO_VIEW_COMMENTS);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(SelfCommentsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(SelfCommentsActivity.this, R.string.toast_server_error);
                     }
                 }
             }
@@ -201,7 +200,7 @@ public class SelfCommentsActivity extends AppCompatActivity {
 
     private void deleteUsersComment(String id) {
         commentToDelete = id;
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().deleteComment(id, helpers.getUserQuryMapRequest());
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().deleteComment(id, Helpers.getUserQuryMapRequest());
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -219,29 +218,29 @@ public class SelfCommentsActivity extends AppCompatActivity {
                         ErrorsParser.checkForError(response.code(), responseString);
                     } catch (ServerInternalErrorException e) {
                         // TODO Handle
-                        helpers.showToast(SelfCommentsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(SelfCommentsActivity.this, R.string.toast_server_error);
                     } catch (BadRequestException e) {
                         // TODO Handle
-                        helpers.showToast(SelfCommentsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(SelfCommentsActivity.this, R.string.toast_server_error);
                     } catch (ValidationErrorException e) {
                         // TODO Handle
-                        helpers.showToast(SelfCommentsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(SelfCommentsActivity.this, R.string.toast_server_error);
                     } catch (NotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(SelfCommentsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(SelfCommentsActivity.this, R.string.toast_server_error);
                     } catch (UnknownErrorException e) {
                         // TODO Handle
-                        helpers.showToast(SelfCommentsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(SelfCommentsActivity.this, R.string.toast_server_error);
                     } catch (DiveSpotNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(SelfCommentsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(SelfCommentsActivity.this, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         SharedPreferenceHelper.logout();
                         SocialNetworks.showForResult(SelfCommentsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_SELF_REVIEWS_LOGIN_TO_DELETE_COMMENTS);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(SelfCommentsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(SelfCommentsActivity.this, R.string.toast_server_error);
                     }
                 }
             }
@@ -290,7 +289,7 @@ public class SelfCommentsActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         DDScannerApplication.activityResumed();
-        if (!helpers.hasConnection(this)) {
+        if (!Helpers.hasConnection(this)) {
             DDScannerApplication.showErrorActivity(this);
         }
     }

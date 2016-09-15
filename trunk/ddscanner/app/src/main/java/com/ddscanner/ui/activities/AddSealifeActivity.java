@@ -89,7 +89,6 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
     private TextView distribution_error;
     private TextView image_error;
     private ImageView sealifePhoto;
-    private Helpers helpers = new Helpers();
     private MaterialDialog progressDialogUpload;
 
     private Map<String, TextView> errorsMap = new HashMap<>();
@@ -145,7 +144,7 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
      * @author Andrei Lashkevich
      */
     private void setUi() {
-        progressDialogUpload = helpers.getMaterialDialog(this);
+        progressDialogUpload = Helpers.getMaterialDialog(this);
         btnSaveSealife.setOnClickListener(this);
         addPhoto.setOnClickListener(this);
         btnDelete.setOnClickListener(this);
@@ -182,7 +181,7 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
         display.getMetrics(outMetrics);
         float density = getResources().getDisplayMetrics().density;
         float dpWidth = outMetrics.widthPixels / density;
-        Picasso.with(this).load(uri).resize(Math.round(helpers.convertDpToPixel(dpWidth, this)), Math.round(helpers.convertDpToPixel(230, this))).centerCrop().into(sealifePhoto);
+        Picasso.with(this).load(uri).resize(Math.round(Helpers.convertDpToPixel(dpWidth, this)), Math.round(Helpers.convertDpToPixel(230, this))).centerCrop().into(sealifePhoto);
         centerLayout.setVisibility(View.GONE);
         btnDelete.setVisibility(View.VISIBLE);
         addPhoto.setOnClickListener(null);
@@ -270,7 +269,7 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
     private void sendRequestToAddSealife(Uri imageFileUri) {
         MultipartBody.Part body = null;
         if (imageFileUri != null) {
-            File file = new File(helpers.getRealPathFromURI(this, imageFileUri));
+            File file = new File(Helpers.getRealPathFromURI(this, imageFileUri));
             RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
             body = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
         }
@@ -294,29 +293,29 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
                         ErrorsParser.checkForError(response.code(), responseString);
                     } catch (ServerInternalErrorException e) {
                         // TODO Handle
-                        helpers.showToast(AddSealifeActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(AddSealifeActivity.this, R.string.toast_server_error);
                     } catch (BadRequestException e) {
                         // TODO Handle
-                        helpers.showToast(AddSealifeActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(AddSealifeActivity.this, R.string.toast_server_error);
                     } catch (ValidationErrorException e) {
                         // TODO Handle
-                        helpers.errorHandling(AddSealifeActivity.this, errorsMap, responseString);
+                        Helpers.errorHandling(AddSealifeActivity.this, errorsMap, responseString);
                     } catch (NotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(AddSealifeActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(AddSealifeActivity.this, R.string.toast_server_error);
                     } catch (UnknownErrorException e) {
                         // TODO Handle
-                        helpers.showToast(AddSealifeActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(AddSealifeActivity.this, R.string.toast_server_error);
                     } catch (DiveSpotNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(AddSealifeActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(AddSealifeActivity.this, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         SharedPreferenceHelper.logout();
                         SocialNetworks.showForResult(AddSealifeActivity.this, ActivitiesRequestCodes.REQUEST_CODE_ADD_SEALIFE_ACTIVITY_LOGIN_TO_SEND);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(AddSealifeActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(AddSealifeActivity.this, R.string.toast_server_error);
                     }
                 }
                 if(response.isSuccessful()) {
@@ -380,7 +379,7 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
     protected void onResume() {
         super.onResume();
         DDScannerApplication.activityResumed();
-        if (!helpers.hasConnection(this)) {
+        if (!Helpers.hasConnection(this)) {
             DDScannerApplication.showErrorActivity(this);
         }
     }

@@ -55,7 +55,6 @@ public class AddPhotosDoDiveSpotActivity extends AppCompatActivity implements Vi
     private RecyclerView recyclerView;
     private Button button;
     private ArrayList<String> images;
-    private Helpers helpers = new Helpers();
     private MaterialDialog materialDialog;
     private Toolbar toolbar;
     private String dsId;
@@ -73,7 +72,7 @@ public class AddPhotosDoDiveSpotActivity extends AppCompatActivity implements Vi
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.add_photos_toolbar_title);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        materialDialog = helpers.getMaterialDialog(this);
+        materialDialog = Helpers.getMaterialDialog(this);
         images = (ArrayList<String>)getIntent().getSerializableExtra(Constants.ADD_PHOTO_ACTIVITY_INTENT_IMAGES);
         dsId = getIntent().getStringExtra(Constants.ADD_PHOTO_ACTIVITY_INTENT_DIVE_SPOT_ID);
         button = (Button) findViewById(R.id.button_share);
@@ -135,28 +134,28 @@ public class AddPhotosDoDiveSpotActivity extends AppCompatActivity implements Vi
                         ErrorsParser.checkForError(response.code(), responseString);
                     } catch (ServerInternalErrorException e) {
                         // TODO Handle
-                        helpers.showToast(AddPhotosDoDiveSpotActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(AddPhotosDoDiveSpotActivity.this, R.string.toast_server_error);
                     } catch (BadRequestException e) {
                         // TODO Handle
-                        helpers.showToast(AddPhotosDoDiveSpotActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(AddPhotosDoDiveSpotActivity.this, R.string.toast_server_error);
                     } catch (ValidationErrorException e) {
                         // TODO Handle
                     } catch (NotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(AddPhotosDoDiveSpotActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(AddPhotosDoDiveSpotActivity.this, R.string.toast_server_error);
                     } catch (UnknownErrorException e) {
                         // TODO Handle
-                        helpers.showToast(AddPhotosDoDiveSpotActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(AddPhotosDoDiveSpotActivity.this, R.string.toast_server_error);
                     } catch (DiveSpotNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(AddPhotosDoDiveSpotActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(AddPhotosDoDiveSpotActivity.this, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         SharedPreferenceHelper.logout();
                         SocialNetworks.showForResult(AddPhotosDoDiveSpotActivity.this, ActivitiesRequestCodes.REQUEST_CODE_ADD_PHOTOS_DO_DIVE_SPOT_ACTIVITY_LOGIN_TO_SEND);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(AddPhotosDoDiveSpotActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(AddPhotosDoDiveSpotActivity.this, R.string.toast_server_error);
                     }
                 } else {
                     EventsTracker.trackDiveSpotPhotoAdded();
@@ -186,7 +185,7 @@ public class AddPhotosDoDiveSpotActivity extends AppCompatActivity implements Vi
                                    RecyclerView.State state) {
             int position = parent.getChildAdapterPosition(view);
             if (position >= spanCount) {
-                outRect.top = Math.round(helpers.convertDpToPixel(Float.valueOf(4),
+                outRect.top = Math.round(Helpers.convertDpToPixel(Float.valueOf(4),
                         AddPhotosDoDiveSpotActivity.this));
             }
         }

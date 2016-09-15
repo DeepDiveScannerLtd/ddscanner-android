@@ -16,13 +16,11 @@ public class NetworkLisetener extends BroadcastReceiver {
 
     private static final String TAG = NetworkLisetener.class.getName();
 
-    private Helpers helpers = new Helpers();
-
     @Override
     public void onReceive(Context context, Intent intent) {
         LogUtils.i(TAG, "onReceive");
         if (DDScannerApplication.isActivityVisible()) {
-            if (helpers.hasConnection(context)) {
+            if (Helpers.hasConnection(context)) {
                 DDScannerApplication.bus.post(new InternerConnectionOpenedEvent());
             } else {
                 DDScannerApplication.showErrorActivity(context);

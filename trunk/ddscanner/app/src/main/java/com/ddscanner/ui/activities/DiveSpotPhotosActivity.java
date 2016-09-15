@@ -59,7 +59,6 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
     private String path;
     private ArrayList<Image> reviewsImages;
     private ArrayList<Image> allPhotos;
-    private Helpers helpers = new Helpers();
     private FloatingActionButton fabAddPhoto;
     private String dsId;
     private PhotosActivityPagerAdapter photosActivityPagerAdapter;
@@ -85,16 +84,16 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
         path = getIntent().getStringExtra("path");
         dsId = getIntent().getStringExtra("id");
         if (diveSpotImages != null) {
-            diveSpotImages = helpers.appendFullImagesWithPath(diveSpotImages, path);
+            diveSpotImages = Helpers.appendFullImagesWithPath(diveSpotImages, path);
         }
         diveSpotPhotosFragment.setList(diveSpotImages, path);
 
         if (reviewsImages != null) {
-            reviewsImages = helpers.appendFullImagesWithPath(reviewsImages, path);
+            reviewsImages = Helpers.appendFullImagesWithPath(reviewsImages, path);
         }
         diveSpotReviewsPhoto.setList(reviewsImages, path);
 
-        allPhotos = helpers.compareObjectsArray(reviewsImages, diveSpotImages);
+        allPhotos = Helpers.compareObjectsArray(reviewsImages, diveSpotImages);
 
         diveSpotAllPhotosFragment.setList(allPhotos, path);
 
@@ -166,7 +165,7 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
     protected void onResume() {
         super.onResume();
         DDScannerApplication.activityResumed();
-        if (!helpers.hasConnection(this)) {
+        if (!Helpers.hasConnection(this)) {
             DDScannerApplication.showErrorActivity(this);
         }
     }
@@ -235,7 +234,7 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
         progressView.setVisibility(View.VISIBLE);
         photosViewPager.setVisibility(View.GONE);
         Map<String, String> map = new HashMap<>();
-        map = helpers.getUserQuryMapRequest();
+        map = Helpers.getUserQuryMapRequest();
         map.put("isImageAuthor", "true");
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveSpotImages(dsId, map);
         call.enqueue(new BaseCallback() {
@@ -266,15 +265,15 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
         reviewsImages = (ArrayList<Image>) divespotDetails.getDivespot().getCommentImages();
         diveSpotImages = (ArrayList<Image>)divespotDetails.getDivespot().getImages();
         if (diveSpotImages != null) {
-            diveSpotImages = helpers.appendFullImagesWithPath(diveSpotImages, path);
+            diveSpotImages = Helpers.appendFullImagesWithPath(diveSpotImages, path);
         }
         if (reviewsImages != null) {
-            reviewsImages = helpers.appendFullImagesWithPath(reviewsImages, path);
+            reviewsImages = Helpers.appendFullImagesWithPath(reviewsImages, path);
         }
 
         diveSpotReviewsPhoto.setList(reviewsImages, path);
         allPhotos = new ArrayList<>();
-        allPhotos = helpers.compareObjectsArray(reviewsImages, diveSpotImages);
+        allPhotos = Helpers.compareObjectsArray(reviewsImages, diveSpotImages);
         diveSpotAllPhotosFragment.setList(allPhotos, path);
         diveSpotPhotosFragment.setList(diveSpotImages, path);
 

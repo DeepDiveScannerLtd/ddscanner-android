@@ -54,7 +54,6 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
     private Toolbar toolbar;
     private LatLng latLng;
     private String dsName;
-    private Helpers helpers = new Helpers();
     MapView mMapView;
     private GoogleMap mGoogleMap;
 
@@ -174,7 +173,7 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
     protected void onResume() {
         super.onResume();
         DDScannerApplication.activityResumed();
-        if (!helpers.hasConnection(this)) {
+        if (!Helpers.hasConnection(this)) {
             DDScannerApplication.showErrorActivity(this);
         }
         mMapView.onResume();

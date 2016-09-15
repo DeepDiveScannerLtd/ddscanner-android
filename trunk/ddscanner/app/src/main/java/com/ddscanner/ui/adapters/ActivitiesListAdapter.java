@@ -33,7 +33,6 @@ public class ActivitiesListAdapter
         extends RecyclerView.Adapter<ActivitiesListAdapter.ActivitiesListViewHolder> {
 
     private Context context;
-    private Helpers helpers = new Helpers();
     private FragmentManager mFragmentManager;
     private List<Activity> activities;
     private SectionedRecyclerViewAdapter sectionAdapter;
@@ -60,7 +59,7 @@ public class ActivitiesListAdapter
             ForegroundColorSpan fcs = new ForegroundColorSpan(color);
             Picasso.with(context)
                     .load(activity.getDiveSpot().getPath() + activity.getDiveSpot().getImage())
-                    .resize(Math.round(helpers.convertDpToPixel(40, context)),Math.round(helpers.convertDpToPixel(40, context)))
+                    .resize(Math.round(Helpers.convertDpToPixel(40, context)),Math.round(Helpers.convertDpToPixel(40, context)))
                     .centerCrop()
                     .transform(new TransformationRoundImage(2,0))
                     .into(holder.dsLogo);
@@ -72,7 +71,7 @@ public class ActivitiesListAdapter
                 spannableString.setSpan(fcs, 0, name.length(), 0);
                 spannableString.setSpan(fcs, text.indexOf(divespot), text.length(), 0);
                 holder.text.setText(spannableString);
-                holder.timeAgo.setText(helpers.getDate(activity.getDate()));
+                holder.timeAgo.setText(Helpers.getDate(activity.getDate()));
                 holder.image.setImageDrawable(AppCompatDrawableManager.get()
                         .getDrawable(context, R.drawable.ic_notif_checkin));
             }
@@ -82,7 +81,7 @@ public class ActivitiesListAdapter
                 SpannableString spannableString = new SpannableString(text);
                 spannableString.setSpan(fcs, text.indexOf(divespot), text.length(), 0);
                 holder.text.setText(spannableString);
-                holder.timeAgo.setText(helpers.getDate(activity.getDate()));
+                holder.timeAgo.setText(Helpers.getDate(activity.getDate()));
             }
             if (activity.getType().equals("update")) {
                 holder.image.setImageDrawable(AppCompatDrawableManager.get()
@@ -92,7 +91,7 @@ public class ActivitiesListAdapter
                 SpannableString spannableString = new SpannableString(text);
                 spannableString.setSpan(fcs, 0, divespot.length(), 0);
                 holder.text.setText(spannableString);
-                holder.timeAgo.setText(helpers.getDate(activity.getDate()));
+                holder.timeAgo.setText(Helpers.getDate(activity.getDate()));
             }
         }
     }

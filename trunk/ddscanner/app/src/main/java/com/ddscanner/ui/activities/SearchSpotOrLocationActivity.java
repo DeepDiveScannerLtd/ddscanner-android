@@ -87,7 +87,6 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
     private List<MultipartBody.Part> like = new ArrayList<>(); // name - оп имени
     private List<MultipartBody.Part> select = new ArrayList<>();// fields (id,name)
     private boolean isTryToOpenAddDiveSpotActivity = false;
-    private Helpers helpers = new Helpers();
     private Runnable sendingSearchRequestRunnable;
 
     @Override
@@ -245,27 +244,27 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
                         }
                     } catch (ServerInternalErrorException e) {
                         // TODO Handle
-                        helpers.showToast(SearchSpotOrLocationActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(SearchSpotOrLocationActivity.this, R.string.toast_server_error);
                     } catch (BadRequestException e) {
                         // TODO Handle
-                        helpers.showToast(SearchSpotOrLocationActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(SearchSpotOrLocationActivity.this, R.string.toast_server_error);
                     } catch (ValidationErrorException e) {
                         // TODO Handle
                     } catch (NotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(SearchSpotOrLocationActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(SearchSpotOrLocationActivity.this, R.string.toast_server_error);
                     } catch (UnknownErrorException e) {
                         // TODO Handle
-                        helpers.showToast(SearchSpotOrLocationActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(SearchSpotOrLocationActivity.this, R.string.toast_server_error);
                     } catch (DiveSpotNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(SearchSpotOrLocationActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(SearchSpotOrLocationActivity.this, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(SearchSpotOrLocationActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(SearchSpotOrLocationActivity.this, R.string.toast_server_error);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(SearchSpotOrLocationActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(SearchSpotOrLocationActivity.this, R.string.toast_server_error);
                     }
                 }
             }

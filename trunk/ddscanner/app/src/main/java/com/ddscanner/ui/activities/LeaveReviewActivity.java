@@ -93,7 +93,6 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
     private RequestBody requessToken = null;
     private RequestBody requestSocial = null;
     private RequestBody requestSecret = null;
-    private Helpers helpers = new Helpers();
     private int maxPhotos = 3;
 
     private EventsTracker.SendReviewSource sendReviewSource;
@@ -169,7 +168,7 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void setProgressDialog() {
-        materialDialog = helpers.getMaterialDialog(this);
+        materialDialog = Helpers.getMaterialDialog(this);
     }
 
     public static void show(Context context, String id, float rating, EventsTracker.SendReviewSource sendReviewSource) {
@@ -269,28 +268,28 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
                         ErrorsParser.checkForError(response.code(), responseString);
                     } catch (ServerInternalErrorException e) {
                         // TODO Handle
-                        helpers.showToast(LeaveReviewActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(LeaveReviewActivity.this, R.string.toast_server_error);
                     } catch (BadRequestException e) {
                         // TODO Handle
-                        helpers.showToast(LeaveReviewActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(LeaveReviewActivity.this, R.string.toast_server_error);
                     } catch (ValidationErrorException e) {
                         // TODO Handle
-                        helpers.errorHandling(LeaveReviewActivity.this, errorsMap, responseString);
+                        Helpers.errorHandling(LeaveReviewActivity.this, errorsMap, responseString);
                     } catch (NotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(LeaveReviewActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(LeaveReviewActivity.this, R.string.toast_server_error);
                     } catch (UnknownErrorException e) {
                         // TODO Handle
-                        helpers.showToast(LeaveReviewActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(LeaveReviewActivity.this, R.string.toast_server_error);
                     } catch (DiveSpotNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(LeaveReviewActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(LeaveReviewActivity.this, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         SocialNetworks.showForResult(LeaveReviewActivity.this, ActivitiesRequestCodes.REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_LOGIN);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(LeaveReviewActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(LeaveReviewActivity.this, R.string.toast_server_error);
                     }
                 }
 
@@ -384,7 +383,7 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
     protected void onResume() {
         super.onResume();
         DDScannerApplication.activityResumed();
-        if (!helpers.hasConnection(this)) {
+        if (!Helpers.hasConnection(this)) {
             DDScannerApplication.showErrorActivity(this);
         }
     }
