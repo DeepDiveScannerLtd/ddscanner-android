@@ -361,12 +361,13 @@
                         android:src="@drawable/ic_addds_desc" />
 
                     <android.support.v7.widget.AppCompatEditText
+                        android:paddingRight="10dp"
                         android:id="@+id/description"
                         style="@style/AddDsCharTitleStyle"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="18dp"
                         android:fontFamily="sans-serif"
-                        android:hint="Description (At least 150 symbols)"
+                        android:hint="@string/description_at_least_150_symbols"
                         android:paddingBottom="7dp" />
                 </LinearLayout>
 

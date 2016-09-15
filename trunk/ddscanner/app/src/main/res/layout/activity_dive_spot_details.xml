@@ -631,16 +631,6 @@
                             android:text="@string/thanks_for_your_answer"
                             android:textColor="@color/black_text"
                             android:textSize="15sp" />
-
-                        <ImageView
-                            android:id="@+id/thank_close"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:padding="15dp"
-                            android:scaleType="centerCrop"
-                            android:src="@drawable/ic_ds_close" />
                     </RelativeLayout>
 
                     <ImageView
