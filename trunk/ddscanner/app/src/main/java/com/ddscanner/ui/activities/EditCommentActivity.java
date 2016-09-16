@@ -292,6 +292,10 @@ public class EditCommentActivity extends AppCompatActivity implements View.OnCli
             materialDialog.dismiss();
             return;
         }
+        if (text.getText().toString().trim().length() < 30) {
+            Toast.makeText(EditCommentActivity.this, R.string.review_error, Toast.LENGTH_SHORT).show();
+            return;
+        }
         if (SharedPreferenceHelper.isUserLoggedIn()) {
             requestSocial = RequestBody.create(MediaType.parse("multipart/form-data"),
                     SharedPreferenceHelper.getSn());
