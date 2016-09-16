@@ -72,17 +72,19 @@ public class DiveSpotsListActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOTS_LIST_ACTIVITY_LOGIN) {
-            if (resultCode == RESULT_OK) {
-                if (isAdded) {
-                    getAddedList();
-                } else {
-                    getEditedList();
+        switch (requestCode) {
+            case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOTS_LIST_ACTIVITY_LOGIN:
+                if (resultCode == RESULT_OK) {
+                    if (isAdded) {
+                        getAddedList();
+                    } else {
+                        getEditedList();
+                    }
                 }
-            }
-            if (resultCode == RESULT_CANCELED) {
-                finish();
-            }
+                if (resultCode == RESULT_CANCELED) {
+                    finish();
+                }
+                break;
         }
     }
     

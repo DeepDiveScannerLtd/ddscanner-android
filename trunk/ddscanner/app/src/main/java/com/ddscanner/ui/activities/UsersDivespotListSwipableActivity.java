@@ -85,17 +85,19 @@ public class UsersDivespotListSwipableActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_USERS_DIVESPOT_LIST_SWIPABLE_ACTIVITY_LOGIN) {
-            if (resultCode == RESULT_OK) {
-                if (isCheckin) {
-                    getListOfDiveSPotsCheckins();
-                } else {
-                    getListOfDiveSPotsFavorites();
+        switch (requestCode) {
+            case ActivitiesRequestCodes.REQUEST_CODE_USERS_DIVESPOT_LIST_SWIPABLE_ACTIVITY_LOGIN:
+                if (resultCode == RESULT_OK) {
+                    if (isCheckin) {
+                        getListOfDiveSPotsCheckins();
+                    } else {
+                        getListOfDiveSPotsFavorites();
+                    }
                 }
-            }
-            if (resultCode == RESULT_CANCELED) {
-                finish();
-            }
+                if (resultCode == RESULT_CANCELED) {
+                    finish();
+                }
+            break;
         }
     }
 

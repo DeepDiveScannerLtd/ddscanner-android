@@ -362,18 +362,20 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_REPORT) {
-            if (resultCode == RESULT_OK) {
-                reportImage(reportName, reportType, reportDescription);
-            }
-        }
-        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_DELETE) {
-            if (resultCode == RESULT_OK) {
-                deleteImage(deleteImageName);
-            }
-            if (resultCode == RESULT_CANCELED) {
+        switch (requestCode) {
+            case ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_REPORT:
+                if (resultCode == RESULT_OK) {
+                    reportImage(reportName, reportType, reportDescription);
+                }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_DELETE:
+                if (resultCode == RESULT_OK) {
+                    deleteImage(deleteImageName);
+                }
+                if (resultCode == RESULT_CANCELED) {
 
-            }
+                }
+                break;
         }
         super.onActivityResult(requestCode, resultCode, data);
     }

@@ -242,61 +242,54 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_LOCATION) {
-            if (resultCode == RESULT_OK) {
-                this.diveSpotLocation = data.getParcelableExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_LATLNG);
-                if (data.getStringExtra(Constants.ADD_DIVE_SPOT_INTENT_LOCATION_NAME) != null) {
-                    locationTitle.setText(data.getStringExtra(Constants.ADD_DIVE_SPOT_INTENT_LOCATION_NAME));
-                } else {
-                    locationTitle.setText(R.string.location);
+        switch (requestCode) {
+            case ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_LOCATION:
+                if (resultCode == RESULT_OK) {
+                    this.diveSpotLocation = data.getParcelableExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_LATLNG);
+                    if (data.getStringExtra(Constants.ADD_DIVE_SPOT_INTENT_LOCATION_NAME) != null) {
+                        locationTitle.setText(data.getStringExtra(Constants.ADD_DIVE_SPOT_INTENT_LOCATION_NAME));
+                    } else {
+                        locationTitle.setText(R.string.location);
+                    }
+                    locationTitle.setTextColor(getResources().getColor(R.color.black_text));
                 }
-                locationTitle.setTextColor(getResources().getColor(R.color.black_text));
-            }
-        }
-        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_PHOTO) {
-            if (resultCode == RESULT_OK) {
-                maxPhotos = maxPhotos - data.getStringArrayListExtra(MultiImageSelectorActivity
-                        .EXTRA_RESULT).size();
-                imageUris.addAll(data.getStringArrayListExtra(MultiImageSelectorActivity
-                        .EXTRA_RESULT));
-                photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris,
-                        AddDiveSpotActivity.this, addPhotoTitle));
-            }
-        }
-        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_SEALIFE) {
-            if (resultCode == RESULT_OK) {
-                Sealife sealife =(Sealife) data.getSerializableExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_SEALIFE);
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_PHOTO:
+                if (resultCode == RESULT_OK) {
+                    maxPhotos = maxPhotos - data.getStringArrayListExtra(MultiImageSelectorActivity
+                            .EXTRA_RESULT).size();
+                    imageUris.addAll(data.getStringArrayListExtra(MultiImageSelectorActivity
+                            .EXTRA_RESULT));
+                    photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris,
+                            AddDiveSpotActivity.this, addPhotoTitle));
+                }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_SEALIFE:
+                if (resultCode == RESULT_OK) {
+                    Sealife sealife =(Sealife) data.getSerializableExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_SEALIFE);
 
-                if (Helpers.checkIsSealifeAlsoInList((ArrayList<Sealife>) sealifes, sealife.getId())) {
-                    Helpers.showToast(AddDiveSpotActivity.this, R.string.sealife_already_added);
-                    return;
+                    if (Helpers.checkIsSealifeAlsoInList((ArrayList<Sealife>) sealifes, sealife.getId())) {
+                        Helpers.showToast(AddDiveSpotActivity.this, R.string.sealife_already_added);
+                        return;
+                    }
+                    sealifes.add(sealife);
+                    sealifeListAddingDiveSpotAdapter = new SealifeListAddingDiveSpotAdapter(
+                            (ArrayList<Sealife>) sealifes, this, addSealifeTitle);
+                    sealifesRc.setAdapter(sealifeListAddingDiveSpotAdapter);
                 }
-                sealifes.add(sealife);
-                sealifeListAddingDiveSpotAdapter = new SealifeListAddingDiveSpotAdapter(
-                        (ArrayList<Sealife>) sealifes, this, addSealifeTitle);
-                sealifesRc.setAdapter(sealifeListAddingDiveSpotAdapter);
-            }
-        }
-//        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_LOGIN) {
-//            if (resultCode == RESULT_OK) {
-//                createSocialDatarequests();
-//                createAddDiveSpotRequest();
-//            } else {
-//                Toast toast = Toast.makeText(this, R.string.you_must_login_to_add_divespot, Toast.LENGTH_SHORT);
-//                toast.show();
-//            }
-//        }
-        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_LOGIN_TO_SEND) {
-            if (resultCode == RESULT_OK) {
-                createAddDiveSpotRequest();
-            }
-        }
-        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_LOGIN_TO_GET_DATA) {
-            if (resultCode == RESULT_OK) {
-                loadFiltersDataRequest();
-            } else {
-                finish();
-            }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_LOGIN_TO_SEND:
+                if (resultCode == RESULT_OK) {
+                    createAddDiveSpotRequest();
+                }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_LOGIN_TO_GET_DATA:
+                if (resultCode == RESULT_OK) {
+                    loadFiltersDataRequest();
+                } else {
+                    finish();
+                }
+                break;
         }
     }
 

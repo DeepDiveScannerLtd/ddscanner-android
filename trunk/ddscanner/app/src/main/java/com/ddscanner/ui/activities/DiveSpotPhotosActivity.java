@@ -173,38 +173,32 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_ADD_PHOTOS) {
-            if (resultCode == RESULT_OK) {
-                Intent intent = new Intent();
-                setResult(RESULT_OK, intent);
-                getDiveSpotPhotos();
-             //   finish();
-            }
-        }
-        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_SELECT_PHOTOS) {
-            if (resultCode == RESULT_OK) {
-                List<String> path = data.getStringArrayListExtra(MultiImageSelectorActivity
-                        .EXTRA_RESULT);
-                Intent intent = new Intent(this, AddPhotosDoDiveSpotActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("IMAGES", (ArrayList<String>)path);
-                bundle.putString("id", dsId);
-                intent.putExtras(bundle);
-                startActivityForResult(intent, ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_ADD_PHOTOS);
-                for (int i = 0; i < path.size(); i++) {
-                    Log.i("ADDRESS", path.get(i));
+        switch (requestCode) {
+            case ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_ADD_PHOTOS:
+                if (resultCode == RESULT_OK) {
+                    Intent intent = new Intent();
+                    setResult(RESULT_OK, intent);
+                    getDiveSpotPhotos();
+                    //   finish();
                 }
-            }
-        }
-        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_LOGIN) {
-            if (resultCode == RESULT_OK) {
-                MultiImageSelector.create(this).start(this, ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_SELECT_PHOTOS);
-            }
-        }
-        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_ACTIVITY_SLIDER) {
-            if (resultCode == RESULT_OK) {
-                getDiveSpotPhotos();
-            }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_SELECT_PHOTOS:
+                if (resultCode == RESULT_OK) {
+                    List<String> path = data.getStringArrayListExtra(MultiImageSelectorActivity
+                            .EXTRA_RESULT);
+                    AddPhotosDoDiveSpotActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_ADD_PHOTOS, (ArrayList<String>)path, dsId);
+                }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_LOGIN:
+                if (resultCode == RESULT_OK) {
+                    MultiImageSelector.create(this).start(this, ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_SELECT_PHOTOS);
+                }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_ACTIVITY_SLIDER:
+                if (resultCode == RESULT_OK) {
+                    getDiveSpotPhotos();
+                }
+                break;
         }
     }
 

@@ -128,16 +128,18 @@ public class PickLocationActivity extends AppCompatActivity implements GoogleMap
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_PICK_LOCATION_ACTIVITY_PLACE_AUTOCOMPLETE) {
-            if (resultCode == RESULT_OK) {
-            Place place = PlacePicker.getPlace(this, data);
-                if (place.getViewport() != null) {
-                    googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(place.getViewport(),0));
-                } else {
-                    LatLngBounds latLngBounds = new LatLngBounds(new LatLng(place.getLatLng().latitude - 0.2, place.getLatLng().longitude - 0.2), new LatLng(place.getLatLng().latitude + 0.2, place.getLatLng().longitude + 0.2) );
-                    googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds,0));
+        switch (requestCode) {
+            case ActivitiesRequestCodes.REQUEST_CODE_PICK_LOCATION_ACTIVITY_PLACE_AUTOCOMPLETE:
+                if (resultCode == RESULT_OK) {
+                    Place place = PlacePicker.getPlace(this, data);
+                    if (place.getViewport() != null) {
+                        googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(place.getViewport(),0));
+                    } else {
+                        LatLngBounds latLngBounds = new LatLngBounds(new LatLng(place.getLatLng().latitude - 0.2, place.getLatLng().longitude - 0.2), new LatLng(place.getLatLng().latitude + 0.2, place.getLatLng().longitude + 0.2) );
+                        googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds,0));
+                    }
                 }
-            }
+                break;
         }
     }
 

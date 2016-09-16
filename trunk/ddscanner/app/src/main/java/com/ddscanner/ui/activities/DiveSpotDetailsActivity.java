@@ -1230,104 +1230,101 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LEAVE_REVIEW) {
-            if (resultCode == RESULT_OK) {
-                if (diveSpot != null) {
-                    getComments();
+        switch (requestCode) {
+            case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LEAVE_REVIEW:
+                if (resultCode == RESULT_OK) {
+                    if (diveSpot != null) {
+                        getComments();
+                    }
                 }
-            }
-        }
-        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_REVIEWS) {
-            if (resultCode == RESULT_OK) {
-                if (diveSpot != null) {
-                    getComments();
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_REVIEWS:
+                if (resultCode == RESULT_OK) {
+                    if (diveSpot != null) {
+                        getComments();
+                    }
                 }
-            }
-        }
-        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_PHOTOS && resultCode == RESULT_OK) {
-            Intent intent = getIntent();
-            startActivity(intent);
-            finish();
-        }
-        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_EDIT_DIVE_SPOT && resultCode == RESULT_OK) {
-            Intent intent = getIntent();
-            startActivity(intent);
-            finish();
-        }
-        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN) {
-            if (resultCode == RESULT_OK) {
-                if (isClickedCHeckin) {
-                    checkIn();
-                    isClickedCHeckin = false;
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_PHOTOS:
+                if (resultCode == RESULT_OK) {
+                    refreshActivity();
                 }
-                if (isClickedCheckOut) {
-                    checkOut();
-                    isClickedCheckOut = false;
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_EDIT_DIVE_SPOT:
+                if (resultCode == RESULT_OK) {
+                    refreshActivity();
                 }
-                if (isCLickedFavorite) {
-                    addDiveSpotToFavorites();
-                    isCLickedFavorite = false;
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN:
+                if (resultCode == RESULT_OK) {
+                    if (isClickedCHeckin) {
+                        checkIn();
+                        isClickedCHeckin = false;
+                    }
+                    if (isClickedCheckOut) {
+                        checkOut();
+                        isClickedCheckOut = false;
+                    }
+                    if (isCLickedFavorite) {
+                        addDiveSpotToFavorites();
+                        isCLickedFavorite = false;
+                    }
+                    if (isClickedRemoveFromFavorites) {
+                        removeFromFavorites(String.valueOf(diveSpot.getId()));
+                        isClickedRemoveFromFavorites = false;
+                    }
+                    if (isClickedNoValidation) {
+                        diveSpotValidation(false);
+                    }
+                    if (isClickedYesValidation) {
+                        diveSpotValidation(true);
+                    }
+                    if (isClickedEdit) {
+                        Intent editDiveSpotIntent = new Intent(DiveSpotDetailsActivity.this,
+                                EditDiveSpotActivity.class);
+                        editDiveSpotIntent
+                                .putExtra(Constants.DIVESPOTID, String.valueOf(diveSpot.getId()));
+                        startActivityForResult(editDiveSpotIntent, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_EDIT_DIVE_SPOT);
+                        isClickedEdit = false;
+                    }
+                } else {
+                    if (isClickedCHeckin) {
+                        checkoutUi();
+                        isClickedCHeckin = false;
+                    }
+                    if (isClickedCheckOut) {
+                        checkinUi();
+                        isClickedCheckOut = false;
+                    }
+                    if (isCLickedFavorite) {
+                        updateMenuItems(menu, false);
+                    }
+                    if (isClickedRemoveFromFavorites) {
+                        updateMenuItems(menu, true);
+                    }
+                    if (isClickedYesValidation || isClickedNoValidation) {
+                        isInfoValidLayout.setVisibility(View.VISIBLE);
+                        thanksLayout.setVisibility(View.GONE);
+                    }
                 }
-                if (isClickedRemoveFromFavorites) {
-                    removeFromFavorites(String.valueOf(diveSpot.getId()));
-                    isClickedRemoveFromFavorites = false;
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_PICK_PHOTOS:
+                if (resultCode == RESULT_OK) {
+                    List<String> path = data.getStringArrayListExtra(MultiImageSelectorActivity
+                            .EXTRA_RESULT);
+                    AddPhotosDoDiveSpotActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_ADD_PHOTOS_ACTIVITY, (ArrayList<String>)path, String.valueOf(diveSpot.getId()));
                 }
-                if (isClickedNoValidation) {
-                    diveSpotValidation(false);
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_ADD_PHOTOS_ACTIVITY:
+                if (resultCode == RESULT_OK) {
+                    requestProductDetails(String.valueOf(diveSpot.getId()));
                 }
-                if (isClickedYesValidation) {
-                    diveSpotValidation(true);
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_PICK_PHOTOS:
+                if (resultCode == RESULT_OK) {
+                    MultiImageSelector.create(this).count(3).start(this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_ADD_PHOTOS_ACTIVITY);
                 }
-                if (isClickedEdit) {
-                    Intent editDiveSpotIntent = new Intent(DiveSpotDetailsActivity.this,
-                            EditDiveSpotActivity.class);
-                    editDiveSpotIntent
-                            .putExtra(Constants.DIVESPOTID, String.valueOf(diveSpot.getId()));
-                    startActivityForResult(editDiveSpotIntent, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_EDIT_DIVE_SPOT);
-                    isClickedEdit = false;
-                }
-            } else {
-                if (isClickedCHeckin) {
-                    checkoutUi();
-                    isClickedCHeckin = false;
-                }
-                if (isClickedCheckOut) {
-                    checkinUi();
-                    isClickedCheckOut = false;
-                }
-                if (isCLickedFavorite) {
-                    updateMenuItems(menu, false);
-                }
-                if (isClickedRemoveFromFavorites) {
-                    updateMenuItems(menu, true);
-                }
-                if (isClickedYesValidation || isClickedNoValidation) {
-                    isInfoValidLayout.setVisibility(View.VISIBLE);
-                    thanksLayout.setVisibility(View.GONE);
-                }
-            }
-        }
-        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_PICK_PHOTOS) {
-            if (resultCode == RESULT_OK) {
-                List<String> path = data.getStringArrayListExtra(MultiImageSelectorActivity
-                        .EXTRA_RESULT);
-                Intent intent = new Intent(this, AddPhotosDoDiveSpotActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("IMAGES", (ArrayList<String>)path);
-                bundle.putString("id", String.valueOf(diveSpot.getId()));
-                intent.putExtras(bundle);
-                startActivityForResult(intent, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_ADD_PHOTOS_ACTIVITY);
-            }
-        }
-        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_ADD_PHOTOS_ACTIVITY) {
-            if (resultCode == RESULT_OK) {
-                requestProductDetails(String.valueOf(diveSpot.getId()));
-            }
-        }
-        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_PICK_PHOTOS) {
-            if (resultCode == RESULT_OK) {
-                MultiImageSelector.create(this).count(3).start(this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_ADD_PHOTOS_ACTIVITY);
-            }
+                break;
         }
     }
 
@@ -1570,6 +1567,12 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     public void serverConnectionError(UnknownErrorCatchedEvent event) {
         mainLayout.setVisibility(View.GONE);
         serveConnectionErrorLayout.setVisibility(View.VISIBLE);
+    }
+
+    private void refreshActivity() {
+        Intent intent = getIntent();
+        startActivity(intent);
+        finish();
     }
 
 }

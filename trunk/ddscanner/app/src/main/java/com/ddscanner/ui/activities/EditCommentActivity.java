@@ -66,8 +66,6 @@ import retrofit2.Response;
 
 public class EditCommentActivity extends AppCompatActivity implements View.OnClickListener{
 
-    private static final int RC_PICK_PHOTO = 9001;
-
     private static final String TAG = LeaveReviewActivity.class.getSimpleName();
     private static final String ID = "ID";
     private static final String RATING = "RATING";
@@ -218,7 +216,7 @@ public class EditCommentActivity extends AppCompatActivity implements View.OnCli
         if (checkReadStoragePermission()) {
             MultiImageSelector.create(this)
                     .count(maxPhotos)
-                    .start(this, RC_PICK_PHOTO);
+                    .start(this, ActivitiesRequestCodes.REQUEST_CODE_EDIT_COMMENT_ACTIVITY_PICK_PHOTOS);
         } else {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, ActivitiesRequestCodes.REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_PERMISSION_READ_STORAGE);
         }
@@ -261,27 +259,29 @@ public class EditCommentActivity extends AppCompatActivity implements View.OnCli
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RC_PICK_PHOTO) {
-            if (resultCode == RESULT_OK) {
-                maxPhotos = maxPhotos - data.getStringArrayListExtra(MultiImageSelectorActivity
-                        .EXTRA_RESULT).size();
-                imageUris.addAll(data.getStringArrayListExtra(MultiImageSelectorActivity
-                        .EXTRA_RESULT));
-                addPhotoToDsListAdapter = new AddPhotoToDsListAdapter(imageUris,
-                        EditCommentActivity.this, addPhotoTitle);
-                addPhotoTitle.setVisibility(View.GONE);
-                photos_rc.setVisibility(View.VISIBLE);
-                photos_rc.setAdapter(addPhotoToDsListAdapter);
-            }
-        }
-        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_EDIT_COMMENT_ACTIVITY_LOGIN) {
-            if (resultCode == RESULT_OK) {
-                updateReview();
-            }
-            if (resultCode == RESULT_CANCELED) {
-                setResult(RESULT_OK);
-                finish();
-            }
+        switch (requestCode) {
+            case ActivitiesRequestCodes.REQUEST_CODE_EDIT_COMMENT_ACTIVITY_PICK_PHOTOS:
+                if (resultCode == RESULT_OK) {
+                    maxPhotos = maxPhotos - data.getStringArrayListExtra(MultiImageSelectorActivity
+                            .EXTRA_RESULT).size();
+                    imageUris.addAll(data.getStringArrayListExtra(MultiImageSelectorActivity
+                            .EXTRA_RESULT));
+                    addPhotoToDsListAdapter = new AddPhotoToDsListAdapter(imageUris,
+                            EditCommentActivity.this, addPhotoTitle);
+                    addPhotoTitle.setVisibility(View.GONE);
+                    photos_rc.setVisibility(View.VISIBLE);
+                    photos_rc.setAdapter(addPhotoToDsListAdapter);
+                }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_EDIT_COMMENT_ACTIVITY_LOGIN:
+                if (resultCode == RESULT_OK) {
+                    updateReview();
+                }
+                if (resultCode == RESULT_CANCELED) {
+                    setResult(RESULT_OK);
+                    finish();
+                }
+                break;
         }
     }
 

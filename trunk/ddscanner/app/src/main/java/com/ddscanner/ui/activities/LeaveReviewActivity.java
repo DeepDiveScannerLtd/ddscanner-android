@@ -307,24 +307,26 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_LOGIN) {
-            if (resultCode == RESULT_OK) {
-                sendReview();
-            }
-            if (resultCode == RESULT_CANCELED) {
-                Log.i(TAG, "Error with login");
-                materialDialog.dismiss();
-            }
-        }
-        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_PICK_PHOTO) {
-            if (resultCode == RESULT_OK) {
-                maxPhotos = maxPhotos - data.getStringArrayListExtra(MultiImageSelectorActivity
-                        .EXTRA_RESULT).size();
-                imageUris.addAll(data.getStringArrayListExtra(MultiImageSelectorActivity
-                        .EXTRA_RESULT));
-                photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris,
-                        LeaveReviewActivity.this, addPhotoTitle));
-            }
+        switch (requestCode) {
+            case ActivitiesRequestCodes.REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_LOGIN:
+                if (resultCode == RESULT_OK) {
+                    sendReview();
+                }
+                if (resultCode == RESULT_CANCELED) {
+                    Log.i(TAG, "Error with login");
+                    materialDialog.dismiss();
+                }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_PICK_PHOTO:
+                if (resultCode == RESULT_OK) {
+                    maxPhotos = maxPhotos - data.getStringArrayListExtra(MultiImageSelectorActivity
+                            .EXTRA_RESULT).size();
+                    imageUris.addAll(data.getStringArrayListExtra(MultiImageSelectorActivity
+                            .EXTRA_RESULT));
+                    photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris,
+                            LeaveReviewActivity.this, addPhotoTitle));
+                }
+                break;
         }
     }
 

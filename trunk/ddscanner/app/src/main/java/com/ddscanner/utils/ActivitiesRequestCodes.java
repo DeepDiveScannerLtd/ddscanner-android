@@ -105,6 +105,7 @@ public class ActivitiesRequestCodes {
 
     //    EditCommentActivity
     public static final int REQUEST_CODE_EDIT_COMMENT_ACTIVITY_LOGIN = 2901;
+    public static final int REQUEST_CODE_EDIT_COMMENT_ACTIVITY_PICK_PHOTOS = 2902;
 
     //    EditDiveSpotActivity
     public static final int REQUEST_CODE_EDIT_DIVE_SPOT_ACTIVITY_PICK_PHOTO = 3001;

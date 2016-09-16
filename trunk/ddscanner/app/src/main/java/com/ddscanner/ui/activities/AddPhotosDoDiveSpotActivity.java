@@ -194,14 +194,26 @@ public class AddPhotosDoDiveSpotActivity extends AppCompatActivity implements Vi
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_ADD_PHOTOS_DO_DIVE_SPOT_ACTIVITY_LOGIN_TO_SEND) {
-            if (resultCode == RESULT_OK) {
-                sendRequest();
-            }
-            if (resultCode == RESULT_CANCELED) {
-                finish();
-            }
+        switch (requestCode) {
+            case ActivitiesRequestCodes.REQUEST_CODE_ADD_PHOTOS_DO_DIVE_SPOT_ACTIVITY_LOGIN_TO_SEND:
+                if (resultCode == RESULT_OK) {
+                    sendRequest();
+                }
+                if (resultCode == RESULT_CANCELED) {
+                    finish();
+                }
+                break;
         }
+
+    }
+
+    public static void showForResult(Activity context, int requestCode, ArrayList<String> path, String diveSpotId) {
+        Intent intent = new Intent(context, AddPhotosDoDiveSpotActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("IMAGES", path);
+        bundle.putString("id", diveSpotId);
+        intent.putExtras(bundle);
+        context.startActivityForResult(intent, requestCode);
     }
 
     @Override

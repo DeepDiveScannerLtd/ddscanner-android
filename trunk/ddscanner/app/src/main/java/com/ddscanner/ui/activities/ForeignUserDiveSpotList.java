@@ -309,21 +309,23 @@ public class ForeignUserDiveSpotList extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_SPOT_LIST_LOGIN) {
-            if (resultCode == RESULT_OK) {
-                if (isCheckIn) {
-                    getUsersCheckinList();
+        switch (requestCode) {
+            case ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_SPOT_LIST_LOGIN:
+                if (resultCode == RESULT_OK) {
+                    if (isCheckIn) {
+                        getUsersCheckinList();
+                    }
+                    if (isEdited) {
+                        getEditedDiveSpotList();
+                    }
+                    if (isCreated) {
+                        getAddedDiveSpotList();
+                    }
+                } else {
+                    setResult(RESULT_CANCELED);
+                    finish();
                 }
-                if (isEdited) {
-                    getEditedDiveSpotList();
-                }
-                if (isCreated) {
-                    getAddedDiveSpotList();
-                }
-            } else {
-                setResult(RESULT_CANCELED);
-                finish();
-            }
+                break;
         }
     }
 

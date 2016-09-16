@@ -420,41 +420,43 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_EDIT_DIVE_SPOT_ACTIVITY_PICK_LOCATION) {
-            if (resultCode == RESULT_OK) {
-                this.diveSpotLocation = data.getParcelableExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_LATLNG);
-            }
-        }
-        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_EDIT_DIVE_SPOT_ACTIVITY_PICK_PHOTO) {
-            if (resultCode == RESULT_OK) {
-                ArrayList<String> addedImages = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
-                if (addedImages != null) {
-                    maxPhotosCount = maxPhotosCount - addedImages.size();
-                    imageUris.addAll(addedImages);
+        switch (requestCode) {
+            case ActivitiesRequestCodes.REQUEST_CODE_EDIT_DIVE_SPOT_ACTIVITY_PICK_LOCATION:
+                if (resultCode == RESULT_OK) {
+                    this.diveSpotLocation = data.getParcelableExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_LATLNG);
                 }
-                addPhotoToDsListAdapter = new AddPhotoToDsListAdapter(imageUris, EditDiveSpotActivity.this, addPhotoTitle);
-                photos_rc.setAdapter(addPhotoToDsListAdapter);
-            }
-        }
-        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_EDIT_DIVE_SPOT_ACTIVITY_PICK_SEALIFE) {
-            if (resultCode == RESULT_OK) {
-                Sealife sealife = (Sealife) data.getSerializableExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_SEALIFE);
-                sealifeListAddingDiveSpotAdapter.add(sealife);
-                Log.i(TAG, sealifeListAddingDiveSpotAdapter.getSealifes().get(0).getName());
-            }
-        }
-        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_EDIT_DIVE_SPOT_ACTIVITY_LOGIN_TO_SEND) {
-            if (resultCode == RESULT_OK) {
-                createAddDiveSpotRequest();
-            }
-        }
-        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_EDIT_DIVE_SPOT_ACTIVITY_LOGIN_TO_GET_DATA) {
-            if (resultCode == RESULT_OK) {
-                getDsInfoRequest();
-            }
-            if (resultCode == RESULT_CANCELED) {
-                finish();
-            }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_EDIT_DIVE_SPOT_ACTIVITY_PICK_PHOTO:
+                if (resultCode == RESULT_OK) {
+                    ArrayList<String> addedImages = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
+                    if (addedImages != null) {
+                        maxPhotosCount = maxPhotosCount - addedImages.size();
+                        imageUris.addAll(addedImages);
+                    }
+                    addPhotoToDsListAdapter = new AddPhotoToDsListAdapter(imageUris, EditDiveSpotActivity.this, addPhotoTitle);
+                    photos_rc.setAdapter(addPhotoToDsListAdapter);
+                }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_EDIT_DIVE_SPOT_ACTIVITY_PICK_SEALIFE:
+                if (resultCode == RESULT_OK) {
+                    Sealife sealife = (Sealife) data.getSerializableExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_SEALIFE);
+                    sealifeListAddingDiveSpotAdapter.add(sealife);
+                    Log.i(TAG, sealifeListAddingDiveSpotAdapter.getSealifes().get(0).getName());
+                }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_EDIT_DIVE_SPOT_ACTIVITY_LOGIN_TO_SEND:
+                if (resultCode == RESULT_OK) {
+                    createAddDiveSpotRequest();
+                }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_EDIT_DIVE_SPOT_ACTIVITY_LOGIN_TO_GET_DATA:
+                if (resultCode == RESULT_OK) {
+                    getDsInfoRequest();
+                }
+                if (resultCode == RESULT_CANCELED) {
+                    finish();
+                }
+                break;
         }
     }
 

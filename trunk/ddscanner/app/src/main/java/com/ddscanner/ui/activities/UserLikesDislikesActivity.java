@@ -236,17 +236,19 @@ public class UserLikesDislikesActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_USER_LIKES_DISLIKES_ACTIVITY_LOGIN) {
-            if (resultCode == RESULT_OK) {
-                if (isLikes) {
-                    getUserLikes();
+        switch (requestCode) {
+            case ActivitiesRequestCodes.REQUEST_CODE_USER_LIKES_DISLIKES_ACTIVITY_LOGIN:
+                if (resultCode == RESULT_OK) {
+                    if (isLikes) {
+                        getUserLikes();
+                    } else {
+                        getUserDislikes();
+                    }
                 } else {
-                    getUserDislikes();
+                    setResult(RESULT_CANCELED);
+                    finish();
                 }
-            } else {
-                setResult(RESULT_CANCELED);
-                finish();
-            }
+                break;
         }
     }
 
