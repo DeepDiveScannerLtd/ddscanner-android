@@ -13,14 +13,13 @@ import android.support.v13.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
-import com.ddscanner.entities.DivespotDetails;
+import com.ddscanner.entities.DiveSpotDetails;
 import com.ddscanner.entities.Image;
 import com.ddscanner.rest.BaseCallback;
 import com.ddscanner.rest.RestClient;
@@ -62,7 +61,7 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
     private FloatingActionButton fabAddPhoto;
     private String dsId;
     private PhotosActivityPagerAdapter photosActivityPagerAdapter;
-    private DivespotDetails divespotDetails;
+    private DiveSpotDetails diveSpotDetails;
     private boolean isDataChanged = false;
 
     private DiveSpotAllPhotosFragment diveSpotAllPhotosFragment = new DiveSpotAllPhotosFragment();
@@ -238,8 +237,8 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
                     String responseString = "";
                     try {
                         responseString = response.body().string();
-                        divespotDetails = new Gson().fromJson(responseString, DivespotDetails.class);
-                        updateFragments(divespotDetails);
+                        diveSpotDetails = new Gson().fromJson(responseString, DiveSpotDetails.class);
+                        updateFragments(diveSpotDetails);
                     } catch (IOException e) {
 
                     }
@@ -253,11 +252,11 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
         });
     }
 
-    private void updateFragments(DivespotDetails divespotDetails) {
+    private void updateFragments(DiveSpotDetails diveSpotDetails) {
         isDataChanged = true;
 
-        reviewsImages = (ArrayList<Image>) divespotDetails.getDivespot().getCommentImages();
-        diveSpotImages = (ArrayList<Image>)divespotDetails.getDivespot().getImages();
+        reviewsImages = (ArrayList<Image>) diveSpotDetails.getDivespot().getCommentImages();
+        diveSpotImages = (ArrayList<Image>) diveSpotDetails.getDivespot().getImages();
         if (diveSpotImages != null) {
             diveSpotImages = Helpers.appendFullImagesWithPath(diveSpotImages, path);
         }

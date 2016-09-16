@@ -53,7 +53,7 @@ import com.ddscanner.entities.Checkins;
 import com.ddscanner.entities.Comment;
 import com.ddscanner.entities.Comments;
 import com.ddscanner.entities.DiveSpotFull;
-import com.ddscanner.entities.DivespotDetails;
+import com.ddscanner.entities.DiveSpotDetails;
 import com.ddscanner.entities.Image;
 import com.ddscanner.entities.Sealife;
 import com.ddscanner.entities.User;
@@ -114,7 +114,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
     private static final String EXTRA_ID = "ID";
 
-    private DivespotDetails divespotDetails;
+    private DiveSpotDetails diveSpotDetails;
     private ProgressDialog progressDialog;
     private String productId;
     private LatLng diveSpotCoordinates;
@@ -324,11 +324,11 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         //checkInPeoples.setOnClickListener(this);
         showMore.setOnClickListener(this);
         showAllReviews.setOnClickListener(this);
-        diveSpot = divespotDetails.getDivespot();
+        diveSpot = diveSpotDetails.getDivespot();
         isFavorite = diveSpot.getIsFavorite();
         updateMenuItems(menu, isFavorite);
-        if (divespotDetails.getComments() != null) {
-            showAllReviews.setText(getString(R.string.show_all, String.valueOf(divespotDetails.getComments().size())));
+        if (diveSpotDetails.getComments() != null) {
+            showAllReviews.setText(getString(R.string.show_all, String.valueOf(diveSpotDetails.getComments().size())));
         } else {
             showAllReviews.setText(R.string.write_review);
         }
@@ -415,7 +415,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         sealifeRecyclerview.setHasFixedSize(false);
         sealifeRecyclerview.setLayoutManager(layoutManager);
         sealifeRecyclerview.setAdapter(new SealifeListAdapter(
-                (ArrayList<Sealife>) divespotDetails.getSealifes(),
+                (ArrayList<Sealife>) diveSpotDetails.getSealifes(),
                 this, diveSpot.getSealifePathMedium(),
                 diveSpot.getSealifePathMedium()));
         mapFragment.getMapAsync(new OnMapReadyCallback() {
@@ -470,8 +470,8 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             }
         }
 
-        if (divespotDetails.getCheckins() != null) {
-            usersCheckins = divespotDetails.getCheckins();
+        if (diveSpotDetails.getCheckins() != null) {
+            usersCheckins = diveSpotDetails.getCheckins();
             if (usersCheckins.size() == 1) {
                 setCheckinsCountPeople(String.valueOf(usersCheckins.size()) + " " +
                         getString(R.string.one_person_checked_in), false);
@@ -480,8 +480,8 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                         getString(R.string.peoples_checked_in_here), false);
             }
         }
-        if (divespotDetails.getEditors() != null) {
-            for (User user : divespotDetails.getEditors()) {
+        if (diveSpotDetails.getEditors() != null) {
+            for (User user : diveSpotDetails.getEditors()) {
                 creatorsEditorsList.add(user);
             }
             expandEditorsArrow.setVisibility(View.VISIBLE);
@@ -568,10 +568,10 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                         e.printStackTrace();
                     }
                     LogUtils.i("response body is " + responseString);
-                    divespotDetails = new Gson().fromJson(responseString, DivespotDetails.class);
-                    diveSpotCoordinates = new LatLng(divespotDetails.getDivespot().getLat(),
-                            divespotDetails.getDivespot().getLng());
-                    usersComments = divespotDetails.getComments();
+                    diveSpotDetails = new Gson().fromJson(responseString, DiveSpotDetails.class);
+                    diveSpotCoordinates = new LatLng(diveSpotDetails.getDivespot().getLat(),
+                            diveSpotDetails.getDivespot().getLng());
+                    usersComments = diveSpotDetails.getComments();
                     setUi();
                 } else {
                     String responseString = "";
@@ -626,7 +626,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 break;
             case R.id.map_layout:
                 Intent intent = new Intent(DiveSpotDetailsActivity.this, ShowDsLocationActivity.class);
-                intent.putExtra("LATLNG", new LatLng(divespotDetails.getDivespot().getLat(), divespotDetails.getDivespot().getLng()));
+                intent.putExtra("LATLNG", new LatLng(diveSpotDetails.getDivespot().getLat(), diveSpotDetails.getDivespot().getLng()));
                 startActivity(intent);
                 break;
             case R.id.check_in_peoples:
@@ -646,13 +646,13 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 }
                 break;
             case R.id.btn_show_all_reviews:
-                if (divespotDetails.getComments() != null || usersComments != null) {
+                if (diveSpotDetails.getComments() != null || usersComments != null) {
                     EventsTracker.trackDeviSpotReviewsView();
                     Intent reviewsIntent = new Intent(DiveSpotDetailsActivity.this, ReviewsActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("COMMENTS", (ArrayList<Comment>) usersComments);
-                    bundle.putString(Constants.DIVESPOTID, String.valueOf(divespotDetails.getDivespot().getId()));
-                    bundle.putString("PATH", divespotDetails.getDivespot().getDiveSpotPathMedium());
+                    bundle.putString(Constants.DIVESPOTID, String.valueOf(diveSpotDetails.getDivespot().getId()));
+                    bundle.putString("PATH", diveSpotDetails.getDivespot().getDiveSpotPathMedium());
                     reviewsIntent.putExtras(bundle);
                     startActivityForResult(reviewsIntent, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_REVIEWS);
                 } else {
@@ -799,7 +799,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             return;
         }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().checkIn(
-                String.valueOf(divespotDetails.getDivespot().getId()),
+                String.valueOf(diveSpotDetails.getDivespot().getId()),
                 Helpers.getRegisterRequest()
         );
         call.enqueue(new BaseCallback() {
@@ -883,7 +883,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             return;
         }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().checkOutUser(
-                String.valueOf(divespotDetails.getDivespot().getId()),
+                String.valueOf(diveSpotDetails.getDivespot().getId()),
                 Helpers.getUserQuryMapRequest()
         );
         call.enqueue(new BaseCallback() {
@@ -975,7 +975,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         }
         validationReguest.setValid(isValid);
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance()
-                .divespotValidation(String.valueOf(divespotDetails.getDivespot().getId()),
+                .divespotValidation(String.valueOf(diveSpotDetails.getDivespot().getId()),
                         validationReguest);
         call.enqueue(new BaseCallback() {
             @Override
@@ -1402,9 +1402,9 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private void showEditorsList() {
         editorsWrapperView.setVisibility(View.VISIBLE);
         editorsRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        editorsRecyclerView.setAdapter(new EditorsListAdapter(this, divespotDetails.getEditors()));
+        editorsRecyclerView.setAdapter(new EditorsListAdapter(this, diveSpotDetails.getEditors()));
         editorsRecyclerView.setHasFixedSize(true);
-        final int viewHeight = (int) (getResources().getDimension(R.dimen.editor_item_height) * divespotDetails.getEditors().size());
+        final int viewHeight = (int) (getResources().getDimension(R.dimen.editor_item_height) * diveSpotDetails.getEditors().size());
         ValueAnimator editorsAnimator = ValueAnimator.ofInt(0, viewHeight);
         editorsAnimator.setDuration(300);
         editorsAnimator.addListener(new Animator.AnimatorListener() {
@@ -1460,7 +1460,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
     private void hideEditorsList() {
         // TODO Implement
-        final int viewHeight = (int) (getResources().getDimension(R.dimen.editor_item_height) * divespotDetails.getEditors().size());
+        final int viewHeight = (int) (getResources().getDimension(R.dimen.editor_item_height) * diveSpotDetails.getEditors().size());
         ValueAnimator editorsAnimator = ValueAnimator.ofInt(viewHeight, 0);
         editorsAnimator.setDuration(300);
         editorsAnimator.addListener(new Animator.AnimatorListener() {
