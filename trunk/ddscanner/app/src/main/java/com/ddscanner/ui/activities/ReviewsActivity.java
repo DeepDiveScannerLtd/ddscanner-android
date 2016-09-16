@@ -128,6 +128,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     private void setContent() {
         commentsRc.setHasFixedSize(true);
         commentsRc.setLayoutManager(new LinearLayoutManager(this));
+        commentsRc.getItemAnimator().setChangeDuration(0);
      //   commentsRc.setAdapter(new ReviewsListAdapter(comments, ReviewsActivity.this, path));
     }
 
