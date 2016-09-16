@@ -303,8 +303,10 @@ public class ProfileFragment extends Fragment
                 aboutLayout.setVisibility(View.GONE);
                 editLayout.setVisibility(View.VISIBLE);
                 fullNameEdit.setText(user.getName());
+                fullNameEdit.setSelection(user.getName().length());
                 if (user.getAbout() != null) {
                     aboutEdit.setText(user.getAbout());
+                    aboutEdit.setSelection(user.getAbout().length());
                 }
                 nameLeftSymbols.setVisibility(View.GONE);
                 aboutLeftSymbols.setVisibility(View.GONE);
