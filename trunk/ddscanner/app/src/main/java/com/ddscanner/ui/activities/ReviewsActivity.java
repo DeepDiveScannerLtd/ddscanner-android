@@ -539,7 +539,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
             return;
         }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().likeComment(
-                id, helpers.getRegisterRequest()
+                id, Helpers.getRegisterRequest()
         );
         call.enqueue(new BaseCallback() {
             @Override
@@ -571,28 +571,28 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
                         ErrorsParser.checkForError(response.code(), responseString);
                     } catch (ServerInternalErrorException e) {
                         // TODO Handle
-                        helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
                     } catch (BadRequestException e) {
                         // TODO Handle
-                        helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
                     } catch (ValidationErrorException e) {
                         // TODO Handle
                     } catch (NotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
                     } catch (UnknownErrorException e) {
                         // TODO Handle
-                        helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
                     } catch (DiveSpotNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         SharedPreferenceHelper.logout();
                         SocialNetworks.showForResult(ReviewsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_LIKE_REVIEW);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
                     }
                 }
             }
@@ -610,7 +610,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
             return;
         }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().dislikeComment(
-                id, helpers.getRegisterRequest()
+                id, Helpers.getRegisterRequest()
         );
         call.enqueue(new BaseCallback() {
             @Override
@@ -642,28 +642,28 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
                         ErrorsParser.checkForError(response.code(), responseString);
                     } catch (ServerInternalErrorException e) {
                         // TODO Handle
-                        helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
                     } catch (BadRequestException e) {
                         // TODO Handle
-                        helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
                     } catch (ValidationErrorException e) {
                         // TODO Handle
                     } catch (NotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
                     } catch (UnknownErrorException e) {
                         // TODO Handle
-                        helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
                     } catch (DiveSpotNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         SharedPreferenceHelper.logout();
                         SocialNetworks.showForResult(ReviewsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_DISLIKE_REVIEW);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
                     }
                 }
             }
