@@ -113,21 +113,22 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         } else {
             reviewsListViewHolder.photos.setAdapter(null);
         }
-
-        reviewsListViewHolder.like.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DDScannerApplication.bus.post(new LikeCommentEvent(i));
-            }
-        });
-
-        reviewsListViewHolder.dislike.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DDScannerApplication.bus.post(new DislikeCommentEvent(i));
-            }
-        });
-
+        if (!isLiked) {
+            reviewsListViewHolder.like.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    DDScannerApplication.bus.post(new LikeCommentEvent(i));
+                }
+            });
+        }
+        if (!isDisliked) {
+            reviewsListViewHolder.dislike.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    DDScannerApplication.bus.post(new DislikeCommentEvent(i));
+                }
+            });
+        }
         if (comments.get(i).isEdit()) {
             reviewsListViewHolder.menu.setOnClickListener(new View.OnClickListener() {
                 @Override

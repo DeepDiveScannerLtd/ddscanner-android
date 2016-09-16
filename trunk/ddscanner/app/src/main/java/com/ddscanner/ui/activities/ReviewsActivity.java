@@ -582,7 +582,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
                         Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
                     } catch (BadRequestException e) {
                         // TODO Handle
-                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ReviewsActivity.this, R.string.comment_already_liked);
                     } catch (ValidationErrorException e) {
                         // TODO Handle
                     } catch (NotFoundException e) {
@@ -654,7 +654,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
                         ErrorsParser.checkForError(response.code(), responseString);
                     } catch (ServerInternalErrorException e) {
                         // TODO Handle
-                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ReviewsActivity.this, R.string.comment_already_disliked);
                     } catch (BadRequestException e) {
                         // TODO Handle
                         Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
