@@ -15,6 +15,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.net.ConnectException;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,11 +29,11 @@ public class DDScannerRestClient {
 
     private Gson gson = new Gson();
 
-    public void requestDiveSpotDetails(String diveSpotId, @NonNull final ResultListener<DiveSpotDetails> resultListener) {
+    public void requestDiveSpotDetails(String diveSpotId, @NonNull final WeakReference<ResultListener<DiveSpotDetails>> resultListenerWeakReference) {
         Map<String, String> map = getUserQueryMapRequest();
         map.put("isImageAuthor", "true");
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveSpotById(diveSpotId, map);
-        call.enqueue(new BaseCallback(resultListener) {
+        call.enqueue(new BaseCallback(resultListenerWeakReference) {
             @Override
             public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
                 String responseString = "";
@@ -40,28 +41,34 @@ public class DDScannerRestClient {
                     responseString = response.body().string();
                 } catch (IOException e) {
                     e.printStackTrace();
-                    resultListener.onError(ErrorType.IO_ERROR, null);
+                    if (resultListenerWeakReference.get() != null) {
+                        resultListenerWeakReference.get().onError(ErrorType.IO_ERROR, null);
+                    }
                     return;
                 }
                 LogUtils.i("response body is " + responseString);
                 if (response.isSuccessful()) {
                     DiveSpotDetails diveSpotDetails = new Gson().fromJson(responseString, DiveSpotDetails.class);
-                    resultListener.onSuccess(diveSpotDetails);
+                    if (resultListenerWeakReference.get() != null) {
+                        resultListenerWeakReference.get().onSuccess(diveSpotDetails);
+                    }
                 } else {
-                    checkForError(response.code(), responseString, resultListener);
+                    checkForError(response.code(), responseString, resultListenerWeakReference);
                 }
             }
         });
     }
 
-    public void checkForError(int responseCode, String json, ResultListener resultListener) {
+    public void checkForError(int responseCode, String json, WeakReference<ResultListener<DiveSpotDetails>> resultListenerWeakReference) {
         GeneralError generalError;
         ValidationError validationError;
         switch (responseCode) {
             case 400:
                 // bad request. for example event already happened or event preconditions are not held
                 generalError = gson.fromJson(json, GeneralError.class);
-                resultListener.onError(ErrorType.BAD_REQUEST_ERROR, generalError);
+                if (resultListenerWeakReference.get() != null) {
+                    resultListenerWeakReference.get().onError(ErrorType.BAD_REQUEST_ERROR, generalError);
+                }
                 break;
             case 404:
                 // entity not found
@@ -69,18 +76,26 @@ public class DDScannerRestClient {
                 switch (generalError.getStatusCode()) {
                     case 801:
                         // user not found
-                        resultListener.onError(ErrorType.USER_NOT_FOUND_ERROR, generalError);
+                        if (resultListenerWeakReference.get() != null) {
+                            resultListenerWeakReference.get().onError(ErrorType.USER_NOT_FOUND_ERROR, generalError);
+                        }
                         break;
                     case 802:
                         // dive spot not found
-                        resultListener.onError(ErrorType.DIVE_SPOT_NOT_FOUND_ERROR, generalError);
+                        if (resultListenerWeakReference.get() != null) {
+                            resultListenerWeakReference.get().onError(ErrorType.DIVE_SPOT_NOT_FOUND_ERROR, generalError);
+                        }
                         break;
                     case 803:
                         // dive spot comment not found
-                        resultListener.onError(ErrorType.COMMENT_NOT_FOUND_ERROR, generalError);
+                        if (resultListenerWeakReference.get() != null) {
+                            resultListenerWeakReference.get().onError(ErrorType.COMMENT_NOT_FOUND_ERROR, generalError);
+                        }
                         break;
                     default:
-                        resultListener.onError(ErrorType.NOT_FOUND_ERROR, generalError);
+                        if (resultListenerWeakReference.get() != null) {
+                            resultListenerWeakReference.get().onError(ErrorType.NOT_FOUND_ERROR, generalError);
+                        }
                         break;
                 }
                 break;
@@ -100,34 +115,44 @@ public class DDScannerRestClient {
                     }
                     validationError.addField(field);
                 }
-                resultListener.onError(ErrorType.VALIDATION_ERROR, validationError);
+                if (resultListenerWeakReference.get() != null) {
+                    resultListenerWeakReference.get().onError(ErrorType.VALIDATION_ERROR, validationError);
+                }
                 break;
             case 500:
                 // unknown server error
                 generalError = gson.fromJson(json, GeneralError.class);
-                resultListener.onError(ErrorType.SERVER_INTERNAL_ERROR, generalError);
+                if (resultListenerWeakReference.get() != null) {
+                    resultListenerWeakReference.get().onError(ErrorType.SERVER_INTERNAL_ERROR, generalError);
+                }
                 break;
             default:
                 // If unexpected error code is received
                 generalError = gson.fromJson(json, GeneralError.class);
-                resultListener.onError(ErrorType.UNKNOWN_ERROR, generalError);
+                if (resultListenerWeakReference.get() != null) {
+                    resultListenerWeakReference.get().onError(ErrorType.UNKNOWN_ERROR, generalError);
+                }
                 break;
         }
     }
 
     private abstract class BaseCallback implements Callback<ResponseBody> {
-        private ResultListener<DiveSpotDetails> resultListener;
+        private WeakReference<ResultListener<DiveSpotDetails>> resultListenerWeakReference;
 
-        public BaseCallback(ResultListener<DiveSpotDetails> resultListener) {
-            this.resultListener = resultListener;
+        public BaseCallback(WeakReference<ResultListener<DiveSpotDetails>> resultListenerWeakReference) {
+            this.resultListenerWeakReference = resultListenerWeakReference;
         }
 
         @Override
         public void onFailure(Call<ResponseBody> call, Throwable t) {
             if (t instanceof ConnectException) {
-                resultListener.onConnectionFailure();
+                if (resultListenerWeakReference.get() != null) {
+                    resultListenerWeakReference.get().onConnectionFailure();
+                }
             } else {
-                resultListener.onError(ErrorType.UNKNOWN_ERROR, null);
+                if (resultListenerWeakReference.get() != null) {
+                    resultListenerWeakReference.get().onError(ErrorType.UNKNOWN_ERROR, null);
+                }
             }
         }
     }
