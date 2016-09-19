@@ -31,7 +31,7 @@ import com.ddscanner.events.OnMapClickEvent;
 import com.ddscanner.events.PutDiveCentersToListEvent;
 import com.ddscanner.ui.adapters.DiveCentersListAdapter;
 import com.ddscanner.ui.managers.DiveCentersClusterManager;
-import com.ddscanner.utils.Constants;
+import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -49,15 +49,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.rey.material.widget.ProgressView;
 import com.squareup.otto.Subscribe;
 
-/**
- * Created by lashket on 29.1.16.
- */
 public class DiveCentersActivity extends BaseAppCompatActivity implements View.OnClickListener {
     private static final String TAG = "DiveCentersActivity";
     private Toolbar toolbar;
     private LatLng latLng;
     private String dsName;
-    private Helpers helpers = new Helpers();
     MapView mMapView;
     private GoogleMap mGoogleMap;
 
@@ -177,7 +173,7 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
     protected void onResume() {
         super.onResume();
         DDScannerApplication.activityResumed();
-        if (!helpers.hasConnection(this)) {
+        if (!Helpers.hasConnection(this)) {
             DDScannerApplication.showErrorActivity(this);
         }
         mMapView.onResume();
@@ -215,7 +211,8 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
             case R.id.go_to_my_location:
                 goToMyLocation.setVisibility(View.INVISIBLE);
                 progressBar.setVisibility(View.VISIBLE);
-                this.getLocation(Constants.REQUEST_CODE_DIVE_CENTERS_MAP_GO_TO_CURRENT_LOCATION);
+                Log.i(TAG, "DiveCentersActivity getLocation");
+                this.getLocation(ActivitiesRequestCodes.REQUEST_CODE_DIVE_CENTERS_MAP_GO_TO_CURRENT_LOCATION);
                // baseAppCompatActivity.getLocation(Constants.REQUEST_CODE_MAP_LIST_FRAGMENT_GO_TO_CURRENT_LOCATION);
               //  baseAppCompatActivity.getLocation();
                 break;
@@ -378,7 +375,7 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
         LogUtils.i(TAG, "location check: onLocationReady, request codes = " + event.getRequestCodes());
         for (Integer code : event.getRequestCodes()) {
             switch (code) {
-                case Constants.REQUEST_CODE_DIVE_CENTERS_MAP_GO_TO_CURRENT_LOCATION:
+                case ActivitiesRequestCodes.REQUEST_CODE_DIVE_CENTERS_MAP_GO_TO_CURRENT_LOCATION:
                     LatLng myLocation = new LatLng(event.getLocation().getLatitude(), event.getLocation().getLongitude());
                     CameraPosition cameraPosition = new CameraPosition.Builder()
                             .target(myLocation)
@@ -411,7 +408,7 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
                     }
                     break;
 
-                case Constants.REQUEST_CODE_MAP_LIST_FRAGMENT_GET_LOCATION_ON_FRAGMENT_START:
+                case ActivitiesRequestCodes.REQUEST_CODE_MAP_LIST_FRAGMENT_GET_LOCATION_ON_FRAGMENT_START:
                     LogUtils.i(TAG, "location check: GET_LOCATION_ON_FRAGMENT_START: event.getLocation() = " + event.getLocation() + " diveSpotsClusterManager = " + diveCentersClusterManager);
                     if (diveCentersClusterManager == null) {
                         // this means map has not yet been initialized. we need to remember location.

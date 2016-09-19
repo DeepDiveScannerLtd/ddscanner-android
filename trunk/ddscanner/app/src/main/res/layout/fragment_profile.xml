@@ -76,12 +76,12 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/comments_layout"
                     android:layout_marginBottom="10dp"
                     android:gravity="center"
                     android:orientation="horizontal">
 
                     <LinearLayout
+                        android:id="@+id/comments_layout"
                         android:layout_width="94dp"
                         android:layout_height="42dp"
                         android:background="@drawable/border_gray_100px"
@@ -584,16 +584,15 @@
                 android:background="@drawable/border_button_orange_2px"
                 android:text="@string/save_changes" />
 
-            <com.rey.material.widget.Button
+            <Button
                 android:id="@+id/cancel_button"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
+                android:layout_marginBottom="10dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:background="@drawable/border_button_white_2px"
-                android:text="@string/cancel"
-                app:rd_backgroundColor="@color/gray"
-                app:rd_rippleType="touch" />
+                android:text="@string/cancel" />
         </LinearLayout>
     </ScrollView>
 

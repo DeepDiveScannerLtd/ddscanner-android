@@ -17,14 +17,14 @@ android {
         }
     }
     compileSdkVersion 24
-    buildToolsVersion "24"
+    buildToolsVersion "24.0.2"
     defaultConfig {
         applicationId "com.ddscanner"
         minSdkVersion 16
         targetSdkVersion 23
         multiDexEnabled true
-        versionCode 20
-        versionName "2.0.13"
+        versionCode 21
+        versionName "2.0.15"
     }
     buildTypes {
         debug {

@@ -1,7 +1,6 @@
 package com.ddscanner.ui.activities;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -15,7 +14,6 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,7 +21,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
-import com.ddscanner.entities.Comment;
 import com.ddscanner.entities.FiltersResponseEntity;
 import com.ddscanner.entities.Image;
 import com.ddscanner.entities.errors.BadRequestException;
@@ -40,6 +37,7 @@ import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.SliderImagesAdapter;
 import com.ddscanner.ui.views.SimpleGestureFilter;
+import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogUtils;
 import com.ddscanner.utils.Helpers;
@@ -61,9 +59,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/**
- * Created by lashket on 4.3.16.
- */
 public class ImageSliderActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener, View.OnClickListener, SimpleGestureFilter.SimpleGestureListener{
 
     private LinearLayout pager_indicator;
@@ -80,7 +75,6 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     private TextView date;
     private TextView userName;
     private ImageView options;
-    private Helpers helpers = new Helpers();
     private boolean isChanged = false;
     private FiltersResponseEntity filters = new FiltersResponseEntity();
     private String imageNameForDeletion;
@@ -101,7 +95,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         setContentView(R.layout.activity_slider);
         findViews();
         detector = new SimpleGestureFilter(this,this);
-        materialDialog = helpers.getMaterialDialog(this);
+        materialDialog = Helpers.getMaterialDialog(this);
         getReportsTypes();
         Bundle bundle = getIntent().getExtras();
         images = bundle.getParcelableArrayList("IMAGES");
@@ -120,10 +114,10 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     private void changeUiAccrodingPosition(final int position) {
         this.position = position;
         userName.setText(images.get(position).getAuthor().getName());
-        date.setText(helpers.convertDateToImageSliderActivity(images.get(position).getAuthor().getDate()));
+        date.setText(Helpers.convertDateToImageSliderActivity(images.get(position).getAuthor().getDate()));
         Picasso.with(this)
                 .load(images.get(position).getAuthor().getPhoto())
-                .resize(Math.round(helpers.convertDpToPixel(35, this)), Math.round(helpers.convertDpToPixel(35, this)))
+                .resize(Math.round(Helpers.convertDpToPixel(35, this)), Math.round(Helpers.convertDpToPixel(35, this)))
                 .centerCrop()
                 .placeholder(R.drawable.avatar_profile_default)
                 .transform(new CropCircleTransformation())
@@ -266,7 +260,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     protected void onResume() {
         super.onResume();
         DDScannerApplication.activityResumed();
-        if (!helpers.hasConnection(this)) {
+        if (!Helpers.hasConnection(this)) {
             DDScannerApplication.showErrorActivity(this);
         }
     }
@@ -299,7 +293,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     private void deleteImage(String name) {
         isChanged = true;
         materialDialog.show();
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().deleteImage(name, helpers.getUserQuryMapRequest());
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().deleteImage(name, Helpers.getUserQuryMapRequest());
         call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -319,29 +313,29 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
                         ErrorsParser.checkForError(response.code(), responseString);
                     } catch (ServerInternalErrorException e) {
                         // TODO Handle
-                        helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
                     } catch (BadRequestException e) {
                         // TODO Handle
-                        helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
                     } catch (ValidationErrorException e) {
                         // TODO Handle
-                        helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
                     } catch (NotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
                     } catch (UnknownErrorException e) {
                         // TODO Handle
-                        helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
                     } catch (DiveSpotNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         SharedPreferenceHelper.logout();
-                        SocialNetworks.showForResult(ImageSliderActivity.this, Constants.SLIDER_ACTIVITY_REQUEST_CODE_LOGIN_FOR_DELETE);
+                        SocialNetworks.showForResult(ImageSliderActivity.this, ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_DELETE);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
                     }
                 }
             }
@@ -368,18 +362,20 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == Constants.SLIDER_ACTIVITY_REQUEST_CODE_LOGIN_FOR_REPORT) {
-            if (resultCode == RESULT_OK) {
-                reportImage(reportName, reportType, reportDescription);
-            }
-        }
-        if (requestCode == Constants.SLIDER_ACTIVITY_REQUEST_CODE_LOGIN_FOR_DELETE) {
-            if (resultCode == RESULT_OK) {
-                deleteImage(deleteImageName);
-            }
-            if (resultCode == RESULT_CANCELED) {
+        switch (requestCode) {
+            case ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_REPORT:
+                if (resultCode == RESULT_OK) {
+                    reportImage(reportName, reportType, reportDescription);
+                }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_DELETE:
+                if (resultCode == RESULT_OK) {
+                    deleteImage(deleteImageName);
+                }
+                if (resultCode == RESULT_CANCELED) {
 
-            }
+                }
+                break;
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -389,7 +385,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         materialDialog.show();
         ReportRequest reportRequest = new ReportRequest();
         if (!SharedPreferenceHelper.isUserLoggedIn() || SharedPreferenceHelper.getToken().isEmpty() || SharedPreferenceHelper.getSn().isEmpty()) {
-            SocialNetworks.showForResult(this, Constants.SLIDER_ACTIVITY_REQUEST_CODE_LOGIN_FOR_REPORT);
+            SocialNetworks.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_REPORT);
             return;
         }
         reportRequest.setName(imageName);
@@ -421,29 +417,29 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
                         ErrorsParser.checkForError(response.code(), responseString);
                     } catch (ServerInternalErrorException e) {
                         // TODO Handle
-                        helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
                     } catch (BadRequestException e) {
                         // TODO Handle
-                        helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
                     } catch (ValidationErrorException e) {
                         // TODO Handle
-                        helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
                     } catch (NotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
                     } catch (UnknownErrorException e) {
                         // TODO Handle
-                        helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
                     } catch (DiveSpotNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         SharedPreferenceHelper.logout();
-                        SocialNetworks.showForResult(ImageSliderActivity.this, Constants.SLIDER_ACTIVITY_REQUEST_CODE_LOGIN_FOR_REPORT);
+                        SocialNetworks.showForResult(ImageSliderActivity.this, ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_REPORT);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
                     }
                 }
             }
@@ -495,7 +491,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
                     @Override
                     public void onSelection(final MaterialDialog dialog, View view, int which, CharSequence text) {
 
-                        reportType = helpers.getMirrorOfHashMap(filters.getReport()).get(text);
+                        reportType = Helpers.getMirrorOfHashMap(filters.getReport()).get(text);
                         if (reportType.equals("other")) {
                             showOtherReportDialog();
                             dialog.dismiss();

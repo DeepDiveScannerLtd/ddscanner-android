@@ -10,9 +10,6 @@ import android.view.MenuItem;
 
 import com.ddscanner.R;
 
-/**
- * Created by lashket on 1.8.16.
- */
 public class TermsOfServiceActivity extends AppCompatActivity {
 
     private Toolbar toolbar;

@@ -30,8 +30,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
-import com.ddscanner.entities.DiveSpotFull;
-import com.ddscanner.entities.DivespotDetails;
 import com.ddscanner.entities.EditDiveSpotEntity;
 import com.ddscanner.entities.EditDiveSpotWrapper;
 import com.ddscanner.entities.FiltersResponseEntity;
@@ -51,6 +49,7 @@ import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.AddPhotoToDsListAdapter;
 import com.ddscanner.ui.adapters.SealifeListAddingDiveSpotAdapter;
 import com.ddscanner.ui.adapters.SpinnerItemsAdapter;
+import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogUtils;
 import com.ddscanner.utils.Helpers;
@@ -64,9 +63,6 @@ import com.google.gson.JsonParser;
 import com.rey.material.widget.ProgressView;
 import com.rey.material.widget.Spinner;
 import com.squareup.otto.Subscribe;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -88,12 +84,6 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
 
     private static final String TAG = EditDiveSpotActivity.class.getSimpleName();
 
-
-    private static final int RC_PICK_PHOTO = 9001;
-    private static final int RC_PICK_LOCATION = 8001;
-    private static final int RC_PICK_SEALIFE = 7001;
-    private static final int RC_LOGIN_TO_SEND = 6001;
-    private static final int RC_LOGIN_TO_GET_DATA = 5001;
     private static final String DIVE_SPOT_NAME_PATTERN = "^[a-zA-Z0-9 ]*$";
 
     private int maxPhotosCount = 3;
@@ -153,7 +143,6 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
     private EditDiveSpotEntity diveSpot;
     private AddPhotoToDsListAdapter addPhotoToDsListAdapter;
     private ProgressDialog progressDialog;
-    private Helpers helpers = new Helpers();
     private Map<String, TextView> errorsMap = new HashMap<>();
 
     private RequestBody requestName, requestLat, requestLng, requestDepth,
@@ -179,7 +168,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
      * Find views in current activity_add_dive_spot
      */
     private void findViews() {
-        progressDialogUpload = helpers.getMaterialDialog(this);
+        progressDialogUpload = Helpers.getMaterialDialog(this);
         progressDialog = new ProgressDialog(this);
         name = (EditText) findViewById(R.id.name);
         depth = (EditText) findViewById(R.id.depth);
@@ -275,7 +264,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
     private void getDsInfoRequest() {
 
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveSpotForEdit(
-                diveSpotId, helpers.getUserQuryMapRequest());
+                diveSpotId, Helpers.getUserQuryMapRequest());
         call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -291,28 +280,28 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
                         ErrorsParser.checkForError(response.code(), responseString);
                     } catch (ServerInternalErrorException e) {
                         // TODO Handle
-                        helpers.showToast(EditDiveSpotActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(EditDiveSpotActivity.this, R.string.toast_server_error);
                     } catch (BadRequestException e) {
                         // TODO Handle
-                        helpers.showToast(EditDiveSpotActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(EditDiveSpotActivity.this, R.string.toast_server_error);
                     } catch (ValidationErrorException e) {
                         // TODO Handle
                     } catch (NotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(EditDiveSpotActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(EditDiveSpotActivity.this, R.string.toast_server_error);
                     } catch (UnknownErrorException e) {
                         // TODO Handle
-                        helpers.showToast(EditDiveSpotActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(EditDiveSpotActivity.this, R.string.toast_server_error);
                     } catch (DiveSpotNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(EditDiveSpotActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(EditDiveSpotActivity.this, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         SharedPreferenceHelper.logout();
-                        SocialNetworks.showForResult(EditDiveSpotActivity.this, RC_LOGIN_TO_GET_DATA);
+                        SocialNetworks.showForResult(EditDiveSpotActivity.this, ActivitiesRequestCodes.REQUEST_CODE_EDIT_DIVE_SPOT_ACTIVITY_LOGIN_TO_GET_DATA);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(EditDiveSpotActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(EditDiveSpotActivity.this, R.string.toast_server_error);
                     } finally {
                         // This will be called only if response code is 200
                     }
@@ -364,9 +353,9 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
         if (checkReadStoragePermission()) {
             MultiImageSelector.create(this)
                     .count(maxPhotosCount)
-                    .start(this, RC_PICK_PHOTO);
+                    .start(this, ActivitiesRequestCodes.REQUEST_CODE_EDIT_DIVE_SPOT_ACTIVITY_PICK_PHOTO);
         } else {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, Constants.ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_PERMISSION_READ_STORAGE);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PERMISSION_READ_STORAGE);
         }
     }
 
@@ -387,15 +376,14 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
                 Intent intent = new Intent(EditDiveSpotActivity.this,
                         PickLocationActivity.class);
                 intent.putExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_LATLNG, diveSpotLocation);
-                startActivityForResult(intent, RC_PICK_LOCATION);
+                startActivityForResult(intent, ActivitiesRequestCodes.REQUEST_CODE_EDIT_DIVE_SPOT_ACTIVITY_PICK_LOCATION);
                 break;
             case R.id.btn_add_sealife:
                 Intent sealifeIntent = new Intent(EditDiveSpotActivity.this,
                         SearchSealifeActivity.class);
-                startActivityForResult(sealifeIntent, RC_PICK_SEALIFE);
+                startActivityForResult(sealifeIntent, ActivitiesRequestCodes.REQUEST_CODE_EDIT_DIVE_SPOT_ACTIVITY_PICK_SEALIFE);
                 break;
             case R.id.button_create:
-                progressDialogUpload.show();
                 createRequestBodyies();
                 break;
         }
@@ -432,41 +420,44 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RC_PICK_LOCATION) {
-            if (resultCode == RESULT_OK) {
-                this.diveSpotLocation = data.getParcelableExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_LATLNG);
-            }
-        }
-        if (requestCode == RC_PICK_PHOTO) {
-            if (resultCode == RESULT_OK) {
-                ArrayList<String> addedImages = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
-                if (addedImages != null) {
-                    maxPhotosCount = maxPhotosCount - addedImages.size();
-                    imageUris.addAll(addedImages);
+        switch (requestCode) {
+            case ActivitiesRequestCodes.REQUEST_CODE_EDIT_DIVE_SPOT_ACTIVITY_PICK_LOCATION:
+                if (resultCode == RESULT_OK) {
+                    this.diveSpotLocation = data.getParcelableExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_LATLNG);
                 }
-                addPhotoToDsListAdapter = new AddPhotoToDsListAdapter(imageUris, EditDiveSpotActivity.this, addPhotoTitle);
-                photos_rc.setAdapter(addPhotoToDsListAdapter);
-            }
-        }
-        if (requestCode == RC_PICK_SEALIFE) {
-            if (resultCode == RESULT_OK) {
-                Sealife sealife = (Sealife) data.getSerializableExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_SEALIFE);
-                sealifeListAddingDiveSpotAdapter.add(sealife);
-                Log.i(TAG, sealifeListAddingDiveSpotAdapter.getSealifes().get(0).getName());
-            }
-        }
-        if (requestCode == RC_LOGIN_TO_SEND) {
-            if (resultCode == RESULT_OK) {
-                createAddDiveSpotRequest();
-            }
-        }
-        if (requestCode == RC_LOGIN_TO_GET_DATA) {
-            if (resultCode == RESULT_OK) {
-                getDsInfoRequest();
-            }
-            if (resultCode == RESULT_CANCELED) {
-                finish();
-            }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_EDIT_DIVE_SPOT_ACTIVITY_PICK_PHOTO:
+                if (resultCode == RESULT_OK) {
+                    ArrayList<String> addedImages = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
+                    if (addedImages != null) {
+                        maxPhotosCount = maxPhotosCount - addedImages.size();
+                        imageUris.addAll(addedImages);
+                    }
+                    addPhotoToDsListAdapter = new AddPhotoToDsListAdapter(imageUris, EditDiveSpotActivity.this, addPhotoTitle);
+                    photos_rc.setAdapter(addPhotoToDsListAdapter);
+                }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_EDIT_DIVE_SPOT_ACTIVITY_PICK_SEALIFE:
+                Helpers.hideKeyboard(this);
+                if (resultCode == RESULT_OK) {
+                    Sealife sealife = (Sealife) data.getSerializableExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_SEALIFE);
+                    sealifeListAddingDiveSpotAdapter.add(sealife);
+                    Log.i(TAG, sealifeListAddingDiveSpotAdapter.getSealifes().get(0).getName());
+                }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_EDIT_DIVE_SPOT_ACTIVITY_LOGIN_TO_SEND:
+                if (resultCode == RESULT_OK) {
+                    createAddDiveSpotRequest();
+                }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_EDIT_DIVE_SPOT_ACTIVITY_LOGIN_TO_GET_DATA:
+                if (resultCode == RESULT_OK) {
+                    getDsInfoRequest();
+                }
+                if (resultCode == RESULT_CANCELED) {
+                    finish();
+                }
+                break;
         }
     }
 
@@ -477,11 +468,12 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
             error_name.setText(R.string.errr);
             return;
         }
-        if (description.getText().toString().length() < 150) {
-            error_description.setVisibility(View.VISIBLE);
-            error_description.setText(R.string.description_length_error);
-            return;
-        }
+//        if (description.getText().toString().length() < 150) {
+//            error_description.setVisibility(View.VISIBLE);
+//            error_description.setText(R.string.description_length_error);
+//            return;
+//        }
+        progressDialogUpload.show();
         requestName = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
                 name.getText().toString());
         requestDepth = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
@@ -491,13 +483,13 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
         requestLng = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
                 String.valueOf(diveSpotLocation.longitude));
         requestObject = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
-                helpers.getMirrorOfHashMap(filters.getObject())
+                Helpers.getMirrorOfHashMap(filters.getObject())
                         .get(objectSpinner.getSelectedItem().toString()));
         requestCurrents = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
-                helpers.getMirrorOfHashMap(filters.getCurrents())
+                Helpers.getMirrorOfHashMap(filters.getCurrents())
                         .get(currentsSpinner.getSelectedItem().toString()));
         requestLevel = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
-                helpers.getMirrorOfHashMap(filters.getLevel())
+                Helpers.getMirrorOfHashMap(filters.getLevel())
                         .get(levelSpinner.getSelectedItem().toString()));
         requestMinVisibility = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), visibilityMin.getText().toString());
         requestMaxVisibility = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), visibilityMax.getText().toString());
@@ -590,29 +582,29 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
                         ErrorsParser.checkForError(response.code(), responseString);
                     } catch (ServerInternalErrorException e) {
                         // TODO Handle
-                        helpers.showToast(EditDiveSpotActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(EditDiveSpotActivity.this, R.string.toast_server_error);
                     } catch (BadRequestException e) {
                         // TODO Handle
-                        helpers.showToast(EditDiveSpotActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(EditDiveSpotActivity.this, R.string.toast_server_error);
                     } catch (ValidationErrorException e) {
                         // TODO Handle
-                        helpers.errorHandling(EditDiveSpotActivity.this, errorsMap, responseString);
+                        Helpers.errorHandling(EditDiveSpotActivity.this, errorsMap, responseString);
                     } catch (NotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(EditDiveSpotActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(EditDiveSpotActivity.this, R.string.toast_server_error);
                     } catch (UnknownErrorException e) {
                         // TODO Handle
-                        helpers.showToast(EditDiveSpotActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(EditDiveSpotActivity.this, R.string.toast_server_error);
                     } catch (DiveSpotNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(EditDiveSpotActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(EditDiveSpotActivity.this, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         SharedPreferenceHelper.logout();
-                        SocialNetworks.showForResult(EditDiveSpotActivity.this, RC_LOGIN_TO_SEND);
+                        SocialNetworks.showForResult(EditDiveSpotActivity.this, ActivitiesRequestCodes.REQUEST_CODE_EDIT_DIVE_SPOT_ACTIVITY_LOGIN_TO_SEND);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(EditDiveSpotActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(EditDiveSpotActivity.this, R.string.toast_server_error);
                     }
                 }
                 if (response.isSuccessful()) {
@@ -652,25 +644,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
                     }
 
                     filters = new FiltersResponseEntity();
-
-                    JsonParser parser = new JsonParser();
-                    JsonObject jsonObject = parser.parse(responseString).getAsJsonObject();
-                    JsonObject currentsJsonObject = jsonObject.getAsJsonObject("currents");
-                    for (Map.Entry<String, JsonElement> elementEntry : currentsJsonObject.entrySet()) {
-                        filters.getCurrents().put(elementEntry.getKey(), elementEntry.getValue().getAsString());
-                    }
-                    JsonObject levelJsonObject = jsonObject.getAsJsonObject("level");
-                    for (Map.Entry<String, JsonElement> elementEntry : levelJsonObject.entrySet()) {
-                        filters.getLevel().put(elementEntry.getKey(), elementEntry.getValue().getAsString());
-                    }
-                    JsonObject objectJsonObject = jsonObject.getAsJsonObject("object");
-                    for (Map.Entry<String, JsonElement> elementEntry : objectJsonObject.entrySet()) {
-                        filters.getObject().put(elementEntry.getKey(), elementEntry.getValue().getAsString());
-                    }
-                    JsonObject visibilityJsonObject = jsonObject.getAsJsonObject("visibility");
-                    for (Map.Entry<String, JsonElement> elementEntry : visibilityJsonObject.entrySet()) {
-                        filters.getVisibility().put(elementEntry.getKey(), elementEntry.getValue().getAsString());
-                    }
+                    filters = new Gson().fromJson(responseString, FiltersResponseEntity.class);
 
                     Log.i(TAG, responseString);
 
@@ -720,7 +694,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
     protected void onResume() {
         super.onResume();
         DDScannerApplication.activityResumed();
-        if (!helpers.hasConnection(this)) {
+        if (!Helpers.hasConnection(this)) {
             DDScannerApplication.showErrorActivity(this);
         }
     }
@@ -755,7 +729,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
-            case Constants.ADD_DIVE_SPOT_ACTIVITY_REQUEST_CODE_PERMISSION_READ_STORAGE: {
+            case ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PERMISSION_READ_STORAGE: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     pickPhotoFromGallery();
                 } else {

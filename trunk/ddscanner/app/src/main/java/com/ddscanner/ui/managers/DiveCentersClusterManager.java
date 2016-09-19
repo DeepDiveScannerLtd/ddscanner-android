@@ -76,7 +76,7 @@ public class DiveCentersClusterManager extends ClusterManager<DiveCenter> implem
         super(context, googleMap);
         this.context = context;
         this.googleMap = googleMap;
-        this.clusterBackgroundDrawable = ContextCompat.getDrawable(context, R.drawable.ic_number);
+     //   this.clusterBackgroundDrawable = ContextCompat.getDrawable(context, R.drawable.ic_number);
         this.clusterIconGenerator = new IconGenerator(context);
         this.clusterIconGenerator.setContentView(this.makeSquareTextView(context));
         this.clusterIconGenerator.setTextAppearance(com.google.maps.android.R.style.ClusterIcon_TextAppearance);

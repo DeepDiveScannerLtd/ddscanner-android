@@ -1,5 +1,6 @@
 package com.ddscanner.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -14,6 +15,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,6 +47,10 @@ public class Helpers {
 
     private static final String TAG = Helpers.class.getName();
 
+    private Helpers() {
+
+    }
+
     /**
      * Method to get real path of file by URI
      *
@@ -54,7 +60,7 @@ public class Helpers {
      * @author Andrei Lashkevich
      */
 
-    public String getRealPathFromURI(Context context, Uri contentUri) {
+    public static String getRealPathFromURI(Context context, Uri contentUri) {
         Cursor cursor = null;
         try {
             String[] proj = {MediaStore.Images.Media.DATA};
@@ -78,7 +84,7 @@ public class Helpers {
      * @author Andrei Lashkevich
      */
 
-    public float convertDpToPixel(float dp, Context context) {
+    public static float convertDpToPixel(float dp, Context context) {
         Resources resources = context.getResources();
         DisplayMetrics metrics = resources.getDisplayMetrics();
         float px = dp * ((float) metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
@@ -93,7 +99,7 @@ public class Helpers {
      * @author Andrei Lashkevich
      */
 
-    public void showDialog(User user, FragmentManager fragmentManager) {
+    public static void showDialog(User user, FragmentManager fragmentManager) {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         Fragment prev = fragmentManager.findFragmentByTag("profile");
         if (prev != null) {
@@ -113,21 +119,21 @@ public class Helpers {
      * @author Andrei Lashkevich
      */
 
-    public ArrayList<String> appendImagesWithPath(ArrayList<String> images, String path) {
+    public static ArrayList<String> appendImagesWithPath(ArrayList<String> images, String path) {
         for (int i = 0; i < images.size(); i++) {
             images.set(i, path + images.get(i));
         }
         return images;
     }
 
-    public ArrayList<Image> appendFullImagesWithPath(ArrayList<Image> images, String path) {
+    public static ArrayList<Image> appendFullImagesWithPath(ArrayList<Image> images, String path) {
         for (int i = 0; i < images.size(); i++) {
             images.get(i).setName(path + images.get(i).getName());
         }
         return images;
     }
 
-    public RegisterRequest getRegisterRequest() {
+    public static RegisterRequest getRegisterRequest() {
         RegisterRequest registerRequest = new RegisterRequest();
         if (!SharedPreferenceHelper.isUserLoggedIn()) {
             registerRequest.setAppId(SharedPreferenceHelper.getUserAppId());
@@ -154,7 +160,7 @@ public class Helpers {
      * @author Andrei Lashkevich
      */
 
-    public ArrayList<String> compareArrays(ArrayList<String> first, ArrayList<String> second) {
+    public static ArrayList<String> compareArrays(ArrayList<String> first, ArrayList<String> second) {
         ArrayList<String> allPhotos = new ArrayList<>();
         if (first != null) {
             allPhotos = (ArrayList<String>) first.clone();
@@ -167,7 +173,7 @@ public class Helpers {
         return allPhotos;
     }
 
-    public ArrayList<Image> compareObjectsArray(ArrayList<Image> first, ArrayList<Image> second) {
+    public static ArrayList<Image> compareObjectsArray(ArrayList<Image> first, ArrayList<Image> second) {
         ArrayList<Image> allPhotos = new ArrayList<>();
         if (first == null && second == null) {
             return allPhotos;
@@ -195,7 +201,7 @@ public class Helpers {
      * @author Andrei Lashkevich
      */
 
-    public Map<String, String> getMirrorOfHashMap(Map<String, String> map) {
+    public static Map<String, String> getMirrorOfHashMap(Map<String, String> map) {
         Map<String, String> returnMap = new HashMap<>();
         for (Map.Entry<String, String> entry : map.entrySet()) {
             returnMap.put(entry.getValue(), entry.getKey());
@@ -210,7 +216,7 @@ public class Helpers {
      * @param errorsMap
      * @param errors
      */
-    public void errorHandling(Context context, Map<String, TextView> errorsMap, String errors) {
+    public static void errorHandling(Context context, Map<String, TextView> errorsMap, String errors) {
         try {
             JsonObject jsonObject = new JsonParser().parse(errors).getAsJsonObject();
             for (Map.Entry<String, TextView> entry : errorsMap.entrySet()) {
@@ -248,7 +254,7 @@ public class Helpers {
      * @return checking Error causing
      * @author Andrei Lashkevich
      */
-    public boolean checkIsErrorByLogin(String errors) {
+    public static boolean checkIsErrorByLogin(String errors) {
         if (errors.contains("token") || errors.contains("social") || errors.contains("secret") || errors.contains("user not found")) {
             SharedPreferenceHelper.logout();
             return true;
@@ -264,7 +270,7 @@ public class Helpers {
      * @author Andrei Lashkevich
      */
 
-    public boolean hasConnection(final Context context) {
+    public static boolean hasConnection(final Context context) {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
         //get all networks information
@@ -296,7 +302,7 @@ public class Helpers {
         }
     }
 
-    public Map<String, String> getUserQuryMapRequest() {
+    public static Map<String, String> getUserQuryMapRequest() {
         Map<String, String> map = new HashMap<>();
         if (SharedPreferenceHelper.isUserLoggedIn()) {
             map.put("social", SharedPreferenceHelper.getSn());
@@ -310,7 +316,7 @@ public class Helpers {
         return map;
     }
 
-    public MaterialDialog getMaterialDialog(Context context) {
+    public static MaterialDialog getMaterialDialog(Context context) {
         MaterialDialog materialDialog;
         materialDialog = new MaterialDialog.Builder(context)
                 .cancelable(false)
@@ -320,7 +326,7 @@ public class Helpers {
         return materialDialog;
     }
 
-    public String getDate(String date) {
+    public static String getDate(String date) {
         Date date1 = new Date();
         long currentDateInMillis = date1.getTime();
         long differenceOfTime = 0;
@@ -366,7 +372,7 @@ public class Helpers {
         return returnString;
     }
 
-    public String getCommentDate(String date) {
+    public static String getCommentDate(String date) {
         Date date1 = new Date();
         long currentDateInMillis = date1.getTime();
         long differenceOfTime = 0;
@@ -435,7 +441,7 @@ public class Helpers {
         return returnString;
     }
 
-    public boolean comparingTimes(long lastShowingTime, String notificationTime) {
+    public static boolean comparingTimes(long lastShowingTime, String notificationTime) {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         format.setTimeZone(TimeZone.getTimeZone("GMT+0"));
         try {
@@ -450,7 +456,7 @@ public class Helpers {
 
     }
 
-    public String convertDate(String incomingDate) {
+    public static String convertDate(String incomingDate) {
         String returningString = "";
         SimpleDateFormat serverFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         serverFormat.setTimeZone(TimeZone.getTimeZone("GMT+0"));
@@ -464,7 +470,7 @@ public class Helpers {
         return returningString;
     }
 
-    public String convertDateToImageSliderActivity(String incomingDate) {
+    public static String convertDateToImageSliderActivity(String incomingDate) {
         String returningString = "";
         SimpleDateFormat serverFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         serverFormat.setTimeZone(TimeZone.getTimeZone("GMT+0"));
@@ -478,7 +484,7 @@ public class Helpers {
         return returningString;
     }
 
-    public boolean checkIsSealifeAlsoInList(ArrayList<Sealife> sealifes, String id) {
+    public static boolean checkIsSealifeAlsoInList(ArrayList<Sealife> sealifes, String id) {
         for (Sealife sealife : sealifes) {
             if (sealife.getId().equals(id)) {
                 return true;
@@ -487,18 +493,26 @@ public class Helpers {
         return false;
     }
 
-    public void showToast(Context context, int message) {
+    public static void showToast(Context context, int message) {
         Toast toast = Toast.makeText(context, context.getString(message), Toast.LENGTH_LONG);
         toast.show();
     }
 
-    public String formatLikesCommentsCountNumber(String count) {
+    public static String formatLikesCommentsCountNumber(String count) {
         int itemsCount = Integer.parseInt(count);
         String returnedString = "";
         if (itemsCount > 999) {
             return String.valueOf(itemsCount/1000) + "K";
         } else {
             return count;
+        }
+    }
+
+    public static void hideKeyboard(Activity context) {
+        View view = context.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)context.getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
 

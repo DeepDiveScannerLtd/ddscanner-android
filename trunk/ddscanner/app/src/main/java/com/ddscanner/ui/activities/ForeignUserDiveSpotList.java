@@ -28,6 +28,7 @@ import com.ddscanner.rest.BaseCallback;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.DiveSpotsListAdapter;
+import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogUtils;
 import com.ddscanner.utils.Helpers;
@@ -42,9 +43,6 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 
-/**
- * Created by lashket on 18.7.16.
- */
 public class ForeignUserDiveSpotList extends AppCompatActivity {
 
     private RecyclerView rc;
@@ -52,7 +50,6 @@ public class ForeignUserDiveSpotList extends AppCompatActivity {
     private ProgressView progressBarFull;
     private String toolbarTitle;
     private String userId;
-    private Helpers helpers = new Helpers();
     private boolean isEdited;
     private boolean isCreated;
     private boolean isCheckIn;
@@ -82,7 +79,7 @@ public class ForeignUserDiveSpotList extends AppCompatActivity {
     }
 
     private void getAddedDiveSpotList() {
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUsersAdded(userId, helpers.getUserQuryMapRequest());
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUsersAdded(userId, Helpers.getUserQuryMapRequest());
         call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -110,27 +107,27 @@ public class ForeignUserDiveSpotList extends AppCompatActivity {
                         ErrorsParser.checkForError(response.code(), responseString);
                     } catch (ServerInternalErrorException e) {
                         // TODO Handle
-                        helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
+                        Helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
                     } catch (BadRequestException e) {
                         // TODO Handle
-                        helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
+                        Helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
                     } catch (ValidationErrorException e) {
                         // TODO Handle
                     } catch (NotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
+                        Helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
                     } catch (UnknownErrorException e) {
                         // TODO Handle
-                        helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
+                        Helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
                     } catch (DiveSpotNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
+                        Helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
-                        SocialNetworks.showForResult(ForeignUserDiveSpotList.this, Constants.FOREIGN_USER_SPOT_LIST_REQUEST_CODE_LOGIN);
+                        SocialNetworks.showForResult(ForeignUserDiveSpotList.this, ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_SPOT_LIST_LOGIN);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
+                        Helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
                     }
                 }
             }
@@ -143,7 +140,7 @@ public class ForeignUserDiveSpotList extends AppCompatActivity {
     }
 
     private void getEditedDiveSpotList() {
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUsersEdited(userId, helpers.getUserQuryMapRequest());
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUsersEdited(userId, Helpers.getUserQuryMapRequest());
         call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -171,27 +168,27 @@ public class ForeignUserDiveSpotList extends AppCompatActivity {
                         ErrorsParser.checkForError(response.code(), responseString);
                     } catch (ServerInternalErrorException e) {
                         // TODO Handle
-                        helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
+                        Helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
                     } catch (BadRequestException e) {
                         // TODO Handle
-                        helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
+                        Helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
                     } catch (ValidationErrorException e) {
                         // TODO Handle
                     } catch (NotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
+                        Helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
                     } catch (UnknownErrorException e) {
                         // TODO Handle
-                        helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
+                        Helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
                     } catch (DiveSpotNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
+                        Helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
-                        SocialNetworks.showForResult(ForeignUserDiveSpotList.this, Constants.FOREIGN_USER_SPOT_LIST_REQUEST_CODE_LOGIN);
+                        SocialNetworks.showForResult(ForeignUserDiveSpotList.this, ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_SPOT_LIST_LOGIN);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
+                        Helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
                     }
                 }
             }
@@ -204,7 +201,7 @@ public class ForeignUserDiveSpotList extends AppCompatActivity {
     }
 
     private void getUsersCheckinList() {
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUsersCheckins(userId, helpers.getUserQuryMapRequest());
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUsersCheckins(userId, Helpers.getUserQuryMapRequest());
         call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -232,27 +229,27 @@ public class ForeignUserDiveSpotList extends AppCompatActivity {
                         ErrorsParser.checkForError(response.code(), responseString);
                     } catch (ServerInternalErrorException e) {
                         // TODO Handle
-                        helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
+                        Helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
                     } catch (BadRequestException e) {
                         // TODO Handle
-                        helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
+                        Helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
                     } catch (ValidationErrorException e) {
                         // TODO Handle
                     } catch (NotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
+                        Helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
                     } catch (UnknownErrorException e) {
                         // TODO Handle
-                        helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
+                        Helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
                     } catch (DiveSpotNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
+                        Helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
-                        SocialNetworks.showForResult(ForeignUserDiveSpotList.this, Constants.FOREIGN_USER_SPOT_LIST_REQUEST_CODE_LOGIN);
+                        SocialNetworks.showForResult(ForeignUserDiveSpotList.this, ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_SPOT_LIST_LOGIN);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
+                        Helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
                     }
                 }
             }
@@ -289,7 +286,7 @@ public class ForeignUserDiveSpotList extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public static void show(Activity context, boolean isEdited, boolean isCreated, boolean isCheckin, String userId, int requestCode) {
+    public static void show(Activity context, boolean isEdited, boolean isCreated, boolean isCheckin, String userId) {
         Intent intent = new Intent(context, ForeignUserDiveSpotList.class);
         intent.putExtra(Constants.FOREIGN_USER_ACTIVITY_INTENT_USER_ID, userId);
         if (isEdited) {
@@ -301,7 +298,7 @@ public class ForeignUserDiveSpotList extends AppCompatActivity {
         if (isCheckin) {
             intent.putExtra(Constants.FOREIGN_USER_ACTIVITY_INTENT_ISCHECKIN, true);
         }
-        context.startActivityForResult(intent, requestCode);
+        context.startActivity(intent);
     }
 
     @Override
@@ -312,21 +309,23 @@ public class ForeignUserDiveSpotList extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == Constants.FOREIGN_USER_SPOT_LIST_REQUEST_CODE_LOGIN) {
-            if (resultCode == RESULT_OK) {
-                if (isCheckIn) {
-                    getUsersCheckinList();
+        switch (requestCode) {
+            case ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_SPOT_LIST_LOGIN:
+                if (resultCode == RESULT_OK) {
+                    if (isCheckIn) {
+                        getUsersCheckinList();
+                    }
+                    if (isEdited) {
+                        getEditedDiveSpotList();
+                    }
+                    if (isCreated) {
+                        getAddedDiveSpotList();
+                    }
+                } else {
+                    setResult(RESULT_CANCELED);
+                    finish();
                 }
-                if (isEdited) {
-                    getEditedDiveSpotList();
-                }
-                if (isCreated) {
-                    getAddedDiveSpotList();
-                }
-            } else {
-                setResult(RESULT_CANCELED);
-                finish();
-            }
+                break;
         }
     }
 
@@ -340,7 +339,7 @@ public class ForeignUserDiveSpotList extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         DDScannerApplication.activityResumed();
-        if (!helpers.hasConnection(this)) {
+        if (!Helpers.hasConnection(this)) {
             DDScannerApplication.showErrorActivity(this);
         }
     }

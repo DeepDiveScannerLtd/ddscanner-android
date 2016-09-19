@@ -55,7 +55,6 @@ public class SwipableDiveSpotListAdapter
 
     public ArrayList<DiveSpot> divespots;
     private Context context;
-    private Helpers helpers = new Helpers();
     private EventsTracker.SpotViewSource spotViewSource;
 
     public SwipableDiveSpotListAdapter(ArrayList<DiveSpot> divespots, Context context, EventsTracker.SpotViewSource spotViewSource) {
@@ -145,7 +144,7 @@ public class SwipableDiveSpotListAdapter
 
     private void checkOut(String id) {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance()
-                .checkOutUser(id, helpers.getUserQuryMapRequest());
+                .checkOutUser(id, Helpers.getUserQuryMapRequest());
         call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -161,29 +160,29 @@ public class SwipableDiveSpotListAdapter
                         ErrorsParser.checkForError(response.code(), responseString);
                     } catch (ServerInternalErrorException e) {
                         // TODO Handle
-                        helpers.showToast(context, R.string.toast_server_error);
+                        Helpers.showToast(context, R.string.toast_server_error);
                     } catch (BadRequestException e) {
                         // TODO Handle
-                        helpers.showToast(context, R.string.toast_server_error);
+                        Helpers.showToast(context, R.string.toast_server_error);
                     } catch (ValidationErrorException e) {
                         // TODO Handle
-                        helpers.showToast(context, R.string.toast_server_error);
+                        Helpers.showToast(context, R.string.toast_server_error);
                     } catch (NotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(context, R.string.toast_server_error);
+                        Helpers.showToast(context, R.string.toast_server_error);
                     } catch (UnknownErrorException e) {
                         // TODO Handle
-                        helpers.showToast(context, R.string.toast_server_error);
+                        Helpers.showToast(context, R.string.toast_server_error);
                     } catch (DiveSpotNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(context, R.string.toast_server_error);
+                        Helpers.showToast(context, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         SharedPreferenceHelper.logout();
                         DDScannerApplication.bus.post(new ShowLoginActivityIntent());
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(context, R.string.toast_server_error);
+                        Helpers.showToast(context, R.string.toast_server_error);
                     }
                 }
             }
@@ -196,7 +195,7 @@ public class SwipableDiveSpotListAdapter
     }
     private void checkIn(String id) {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance()
-                .checkIn(id, helpers.getRegisterRequest());
+                .checkIn(id, Helpers.getRegisterRequest());
         call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -212,29 +211,29 @@ public class SwipableDiveSpotListAdapter
                         ErrorsParser.checkForError(response.code(), responseString);
                     } catch (ServerInternalErrorException e) {
                         // TODO Handle
-                        helpers.showToast(context, R.string.toast_server_error);
+                        Helpers.showToast(context, R.string.toast_server_error);
                     } catch (BadRequestException e) {
                         // TODO Handle
-                        helpers.showToast(context, R.string.toast_server_error);
+                        Helpers.showToast(context, R.string.toast_server_error);
                     } catch (ValidationErrorException e) {
                         // TODO Handle
-                        helpers.showToast(context, R.string.toast_server_error);
+                        Helpers.showToast(context, R.string.toast_server_error);
                     } catch (NotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(context, R.string.toast_server_error);
+                        Helpers.showToast(context, R.string.toast_server_error);
                     } catch (UnknownErrorException e) {
                         // TODO Handle
-                        helpers.showToast(context, R.string.toast_server_error);
+                        Helpers.showToast(context, R.string.toast_server_error);
                     } catch (DiveSpotNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(context, R.string.toast_server_error);
+                        Helpers.showToast(context, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         SharedPreferenceHelper.logout();
                         DDScannerApplication.bus.post(new ShowLoginActivityIntent());
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(context, R.string.toast_server_error);
+                        Helpers.showToast(context, R.string.toast_server_error);
                     }
                 }
             }
@@ -247,7 +246,7 @@ public class SwipableDiveSpotListAdapter
     }
     private void addToFavorites(String id) {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance()
-                .addDiveSpotToFavourites(id, helpers.getRegisterRequest());
+                .addDiveSpotToFavourites(id, Helpers.getRegisterRequest());
         call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -263,29 +262,29 @@ public class SwipableDiveSpotListAdapter
                         ErrorsParser.checkForError(response.code(), responseString);
                     } catch (ServerInternalErrorException e) {
                         // TODO Handle
-                        helpers.showToast(context, R.string.toast_server_error);
+                        Helpers.showToast(context, R.string.toast_server_error);
                     } catch (BadRequestException e) {
                         // TODO Handle
-                        helpers.showToast(context, R.string.toast_server_error);
+                        Helpers.showToast(context, R.string.toast_server_error);
                     } catch (ValidationErrorException e) {
                         // TODO Handle
-                        helpers.showToast(context, R.string.toast_server_error);
+                        Helpers.showToast(context, R.string.toast_server_error);
                     } catch (NotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(context, R.string.toast_server_error);
+                        Helpers.showToast(context, R.string.toast_server_error);
                     } catch (UnknownErrorException e) {
                         // TODO Handle
-                        helpers.showToast(context, R.string.toast_server_error);
+                        Helpers.showToast(context, R.string.toast_server_error);
                     } catch (DiveSpotNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(context, R.string.toast_server_error);
+                        Helpers.showToast(context, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         SharedPreferenceHelper.logout();
                         DDScannerApplication.bus.post(new ShowLoginActivityIntent());
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(context, R.string.toast_server_error);
+                        Helpers.showToast(context, R.string.toast_server_error);
                     }
                 }
             }
@@ -299,7 +298,7 @@ public class SwipableDiveSpotListAdapter
 
     private void removeFromFavorites(String id) {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance()
-                .removeSpotFromFavorites(id, helpers.getUserQuryMapRequest());
+                .removeSpotFromFavorites(id, Helpers.getUserQuryMapRequest());
         call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -315,29 +314,29 @@ public class SwipableDiveSpotListAdapter
                         ErrorsParser.checkForError(response.code(), responseString);
                     } catch (ServerInternalErrorException e) {
                         // TODO Handle
-                        helpers.showToast(context, R.string.toast_server_error);
+                        Helpers.showToast(context, R.string.toast_server_error);
                     } catch (BadRequestException e) {
                         // TODO Handle
-                        helpers.showToast(context, R.string.toast_server_error);
+                        Helpers.showToast(context, R.string.toast_server_error);
                     } catch (ValidationErrorException e) {
                         // TODO Handle
-                        helpers.showToast(context, R.string.toast_server_error);
+                        Helpers.showToast(context, R.string.toast_server_error);
                     } catch (NotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(context, R.string.toast_server_error);
+                        Helpers.showToast(context, R.string.toast_server_error);
                     } catch (UnknownErrorException e) {
                         // TODO Handle
-                        helpers.showToast(context, R.string.toast_server_error);
+                        Helpers.showToast(context, R.string.toast_server_error);
                     } catch (DiveSpotNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(context, R.string.toast_server_error);
+                        Helpers.showToast(context, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         SharedPreferenceHelper.logout();
                         DDScannerApplication.bus.post(new ShowLoginActivityIntent());
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(context, R.string.toast_server_error);
+                        Helpers.showToast(context, R.string.toast_server_error);
                     }
                 }
             }

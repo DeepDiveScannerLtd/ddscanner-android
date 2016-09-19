@@ -28,6 +28,7 @@ import com.ddscanner.rest.BaseCallback;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.DiveSpotsListAdapter;
+import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogUtils;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
@@ -43,19 +44,14 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 
-/**
- * Created by lashket on 20.5.16.
- */
 public class DiveSpotsListActivity extends AppCompatActivity {
 
-    private static final int RC_LOGIN = 9001;
     private static final String BUNDLE_KEY_SPOT_VIEW_SOURCE = "BUNDLE_KEY_SPOT_VIEW_SOURCE";
     
     private RecyclerView rc;
     private Toolbar toolbar;
     private List<DiveSpot> diveSpots = new ArrayList<>();
     private boolean isAdded = false;
-    private Helpers helpers = new Helpers();
     private ProgressView progressBarFull;
     private EventsTracker.SpotViewSource spotViewSource;
 
@@ -76,17 +72,19 @@ public class DiveSpotsListActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RC_LOGIN) {
-            if (resultCode == RESULT_OK) {
-                if (isAdded) {
-                    getAddedList();
-                } else {
-                    getEditedList();
+        switch (requestCode) {
+            case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOTS_LIST_ACTIVITY_LOGIN:
+                if (resultCode == RESULT_OK) {
+                    if (isAdded) {
+                        getAddedList();
+                    } else {
+                        getEditedList();
+                    }
                 }
-            }
-            if (resultCode == RESULT_CANCELED) {
-                finish();
-            }
+                if (resultCode == RESULT_CANCELED) {
+                    finish();
+                }
+                break;
         }
     }
     
@@ -115,7 +113,7 @@ public class DiveSpotsListActivity extends AppCompatActivity {
 
     private void getAddedList() {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUsersAdded(
-                SharedPreferenceHelper.getUserServerId(), helpers.getUserQuryMapRequest());
+                SharedPreferenceHelper.getUserServerId(), Helpers.getUserQuryMapRequest());
         call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -144,28 +142,28 @@ public class DiveSpotsListActivity extends AppCompatActivity {
                         ErrorsParser.checkForError(response.code(), responseString);
                     } catch (ServerInternalErrorException e) {
                         // TODO Handle
-                        helpers.showToast(DiveSpotsListActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(DiveSpotsListActivity.this, R.string.toast_server_error);
                     } catch (BadRequestException e) {
                         // TODO Handle
-                        helpers.showToast(DiveSpotsListActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(DiveSpotsListActivity.this, R.string.toast_server_error);
                     } catch (ValidationErrorException e) {
                         // TODO Handle
                     } catch (NotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(DiveSpotsListActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(DiveSpotsListActivity.this, R.string.toast_server_error);
                     } catch (UnknownErrorException e) {
                         // TODO Handle
-                        helpers.showToast(DiveSpotsListActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(DiveSpotsListActivity.this, R.string.toast_server_error);
                     } catch (DiveSpotNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(DiveSpotsListActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(DiveSpotsListActivity.this, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         SharedPreferenceHelper.logout();
-                        SocialNetworks.showForResult(DiveSpotsListActivity.this, RC_LOGIN);
+                        SocialNetworks.showForResult(DiveSpotsListActivity.this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOTS_LIST_ACTIVITY_LOGIN);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(DiveSpotsListActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(DiveSpotsListActivity.this, R.string.toast_server_error);
                     }
                 }
             }
@@ -179,7 +177,7 @@ public class DiveSpotsListActivity extends AppCompatActivity {
 
     private void getEditedList() {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUsersEdited(
-                SharedPreferenceHelper.getUserServerId(), helpers.getUserQuryMapRequest());
+                SharedPreferenceHelper.getUserServerId(), Helpers.getUserQuryMapRequest());
         call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -208,28 +206,28 @@ public class DiveSpotsListActivity extends AppCompatActivity {
                         ErrorsParser.checkForError(response.code(), responseString);
                     } catch (ServerInternalErrorException e) {
                         // TODO Handle
-                        helpers.showToast(DiveSpotsListActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(DiveSpotsListActivity.this, R.string.toast_server_error);
                     } catch (BadRequestException e) {
                         // TODO Handle
-                        helpers.showToast(DiveSpotsListActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(DiveSpotsListActivity.this, R.string.toast_server_error);
                     } catch (ValidationErrorException e) {
                         // TODO Handle
                     } catch (NotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(DiveSpotsListActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(DiveSpotsListActivity.this, R.string.toast_server_error);
                     } catch (UnknownErrorException e) {
                         // TODO Handle
-                        helpers.showToast(DiveSpotsListActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(DiveSpotsListActivity.this, R.string.toast_server_error);
                     } catch (DiveSpotNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(DiveSpotsListActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(DiveSpotsListActivity.this, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         SharedPreferenceHelper.logout();
-                        SocialNetworks.showForResult(DiveSpotsListActivity.this, RC_LOGIN);
+                        SocialNetworks.showForResult(DiveSpotsListActivity.this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOTS_LIST_ACTIVITY_LOGIN);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(DiveSpotsListActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(DiveSpotsListActivity.this, R.string.toast_server_error);
                     }
                 }
             }
@@ -274,7 +272,7 @@ public class DiveSpotsListActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         DDScannerApplication.activityResumed();
-        if (!helpers.hasConnection(this)) {
+        if (!Helpers.hasConnection(this)) {
             DDScannerApplication.showErrorActivity(this);
         }
     }

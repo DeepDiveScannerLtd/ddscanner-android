@@ -17,6 +17,7 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.events.GoToMyLocationButtonClickedEvent;
 import com.ddscanner.ui.adapters.PlacesListAdapter;
+import com.ddscanner.utils.Helpers;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.util.ArrayList;
@@ -65,7 +66,7 @@ public class SearchLocationFragment extends Fragment implements View.OnClickList
         if (places == null || places.size() == 0) {
             noResultsView.setVisibility(View.VISIBLE);
             content.setVisibility(View.GONE);
-            hideKeyboard();
+            Helpers.hideKeyboard(getActivity());
         } else {
             noResultsView.setVisibility(View.GONE);
             content.setVisibility(View.VISIBLE);
@@ -79,14 +80,6 @@ public class SearchLocationFragment extends Fragment implements View.OnClickList
             case R.id.go_to_my_location:
                 DDScannerApplication.bus.post(new GoToMyLocationButtonClickedEvent());
                 break;
-        }
-    }
-
-    private void hideKeyboard() {
-        View view = getActivity().getCurrentFocus();
-        if (view != null) {
-            InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
 

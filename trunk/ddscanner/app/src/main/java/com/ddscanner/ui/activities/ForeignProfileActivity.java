@@ -30,10 +30,12 @@ import com.ddscanner.entities.errors.ValidationErrorException;
 import com.ddscanner.rest.BaseCallback;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
+import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogUtils;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
+import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.gson.Gson;
 import com.rey.material.widget.ProgressView;
 import com.squareup.picasso.Picasso;
@@ -48,9 +50,6 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 
-/**
- * Created by lashket on 18.7.16.
- */
 public class ForeignProfileActivity extends AppCompatActivity implements View.OnClickListener {
 
     private String FACEBOOK_URL;
@@ -77,8 +76,6 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
     private LinearLayout likeLayout;
     private LinearLayout dislikeLayout;
     private LinearLayout openOnSocialLayout;
-
-    private Helpers helpers = new Helpers();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -125,12 +122,6 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
         addedCount.setText(user.getCountAdd() + getDiveSpotString(Integer.parseInt(user.getCountAdd())));
         editedCount.setText(user.getCountEdit() + getDiveSpotString(Integer.parseInt(user.getCountEdit())));
         checkInCount.setText(user.getCountCheckin() + getDiveSpotString(Integer.parseInt(user.getCountFavorite())));
-//        if (!user.getCountLike().equals("0")) {
-//            likeLayout.setOnClickListener(this);
-//        }
-//        if (!user.getCountDislike().equals("0")) {
-//            dislikeLayout.setOnClickListener(this);
-//        }
         if (!user.getCountCheckin().equals("0")) {
             showAllCheckins.setOnClickListener(this);
         }
@@ -145,12 +136,12 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
             userAbout.setVisibility(View.VISIBLE);
             userAbout.setText(user.getAbout());
         }
-        userCommentsCount.setText(helpers.formatLikesCommentsCountNumber(user.getCountComment()));
-        userDislikesCount.setText(helpers.formatLikesCommentsCountNumber(user.getCountDislike()));
-        userLikesCount.setText(helpers.formatLikesCommentsCountNumber(user.getCountLike()));
+        userCommentsCount.setText(Helpers.formatLikesCommentsCountNumber(user.getCountComment()));
+        userDislikesCount.setText(Helpers.formatLikesCommentsCountNumber(user.getCountDislike()));
+        userLikesCount.setText(Helpers.formatLikesCommentsCountNumber(user.getCountLike()));
         Picasso.with(this).load(user.getPicture())
-                .resize(Math.round(helpers.convertDpToPixel(100, this)),
-                        Math.round(helpers.convertDpToPixel(100, this))).centerCrop()
+                .resize(Math.round(Helpers.convertDpToPixel(100, this)),
+                        Math.round(Helpers.convertDpToPixel(100, this))).centerCrop()
                 .transform(new CropCircleTransformation()).into(avatar);
         userFullName.setText(user.getName());
         progressView.setVisibility(View.GONE);
@@ -179,7 +170,7 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
     }
 
     private void requestUserData() {
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserInfo(userId, helpers.getUserQuryMapRequest());
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserInfo(userId, Helpers.getUserQuryMapRequest());
         call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -213,27 +204,27 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
                         ErrorsParser.checkForError(response.code(), responseString);
                     } catch (ServerInternalErrorException e) {
                         // TODO Handle
-                        helpers.showToast(ForeignProfileActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ForeignProfileActivity.this, R.string.toast_server_error);
                     } catch (BadRequestException e) {
                         // TODO Handle
-                        helpers.showToast(ForeignProfileActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ForeignProfileActivity.this, R.string.toast_server_error);
                     } catch (ValidationErrorException e) {
                         // TODO Handle
                     } catch (NotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(ForeignProfileActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ForeignProfileActivity.this, R.string.toast_server_error);
                     } catch (UnknownErrorException e) {
                         // TODO Handle
-                        helpers.showToast(ForeignProfileActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ForeignProfileActivity.this, R.string.toast_server_error);
                     } catch (DiveSpotNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(ForeignProfileActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ForeignProfileActivity.this, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
-                        SocialNetworks.showForResult(ForeignProfileActivity.this, Constants.FOREIGN_USER_REQUEST_CODE_LOGIN);
+                        SocialNetworks.showForResult(ForeignProfileActivity.this, ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_LOGIN);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(ForeignProfileActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ForeignProfileActivity.this, R.string.toast_server_error);
                     }
                 }
             }
@@ -265,21 +256,27 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case Constants.FOREIGN_USER_REQUEST_CODE_LOGIN:
+            case ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_LOGIN:
                 if (resultCode == RESULT_OK) {
                     requestUserData();
-                } else {
-                    finish();
                 }
                 break;
-            case Constants.FOREIGN_USER_REQUEST_CODE_SHOW_LIST:
-                if (resultCode == RESULT_CANCELED) {
-                    finish();
+            case ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_LOGIN_TO_SEE_CHECKINS:
+                if (resultCode == RESULT_OK) {
+                    EventsTracker.trackReviewerCheckInsView();
+                    ForeignUserDiveSpotList.show(this, false, false, true, userId);
                 }
                 break;
-            case Constants.FOREIGN_USER_REQUEST_CODE_SHOW_LIKES_LIST:
-                if (resultCode == RESULT_CANCELED) {
-                    finish();
+            case ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_LOGIN_TO_SEE_CREATED:
+                if (resultCode == RESULT_OK) {
+                    EventsTracker.trackUserCreatedView();
+                    ForeignUserDiveSpotList.show(this, false, true, false, userId);
+                }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_LOGIN_TO_SEE_EDITED:
+                if (resultCode == RESULT_OK) {
+                    EventsTracker.trackReviewerEditedView();
+                    ForeignUserDiveSpotList.show(this, true, false, false, userId);
                 }
                 break;
         }
@@ -289,22 +286,31 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.checkins_activity:
-                EventsTracker.trackReviewerCheckInsView();
-                ForeignUserDiveSpotList.show(this, false, false, true, userId, Constants.FOREIGN_USER_REQUEST_CODE_SHOW_LIST);
+                if (SharedPreferenceHelper.isUserLoggedIn()) {
+                    EventsTracker.trackReviewerCheckInsView();
+                    ForeignUserDiveSpotList.show(this, false, false, true, userId);
+                } else {
+                    Intent intent = new Intent(ForeignProfileActivity.this, SocialNetworks.class);
+                    startActivityForResult(intent, ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_LOGIN_TO_SEE_CHECKINS);
+                }
                 break;
             case R.id.created_activity:
-                EventsTracker.trackUserCreatedView();
-                ForeignUserDiveSpotList.show(this, false, true, false, userId, Constants.FOREIGN_USER_REQUEST_CODE_SHOW_LIST);
+                if (SharedPreferenceHelper.isUserLoggedIn()) {
+                    EventsTracker.trackUserCreatedView();
+                    ForeignUserDiveSpotList.show(this, false, true, false, userId);
+                } else {
+                    Intent intent = new Intent(ForeignProfileActivity.this, SocialNetworks.class);
+                    startActivityForResult(intent, ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_LOGIN_TO_SEE_CREATED);
+                }
                 break;
             case R.id.edited_activity:
-                EventsTracker.trackReviewerEditedView();
-                ForeignUserDiveSpotList.show(this, true, false, false, userId, Constants.FOREIGN_USER_REQUEST_CODE_SHOW_LIST);
-                break;
-            case R.id.likeLayout:
-                ForeignUserLikesDislikesActivity.show(this, true, userId, Constants.FOREIGN_USER_REQUEST_CODE_SHOW_LIKES_LIST);
-                break;
-            case R.id.dislikeLayout:
-                ForeignUserLikesDislikesActivity.show(this, false, userId, Constants.FOREIGN_USER_REQUEST_CODE_SHOW_LIKES_LIST);
+                if (SharedPreferenceHelper.isUserLoggedIn()) {
+                    EventsTracker.trackReviewerEditedView();
+                    ForeignUserDiveSpotList.show(this, true, false, false, userId);
+                } else {
+                    Intent intent = new Intent(ForeignProfileActivity.this, SocialNetworks.class);
+                    startActivityForResult(intent, ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_LOGIN_TO_SEE_EDITED);
+                }
                 break;
             case R.id.openSocialNetwork:
                 openLink(user.getSocialId(), user.getType());
@@ -370,7 +376,7 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
     protected void onResume() {
         super.onResume();
         DDScannerApplication.activityResumed();
-        if (!helpers.hasConnection(this)) {
+        if (!Helpers.hasConnection(this)) {
             DDScannerApplication.showErrorActivity(this);
         }
     }

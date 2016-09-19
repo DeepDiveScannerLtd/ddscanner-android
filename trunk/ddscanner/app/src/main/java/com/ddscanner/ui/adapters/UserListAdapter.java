@@ -28,7 +28,6 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserLi
 
     private Context context;
     private ArrayList<User> userArrayList;
-    private Helpers helpers = new Helpers();
 
     public UserListAdapter(Context context, ArrayList<User> users) {
         userArrayList = users;
@@ -47,7 +46,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserLi
     public void onBindViewHolder(UserListViewHolder holder, int position) {
         Picasso.with(context)
                 .load(userArrayList.get(position).getPicture())
-                .resize(Math.round(helpers.convertDpToPixel(58, context)), Math.round(helpers.convertDpToPixel(58, context)))
+                .resize(Math.round(Helpers.convertDpToPixel(58, context)), Math.round(Helpers.convertDpToPixel(58, context)))
                 .centerCrop()
                 .transform(new CropCircleTransformation())
                 .into(holder.userAvatar);

@@ -25,15 +25,11 @@ import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 
-/**
- * Created by lashket on 2.7.16.
- */
 public class EditorsListActivity extends AppCompatActivity {
 
     private RecyclerView usersRecyclerView;
     private Toolbar toolbar;
     private ArrayList<User> users;
-    private Helpers helpers = new Helpers();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -113,7 +109,7 @@ public class EditorsListActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         DDScannerApplication.activityResumed();
-        if (!helpers.hasConnection(this)) {
+        if (!Helpers.hasConnection(this)) {
             DDScannerApplication.showErrorActivity(this);
         }
     }

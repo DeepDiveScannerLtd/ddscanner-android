@@ -20,6 +20,7 @@
             android:layout_below="@+id/icon"
             style="@style/ErrorsViewTitleStyle"
             android:text="@string/can_not_locate" />
+
         <TextView
             android:id="@+id/subtext"
             android:layout_width="263dp"

@@ -28,7 +28,7 @@ import com.ddscanner.rest.BaseCallback;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.AddPhotoToDiveSpotAdapter;
-import com.ddscanner.ui.adapters.AllPhotosDiveSpotAdapter;
+import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogUtils;
 import com.ddscanner.utils.Helpers;
@@ -52,12 +52,9 @@ import retrofit2.Response;
  */
 public class AddPhotosDoDiveSpotActivity extends AppCompatActivity implements View.OnClickListener{
 
-    private static final int RC_LOGIN_TO_SEND = 4001;
-
     private RecyclerView recyclerView;
     private Button button;
     private ArrayList<String> images;
-    private Helpers helpers = new Helpers();
     private MaterialDialog materialDialog;
     private Toolbar toolbar;
     private String dsId;
@@ -75,7 +72,7 @@ public class AddPhotosDoDiveSpotActivity extends AppCompatActivity implements Vi
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.add_photos_toolbar_title);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        materialDialog = helpers.getMaterialDialog(this);
+        materialDialog = Helpers.getMaterialDialog(this);
         images = (ArrayList<String>)getIntent().getSerializableExtra(Constants.ADD_PHOTO_ACTIVITY_INTENT_IMAGES);
         dsId = getIntent().getStringExtra(Constants.ADD_PHOTO_ACTIVITY_INTENT_DIVE_SPOT_ID);
         button = (Button) findViewById(R.id.button_share);
@@ -137,28 +134,28 @@ public class AddPhotosDoDiveSpotActivity extends AppCompatActivity implements Vi
                         ErrorsParser.checkForError(response.code(), responseString);
                     } catch (ServerInternalErrorException e) {
                         // TODO Handle
-                        helpers.showToast(AddPhotosDoDiveSpotActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(AddPhotosDoDiveSpotActivity.this, R.string.toast_server_error);
                     } catch (BadRequestException e) {
                         // TODO Handle
-                        helpers.showToast(AddPhotosDoDiveSpotActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(AddPhotosDoDiveSpotActivity.this, R.string.toast_server_error);
                     } catch (ValidationErrorException e) {
                         // TODO Handle
                     } catch (NotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(AddPhotosDoDiveSpotActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(AddPhotosDoDiveSpotActivity.this, R.string.toast_server_error);
                     } catch (UnknownErrorException e) {
                         // TODO Handle
-                        helpers.showToast(AddPhotosDoDiveSpotActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(AddPhotosDoDiveSpotActivity.this, R.string.toast_server_error);
                     } catch (DiveSpotNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(AddPhotosDoDiveSpotActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(AddPhotosDoDiveSpotActivity.this, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         SharedPreferenceHelper.logout();
-                        SocialNetworks.showForResult(AddPhotosDoDiveSpotActivity.this, RC_LOGIN_TO_SEND);
+                        SocialNetworks.showForResult(AddPhotosDoDiveSpotActivity.this, ActivitiesRequestCodes.REQUEST_CODE_ADD_PHOTOS_DO_DIVE_SPOT_ACTIVITY_LOGIN_TO_SEND);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(AddPhotosDoDiveSpotActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(AddPhotosDoDiveSpotActivity.this, R.string.toast_server_error);
                     }
                 } else {
                     EventsTracker.trackDiveSpotPhotoAdded();
@@ -188,7 +185,7 @@ public class AddPhotosDoDiveSpotActivity extends AppCompatActivity implements Vi
                                    RecyclerView.State state) {
             int position = parent.getChildAdapterPosition(view);
             if (position >= spanCount) {
-                outRect.top = Math.round(helpers.convertDpToPixel(Float.valueOf(4),
+                outRect.top = Math.round(Helpers.convertDpToPixel(Float.valueOf(4),
                         AddPhotosDoDiveSpotActivity.this));
             }
         }
@@ -197,14 +194,26 @@ public class AddPhotosDoDiveSpotActivity extends AppCompatActivity implements Vi
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RC_LOGIN_TO_SEND) {
-            if (resultCode == RESULT_OK) {
-                sendRequest();
-            }
-            if (resultCode == RESULT_CANCELED) {
-                finish();
-            }
+        switch (requestCode) {
+            case ActivitiesRequestCodes.REQUEST_CODE_ADD_PHOTOS_DO_DIVE_SPOT_ACTIVITY_LOGIN_TO_SEND:
+                if (resultCode == RESULT_OK) {
+                    sendRequest();
+                }
+                if (resultCode == RESULT_CANCELED) {
+                    finish();
+                }
+                break;
         }
+
+    }
+
+    public static void showForResult(Activity context, int requestCode, ArrayList<String> path, String diveSpotId) {
+        Intent intent = new Intent(context, AddPhotosDoDiveSpotActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("IMAGES", path);
+        bundle.putString("id", diveSpotId);
+        intent.putExtras(bundle);
+        context.startActivityForResult(intent, requestCode);
     }
 
     @Override

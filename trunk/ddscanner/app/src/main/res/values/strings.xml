@@ -96,7 +96,7 @@
     <string name="location">Location</string>
     <string name="add_manually">ADD MANUALLY</string>
     <string name="sealife">Sea Life</string>
-    <string name="edit_dive_spot">Edit dive spot</string>
+    <string name="edit_dive_spot">Edit Dive Spot</string>
     <string name="edit_profile">Edit profile</string>
     <string name="created">Created</string>
     <string name="edited_low">Edited</string>
@@ -135,7 +135,7 @@
     <string name="filter_label">Level</string>
     <string name="creator">Creator</string>
     <string name="editor">Editor</string>
-    <string name="error_turn_on_location_provider">Please give the app permission to use your location. You can find this option in your device settings</string>
+    <string name="error_turn_on_location_provider">Please turn on GPS. You can find this option in your device settings</string>
     <string name="error_no_location_permission">Please give the app permission to use your location. This will be used for "checkin" and "show my location" functionality</string>
     <string name="error_no_internet">No internet connection</string>
     <string name="open_settings">OPEN SETTINGS</string>
@@ -277,4 +277,13 @@
     <string name="pick_location_on_the_map">Pick location on the map</string>
     <string name="errr">Name may contain only numbers and letters</string>
     <string name="description_length_error">Description should contain at least 150 symbols</string>
+    <string name="also_added_to_favorites">Dive spot has already been added to favorite</string>
+    <string name="description_at_least_150_symbols">Description (At least 150 symbols)</string>
+    <string name="added_to_favorites">Added to favorites</string>
+    <string name="removed_from_favorites">Removed from favorites</string>
+    <string name="review_error">Review must contain at least 30 characters</string>
+    <string name="please_write_a_review">Please write a review to dive spot</string>
+    <string name="new_review">New Review</string>
+    <string name="comment_already_disliked">Dive spot comment has already been disliked</string>
+    <string name="comment_already_liked">Dive spot comment has already been liked</string>
 </resources>

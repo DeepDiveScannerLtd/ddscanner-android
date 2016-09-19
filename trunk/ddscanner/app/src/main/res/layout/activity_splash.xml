@@ -4,20 +4,24 @@
     android:layout_height="match_parent"
     android:background="@drawable/bg_photo">
 
+    <LinearLayout
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_marginTop="100dp">
+
     <ImageView
         android:id="@+id/logo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="164dp"
         android:src="@drawable/splash_logo" />
 
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/logo"
-        android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
         android:fontFamily="sans-serif-medium"
         android:text="@string/deep_dive_scanner"
@@ -27,12 +31,10 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/title"
-        android:layout_centerHorizontal="true"
         android:text="@string/your_personal_dive_guide"
         android:textColor="#f6f6f6"
         android:textSize="17sp" />
-
+    </LinearLayout>
     <TextView
         android:id="@+id/message"
         android:layout_width="wrap_content"

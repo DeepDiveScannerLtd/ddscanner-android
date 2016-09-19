@@ -30,8 +30,8 @@ public class ProfileDialog extends DialogFragment implements View.OnClickListene
     private Context context;
     private User user;
 
-     private String FACEBOOK_URL;
-     private  String FACEBOOK_PAGE_ID;
+    private String FACEBOOK_URL;
+    private String FACEBOOK_PAGE_ID;
 
     private TextView name;
     private TextView comments;
@@ -44,7 +44,6 @@ public class ProfileDialog extends DialogFragment implements View.OnClickListene
     private TextView link;
     private LinearLayout open;
     private ImageView closeDialog;
-    private Helpers helpers = new Helpers();
 
     public static ProfileDialog newInstance(User user) {
         ProfileDialog profileDialog = new ProfileDialog();
@@ -71,7 +70,7 @@ public class ProfileDialog extends DialogFragment implements View.OnClickListene
     @Override
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.dialog_profile_info, container,false);
+        View v = inflater.inflate(R.layout.dialog_profile_info, container, false);
         setUi(v);
         name = (TextView) v.findViewById(R.id.name);
         comments = (TextView) v.findViewById(R.id.comments);
@@ -94,8 +93,8 @@ public class ProfileDialog extends DialogFragment implements View.OnClickListene
         if (user.getAbout() != null) {
             about.setText(user.getAbout());
         }
-        Picasso.with(context).load(user.getPicture()).resize(80,80).centerCrop()
-                .transform(new TransformationRoundImage(50,0)).into(avatar);
+        Picasso.with(context).load(user.getPicture()).resize(80, 80).centerCrop()
+                .transform(new TransformationRoundImage(50, 0)).into(avatar);
         open.setOnClickListener(this);
         closeDialog.setOnClickListener(this);
 
@@ -137,8 +136,8 @@ public class ProfileDialog extends DialogFragment implements View.OnClickListene
             about.setText(user.getAbout());
             about.setVisibility(View.VISIBLE);
         }
-        Picasso.with(context).load(user.getPicture()).resize(80,80).centerCrop()
-                .transform(new TransformationRoundImage(50,0)).into(avatar);
+        Picasso.with(context).load(user.getPicture()).resize(80, 80).centerCrop()
+                .transform(new TransformationRoundImage(50, 0)).into(avatar);
         open.setOnClickListener(this);
         closeDialog.setOnClickListener(this);
 
@@ -177,7 +176,7 @@ public class ProfileDialog extends DialogFragment implements View.OnClickListene
                             Uri.parse(Constants.PROFILE_DIALOG_TWITTER_URI + userName));
                     startActivity(intent);
 
-                }catch (Exception e) {
+                } catch (Exception e) {
                     startActivity(new Intent(Intent.ACTION_VIEW,
                             Uri.parse(Constants.PROFILE_DIALOG_TWITTER_URL + userName)));
                 }
@@ -204,6 +203,7 @@ public class ProfileDialog extends DialogFragment implements View.OnClickListene
 
     /**
      * Check version of facebook app. According this create uri to open this
+     *
      * @param context
      * @return facebook URL to open app correctly
      * @author Andrei Lashkevich
@@ -224,12 +224,11 @@ public class ProfileDialog extends DialogFragment implements View.OnClickListene
     }
 
     @Override
-    public void onStart()
-    {
+    public void onStart() {
         super.onStart();
         if (getDialog() == null)
             return;
-        int dialogWidth = Math.round(helpers.convertDpToPixel(285, getActivity()));
+        int dialogWidth = Math.round(Helpers.convertDpToPixel(285, getActivity()));
         int dialogHeight = LinearLayout.LayoutParams.WRAP_CONTENT;
         getDialog().getWindow().setLayout(dialogWidth, dialogHeight);
     }

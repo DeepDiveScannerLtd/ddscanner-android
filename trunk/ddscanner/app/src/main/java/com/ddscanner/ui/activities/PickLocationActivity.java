@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -35,12 +36,8 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import java.util.List;
 import java.util.Locale;
 
-/**
- * Created by lashket on 5.4.16.
- */
 public class PickLocationActivity extends AppCompatActivity implements GoogleMap.OnCameraChangeListener, View.OnClickListener, OnMapReadyCallback {
 
-    private static final int REQUEST_CODE_PLACE_AUTOCOMPLETE = 8001;
     private static final String TAG = PickLocationActivity.class.getSimpleName();
 
     private SupportMapFragment mapFragment;
@@ -53,7 +50,6 @@ public class PickLocationActivity extends AppCompatActivity implements GoogleMap
     private ChangeDataInTextView changeDataInTextView;
     private FloatingActionButton applyLocation;
     private LatLng startLocation;
-    private Helpers helpers = new Helpers();
     private String returnedLocationName = "";
 
     public static void show(Context context) {
@@ -132,16 +128,18 @@ public class PickLocationActivity extends AppCompatActivity implements GoogleMap
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_PLACE_AUTOCOMPLETE) {
-            if (resultCode == RESULT_OK) {
-            Place place = PlacePicker.getPlace(this, data);
-                if (place.getViewport() != null) {
-                    googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(place.getViewport(),0));
-                } else {
-                    LatLngBounds latLngBounds = new LatLngBounds(new LatLng(place.getLatLng().latitude - 0.2, place.getLatLng().longitude - 0.2), new LatLng(place.getLatLng().latitude + 0.2, place.getLatLng().longitude + 0.2) );
-                    googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds,0));
+        switch (requestCode) {
+            case ActivitiesRequestCodes.REQUEST_CODE_PICK_LOCATION_ACTIVITY_PLACE_AUTOCOMPLETE:
+                if (resultCode == RESULT_OK) {
+                    Place place = PlacePicker.getPlace(this, data);
+                    if (place.getViewport() != null) {
+                        googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(place.getViewport(),0));
+                    } else {
+                        LatLngBounds latLngBounds = new LatLngBounds(new LatLng(place.getLatLng().latitude - 0.2, place.getLatLng().longitude - 0.2), new LatLng(place.getLatLng().latitude + 0.2, place.getLatLng().longitude + 0.2) );
+                        googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds,0));
+                    }
                 }
-            }
+                break;
         }
     }
 
@@ -183,7 +181,7 @@ public class PickLocationActivity extends AppCompatActivity implements GoogleMap
     private void openSearchLocationWindow() {
         try {
             PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
-            startActivityForResult(builder.build(this), REQUEST_CODE_PLACE_AUTOCOMPLETE);
+            startActivityForResult(builder.build(this), ActivitiesRequestCodes.REQUEST_CODE_PICK_LOCATION_ACTIVITY_PLACE_AUTOCOMPLETE);
         } catch (GooglePlayServicesRepairableException e) {
             Log.i(TAG, e.toString());
         } catch (GooglePlayServicesNotAvailableException e) {
@@ -227,7 +225,7 @@ public class PickLocationActivity extends AppCompatActivity implements GoogleMap
     protected void onResume() {
         super.onResume();
         DDScannerApplication.activityResumed();
-        if (!helpers.hasConnection(this)) {
+        if (!Helpers.hasConnection(this)) {
             DDScannerApplication.showErrorActivity(this);
         }
     }

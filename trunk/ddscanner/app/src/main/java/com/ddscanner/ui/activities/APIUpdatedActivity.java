@@ -2,19 +2,13 @@ package com.ddscanner.ui.activities;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
 import com.ddscanner.R;
-import com.ddscanner.utils.Helpers;
-import com.ddscanner.utils.LocationHelper;
-import com.ddscanner.utils.LogUtils;
 
 /**
  * Created by lashket on 19.5.16.
@@ -22,9 +16,6 @@ import com.ddscanner.utils.LogUtils;
 public class APIUpdatedActivity extends AppCompatActivity {
 
     private static final String TAG = APIUpdatedActivity.class.getName();
-    private static final int REQUEST_CODE_TURN_ON_LOCATION_SETTINGS = 5000;
-
-    private Helpers helpers = new Helpers();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

@@ -27,14 +27,13 @@ import java.util.ArrayList;
  * Created by lashket on 23.12.15.
  */
 public class DiveSpotsListAdapter
-        extends RecyclerView.Adapter<DiveSpotsListAdapter.ProductListViewHolder>{
+        extends RecyclerView.Adapter<DiveSpotsListAdapter.ProductListViewHolder> {
 
     private static final String TAG = DiveSpotsListAdapter.class.getSimpleName();
 
     public ArrayList<DiveSpot> divespots;
     private Context context;
     private EventsTracker.SpotViewSource spotViewSource;
-    private Helpers helpers = new Helpers();
 
     public DiveSpotsListAdapter(ArrayList<DiveSpot> divespots, Context context, EventsTracker.SpotViewSource spotViewSource) {
         this.divespots = divespots;
@@ -59,35 +58,35 @@ public class DiveSpotsListAdapter
                 setColorFilter(context.getResources().getColor(R.color.primary),
                         PorterDuff.Mode.MULTIPLY);
         if (divespot.getImage() != null) {
-            Picasso.with(context).load(divespot.getImage()).resize(Math.round(helpers.convertDpToPixel(130, context)), Math.round(helpers.convertDpToPixel(130, context))).centerCrop()
-                    .transform(new TransformationRoundImage(2,0))
+            Picasso.with(context).load(divespot.getImage()).resize(Math.round(Helpers.convertDpToPixel(130, context)), Math.round(Helpers.convertDpToPixel(130, context))).centerCrop()
+                    .transform(new TransformationRoundImage(2, 0))
                     .into(productListViewHolder.imageView,
                             new ImageLoadedCallback(productListViewHolder.progressBar) {
-                @Override
-                public void onSuccess() {
-                    if (this.progressBar != null) {
-                        progressBar.setVisibility(View.GONE);
-                    }
-                }
-            });
+                                @Override
+                                public void onSuccess() {
+                                    if (this.progressBar != null) {
+                                        progressBar.setVisibility(View.GONE);
+                                    }
+                                }
+                            });
         } else {
             productListViewHolder.imageView.setImageDrawable(ContextCompat.getDrawable(context,
                     R.drawable.list_photo_default));
         }
-        if(divespot.getName() != null) {
-             productListViewHolder.title.setText(divespot.getName());
+        if (divespot.getName() != null) {
+            productListViewHolder.title.setText(divespot.getName());
         }
         productListViewHolder.stars.removeAllViews();
         for (int k = 0; k < divespot.getRating(); k++) {
             ImageView iv = new ImageView(context);
             iv.setImageResource(R.drawable.ic_list_star_full);
-            iv.setPadding(0,0,5,0);
+            iv.setPadding(0, 0, 5, 0);
             productListViewHolder.stars.addView(iv);
         }
         for (int k = 0; k < 5 - divespot.getRating(); k++) {
             ImageView iv = new ImageView(context);
             iv.setImageResource(R.drawable.ic_list_star_empty);
-            iv.setPadding(0,0,5,0);
+            iv.setPadding(0, 0, 5, 0);
             productListViewHolder.stars.addView(iv);
         }
         productListViewHolder.object.setText(divespot.getObject());
@@ -95,7 +94,9 @@ public class DiveSpotsListAdapter
 
     @Override
     public int getItemCount() {
-        if (divespots == null) { return 0; }
+        if (divespots == null) {
+            return 0;
+        }
         return divespots.size();
     }
 
@@ -114,7 +115,7 @@ public class DiveSpotsListAdapter
             super(v);
             context = itemView.getContext();
             v.setOnClickListener(this);
-           // productPrice = (TextView) v.findViewById(R.id.product_price);
+            // productPrice = (TextView) v.findViewById(R.id.product_price);
             imageView = (ImageView) v.findViewById(R.id.product_logo);
             title = (TextView) v.findViewById(R.id.product_title);
             stars = (LinearLayout) v.findViewById(R.id.stars);
@@ -136,7 +137,7 @@ public class DiveSpotsListAdapter
     private class ImageLoadedCallback implements Callback {
         ProgressBar progressBar;
 
-        public  ImageLoadedCallback(ProgressBar progBar){
+        public ImageLoadedCallback(ProgressBar progBar) {
             progressBar = progBar;
         }
 

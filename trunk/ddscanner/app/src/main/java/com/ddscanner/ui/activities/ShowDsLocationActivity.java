@@ -18,9 +18,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-/**
- * Created by lashket on 27.4.16.
- */
 public class ShowDsLocationActivity extends AppCompatActivity {
 
     public static final String LATLNG = "LATLNG";
@@ -28,7 +25,6 @@ public class ShowDsLocationActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private MapFragment mapFragment;
     private LatLng latLng;
-    private Helpers helpers = new Helpers();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -77,7 +73,7 @@ public class ShowDsLocationActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         DDScannerApplication.activityResumed();
-        if (!helpers.hasConnection(this)) {
+        if (!Helpers.hasConnection(this)) {
             DDScannerApplication.showErrorActivity(this);
         }
     }

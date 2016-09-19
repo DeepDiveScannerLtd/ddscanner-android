@@ -34,7 +34,6 @@ public class NotificationsListAdapter
 
     private List<Notification> notifications;
     private Context context;
-    private Helpers helpers = new Helpers();
     private FragmentManager mFragmentManager;
     private SectionedRecyclerViewAdapter sectionAdapter;
 
@@ -63,14 +62,15 @@ public class NotificationsListAdapter
                     spannableString.setSpan(fcs, text.indexOf(divespot),
                             text.length() - divespot.length(), 0);
                     holder.text.setText(spannableString);
-                    holder.timeAgo.setText(helpers.getDate(notification.getDate()));
+                    holder.timeAgo.setText(Helpers.getDate(notification.getDate()));
                     break;
                 case LIKE:
                     holder.likeDislikeImage.setImageDrawable(AppCompatDrawableManager.get()
                             .getDrawable(context, R.drawable.icon_like));
                     Picasso.with(context)
                             .load(notification.getUser().getPicture())
-                            .resize(Math.round(helpers.convertDpToPixel(64, context)),Math.round(helpers.convertDpToPixel(64, context)))
+                            .resize(Math.round(Helpers.convertDpToPixel(64, context)),Math.round(Helpers.convertDpToPixel(64, context)))
+                            .centerCrop()
                             .transform(new CropCircleTransformation())
                             .into(holder.image);
                     String name = notification.getUser().getName();
@@ -81,14 +81,14 @@ public class NotificationsListAdapter
                     spannableString.setSpan(fcs, 0, name.length(), 0);
                     spannableString.setSpan(fcs, text.indexOf(divespot), text.length(), 0);
                     holder.text.setText(spannableString);
-                    holder.timeAgo.setText(helpers.getDate(notification.getDate()));
+                    holder.timeAgo.setText(Helpers.getDate(notification.getDate()));
                     break;
                 case DISLIKE:
                     holder.likeDislikeImage.setImageDrawable(AppCompatDrawableManager.get()
                             .getDrawable(context, R.drawable.icon_dislike));
                     Picasso.with(context)
                             .load(notification.getUser().getPicture())
-                            .resize(Math.round(helpers.convertDpToPixel(64, context)),Math.round(helpers.convertDpToPixel(64, context)))
+                            .resize(Math.round(Helpers.convertDpToPixel(64, context)),Math.round(Helpers.convertDpToPixel(64, context)))
                             .transform(new CropCircleTransformation())
                             .into(holder.image);
                     name = notification.getUser().getName();
@@ -98,7 +98,7 @@ public class NotificationsListAdapter
                     spannableString.setSpan(fcs, 0, name.length(), 0);
                     spannableString.setSpan(fcs, text.indexOf(divespot), text.length(), 0);
                     holder.text.setText(spannableString);
-                    holder.timeAgo.setText(helpers.getDate(notification.getDate()));
+                    holder.timeAgo.setText(Helpers.getDate(notification.getDate()));
                     break;
             }
         }

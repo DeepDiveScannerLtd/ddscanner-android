@@ -47,11 +47,12 @@ import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.activities.AboutActivity;
 import com.ddscanner.ui.activities.DiveSpotsListActivity;
-import com.ddscanner.ui.activities.ForeignUserLikesDislikesActivity;
+import com.ddscanner.ui.activities.UserLikesDislikesActivity;
 import com.ddscanner.ui.activities.MainActivity;
 import com.ddscanner.ui.activities.SelfCommentsActivity;
 import com.ddscanner.ui.activities.UsersDivespotListSwipableActivity;
 import com.ddscanner.ui.views.LoginView;
+import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogUtils;
 import com.ddscanner.utils.Helpers;
@@ -94,8 +95,7 @@ public class ProfileFragment extends Fragment
     private LinearLayout logout;
     private LinearLayout capturePhoto;
     private ImageView newPhoto;
-    private com.rey.material.widget.Button cancelButton;
-    private Helpers helpers = new Helpers();
+    private Button cancelButton;
     private User user;
     private TextView userCommentsCount;
     private TextView userLikesCount;
@@ -140,7 +140,8 @@ public class ProfileFragment extends Fragment
     private MaterialDialog materialDialog;
     private Map<String, TextView> errorsMap = new HashMap<>();
 
-    private Uri uri = null;
+    private String uri = null;
+    private Uri uriFromCamera = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -163,7 +164,7 @@ public class ProfileFragment extends Fragment
         if (SharedPreferenceHelper.isUserLoggedIn()) {
             getUserDataRequest(SharedPreferenceHelper.getUserServerId());
         }
-        materialDialog = helpers.getMaterialDialog(getContext());
+        materialDialog = Helpers.getMaterialDialog(getContext());
         createErrorsMap();
         if (SharedPreferenceHelper.isUserLoggedIn()) {
             onLoggedIn();
@@ -213,7 +214,7 @@ public class ProfileFragment extends Fragment
         editProfile = (LinearLayout) v.findViewById(R.id.edit_profile);
         capturePhoto = (LinearLayout) v.findViewById(R.id.capture_photo);
         newPhoto = (ImageView) v.findViewById(R.id.user_chosed_photo);
-        cancelButton = (com.rey.material.widget.Button) v.findViewById(R.id.cancel_button);
+        cancelButton = (Button) v.findViewById(R.id.cancel_button);
         userCommentsCount = (TextView) v.findViewById(R.id.user_comments);
         userLikesCount = (TextView) v.findViewById(R.id.user_likes);
         userDislikesCount = (TextView) v.findViewById(R.id.user_dislikes);
@@ -302,9 +303,13 @@ public class ProfileFragment extends Fragment
                 aboutLayout.setVisibility(View.GONE);
                 editLayout.setVisibility(View.VISIBLE);
                 fullNameEdit.setText(user.getName());
+                fullNameEdit.setSelection(user.getName().length());
                 if (user.getAbout() != null) {
                     aboutEdit.setText(user.getAbout());
+                    aboutEdit.setSelection(user.getAbout().length());
                 }
+                nameLeftSymbols.setVisibility(View.GONE);
+                aboutLeftSymbols.setVisibility(View.GONE);
                 break;
             case R.id.capture_photo:
                 isClickedChosingPhotoButton = true;
@@ -354,11 +359,11 @@ public class ProfileFragment extends Fragment
                 break;
             case R.id.likeLayout:
                 EventsTracker.trackUserLikesView();
-                ForeignUserLikesDislikesActivity.show(getActivity(), true, user.getId(), Constants.FOREIGN_USER_REQUEST_CODE_SHOW_LIKES_LIST);
+                UserLikesDislikesActivity.show(getActivity(), true, user.getId());
                 break;
             case R.id.dislikeLayout:
                 EventsTracker.trackUserDislikesView();
-                ForeignUserLikesDislikesActivity.show(getActivity(), false, user.getId(), Constants.FOREIGN_USER_REQUEST_CODE_SHOW_LIKES_LIST);
+                UserLikesDislikesActivity.show(getActivity(), false, user.getId());
                 break;
             case R.id.comments_layout:
                 SelfCommentsActivity.show(getContext(), user.getId());
@@ -394,16 +399,28 @@ public class ProfileFragment extends Fragment
         DDScannerApplication.bus.unregister(this);
     }
 
-    public void setImage(Uri uri) {
-        Picasso.with(getContext()).load(uri)
-                .resize(Math.round(helpers.convertDpToPixel(80, getContext())),
-                        Math.round(helpers.convertDpToPixel(80, getContext()))).centerCrop()
+    public void setImage(String uri) {
+        Picasso.with(getContext()).load("file://" + uri)
+                .resize(Math.round(Helpers.convertDpToPixel(80, getContext())),
+                        Math.round(Helpers.convertDpToPixel(80, getContext()))).centerCrop()
                 .transform(new CropCircleTransformation()).into(newPhoto);
         this.uri = uri;
+        this.uriFromCamera = null;
     }
 
+    public void setImage(Uri uri) {
+        Picasso.with(getContext()).load(uri)
+                .resize(Math.round(Helpers.convertDpToPixel(80, getContext())),
+                        Math.round(Helpers.convertDpToPixel(80, getContext()))).centerCrop()
+                .transform(new CropCircleTransformation()).into(newPhoto);
+        this.uriFromCamera = uri;
+        this.uri = null;
+    }
+
+
+
     private void getUserDataRequest(String id) {
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserInfo(id, helpers.getUserQuryMapRequest());
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserInfo(id, Helpers.getUserQuryMapRequest());
         call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -435,7 +452,7 @@ public class ProfileFragment extends Fragment
                 }
                 if (response.errorBody() != null) {
                     try {
-                        if (helpers.checkIsErrorByLogin(response.errorBody().string())) {
+                        if (Helpers.checkIsErrorByLogin(response.errorBody().string())) {
                             SharedPreferenceHelper.logout();
                         }
                     } catch (IOException e) {
@@ -464,24 +481,24 @@ public class ProfileFragment extends Fragment
             }
             if (user.getPicture() == null) {
                 Picasso.with(getContext()).load(R.drawable.avatar_profile_default)
-                        .resize(Math.round(helpers.convertDpToPixel(100, getContext())),
-                                Math.round(helpers.convertDpToPixel(100, getContext()))).centerCrop()
+                        .resize(Math.round(Helpers.convertDpToPixel(100, getContext())),
+                                Math.round(Helpers.convertDpToPixel(100, getContext()))).centerCrop()
                         .placeholder(R.drawable.avatar_profile_default)
                         .transform(new CropCircleTransformation()).into(avatar);
             } else {
                 Picasso.with(getContext()).load(user.getPicture())
-                        .resize(Math.round(helpers.convertDpToPixel(80, getContext())),
-                                Math.round(helpers.convertDpToPixel(80, getContext()))).centerCrop()
+                        .resize(Math.round(Helpers.convertDpToPixel(80, getContext())),
+                                Math.round(Helpers.convertDpToPixel(80, getContext()))).centerCrop()
                         .placeholder(R.drawable.avatar_profile_default)
                         .error(R.drawable.avatar_profile_default)
                         .transform(new CropCircleTransformation()).into(avatar);
             }
-            userCommentsCount.setText(helpers.formatLikesCommentsCountNumber(user.getCountComment()));
-            userLikesCount.setText(helpers.formatLikesCommentsCountNumber(user.getCountLike()));
-            userDislikesCount.setText(helpers.formatLikesCommentsCountNumber(user.getCountDislike()));
+            userCommentsCount.setText(Helpers.formatLikesCommentsCountNumber(user.getCountComment()));
+            userLikesCount.setText(Helpers.formatLikesCommentsCountNumber(user.getCountLike()));
+            userDislikesCount.setText(Helpers.formatLikesCommentsCountNumber(user.getCountDislike()));
             Picasso.with(getContext()).load(user.getPicture())
-                    .resize(Math.round(helpers.convertDpToPixel(80, getContext())),
-                            Math.round(helpers.convertDpToPixel(80, getContext()))).centerCrop()
+                    .resize(Math.round(Helpers.convertDpToPixel(80, getContext())),
+                            Math.round(Helpers.convertDpToPixel(80, getContext()))).centerCrop()
                     .placeholder(R.drawable.avatar_profile_default)
                     .error(R.drawable.avatar_profile_default)
                     .transform(new CropCircleTransformation()).into(newPhoto);
@@ -565,9 +582,20 @@ public class ProfileFragment extends Fragment
         if (uri != null) {
             File file;
             if (!uri.toString().contains("file:")) {
-                file = new File(helpers.getRealPathFromURI(getContext(), uri));
+                file = new File(uri);
             } else {
-                file = new File(uri.getPath());
+                file = new File(uri);
+            }
+            RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
+            image = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
+        }
+
+        if (uriFromCamera != null) {
+            File file;
+            if (!uriFromCamera.toString().contains("file:")) {
+                file = new File(Helpers.getRealPathFromURI(getContext(), uriFromCamera));
+            } else {
+                file = new File(uriFromCamera.getPath());
             }
             RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
             image = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
@@ -612,13 +640,13 @@ public class ProfileFragment extends Fragment
                     }
                     if (response.raw().code() == 422) {
                         try {
-                            if (helpers.checkIsErrorByLogin(response.errorBody().string())) {
+                            if (Helpers.checkIsErrorByLogin(response.errorBody().string())) {
                                 SharedPreferenceHelper.logout();
                                 DDScannerApplication.bus.post(new ShowLoginActivityIntent());
                             } else {
                                 try {
                                     String error = response.errorBody().string();
-                                    helpers.errorHandling(getContext(), errorsMap, error);
+                                    Helpers.errorHandling(getContext(), errorsMap, error);
                                 } catch (IOException e) {
 
                                 }
@@ -653,7 +681,7 @@ public class ProfileFragment extends Fragment
 
     private void logout() {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance()
-                .logout(helpers.getRegisterRequest());
+                .logout(Helpers.getRegisterRequest());
         call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -676,24 +704,24 @@ public class ProfileFragment extends Fragment
                         ErrorsParser.checkForError(response.code(), responseString);
                     } catch (ServerInternalErrorException e) {
                         // TODO Handle
-                        helpers.showToast(getContext(), R.string.toast_server_error);
+                        Helpers.showToast(getContext(), R.string.toast_server_error);
                     } catch (BadRequestException e) {
                         // TODO Handle
-                        helpers.showToast(getContext(), R.string.toast_server_error);
+                        Helpers.showToast(getContext(), R.string.toast_server_error);
                     } catch (ValidationErrorException e) {
                         // TODO Handle
                     } catch (NotFoundException e) {
                         // TODO Handle
-                      // helpers.showToast(getContext(), R.string.toast_server_error);
+                      // Helpers.showToast(getContext(), R.string.toast_server_error);
                         SharedPreferenceHelper.logout();
                         DDScannerApplication.bus.post(new LoggedOutEvent());
                         DDScannerApplication.bus.post(new ChangePageOfMainViewPagerEvent(0));
                     } catch (UnknownErrorException e) {
                         // TODO Handle
-                        helpers.showToast(getContext(), R.string.toast_server_error);
+                        Helpers.showToast(getContext(), R.string.toast_server_error);
                     } catch (DiveSpotNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(getContext(), R.string.toast_server_error);
+                        Helpers.showToast(getContext(), R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         SharedPreferenceHelper.logout();
@@ -701,7 +729,7 @@ public class ProfileFragment extends Fragment
                         DDScannerApplication.bus.post(new ChangePageOfMainViewPagerEvent(0));
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(getContext(), R.string.toast_server_error);
+                        Helpers.showToast(getContext(), R.string.toast_server_error);
                     }
                 }
             }

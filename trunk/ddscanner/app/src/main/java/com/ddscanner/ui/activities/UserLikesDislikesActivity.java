@@ -28,6 +28,7 @@ import com.ddscanner.rest.BaseCallback;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.ForeignUserLikesAdapter;
+import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogUtils;
 import com.ddscanner.utils.Helpers;
@@ -42,17 +43,13 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 
-/**
- * Created by lashket on 19.7.16.
- */
-public class ForeignUserLikesDislikesActivity extends AppCompatActivity {
+public class UserLikesDislikesActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
     private RecyclerView recyclerView;
     private boolean isLikes;
     private String userId;
     private ProgressView progressView;
-    private Helpers helpers = new Helpers();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -79,7 +76,7 @@ public class ForeignUserLikesDislikesActivity extends AppCompatActivity {
     }
 
     private void getUserDislikes() {
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getForeignUserDislikes(userId, helpers.getUserQuryMapRequest());
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getForeignUserDislikes(userId, Helpers.getUserQuryMapRequest());
         call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -88,7 +85,7 @@ public class ForeignUserLikesDislikesActivity extends AppCompatActivity {
                     try {
                         responseString = response.body().string();
                         ForeignUserDislikesWrapper foreignUserDislikesWrapper = new Gson().fromJson(responseString, ForeignUserDislikesWrapper.class);
-                        recyclerView.setAdapter(new ForeignUserLikesAdapter(ForeignUserLikesDislikesActivity.this, (ArrayList<ForeignUserLike>) foreignUserDislikesWrapper.getDislikes(), false));
+                        recyclerView.setAdapter(new ForeignUserLikesAdapter(UserLikesDislikesActivity.this, (ArrayList<ForeignUserLike>) foreignUserDislikesWrapper.getDislikes(), false));
                         recyclerView.setVisibility(View.VISIBLE);
                         progressView.setVisibility(View.GONE);
                     } catch (IOException e) {
@@ -107,40 +104,40 @@ public class ForeignUserLikesDislikesActivity extends AppCompatActivity {
                         ErrorsParser.checkForError(response.code(), responseString);
                     } catch (ServerInternalErrorException e) {
                         // TODO Handle
-                        helpers.showToast(ForeignUserLikesDislikesActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(UserLikesDislikesActivity.this, R.string.toast_server_error);
                     } catch (BadRequestException e) {
                         // TODO Handle
-                        helpers.showToast(ForeignUserLikesDislikesActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(UserLikesDislikesActivity.this, R.string.toast_server_error);
                     } catch (ValidationErrorException e) {
                         // TODO Handle
                     } catch (NotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(ForeignUserLikesDislikesActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(UserLikesDislikesActivity.this, R.string.toast_server_error);
                     } catch (UnknownErrorException e) {
                         // TODO Handle
-                        helpers.showToast(ForeignUserLikesDislikesActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(UserLikesDislikesActivity.this, R.string.toast_server_error);
                     } catch (DiveSpotNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(ForeignUserLikesDislikesActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(UserLikesDislikesActivity.this, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
-                        SocialNetworks.showForResult(ForeignUserLikesDislikesActivity.this, Constants.FOREIGN_USER_SPOT_LIST_REQUEST_CODE_LOGIN);
+                        SocialNetworks.showForResult(UserLikesDislikesActivity.this, ActivitiesRequestCodes.REQUEST_CODE_USER_LIKES_DISLIKES_ACTIVITY_LOGIN);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(ForeignUserLikesDislikesActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(UserLikesDislikesActivity.this, R.string.toast_server_error);
                     }
                 }
             }
 
             @Override
             public void onConnectionFailure() {
-                DialogUtils.showConnectionErrorDialog(ForeignUserLikesDislikesActivity.this);
+                DialogUtils.showConnectionErrorDialog(UserLikesDislikesActivity.this);
             }
         });
     }
 
     private void getUserLikes() {
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getForeignUserLikes(userId, helpers.getUserQuryMapRequest());
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getForeignUserLikes(userId, Helpers.getUserQuryMapRequest());
         call.enqueue(new BaseCallback() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -149,7 +146,7 @@ public class ForeignUserLikesDislikesActivity extends AppCompatActivity {
                     try {
                         responseString = response.body().string();
                         ForeignUserLikeWrapper foreignUserLikeWrapper = new Gson().fromJson(responseString, ForeignUserLikeWrapper.class);
-                        recyclerView.setAdapter(new ForeignUserLikesAdapter(ForeignUserLikesDislikesActivity.this, (ArrayList<ForeignUserLike>) foreignUserLikeWrapper.getLikes(), true));
+                        recyclerView.setAdapter(new ForeignUserLikesAdapter(UserLikesDislikesActivity.this, (ArrayList<ForeignUserLike>) foreignUserLikeWrapper.getLikes(), true));
                         recyclerView.setVisibility(View.VISIBLE);
                         progressView.setVisibility(View.GONE);
                     } catch (IOException e) {
@@ -168,34 +165,34 @@ public class ForeignUserLikesDislikesActivity extends AppCompatActivity {
                         ErrorsParser.checkForError(response.code(), responseString);
                     } catch (ServerInternalErrorException e) {
                         // TODO Handle
-                        helpers.showToast(ForeignUserLikesDislikesActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(UserLikesDislikesActivity.this, R.string.toast_server_error);
                     } catch (BadRequestException e) {
                         // TODO Handle
-                        helpers.showToast(ForeignUserLikesDislikesActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(UserLikesDislikesActivity.this, R.string.toast_server_error);
                     } catch (ValidationErrorException e) {
                         // TODO Handle
                     } catch (NotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(ForeignUserLikesDislikesActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(UserLikesDislikesActivity.this, R.string.toast_server_error);
                     } catch (UnknownErrorException e) {
                         // TODO Handle
-                        helpers.showToast(ForeignUserLikesDislikesActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(UserLikesDislikesActivity.this, R.string.toast_server_error);
                     } catch (DiveSpotNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(ForeignUserLikesDislikesActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(UserLikesDislikesActivity.this, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
-                        SocialNetworks.showForResult(ForeignUserLikesDislikesActivity.this, Constants.FOREIGN_USER_SPOT_LIST_REQUEST_CODE_LOGIN);
+                        SocialNetworks.showForResult(UserLikesDislikesActivity.this, ActivitiesRequestCodes.REQUEST_CODE_USER_LIKES_DISLIKES_ACTIVITY_LOGIN);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(ForeignUserLikesDislikesActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(UserLikesDislikesActivity.this, R.string.toast_server_error);
                     }
                 }
             }
 
             @Override
             public void onConnectionFailure() {
-                DialogUtils.showConnectionErrorDialog(ForeignUserLikesDislikesActivity.this);
+                DialogUtils.showConnectionErrorDialog(UserLikesDislikesActivity.this);
             }
         });
     }
@@ -213,11 +210,18 @@ public class ForeignUserLikesDislikesActivity extends AppCompatActivity {
 
 
 
-    public static void show(Activity context, boolean isLikes, String userId, int requestCode) {
-        Intent intent = new Intent(context, ForeignUserLikesDislikesActivity.class);
+    public static void showForResult(Activity context, boolean isLikes, String userId, int requestCode) {
+        Intent intent = new Intent(context, UserLikesDislikesActivity.class);
         intent.putExtra(Constants.USER_LIKES_ACTIVITY_INTENT_IS_LIKE, isLikes);
         intent.putExtra(Constants.USER_LIKES_ACTIVITY_INTENT_USER_ID, userId);
         context.startActivityForResult(intent, requestCode);
+    }
+
+    public static void show(Activity context, boolean isLikes, String userId) {
+        Intent intent = new Intent(context, UserLikesDislikesActivity.class);
+        intent.putExtra(Constants.USER_LIKES_ACTIVITY_INTENT_IS_LIKE, isLikes);
+        intent.putExtra(Constants.USER_LIKES_ACTIVITY_INTENT_USER_ID, userId);
+        context.startActivity(intent);
     }
 
     @Override
@@ -232,17 +236,19 @@ public class ForeignUserLikesDislikesActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == Constants.FOREIGN_USER_SPOT_LIST_REQUEST_CODE_LOGIN) {
-            if (resultCode == RESULT_OK) {
-                if (isLikes) {
-                    getUserLikes();
+        switch (requestCode) {
+            case ActivitiesRequestCodes.REQUEST_CODE_USER_LIKES_DISLIKES_ACTIVITY_LOGIN:
+                if (resultCode == RESULT_OK) {
+                    if (isLikes) {
+                        getUserLikes();
+                    } else {
+                        getUserDislikes();
+                    }
                 } else {
-                    getUserDislikes();
+                    setResult(RESULT_CANCELED);
+                    finish();
                 }
-            } else {
-                setResult(RESULT_CANCELED);
-                finish();
-            }
+                break;
         }
     }
 
@@ -262,7 +268,7 @@ public class ForeignUserLikesDislikesActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         DDScannerApplication.activityResumed();
-        if (!helpers.hasConnection(this)) {
+        if (!Helpers.hasConnection(this)) {
             DDScannerApplication.showErrorActivity(this);
         }
     }

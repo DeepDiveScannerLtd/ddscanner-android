@@ -10,8 +10,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v13.app.ActivityCompat;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -30,6 +28,7 @@ import com.ddscanner.ui.adapters.PhotosActivityPagerAdapter;
 import com.ddscanner.ui.fragments.DiveSpotAllPhotosFragment;
 import com.ddscanner.ui.fragments.DiveSpotPhotosFragment;
 import com.ddscanner.ui.fragments.DiveSpotReviewsPhoto;
+import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogUtils;
 import com.ddscanner.utils.Helpers;
@@ -49,9 +48,6 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 
-/**
- * Created by lashket on 11.5.16.
- */
 public class DiveSpotPhotosActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = DiveSpotPhotosActivity.class.getSimpleName();
@@ -63,7 +59,6 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
     private String path;
     private ArrayList<Image> reviewsImages;
     private ArrayList<Image> allPhotos;
-    private Helpers helpers = new Helpers();
     private FloatingActionButton fabAddPhoto;
     private String dsId;
     private PhotosActivityPagerAdapter photosActivityPagerAdapter;
@@ -89,16 +84,16 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
         path = getIntent().getStringExtra("path");
         dsId = getIntent().getStringExtra("id");
         if (diveSpotImages != null) {
-            diveSpotImages = helpers.appendFullImagesWithPath(diveSpotImages, path);
+            diveSpotImages = Helpers.appendFullImagesWithPath(diveSpotImages, path);
         }
         diveSpotPhotosFragment.setList(diveSpotImages, path);
 
         if (reviewsImages != null) {
-            reviewsImages = helpers.appendFullImagesWithPath(reviewsImages, path);
+            reviewsImages = Helpers.appendFullImagesWithPath(reviewsImages, path);
         }
         diveSpotReviewsPhoto.setList(reviewsImages, path);
 
-        allPhotos = helpers.compareObjectsArray(reviewsImages, diveSpotImages);
+        allPhotos = Helpers.compareObjectsArray(reviewsImages, diveSpotImages);
 
         diveSpotAllPhotosFragment.setList(allPhotos, path);
 
@@ -170,7 +165,7 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
     protected void onResume() {
         super.onResume();
         DDScannerApplication.activityResumed();
-        if (!helpers.hasConnection(this)) {
+        if (!Helpers.hasConnection(this)) {
             DDScannerApplication.showErrorActivity(this);
         }
     }
@@ -178,38 +173,32 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 10) {
-            if (resultCode == RESULT_OK) {
-                Intent intent = new Intent();
-                setResult(RESULT_OK, intent);
-                getDiveSpotPhotos();
-             //   finish();
-            }
-        }
-        if (requestCode == 1) {
-            if (resultCode == RESULT_OK) {
-                List<String> path = data.getStringArrayListExtra(MultiImageSelectorActivity
-                        .EXTRA_RESULT);
-                Intent intent = new Intent(this, AddPhotosDoDiveSpotActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("IMAGES", (ArrayList<String>)path);
-                bundle.putString("id", dsId);
-                intent.putExtras(bundle);
-                startActivityForResult(intent, 10);
-                for (int i = 0; i < path.size(); i++) {
-                    Log.i("ADDRESS", path.get(i));
+        switch (requestCode) {
+            case ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_ADD_PHOTOS:
+                if (resultCode == RESULT_OK) {
+                    Intent intent = new Intent();
+                    setResult(RESULT_OK, intent);
+                    getDiveSpotPhotos();
+                    //   finish();
                 }
-            }
-        }
-        if (requestCode == 100) {
-            if (resultCode == RESULT_OK) {
-                MultiImageSelector.create(this).start(this, 1);
-            }
-        }
-        if (requestCode == Constants.PHOTOS_ACTIVITY_REQUEST_CODE_SLIDER) {
-            if (resultCode == RESULT_OK) {
-                getDiveSpotPhotos();
-            }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_SELECT_PHOTOS:
+                if (resultCode == RESULT_OK) {
+                    List<String> path = data.getStringArrayListExtra(MultiImageSelectorActivity
+                            .EXTRA_RESULT);
+                    AddPhotosDoDiveSpotActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_ADD_PHOTOS, (ArrayList<String>)path, dsId);
+                }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_LOGIN:
+                if (resultCode == RESULT_OK) {
+                    MultiImageSelector.create(this).start(this, ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_SELECT_PHOTOS);
+                }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_ACTIVITY_SLIDER:
+                if (resultCode == RESULT_OK) {
+                    getDiveSpotPhotos();
+                }
+                break;
         }
     }
 
@@ -229,9 +218,9 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
     private void addPhotosToDiveSpot() {
         if (!SharedPreferenceHelper.isUserLoggedIn()) {
             Intent intent = new Intent(this, SocialNetworks.class);
-            startActivityForResult(intent, 100);
+            startActivityForResult(intent, ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_LOGIN);
         } else {
-            MultiImageSelector.create(this).count(3).start(this, 1);
+            MultiImageSelector.create(this).count(3).start(this, ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_SELECT_PHOTOS);
         }
     }
 
@@ -239,7 +228,7 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
         progressView.setVisibility(View.VISIBLE);
         photosViewPager.setVisibility(View.GONE);
         Map<String, String> map = new HashMap<>();
-        map = helpers.getUserQuryMapRequest();
+        map = Helpers.getUserQuryMapRequest();
         map.put("isImageAuthor", "true");
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveSpotImages(dsId, map);
         call.enqueue(new BaseCallback() {
@@ -270,15 +259,15 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
         reviewsImages = (ArrayList<Image>) divespotDetails.getDivespot().getCommentImages();
         diveSpotImages = (ArrayList<Image>)divespotDetails.getDivespot().getImages();
         if (diveSpotImages != null) {
-            diveSpotImages = helpers.appendFullImagesWithPath(diveSpotImages, path);
+            diveSpotImages = Helpers.appendFullImagesWithPath(diveSpotImages, path);
         }
         if (reviewsImages != null) {
-            reviewsImages = helpers.appendFullImagesWithPath(reviewsImages, path);
+            reviewsImages = Helpers.appendFullImagesWithPath(reviewsImages, path);
         }
 
         diveSpotReviewsPhoto.setList(reviewsImages, path);
         allPhotos = new ArrayList<>();
-        allPhotos = helpers.compareObjectsArray(reviewsImages, diveSpotImages);
+        allPhotos = Helpers.compareObjectsArray(reviewsImages, diveSpotImages);
         diveSpotAllPhotosFragment.setList(allPhotos, path);
         diveSpotPhotosFragment.setList(diveSpotImages, path);
 

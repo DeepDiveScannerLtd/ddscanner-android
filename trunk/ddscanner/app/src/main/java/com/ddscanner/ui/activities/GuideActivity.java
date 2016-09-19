@@ -15,9 +15,6 @@ import com.ddscanner.ui.adapters.GuideListAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by lashket on 5.8.16.
- */
 public class GuideActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;

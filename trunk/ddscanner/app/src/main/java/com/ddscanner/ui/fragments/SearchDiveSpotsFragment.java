@@ -19,6 +19,7 @@ import com.ddscanner.entities.DiveSpot;
 import com.ddscanner.events.OpenAddDsActivityAfterLogin;
 import com.ddscanner.ui.activities.AddDiveSpotActivity;
 import com.ddscanner.ui.adapters.SearchDiveSpotListAdapter;
+import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.SharedPreferenceHelper;
 
 import java.util.ArrayList;
@@ -58,7 +59,7 @@ public class SearchDiveSpotsFragment extends Fragment implements View.OnClickLis
         if (diveSpots == null || diveSpots.size() == 0) {
             noResultsView.setVisibility(View.VISIBLE);
             diveSpotsListRc.setVisibility(View.GONE);
-            hideKeyboard();
+            Helpers.hideKeyboard(getActivity());
         } else {
             noResultsView.setVisibility(View.GONE);
             diveSpotsListRc.setVisibility(View.VISIBLE);
@@ -79,11 +80,4 @@ public class SearchDiveSpotsFragment extends Fragment implements View.OnClickLis
         }
     }
 
-    private void hideKeyboard() {
-        View view = getActivity().getCurrentFocus();
-        if (view != null) {
-            InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
-    }
 }

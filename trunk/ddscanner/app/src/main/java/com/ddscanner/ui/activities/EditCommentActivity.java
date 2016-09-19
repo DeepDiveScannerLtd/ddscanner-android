@@ -2,7 +2,6 @@ package com.ddscanner.ui.activities;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -42,7 +41,7 @@ import com.ddscanner.events.ImageDeletedEvent;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.AddPhotoToDsListAdapter;
-import com.ddscanner.utils.Constants;
+import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
@@ -65,18 +64,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/**
- * Created by lashket on 9.8.16.
- */
 public class EditCommentActivity extends AppCompatActivity implements View.OnClickListener{
-
-    private static final int RC_PICK_PHOTO = 9001;
 
     private static final String TAG = LeaveReviewActivity.class.getSimpleName();
     private static final String ID = "ID";
     private static final String RATING = "RATING";
     private static final String SOURCE = "SOURCE";
-    private static final int RC_LOGIN = 8001;
     private static final int COMMENT_MAX_LENGTH = 250;
 
     private Toolbar toolbar;
@@ -102,7 +95,6 @@ public class EditCommentActivity extends AppCompatActivity implements View.OnCli
     private RequestBody requestSocial = null;
     private RequestBody requestSecret = null;
     private RequestBody _method = null;
-    private Helpers helpers = new Helpers();
     private int maxPhotos = 3;
     private Comment comment;
     private ArrayList<String> deleted = new ArrayList<>();
@@ -136,7 +128,7 @@ public class EditCommentActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void findViews() {
-        materialDialog = helpers.getMaterialDialog(this);
+        materialDialog = Helpers.getMaterialDialog(this);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         text = (EditText) findViewById(R.id.review_text);
         text.setTag("comment");
@@ -193,7 +185,7 @@ public class EditCommentActivity extends AppCompatActivity implements View.OnCli
     protected void onResume() {
         super.onResume();
         DDScannerApplication.activityResumed();
-        if (!helpers.hasConnection(this)) {
+        if (!Helpers.hasConnection(this)) {
             DDScannerApplication.showErrorActivity(this);
         }
     }
@@ -224,9 +216,9 @@ public class EditCommentActivity extends AppCompatActivity implements View.OnCli
         if (checkReadStoragePermission()) {
             MultiImageSelector.create(this)
                     .count(maxPhotos)
-                    .start(this, RC_PICK_PHOTO);
+                    .start(this, ActivitiesRequestCodes.REQUEST_CODE_EDIT_COMMENT_ACTIVITY_PICK_PHOTOS);
         } else {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, Constants.LEAVE_REVIEW_ACTIVITY_REQUEST_CODE_PERMISSION_READ_STORAGE);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, ActivitiesRequestCodes.REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_PERMISSION_READ_STORAGE);
         }
     }
 
@@ -237,11 +229,11 @@ public class EditCommentActivity extends AppCompatActivity implements View.OnCli
         return true;
     }
 
-    public static void show(Activity context, Comment comment, String path) {
+    public static void showForResult(Activity context, Comment comment, String path, int requestCode) {
         Intent intent = new Intent(context, EditCommentActivity.class);
         intent.putExtra("COMMENT", comment);
         intent.putExtra("PATH", path);
-        context.startActivityForResult(intent, 3011);
+        context.startActivityForResult(intent, requestCode);
     }
 
     @Override
@@ -267,27 +259,29 @@ public class EditCommentActivity extends AppCompatActivity implements View.OnCli
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RC_PICK_PHOTO) {
-            if (resultCode == RESULT_OK) {
-                maxPhotos = maxPhotos - data.getStringArrayListExtra(MultiImageSelectorActivity
-                        .EXTRA_RESULT).size();
-                imageUris.addAll(data.getStringArrayListExtra(MultiImageSelectorActivity
-                        .EXTRA_RESULT));
-                addPhotoToDsListAdapter = new AddPhotoToDsListAdapter(imageUris,
-                        EditCommentActivity.this, addPhotoTitle);
-                addPhotoTitle.setVisibility(View.GONE);
-                photos_rc.setVisibility(View.VISIBLE);
-                photos_rc.setAdapter(addPhotoToDsListAdapter);
-            }
-        }
-        if (requestCode == RC_LOGIN) {
-            if (resultCode == RESULT_OK) {
-                updateReview();
-            }
-            if (resultCode == RESULT_CANCELED) {
-                setResult(RESULT_OK);
-                finish();
-            }
+        switch (requestCode) {
+            case ActivitiesRequestCodes.REQUEST_CODE_EDIT_COMMENT_ACTIVITY_PICK_PHOTOS:
+                if (resultCode == RESULT_OK) {
+                    maxPhotos = maxPhotos - data.getStringArrayListExtra(MultiImageSelectorActivity
+                            .EXTRA_RESULT).size();
+                    imageUris.addAll(data.getStringArrayListExtra(MultiImageSelectorActivity
+                            .EXTRA_RESULT));
+                    addPhotoToDsListAdapter = new AddPhotoToDsListAdapter(imageUris,
+                            EditCommentActivity.this, addPhotoTitle);
+                    addPhotoTitle.setVisibility(View.GONE);
+                    photos_rc.setVisibility(View.VISIBLE);
+                    photos_rc.setAdapter(addPhotoToDsListAdapter);
+                }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_EDIT_COMMENT_ACTIVITY_LOGIN:
+                if (resultCode == RESULT_OK) {
+                    updateReview();
+                }
+                if (resultCode == RESULT_CANCELED) {
+                    setResult(RESULT_OK);
+                    finish();
+                }
+                break;
         }
     }
 
@@ -296,6 +290,10 @@ public class EditCommentActivity extends AppCompatActivity implements View.OnCli
         if (text.getText().toString().trim().isEmpty() && deleted.size() != 0 && addPhotoToDsListAdapter.getNewFilesUrisList() != null && addPhotoToDsListAdapter.getNewFilesUrisList().size() != 0 ) {
             Toast.makeText(EditCommentActivity.this, "Please write a review to dive spot", Toast.LENGTH_SHORT).show();
             materialDialog.dismiss();
+            return;
+        }
+        if (text.getText().toString().trim().length() < 30) {
+            Toast.makeText(EditCommentActivity.this, R.string.review_error, Toast.LENGTH_SHORT).show();
             return;
         }
         if (SharedPreferenceHelper.isUserLoggedIn()) {
@@ -373,28 +371,28 @@ public class EditCommentActivity extends AppCompatActivity implements View.OnCli
                         ErrorsParser.checkForError(response.code(), responseString);
                     } catch (ServerInternalErrorException e) {
                         // TODO Handle
-                        helpers.showToast(EditCommentActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(EditCommentActivity.this, R.string.toast_server_error);
                     } catch (BadRequestException e) {
                         // TODO Handle
-                        helpers.showToast(EditCommentActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(EditCommentActivity.this, R.string.toast_server_error);
                     } catch (ValidationErrorException e) {
                         // TODO Handle
-                        helpers.errorHandling(EditCommentActivity.this, errorsMap, responseString);
+                        Helpers.errorHandling(EditCommentActivity.this, errorsMap, responseString);
                     } catch (NotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(EditCommentActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(EditCommentActivity.this, R.string.toast_server_error);
                     } catch (UnknownErrorException e) {
                         // TODO Handle
-                        helpers.showToast(EditCommentActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(EditCommentActivity.this, R.string.toast_server_error);
                     } catch (DiveSpotNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(EditCommentActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(EditCommentActivity.this, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
-                        SocialNetworks.showForResult(EditCommentActivity.this, RC_LOGIN);
+                        SocialNetworks.showForResult(EditCommentActivity.this, ActivitiesRequestCodes.REQUEST_CODE_EDIT_COMMENT_ACTIVITY_LOGIN);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(EditCommentActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(EditCommentActivity.this, R.string.toast_server_error);
                     }
                 }
             }
@@ -433,7 +431,7 @@ public class EditCommentActivity extends AppCompatActivity implements View.OnCli
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
-            case Constants.LEAVE_REVIEW_ACTIVITY_REQUEST_CODE_PERMISSION_READ_STORAGE: {
+            case ActivitiesRequestCodes.REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_PERMISSION_READ_STORAGE: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     pickPhotoFromGallery();
                 } else {

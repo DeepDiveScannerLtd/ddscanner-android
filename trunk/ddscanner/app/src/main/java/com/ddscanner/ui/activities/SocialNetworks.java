@@ -4,17 +4,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Selection;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
-import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -39,6 +36,7 @@ import com.ddscanner.events.LoggedInEvent;
 import com.ddscanner.rest.BaseCallback;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
+import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogUtils;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
@@ -72,8 +70,6 @@ import retrofit2.Call;
 public class SocialNetworks extends AppCompatActivity
         implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
 
-    private static final int RC_SIGN_IN = 0;
-
     private static final String TAG = "SOCIAL";
 
     private CallbackManager callbackManager;
@@ -84,7 +80,6 @@ public class SocialNetworks extends AppCompatActivity
     private com.ddscanner.entities.User selfProfile;
     private RegisterResponse registerResponse = new RegisterResponse();
     private MaterialDialog materialDialog;
-    private Helpers helpers = new Helpers();
     private TextView privacyPolicy;
     private ImageView close;
 
@@ -99,7 +94,7 @@ public class SocialNetworks extends AppCompatActivity
         setContentView(R.layout.activity_social_login);
         privacyPolicy = (TextView) findViewById(R.id.privacy_policy);
         close = (ImageView) findViewById(R.id.close);
-        materialDialog = helpers.getMaterialDialog(this);
+        materialDialog = Helpers.getMaterialDialog(this);
         close.setOnClickListener(this);
         int color = getResources().getColor(R.color.primary);
         final SpannableString spannableString = new SpannableString(privacyPolicy.getText());
@@ -195,7 +190,7 @@ public class SocialNetworks extends AppCompatActivity
                     }
                 });
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-        startActivityForResult(signInIntent, RC_SIGN_IN);
+        startActivityForResult(signInIntent, ActivitiesRequestCodes.REQUEST_CODE_SOCIAL_NETWORKS_SIGN_IN);
     }
 
     @Override
@@ -206,9 +201,7 @@ public class SocialNetworks extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-
-        if (requestCode == RC_SIGN_IN) {
+        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_SOCIAL_NETWORKS_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             Log.d(TAG, "onActivityResult:GET_TOKEN:success:" + result.getStatus().isSuccess());
             if (result.isSuccess()) {
@@ -275,26 +268,26 @@ public class SocialNetworks extends AppCompatActivity
                         ErrorsParser.checkForError(response.code(), responseString);
                     } catch (ServerInternalErrorException e) {
                         // TODO Handle
-                        helpers.showToast(SocialNetworks.this, R.string.toast_server_error);
+                        Helpers.showToast(SocialNetworks.this, R.string.toast_server_error);
                     } catch (BadRequestException e) {
                         // TODO Handle
-                        helpers.showToast(SocialNetworks.this, R.string.toast_server_error);
+                        Helpers.showToast(SocialNetworks.this, R.string.toast_server_error);
                     } catch (ValidationErrorException e) {
                         // TODO Handle
                     } catch (NotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(SocialNetworks.this, R.string.toast_server_error);
+                        Helpers.showToast(SocialNetworks.this, R.string.toast_server_error);
                     } catch (UnknownErrorException e) {
                         // TODO Handle
-                        helpers.showToast(SocialNetworks.this, R.string.toast_server_error);
+                        Helpers.showToast(SocialNetworks.this, R.string.toast_server_error);
                     } catch (DiveSpotNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(SocialNetworks.this, R.string.toast_server_error);
+                        Helpers.showToast(SocialNetworks.this, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(SocialNetworks.this, R.string.toast_server_error);
+                        Helpers.showToast(SocialNetworks.this, R.string.toast_server_error);
                     }
                 }
             }
@@ -330,7 +323,7 @@ public class SocialNetworks extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         DDScannerApplication.activityResumed();
-        if (!helpers.hasConnection(this)) {
+        if (!Helpers.hasConnection(this)) {
             DDScannerApplication.showErrorActivity(this);
         }
     }

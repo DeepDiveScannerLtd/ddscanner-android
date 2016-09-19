@@ -27,8 +27,6 @@ public class DiveSpotAllPhotosFragment extends Fragment {
 
     private RecyclerView recyclerView;
 
-    private Helpers helpers = new Helpers();
-
     private String path;
 
     @Override
@@ -42,7 +40,7 @@ public class DiveSpotAllPhotosFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_all_photos, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.photos);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(),3));
-        recyclerView.addItemDecoration(new GridSpacingItemDecoration(3));
+       // recyclerView.addItemDecoration(new GridSpacingItemDecoration(3));
         recyclerView.setAdapter(new AllPhotosDiveSpotAdapter(images, getActivity(), path));
         return view;
     }
@@ -59,7 +57,7 @@ public class DiveSpotAllPhotosFragment extends Fragment {
         public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
             int position = parent.getChildAdapterPosition(view);
             if (position >= spanCount) {
-                outRect.top = Math.round(helpers.convertDpToPixel(Float.valueOf(4), getContext()));
+                outRect.top = Math.round(Helpers.convertDpToPixel(Float.valueOf(4), getContext()));
             }
         }
     }

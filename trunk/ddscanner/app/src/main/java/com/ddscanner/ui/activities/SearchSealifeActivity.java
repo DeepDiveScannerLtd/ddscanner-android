@@ -35,6 +35,7 @@ import com.ddscanner.rest.BaseCallback;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.SealifeSearchAdapter;
+import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogUtils;
 import com.ddscanner.utils.Helpers;
@@ -51,12 +52,7 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 
-/**
- * Created by lashket on 7.4.16.
- */
 public class SearchSealifeActivity extends AppCompatActivity implements SearchView.OnQueryTextListener, View.OnClickListener {
-
-    private static final int RC_ADD_SEALIFE = 8001;
 
     private Toolbar toolbar;
     private RecyclerView mRecyclerView;
@@ -65,7 +61,6 @@ public class SearchSealifeActivity extends AppCompatActivity implements SearchVi
     private RelativeLayout notFoundLayout;
     private TextView textNotFound;
     private Button addManually;
-    private Helpers helpers = new Helpers();
     private Menu menu;
     private ProgressView progressView;
     private RelativeLayout contentLayout;
@@ -133,7 +128,7 @@ public class SearchSealifeActivity extends AppCompatActivity implements SearchVi
         if (filteredModelList.isEmpty()) {
             mRecyclerView.setVisibility(View.GONE);
             notFoundLayout.setVisibility(View.VISIBLE);
-            hideKeyboard();
+            Helpers.hideKeyboard(this);
         } else {
             mRecyclerView.setVisibility(View.VISIBLE);
             notFoundLayout.setVisibility(View.GONE);
@@ -146,7 +141,7 @@ public class SearchSealifeActivity extends AppCompatActivity implements SearchVi
         switch (v.getId()) {
             case R.id.add_manualy:
                 Intent i = new Intent(SearchSealifeActivity.this, AddSealifeActivity.class);
-                startActivityForResult(i, RC_ADD_SEALIFE);
+                startActivityForResult(i, ActivitiesRequestCodes.REQUEST_CODE_SEARCH_SEALIFE_ACTIVITY_ADD_SEALIFE);
                 break;
         }
     }
@@ -183,31 +178,31 @@ public class SearchSealifeActivity extends AppCompatActivity implements SearchVi
                         ErrorsParser.checkForError(response.code(), responseString);
                     } catch (ServerInternalErrorException e) {
                         // TODO Handle
-                        helpers.showToast(SearchSealifeActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(SearchSealifeActivity.this, R.string.toast_server_error);
                         finish();
                     } catch (BadRequestException e) {
                         // TODO Handle
-                        helpers.showToast(SearchSealifeActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(SearchSealifeActivity.this, R.string.toast_server_error);
                         finish();
                     } catch (ValidationErrorException e) {
                         // TODO Handle
                     } catch (NotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(SearchSealifeActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(SearchSealifeActivity.this, R.string.toast_server_error);
                         finish();
                     } catch (UnknownErrorException e) {
                         // TODO Handle
-                        helpers.showToast(SearchSealifeActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(SearchSealifeActivity.this, R.string.toast_server_error);
                         finish();
                     } catch (DiveSpotNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(SearchSealifeActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(SearchSealifeActivity.this, R.string.toast_server_error);
                         finish();
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
-                        helpers.showToast(SearchSealifeActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(SearchSealifeActivity.this, R.string.toast_server_error);
                         finish();
                     }
                 }
@@ -230,7 +225,7 @@ public class SearchSealifeActivity extends AppCompatActivity implements SearchVi
     protected void onResume() {
         super.onResume();
         DDScannerApplication.activityResumed();
-        if (!helpers.hasConnection(this)) {
+        if (!Helpers.hasConnection(this)) {
             DDScannerApplication.showErrorActivity(this);
         }
     }
@@ -268,23 +263,18 @@ public class SearchSealifeActivity extends AppCompatActivity implements SearchVi
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RC_ADD_SEALIFE) {
-            if (resultCode == RESULT_OK) {
-                Sealife sealife = (Sealife) data.getSerializableExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_SEALIFE);
-                Intent intent = new Intent();
-                intent.putExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_SEALIFE, sealife);
-                setResult(RESULT_OK, intent);
-                finish();
-            }
+        switch (requestCode) {
+            case ActivitiesRequestCodes.REQUEST_CODE_SEARCH_SEALIFE_ACTIVITY_ADD_SEALIFE:
+                if (resultCode == RESULT_OK) {
+                    Sealife sealife = (Sealife) data.getSerializableExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_SEALIFE);
+                    Intent intent = new Intent();
+                    intent.putExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_SEALIFE, sealife);
+                    setResult(RESULT_OK, intent);
+                    finish();
+                }
+                break;
         }
     }
 
-    private void hideKeyboard() {
-        View view = this.getCurrentFocus();
-        if (view != null) {
-            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
-    }
 
 }

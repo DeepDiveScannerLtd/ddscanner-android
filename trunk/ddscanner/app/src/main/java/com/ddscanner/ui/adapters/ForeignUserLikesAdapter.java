@@ -30,7 +30,6 @@ public class ForeignUserLikesAdapter extends RecyclerView.Adapter<ForeignUserLik
 
     private ArrayList<ForeignUserLike> likes;
     private Context context;
-    private Helpers helpers = new Helpers();
     private boolean isLikes;
     private static final int REVIEW_TEXT_MAX_LENGTH = 30;
 
@@ -53,10 +52,10 @@ public class ForeignUserLikesAdapter extends RecyclerView.Adapter<ForeignUserLik
         ForeignUserLike foreignUserLike = likes.get(position);
         Picasso.with(context)
                 .load(foreignUserLike.getUser().getPicture())
-                .resize(Math.round(helpers.convertDpToPixel(40, context)), Math.round(helpers.convertDpToPixel(40, context)))
+                .resize(Math.round(Helpers.convertDpToPixel(40, context)), Math.round(Helpers.convertDpToPixel(40, context)))
                 .transform(new CropCircleTransformation())
                 .into(holder.avatar);
-        holder.timeAgo.setText(helpers.getDate(foreignUserLike.getDate()));
+        holder.timeAgo.setText(Helpers.getDate(foreignUserLike.getDate()));
         String comment = foreignUserLike.getComment();
 
         if (comment.length() > 30) {
