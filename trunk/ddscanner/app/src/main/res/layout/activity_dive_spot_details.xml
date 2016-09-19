@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:layout_width="match_parent"
+<RelativeLayout android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical">
     <include layout="@layout/view_connection_error" />
 <android.support.design.widget.CoordinatorLayout
+    android:layout_above="@+id/button_show_divecenters"
     android:id="@+id/main_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -703,13 +704,6 @@
                             tools:clickable="false" />
                     </LinearLayout>
                 </LinearLayout>
-                <Button
-                    android:id="@+id/button_show_divecenters"
-                    android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:background="@color/orange"
-                    android:text="@string/contact_dive_centers"
-                    />
             </LinearLayout>
         </LinearLayout>
     </com.ddscanner.ui.views.FlingableNestedScrollView>
@@ -727,4 +721,13 @@
         app:layout_collapseMode="pin" />
 
 </android.support.design.widget.CoordinatorLayout>
-    </LinearLayout>
+    <Button
+        android:visibility="gone"
+        android:id="@+id/button_show_divecenters"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@color/orange"
+        android:text="@string/contact_dive_centers"
+        android:layout_alignParentBottom="true"
+        />
+    </RelativeLayout>

@@ -93,6 +93,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     private MaterialDialog materialDialog;
     private boolean isClickedReport;
     private int reviewPositionToRate;
+    private boolean isNeedRefreshComments;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -181,11 +182,13 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
             case ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_LIKE_REVIEW:
                 if (resultCode == RESULT_OK) {
                     likeComment(comments.get(reviewPositionToRate).getId(), reviewPositionToRate);
+                    isNeedRefreshComments = true;
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_DISLIKE_REVIEW:
                 if (resultCode == RESULT_OK) {
                     dislikeComment(comments.get(reviewPositionToRate).getId(), reviewPositionToRate);
+                    isNeedRefreshComments = true;
                 }
                 break;
         }
@@ -548,8 +551,12 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
                 if (response.isSuccessful()) {
                     if (response.raw().code() == 200) {
                         EventsTracker.trackCommentLiked();
-                        isHasNewComment = true;
                         reviewsListAdapter.commentLiked(position);
+                        isHasNewComment = true;
+                        if (isNeedRefreshComments) {
+                            getComments();
+                            isNeedRefreshComments = !isNeedRefreshComments;
+                        }
                     }
                 }
                 if (!response.isSuccessful()) {
@@ -575,7 +582,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
                         Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
                     } catch (BadRequestException e) {
                         // TODO Handle
-                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ReviewsActivity.this, R.string.comment_already_liked);
                     } catch (ValidationErrorException e) {
                         // TODO Handle
                     } catch (NotFoundException e) {
@@ -621,6 +628,10 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
                         EventsTracker.trackCommentLiked();
                         isHasNewComment = true;
                         reviewsListAdapter.commentDisliked(position);
+                        if (isNeedRefreshComments) {
+                            getComments();
+                            isNeedRefreshComments = !isNeedRefreshComments;
+                        }
                     }
                 }
                 if (!response.isSuccessful()) {
@@ -643,7 +654,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
                         ErrorsParser.checkForError(response.code(), responseString);
                     } catch (ServerInternalErrorException e) {
                         // TODO Handle
-                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
+                        Helpers.showToast(ReviewsActivity.this, R.string.comment_already_disliked);
                     } catch (BadRequestException e) {
                         // TODO Handle
                         Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);

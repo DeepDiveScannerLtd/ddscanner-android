@@ -196,12 +196,10 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activities.EditCommentActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activities.LeaveReviewActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activities.DiveCenterDetailsActivity"
             android:screenOrientation="portrait" />

@@ -284,4 +284,6 @@
     <string name="review_error">Review must contain at least 30 characters</string>
     <string name="please_write_a_review">Please write a review to dive spot</string>
     <string name="new_review">New Review</string>
+    <string name="comment_already_disliked">Dive spot comment has already been disliked</string>
+    <string name="comment_already_liked">Dive spot comment has already been liked</string>
 </resources>
