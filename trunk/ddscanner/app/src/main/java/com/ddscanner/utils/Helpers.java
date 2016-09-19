@@ -1,5 +1,6 @@
 package com.ddscanner.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -14,6 +15,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -503,6 +505,14 @@ public class Helpers {
             return String.valueOf(itemsCount/1000) + "K";
         } else {
             return count;
+        }
+    }
+
+    public static void hideKeyboard(Activity context) {
+        View view = context.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)context.getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
 

@@ -128,7 +128,7 @@ public class SearchSealifeActivity extends AppCompatActivity implements SearchVi
         if (filteredModelList.isEmpty()) {
             mRecyclerView.setVisibility(View.GONE);
             notFoundLayout.setVisibility(View.VISIBLE);
-            hideKeyboard();
+            Helpers.hideKeyboard(this);
         } else {
             mRecyclerView.setVisibility(View.VISIBLE);
             notFoundLayout.setVisibility(View.GONE);
@@ -276,12 +276,5 @@ public class SearchSealifeActivity extends AppCompatActivity implements SearchVi
         }
     }
 
-    private void hideKeyboard() {
-        View view = this.getCurrentFocus();
-        if (view != null) {
-            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
-    }
 
 }
