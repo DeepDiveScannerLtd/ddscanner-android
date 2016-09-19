@@ -489,6 +489,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
            // EditorsListActivity.show(DiveSpotDetailsActivity.this, (ArrayList<User>) creatorsEditorsList);
 
         }
+        showDiveCenters.setVisibility(View.VISIBLE);
     }
 
     private void setCheckinsCountPeople(String count, boolean isNull) {
@@ -546,16 +547,10 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
      * Andrei Lashkevich
      */
     private void requestProductDetails(String productId) {
+        showDiveCenters.setVisibility(View.GONE);
         Map<String, String> map = new HashMap<>();
         map = Helpers.getUserQuryMapRequest();
         map.put("isImageAuthor", "true");
-//        if (SharedPreferenceHelper.isUserLoggedIn()) {
-//            map.put("social", SharedPreferenceHelper.getSn());
-//            map.put("token", SharedPreferenceHelper.getToken());
-//            if (SharedPreferenceHelper.getSn().equals("tw")) {
-//                map.put("secret", SharedPreferenceHelper.getSecret());
-//            }
-//        }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveSpotById(productId, map);
         call.enqueue(new ServerErrorCallback() {
             @Override
