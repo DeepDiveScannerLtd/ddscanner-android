@@ -2,10 +2,22 @@ package com.ddscanner.rest;
 
 import android.support.annotation.NonNull;
 
+import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.DiveSpotDetails;
+import com.ddscanner.entities.errors.BadRequestException;
+import com.ddscanner.entities.errors.CommentNotFoundException;
+import com.ddscanner.entities.errors.DiveSpotNotFoundException;
 import com.ddscanner.entities.errors.Field;
 import com.ddscanner.entities.errors.GeneralError;
+import com.ddscanner.entities.errors.NotFoundException;
+import com.ddscanner.entities.errors.ServerInternalErrorException;
+import com.ddscanner.entities.errors.UnknownErrorException;
+import com.ddscanner.entities.errors.UserNotFoundException;
 import com.ddscanner.entities.errors.ValidationError;
+import com.ddscanner.entities.errors.ValidationErrorException;
+import com.ddscanner.utils.DialogUtils;
+import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.gson.Gson;
@@ -24,12 +36,14 @@ import java.util.Set;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 
 public class DDScannerRestClient {
 
     private Gson gson = new Gson();
 
-    public void requestDiveSpotDetails(String diveSpotId, @NonNull final WeakReference<ResultListener<DiveSpotDetails>> resultListenerWeakReference) {
+    public void getDiveSpotDetails(String diveSpotId, @NonNull final ResultListener<DiveSpotDetails> resultListener) {
+        final WeakReference<ResultListener<DiveSpotDetails>> resultListenerWeakReference = new WeakReference<ResultListener<DiveSpotDetails>>(resultListener);
         Map<String, String> map = getUserQueryMapRequest();
         map.put("isImageAuthor", "true");
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveSpotById(diveSpotId, map);
@@ -59,6 +73,63 @@ public class DDScannerRestClient {
         });
     }
 
+//    private void postCheckIn(String diveSpotId) {
+//        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().checkIn(diveSpotId,
+//                Helpers.getRegisterRequest()
+//        );
+//        call.enqueue(new com.ddscanner.rest.BaseCallback() {
+//            @Override
+//            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+//                if (response.isSuccessful()) {
+//                    getCheckins();
+//                    EventsTracker.trackCheckIn(EventsTracker.CheckInStatus.SUCCESS);
+//                } else {
+//                    checkoutUi();
+//                    String responseString = "";
+//                    try {
+//                        responseString = response.errorBody().string();
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//                    LogUtils.i("response body is " + responseString);
+//                    try {
+//                        ErrorsParser.checkForError(response.code(), responseString);
+//                    } catch (ServerInternalErrorException e) {
+//                        // TODO Handle
+//                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+//                    } catch (BadRequestException e) {
+//                        // TODO Handle
+//                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+//                    } catch (ValidationErrorException e) {
+//                        // TODO Handle
+//
+//                    } catch (NotFoundException e) {
+//                        // TODO Handle
+//                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+//                    } catch (UnknownErrorException e) {
+//                        // TODO Handle
+//                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+//                    } catch (DiveSpotNotFoundException e) {
+//                        // TODO Handle
+//                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+//                    } catch (UserNotFoundException e) {
+//                        // TODO Handle
+//                        isClickedCHeckin = true;
+//                        showLoginActivity();
+//                    } catch (CommentNotFoundException e) {
+//                        // TODO Handle
+//                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onConnectionFailure() {
+//                DialogUtils.showConnectionErrorDialog(DiveSpotDetailsActivity.this);
+//            }
+//        });
+//    }
+
     public void checkForError(int responseCode, String json, WeakReference<ResultListener<DiveSpotDetails>> resultListenerWeakReference) {
         GeneralError generalError;
         ValidationError validationError;
@@ -67,7 +138,7 @@ public class DDScannerRestClient {
                 // bad request. for example event already happened or event preconditions are not held
                 generalError = gson.fromJson(json, GeneralError.class);
                 if (resultListenerWeakReference.get() != null) {
-                    resultListenerWeakReference.get().onError(ErrorType.BAD_REQUEST_ERROR, generalError);
+                    resultListenerWeakReference.get().onError(ErrorType.BAD_REQUEST_ERROR_400, generalError);
                 }
                 break;
             case 404:
@@ -77,30 +148,30 @@ public class DDScannerRestClient {
                     case 801:
                         // user not found
                         if (resultListenerWeakReference.get() != null) {
-                            resultListenerWeakReference.get().onError(ErrorType.USER_NOT_FOUND_ERROR, generalError);
+                            resultListenerWeakReference.get().onError(ErrorType.USER_NOT_FOUND_ERROR_C801, generalError);
                         }
                         break;
                     case 802:
                         // dive spot not found
                         if (resultListenerWeakReference.get() != null) {
-                            resultListenerWeakReference.get().onError(ErrorType.DIVE_SPOT_NOT_FOUND_ERROR, generalError);
+                            resultListenerWeakReference.get().onError(ErrorType.DIVE_SPOT_NOT_FOUND_ERROR_C802, generalError);
                         }
                         break;
                     case 803:
                         // dive spot comment not found
                         if (resultListenerWeakReference.get() != null) {
-                            resultListenerWeakReference.get().onError(ErrorType.COMMENT_NOT_FOUND_ERROR, generalError);
+                            resultListenerWeakReference.get().onError(ErrorType.COMMENT_NOT_FOUND_ERROR_C803, generalError);
                         }
                         break;
                     default:
                         if (resultListenerWeakReference.get() != null) {
-                            resultListenerWeakReference.get().onError(ErrorType.NOT_FOUND_ERROR, generalError);
+                            resultListenerWeakReference.get().onError(ErrorType.NOT_FOUND_ERROR_404, generalError);
                         }
                         break;
                 }
                 break;
             case 422:
-                // validation error
+                // unprocessable entity error, aka validation error
                 validationError = new ValidationError();
                 JsonElement jsonElement = new JsonParser().parse(json);
                 JsonObject jsonObject = jsonElement.getAsJsonObject();
@@ -116,14 +187,14 @@ public class DDScannerRestClient {
                     validationError.addField(field);
                 }
                 if (resultListenerWeakReference.get() != null) {
-                    resultListenerWeakReference.get().onError(ErrorType.VALIDATION_ERROR, validationError);
+                    resultListenerWeakReference.get().onError(ErrorType.UNPROCESSABLE_ENTITY_ERROR_422, validationError);
                 }
                 break;
             case 500:
                 // unknown server error
                 generalError = gson.fromJson(json, GeneralError.class);
                 if (resultListenerWeakReference.get() != null) {
-                    resultListenerWeakReference.get().onError(ErrorType.SERVER_INTERNAL_ERROR, generalError);
+                    resultListenerWeakReference.get().onError(ErrorType.SERVER_INTERNAL_ERROR_500, generalError);
                 }
                 break;
             default:
@@ -178,6 +249,6 @@ public class DDScannerRestClient {
     }
 
     public enum ErrorType {
-        BAD_REQUEST_ERROR, USER_NOT_FOUND_ERROR, DIVE_SPOT_NOT_FOUND_ERROR, COMMENT_NOT_FOUND_ERROR, NOT_FOUND_ERROR, VALIDATION_ERROR,  SERVER_INTERNAL_ERROR, IO_ERROR, UNKNOWN_ERROR
+        BAD_REQUEST_ERROR_400, USER_NOT_FOUND_ERROR_C801, DIVE_SPOT_NOT_FOUND_ERROR_C802, COMMENT_NOT_FOUND_ERROR_C803, NOT_FOUND_ERROR_404, UNPROCESSABLE_ENTITY_ERROR_422, SERVER_INTERNAL_ERROR_500, IO_ERROR, UNKNOWN_ERROR
     }
 }

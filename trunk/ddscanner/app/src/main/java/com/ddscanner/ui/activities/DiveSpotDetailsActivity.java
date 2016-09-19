@@ -69,9 +69,9 @@ import com.ddscanner.entities.request.ValidationReguest;
 import com.ddscanner.events.OpenPhotosActivityEvent;
 import com.ddscanner.events.UnknownErrorCatchedEvent;
 import com.ddscanner.rest.BaseCallback;
+import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
-import com.ddscanner.rest.ServerErrorCallback;
 import com.ddscanner.ui.adapters.DiveSpotsPhotosAdapter;
 import com.ddscanner.ui.adapters.EditorsListAdapter;
 import com.ddscanner.ui.adapters.SealifeListAdapter;
@@ -97,9 +97,7 @@ import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 import me.nereo.multi_image_selector.MultiImageSelector;
@@ -116,7 +114,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
     private DiveSpotDetails diveSpotDetails;
     private ProgressDialog progressDialog;
-    private String productId;
+    private String diveSpotId;
     private LatLng diveSpotCoordinates;
     private boolean isCheckedIn = false;
     private DiveSpotFull diveSpot;
@@ -188,6 +186,35 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
     private boolean editorsListExpanded;
 
+    private DDScannerRestClient.ResultListener<DiveSpotDetails> diveSpotDetailsResultListener = new DDScannerRestClient.ResultListener<DiveSpotDetails>() {
+        @Override
+        public void onSuccess(DiveSpotDetails result) {
+            diveSpotDetails = result;
+            diveSpotCoordinates = new LatLng(diveSpotDetails.getDivespot().getLat(),
+                    diveSpotDetails.getDivespot().getLng());
+            usersComments = diveSpotDetails.getComments();
+            setUi();
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            DialogUtils.showConnectionErrorDialog(DiveSpotDetailsActivity.this);
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData) {
+            switch (errorType) {
+                case UNPROCESSABLE_ENTITY_ERROR_422:
+                    // TODO Send info about this issue to server or analytics
+                case DIVE_SPOT_NOT_FOUND_ERROR_C802:
+                    // TODO Send info about this issue to server or analytics
+                default:
+                    Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+                    break;
+            }
+        }
+    };
+
     public static float convertDpToPixel(float dp, Context context) {
         Resources resources = context.getResources();
         DisplayMetrics metrics = resources.getDisplayMetrics();
@@ -227,8 +254,8 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         findViews();
         toolbarSettings();
         isNewDiveSpot = getIntent().getBooleanExtra(Constants.DIVE_SPOT_DETAILS_ACTIVITY_EXTRA_IS_FROM_AD_DIVE_SPOT, false);
-        productId = getIntent().getStringExtra(EXTRA_ID);
-        requestProductDetails(productId);
+        diveSpotId = getIntent().getStringExtra(EXTRA_ID);
+        DDScannerApplication.getDdScannerRestClient().getDiveSpotDetails(diveSpotId, diveSpotDetailsResultListener);
     }
 
     /**
@@ -540,84 +567,13 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         });
     }
 
-    /**
-     * Request for getting data about dive spot
-     *
-     * @param productId
-     * Andrei Lashkevich
-     */
-    private void requestProductDetails(String productId) {
-        showDiveCenters.setVisibility(View.GONE);
-        Map<String, String> map = new HashMap<>();
-        map = Helpers.getUserQuryMapRequest();
-        map.put("isImageAuthor", "true");
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveSpotById(productId, map);
-        call.enqueue(new ServerErrorCallback() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    String responseString = "";
-                    try {
-                        responseString = response.body().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    LogUtils.i("response body is " + responseString);
-                    diveSpotDetails = new Gson().fromJson(responseString, DiveSpotDetails.class);
-                    diveSpotCoordinates = new LatLng(diveSpotDetails.getDivespot().getLat(),
-                            diveSpotDetails.getDivespot().getLng());
-                    usersComments = diveSpotDetails.getComments();
-                    setUi();
-                } else {
-                    String responseString = "";
-                    try {
-                        responseString = response.errorBody().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    LogUtils.i("response body is " + responseString);
-                    try {
-                        ErrorsParser.checkForError(response.code(), responseString);
-                    } catch (ServerInternalErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
-                    } catch (BadRequestException e) {
-                        // TODO Handle
-                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
-                    } catch (ValidationErrorException e) {
-                        // TODO Handle
-                    } catch (NotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
-                    } catch (UnknownErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
-                    } catch (DiveSpotNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
-                    } catch (UserNotFoundException e) {
-                        // TODO Handle
-                    } catch (CommentNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
-                    }
-                }
-            }
-
-            @Override
-            public void onConnectionFailure() {
-                DialogUtils.showConnectionErrorDialog(DiveSpotDetailsActivity.this);
-            }
-        });
-    }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.button_refresh:
                 mainLayout.setVisibility(View.VISIBLE);
                 serveConnectionErrorLayout.setVisibility(View.GONE);
-                requestProductDetails(productId);
+                DDScannerApplication.getDdScannerRestClient().getDiveSpotDetails(diveSpotId, diveSpotDetailsResultListener);
                 break;
             case R.id.map_layout:
                 Intent intent = new Intent(DiveSpotDetailsActivity.this, ShowDsLocationActivity.class);
@@ -1312,7 +1268,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_ADD_PHOTOS_ACTIVITY:
                 if (resultCode == RESULT_OK) {
-                    requestProductDetails(String.valueOf(diveSpot.getId()));
+                    DDScannerApplication.getDdScannerRestClient().getDiveSpotDetails(String.valueOf(diveSpot.getId()), diveSpotDetailsResultListener);
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_PICK_PHOTOS:
