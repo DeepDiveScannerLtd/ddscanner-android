@@ -6,6 +6,13 @@
     android:layout_height="match_parent"
     android:background="#f6f6f6">
     <include layout="@layout/view_toolbar" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
     <RelativeLayout
         android:id="@+id/add_photo_layout"
         android:background="@color/white"
@@ -92,13 +99,13 @@
                 tools:text="250"/>
         <EditText
             android:textSize="14sp"
-            android:inputType="text|textFilter|textMultiLine"
             android:gravity="top"
             android:layout_below="@id/left_number"
             android:layout_gravity="center"
             android:cursorVisible="true"
             android:id="@+id/review_text"
             android:layout_width="match_parent"
+            android:minHeight="200dp"
             android:layout_height="match_parent"
             android:hint="@string/write_a_review"
             android:layout_marginTop="13dp"
@@ -121,4 +128,6 @@
             android:text="@string/symbols_left"/>
         </RelativeLayout>
     </LinearLayout>
+    </LinearLayout>
+    </ScrollView>
 </LinearLayout>
