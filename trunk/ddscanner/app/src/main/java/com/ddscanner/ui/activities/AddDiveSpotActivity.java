@@ -265,6 +265,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_SEALIFE:
+                Helpers.hideKeyboard(this);
                 if (resultCode == RESULT_OK) {
                     Sealife sealife =(Sealife) data.getSerializableExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_SEALIFE);
 
