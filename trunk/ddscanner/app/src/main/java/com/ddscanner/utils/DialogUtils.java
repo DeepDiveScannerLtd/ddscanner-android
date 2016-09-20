@@ -3,6 +3,7 @@ package com.ddscanner.utils;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -20,7 +21,7 @@ public class DialogUtils {
         MaterialDialog.Builder dialog = new MaterialDialog.Builder(context)
                 .content(R.string.error_connection_failed)
                 .neutralText(R.string.ok)
-                .neutralColor(context.getResources().getColor(R.color.primary))
+                .neutralColor(ContextCompat.getColor(context, R.color.primary))
                 .cancelable(false)
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override

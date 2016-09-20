@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v13.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -148,7 +149,7 @@ public class EditCommentActivity extends AppCompatActivity implements View.OnCli
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (COMMENT_MAX_LENGTH - text.length() < 10) {
-                    symbolNumberLeft.setTextColor(getResources().getColor(R.color.tw__composer_red));
+                    symbolNumberLeft.setTextColor(ContextCompat.getColor(EditCommentActivity.this, R.color.tw__composer_red));
                 } else {
                     symbolNumberLeft.setTextColor(Color.parseColor("#9f9f9f"));
                 }

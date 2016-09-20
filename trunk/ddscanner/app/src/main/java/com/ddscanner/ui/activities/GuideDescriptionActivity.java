@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -71,14 +72,14 @@ public class GuideDescriptionActivity extends AppCompatActivity implements View.
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.yes:
-                buttonYes.setImageDrawable(getResources().getDrawable(R.drawable.ic_smile_active));
+                buttonYes.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_smile_active));
                 thnaks.setText(R.string.thank_you_title);
                 EventsTracker.trackGuideUseful(item.getTitle());
                 buttonYes.setOnClickListener(null);
                 buttonNo.setOnClickListener(null);
                 break;
             case R.id.no:
-                buttonNo.setImageDrawable(getResources().getDrawable(R.drawable.ic_sad_active));
+                buttonNo.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_sad_active));
                 thnaks.setText(R.string.thank_you_title);
                 EventsTracker.trackGuideNotUseful(item.getTitle());
                 buttonYes.setOnClickListener(null);

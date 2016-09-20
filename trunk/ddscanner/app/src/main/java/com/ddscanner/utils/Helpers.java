@@ -9,10 +9,7 @@ import android.net.Network;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -23,9 +20,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.R;
 import com.ddscanner.entities.Image;
 import com.ddscanner.entities.Sealife;
-import com.ddscanner.entities.User;
 import com.ddscanner.entities.request.RegisterRequest;
-import com.ddscanner.ui.dialogs.ProfileDialog;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -89,25 +84,6 @@ public class Helpers {
         DisplayMetrics metrics = resources.getDisplayMetrics();
         float px = dp * ((float) metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
         return px;
-    }
-
-    /**
-     * Show dialog with user information
-     *
-     * @param user
-     * @param fragmentManager
-     * @author Andrei Lashkevich
-     */
-
-    public static void showDialog(User user, FragmentManager fragmentManager) {
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        Fragment prev = fragmentManager.findFragmentByTag("profile");
-        if (prev != null) {
-            fragmentTransaction.remove(prev);
-        }
-        fragmentTransaction.addToBackStack(null);
-        DialogFragment dialogFragment = ProfileDialog.newInstance(user);
-        dialogFragment.show(fragmentTransaction, "profile");
     }
 
     /**
@@ -321,8 +297,8 @@ public class Helpers {
         materialDialog = new MaterialDialog.Builder(context)
                 .cancelable(false)
                 .content("Please wait...").progress(true, 0)
-                .contentColor(context.getResources().getColor(R.color.black_text))
-                .widgetColor(context.getResources().getColor(R.color.primary)).build();
+                .contentColor(ContextCompat.getColor(context, R.color.black_text))
+                .widgetColor(ContextCompat.getColor(context, R.color.primary)).build();
         return materialDialog;
     }
 

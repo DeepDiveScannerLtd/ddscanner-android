@@ -18,8 +18,6 @@ import com.ddscanner.R;
 import com.ddscanner.entities.User;
 import com.ddscanner.events.ShowUserDialogEvent;
 import com.ddscanner.ui.adapters.EditorsUsersListAdapter;
-import com.ddscanner.ui.adapters.UserListAdapter;
-import com.ddscanner.ui.dialogs.ProfileDialog;
 import com.ddscanner.utils.Helpers;
 import com.squareup.otto.Subscribe;
 
@@ -85,18 +83,6 @@ public class EditorsListActivity extends AppCompatActivity {
     public void onStop() {
         super.onStop();
         DDScannerApplication.bus.unregister(this);
-    }
-
-    @Subscribe
-    public void showDialog(ShowUserDialogEvent event) {
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        Fragment prev = getSupportFragmentManager().findFragmentByTag("profile");
-        if (prev != null) {
-            fragmentTransaction.remove(prev);
-        }
-        fragmentTransaction.addToBackStack(null);
-        DialogFragment dialogFragment = ProfileDialog.newInstance(event.getUser());
-        dialogFragment.show(fragmentTransaction, "profile");
     }
 
     @Override

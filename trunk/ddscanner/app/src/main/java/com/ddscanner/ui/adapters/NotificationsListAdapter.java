@@ -3,6 +3,7 @@ package com.ddscanner.ui.adapters;
 import android.content.Context;
 import android.support.percent.PercentRelativeLayout;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatDrawableManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
@@ -49,7 +50,7 @@ public class NotificationsListAdapter
         if (notifications != null) {
             Notification notification;
             notification = notifications.get(position);
-            int color = context.getResources().getColor(R.color.primary);
+            int color = ContextCompat.getColor(context, R.color.primary);
             ForegroundColorSpan fcs = new ForegroundColorSpan(color);
             String divespot = "";
             String text = "";

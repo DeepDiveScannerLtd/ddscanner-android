@@ -98,7 +98,7 @@ public class SwipableDiveSpotListAdapter
     public void onBindViewHolder(final SwipableDiveSpotListViewHolder swipableDiveSpotListViewHolder, final int position) {
         DiveSpot divespot = divespots.get(position);
         swipableDiveSpotListViewHolder.progressBar.getIndeterminateDrawable().
-                setColorFilter(context.getResources().getColor(R.color.primary),
+                setColorFilter(ContextCompat.getColor(context, R.color.primary),
                         PorterDuff.Mode.MULTIPLY);
         if (divespot.getImage() != null) {
             Picasso.with(context).load(divespot.getImage()).resize(130, 130).centerCrop()

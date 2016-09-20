@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v13.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -251,7 +252,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                     } else {
                         locationTitle.setText(R.string.location);
                     }
-                    locationTitle.setTextColor(getResources().getColor(R.color.black_text));
+                    locationTitle.setTextColor(ContextCompat.getColor(this, R.color.black_text));
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_PHOTO:
@@ -647,7 +648,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                 .title(R.string.thank_you_title)
                 .content(R.string.success_added)
                 .positiveText(R.string.ok)
-                .positiveColor(getResources().getColor(R.color.primary))
+                .positiveColor(ContextCompat.getColor(this, R.color.primary))
                 .cancelable(false)
                 .dismissListener(new DialogInterface.OnDismissListener() {
                     @Override

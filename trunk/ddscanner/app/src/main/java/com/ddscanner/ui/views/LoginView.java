@@ -3,6 +3,7 @@ package com.ddscanner.ui.views;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
@@ -117,7 +118,7 @@ public class LoginView extends RelativeLayout implements View.OnClickListener {
         }
 
         public void updateDrawState(TextPaint ds) {
-            ds.setColor(getResources().getColor(R.color.primary));
+            ds.setColor(ContextCompat.getColor(getContext(), R.color.primary));
             ds.setUnderlineText(false);
         }
     }

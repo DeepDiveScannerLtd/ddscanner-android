@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -254,7 +255,7 @@ public class ProfileFragment extends Fragment
                     aboutLeftSymbols.setVisibility(View.VISIBLE);
                 }
                 if (MAX_LENGTH_ABOUT - aboutEdit.length() < 10) {
-                    aboutLeftSymbols.setTextColor(getResources().getColor(R.color.tw__composer_red));
+                    aboutLeftSymbols.setTextColor(ContextCompat.getColor(getContext(), R.color.tw__composer_red));
                 } else {
                     aboutLeftSymbols.setTextColor(Color.parseColor("#b2b2b2"));
                 }
@@ -280,7 +281,7 @@ public class ProfileFragment extends Fragment
                     nameLeftSymbols.setVisibility(View.VISIBLE);
                 }
                 if (MAX_LENGTH_NAME - fullNameEdit.length() < 10) {
-                    nameLeftSymbols.setTextColor(getResources().getColor(R.color.tw__composer_red));
+                    nameLeftSymbols.setTextColor(ContextCompat.getColor(getContext(), R.color.tw__composer_red));
                 } else {
                     nameLeftSymbols.setTextColor(Color.parseColor("#b2b2b2"));
                 }

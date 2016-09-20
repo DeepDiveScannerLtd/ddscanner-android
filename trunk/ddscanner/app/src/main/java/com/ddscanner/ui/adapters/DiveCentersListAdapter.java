@@ -119,7 +119,7 @@ public class DiveCentersListAdapter extends RecyclerView.Adapter<DiveCentersList
 
         @Override
         public void onClick(View v) {
-            DiveCenterDetailsActivity.show(context, diveCenters.get(getPosition()), DiveCentersListAdapter.this.getLogopath(), EventsTracker.SpotViewSource.FROM_LIST);
+            DiveCenterDetailsActivity.show(context, diveCenters.get(getAdapterPosition()), DiveCentersListAdapter.this.getLogopath(), EventsTracker.SpotViewSource.FROM_LIST);
         }
 
     }

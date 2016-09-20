@@ -22,6 +22,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v13.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatDrawableManager;
 import android.support.v7.widget.GridLayoutManager;
@@ -265,7 +266,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         showMore = (TextView) findViewById(R.id.showmore);
         ratingBar = (RatingBar) findViewById(R.id.rating_bar);
         btnCheckIn = (FloatingActionButton) findViewById(R.id.fab_checkin);
-        btnCheckIn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
+        btnCheckIn.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.white)));
         showAllReviews = (Button) findViewById(R.id.btn_show_all_reviews);
         isInfoValidLayout = (LinearLayout) findViewById(R.id.is_info_valid_layout);
         thanksLayout = (LinearLayout) findViewById(R.id.thanks_layout);
@@ -296,9 +297,9 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);
         getSupportActionBar().setTitle("");
-        collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
-        collapsingToolbarLayout.setStatusBarScrimColor(getResources().getColor(android.R.color.transparent));
-        //  collapsingToolbarLayout.setCollapsedTitleTextColor(getResources().getColor(android.R.color.transparent));
+        collapsingToolbarLayout.setExpandedTitleColor(ContextCompat.getColor(this, android.R.color.transparent));
+        collapsingToolbarLayout.setStatusBarScrimColor(ContextCompat.getColor(this, android.R.color.transparent));
+        //  collapsingToolbarLayout.setCollapsedTitleTextColor(ContextCompat.getColor(this, android.R.color.transparent));
     }
 
     /**
@@ -726,8 +727,8 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 .title(R.string.edit)
                 .content(R.string.question_edit_dive_spot)
                 .positiveText(R.string.btn_yes)
-                .positiveColor(getResources().getColor(R.color.primary))
-                .negativeColor(getResources().getColor(R.color.primary))
+                .positiveColor(ContextCompat.getColor(this, R.color.primary))
+                .negativeColor(ContextCompat.getColor(this, R.color.primary))
                 .negativeText(R.string.no_just_vote_answer)
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
@@ -752,8 +753,8 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 .title(R.string.dialog_title_check_in)
                 .content(R.string.dialog_check_in_content)
                 .positiveText(R.string.ok)
-                .positiveColor(getResources().getColor(R.color.primary))
-                .negativeColor(getResources().getColor(R.color.primary))
+                .positiveColor(ContextCompat.getColor(this, R.color.primary))
+                .negativeColor(ContextCompat.getColor(this, R.color.primary))
                 .negativeText(R.string.dialog_cancel)
                 .dismissListener(new DialogInterface.OnDismissListener() {
                     @Override
@@ -853,13 +854,13 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private void checkinUi() {
         btnCheckIn.setImageDrawable(AppCompatDrawableManager.get().getDrawable(
                 DiveSpotDetailsActivity.this, R.drawable.ic_acb_pin_checked));
-        btnCheckIn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
+        btnCheckIn.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.white)));
         isCheckedIn = true;
     }
 
     private void checkoutUi() {
         btnCheckIn.setImageDrawable(AppCompatDrawableManager.get().getDrawable(DiveSpotDetailsActivity.this, R.drawable.ic_acb_pin));
-        btnCheckIn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.orange)));
+        btnCheckIn.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.orange)));
         isCheckedIn = false;
     }
 
