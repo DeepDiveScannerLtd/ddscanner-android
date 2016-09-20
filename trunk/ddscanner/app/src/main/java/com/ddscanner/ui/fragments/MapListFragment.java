@@ -244,7 +244,7 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
                         LogUtils.i(TAG, "location check: onMapLoaded, userLocationOnFragmentStart = " + userLocationOnFragmentStart);
                         diveSpotsClusterManager = new DiveSpotsClusterManager(getActivity(), mGoogleMap, toast, progressBar, MapListFragment.this);
                         mGoogleMap.setOnMarkerClickListener(diveSpotsClusterManager);
-                        mGoogleMap.setOnCameraChangeListener(diveSpotsClusterManager);
+                        mGoogleMap.setOnCameraIdleListener(diveSpotsClusterManager);
                         DDScannerApplication.bus.post(new MapViewInitializedEvent());
                         if (userLocationOnFragmentStart == null) {
                             // this means location has not yet been received. do nothing

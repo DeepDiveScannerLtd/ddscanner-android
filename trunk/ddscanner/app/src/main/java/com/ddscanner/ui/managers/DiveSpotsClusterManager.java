@@ -52,7 +52,7 @@ import java.util.Map;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 
-public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements ClusterManager.OnClusterClickListener<DiveSpot>, GoogleMap.OnMapClickListener {
+public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements ClusterManager.OnClusterClickListener<DiveSpot>, GoogleMap.OnMapClickListener, GoogleMap.OnCameraIdleListener{
 
     private static final String TAG = DiveSpotsClusterManager.class.getName();
     private static final int CAMERA_ANIMATION_DURATION = 300;
@@ -176,8 +176,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
     }
 
     @Override
-    public void onCameraChange(CameraPosition cameraPosition) {
-        super.onCameraChange(cameraPosition);
+    public void onCameraIdle() {
         if (lastZoom != googleMap.getCameraPosition().zoom && lastClickedMarker != null) {
             lastZoom = googleMap.getCameraPosition().zoom;
             DDScannerApplication.bus.post(new OnMapClickEvent(null, false));
@@ -207,6 +206,39 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
             showToast();
         }
     }
+
+//    @Override
+//    public void onCameraChange(CameraPosition cameraPosition) {
+//        super.onCameraChange(cameraPosition);
+//        if (lastZoom != googleMap.getCameraPosition().zoom && lastClickedMarker != null) {
+//            lastZoom = googleMap.getCameraPosition().zoom;
+//            DDScannerApplication.bus.post(new OnMapClickEvent(null, false));
+//        }
+//        LatLng southwest = googleMap.getProjection().getVisibleRegion().latLngBounds.southwest;
+//        LatLng northeast = googleMap.getProjection().getVisibleRegion().latLngBounds.northeast;
+//        parentFragment.fillDiveSpots(getVisibleMarkersList(diveSpots));
+//        if (diveSpotsRequestMap.size() == 0) {
+//            diveSpotsRequestMap.putSouthWestLat(southwest.latitude - Math.abs(northeast.latitude - southwest.latitude));
+//            diveSpotsRequestMap.putSouthWestLng(southwest.longitude - Math.abs(northeast.longitude - southwest.longitude));
+//            diveSpotsRequestMap.putNorthEastLat(northeast.latitude + Math.abs(northeast.latitude - southwest.latitude));
+//            diveSpotsRequestMap.putNorthEastLng(northeast.longitude + Math.abs(northeast.longitude - southwest.longitude));
+//        }
+//        if (checkArea(southwest, northeast)) {
+//            hideToast();
+//            if (isCanMakeRequest) {
+//                if (southwest.latitude <= diveSpotsRequestMap.getSouthWestLat() ||
+//                        southwest.longitude <= diveSpotsRequestMap.getSouthWestLng() ||
+//                        northeast.latitude >= diveSpotsRequestMap.getNorthEastLat() ||
+//                        northeast.longitude >= diveSpotsRequestMap.getNorthEastLng()) {
+//                    requestCityProducts(false);
+//                }
+//            } else {
+//                requestCityProducts(false);
+//            }
+//        } else {
+//            showToast();
+//        }
+//    }
 
     @Override
     public boolean onMarkerClick(final Marker marker) {
@@ -484,13 +516,13 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
 
     @Subscribe
     public void newDiveSpotAdded(NewDiveSpotAddedEvent event) {
-        googleMap.setOnCameraChangeListener(null);
+        googleMap.setOnCameraIdleListener(null);
         newDiveSpotId = Integer.parseInt(event.getDiveSpotId());
         lastClickedMarker = null;
         isNewDiveSpotMarkerClicked = true;
         googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(new LatLngBounds(new LatLng(event.getLatLng().latitude - 0.05, event.getLatLng().longitude - 0.05), new LatLng(event.getLatLng().latitude + 0.05, event.getLatLng().longitude + 0.05)),0));
         sendRequest(new LatLng(event.getLatLng().latitude - 0.05, event.getLatLng().longitude - 0.05), new LatLng(event.getLatLng().latitude + 0.05, event.getLatLng().longitude + 0.05));
-        googleMap.setOnCameraChangeListener(this);
+        googleMap.setOnCameraIdleListener(this);
     }
 
 }

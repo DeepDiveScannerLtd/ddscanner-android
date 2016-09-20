@@ -262,16 +262,8 @@ public class Helpers {
             }
             return false;
         } else {
-            NetworkInfo wifiInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-            if (wifiInfo != null && wifiInfo.isConnected()) {
-                return true;
-            }
-            wifiInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
-            if (wifiInfo != null && wifiInfo.isConnected()) {
-                return true;
-            }
-            wifiInfo = cm.getActiveNetworkInfo();
-            if (wifiInfo != null && wifiInfo.isConnected()) {
+            NetworkInfo wifiInfo = cm.getActiveNetworkInfo();
+            if (wifiInfo != null) {
                 return true;
             }
             return false;

@@ -270,7 +270,7 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
                         diveCentersClusterManager = new DiveCentersClusterManager(DiveCentersActivity.this, mGoogleMap, latLng, dsName);
                         mGoogleMap.setOnInfoWindowClickListener(diveCentersClusterManager);
                         mGoogleMap.setOnMarkerClickListener(diveCentersClusterManager);
-                        mGoogleMap.setOnCameraChangeListener(diveCentersClusterManager);
+                        mGoogleMap.setOnCameraIdleListener(diveCentersClusterManager);
                     }
                 });
 

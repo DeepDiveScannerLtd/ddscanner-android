@@ -284,11 +284,6 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     @Subscribe
-    public void showDialog(ShowUserDialogEvent event) {
-        Helpers.showDialog(event.getUser(), getSupportFragmentManager());
-    }
-
-    @Subscribe
     public void isCommentLiked(IsCommentLikedEvent event) {
         isHasNewComment = true;
     }
