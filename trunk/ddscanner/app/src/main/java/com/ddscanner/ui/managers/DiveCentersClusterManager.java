@@ -112,7 +112,7 @@ public class DiveCentersClusterManager extends ClusterManager<DiveCenter> implem
         }
         // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
 //        diveSpotMarker = googleMap.addMarker(new MarkerOptions().position(diveSpotLatLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds)).title(diveSpotName));
-        diveSpotMarker = googleMap.addMarker(new MarkerOptions().position(diveSpotLatLng).icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_ds))).title(diveSpotName));
+        diveSpotMarker = googleMap.addMarker(new MarkerOptions().position(diveSpotLatLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds)).title(diveSpotName));
     }
 
     @Override
@@ -138,7 +138,7 @@ public class DiveCentersClusterManager extends ClusterManager<DiveCenter> implem
             // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
 //                lastClickedMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
             try {
-                lastClickedMarker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.pin_dc)));
+                lastClickedMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.pin_dc));
             } catch (IllegalStateException e) {
 
             } catch (IllegalArgumentException e) {
@@ -148,7 +148,7 @@ public class DiveCentersClusterManager extends ClusterManager<DiveCenter> implem
         lastClickedMarker = marker;
         // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
 //                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds_selected));
-        marker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_dc_selected)));
+        marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_dc_selected));
         if (diveCentersMap.get(marker.getPosition())!= null) {
             DDScannerApplication.bus.post(new DiveCenterMarkerClickEvent(diveCentersMap.get(marker.getPosition()), logoPath));
         }
@@ -225,7 +225,7 @@ public class DiveCentersClusterManager extends ClusterManager<DiveCenter> implem
             try {
                 // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
 //                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
-                marker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.pin_dc)));
+                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.pin_dc));
                 if (lastClickedMarker != null && lastClickedMarker.getPosition().equals(marker.getPosition()) && lastClickedMarker.isInfoWindowShown()) {
                     //      marker.showInfoWindow();
                 }

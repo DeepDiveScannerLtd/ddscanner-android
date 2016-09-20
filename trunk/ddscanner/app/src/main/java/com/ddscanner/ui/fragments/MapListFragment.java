@@ -394,9 +394,9 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
         if (diveSpotsClusterManager != null && diveSpotsClusterManager.getLastClickedMarker() != null) {
             try {
                 if (diveSpotsClusterManager.isLastClickedMarkerNew()) {
-                    diveSpotsClusterManager.getLastClickedMarker().setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.ic_ds_new)));
+                    diveSpotsClusterManager.getLastClickedMarker().setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds_new));
                 } else {
-                    diveSpotsClusterManager.getLastClickedMarker().setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.ic_ds)));
+                    diveSpotsClusterManager.getLastClickedMarker().setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
                 }
             } catch (NullPointerException e) {
 
@@ -428,9 +428,9 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
             try {
 
                 if (event.getIsNew()) {
-                    event.getMarker().setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.ic_ds_new)));
+                    event.getMarker().setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds_new));
                 } else {
-                    event.getMarker().setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.ic_ds)));
+                    event.getMarker().setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
                 }
             } catch (NullPointerException e) {
 

@@ -225,9 +225,9 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
                 // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
 //                lastClickedMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
                 if (diveSpotsMap.get(marker.getPosition()).getStatus().equals("waiting")) {
-                    lastClickedMarker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_ds_new)));
+                    lastClickedMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds_new));
                 } else {
-                    lastClickedMarker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_ds)));
+                    lastClickedMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
                 }
             } catch (IllegalArgumentException e) {
                 e.printStackTrace();
@@ -236,7 +236,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         lastClickedMarker = marker;
         // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
 //                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds_selected));
-        marker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_ds_selected)));
+        marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds_selected));
         if (diveSpotsMap.get(marker.getPosition()) != null) {
             DDScannerApplication.bus.post(new MarkerClickEvent(diveSpotsMap.get(marker.getPosition())));
         }
@@ -407,10 +407,10 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
 //                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
                 if (diveSpot.getStatus().equals("waiting")) {
                     if (lastClickedMarker == null || !lastClickedMarker.equals(marker)) {
-                        marker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_ds_new)));
+                        marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds_new));
                     }
                 } else {
-                    marker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_ds)));
+                    marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
                 }
 
                 if (newDiveSpotId != -1) {

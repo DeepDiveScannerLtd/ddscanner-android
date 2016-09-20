@@ -308,7 +308,7 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
 //                event.getMarker().setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
         if (event.getMarker() != null) {
             try {
-                event.getMarker().setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.pin_dc)));
+                event.getMarker().setIcon(BitmapDescriptorFactory.fromResource(R.drawable.pin_dc));
             } catch (NullPointerException e) {
 
             } catch (IllegalArgumentException e) {
