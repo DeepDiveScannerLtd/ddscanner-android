@@ -130,13 +130,6 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         lastClickedMarker = null;
         DDScannerApplication.bus.post(new CloseInfoWindowEvent());
         toast.setVisibility(View.VISIBLE);
-//        android.os.Handler handler = new android.os.Handler();
-//        handler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                hideToast();
-//            }
-//        }, 1700);
     }
 
     private void showPb() {
@@ -222,8 +215,6 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         }
         if (lastClickedMarker != null) {
             try {
-                // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
-//                lastClickedMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
                 if (diveSpotsMap.get(marker.getPosition()).getStatus().equals("waiting")) {
                     lastClickedMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds_new));
                 } else {
@@ -234,8 +225,6 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
             }
         }
         lastClickedMarker = marker;
-        // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
-//                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds_selected));
         marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds_selected));
         if (diveSpotsMap.get(marker.getPosition()) != null) {
             DDScannerApplication.bus.post(new MarkerClickEvent(diveSpotsMap.get(marker.getPosition())));
@@ -319,49 +308,6 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         }
         if (checkArea(southwest, northeast)) {
             sendRequest(northeast, southwest);
-//            showPb();
-//            isCanMakeRequest = true;
-//            lastKnownSouthWest = southwest;
-//            lastKnownNorthEast = northeast;
-//            diveSpotsRequestMap.putSouthWestLat(southwest.latitude - Math.abs(northeast.latitude - southwest.latitude));
-//            diveSpotsRequestMap.putSouthWestLng(southwest.longitude - Math.abs(northeast.longitude - southwest.longitude));
-//            diveSpotsRequestMap.putNorthEastLat(northeast.latitude + Math.abs(northeast.latitude - southwest.latitude));
-//            diveSpotsRequestMap.putNorthEastLng(northeast.longitude + Math.abs(northeast.longitude - southwest.longitude));
-//            if (!TextUtils.isEmpty(SharedPreferenceHelper.getLevel())) {
-//                diveSpotsRequestMap.putLevel(SharedPreferenceHelper.getLevel());
-//            }
-//            if (!TextUtils.isEmpty(SharedPreferenceHelper.getObject())) {
-//                diveSpotsRequestMap.putObject(SharedPreferenceHelper.getObject());
-//            }
-//            for (Map.Entry<String, Object> entry : diveSpotsRequestMap.entrySet()) {
-//                LogUtils.i(TAG, "get dive spots request parameter: " + entry.getKey() + " " + entry.getValue());
-//            }
-//            Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDivespots(diveSpotsRequestMap);
-//            call.enqueue(new BaseCallback() {
-//                @Override
-//                public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-//                    if (response.isSuccessful()) {
-//                        String responseString = "";
-//                        try {
-//                            responseString = response.body().string();
-//                        } catch (IOException e) {
-//                            e.printStackTrace();
-//                        }
-//                        LogUtils.i(TAG, "response body is " + responseString);
-//                        divespotsWrapper = new Gson().fromJson(responseString, DivespotsWrapper.class);
-//                        updateDiveSpots((ArrayList<DiveSpot>) divespotsWrapper.getDiveSpots());
-//                        parentFragment.fillDiveSpots(getVisibleMarkersList(diveSpots));
-//                        hidePb();
-//                    } else {
-//                        hidePb();
-//                    }
-//                }
-//
-//                @Override
-//                public void onConnectionFailure() {
-//                    DialogUtils.showConnectionErrorDialog(context);
-//                }
-//            });
         }
     }
 
@@ -403,8 +349,6 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
             super.onClusterItemRendered(diveSpot, marker);
             Log.i(TAG, "Marker id- " + marker.toString());
             try {
-                // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
-//                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
                 if (diveSpot.getStatus().equals("waiting")) {
                     if (lastClickedMarker == null || !lastClickedMarker.equals(marker)) {
                         marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds_new));

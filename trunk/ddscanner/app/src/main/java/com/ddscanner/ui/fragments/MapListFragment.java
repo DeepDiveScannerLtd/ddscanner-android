@@ -422,8 +422,6 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
 
     @Subscribe
     public void hideDiveSpotinfo(OnMapClickEvent event) {
-        // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
-//                event.getMarker().setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
         if (event.getMarker() != null) {
             try {
 
@@ -466,13 +464,9 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
         if (diveSpots == null || diveSpots.isEmpty() || diveSpots.size() == 0) {
             rc.setVisibility(View.GONE);
             please.setVisibility(View.VISIBLE);
-//            mapListFAB.setVisibility(View.GONE);
-//            addDsFab.setVisibility(View.GONE);
         } else {
             rc.setVisibility(View.VISIBLE);
             please.setVisibility(View.GONE);
-//            mapListFAB.setVisibility(View.VISIBLE);
-//            addDsFab.setVisibility(View.VISIBLE);
         }
 
     }
@@ -492,15 +486,10 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
                     goToMyLocation.setVisibility(View.VISIBLE);
                     progressBarMyLocation.setVisibility(View.GONE);
                     if (circle == null) {
-                        // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
-//                myLocationMarker = mGoogleMap.addMarker(new MarkerOptions()
-//                        .position(myLocation)
-//                        .anchor(0.5f, 0.5f)
-//                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.pin_me)));
                         myLocationMarker = mGoogleMap.addMarker(new MarkerOptions()
                                 .position(myLocation)
                                 .anchor(0.5f, 0.5f)
-                                .icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.ic_pin_me))));
+                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_me)));
                         CircleOptions circleOptions = new CircleOptions()
                                 .center(myLocation)
                                 .radius(200)

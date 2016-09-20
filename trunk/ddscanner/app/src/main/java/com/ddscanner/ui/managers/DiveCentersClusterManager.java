@@ -110,8 +110,6 @@ public class DiveCentersClusterManager extends ClusterManager<DiveCenter> implem
             addItem(diveCenter);
             diveCentersMap.put(diveCenter.getPosition(), diveCenter);
         }
-        // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
-//        diveSpotMarker = googleMap.addMarker(new MarkerOptions().position(diveSpotLatLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds)).title(diveSpotName));
         diveSpotMarker = googleMap.addMarker(new MarkerOptions().position(diveSpotLatLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds)).title(diveSpotName));
     }
 
@@ -135,8 +133,6 @@ public class DiveCentersClusterManager extends ClusterManager<DiveCenter> implem
             return true;
         }
         if (lastClickedMarker != null) {
-            // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
-//                lastClickedMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
             try {
                 lastClickedMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.pin_dc));
             } catch (IllegalStateException e) {
