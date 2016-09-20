@@ -66,7 +66,7 @@ import com.ddscanner.entities.errors.ValidationErrorException;
 import com.ddscanner.entities.request.ValidationReguest;
 import com.ddscanner.events.OpenPhotosActivityEvent;
 import com.ddscanner.events.UnknownErrorCatchedEvent;
-import com.ddscanner.rest.BaseCallback;
+import com.ddscanner.rest.BaseCallbackOld;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
@@ -868,7 +868,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance()
                 .divespotValidation(String.valueOf(diveSpotDetails.getDivespot().getId()),
                         validationReguest);
-        call.enqueue(new BaseCallback() {
+        call.enqueue(new BaseCallbackOld() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 materialDialog.dismiss();
@@ -933,7 +933,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 String.valueOf(diveSpot.getId()),
                 Helpers.getRegisterRequest()
         );
-        call.enqueue(new BaseCallback() {
+        call.enqueue(new BaseCallbackOld() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.raw().code() == 200) {
@@ -995,7 +995,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance()
                 .removeSpotFromFavorites(id, Helpers.getUserQuryMapRequest());
-        call.enqueue(new BaseCallback() {
+        call.enqueue(new BaseCallbackOld() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.raw().code() == 200) {
@@ -1051,7 +1051,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
     private void getCheckins() {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getCheckins(String.valueOf(diveSpot.getId()));
-        call.enqueue(new BaseCallback() {
+        call.enqueue(new BaseCallbackOld() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 String responseString = "";
@@ -1089,7 +1089,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance()
                 .getComments(String.valueOf(diveSpot.getId()), Helpers.getUserQuryMapRequest());
-        call.enqueue(new BaseCallback() {
+        call.enqueue(new BaseCallbackOld() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 String responseString = "";

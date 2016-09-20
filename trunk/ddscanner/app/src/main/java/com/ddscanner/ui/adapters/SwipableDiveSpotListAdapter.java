@@ -25,11 +25,10 @@ import com.ddscanner.entities.errors.UnknownErrorException;
 import com.ddscanner.entities.errors.UserNotFoundException;
 import com.ddscanner.entities.errors.ValidationErrorException;
 import com.ddscanner.events.ShowLoginActivityIntent;
-import com.ddscanner.rest.BaseCallback;
+import com.ddscanner.rest.BaseCallbackOld;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.activities.DiveSpotDetailsActivity;
-import com.ddscanner.ui.activities.SocialNetworks;
 import com.ddscanner.ui.views.TransformationRoundImage;
 import com.ddscanner.utils.DialogUtils;
 import com.ddscanner.utils.Helpers;
@@ -145,7 +144,7 @@ public class SwipableDiveSpotListAdapter
     private void checkOut(String id) {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance()
                 .checkOutUser(id, Helpers.getUserQuryMapRequest());
-        call.enqueue(new BaseCallback() {
+        call.enqueue(new BaseCallbackOld() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (!response.isSuccessful()) {
@@ -196,7 +195,7 @@ public class SwipableDiveSpotListAdapter
     private void checkIn(String id) {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance()
                 .checkIn(id, Helpers.getRegisterRequest());
-        call.enqueue(new BaseCallback() {
+        call.enqueue(new BaseCallbackOld() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (!response.isSuccessful()) {
@@ -247,7 +246,7 @@ public class SwipableDiveSpotListAdapter
     private void addToFavorites(String id) {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance()
                 .addDiveSpotToFavourites(id, Helpers.getRegisterRequest());
-        call.enqueue(new BaseCallback() {
+        call.enqueue(new BaseCallbackOld() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (!response.isSuccessful()) {
@@ -299,7 +298,7 @@ public class SwipableDiveSpotListAdapter
     private void removeFromFavorites(String id) {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance()
                 .removeSpotFromFavorites(id, Helpers.getUserQuryMapRequest());
-        call.enqueue(new BaseCallback() {
+        call.enqueue(new BaseCallbackOld() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (!response.isSuccessful()) {

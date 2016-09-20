@@ -10,8 +10,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -39,7 +37,7 @@ import com.ddscanner.events.LikeCommentEvent;
 import com.ddscanner.events.ReportCommentEvent;
 import com.ddscanner.events.ShowLoginActivityIntent;
 import com.ddscanner.events.ShowUserDialogEvent;
-import com.ddscanner.rest.BaseCallback;
+import com.ddscanner.rest.BaseCallbackOld;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.ReviewsListAdapter;
@@ -199,7 +197,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
         progressView.setVisibility(View.VISIBLE);
         isHasNewComment = true;
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getComments(diveSpotId, Helpers.getUserQuryMapRequest());
-        call.enqueue(new BaseCallback() {
+        call.enqueue(new BaseCallbackOld() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
@@ -479,7 +477,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
         }
         reportRequest.setType(type);
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().reportComment(reportCommentId, reportRequest);
-        call.enqueue(new BaseCallback() {
+        call.enqueue(new BaseCallbackOld() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 materialDialog.dismiss();
@@ -545,7 +543,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().likeComment(
                 id, Helpers.getRegisterRequest()
         );
-        call.enqueue(new BaseCallback() {
+        call.enqueue(new BaseCallbackOld() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
@@ -620,7 +618,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().dislikeComment(
                 id, Helpers.getRegisterRequest()
         );
-        call.enqueue(new BaseCallback() {
+        call.enqueue(new BaseCallbackOld() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
