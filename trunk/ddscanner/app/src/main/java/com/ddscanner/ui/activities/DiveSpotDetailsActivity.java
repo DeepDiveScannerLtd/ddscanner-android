@@ -10,7 +10,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
-import android.content.res.Resources;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -29,7 +28,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -52,8 +50,8 @@ import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.Checkins;
 import com.ddscanner.entities.Comment;
 import com.ddscanner.entities.Comments;
-import com.ddscanner.entities.DiveSpotFull;
 import com.ddscanner.entities.DiveSpotDetails;
+import com.ddscanner.entities.DiveSpotFull;
 import com.ddscanner.entities.Image;
 import com.ddscanner.entities.Sealife;
 import com.ddscanner.entities.User;
@@ -75,6 +73,7 @@ import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.DiveSpotsPhotosAdapter;
 import com.ddscanner.ui.adapters.EditorsListAdapter;
 import com.ddscanner.ui.adapters.SealifeListAdapter;
+import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogUtils;
@@ -128,7 +127,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private ProgressView progressBar;
     private ProgressView progressBarFull;
     private RecyclerView photosRecyclerView;
-    private RecyclerView sealifeRecyclerview;
+    private RecyclerView sealifeRecyclerView;
     private MapFragment mapFragment;
     private Toolbar toolbar;
     private CollapsingToolbarLayout collapsingToolbarLayout;
@@ -158,8 +157,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private TextView newDiveSpotView;
     private ImageView creatorAvatar;
     private ImageButton btnAddPhoto;
-    private int avatarImageSize;
-    private int avatarImageRadius;
     private ImageView expandEditorsArrow;
     private Menu menu;
     private List<User> creatorsEditorsList = new ArrayList<>();
@@ -199,28 +196,91 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         @Override
         public void onConnectionFailure() {
             DialogUtils.showConnectionErrorDialog(DiveSpotDetailsActivity.this);
+            finish();
         }
 
         @Override
-        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData) {
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             switch (errorType) {
-                case UNPROCESSABLE_ENTITY_ERROR_422:
-                    // TODO Send info about this issue to server or analytics
                 case DIVE_SPOT_NOT_FOUND_ERROR_C802:
-                    // TODO Send info about this issue to server or analytics
-                default:
-                    Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
+                    InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_message_dive_spot_not_found);
+                    // This is unexpected so track it
+                    handleUnexpectedError(url, errorMessage);
                     break;
+                default:
+                    handleUnexpectedError(url, errorMessage);
             }
         }
     };
 
-    public static float convertDpToPixel(float dp, Context context) {
-        Resources resources = context.getResources();
-        DisplayMetrics metrics = resources.getDisplayMetrics();
-        float px = dp * ((float) metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
-        return px;
-    }
+    private DDScannerRestClient.ResultListener<Void> checkInResultListener = new DDScannerRestClient.ResultListener<Void>() {
+        @Override
+        public void onSuccess(Void result) {
+            getCheckins();
+            EventsTracker.trackCheckIn(EventsTracker.CheckInStatus.SUCCESS);
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            DialogUtils.showConnectionErrorDialog(DiveSpotDetailsActivity.this);
+            checkInUi();
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            checkInUi();
+            switch (errorType) {
+                case DIVE_SPOT_NOT_FOUND_ERROR_C802:
+                    InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_message_dive_spot_not_found);
+                    // This is unexpected so track it
+                    handleUnexpectedError(url, errorMessage);
+                    break;
+                case USER_NOT_FOUND_ERROR_C801:
+                    isClickedCHeckin = true;
+                    showLoginActivity();
+                    break;
+                case BAD_REQUEST_ERROR_400:
+                    InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_message_already_checked_in);
+                    break;
+                default:
+                    handleUnexpectedError(url, errorMessage);
+            }
+        }
+    };
+
+    private DDScannerRestClient.ResultListener<Void> checkOutResultListener = new DDScannerRestClient.ResultListener<Void>() {
+        @Override
+        public void onSuccess(Void result) {
+            getCheckins();
+            EventsTracker.trackCheckOut();
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            DialogUtils.showConnectionErrorDialog(DiveSpotDetailsActivity.this);
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            getCheckins();
+            switch (errorType) {
+                case DIVE_SPOT_NOT_FOUND_ERROR_C802:
+                    InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_message_dive_spot_not_found);
+                    // This is unexpected so track it
+                    handleUnexpectedError(url, errorMessage);
+                    break;
+                case USER_NOT_FOUND_ERROR_C801:
+                    isClickedCheckOut = true;
+                    showLoginActivity();
+                    break;
+                case BAD_REQUEST_ERROR_400:
+                    InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_message_already_checked_out);
+                    break;
+                default:
+                    handleUnexpectedError(url, errorMessage);
+            }
+        }
+    };
 
     /**
      * Show current activity from another place of app
@@ -277,7 +337,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         progressBar = (ProgressView) findViewById(R.id.progressBar);
         progressBarFull = (ProgressView) findViewById(R.id.progressBarFull);
         photosRecyclerView = (RecyclerView) findViewById(R.id.photos_rc);
-        sealifeRecyclerview = (RecyclerView) findViewById(R.id.sealife_rc);
+        sealifeRecyclerView = (RecyclerView) findViewById(R.id.sealife_rc);
         mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.google_map_fragment);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
@@ -335,9 +395,9 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
      */
 
     private void setUi() {
-        avatarImageRadius = (int) getResources().getDimension(R.dimen.editor_avatar_radius);
+        int avatarImageRadius = (int) getResources().getDimension(R.dimen.editor_avatar_radius);
         rating.removeAllViews();
-        avatarImageSize = 2 * avatarImageRadius;
+        int avatarImageSize = 2 * avatarImageRadius;
         btnRefreshLayout.setOnClickListener(this);
         btnAddPhoto.setOnClickListener(this);
         materialDialog = Helpers.getMaterialDialog(this);
@@ -438,10 +498,10 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 diveSpot.getDiveSpotPathMedium(), DiveSpotDetailsActivity.this, (ArrayList<Image>) diveSpot.getCommentImages()));
         LinearLayoutManager layoutManager = new LinearLayoutManager(DiveSpotDetailsActivity.this);
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        sealifeRecyclerview.setNestedScrollingEnabled(false);
-        sealifeRecyclerview.setHasFixedSize(false);
-        sealifeRecyclerview.setLayoutManager(layoutManager);
-        sealifeRecyclerview.setAdapter(new SealifeListAdapter(
+        sealifeRecyclerView.setNestedScrollingEnabled(false);
+        sealifeRecyclerView.setHasFixedSize(false);
+        sealifeRecyclerView.setLayoutManager(layoutManager);
+        sealifeRecyclerView.setAdapter(new SealifeListAdapter(
                 (ArrayList<Sealife>) diveSpotDetails.getSealifes(),
                 this, diveSpot.getSealifePathMedium(),
                 diveSpot.getSealifePathMedium()));
@@ -478,7 +538,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         progressBarFull.setVisibility(View.GONE);
         informationLayout.setVisibility(View.VISIBLE);
         if (diveSpot.getCheckin()) {
-            checkinUi();
+            checkInUi();
         } else {
             checkoutUi();
         }
@@ -735,78 +795,18 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         dialog.show();
     }
 
-    /**
-     * Sending request when try to check in in dive spot and change FAB style
-     *
-     * Andrei Lashkevich
-     */
-
     private void checkIn() {
-        checkinUi();
+        checkInUi();
         if (!SharedPreferenceHelper.isUserLoggedIn()) {
             checkoutUi();
             isClickedCHeckin = true;
             showLoginActivity();
             return;
         }
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().checkIn(
-                String.valueOf(diveSpotDetails.getDivespot().getId()),
-                Helpers.getRegisterRequest()
-        );
-        call.enqueue(new BaseCallback() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    getCheckins();
-                    EventsTracker.trackCheckIn(EventsTracker.CheckInStatus.SUCCESS);
-                } else {
-                    checkoutUi();
-                    String responseString = "";
-                    try {
-                        responseString = response.errorBody().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    LogUtils.i("response body is " + responseString);
-                    try {
-                        ErrorsParser.checkForError(response.code(), responseString);
-                    } catch (ServerInternalErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
-                    } catch (BadRequestException e) {
-                        // TODO Handle
-                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
-                    } catch (ValidationErrorException e) {
-                        // TODO Handle
-
-                    } catch (NotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
-                    } catch (UnknownErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
-                    } catch (DiveSpotNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
-                    } catch (UserNotFoundException e) {
-                        // TODO Handle
-                        isClickedCHeckin = true;
-                        showLoginActivity();
-                    } catch (CommentNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
-                    }
-                }
-            }
-
-            @Override
-            public void onConnectionFailure() {
-                DialogUtils.showConnectionErrorDialog(DiveSpotDetailsActivity.this);
-            }
-        });
+        DDScannerApplication.getDdScannerRestClient().postCheckIn(diveSpotId, checkInResultListener);
     }
 
-    private void checkinUi() {
+    private void checkInUi() {
         btnCheckIn.setImageDrawable(AppCompatDrawableManager.get().getDrawable(
                 DiveSpotDetailsActivity.this, R.drawable.ic_acb_pin_checked));
         btnCheckIn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
@@ -819,75 +819,15 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         isCheckedIn = false;
     }
 
-    /**
-     * Sending request when try to check out in dive spot and change FAB style
-     *
-     * Andrei Lashkevich
-     */
-
     private void checkOut() {
         checkoutUi();
         if (!SharedPreferenceHelper.isUserLoggedIn()) {
-            checkinUi();
+            checkInUi();
             isClickedCheckOut = true;
             showLoginActivity();
             return;
         }
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().checkOutUser(
-                String.valueOf(diveSpotDetails.getDivespot().getId()),
-                Helpers.getUserQuryMapRequest()
-        );
-        call.enqueue(new BaseCallback() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (!response.isSuccessful()) {
-                    checkinUi();
-                    String responseString = "";
-                    try {
-                        responseString = response.errorBody().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    LogUtils.i("response body is " + responseString);
-                    try {
-                        ErrorsParser.checkForError(response.code(), responseString);
-                    } catch (ServerInternalErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
-                    } catch (BadRequestException e) {
-                        // TODO Handle
-                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
-                    } catch (ValidationErrorException e) {
-                        // TODO Handle
-
-                    } catch (NotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
-                    } catch (UnknownErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
-                    } catch (DiveSpotNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
-                    } catch (UserNotFoundException e) {
-                        // TODO Handle
-                        isClickedCheckOut = true;
-                        showLoginActivity();
-                    } catch (CommentNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
-                    }
-                } else {
-                    EventsTracker.trackCheckOut();
-                    getCheckins();
-                }
-            }
-
-            @Override
-            public void onConnectionFailure() {
-                DialogUtils.showConnectionErrorDialog(DiveSpotDetailsActivity.this);
-            }
-        });
+        DDScannerApplication.getDdScannerRestClient().postCheckOut(diveSpotId, checkOutResultListener);
     }
 
     @Override
@@ -1244,7 +1184,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                         isClickedCHeckin = false;
                     }
                     if (isClickedCheckOut) {
-                        checkinUi();
+                        checkInUi();
                         isClickedCheckOut = false;
                     }
                     if (isCLickedFavorite) {
@@ -1494,7 +1434,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
             int position = parent.getChildAdapterPosition(view);
             if (position >= spanCount) {
-                outRect.top = Math.round(convertDpToPixel(Float.valueOf(10), DiveSpotDetailsActivity.this));
+                outRect.top = Math.round(Helpers.convertDpToPixel(Float.valueOf(10), DiveSpotDetailsActivity.this));
             }
         }
     }
@@ -1525,5 +1465,4 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         startActivity(intent);
         finish();
     }
-
 }

@@ -152,7 +152,7 @@
     <string name="checkin">Check-ins</string>
     <string name="added_ds">Created</string>
     <string name="edited_ds">Edited</string>
-    <string name="toast_server_error">Try again later</string>
+    <string name="toast_server_error">Failed to reach DDScanner service. Please try again later</string>
     <string name="sealife_already_added">It has already been added</string>
     <string name="please_connect_to_a_network_to_continue">Please connect to a network to continue</string>
     <string name="refresh">REFRESH</string>
@@ -286,4 +286,8 @@
     <string name="new_review">New Review</string>
     <string name="comment_already_disliked">Dive spot comment has already been disliked</string>
     <string name="comment_already_liked">Dive spot comment has already been liked</string>
+    <string name="error_server_error_title">Error occurred</string>
+    <string name="error_message_dive_spot_not_found">For some reason requested dive spot info was not found. Report was captured.</string>
+    <string name="error_message_already_checked_in">You have already checked in here.</string>
+    <string name="error_message_already_checked_out">You have already checked out of here.</string>
 </resources>
