@@ -206,9 +206,11 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                     InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_message_dive_spot_not_found);
                     // This is unexpected so track it
                     handleUnexpectedError(url, errorMessage);
+                    finish();
                     break;
                 default:
                     handleUnexpectedError(url, errorMessage);
+                    finish();
             }
         }
     };
