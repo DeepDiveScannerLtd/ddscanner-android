@@ -39,6 +39,7 @@ import com.ddscanner.events.IsCommentLikedEvent;
 import com.ddscanner.events.LikeCommentEvent;
 import com.ddscanner.events.ReportCommentEvent;
 import com.ddscanner.events.ShowLoginActivityIntent;
+import com.ddscanner.events.ShowSliderForReviewImagesEvent;
 import com.ddscanner.events.ShowUserDialogEvent;
 import com.ddscanner.rest.BaseCallback;
 import com.ddscanner.rest.ErrorsParser;
@@ -693,5 +694,10 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     public void dislikeComment(DislikeCommentEvent event) {
         this.reviewPositionToRate = event.getPosition();
         dislikeComment(comments.get(event.getPosition()).getId(), event.getPosition());
+    }
+
+    @Subscribe
+    public void showSliderActivity(ShowSliderForReviewImagesEvent event) {
+        ReviewImageSliderActivity.show(this, event.getPhotos(), event.getPosition(), event.isSelfReview(), true, path);
     }
 }

@@ -1,6 +1,7 @@
 package com.ddscanner.ui.adapters;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.AppCompatDrawableManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -27,6 +28,7 @@ import com.ddscanner.events.LikeCommentEvent;
 import com.ddscanner.events.ReportCommentEvent;
 import com.ddscanner.ui.activities.ForeignProfileActivity;
 import com.ddscanner.utils.Helpers;
+import com.ddscanner.utils.SharedPreferenceHelper;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -65,6 +67,13 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         boolean isLiked;
         boolean isDisliked;
         reviewsListViewHolder.rating.removeAllViews();
+        reviewsListViewHolder.date.setText("");
+        reviewsListViewHolder.dislikeImage.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_review_dislike_empty));
+        reviewsListViewHolder.likeImage.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_review_like_empty));
+        reviewsListViewHolder.photos.setVisibility(View.GONE);
+        reviewsListViewHolder.expand.setText("");
+        reviewsListViewHolder.dislikesCount.setText("");
+        reviewsListViewHolder.likesCount.setText("");
         isLiked = comments.get(reviewsListViewHolder.getAdapterPosition()).isLike();
         isDisliked = comments.get(reviewsListViewHolder.getAdapterPosition()).isDislike();
         if (isLiked) {
@@ -76,12 +85,17 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
                     .getDrawable(context, R.drawable.ic_review_dislike));
         }
         if (comments.get(reviewsListViewHolder.getAdapterPosition()).getImages() != null) {
+            reviewsListViewHolder.photos.setVisibility(View.VISIBLE);
             LinearLayoutManager layoutManager = new LinearLayoutManager(context);
             layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
             reviewsListViewHolder.photos.setNestedScrollingEnabled(false);
             reviewsListViewHolder.photos.setHasFixedSize(false);
             reviewsListViewHolder.photos.setLayoutManager(layoutManager);
-            reviewsListViewHolder.photos.setAdapter(new ReviewPhotosAdapter((ArrayList<String>) comments.get(reviewsListViewHolder.getAdapterPosition()).getImages(), context, path));
+            if (comments.get(reviewsListViewHolder.getAdapterPosition()).getUser().getId().equals(SharedPreferenceHelper.getUserServerId())) {
+                reviewsListViewHolder.photos.setAdapter(new ReviewPhotosAdapter((ArrayList<String>) comments.get(reviewsListViewHolder.getAdapterPosition()).getImages(), context, path, true));
+            } else {
+                reviewsListViewHolder.photos.setAdapter(new ReviewPhotosAdapter((ArrayList<String>) comments.get(reviewsListViewHolder.getAdapterPosition()).getImages(), context, path, false));
+            }
         } else {
             reviewsListViewHolder.photos.setAdapter(null);
         }
