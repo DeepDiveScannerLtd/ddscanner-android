@@ -61,7 +61,7 @@ public class NotificationsListAdapter
                     text = context.getResources().getString(R.string.your_changes_accepted,divespot);
                     spannableString = new SpannableString(text);
                     spannableString.setSpan(fcs, text.indexOf(divespot),
-                            text.length() - divespot.length(), 0);
+                            text.indexOf(divespot) + divespot.length(), 0);
                     holder.text.setText(spannableString);
                     holder.timeAgo.setText(Helpers.getDate(notification.getDate()));
                     break;
