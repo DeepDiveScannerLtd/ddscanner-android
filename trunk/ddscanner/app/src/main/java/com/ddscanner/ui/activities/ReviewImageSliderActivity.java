@@ -53,6 +53,7 @@ public class ReviewImageSliderActivity extends AppCompatActivity implements View
     private String reportName;
     private String deleteImageName;
     private ImageView menu;
+    private String path;
 
 
     @Override
@@ -63,6 +64,7 @@ public class ReviewImageSliderActivity extends AppCompatActivity implements View
         images = (ArrayList<String>) getIntent().getSerializableExtra(Constants.REVIEWS_IMAGES_SLIDE_INTENT_IMAGES);
         isSelfImages = getIntent().getBooleanExtra("isSelf", false);
         isFromReviews = getIntent().getBooleanExtra("isFromReviews", false);
+        path = getIntent().getStringExtra("path");
         if (isFromReviews) {
             menu.setVisibility(View.VISIBLE);
         }
@@ -76,7 +78,7 @@ public class ReviewImageSliderActivity extends AppCompatActivity implements View
     }
 
     private void showDeleteMenu(View view) {
-        deleteImageName = images.get(position);
+        deleteImageName = images.get(position).replace(path, "");
         PopupMenu popup = new PopupMenu(this, view);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.menu_photo_delete, popup.getMenu());
@@ -84,12 +86,12 @@ public class ReviewImageSliderActivity extends AppCompatActivity implements View
         popup.show();
     }
 
-    private void showReportMenu(View view, int position) {
+    private void showReportMenu(View view) {
         if (images.size() == 0) {
             position = 0;
             this.position = 0;
         }
-        reportName = images.get(position);
+        reportName = images.get(position).replace(path, "");
         PopupMenu popup = new PopupMenu(this, view);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.menu_photo_report, popup.getMenu());
@@ -161,7 +163,7 @@ public class ReviewImageSliderActivity extends AppCompatActivity implements View
                     showDeleteMenu(menu);
                     break;
                 }
-                showReportMenu(menu, 0);
+                showReportMenu(menu);
                 break;
         }
     }
@@ -177,6 +179,7 @@ public class ReviewImageSliderActivity extends AppCompatActivity implements View
             dots[i].setImageDrawable(ContextCompat.getDrawable(this, R.drawable.nonselecteditem_dot));
         }
         dots[position].setImageDrawable(ContextCompat.getDrawable(this, R.drawable.selecteditem_dot));
+        this.position = position;
     }
 
 
