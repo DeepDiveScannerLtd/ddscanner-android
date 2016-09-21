@@ -392,9 +392,9 @@ public class Helpers {
             }
             if ((differenceOfTime / minuteSeconds) > 0) {
                 if ((differenceOfTime) == 1) {
-                    return String.valueOf(differenceOfTime / minuteSeconds) + " minute age";
+                    return String.valueOf(differenceOfTime / minuteSeconds) + " minute ago";
                 }
-                return String.valueOf(differenceOfTime / minuteSeconds) + " minutes age";
+                return String.valueOf(differenceOfTime / minuteSeconds) + " minutes ago";
             }
             if (differenceOfTime > 0 && differenceOfTime < 60) {
                 if ((differenceOfTime) == 1) {
