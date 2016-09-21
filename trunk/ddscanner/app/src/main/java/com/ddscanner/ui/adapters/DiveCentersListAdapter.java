@@ -61,7 +61,7 @@ public class DiveCentersListAdapter extends RecyclerView.Adapter<DiveCentersList
         }
         if (diveCenter.getLogo() != null) {
             String imageUrlPath = logoPath + diveCenter.getLogo();
-            Picasso.with(context).load(imageUrlPath).into(diveCentersListViewHolder.imgLogo);
+            Picasso.with(context).load(imageUrlPath).placeholder(R.drawable.avatar_dc_list_empty).into(diveCentersListViewHolder.imgLogo);
         } else {
             diveCentersListViewHolder.imgLogo.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.avatar_dc_list_empty));
         }
