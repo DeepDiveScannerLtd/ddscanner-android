@@ -270,7 +270,7 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
                         diveCentersClusterManager = new DiveCentersClusterManager(DiveCentersActivity.this, mGoogleMap, latLng, dsName);
                         mGoogleMap.setOnInfoWindowClickListener(diveCentersClusterManager);
                         mGoogleMap.setOnMarkerClickListener(diveCentersClusterManager);
-                        mGoogleMap.setOnCameraChangeListener(diveCentersClusterManager);
+                        mGoogleMap.setOnCameraIdleListener(diveCentersClusterManager);
                     }
                 });
 
@@ -304,11 +304,9 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
 
     @Subscribe
     public void hidediveCenterInfo(OnMapClickEvent event) {
-        // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
-//                event.getMarker().setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
         if (event.getMarker() != null) {
             try {
-                event.getMarker().setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.pin_dc)));
+                event.getMarker().setIcon(BitmapDescriptorFactory.fromResource(R.drawable.pin_dc));
             } catch (NullPointerException e) {
 
             } catch (IllegalArgumentException e) {
@@ -393,7 +391,7 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
                         myLocationMarker = mGoogleMap.addMarker(new MarkerOptions()
                                 .position(myLocation)
                                 .anchor(0.5f, 0.5f)
-                                .icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(this.getResources(), R.drawable.ic_pin_me))));
+                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_me)));
                         CircleOptions circleOptions = new CircleOptions()
                                 .center(myLocation)
                                 .radius(200)

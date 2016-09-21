@@ -4,8 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.PopupMenu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -16,6 +20,7 @@ import android.widget.TextView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.Image;
 import com.ddscanner.ui.adapters.ReviewImageSLiderAdapter;
 import com.ddscanner.ui.adapters.SliderImagesAdapter;
@@ -43,6 +48,12 @@ public class ReviewImageSliderActivity extends AppCompatActivity implements View
     private SimpleGestureFilter detector;
     float x1,x2;
     float y1, y2;
+    private boolean isSelfImages;
+    private boolean isFromReviews;
+    private String reportName;
+    private String deleteImageName;
+    private ImageView menu;
+    private String path;
 
 
     @Override
@@ -51,14 +62,41 @@ public class ReviewImageSliderActivity extends AppCompatActivity implements View
         setContentView(R.layout.activity_slider);
         findViews();
         images = (ArrayList<String>) getIntent().getSerializableExtra(Constants.REVIEWS_IMAGES_SLIDE_INTENT_IMAGES);
+        isSelfImages = getIntent().getBooleanExtra("isSelf", false);
+        isFromReviews = getIntent().getBooleanExtra("isFromReviews", false);
+        path = getIntent().getStringExtra("path");
+        if (isFromReviews) {
+            menu.setVisibility(View.VISIBLE);
+        }
         detector = new SimpleGestureFilter(this,this);
         position = getIntent().getIntExtra(Constants.REVIEWS_IMAGES_SLIDE_INTENT_POSITION, 0);
         viewPager.addOnPageChangeListener(this);
         sliderImagesAdapter = new ReviewImageSLiderAdapter(getFragmentManager(), images);
         viewPager.setAdapter(sliderImagesAdapter);
-        close.setOnClickListener(this);
         setUi();
 
+    }
+
+    private void showDeleteMenu(View view) {
+        deleteImageName = images.get(position).replace(path, "");
+        PopupMenu popup = new PopupMenu(this, view);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.menu_photo_delete, popup.getMenu());
+        popup.setOnMenuItemClickListener(new MenuItemsClickListener(deleteImageName));
+        popup.show();
+    }
+
+    private void showReportMenu(View view) {
+        if (images.size() == 0) {
+            position = 0;
+            this.position = 0;
+        }
+        reportName = images.get(position).replace(path, "");
+        PopupMenu popup = new PopupMenu(this, view);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.menu_photo_report, popup.getMenu());
+        popup.setOnMenuItemClickListener(new MenuItemsClickListener(reportName));
+        popup.show();
     }
 
     private void findViews() {
@@ -66,6 +104,9 @@ public class ReviewImageSliderActivity extends AppCompatActivity implements View
         pager_indicator = (LinearLayout) findViewById(R.id.viewPagerCountDots);
         close = (ImageView) findViewById(R.id.close_btn);
         baseLayout = (FrameLayout) findViewById(R.id.swipe_layout);
+        menu = (ImageView) findViewById(R.id.options);
+        close.setOnClickListener(this);
+        menu.setOnClickListener(this);
     }
 
     private void setUi() {
@@ -74,7 +115,7 @@ public class ReviewImageSliderActivity extends AppCompatActivity implements View
 
         for (int i=0; i < dotsCount; i++) {
             dots[i] = new ImageView(this);
-            dots[i].setImageDrawable(getResources().getDrawable(R.drawable.nonselecteditem_dot));
+            dots[i].setImageDrawable(ContextCompat.getDrawable(this, R.drawable.nonselecteditem_dot));
 
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -85,16 +126,44 @@ public class ReviewImageSliderActivity extends AppCompatActivity implements View
 
             pager_indicator.addView(dots[i],  params);
         }
-        dots[position].setImageDrawable(getResources().getDrawable(R.drawable.selecteditem_dot));
+        dots[position].setImageDrawable(ContextCompat.getDrawable(this, R.drawable.selecteditem_dot));
         viewPager.setCurrentItem(position);
     }
 
+
+    private class MenuItemsClickListener implements PopupMenu.OnMenuItemClickListener {
+
+        private String imageName;
+
+        public MenuItemsClickListener(String imageName) {
+            this.imageName = imageName;
+        }
+
+        @Override
+        public boolean onMenuItemClick(MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.photo_report:
+                    EventsTracker.trackPhotoReport();
+                    break;
+                case R.id.photo_delete:
+                    break;
+            }
+            return false;
+        }
+    }
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.close_btn:
                 onBackPressed();
                 overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
+                break;
+            case R.id.options:
+                if (isSelfImages) {
+                    showDeleteMenu(menu);
+                    break;
+                }
+                showReportMenu(menu);
                 break;
         }
     }
@@ -107,30 +176,20 @@ public class ReviewImageSliderActivity extends AppCompatActivity implements View
     @Override
     public void onPageSelected(int position) {
         for (int i = 0; i < dotsCount; i++) {
-            dots[i].setImageDrawable(getResources().getDrawable(R.drawable.nonselecteditem_dot));
+            dots[i].setImageDrawable(ContextCompat.getDrawable(this, R.drawable.nonselecteditem_dot));
         }
-        dots[position].setImageDrawable(getResources().getDrawable(R.drawable.selecteditem_dot));
-      /*  Picasso.with(this).load("http://www.trizeri.travel/images/divespots/medium/" +images.get(position)).into(new Target() {
-            @Override
-            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                drawable = new BitmapDrawable(bitmap);
-                drawable.setColorFilter(Color.parseColor("#99000000"), PorterDuff.Mode.SRC_ATOP);
-                baseLayout.setBackgroundDrawable(drawable);
-            }
-            @Override
-            public void onBitmapFailed(Drawable errorDrawable) {
-            }
-            @Override
-            public void onPrepareLoad(Drawable placeHolderDrawable) {
-            }
-        });*/
+        dots[position].setImageDrawable(ContextCompat.getDrawable(this, R.drawable.selecteditem_dot));
+        this.position = position;
     }
 
 
-    public static void show(Context context, ArrayList<String> images, int position) {
+    public static void show(Context context, ArrayList<String> images, int position, boolean isSelfImages, boolean isFromReviews, String path) {
         Intent intent = new Intent(context, ReviewImageSliderActivity.class);
         intent.putExtra(Constants.REVIEWS_IMAGES_SLIDE_INTENT_IMAGES, images);
         intent.putExtra(Constants.REVIEWS_IMAGES_SLIDE_INTENT_POSITION, position);
+        intent.putExtra("isSelf", isSelfImages);
+        intent.putExtra("isFromReviews", isFromReviews);
+        intent.putExtra("path", path);
         context.startActivity(intent);
     }
 

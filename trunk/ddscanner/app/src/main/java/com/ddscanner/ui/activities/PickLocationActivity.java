@@ -36,7 +36,7 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import java.util.List;
 import java.util.Locale;
 
-public class PickLocationActivity extends AppCompatActivity implements GoogleMap.OnCameraChangeListener, View.OnClickListener, OnMapReadyCallback {
+public class PickLocationActivity extends AppCompatActivity implements GoogleMap.OnCameraIdleListener, View.OnClickListener, OnMapReadyCallback {
 
     private static final String TAG = PickLocationActivity.class.getSimpleName();
 
@@ -95,10 +95,10 @@ public class PickLocationActivity extends AppCompatActivity implements GoogleMap
     }
 
     @Override
-    public void onCameraChange(CameraPosition cameraPosition) {
-        new ChangeDataInTextView().execute(cameraPosition.target);
-        pickedLatLng = cameraPosition.target;
-        placeCoordinates.setText(String.valueOf(cameraPosition.target.latitude) + ", " + String.valueOf(cameraPosition.target.longitude));
+    public void onCameraIdle() {
+        new ChangeDataInTextView().execute(googleMap.getCameraPosition().target);
+        pickedLatLng = googleMap.getCameraPosition().target;
+        placeCoordinates.setText(String.valueOf(googleMap.getCameraPosition().target.latitude) + ", " + String.valueOf(googleMap.getCameraPosition().target.longitude));
 
     }
 
@@ -192,7 +192,7 @@ public class PickLocationActivity extends AppCompatActivity implements GoogleMap
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
-        googleMap.setOnCameraChangeListener(this);
+        googleMap.setOnCameraIdleListener(this);
         googleMap.getUiSettings().setZoomControlsEnabled(false);
         if (startLocation != null) {
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(startLocation));

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
@@ -156,7 +157,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         pager_indicator.removeAllViews();
         for (int i=0; i < dotsCount; i++) {
             dots[i] = new ImageView(this);
-            dots[i].setImageDrawable(getResources().getDrawable(R.drawable.nonselecteditem_dot));
+            dots[i].setImageDrawable(ContextCompat.getDrawable(this, R.drawable.nonselecteditem_dot));
 
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -167,7 +168,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
 
             pager_indicator.addView(dots[i],  params);
         }
-        dots[position].setImageDrawable(getResources().getDrawable(R.drawable.selecteditem_dot));
+        dots[position].setImageDrawable(ContextCompat.getDrawable(this, R.drawable.selecteditem_dot));
         viewPager.setCurrentItem(position);
     }
 
@@ -209,9 +210,9 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     @Override
     public void onPageSelected(int position) {
         for (int i = 0; i < dotsCount; i++) {
-            dots[i].setImageDrawable(getResources().getDrawable(R.drawable.nonselecteditem_dot));
+            dots[i].setImageDrawable(ContextCompat.getDrawable(this, R.drawable.nonselecteditem_dot));
         }
-        dots[position].setImageDrawable(getResources().getDrawable(R.drawable.selecteditem_dot));
+        dots[position].setImageDrawable(ContextCompat.getDrawable(this, R.drawable.selecteditem_dot));
         changeUiAccrodingPosition(position);
     }
 
@@ -506,7 +507,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     private void showOtherReportDialog() {
         new MaterialDialog.Builder(this)
                 .title("Other")
-                .widgetColor(getResources().getColor(R.color.primary))
+                .widgetColor(ContextCompat.getColor(this, R.color.primary))
                 .input("Write reason", "", new MaterialDialog.InputCallback() {
                     @Override
                     public void onInput(MaterialDialog dialog, CharSequence input) {

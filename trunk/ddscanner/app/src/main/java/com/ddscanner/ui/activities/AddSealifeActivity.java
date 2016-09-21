@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v13.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.Toolbar;
@@ -195,7 +196,7 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
                 break;
             case R.id.delete_photo:
                 sealifePhoto.setImageDrawable(null);
-                addPhoto.setBackgroundColor(getResources().getColor(R.color.white));
+                addPhoto.setBackgroundColor(ContextCompat.getColor(this, R.color.white));
                 btnDelete.setVisibility(View.GONE);
                 centerLayout.setVisibility(View.VISIBLE);
                 addPhoto.setOnClickListener(this);

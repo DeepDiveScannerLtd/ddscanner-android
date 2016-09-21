@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -36,6 +37,7 @@ import com.ddscanner.events.IsCommentLikedEvent;
 import com.ddscanner.events.LikeCommentEvent;
 import com.ddscanner.events.ReportCommentEvent;
 import com.ddscanner.events.ShowLoginActivityIntent;
+import com.ddscanner.events.ShowSliderForReviewImagesEvent;
 import com.ddscanner.events.ShowUserDialogEvent;
 import com.ddscanner.rest.BaseCallbackOld;
 import com.ddscanner.rest.ErrorsParser;
@@ -281,11 +283,6 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     @Subscribe
-    public void showDialog(ShowUserDialogEvent event) {
-        Helpers.showDialog(event.getUser(), getSupportFragmentManager());
-    }
-
-    @Subscribe
     public void isCommentLiked(IsCommentLikedEvent event) {
         isHasNewComment = true;
     }
@@ -444,7 +441,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     private void showOtherReportDialog() {
         new MaterialDialog.Builder(this)
                 .title("Other")
-                .widgetColor(getResources().getColor(R.color.primary))
+                .widgetColor(ContextCompat.getColor(this, R.color.primary))
                 .input("Write reason", "", new MaterialDialog.InputCallback() {
                     @Override
                     public void onInput(MaterialDialog dialog, CharSequence input) {
@@ -695,5 +692,10 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     public void dislikeComment(DislikeCommentEvent event) {
         this.reviewPositionToRate = event.getPosition();
         dislikeComment(comments.get(event.getPosition()).getId(), event.getPosition());
+    }
+
+    @Subscribe
+    public void showSliderActivity(ShowSliderForReviewImagesEvent event) {
+        ReviewImageSliderActivity.show(this, event.getPhotos(), event.getPosition(), event.isSelfReview(), true, path);
     }
 }

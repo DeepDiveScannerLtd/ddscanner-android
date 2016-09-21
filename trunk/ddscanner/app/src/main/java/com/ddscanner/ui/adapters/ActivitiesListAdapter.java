@@ -4,6 +4,7 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.media.Image;
 import android.support.percent.PercentRelativeLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatDrawableManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
@@ -55,7 +56,7 @@ public class ActivitiesListAdapter
     public void onBindViewHolder(ActivitiesListViewHolder holder, int position) {
         if (activities != null && position < activities.size()) {
             Activity activity = activities.get(position);
-            int color = context.getResources().getColor(R.color.primary);
+            int color = ContextCompat.getColor(context,R.color.primary);
             ForegroundColorSpan fcs = new ForegroundColorSpan(color);
             Picasso.with(context)
                     .load(activity.getDiveSpot().getPath() + activity.getDiveSpot().getImage())

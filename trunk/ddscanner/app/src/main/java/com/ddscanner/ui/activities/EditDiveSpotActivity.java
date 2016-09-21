@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v13.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -212,7 +213,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
         name.setText(diveSpot.getName());
         depth.setText(diveSpot.getDepth());
         description.setText(diveSpot.getDescription());
-        locationTitle.setTextColor(getResources().getColor(R.color.black_text));
+        locationTitle.setTextColor(ContextCompat.getColor(this, R.color.black_text));
         visibilityMax.setText(diveSpot.getVisibilityMax());
         visibilityMin.setText(diveSpot.getVisibilityMin());
 

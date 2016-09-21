@@ -52,7 +52,7 @@ import java.util.Map;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 
-public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements ClusterManager.OnClusterClickListener<DiveSpot>, GoogleMap.OnMapClickListener {
+public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements ClusterManager.OnClusterClickListener<DiveSpot>, GoogleMap.OnMapClickListener, GoogleMap.OnCameraIdleListener{
 
     private static final String TAG = DiveSpotsClusterManager.class.getName();
     private static final int CAMERA_ANIMATION_DURATION = 300;
@@ -130,13 +130,6 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         lastClickedMarker = null;
         DDScannerApplication.bus.post(new CloseInfoWindowEvent());
         toast.setVisibility(View.VISIBLE);
-//        android.os.Handler handler = new android.os.Handler();
-//        handler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                hideToast();
-//            }
-//        }, 1700);
     }
 
     private void showPb() {
@@ -183,8 +176,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
     }
 
     @Override
-    public void onCameraChange(CameraPosition cameraPosition) {
-        super.onCameraChange(cameraPosition);
+    public void onCameraIdle() {
         if (lastZoom != googleMap.getCameraPosition().zoom && lastClickedMarker != null) {
             lastZoom = googleMap.getCameraPosition().zoom;
             DDScannerApplication.bus.post(new OnMapClickEvent(null, false));
@@ -215,6 +207,39 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         }
     }
 
+//    @Override
+//    public void onCameraChange(CameraPosition cameraPosition) {
+//        super.onCameraChange(cameraPosition);
+//        if (lastZoom != googleMap.getCameraPosition().zoom && lastClickedMarker != null) {
+//            lastZoom = googleMap.getCameraPosition().zoom;
+//            DDScannerApplication.bus.post(new OnMapClickEvent(null, false));
+//        }
+//        LatLng southwest = googleMap.getProjection().getVisibleRegion().latLngBounds.southwest;
+//        LatLng northeast = googleMap.getProjection().getVisibleRegion().latLngBounds.northeast;
+//        parentFragment.fillDiveSpots(getVisibleMarkersList(diveSpots));
+//        if (diveSpotsRequestMap.size() == 0) {
+//            diveSpotsRequestMap.putSouthWestLat(southwest.latitude - Math.abs(northeast.latitude - southwest.latitude));
+//            diveSpotsRequestMap.putSouthWestLng(southwest.longitude - Math.abs(northeast.longitude - southwest.longitude));
+//            diveSpotsRequestMap.putNorthEastLat(northeast.latitude + Math.abs(northeast.latitude - southwest.latitude));
+//            diveSpotsRequestMap.putNorthEastLng(northeast.longitude + Math.abs(northeast.longitude - southwest.longitude));
+//        }
+//        if (checkArea(southwest, northeast)) {
+//            hideToast();
+//            if (isCanMakeRequest) {
+//                if (southwest.latitude <= diveSpotsRequestMap.getSouthWestLat() ||
+//                        southwest.longitude <= diveSpotsRequestMap.getSouthWestLng() ||
+//                        northeast.latitude >= diveSpotsRequestMap.getNorthEastLat() ||
+//                        northeast.longitude >= diveSpotsRequestMap.getNorthEastLng()) {
+//                    requestCityProducts(false);
+//                }
+//            } else {
+//                requestCityProducts(false);
+//            }
+//        } else {
+//            showToast();
+//        }
+//    }
+
     @Override
     public boolean onMarkerClick(final Marker marker) {
         if (super.onMarkerClick(marker) || marker.equals(userCurrentLocationMarker)) {
@@ -222,21 +247,17 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         }
         if (lastClickedMarker != null) {
             try {
-                // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
-//                lastClickedMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
                 if (diveSpotsMap.get(marker.getPosition()).getStatus().equals("waiting")) {
-                    lastClickedMarker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_ds_new)));
+                    lastClickedMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds_new));
                 } else {
-                    lastClickedMarker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_ds)));
+                    lastClickedMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
                 }
             } catch (IllegalArgumentException e) {
                 e.printStackTrace();
             }
         }
         lastClickedMarker = marker;
-        // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
-//                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds_selected));
-        marker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_ds_selected)));
+        marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds_selected));
         if (diveSpotsMap.get(marker.getPosition()) != null) {
             DDScannerApplication.bus.post(new MarkerClickEvent(diveSpotsMap.get(marker.getPosition())));
         }
@@ -319,49 +340,6 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         }
         if (checkArea(southwest, northeast)) {
             sendRequest(northeast, southwest);
-//            showPb();
-//            isCanMakeRequest = true;
-//            lastKnownSouthWest = southwest;
-//            lastKnownNorthEast = northeast;
-//            diveSpotsRequestMap.putSouthWestLat(southwest.latitude - Math.abs(northeast.latitude - southwest.latitude));
-//            diveSpotsRequestMap.putSouthWestLng(southwest.longitude - Math.abs(northeast.longitude - southwest.longitude));
-//            diveSpotsRequestMap.putNorthEastLat(northeast.latitude + Math.abs(northeast.latitude - southwest.latitude));
-//            diveSpotsRequestMap.putNorthEastLng(northeast.longitude + Math.abs(northeast.longitude - southwest.longitude));
-//            if (!TextUtils.isEmpty(SharedPreferenceHelper.getLevel())) {
-//                diveSpotsRequestMap.putLevel(SharedPreferenceHelper.getLevel());
-//            }
-//            if (!TextUtils.isEmpty(SharedPreferenceHelper.getObject())) {
-//                diveSpotsRequestMap.putObject(SharedPreferenceHelper.getObject());
-//            }
-//            for (Map.Entry<String, Object> entry : diveSpotsRequestMap.entrySet()) {
-//                LogUtils.i(TAG, "get dive spots request parameter: " + entry.getKey() + " " + entry.getValue());
-//            }
-//            Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDivespots(diveSpotsRequestMap);
-//            call.enqueue(new BaseCallback() {
-//                @Override
-//                public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-//                    if (response.isSuccessful()) {
-//                        String responseString = "";
-//                        try {
-//                            responseString = response.body().string();
-//                        } catch (IOException e) {
-//                            e.printStackTrace();
-//                        }
-//                        LogUtils.i(TAG, "response body is " + responseString);
-//                        divespotsWrapper = new Gson().fromJson(responseString, DivespotsWrapper.class);
-//                        updateDiveSpots((ArrayList<DiveSpot>) divespotsWrapper.getDiveSpots());
-//                        parentFragment.fillDiveSpots(getVisibleMarkersList(diveSpots));
-//                        hidePb();
-//                    } else {
-//                        hidePb();
-//                    }
-//                }
-//
-//                @Override
-//                public void onConnectionFailure() {
-//                    DialogUtils.showConnectionErrorDialog(context);
-//                }
-//            });
         }
     }
 
@@ -403,14 +381,12 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
             super.onClusterItemRendered(diveSpot, marker);
             Log.i(TAG, "Marker id- " + marker.toString());
             try {
-                // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
-//                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
                 if (diveSpot.getStatus().equals("waiting")) {
                     if (lastClickedMarker == null || !lastClickedMarker.equals(marker)) {
-                        marker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_ds_new)));
+                        marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds_new));
                     }
                 } else {
-                    marker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_ds)));
+                    marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
                 }
 
                 if (newDiveSpotId != -1) {
@@ -540,13 +516,13 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
 
     @Subscribe
     public void newDiveSpotAdded(NewDiveSpotAddedEvent event) {
-        googleMap.setOnCameraChangeListener(null);
+        googleMap.setOnCameraIdleListener(null);
         newDiveSpotId = Integer.parseInt(event.getDiveSpotId());
         lastClickedMarker = null;
         isNewDiveSpotMarkerClicked = true;
         googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(new LatLngBounds(new LatLng(event.getLatLng().latitude - 0.05, event.getLatLng().longitude - 0.05), new LatLng(event.getLatLng().latitude + 0.05, event.getLatLng().longitude + 0.05)),0));
         sendRequest(new LatLng(event.getLatLng().latitude - 0.05, event.getLatLng().longitude - 0.05), new LatLng(event.getLatLng().latitude + 0.05, event.getLatLng().longitude + 0.05));
-        googleMap.setOnCameraChangeListener(this);
+        googleMap.setOnCameraIdleListener(this);
     }
 
 }

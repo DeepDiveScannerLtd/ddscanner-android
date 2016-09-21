@@ -11,7 +11,9 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.events.ShowSliderForReviewImagesEvent;
 import com.ddscanner.ui.activities.ImageSliderActivity;
 import com.ddscanner.ui.activities.ReviewImageSliderActivity;
 import com.ddscanner.ui.views.TransformationRoundImage;
@@ -29,11 +31,13 @@ public class ReviewPhotosAdapter extends RecyclerView.Adapter<ReviewPhotosAdapte
     public String reviewId;
     public String path;
     public Context context;
+    public boolean isSelfPhotos;
 
-    public ReviewPhotosAdapter(ArrayList<String> photos, Context context, String path) {
+    public ReviewPhotosAdapter(ArrayList<String> photos, Context context, String path, boolean isSelfPhotos) {
         this.photos = photos;
         this.context = context;
         this.path = path;
+        this.isSelfPhotos =  isSelfPhotos;
 
         Helpers.appendImagesWithPath(photos, path);
     }
@@ -87,7 +91,8 @@ public class ReviewPhotosAdapter extends RecyclerView.Adapter<ReviewPhotosAdapte
 
         @Override
         public void onClick(View v) {
-           ReviewImageSliderActivity.show(context, photos, getAdapterPosition());
+          // ReviewImageSliderActivity.show(context, photos, getAdapterPosition());
+            DDScannerApplication.bus.post(new ShowSliderForReviewImagesEvent(isSelfPhotos, photos, getAdapterPosition()));
         }
     }
 

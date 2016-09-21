@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -96,7 +97,7 @@ public class SocialNetworks extends AppCompatActivity
         close = (ImageView) findViewById(R.id.close);
         materialDialog = Helpers.getMaterialDialog(this);
         close.setOnClickListener(this);
-        int color = getResources().getColor(R.color.primary);
+        int color = ContextCompat.getColor(this, R.color.primary);
         final SpannableString spannableString = new SpannableString(privacyPolicy.getText());
         privacyPolicy.setHighlightColor(Color.TRANSPARENT);
         spannableString.setSpan(new MyClickableSpan(privacyPolicy.getText().toString()) {
@@ -358,7 +359,7 @@ public class SocialNetworks extends AppCompatActivity
         }
 
         public void updateDrawState(TextPaint ds) {
-            ds.setColor(getResources().getColor(R.color.primary));
+            ds.setColor(ContextCompat.getColor(SocialNetworks.this, R.color.primary));
             ds.setUnderlineText(false);
         }
     }

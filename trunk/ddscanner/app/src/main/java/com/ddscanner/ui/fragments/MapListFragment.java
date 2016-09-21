@@ -244,7 +244,7 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
                         LogUtils.i(TAG, "location check: onMapLoaded, userLocationOnFragmentStart = " + userLocationOnFragmentStart);
                         diveSpotsClusterManager = new DiveSpotsClusterManager(getActivity(), mGoogleMap, toast, progressBar, MapListFragment.this);
                         mGoogleMap.setOnMarkerClickListener(diveSpotsClusterManager);
-                        mGoogleMap.setOnCameraChangeListener(diveSpotsClusterManager);
+                        mGoogleMap.setOnCameraIdleListener(diveSpotsClusterManager);
                         DDScannerApplication.bus.post(new MapViewInitializedEvent());
                         if (userLocationOnFragmentStart == null) {
                             // this means location has not yet been received. do nothing
@@ -394,9 +394,9 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
         if (diveSpotsClusterManager != null && diveSpotsClusterManager.getLastClickedMarker() != null) {
             try {
                 if (diveSpotsClusterManager.isLastClickedMarkerNew()) {
-                    diveSpotsClusterManager.getLastClickedMarker().setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.ic_ds_new)));
+                    diveSpotsClusterManager.getLastClickedMarker().setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds_new));
                 } else {
-                    diveSpotsClusterManager.getLastClickedMarker().setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.ic_ds)));
+                    diveSpotsClusterManager.getLastClickedMarker().setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
                 }
             } catch (NullPointerException e) {
 
@@ -422,15 +422,13 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
 
     @Subscribe
     public void hideDiveSpotinfo(OnMapClickEvent event) {
-        // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
-//                event.getMarker().setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
         if (event.getMarker() != null) {
             try {
 
                 if (event.getIsNew()) {
-                    event.getMarker().setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.ic_ds_new)));
+                    event.getMarker().setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds_new));
                 } else {
-                    event.getMarker().setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.ic_ds)));
+                    event.getMarker().setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
                 }
             } catch (NullPointerException e) {
 
@@ -466,13 +464,9 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
         if (diveSpots == null || diveSpots.isEmpty() || diveSpots.size() == 0) {
             rc.setVisibility(View.GONE);
             please.setVisibility(View.VISIBLE);
-//            mapListFAB.setVisibility(View.GONE);
-//            addDsFab.setVisibility(View.GONE);
         } else {
             rc.setVisibility(View.VISIBLE);
             please.setVisibility(View.GONE);
-//            mapListFAB.setVisibility(View.VISIBLE);
-//            addDsFab.setVisibility(View.VISIBLE);
         }
 
     }
@@ -492,15 +486,10 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
                     goToMyLocation.setVisibility(View.VISIBLE);
                     progressBarMyLocation.setVisibility(View.GONE);
                     if (circle == null) {
-                        // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
-//                myLocationMarker = mGoogleMap.addMarker(new MarkerOptions()
-//                        .position(myLocation)
-//                        .anchor(0.5f, 0.5f)
-//                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.pin_me)));
                         myLocationMarker = mGoogleMap.addMarker(new MarkerOptions()
                                 .position(myLocation)
                                 .anchor(0.5f, 0.5f)
-                                .icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.ic_pin_me))));
+                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_me)));
                         CircleOptions circleOptions = new CircleOptions()
                                 .center(myLocation)
                                 .radius(200)
