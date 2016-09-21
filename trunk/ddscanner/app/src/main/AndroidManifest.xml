@@ -46,14 +46,6 @@
             </intent-filter>
         </receiver>
         <receiver
-            android:name="com.flurry.android.FlurryInstallReceiver"
-            android:enabled="true"
-            android:exported="true" >
-            <intent-filter>
-                <action android:name="com.android.vending.INSTALL_REFERRER" />
-            </intent-filter>
-        </receiver>
-        <receiver
             android:name="com.google.android.gms.analytics.CampaignTrackingReceiver"
             android:enabled="true"
             android:exported="true" >
