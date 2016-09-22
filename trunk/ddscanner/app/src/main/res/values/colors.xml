@@ -59,4 +59,6 @@
 
     <color name="defaultGrayTitleColor">#B2B2B2</color>
 
+    <color name="tw__composer_red">#ffe81c4f</color>
+
 </resources>
