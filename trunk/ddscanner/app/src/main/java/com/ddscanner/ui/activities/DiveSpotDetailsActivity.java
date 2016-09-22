@@ -78,6 +78,7 @@ import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogUtils;
+import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
@@ -106,7 +107,7 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class DiveSpotDetailsActivity extends AppCompatActivity implements View.OnClickListener, RatingBar.OnRatingBarChangeListener {
+public class DiveSpotDetailsActivity extends AppCompatActivity implements View.OnClickListener, RatingBar.OnRatingBarChangeListener, InfoDialogFragment.DialogClosedListener {
 
     private static final String TAG = DiveSpotDetailsActivity.class.getName();
 
@@ -202,16 +203,17 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+
             switch (errorType) {
                 case DIVE_SPOT_NOT_FOUND_ERROR_C802:
-                    InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_message_dive_spot_not_found);
                     // This is unexpected so track it
-                    handleUnexpectedError(url, errorMessage);
-                    finish();
+                    EventsTracker.trackUnknownServerError(url, errorMessage);
+                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_message_dive_spot_not_found, DialogsRequestCodes.DRC_DIVE_SPOT_DETAILS_ACTIVITY_DIVE_SPOT_NOT_FOUND, false);
                     break;
                 default:
-                    handleUnexpectedError(url, errorMessage);
-                    finish();
+                    EventsTracker.trackUnknownServerError(url, errorMessage);
+                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error_title, DialogsRequestCodes.DRC_DIVE_SPOT_DETAILS_ACTIVITY_DIVE_SPOT_NOT_FOUND, false);
+                    break;
             }
         }
     };
@@ -226,27 +228,26 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         @Override
         public void onConnectionFailure() {
             DialogUtils.showConnectionErrorDialog(DiveSpotDetailsActivity.this);
-            checkInUi();
+            checkoutUi();
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-            checkInUi();
+            checkoutUi();
             switch (errorType) {
                 case DIVE_SPOT_NOT_FOUND_ERROR_C802:
-                    InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_message_dive_spot_not_found);
                     // This is unexpected so track it
-                    handleUnexpectedError(url, errorMessage);
+                    Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage, R.string.error_server_error_title, R.string.error_message_dive_spot_not_found);
                     break;
                 case USER_NOT_FOUND_ERROR_C801:
                     isClickedCHeckin = true;
                     showLoginActivity();
                     break;
                 case BAD_REQUEST_ERROR_400:
-                    InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_message_already_checked_in);
+                    InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_message_already_checked_in, false);
                     break;
                 default:
-                    handleUnexpectedError(url, errorMessage);
+                    Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);
             }
         }
     };
@@ -268,19 +269,18 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             getCheckins();
             switch (errorType) {
                 case DIVE_SPOT_NOT_FOUND_ERROR_C802:
-                    InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_message_dive_spot_not_found);
                     // This is unexpected so track it
-                    handleUnexpectedError(url, errorMessage);
+                    Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage, R.string.error_server_error_title, R.string.error_message_dive_spot_not_found);
                     break;
                 case USER_NOT_FOUND_ERROR_C801:
                     isClickedCheckOut = true;
                     showLoginActivity();
                     break;
                 case BAD_REQUEST_ERROR_400:
-                    InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_message_already_checked_out);
+                    InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_message_already_checked_out, false);
                     break;
                 default:
-                    handleUnexpectedError(url, errorMessage);
+                    Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);
             }
         }
     };
@@ -1405,6 +1405,15 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         arrowRotationAnimator.start();
 
         editorsListExpanded = false;
+    }
+
+    @Override
+    public void onDialogClosed(int requestCode) {
+        switch (requestCode) {
+            case DialogsRequestCodes.DRC_DIVE_SPOT_DETAILS_ACTIVITY_DIVE_SPOT_NOT_FOUND:
+                finish();
+                break;
+        }
     }
 
     private class ImageLoadedCallback implements Callback {

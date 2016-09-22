@@ -287,6 +287,7 @@
     <string name="comment_already_disliked">Dive spot comment has already been disliked</string>
     <string name="comment_already_liked">Dive spot comment has already been liked</string>
     <string name="error_server_error_title">Error occurred</string>
+    <string name="error_unexpected_error_title">Opps. Looks like we have an unexpected issue here. Report was captured</string>
     <string name="error_message_dive_spot_not_found">For some reason requested dive spot info was not found. Report was captured</string>
     <string name="error_message_already_checked_in">You have already checked in here</string>
     <string name="error_message_already_checked_out">You have already checked out of here</string>

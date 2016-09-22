@@ -86,18 +86,12 @@ public class DDScannerRestClient {
         return registerRequest;
     }
 
-    public abstract static class ResultListener<T> {
-        public abstract void onSuccess(T result);
+    public interface ResultListener<T> {
+        void onSuccess(T result);
 
-        public abstract void onConnectionFailure();
+        void onConnectionFailure();
 
-        public abstract void onError(ErrorType errorType, Object errorData, String url, String errorMessage);
-
-        protected void handleUnexpectedError(String url, String message) {
-            // TODO May be should use another tracking mechanism
-            EventsTracker.trackUnknownServerError(url, message);
-            Helpers.showToast(DDScannerApplication.getInstance(), R.string.toast_server_error);
-        }
+        void onError(ErrorType errorType, Object errorData, String url, String errorMessage);
     }
 
     public enum ErrorType {

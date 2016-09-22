@@ -31,7 +31,6 @@ class NoResponseEntityCallback extends BaseCallback<Void> {
                 }
                 return;
             }
-            LogUtils.i("response body is " + responseString);
             checkForError(call, response.code(), responseString, resultListenerWeakReference.get());
         }
     }
