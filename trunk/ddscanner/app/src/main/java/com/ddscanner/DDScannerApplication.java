@@ -15,6 +15,8 @@ import com.squareup.otto.Bus;
 import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 
+import java.util.Locale;
+
 import io.fabric.sdk.android.Fabric;
 
 /**
@@ -41,6 +43,7 @@ public class DDScannerApplication extends Application {
     public void onCreate() {
         super.onCreate();
         TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
+        Locale.setDefault(new Locale("en_EN"));
 //        if (!BuildConfig.DEBUG) {
             Fabric.with(this, new Crashlytics(), new Twitter(authConfig));
 //        }
