@@ -16,22 +16,18 @@ class NoResponseEntityCallback extends BaseCallback<Void> {
     }
 
     @Override
-    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+    public void onResponse(DDScannerRestClient.ResultListener<Void> resultListener, Call<ResponseBody> call, Response<ResponseBody> response) {
         if (response.isSuccessful()) {
-            if (resultListenerWeakReference.get() != null) {
-                resultListenerWeakReference.get().onSuccess(null);
-            }
+            resultListener.onSuccess(null);
         } else {
             String responseString;
             try {
                 responseString = response.errorBody().string();
             } catch (IOException e) {
-                if (resultListenerWeakReference.get() != null) {
-                    resultListenerWeakReference.get().onError(DDScannerRestClient.ErrorType.IO_ERROR, null, call.request().url().toString(), e.getMessage());
-                }
+                resultListener.onError(DDScannerRestClient.ErrorType.IO_ERROR, null, call.request().url().toString(), e.getMessage());
                 return;
             }
-            checkForError(call, response.code(), responseString, resultListenerWeakReference.get());
+            checkForError(call, response.code(), responseString, resultListener);
         }
     }
 }

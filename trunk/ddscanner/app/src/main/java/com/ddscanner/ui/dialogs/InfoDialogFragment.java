@@ -56,7 +56,7 @@ public class InfoDialogFragment extends DialogFragment {
         InfoDialogFragment.show(fragmentManager, titleResId, messageResId, requestCode, ARG_VALUE_CALLBACK_TYPE_ACTIVITY, cancelable);
     }
 
-    public static void showForFragmentResult(FragmentManager fragmentManager, Fragment parentFragment, int titleResId, int messageResId, int requestCode, boolean cancelable) {
+    public static void showForFragmentResult(FragmentManager fragmentManager, int titleResId, int messageResId, int requestCode, boolean cancelable) {
         InfoDialogFragment.show(fragmentManager, titleResId, messageResId, requestCode, ARG_VALUE_CALLBACK_TYPE_FRAGMENT, cancelable);
     }
 

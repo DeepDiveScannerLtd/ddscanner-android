@@ -23,9 +23,9 @@ public class DDScannerRestClient {
         final Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveSpotById(diveSpotId, map);
         call.enqueue(new ResponseEntityCallback<DiveSpotDetails>(gson, resultListener) {
             @Override
-            void handleResponseString(String responseString) {
+            void handleResponseString(DDScannerRestClient.ResultListener<DiveSpotDetails> resultListener, String responseString) {
                 DiveSpotDetails diveSpotDetails = new Gson().fromJson(responseString, DiveSpotDetails.class);
-                resultListenerWeakReference.get().onSuccess(diveSpotDetails);
+                resultListener.onSuccess(diveSpotDetails);
             }
         });
     }

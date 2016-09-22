@@ -17,40 +17,32 @@ abstract class ResponseEntityCallback<T> extends BaseCallback<T> {
     }
 
     @Override
-    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+    public void onResponse(DDScannerRestClient.ResultListener<T> resultListener, Call<ResponseBody> call, Response<ResponseBody> response) {
         if (response.isSuccessful()) {
             String responseString;
             try {
                 responseString = response.body().string();
             } catch (IOException e) {
-                if (resultListenerWeakReference.get() != null) {
-                    resultListenerWeakReference.get().onError(DDScannerRestClient.ErrorType.IO_ERROR, null, call.request().url().toString(), e.getMessage());
-                }
+                resultListener.onError(DDScannerRestClient.ErrorType.IO_ERROR, null, call.request().url().toString(), e.getMessage());
                 return;
             }
             LogUtils.i("response body is " + responseString);
             try {
-                if (resultListenerWeakReference.get() != null) {
-                    handleResponseString(responseString);
-                }
+                handleResponseString(resultListener, responseString);
             } catch (JsonSyntaxException e) {
-                if (resultListenerWeakReference.get() != null) {
-                    resultListenerWeakReference.get().onError(DDScannerRestClient.ErrorType.JSON_SYNTAX_EXCEPTION, null, call.request().url().toString(), e.getMessage());
-                }
+                resultListener.onError(DDScannerRestClient.ErrorType.JSON_SYNTAX_EXCEPTION, null, call.request().url().toString(), e.getMessage());
             }
         } else {
             String responseString;
             try {
                 responseString = response.errorBody().string();
             } catch (IOException e) {
-                if (resultListenerWeakReference.get() != null) {
-                    resultListenerWeakReference.get().onError(DDScannerRestClient.ErrorType.IO_ERROR, null, call.request().url().toString(), e.getMessage());
-                }
+                resultListener.onError(DDScannerRestClient.ErrorType.IO_ERROR, null, call.request().url().toString(), e.getMessage());
                 return;
             }
-            checkForError(call, response.code(), responseString, resultListenerWeakReference.get());
+            checkForError(call, response.code(), responseString, resultListener);
         }
     }
 
-    abstract void handleResponseString(String responseString);
+    abstract void handleResponseString(DDScannerRestClient.ResultListener<T> resultListener, String responseString);
 }
