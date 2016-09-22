@@ -19,7 +19,7 @@ import android.widget.Toast;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
-import com.ddscanner.entities.DiveSpotDetails1;
+import com.ddscanner.entities.DiveSpotDetails;
 import com.ddscanner.entities.Image;
 import com.ddscanner.rest.BaseCallbackOld;
 import com.ddscanner.rest.RestClient;
@@ -61,7 +61,7 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
     private FloatingActionButton fabAddPhoto;
     private String dsId;
     private PhotosActivityPagerAdapter photosActivityPagerAdapter;
-    private DiveSpotDetails1 diveSpotDetails;
+    private DiveSpotDetails diveSpotDetails;
     private boolean isDataChanged = false;
 
     private DiveSpotAllPhotosFragment diveSpotAllPhotosFragment = new DiveSpotAllPhotosFragment();
@@ -237,7 +237,7 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
                     String responseString = "";
                     try {
                         responseString = response.body().string();
-                        diveSpotDetails = new Gson().fromJson(responseString, DiveSpotDetails1.class);
+                        diveSpotDetails = new Gson().fromJson(responseString, DiveSpotDetails.class);
                         updateFragments(diveSpotDetails);
                     } catch (IOException e) {
 
@@ -252,7 +252,7 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
         });
     }
 
-    private void updateFragments(DiveSpotDetails1 diveSpotDetails) {
+    private void updateFragments(DiveSpotDetails diveSpotDetails) {
         isDataChanged = true;
 
         reviewsImages = (ArrayList<Image>) diveSpotDetails.getDivespot().getCommentImages();
