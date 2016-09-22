@@ -2,7 +2,7 @@ package com.ddscanner.entities;
 
 import java.util.List;
 
-public class DiveSpotDetails {
+public class DiveSpotDetails1 {
 
     private List<Comment> comments;
     private DiveSpotFull divespot;

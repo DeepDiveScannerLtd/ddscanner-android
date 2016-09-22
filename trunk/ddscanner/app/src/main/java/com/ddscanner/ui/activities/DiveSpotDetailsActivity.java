@@ -51,7 +51,7 @@ import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.Checkins;
 import com.ddscanner.entities.Comment;
 import com.ddscanner.entities.Comments;
-import com.ddscanner.entities.DiveSpotDetails;
+import com.ddscanner.entities.DiveSpotDetails1;
 import com.ddscanner.entities.DiveSpotFull;
 import com.ddscanner.entities.Image;
 import com.ddscanner.entities.Sealife;
@@ -113,7 +113,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
     private static final String EXTRA_ID = "ID";
 
-    private DiveSpotDetails diveSpotDetails;
+    private DiveSpotDetails1 diveSpotDetails;
     private ProgressDialog progressDialog;
     private String diveSpotId;
     private LatLng diveSpotCoordinates;
@@ -186,9 +186,9 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
     private boolean editorsListExpanded;
 
-    private DDScannerRestClient.ResultListener<DiveSpotDetails> diveSpotDetailsResultListener = new DDScannerRestClient.ResultListener<DiveSpotDetails>() {
+    private DDScannerRestClient.ResultListener<DiveSpotDetails1> diveSpotDetailsResultListener = new DDScannerRestClient.ResultListener<DiveSpotDetails1>() {
         @Override
-        public void onSuccess(DiveSpotDetails result) {
+        public void onSuccess(DiveSpotDetails1 result) {
             diveSpotDetails = result;
             diveSpotCoordinates = new LatLng(diveSpotDetails.getDivespot().getLat(),
                     diveSpotDetails.getDivespot().getLng());

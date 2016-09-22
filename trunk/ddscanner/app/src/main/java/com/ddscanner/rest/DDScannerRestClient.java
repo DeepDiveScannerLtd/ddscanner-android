@@ -2,12 +2,8 @@ package com.ddscanner.rest;
 
 import android.support.annotation.NonNull;
 
-import com.ddscanner.DDScannerApplication;
-import com.ddscanner.R;
-import com.ddscanner.analytics.EventsTracker;
-import com.ddscanner.entities.DiveSpotDetails;
+import com.ddscanner.entities.DiveSpotDetails1;
 import com.ddscanner.entities.request.RegisterRequest;
-import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.gson.Gson;
 
@@ -21,14 +17,14 @@ public class DDScannerRestClient {
 
     private Gson gson = new Gson();
 
-    public void getDiveSpotDetails(String diveSpotId, @NonNull final ResultListener<DiveSpotDetails> resultListener) {
+    public void getDiveSpotDetails(String diveSpotId, @NonNull final ResultListener<DiveSpotDetails1> resultListener) {
         Map<String, String> map = getUserQueryMapRequest();
         map.put("isImageAuthor", "true");
         final Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveSpotById(diveSpotId, map);
-        call.enqueue(new ResponseEntityCallback<DiveSpotDetails>(gson, resultListener) {
+        call.enqueue(new ResponseEntityCallback<DiveSpotDetails1>(gson, resultListener) {
             @Override
             void handleResponseString(String responseString) {
-                DiveSpotDetails diveSpotDetails = new Gson().fromJson(responseString, DiveSpotDetails.class);
+                DiveSpotDetails1 diveSpotDetails = new Gson().fromJson(responseString, DiveSpotDetails1.class);
                 resultListenerWeakReference.get().onSuccess(diveSpotDetails);
             }
         });
