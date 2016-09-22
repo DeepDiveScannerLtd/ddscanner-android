@@ -17,6 +17,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -67,6 +68,8 @@ import com.squareup.otto.Subscribe;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
 
 /**
  * Created by lashket on 20.4.16.
@@ -177,6 +180,26 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
         findViews();
         setMapView(savedInstanceState);
         Log.i(TAG, "MapListFragment getLocation 1");
+        new MaterialTapTargetPrompt.Builder(getActivity())
+                .setTarget(view.findViewById(R.id.add_ds_fab))
+                .setBackgroundColourFromRes(R.color.primary)
+                .setPrimaryText("Add dive spot")
+                .setSecondaryText("Tap to become a community")
+                .setOnHidePromptListener(new MaterialTapTargetPrompt.OnHidePromptListener()
+                {
+                    @Override
+                    public void onHidePrompt(MotionEvent event, boolean tappedTarget)
+                    {
+                        //Do something such as storing a value so that this prompt is never shown again
+                    }
+
+                    @Override
+                    public void onHidePromptComplete()
+                    {
+
+                    }
+                })
+                .show();
         baseAppCompatActivity.getLocation(ActivitiesRequestCodes.REQUEST_CODE_MAP_LIST_FRAGMENT_GET_LOCATION_ON_FRAGMENT_START);
         return view;
     }
