@@ -286,13 +286,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         }
     };
 
-    /**
-     * Show current activity from another place of app
-     *
-     * @param context
-     * @param id
-     * Andrei Lashkevich
-     */
     public static void show(Context context, String id, EventsTracker.SpotViewSource spotViewSource) {
         if (spotViewSource != null) {
             EventsTracker.trackDiveSpotView(id, spotViewSource);
@@ -321,12 +314,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         diveSpotId = getIntent().getStringExtra(EXTRA_ID);
         DDScannerApplication.getDdScannerRestClient().getDiveSpotDetails(diveSpotId, diveSpotDetailsResultListener);
     }
-
-    /**
-     * Find views in activity
-     *
-     * Andrei Lashkevich
-     */
 
     private void findViews() {
         checkinsArrow = (ImageView) findViewById(R.id.checkins_arrow);
@@ -392,12 +379,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         collapsingToolbarLayout.setStatusBarScrimColor(ContextCompat.getColor(this, android.R.color.transparent));
         //  collapsingToolbarLayout.setCollapsedTitleTextColor(ContextCompat.getColor(this, android.R.color.transparent));
     }
-
-    /**
-     * Set ui data at current activity
-     *
-     * Andrei Lashkevich
-     */
 
     private void setUi() {
         int avatarImageRadius = (int) getResources().getDimension(R.dimen.editor_avatar_radius);
@@ -704,10 +685,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     }
 
     public boolean checkReadStoragePermission(Activity context) {
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            return false;
-        }
-        return true;
+        return ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
     }
 
     @Override
@@ -719,7 +697,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 } else {
                     Toast.makeText(DiveSpotDetailsActivity.this, "Grand permission to pick photo from gallery!", Toast.LENGTH_SHORT).show();
                 }
-                return;
+                break;
             }
         }
     }
