@@ -198,8 +198,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
         @Override
         public void onConnectionFailure() {
-            DialogUtils.showConnectionErrorDialog(DiveSpotDetailsActivity.this);
-            finish();
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_DIVE_SPOT_DETAILS_ACTIVITY_FAILED_TO_CONNECT, false);
         }
 
         @Override
@@ -228,7 +227,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
         @Override
         public void onConnectionFailure() {
-            DialogUtils.showConnectionErrorDialog(DiveSpotDetailsActivity.this);
+            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
             checkoutUi();
         }
 
@@ -262,12 +261,13 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
         @Override
         public void onConnectionFailure() {
-            DialogUtils.showConnectionErrorDialog(DiveSpotDetailsActivity.this);
+            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
+            checkInUi();
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-            getCheckins();
+            checkInUi();
             switch (errorType) {
                 case DIVE_SPOT_NOT_FOUND_ERROR_C802:
                     // This is unexpected so track it
@@ -1064,7 +1064,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 String responseString = "";
                 if (response.isSuccessful()) {
-                    Checkins checkins = new Checkins();
+                    Checkins checkins;
                     try {
                         responseString = response.body().string();
                         checkins = new Gson().fromJson(responseString, Checkins.class);
@@ -1415,6 +1415,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     @Override
     public void onDialogClosed(int requestCode) {
         switch (requestCode) {
+            case DialogsRequestCodes.DRC_DIVE_SPOT_DETAILS_ACTIVITY_FAILED_TO_CONNECT:
             case DialogsRequestCodes.DRC_DIVE_SPOT_DETAILS_ACTIVITY_DIVE_SPOT_NOT_FOUND:
                 finish();
                 break;

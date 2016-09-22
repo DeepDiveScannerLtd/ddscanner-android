@@ -38,12 +38,10 @@ abstract class BaseCallback<T> implements Callback<ResponseBody> {
 
     @Override
     public final void onFailure(Call<ResponseBody> call, Throwable t) {
-        if (t instanceof ConnectException) {
-            if (resultListenerWeakReference.get() != null) {
+        if (resultListenerWeakReference.get() != null) {
+            if (t instanceof ConnectException) {
                 resultListenerWeakReference.get().onConnectionFailure();
-            }
-        } else {
-            if (resultListenerWeakReference.get() != null) {
+            } else {
                 resultListenerWeakReference.get().onError(DDScannerRestClient.ErrorType.UNKNOWN_ERROR, null, call.request().url().toString(), t.getMessage());
             }
         }
