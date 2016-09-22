@@ -48,7 +48,7 @@ import java.util.Map;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 
-public class DiveCentersClusterManager extends ClusterManager<DiveCenter> implements ClusterManager.OnClusterClickListener<DiveCenter>, GoogleMap.OnMapClickListener, GoogleMap.OnCameraIdleListener{
+public class DiveCentersClusterManager extends ClusterManager<DiveCenter> implements ClusterManager.OnClusterClickListener<DiveCenter>, GoogleMap.OnMapClickListener, GoogleMap.OnCameraChangeListener {
 
     private static final String TAG = DiveCentersClusterManager.class.getName();
     private static final int CAMERA_ANIMATION_DURATION = 300;
@@ -119,8 +119,15 @@ public class DiveCentersClusterManager extends ClusterManager<DiveCenter> implem
         }
     }
 
+//    @Override
+//    public void onCameraIdle() {
+//        DDScannerApplication.bus.post(new PutDiveCentersToListEvent(changeListToListFragment((ArrayList<DiveCenter>)diveCenters), logoPath));
+//    }
+
+
     @Override
-    public void onCameraIdle() {
+    public void onCameraChange(CameraPosition cameraPosition) {
+        super.onCameraChange(cameraPosition);
         DDScannerApplication.bus.post(new PutDiveCentersToListEvent(changeListToListFragment((ArrayList<DiveCenter>)diveCenters), logoPath));
     }
 

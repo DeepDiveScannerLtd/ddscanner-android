@@ -187,6 +187,8 @@
                         android:textSize="15sp" />
 
                     <ImageView
+                        android:id="@+id/checkins_arrow"
+                        android:visibility="gone"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"

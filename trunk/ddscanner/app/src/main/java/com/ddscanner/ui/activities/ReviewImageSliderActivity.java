@@ -66,7 +66,7 @@ public class ReviewImageSliderActivity extends AppCompatActivity implements View
         isFromReviews = getIntent().getBooleanExtra("isFromReviews", false);
         path = getIntent().getStringExtra("path");
         if (isFromReviews) {
-            menu.setVisibility(View.VISIBLE);
+         //   menu.setVisibility(View.VISIBLE);
         }
         detector = new SimpleGestureFilter(this,this);
         position = getIntent().getIntExtra(Constants.REVIEWS_IMAGES_SLIDE_INTENT_POSITION, 0);

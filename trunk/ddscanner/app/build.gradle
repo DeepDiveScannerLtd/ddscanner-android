@@ -23,8 +23,8 @@ android {
         minSdkVersion 16
         targetSdkVersion 23
         multiDexEnabled true
-        versionCode 21
-        versionName "2.0.15"
+        versionCode 22
+        versionName "2.0.16"
     }
     buildTypes {
         debug {
@@ -66,13 +66,7 @@ dependencies {
     //    }
     //   compile 'com.google.android.gms:play-services-auth:8.4.0'
     //  compile 'com.google.android.gms:play-services-maps:8.4.0'
-    compile('com.facebook.fresco:fresco:0.9.0') {
-        exclude group: 'com.parse.bolts', module: 'bolts-android'
-    }
     //  compile 'com.google.android.gms:play-services-gcm:8.4.0'
-    compile('com.twitter.sdk.android:twitter:1.12.0@aar') {
-        transitive = true;
-    }
     // compile 'com.google.android.gms:play-services:8.4.0'
     compile('com.crashlytics.sdk.android:crashlytics:2.6.1@aar') {
         transitive = true;
@@ -106,7 +100,6 @@ dependencies {
     compile 'com.github.rey5137:material:1.2.2'
     compile 'com.weiwangcn.betterspinner:library-material:1.1.0'
     compile 'com.afollestad.material-dialogs:core:0.8.5.9'
-    compile 'com.daimajia.swipelayout:library:1.2.0@aar'
     compile 'com.github.ganfra:material-spinner:1.1.1'
     compile 'com.github.lovetuzitong:MultiImageSelector:1.1'
     compile 'jp.wasabeef:picasso-transformations:2.1.0'

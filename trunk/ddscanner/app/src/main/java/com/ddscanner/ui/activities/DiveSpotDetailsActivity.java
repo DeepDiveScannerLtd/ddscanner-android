@@ -179,6 +179,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private LinearLayout serveConnectionErrorLayout;
     private Button btnRefreshLayout;
     private CoordinatorLayout mainLayout;
+    private ImageView checkinsArrow;
 
     private List<Comment> usersComments;
     private List<User> usersCheckins;
@@ -328,6 +329,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
      */
 
     private void findViews() {
+        checkinsArrow = (ImageView) findViewById(R.id.checkins_arrow);
         serveConnectionErrorLayout = (LinearLayout) findViewById(R.id.server_error);
         btnRefreshLayout =(Button) findViewById(R.id.button_refresh);
         mainLayout = (CoordinatorLayout) findViewById(R.id.main_layout);
@@ -561,6 +563,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         }
 
         if (diveSpotDetails.getCheckins() != null) {
+            checkinsArrow.setVisibility(View.GONE);
             usersCheckins = diveSpotDetails.getCheckins();
             if (usersCheckins.size() == 1) {
                 setCheckinsCountPeople(String.valueOf(usersCheckins.size()) + " " +
@@ -584,8 +587,10 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
     private void setCheckinsCountPeople(String count, boolean isNull) {
         if (isNull) {
+            checkinsArrow.setVisibility(View.GONE);
             checkInPeoples.setOnClickListener(null);
         } else {
+            checkinsArrow.setVisibility(View.VISIBLE);
             checkInPeoples.setOnClickListener(this);
         }
         numberOfCheckinPeoplesHere.setText(count);
