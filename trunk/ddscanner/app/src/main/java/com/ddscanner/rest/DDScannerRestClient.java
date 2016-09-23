@@ -50,6 +50,19 @@ public class DDScannerRestClient {
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 
+    public void getDiveSpotPhotos(String diveSpotId, @NonNull final ResultListener<DiveSpotDetails> resultListener) {
+        Map<String, String> map = getUserQueryMapRequest();
+        map.put("isImageAuthor", "true");
+        final Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveSpotImages(diveSpotId, map);
+        call.enqueue(new ResponseEntityCallback<DiveSpotDetails>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<DiveSpotDetails> resultListener, String responseString) {
+                DiveSpotDetails diveSpotDetails = new Gson().fromJson(responseString, DiveSpotDetails.class);
+                resultListener.onSuccess(diveSpotDetails);
+            }
+        });
+    }
+
     private Map<String, String> getUserQueryMapRequest() {
         Map<String, String> map = new HashMap<>();
         if (SharedPreferenceHelper.isUserLoggedIn()) {
