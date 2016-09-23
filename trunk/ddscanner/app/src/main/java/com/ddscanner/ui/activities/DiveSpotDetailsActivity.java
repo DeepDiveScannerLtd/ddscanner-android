@@ -198,8 +198,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
         @Override
         public void onConnectionFailure() {
-            DialogUtils.showConnectionErrorDialog(DiveSpotDetailsActivity.this);
-            finish();
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_DIVE_SPOT_DETAILS_ACTIVITY_FAILED_TO_CONNECT, false);
         }
 
         @Override
@@ -228,7 +227,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
         @Override
         public void onConnectionFailure() {
-            DialogUtils.showConnectionErrorDialog(DiveSpotDetailsActivity.this);
+            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
             checkoutUi();
         }
 
@@ -262,12 +261,13 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
         @Override
         public void onConnectionFailure() {
-            DialogUtils.showConnectionErrorDialog(DiveSpotDetailsActivity.this);
+            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
+            checkInUi();
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-            getCheckins();
+            checkInUi();
             switch (errorType) {
                 case DIVE_SPOT_NOT_FOUND_ERROR_C802:
                     // This is unexpected so track it
@@ -286,13 +286,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         }
     };
 
-    /**
-     * Show current activity from another place of app
-     *
-     * @param context
-     * @param id
-     * Andrei Lashkevich
-     */
     public static void show(Context context, String id, EventsTracker.SpotViewSource spotViewSource) {
         if (spotViewSource != null) {
             EventsTracker.trackDiveSpotView(id, spotViewSource);
@@ -321,12 +314,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         diveSpotId = getIntent().getStringExtra(EXTRA_ID);
         DDScannerApplication.getDdScannerRestClient().getDiveSpotDetails(diveSpotId, diveSpotDetailsResultListener);
     }
-
-    /**
-     * Find views in activity
-     *
-     * Andrei Lashkevich
-     */
 
     private void findViews() {
         checkinsArrow = (ImageView) findViewById(R.id.checkins_arrow);
@@ -392,12 +379,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         collapsingToolbarLayout.setStatusBarScrimColor(ContextCompat.getColor(this, android.R.color.transparent));
         //  collapsingToolbarLayout.setCollapsedTitleTextColor(ContextCompat.getColor(this, android.R.color.transparent));
     }
-
-    /**
-     * Set ui data at current activity
-     *
-     * Andrei Lashkevich
-     */
 
     private void setUi() {
         int avatarImageRadius = (int) getResources().getDimension(R.dimen.editor_avatar_radius);
@@ -704,10 +685,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     }
 
     public boolean checkReadStoragePermission(Activity context) {
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            return false;
-        }
-        return true;
+        return ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
     }
 
     @Override
@@ -719,7 +697,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 } else {
                     Toast.makeText(DiveSpotDetailsActivity.this, "Grand permission to pick photo from gallery!", Toast.LENGTH_SHORT).show();
                 }
-                return;
+                break;
             }
         }
     }
@@ -1064,7 +1042,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 String responseString = "";
                 if (response.isSuccessful()) {
-                    Checkins checkins = new Checkins();
+                    Checkins checkins;
                     try {
                         responseString = response.body().string();
                         checkins = new Gson().fromJson(responseString, Checkins.class);
@@ -1415,6 +1393,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     @Override
     public void onDialogClosed(int requestCode) {
         switch (requestCode) {
+            case DialogsRequestCodes.DRC_DIVE_SPOT_DETAILS_ACTIVITY_FAILED_TO_CONNECT:
             case DialogsRequestCodes.DRC_DIVE_SPOT_DETAILS_ACTIVITY_DIVE_SPOT_NOT_FOUND:
                 finish();
                 break;
