@@ -47,7 +47,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
-import com.ddscanner.entities.CheckIns1;
+import com.ddscanner.entities.CheckIns;
 import com.ddscanner.entities.Comment;
 import com.ddscanner.entities.Comments;
 import com.ddscanner.entities.DiveSpotDetails;
@@ -202,9 +202,9 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private AddRemoveFromFavouritesResultListener addToFavouritesResultListener = new AddRemoveFromFavouritesResultListener(true);
     private AddRemoveFromFavouritesResultListener removeToFavouritesResultListener = new AddRemoveFromFavouritesResultListener(false);
 
-    private DDScannerRestClient.ResultListener<CheckIns1> checkInsResultListener = new DDScannerRestClient.ResultListener<CheckIns1>() {
+    private DDScannerRestClient.ResultListener<CheckIns> checkInsResultListener = new DDScannerRestClient.ResultListener<CheckIns>() {
         @Override
-        public void onSuccess(CheckIns1 checkIns) {
+        public void onSuccess(CheckIns checkIns) {
             if (checkIns.getCheckins() != null) {
                 usersCheckins = checkIns.getCheckins();
                 if (usersCheckins.size() == 1) {

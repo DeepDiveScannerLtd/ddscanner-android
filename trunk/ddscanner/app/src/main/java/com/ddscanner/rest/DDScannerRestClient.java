@@ -2,12 +2,11 @@ package com.ddscanner.rest;
 
 import android.support.annotation.NonNull;
 
-import com.ddscanner.entities.CheckIns1;
+import com.ddscanner.entities.CheckIns;
 import com.ddscanner.entities.Comments;
 import com.ddscanner.entities.DiveSpotDetails;
 import com.ddscanner.entities.request.RegisterRequest;
 import com.ddscanner.entities.request.ValidationRequest;
-import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.gson.Gson;
 
@@ -54,12 +53,12 @@ public class DDScannerRestClient {
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 
-    public void getCheckIns(String diveSpotId, @NonNull final ResultListener<CheckIns1> resultListener) {
+    public void getCheckIns(String diveSpotId, @NonNull final ResultListener<CheckIns> resultListener) {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getCheckins(diveSpotId);
-        call.enqueue(new ResponseEntityCallback<CheckIns1>(gson, resultListener) {
+        call.enqueue(new ResponseEntityCallback<CheckIns>(gson, resultListener) {
             @Override
-            void handleResponseString(DDScannerRestClient.ResultListener<CheckIns1> resultListener, String responseString) {
-                CheckIns1 checkIns = new Gson().fromJson(responseString, CheckIns1.class);
+            void handleResponseString(DDScannerRestClient.ResultListener<CheckIns> resultListener, String responseString) {
+                CheckIns checkIns = new Gson().fromJson(responseString, CheckIns.class);
                 resultListener.onSuccess(checkIns);
             }
         });
