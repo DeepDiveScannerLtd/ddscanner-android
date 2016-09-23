@@ -2,8 +2,12 @@ package com.ddscanner.rest;
 
 import android.support.annotation.NonNull;
 
+import com.ddscanner.entities.CheckIns1;
+import com.ddscanner.entities.Comments;
 import com.ddscanner.entities.DiveSpotDetails;
 import com.ddscanner.entities.request.RegisterRequest;
+import com.ddscanner.entities.request.ValidationRequest;
+import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.gson.Gson;
 
@@ -20,7 +24,7 @@ public class DDScannerRestClient {
     public void getDiveSpotDetails(String diveSpotId, @NonNull final ResultListener<DiveSpotDetails> resultListener) {
         Map<String, String> map = getUserQueryMapRequest();
         map.put("isImageAuthor", "true");
-        final Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveSpotById(diveSpotId, map);
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveSpotById(diveSpotId, map);
         call.enqueue(new ResponseEntityCallback<DiveSpotDetails>(gson, resultListener) {
             @Override
             void handleResponseString(DDScannerRestClient.ResultListener<DiveSpotDetails> resultListener, String responseString) {
@@ -47,6 +51,39 @@ public class DDScannerRestClient {
 
     public void postRemoveDiveSpotFromFavourites(String diveSpotId, @NonNull final ResultListener<Void> resultListener) {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().removeSpotFromFavorites(diveSpotId, getUserQueryMapRequest());
+        call.enqueue(new NoResponseEntityCallback(gson, resultListener));
+    }
+
+    public void getCheckIns(String diveSpotId, @NonNull final ResultListener<CheckIns1> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getCheckins(diveSpotId);
+        call.enqueue(new ResponseEntityCallback<CheckIns1>(gson, resultListener) {
+            @Override
+            void handleResponseString(DDScannerRestClient.ResultListener<CheckIns1> resultListener, String responseString) {
+                CheckIns1 checkIns = new Gson().fromJson(responseString, CheckIns1.class);
+                resultListener.onSuccess(checkIns);
+            }
+        });
+    }
+
+    public void getComments(String diveSpotId, @NonNull final ResultListener<Comments> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getComments(diveSpotId, getUserQueryMapRequest());
+        call.enqueue(new ResponseEntityCallback<Comments>(gson, resultListener) {
+            @Override
+            void handleResponseString(DDScannerRestClient.ResultListener<Comments> resultListener, String responseString) {
+                Comments comments = new Gson().fromJson(responseString, Comments.class);
+                resultListener.onSuccess(comments);
+            }
+        });
+    }
+
+    public void postValidateDiveSpot(String diveSpotId, boolean isValid, @NonNull final ResultListener<Void> resultListener) {
+        ValidationRequest validationRequest = new ValidationRequest();
+        validationRequest.setSocial(SharedPreferenceHelper.getSn());
+        validationRequest.setToken(SharedPreferenceHelper.getToken());
+        validationRequest.setAppId(SharedPreferenceHelper.getUserAppId());
+        validationRequest.setpush(SharedPreferenceHelper.getGcmId());
+        validationRequest.setValid(isValid);
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().divespotValidation(diveSpotId, validationRequest);
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 
