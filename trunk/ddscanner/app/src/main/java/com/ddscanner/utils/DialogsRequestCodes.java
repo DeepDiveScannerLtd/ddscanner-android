@@ -12,5 +12,7 @@ public class DialogsRequestCodes {
 
 //    DiveSpotDetailsActivity
     public static final int DRC_DIVE_SPOT_DETAILS_ACTIVITY_DIVE_SPOT_NOT_FOUND = 1001;
-    public static final int DRC_DIVE_SPOT_DETAILS_ACTIVITY_FAILED_TO_CONNECT = 1002;
+
+//    DiveSpotPhotosActivity
+    public static final int DRC_DIVE_SPOT_PHOTOS_ACTIVITY_DIVE_SPOT_NOT_FOUND = 1101;
 }
