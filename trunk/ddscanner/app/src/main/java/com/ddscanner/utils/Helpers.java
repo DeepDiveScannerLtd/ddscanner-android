@@ -488,7 +488,7 @@ public class Helpers {
     }
 
     public static void handleUnexpectedServerError(FragmentManager fragmentManager, String requestUrl, String errorMessage) {
-        handleUnexpectedServerError(fragmentManager, requestUrl, errorMessage, R.string.error_server_error_title, R.string.error_unexpected_error_title);
+        handleUnexpectedServerError(fragmentManager, requestUrl, errorMessage, R.string.error_server_error_title, R.string.error_unexpected_error);
     }
 
     public static void handleUnexpectedServerError(FragmentManager fragmentManager, String requestUrl, String errorMessage, int titleResId, int messageResId) {

@@ -191,7 +191,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                     break;
                 default:
                     EventsTracker.trackUnknownServerError(url, errorMessage);
-                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error_title, DialogsRequestCodes.DRC_DIVE_SPOT_DETAILS_ACTIVITY_DIVE_SPOT_NOT_FOUND, false);
+                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_DIVE_SPOT_DETAILS_ACTIVITY_DIVE_SPOT_NOT_FOUND, false);
                     break;
             }
         }
@@ -231,11 +231,11 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 case DIVE_SPOT_NOT_FOUND_ERROR_C802:
                     // This is unexpected so track it
                     EventsTracker.trackUnknownServerError(url, errorMessage);
-                    InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_message_dive_spot_not_found, false);
+                    InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_message_dive_spot_not_found_checkins_counter, false);
                     break;
                 default:
                     EventsTracker.trackUnknownServerError(url, errorMessage);
-                    InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error_title, false);
+                    InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error_checkins_counter, false);
                     break;
             }
         }
@@ -268,7 +268,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                     break;
                 default:
                     EventsTracker.trackUnknownServerError(url, errorMessage);
-                    InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error_title, false);
+                    InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, false);
                     break;
             }
         }
@@ -855,7 +855,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             showLoginActivity();
             return;
         }
-        DDScannerApplication.getDdScannerRestClient().postRemoveDiveSpotFromFavourites(diveSpotId, removeToFavouritesResultListener);
+        DDScannerApplication.getDdScannerRestClient().deleteDiveSpotFromFavourites(diveSpotId, removeToFavouritesResultListener);
     }
 
     @Override
@@ -1226,8 +1226,10 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         public void onSuccess(Void result) {
             DDScannerApplication.getDdScannerRestClient().getCheckIns(diveSpotId, checkInsResultListener);
             if (isCheckIn) {
+                DiveSpotDetailsActivity.this.isCheckedIn = true;
                 EventsTracker.trackCheckIn(EventsTracker.CheckInStatus.SUCCESS);
             } else {
+                DiveSpotDetailsActivity.this.isCheckedIn = false;
                 EventsTracker.trackCheckOut();
             }
         }
@@ -1244,28 +1246,40 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-            if (isCheckIn) {
-                checkOutUi();
-            } else {
-                checkInUi();
-            }
             switch (errorType) {
                 case DIVE_SPOT_NOT_FOUND_ERROR_C802:
+                    if (isCheckIn) {
+                        checkOutUi();
+                    } else {
+                        checkInUi();
+                    }
                     // This is unexpected so track it
                     Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage, R.string.error_server_error_title, R.string.error_message_dive_spot_not_found);
                     break;
                 case USER_NOT_FOUND_ERROR_C801:
                     if (isCheckIn) {
+                        checkOutUi();
                         isClickedCHeckin = true;
                     } else {
+                        checkInUi();
                         isClickedCheckOut = true;
                     }
                     showLoginActivity();
                     break;
                 case BAD_REQUEST_ERROR_400:
-                    InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, isClickedCHeckin ? R.string.error_message_already_checked_in : R.string.error_message_already_checked_out, false);
+                    if (isCheckIn) {
+                        checkInUi();
+                    } else {
+                        checkOutUi();
+                    }
+                    InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, isCheckIn ? R.string.error_message_already_checked_in : R.string.error_message_already_checked_out, false);
                     break;
                 default:
+                    if (isCheckIn) {
+                        checkOutUi();
+                    } else {
+                        checkInUi();
+                    }
                     Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);
             }
         }
@@ -1294,7 +1308,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-            updateMenuItems(menu, isFavorite);
             switch (errorType) {
                 case DIVE_SPOT_NOT_FOUND_ERROR_C802:
                     // This is unexpected so track it
@@ -1309,12 +1322,14 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                     showLoginActivity();
                     break;
                 case BAD_REQUEST_ERROR_400:
+                    isFavorite = isAddToFavourites;
                     InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, isAddToFavourites ? R.string.error_message_already_added_to_favourites : R.string.error_message_already_removed_from_favourites, false);
                     break;
                 case UNPROCESSABLE_ENTITY_ERROR_422:
                 default:
                     Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);
             }
+            updateMenuItems(menu, isFavorite);
         }
     }
 

@@ -121,8 +121,8 @@ public interface DDScannerRestService {
       );
 
     @DELETE("diving/divespot/{id}/checkin")
-    Call<ResponseBody> checkOutUser( @Path("id") String id,
-                                     @QueryMap Map<String, String> map);
+    Call<ResponseBody> checkOut(@Path("id") String id,
+                                @QueryMap Map<String, String> map);
 
     @POST("diving/divespot/{id}")
     @Multipart

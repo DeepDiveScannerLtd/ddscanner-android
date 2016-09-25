@@ -39,7 +39,7 @@ public class DDScannerRestClient {
     }
 
     public void postCheckOut(String diveSpotId, @NonNull final ResultListener<Void> resultListener) {
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().checkOutUser(diveSpotId, getUserQueryMapRequest());
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().checkOut(diveSpotId, getUserQueryMapRequest());
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 
@@ -48,7 +48,7 @@ public class DDScannerRestClient {
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 
-    public void postRemoveDiveSpotFromFavourites(String diveSpotId, @NonNull final ResultListener<Void> resultListener) {
+    public void deleteDiveSpotFromFavourites(String diveSpotId, @NonNull final ResultListener<Void> resultListener) {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().removeSpotFromFavorites(diveSpotId, getUserQueryMapRequest());
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }

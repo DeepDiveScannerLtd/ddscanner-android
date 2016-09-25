@@ -143,7 +143,7 @@ public class SwipableDiveSpotListAdapter
 
     private void checkOut(String id) {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance()
-                .checkOutUser(id, Helpers.getUserQuryMapRequest());
+                .checkOut(id, Helpers.getUserQuryMapRequest());
         call.enqueue(new BaseCallbackOld() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
