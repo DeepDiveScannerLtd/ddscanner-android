@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
+import com.crashlytics.android.Crashlytics;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.DiveSpot;
@@ -247,10 +248,22 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         }
         if (lastClickedMarker != null) {
             try {
-                if (diveSpotsMap.get(marker.getPosition()).getStatus().equals("waiting")) {
-                    lastClickedMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds_new));
+                if (diveSpotsMap.get(marker.getPosition()) != null) {
+                    if (diveSpotsMap.get(marker.getPosition()).getStatus().equals("waiting")) {
+                        lastClickedMarker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_ds_new)));
+                    } else {
+                        lastClickedMarker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_ds)));
+                    }
                 } else {
-                    lastClickedMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
+                    if (diveSpotsMap != null) {
+                        String loggedString = "Marker position - " + marker.getPosition().toString() + "\n";
+                        int i = 1;
+                        for (Map.Entry<LatLng, DiveSpot> entry : diveSpotsMap.entrySet()) {
+                            loggedString += String.valueOf(i) + ": " + entry.getValue().getLat() + ", " + entry.getValue().getLat() + "\n";
+                            i++;
+                        }
+                        Crashlytics.log(loggedString);
+                    }
                 }
             } catch (IllegalArgumentException e) {
                 e.printStackTrace();

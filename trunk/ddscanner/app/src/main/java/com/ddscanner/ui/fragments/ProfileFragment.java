@@ -241,7 +241,6 @@ public class ProfileFragment extends Fragment
         likeLayout = (LinearLayout) v.findViewById(R.id.likeLayout);
         dislikeLayout = (LinearLayout) v.findViewById(R.id.dislikeLayout);
         commentsLayout = (LinearLayout) v.findViewById(R.id.comments_layout);
-     //   commentsLayout.setOnClickListener(this);
 
         aboutEdit.addTextChangedListener(new TextWatcher() {
             @Override

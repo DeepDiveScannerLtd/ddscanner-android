@@ -98,6 +98,10 @@ public class ActivityNotificationsFragment extends Fragment {
             this.activities = activities;
             return;
         }
+        if (getContext() == null) {
+            this.activities = activities;
+            return;
+        }
         EventsTracker.trackActivityView();
         if (activities == null || activities.size() == 0) {
             noNotificationsLayout.setVisibility(View.VISIBLE);
