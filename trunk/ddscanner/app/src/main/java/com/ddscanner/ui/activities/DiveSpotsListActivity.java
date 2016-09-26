@@ -68,9 +68,9 @@ public class DiveSpotsListActivity extends AppCompatActivity implements InfoDial
         isAdded = getIntent().getBooleanExtra("ISADDED", false);
         spotViewSource = EventsTracker.SpotViewSource.getByName(getIntent().getStringExtra(BUNDLE_KEY_SPOT_VIEW_SOURCE));
         if (isAdded) {
-            DDScannerApplication.getDdScannerRestClient().getAddedDiveSpots(getAddedDiveSpotsResultListener);
+            DDScannerApplication.getDdScannerRestClient().getAddedDiveSpots(SharedPreferenceHelper.getUserServerId(), getAddedDiveSpotsResultListener);
         } else {
-            DDScannerApplication.getDdScannerRestClient().getEditedDiveSpots(getEditedDiveSpotsResultListener);
+            DDScannerApplication.getDdScannerRestClient().getEditedDiveSpots(SharedPreferenceHelper.getUserServerId(), getEditedDiveSpotsResultListener);
         }
         findViews();
     }
@@ -82,9 +82,9 @@ public class DiveSpotsListActivity extends AppCompatActivity implements InfoDial
             case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOTS_LIST_ACTIVITY_LOGIN:
                 if (resultCode == RESULT_OK) {
                     if (isAdded) {
-                        DDScannerApplication.getDdScannerRestClient().getAddedDiveSpots(getAddedDiveSpotsResultListener);
+                        DDScannerApplication.getDdScannerRestClient().getAddedDiveSpots(SharedPreferenceHelper.getUserServerId(), getAddedDiveSpotsResultListener);
                     } else {
-                        DDScannerApplication.getDdScannerRestClient().getEditedDiveSpots(getEditedDiveSpotsResultListener);
+                        DDScannerApplication.getDdScannerRestClient().getEditedDiveSpots(SharedPreferenceHelper.getUserServerId(), getEditedDiveSpotsResultListener);
                     }
                 }
                 if (resultCode == RESULT_CANCELED) {

@@ -76,8 +76,8 @@ public class DDScannerRestClient {
         });
     }
 
-    public void getAddedDiveSpots(final ResultListener<DivespotsWrapper> resultListener) {
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUsersAdded(SharedPreferenceHelper.getUserServerId(), getUserQueryMapRequest());
+    public void getAddedDiveSpots(String userId, final ResultListener<DivespotsWrapper> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUsersAdded(userId, getUserQueryMapRequest());
         call.enqueue(new ResponseEntityCallback<DivespotsWrapper>(gson, resultListener) {
             @Override
             void handleResponseString(ResultListener<DivespotsWrapper> resultListener, String responseString) {
@@ -87,8 +87,8 @@ public class DDScannerRestClient {
         });
     }
 
-    public void getEditedDiveSpots(final ResultListener<DivespotsWrapper> resultListener) {
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUsersEdited(SharedPreferenceHelper.getUserServerId(), getUserQueryMapRequest());
+    public void getEditedDiveSpots(String userId, final ResultListener<DivespotsWrapper> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUsersEdited(userId, getUserQueryMapRequest());
         call.enqueue(new ResponseEntityCallback<DivespotsWrapper>(gson, resultListener) {
             @Override
             void handleResponseString(ResultListener<DivespotsWrapper> resultListener, String responseString) {
