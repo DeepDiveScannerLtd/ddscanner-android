@@ -240,7 +240,6 @@ public class ProfileFragment extends Fragment
         likeLayout = (LinearLayout) v.findViewById(R.id.likeLayout);
         dislikeLayout = (LinearLayout) v.findViewById(R.id.dislikeLayout);
         commentsLayout = (LinearLayout) v.findViewById(R.id.comments_layout);
-        commentsLayout.setOnClickListener(this);
 
         aboutEdit.addTextChangedListener(new TextWatcher() {
             @Override
@@ -478,6 +477,9 @@ public class ProfileFragment extends Fragment
             }
             if (!user.getCountDislike().equals("0")) {
                 dislikeLayout.setOnClickListener(this);
+            }
+            if (!user.getCountComment().equals("0")) {
+                commentsLayout.setOnClickListener(this);
             }
             if (user.getPicture() == null) {
                 Picasso.with(getContext()).load(R.drawable.avatar_profile_default)
