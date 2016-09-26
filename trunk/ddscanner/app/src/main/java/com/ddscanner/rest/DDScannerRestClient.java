@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import com.ddscanner.entities.CheckIns;
 import com.ddscanner.entities.Comments;
 import com.ddscanner.entities.DiveSpotDetails;
+import com.ddscanner.entities.DivespotsWrapper;
 import com.ddscanner.entities.request.RegisterRequest;
 import com.ddscanner.entities.request.ValidationRequest;
 import com.ddscanner.utils.SharedPreferenceHelper;
@@ -71,6 +72,28 @@ public class DDScannerRestClient {
             void handleResponseString(DDScannerRestClient.ResultListener<Comments> resultListener, String responseString) {
                 Comments comments = new Gson().fromJson(responseString, Comments.class);
                 resultListener.onSuccess(comments);
+            }
+        });
+    }
+
+    public void getAddedDiveSpots(final ResultListener<DivespotsWrapper> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUsersAdded(SharedPreferenceHelper.getUserServerId(), getUserQueryMapRequest());
+        call.enqueue(new ResponseEntityCallback<DivespotsWrapper>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<DivespotsWrapper> resultListener, String responseString) {
+                DivespotsWrapper divespotsWrapper = new Gson().fromJson(responseString, DivespotsWrapper.class);
+                resultListener.onSuccess(divespotsWrapper);
+            }
+        });
+    }
+
+    public void getEditedDiveSpots(final ResultListener<DivespotsWrapper> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUsersEdited(SharedPreferenceHelper.getUserServerId(), getUserQueryMapRequest());
+        call.enqueue(new ResponseEntityCallback<DivespotsWrapper>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<DivespotsWrapper> resultListener, String responseString) {
+                DivespotsWrapper divespotsWrapper = new Gson().fromJson(responseString, DivespotsWrapper.class);
+                resultListener.onSuccess(divespotsWrapper);
             }
         });
     }
