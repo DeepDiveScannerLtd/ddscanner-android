@@ -25,6 +25,7 @@ import com.ddscanner.entities.errors.UnknownErrorException;
 import com.ddscanner.entities.errors.UserNotFoundException;
 import com.ddscanner.entities.errors.ValidationErrorException;
 import com.ddscanner.rest.BaseCallbackOld;
+import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.DiveSpotsListAdapter;
@@ -341,6 +342,24 @@ public class ForeignUserDiveSpotList extends AppCompatActivity {
         DDScannerApplication.activityResumed();
         if (!Helpers.hasConnection(this)) {
             DDScannerApplication.showErrorActivity(this);
+        }
+    }
+
+    private class GetListOfDiveSpotsListener implements DDScannerRestClient.ResultListener<DivespotsWrapper> {
+
+        @Override
+        public void onSuccess(DivespotsWrapper result) {
+
+        }
+
+        @Override
+        public void onConnectionFailure() {
+
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            
         }
     }
 
