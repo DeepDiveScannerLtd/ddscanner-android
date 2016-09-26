@@ -289,6 +289,7 @@
     <string name="error_connection_error_title">Connection error</string>
     <string name="error_unexpected_error">Opps. Looks like we have an unexpected issue here. Report was captured</string>
     <string name="error_message_dive_spot_not_found">For some reason this dive spot was not found. Report was captured</string>
+    <string name="error_message_user_not_found">For some reason this user was not found. Report was captured</string>
     <string name="error_unexpected_error_checkins_counter">Opps. Looks like we have an unexpected issue while updating checkins count. Report was captured</string>
     <string name="error_message_dive_spot_not_found_checkins_counter">For some reason while updating checkins count this dive spot was not found. Report was captured</string>
     <string name="error_unexpected_error_reviews_counter">Opps. Looks like we have an unexpected issue while updating reviews count. Report was captured</string>
