@@ -541,8 +541,6 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
             case DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_REPORTED_COMMENT_NOT_FOUND:
                 getComments();
                 break;
-
-
         }
     }
 }

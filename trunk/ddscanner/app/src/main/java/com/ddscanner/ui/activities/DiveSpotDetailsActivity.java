@@ -97,7 +97,10 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private String diveSpotId;
     private LatLng diveSpotCoordinates;
     private boolean isCheckedIn = false;
+    private boolean isFavorite = false;
+    private boolean isNewDiveSpot = false;
     private DiveSpotFull diveSpot;
+    private boolean editorsListExpanded;
 
     /*Ui*/
     private TextView diveSpotName;
@@ -146,15 +149,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private RecyclerView editorsRecyclerView;
     private MaterialDialog materialDialog;
 
-    private boolean isCLickedFavorite = false;
-    private boolean isClickedCHeckin = false;
-    private boolean isClickedCheckOut = false;
-    private boolean isClickedYesValidation = false;
-    private boolean isClickedNoValidation = false;
-    private boolean isFavorite = false;
-    private boolean isClickedRemoveFromFavorites = false;
-    private boolean isClickedEdit = false;
-    private boolean isNewDiveSpot = false;
     private LinearLayout serveConnectionErrorLayout;
     private Button btnRefreshLayout;
     private CoordinatorLayout mainLayout;
@@ -162,8 +156,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
     private List<Comment> usersComments;
     private List<User> usersCheckins;
-
-    private boolean editorsListExpanded;
 
     private DDScannerRestClient.ResultListener<DiveSpotDetails> diveSpotDetailsResultListener = new DDScannerRestClient.ResultListener<DiveSpotDetails>() {
         @Override
@@ -697,8 +689,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                     .putExtra(Constants.DIVESPOTID, String.valueOf(diveSpot.getId()));
             startActivityForResult(editDiveSpotIntent, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_EDIT_DIVE_SPOT);
         } else {
-            isClickedEdit = true;
-            showLoginActivity();
+            SocialNetworks.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_EDIT_SPOT);
         }
     }
 
@@ -764,8 +755,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         checkInUi();
         if (!SharedPreferenceHelper.isUserLoggedIn()) {
             checkOutUi();
-            isClickedCHeckin = true;
-            showLoginActivity();
+            SocialNetworks.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_CHECK_IN);
             return;
         }
         DDScannerApplication.getDdScannerRestClient().postCheckIn(diveSpotId, checkInResultListener);
@@ -788,8 +778,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         checkOutUi();
         if (!SharedPreferenceHelper.isUserLoggedIn()) {
             checkInUi();
-            isClickedCheckOut = true;
-            showLoginActivity();
+            SocialNetworks.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_CHECK_OUT);
             return;
         }
         DDScannerApplication.getDdScannerRestClient().postCheckOut(diveSpotId, checkOutResultListener);
@@ -822,7 +811,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
     private void validateDiveSpot(final boolean isValid) {
         if (!SharedPreferenceHelper.isUserLoggedIn()) {
-            showLoginActivity(isValid ? ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_VALIDATE_SPOT : ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_INVALIDATE_SPOT);
+            SocialNetworks.showForResult(DiveSpotDetailsActivity.this, isValid ? ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_VALIDATE_SPOT : ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_INVALIDATE_SPOT);
             return;
         }
         materialDialog.show();
@@ -842,8 +831,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
     private void addDiveSpotToFavorites() {
         if (!SharedPreferenceHelper.isUserLoggedIn()) {
-            isCLickedFavorite = true;
-            showLoginActivity();
+            SocialNetworks.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_ADD_TO_FAVOURITES);
             return;
         }
         DDScannerApplication.getDdScannerRestClient().postAddDiveSpotToFavourites(diveSpotId, addToFavouritesResultListener);
@@ -851,8 +839,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
     private void removeFromFavorites() {
         if (!SharedPreferenceHelper.isUserLoggedIn()) {
-            isCLickedFavorite = true;
-            showLoginActivity();
+            SocialNetworks.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_REMOVE_FROM_FAVOURITES);
             return;
         }
         DDScannerApplication.getDdScannerRestClient().deleteDiveSpotFromFavourites(diveSpotId, removeToFavouritesResultListener);
@@ -885,59 +872,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                     refreshActivity();
                 }
                 break;
-            case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN:
-                if (resultCode == RESULT_OK) {
-                    if (isClickedCHeckin) {
-                        checkIn();
-                        isClickedCHeckin = false;
-                    }
-                    if (isClickedCheckOut) {
-                        checkOut();
-                        isClickedCheckOut = false;
-                    }
-                    if (isCLickedFavorite) {
-                        addDiveSpotToFavorites();
-                        isCLickedFavorite = false;
-                    }
-                    if (isClickedRemoveFromFavorites) {
-                        removeFromFavorites();
-                        isClickedRemoveFromFavorites = false;
-                    }
-                    if (isClickedNoValidation) {
-                        validateDiveSpot(false);
-                    }
-                    if (isClickedYesValidation) {
-                        validateDiveSpot(true);
-                    }
-                    if (isClickedEdit) {
-                        Intent editDiveSpotIntent = new Intent(DiveSpotDetailsActivity.this,
-                                EditDiveSpotActivity.class);
-                        editDiveSpotIntent
-                                .putExtra(Constants.DIVESPOTID, String.valueOf(diveSpot.getId()));
-                        startActivityForResult(editDiveSpotIntent, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_EDIT_DIVE_SPOT);
-                        isClickedEdit = false;
-                    }
-                } else {
-                    if (isClickedCHeckin) {
-                        checkOutUi();
-                        isClickedCHeckin = false;
-                    }
-                    if (isClickedCheckOut) {
-                        checkInUi();
-                        isClickedCheckOut = false;
-                    }
-                    if (isCLickedFavorite) {
-                        updateMenuItems(menu, false);
-                    }
-                    if (isClickedRemoveFromFavorites) {
-                        updateMenuItems(menu, true);
-                    }
-                    if (isClickedYesValidation || isClickedNoValidation) {
-                        isInfoValidLayout.setVisibility(View.VISIBLE);
-                        thanksLayout.setVisibility(View.GONE);
-                    }
-                }
-                break;
             case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_PICK_PHOTOS:
                 if (resultCode == RESULT_OK) {
                     List<String> path = data.getStringArrayListExtra(MultiImageSelectorActivity
@@ -958,11 +892,54 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_VALIDATE_SPOT:
                 if (resultCode == RESULT_OK) {
                     validateDiveSpot(true);
+                } else {
+                    isInfoValidLayout.setVisibility(View.VISIBLE);
+                    thanksLayout.setVisibility(View.GONE);
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_INVALIDATE_SPOT:
                 if (resultCode == RESULT_OK) {
                     validateDiveSpot(false);
+                } else {
+                    isInfoValidLayout.setVisibility(View.VISIBLE);
+                    thanksLayout.setVisibility(View.GONE);
+                }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_EDIT_SPOT:
+                if (resultCode == RESULT_OK) {
+                    Intent editDiveSpotIntent = new Intent(DiveSpotDetailsActivity.this,
+                            EditDiveSpotActivity.class);
+                    editDiveSpotIntent
+                            .putExtra(Constants.DIVESPOTID, String.valueOf(diveSpot.getId()));
+                    startActivityForResult(editDiveSpotIntent, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_EDIT_DIVE_SPOT);
+                }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_CHECK_IN:
+                if (resultCode == RESULT_OK) {
+                    checkIn();
+                } else {
+                    checkOutUi();
+                }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_CHECK_OUT:
+                if (resultCode == RESULT_OK) {
+                    checkOut();
+                } else {
+                    checkInUi();
+                }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_ADD_TO_FAVOURITES:
+                if (resultCode == RESULT_OK) {
+                    addDiveSpotToFavorites();
+                } else {
+                    updateMenuItems(menu, false);
+                }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_REMOVE_FROM_FAVOURITES:
+                if (resultCode == RESULT_OK) {
+                    removeFromFavorites();
+                } else {
+                    updateMenuItems(menu, true);
                 }
                 break;
         }
@@ -990,16 +967,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 menu.findItem(R.id.favorite).setTitle("Add to favorites");
             }
         }
-    }
-
-    private void showLoginActivity() {
-        Intent intent = new Intent(this, SocialNetworks.class);
-        startActivityForResult(intent, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN);
-    }
-
-    private void showLoginActivity(int requestCode) {
-        Intent intent = new Intent(this, SocialNetworks.class);
-        startActivityForResult(intent, requestCode);
     }
 
     @Override
@@ -1198,7 +1165,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
             int position = parent.getChildAdapterPosition(view);
             if (position >= spanCount) {
-                outRect.top = Math.round(Helpers.convertDpToPixel(Float.valueOf(10), DiveSpotDetailsActivity.this));
+                outRect.top = Math.round(Helpers.convertDpToPixel(10f, DiveSpotDetailsActivity.this));
             }
         }
     }
@@ -1272,14 +1239,14 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                     Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage, R.string.error_server_error_title, R.string.error_message_dive_spot_not_found);
                     break;
                 case USER_NOT_FOUND_ERROR_C801:
+                    SharedPreferenceHelper.logout();
                     if (isCheckIn) {
                         checkOutUi();
-                        isClickedCHeckin = true;
+                        SocialNetworks.showForResult(DiveSpotDetailsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_CHECK_IN);
                     } else {
                         checkInUi();
-                        isClickedCheckOut = true;
+                        SocialNetworks.showForResult(DiveSpotDetailsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_CHECK_OUT);
                     }
-                    showLoginActivity();
                     break;
                 case BAD_REQUEST_ERROR_400:
                     if (isCheckIn) {
@@ -1329,12 +1296,12 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                     Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage, R.string.error_server_error_title, R.string.error_message_dive_spot_not_found);
                     break;
                 case USER_NOT_FOUND_ERROR_C801:
+                    SharedPreferenceHelper.logout();
                     if (isAddToFavourites) {
-                        isCLickedFavorite = true;
+                        SocialNetworks.showForResult(DiveSpotDetailsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_ADD_TO_FAVOURITES);
                     } else {
-                        isClickedRemoveFromFavorites = true;
+                        SocialNetworks.showForResult(DiveSpotDetailsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_REMOVE_FROM_FAVOURITES);
                     }
-                    showLoginActivity();
                     break;
                 case BAD_REQUEST_ERROR_400:
                     isFavorite = isAddToFavourites;
@@ -1386,14 +1353,8 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                     Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage, R.string.error_server_error_title, R.string.error_message_dive_spot_not_found);
                     break;
                 case USER_NOT_FOUND_ERROR_C801:
-                    if (isValid) {
-                        isClickedYesValidation = true;
-                        isClickedNoValidation = false;
-                    } else {
-                        isClickedNoValidation = true;
-                        isClickedYesValidation = false;
-                    }
-                    showLoginActivity();
+                    SharedPreferenceHelper.logout();
+                    SocialNetworks.showForResult(DiveSpotDetailsActivity.this, isValid ? ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_VALIDATE_SPOT : ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_INVALIDATE_SPOT);
                     break;
                 case BAD_REQUEST_ERROR_400:
                     if (menu != null && menu.findItem(R.id.edit_dive_spot) != null) {
