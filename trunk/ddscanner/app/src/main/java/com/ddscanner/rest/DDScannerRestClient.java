@@ -98,6 +98,17 @@ public class DDScannerRestClient {
         });
     }
 
+    public void getUsersCheckins(String userId, final ResultListener<DivespotsWrapper> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUsersCheckins(userId, getUserQueryMapRequest());
+        call.enqueue(new ResponseEntityCallback<DivespotsWrapper>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<DivespotsWrapper> resultListener, String responseString) {
+                DivespotsWrapper divespotsWrapper = new Gson().fromJson(responseString, DivespotsWrapper.class);
+                resultListener.onSuccess(divespotsWrapper);
+            }
+        });
+    }
+
     public void postValidateDiveSpot(String diveSpotId, boolean isValid, @NonNull final ResultListener<Void> resultListener) {
         ValidationRequest validationRequest = new ValidationRequest();
         validationRequest.setSocial(SharedPreferenceHelper.getSn());
