@@ -291,9 +291,12 @@
     <string name="error_message_dive_spot_not_found">For some reason this dive spot was not found. Report was captured</string>
     <string name="error_unexpected_error_checkins_counter">Opps. Looks like we have an unexpected issue while updating checkins count. Report was captured</string>
     <string name="error_message_dive_spot_not_found_checkins_counter">For some reason while updating checkins count this dive spot was not found. Report was captured</string>
+    <string name="error_unexpected_error_reviews_counter">Opps. Looks like we have an unexpected issue while updating reviews count. Report was captured</string>
+    <string name="error_message_dive_spot_not_found_reviews_counter">For some reason while updating reviews count this dive spot was not found. Report was captured</string>
     <string name="error_message_already_checked_in">You have already checked in here</string>
     <string name="error_message_already_checked_out">You have already checked out of here</string>
     <string name="error_message_already_added_to_favourites">You have already added this dive spot to favourites</string>
     <string name="error_message_already_removed_from_favourites">You have already removed this dive spot from favourites</string>
+    <string name="error_message_already_validated_dive_spot_data">You have already validated this dive spot data</string>
     <string name="error_connection_failed">Failed to connect to DDScanner service. Please try again later.</string>
 </resources>

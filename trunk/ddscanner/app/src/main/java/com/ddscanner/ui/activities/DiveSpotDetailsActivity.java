@@ -230,12 +230,10 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             switch (errorType) {
                 case DIVE_SPOT_NOT_FOUND_ERROR_C802:
                     // This is unexpected so track it
-                    EventsTracker.trackUnknownServerError(url, errorMessage);
-                    InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_message_dive_spot_not_found_checkins_counter, false);
+                    Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage, R.string.error_server_error_title, R.string.error_message_dive_spot_not_found_checkins_counter);
                     break;
                 default:
-                    EventsTracker.trackUnknownServerError(url, errorMessage);
-                    InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error_checkins_counter, false);
+                    Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage, R.string.error_server_error_title, R.string.error_unexpected_error_checkins_counter);
                     break;
             }
         }
@@ -263,12 +261,10 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             switch (errorType) {
                 case DIVE_SPOT_NOT_FOUND_ERROR_C802:
                     // This is unexpected so track it
-                    EventsTracker.trackUnknownServerError(url, errorMessage);
-                    InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_message_dive_spot_not_found, false);
+                    Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage, R.string.error_server_error_title, R.string.error_message_dive_spot_not_found_reviews_counter);
                     break;
                 default:
-                    EventsTracker.trackUnknownServerError(url, errorMessage);
-                    InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, false);
+                    Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage, R.string.error_server_error_title, R.string.error_unexpected_error_reviews_counter);
                     break;
             }
         }
@@ -825,6 +821,10 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     }
 
     private void validateDiveSpot(final boolean isValid) {
+        if (!SharedPreferenceHelper.isUserLoggedIn()) {
+            showLoginActivity(isValid ? ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_VALIDATE_SPOT : ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_INVALIDATE_SPOT);
+            return;
+        }
         materialDialog.show();
         diveSpotValidationResultListener.setValid(isValid);
         DDScannerApplication.getDdScannerRestClient().postValidateDiveSpot(diveSpotId, isValid, diveSpotValidationResultListener);
@@ -955,6 +955,16 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                     MultiImageSelector.create(this).count(3).start(this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_ADD_PHOTOS_ACTIVITY);
                 }
                 break;
+            case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_VALIDATE_SPOT:
+                if (resultCode == RESULT_OK) {
+                    validateDiveSpot(true);
+                }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_INVALIDATE_SPOT:
+                if (resultCode == RESULT_OK) {
+                    validateDiveSpot(false);
+                }
+                break;
         }
     }
 
@@ -985,6 +995,11 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private void showLoginActivity() {
         Intent intent = new Intent(this, SocialNetworks.class);
         startActivityForResult(intent, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN);
+    }
+
+    private void showLoginActivity(int requestCode) {
+        Intent intent = new Intent(this, SocialNetworks.class);
+        startActivityForResult(intent, requestCode);
     }
 
     @Override
@@ -1381,8 +1396,13 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                     showLoginActivity();
                     break;
                 case BAD_REQUEST_ERROR_400:
-                    InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, isClickedCHeckin ? R.string.error_message_already_checked_in : R.string.error_message_already_checked_out, false);
+                    if (menu != null && menu.findItem(R.id.edit_dive_spot) != null) {
+                        menu.findItem(R.id.edit_dive_spot).setVisible(false);
+                    }
+                    isInfoValidLayout.setVisibility(View.GONE);
+                    InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_message_already_validated_dive_spot_data, false);
                     break;
+                case UNPROCESSABLE_ENTITY_ERROR_422:
                 default:
                     Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);
             }

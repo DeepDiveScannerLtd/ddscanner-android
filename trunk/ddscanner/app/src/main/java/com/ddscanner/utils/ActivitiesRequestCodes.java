@@ -77,6 +77,8 @@ public class ActivitiesRequestCodes {
     public static final int REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN = 2206;
     public static final int REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_PHOTOS = 2207;
     public static final int REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_REVIEWS = 2208;
+    public static final int REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_VALIDATE_SPOT = 2209;
+    public static final int REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_INVALIDATE_SPOT = 2210;
 
     //    SelfCommentsActivity
     public static final int REQUEST_CODE_SELF_REVIEWS_LOGIN_TO_VIEW_COMMENTS = 2301;
