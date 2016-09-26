@@ -35,7 +35,7 @@ import com.ddscanner.entities.errors.ServerInternalErrorException;
 import com.ddscanner.entities.errors.UnknownErrorException;
 import com.ddscanner.entities.errors.UserNotFoundException;
 import com.ddscanner.entities.errors.ValidationErrorException;
-import com.ddscanner.rest.BaseCallback;
+import com.ddscanner.rest.BaseCallbackOld;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.utils.ActivitiesRequestCodes;
@@ -278,7 +278,7 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
                 requestName, requestDistribution, requestHabitat, body, requestScname,
                 requestLength, requestWeight, requestDepth, requestOrder, requestClass,
                 requestToken, requestSocial, requestSecret);
-        call.enqueue(new BaseCallback() {
+        call.enqueue(new BaseCallbackOld() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 progressDialogUpload.dismiss();

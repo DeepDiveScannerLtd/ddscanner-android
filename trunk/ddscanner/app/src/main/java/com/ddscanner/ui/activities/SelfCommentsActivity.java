@@ -27,7 +27,7 @@ import com.ddscanner.entities.errors.ValidationErrorException;
 import com.ddscanner.events.DeleteCommentEvent;
 import com.ddscanner.events.EditCommentEvent;
 import com.ddscanner.events.ShowLoginActivityIntent;
-import com.ddscanner.rest.BaseCallback;
+import com.ddscanner.rest.BaseCallbackOld;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.SelfReviewsListAdapter;
@@ -91,7 +91,7 @@ public class SelfCommentsActivity extends AppCompatActivity {
         commentsRc.setVisibility(View.GONE);
         progressView.setVisibility(View.VISIBLE);
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserComments(userId, Helpers.getUserQuryMapRequest());
-        call.enqueue(new BaseCallback() {
+        call.enqueue(new BaseCallbackOld() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {

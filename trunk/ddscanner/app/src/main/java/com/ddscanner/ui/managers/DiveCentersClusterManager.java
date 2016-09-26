@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +17,7 @@ import com.ddscanner.entities.DiveCentersResponseEntity;
 import com.ddscanner.events.DiveCenterMarkerClickEvent;
 import com.ddscanner.events.OnMapClickEvent;
 import com.ddscanner.events.PutDiveCentersToListEvent;
-import com.ddscanner.rest.BaseCallback;
+import com.ddscanner.rest.BaseCallbackOld;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.activities.DiveCenterDetailsActivity;
 import com.ddscanner.utils.DialogUtils;
@@ -273,7 +272,7 @@ public class DiveCentersClusterManager extends ClusterManager<DiveCenter> implem
         map.put("lngRight", String.valueOf(latLng.longitude + 2.0));
         map.put("latRight", String.valueOf(latLng.latitude + 2.0));
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveCenters(map);
-        call.enqueue(new BaseCallback() {
+        call.enqueue(new BaseCallbackOld() {
             @Override
             public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
                 if (response.isSuccessful()) {

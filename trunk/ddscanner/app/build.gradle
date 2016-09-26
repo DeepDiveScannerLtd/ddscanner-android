@@ -56,7 +56,7 @@ repositories {
 }
 
 def playServicesVersion="9.4.0"
-def supportVersionVersion="24.1.1"
+def supportVersionVersion="24.2.1"
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
@@ -104,7 +104,7 @@ dependencies {
     compile 'com.github.lovetuzitong:MultiImageSelector:1.1'
     compile 'jp.wasabeef:picasso-transformations:2.1.0'
     compile 'com.flurry.android:analytics:6.4.0'
-    compile 'com.appsflyer:af-android-sdk:4+@aar'
+    compile 'com.appsflyer:af-android-sdk:4.6.0@aar'
     compile 'com.github.liuguangqiang.swipeback:library:1.0.2@aar'
     compile 'at.blogc:expandabletextview:1.0.3'
 }

@@ -220,13 +220,13 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
         MapsInitializer.initialize(getActivity());
 
         infoWindowBackgroundImages.put(Constants.OBJECT_TYPE_WRECK, AppCompatDrawableManager.get().getDrawable(getActivity(),
-                R.drawable.iw_card_wreck, false));
+                R.drawable.iw_card_wreck));
         infoWindowBackgroundImages.put(Constants.OBJECT_TYPE_CAVE, AppCompatDrawableManager.get().getDrawable(getActivity(),
-                R.drawable.iw_card_cave, false));
+                R.drawable.iw_card_cave));
         infoWindowBackgroundImages.put(Constants.OBJECT_TYPE_REEF, AppCompatDrawableManager.get().getDrawable(getActivity(),
-                R.drawable.iw_card_reef, false));
+                R.drawable.iw_card_reef));
         infoWindowBackgroundImages.put(Constants.OBJECT_TYPE_OTHER, AppCompatDrawableManager.get().getDrawable(getActivity(),
-                R.drawable.iw_card_other, false));
+                R.drawable.iw_card_other));
 
         addDsFab.setOnClickListener(this);
         mapListFAB.setOnClickListener(this);

@@ -36,7 +36,7 @@ import com.ddscanner.entities.errors.UnknownErrorException;
 import com.ddscanner.entities.errors.UserNotFoundException;
 import com.ddscanner.entities.errors.ValidationErrorException;
 import com.ddscanner.events.ImageDeletedEvent;
-import com.ddscanner.rest.BaseCallback;
+import com.ddscanner.rest.BaseCallbackOld;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.AddPhotoToDsListAdapter;
@@ -218,7 +218,7 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
                 requestSocial,
                 requestSecret
         );
-        call.enqueue(new BaseCallback() {
+        call.enqueue(new BaseCallbackOld() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.raw().isSuccessful()) {

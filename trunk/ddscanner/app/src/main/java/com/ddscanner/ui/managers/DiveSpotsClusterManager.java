@@ -21,7 +21,7 @@ import com.ddscanner.events.MarkerClickEvent;
 import com.ddscanner.events.NewDiveSpotAddedEvent;
 import com.ddscanner.events.OnMapClickEvent;
 import com.ddscanner.events.PlaceChoosedEvent;
-import com.ddscanner.rest.BaseCallback;
+import com.ddscanner.rest.BaseCallbackOld;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.fragments.MapListFragment;
 import com.ddscanner.utils.DialogUtils;
@@ -498,7 +498,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
             LogUtils.i(TAG, "get dive spots request parameter: " + entry.getKey() + " " + entry.getValue());
         }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDivespots(diveSpotsRequestMap);
-        call.enqueue(new BaseCallback() {
+        call.enqueue(new BaseCallbackOld() {
             @Override
             public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
                 if (response.isSuccessful()) {

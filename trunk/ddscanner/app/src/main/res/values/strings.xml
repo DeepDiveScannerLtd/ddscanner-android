@@ -152,7 +152,7 @@
     <string name="checkin">Check-ins</string>
     <string name="added_ds">Created</string>
     <string name="edited_ds">Edited</string>
-    <string name="toast_server_error">Try again later</string>
+    <string name="toast_server_error">Failed to reach DDScanner service. Please try again later</string>
     <string name="sealife_already_added">It has already been added</string>
     <string name="please_connect_to_a_network_to_continue">Please connect to a network to continue</string>
     <string name="refresh">REFRESH</string>
@@ -244,7 +244,6 @@
     <string name="thank_you_title">Thank you!</string>
     <string name="no_one_has_checked_in_here">No one has checked in here</string>
     <string name="one_person_checked_in">person checked in here</string>
-    <string name="error_connection_failed">Failed to connect to DDScanner service. Please try again later.</string>
     <string name="there_are_no_dive_spots_here">There are no dive spots here</string>
     <string name="please_choose_another_location">Please choose another location</string>
     <string name="send">SEND</string>
@@ -286,4 +285,17 @@
     <string name="new_review">New Review</string>
     <string name="comment_already_disliked">Dive spot comment has already been disliked</string>
     <string name="comment_already_liked">Dive spot comment has already been liked</string>
+    <string name="error_server_error_title">Error occurred</string>
+    <string name="error_connection_error_title">Connection error</string>
+    <string name="error_unexpected_error_title">Opps. Looks like we have an unexpected issue here. Report was captured</string>
+    <string name="error_message_dive_spot_not_found">For some reason requested this dive spot was not found. Report was captured</string>
+    <string name="error_message_comment_not_found">For some reason requested this comment was not found. Report was captured</string>
+    <string name="error_message_you_cannot_report_self_review">You cannot report self review</string>
+    <string name="error_message_comment_also_disliked">This comment was also disliked</string>
+    <string name="error_message_comment_also_liked">This comment was also liked</string>
+    <string name="error_message_already_checked_in">You have already checked in here</string>
+    <string name="error_message_already_checked_out">You have already checked out of here</string>
+    <string name="error_connection_failed">Failed to connect to DDScanner service. Please try again later.</string>
+    <string name="error_self_comment_like_banned">You cannot like your comment</string>
+    <string name="error_self_comment_dislike_banned">You cannot dislike your comment</string>
 </resources>

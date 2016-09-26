@@ -34,7 +34,7 @@ import com.ddscanner.entities.errors.UserNotFoundException;
 import com.ddscanner.entities.errors.ValidationErrorException;
 import com.ddscanner.entities.request.RegisterRequest;
 import com.ddscanner.events.LoggedInEvent;
-import com.ddscanner.rest.BaseCallback;
+import com.ddscanner.rest.BaseCallbackOld;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.utils.ActivitiesRequestCodes;
@@ -230,7 +230,7 @@ public class SocialNetworks extends AppCompatActivity
     private void sendRegisterRequest(final RegisterRequest userData, final SignInType signInType) {
         materialDialog.show();
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().registerUser(userData);
-        call.enqueue(new BaseCallback() {
+        call.enqueue(new BaseCallbackOld() {
             @Override
             public void onResponse(Call<ResponseBody> call,
                                    retrofit2.Response<ResponseBody> response) {

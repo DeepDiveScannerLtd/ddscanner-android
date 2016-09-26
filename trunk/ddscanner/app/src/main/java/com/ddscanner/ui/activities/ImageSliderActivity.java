@@ -33,7 +33,7 @@ import com.ddscanner.entities.errors.UnknownErrorException;
 import com.ddscanner.entities.errors.UserNotFoundException;
 import com.ddscanner.entities.errors.ValidationErrorException;
 import com.ddscanner.entities.request.ReportRequest;
-import com.ddscanner.rest.BaseCallback;
+import com.ddscanner.rest.BaseCallbackOld;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.SliderImagesAdapter;
@@ -295,7 +295,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         isChanged = true;
         materialDialog.show();
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().deleteImage(name, Helpers.getUserQuryMapRequest());
-        call.enqueue(new BaseCallback() {
+        call.enqueue(new BaseCallbackOld() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 materialDialog.dismiss();
@@ -397,7 +397,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         reportRequest.setSocial(SharedPreferenceHelper.getSn());
         reportRequest.setToken(SharedPreferenceHelper.getToken());
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().reportImage(reportRequest);
-        call.enqueue(new BaseCallback() {
+        call.enqueue(new BaseCallbackOld() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 materialDialog.dismiss();

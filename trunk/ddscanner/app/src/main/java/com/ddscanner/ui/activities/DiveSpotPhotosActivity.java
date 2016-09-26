@@ -13,24 +13,28 @@ import android.support.v13.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
-import com.ddscanner.entities.DivespotDetails;
+import com.ddscanner.analytics.EventsTracker;
+import com.ddscanner.entities.DiveSpotDetails;
 import com.ddscanner.entities.Image;
-import com.ddscanner.rest.BaseCallback;
+import com.ddscanner.rest.BaseCallbackOld;
+import com.ddscanner.rest.DDScannerRestClient;
+import com.ddscanner.rest.DDScannerRestService;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.PhotosActivityPagerAdapter;
+import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.ui.fragments.DiveSpotAllPhotosFragment;
 import com.ddscanner.ui.fragments.DiveSpotPhotosFragment;
 import com.ddscanner.ui.fragments.DiveSpotReviewsPhoto;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogUtils;
+import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.gson.Gson;
@@ -48,7 +52,7 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class DiveSpotPhotosActivity extends AppCompatActivity implements View.OnClickListener {
+public class DiveSpotPhotosActivity extends AppCompatActivity implements View.OnClickListener, InfoDialogFragment.DialogClosedListener {
 
     private static final String TAG = DiveSpotPhotosActivity.class.getSimpleName();
 
@@ -62,7 +66,7 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
     private FloatingActionButton fabAddPhoto;
     private String dsId;
     private PhotosActivityPagerAdapter photosActivityPagerAdapter;
-    private DivespotDetails divespotDetails;
+    private DiveSpotDetails diveSpotDetails;
     private boolean isDataChanged = false;
 
     private DiveSpotAllPhotosFragment diveSpotAllPhotosFragment = new DiveSpotAllPhotosFragment();
@@ -70,6 +74,35 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
     private DiveSpotReviewsPhoto diveSpotReviewsPhoto = new DiveSpotReviewsPhoto();
 
     private ProgressView progressView;
+
+    private DDScannerRestClient.ResultListener<DiveSpotDetails> diveSpotDetailsResultListener = new DDScannerRestClient.ResultListener<DiveSpotDetails>() {
+        @Override
+        public void onSuccess(DiveSpotDetails result) {
+            diveSpotDetails = result;
+            updateFragments(diveSpotDetails);
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_DIVE_SPOT_PHOTOS_ACTIVITY_CONNECTION_FAILURE, false);
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+
+            switch (errorType) {
+                case DIVE_SPOT_NOT_FOUND_ERROR_C802:
+                    EventsTracker.trackUnknownServerError(url, errorMessage);
+                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_message_dive_spot_not_found, DialogsRequestCodes.DRC_DIVE_SPOT_PHOTOS_ACTIVITY_DIVE_SPOT_NOT_FOUND, false);
+                    break;
+                default:
+                    EventsTracker.trackUnknownServerError(url, errorMessage);
+                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error_title, DialogsRequestCodes.DRC_DIVE_SPOT_PHOTOS_ACTIVITY_DIVE_SPOT_NOT_FOUND, false);
+                    break;
+            }
+
+        }
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -217,8 +250,7 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
 
     private void addPhotosToDiveSpot() {
         if (!SharedPreferenceHelper.isUserLoggedIn()) {
-            Intent intent = new Intent(this, SocialNetworks.class);
-            startActivityForResult(intent, ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_LOGIN);
+            SocialNetworks.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_LOGIN);
         } else {
             MultiImageSelector.create(this).count(3).start(this, ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_SELECT_PHOTOS);
         }
@@ -227,37 +259,14 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
     private void getDiveSpotPhotos() {
         progressView.setVisibility(View.VISIBLE);
         photosViewPager.setVisibility(View.GONE);
-        Map<String, String> map = new HashMap<>();
-        map = Helpers.getUserQuryMapRequest();
-        map.put("isImageAuthor", "true");
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveSpotImages(dsId, map);
-        call.enqueue(new BaseCallback() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    String responseString = "";
-                    try {
-                        responseString = response.body().string();
-                        divespotDetails = new Gson().fromJson(responseString, DivespotDetails.class);
-                        updateFragments(divespotDetails);
-                    } catch (IOException e) {
-
-                    }
-                }
-            }
-
-            @Override
-            public void onConnectionFailure() {
-                DialogUtils.showConnectionErrorDialog(DiveSpotPhotosActivity.this);
-            }
-        });
+        DDScannerApplication.getDdScannerRestClient().getDiveSpotPhotos(dsId, diveSpotDetailsResultListener);
     }
 
-    private void updateFragments(DivespotDetails divespotDetails) {
+    private void updateFragments(DiveSpotDetails diveSpotDetails) {
         isDataChanged = true;
 
-        reviewsImages = (ArrayList<Image>) divespotDetails.getDivespot().getCommentImages();
-        diveSpotImages = (ArrayList<Image>)divespotDetails.getDivespot().getImages();
+        reviewsImages = (ArrayList<Image>) diveSpotDetails.getDivespot().getCommentImages();
+        diveSpotImages = (ArrayList<Image>) diveSpotDetails.getDivespot().getImages();
         if (diveSpotImages != null) {
             diveSpotImages = Helpers.appendFullImagesWithPath(diveSpotImages, path);
         }
@@ -303,6 +312,17 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
                 }
                 return;
             }
+        }
+    }
+
+    @Override
+    public void onDialogClosed(int requestCode) {
+        switch (requestCode) {
+            case DialogsRequestCodes.DRC_DIVE_SPOT_PHOTOS_ACTIVITY_CONNECTION_FAILURE:
+            case DialogsRequestCodes.DRC_DIVE_SPOT_PHOTOS_ACTIVITY_DIVE_SPOT_NOT_FOUND:
+                setResult(RESULT_OK);
+                finish();
+                break;
         }
     }
 }
