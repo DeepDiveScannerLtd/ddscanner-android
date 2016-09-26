@@ -29,4 +29,7 @@ public class DialogsRequestCodes {
     
     //DiveSpotsListActivity
     public static final int DRC_DIVE_SPOTS_LIST_ACTIVITY_FAILED_TO_CONNECT = 1301;
+
+    //User likes dislikes activity
+    public static final int DRC_USER_LIKES_DISLIKES_ACTIVITY_FAILED_TO_CONNECT = 1401;
 }

@@ -7,6 +7,8 @@ import com.ddscanner.entities.Comments;
 import com.ddscanner.entities.DiveSpotDetails;
 import com.ddscanner.entities.DivespotsWrapper;
 import com.ddscanner.entities.FiltersResponseEntity;
+import com.ddscanner.entities.ForeignUserDislikesWrapper;
+import com.ddscanner.entities.ForeignUserLikeWrapper;
 import com.ddscanner.entities.request.RegisterRequest;
 import com.ddscanner.entities.request.ReportRequest;
 import com.ddscanner.entities.request.ValidationRequest;
@@ -96,6 +98,28 @@ public class DDScannerRestClient {
             void handleResponseString(ResultListener<DivespotsWrapper> resultListener, String responseString) {
                 DivespotsWrapper divespotsWrapper = new Gson().fromJson(responseString, DivespotsWrapper.class);
                 resultListener.onSuccess(divespotsWrapper);
+            }
+        });
+    }
+
+    public void getUserLikes(String userId, final ResultListener<ForeignUserLikeWrapper> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getForeignUserLikes(userId, getUserQueryMapRequest());
+        call.enqueue(new ResponseEntityCallback<ForeignUserLikeWrapper>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<ForeignUserLikeWrapper> resultListener, String responseString) {
+                ForeignUserLikeWrapper foreignUserLikeWrapper = new Gson().fromJson(responseString, ForeignUserLikeWrapper.class);
+                resultListener.onSuccess(foreignUserLikeWrapper);
+            }
+        });
+    }
+
+    public void getUserDislikes(String userId, final ResultListener<ForeignUserDislikesWrapper> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getForeignUserDislikes(userId, getUserQueryMapRequest());
+        call.enqueue(new ResponseEntityCallback<ForeignUserDislikesWrapper>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<ForeignUserDislikesWrapper> resultListener, String responseString) {
+                ForeignUserDislikesWrapper foreignUserDislikesWrapper = new Gson().fromJson(responseString, ForeignUserDislikesWrapper.class);
+                resultListener.onSuccess(foreignUserDislikesWrapper);
             }
         });
     }
