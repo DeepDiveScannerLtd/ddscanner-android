@@ -25,4 +25,5 @@ public class DialogsRequestCodes {
     public static final int DRC_REVIEWS_ACTIVITY_DELETED_COMMENT_NOT_FOUND = 1204;
     public static final int DRC_REVIEWS_ACTIVITY_REPORTED_COMMENT_NOT_FOUND = 1205;
     public static final int DRC_REVIEWS_ACTIVITY_RIGHTS_NEED = 1206;
+    public static final int DRC_REVIEWS_ACTIVITY_REPORT_SELF_REVIEW = 1207;
 }
