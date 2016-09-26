@@ -84,8 +84,7 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
 
         @Override
         public void onConnectionFailure() {
-            DialogUtils.showConnectionErrorDialog(DiveSpotPhotosActivity.this);
-            finish();
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_DIVE_SPOT_PHOTOS_ACTIVITY_CONNECTION_FAILURE, false);
         }
 
         @Override
@@ -319,6 +318,7 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
     @Override
     public void onDialogClosed(int requestCode) {
         switch (requestCode) {
+            case DialogsRequestCodes.DRC_DIVE_SPOT_PHOTOS_ACTIVITY_CONNECTION_FAILURE:
             case DialogsRequestCodes.DRC_DIVE_SPOT_PHOTOS_ACTIVITY_DIVE_SPOT_NOT_FOUND:
                 setResult(RESULT_OK);
                 finish();

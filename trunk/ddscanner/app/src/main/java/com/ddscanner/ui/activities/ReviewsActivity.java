@@ -40,12 +40,15 @@ import com.ddscanner.events.ShowLoginActivityIntent;
 import com.ddscanner.events.ShowSliderForReviewImagesEvent;
 import com.ddscanner.events.ShowUserDialogEvent;
 import com.ddscanner.rest.BaseCallbackOld;
+import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.ReviewsListAdapter;
+import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogUtils;
+import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
@@ -66,7 +69,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ReviewsActivity extends AppCompatActivity implements View.OnClickListener {
+public class ReviewsActivity extends AppCompatActivity implements View.OnClickListener, InfoDialogFragment.DialogClosedListener {
 
     private ArrayList<Comment> comments;
     private RecyclerView commentsRc;
@@ -91,9 +94,197 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     private String reportType;
     private String reportDescription = null;
     private MaterialDialog materialDialog;
-    private boolean isClickedReport;
     private int reviewPositionToRate;
     private boolean isNeedRefreshComments;
+
+    private DDScannerRestClient.ResultListener<FiltersResponseEntity> filtersResponseEntityResultListener = new DDScannerRestClient.ResultListener<FiltersResponseEntity>() {
+        @Override
+        public void onSuccess(FiltersResponseEntity result) {
+            filters = result;
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_CONNECTION_FAILURE, false);
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error_title, DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_FAILED_TO_CONNECT, false);
+        }
+    };
+
+    private DDScannerRestClient.ResultListener<Void> likeCommentResultListener = new DDScannerRestClient.ResultListener<Void>() {
+        @Override
+        public void onSuccess(Void result) {
+            EventsTracker.trackCommentLiked();
+            reviewsListAdapter.commentLiked(reviewPositionToRate);
+            isHasNewComment = true;
+            if (isNeedRefreshComments) {
+                getComments();
+                isNeedRefreshComments = !isNeedRefreshComments;
+            }
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_CONNECTION_FAILURE, false);
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            switch (errorType) {
+                case USER_NOT_FOUND_ERROR_C801:
+                    SharedPreferenceHelper.logout();
+                    SocialNetworks.showForResult(ReviewsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_LIKE_REVIEW);
+                    break;
+                case RIGHTS_NOT_FOUND_403:
+                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_self_comment_like_banned, DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_RIGHTS_NEED, false);
+                    break;
+                case COMMENT_NOT_FOUND_ERROR_C803:
+                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_message_comment_not_found, DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_DELETED_COMMENT_NOT_FOUND, false);
+                    break;
+                default:
+                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error_title, DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_FAILED_TO_CONNECT, false);
+                    break;
+
+            }
+        }
+    };
+
+    private DDScannerRestClient.ResultListener<Void> dislikeCommentResultListener = new DDScannerRestClient.ResultListener<Void>() {
+        @Override
+        public void onSuccess(Void result) {
+            EventsTracker.trackCommentLiked();
+            isHasNewComment = true;
+            reviewsListAdapter.commentDisliked(reviewPositionToRate);
+            if (isNeedRefreshComments) {
+                getComments();
+                isNeedRefreshComments = !isNeedRefreshComments;
+            }
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_CONNECTION_FAILURE, false);
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            switch (errorType) {
+                case USER_NOT_FOUND_ERROR_C801:
+                    SharedPreferenceHelper.logout();
+                    SocialNetworks.showForResult(ReviewsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_DISLIKE_REVIEW);
+                    break;
+                case RIGHTS_NOT_FOUND_403:
+                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_self_comment_dislike_banned, DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_RIGHTS_NEED, false);
+                    break;
+                case COMMENT_NOT_FOUND_ERROR_C803:
+                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_message_comment_not_found, DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_DELETED_COMMENT_NOT_FOUND, false);
+                    break;
+                default:
+                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error_title, DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_FAILED_TO_CONNECT, false);
+                    break;
+
+            }
+        }
+    };
+
+    private DDScannerRestClient.ResultListener<Void> reportCommentResultListener = new DDScannerRestClient.ResultListener<Void>() {
+        @Override
+        public void onSuccess(Void result) {
+            EventsTracker.trackDiveSpotReviewReportSent();
+            reportType = null;
+            reportDescription = null;
+            getComments();
+            Toast.makeText(ReviewsActivity.this, R.string.report_sent, Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_CONNECTION_FAILURE, false);
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            switch (errorType) {
+                case USER_NOT_FOUND_ERROR_C801:
+                    SharedPreferenceHelper.logout();
+                    SocialNetworks.showForResult(ReviewsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_LEAVE_REPORT);
+                    break;
+                case COMMENT_NOT_FOUND_ERROR_C803:
+                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_message_comment_not_found, DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_REPORTED_COMMENT_NOT_FOUND, false);
+                    break;
+                case BAD_REQUEST_ERROR_400:
+
+                    break;
+                default:
+                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error_title, DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_FAILED_TO_CONNECT, false);
+                    break;
+            }
+        }
+    };
+
+    private DDScannerRestClient.ResultListener<Comments> commentsResultListener = new DDScannerRestClient.ResultListener<Comments>() {
+        @Override
+        public void onSuccess(Comments result) {
+            Comments comments = result;
+            ReviewsActivity.this.comments = (ArrayList<Comment>) comments.getComments();
+            progressView.setVisibility(View.GONE);
+            commentsRc.setVisibility(View.VISIBLE);
+            reviewsListAdapter = new ReviewsListAdapter((ArrayList<Comment>) comments.getComments(), ReviewsActivity.this, path);
+            commentsRc.setAdapter(reviewsListAdapter);
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_CONNECTION_FAILURE, false);
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+
+            switch (errorType) {
+                case DIVE_SPOT_NOT_FOUND_ERROR_C802:
+                    // This is unexpected so track it
+                    EventsTracker.trackUnknownServerError(url, errorMessage);
+                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_message_dive_spot_not_found, DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_DIVE_SPOT_NOT_FOUND, false);
+                    break;
+                default:
+                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error_title, DialogsRequestCodes.DRC_DIVE_SPOT_PHOTOS_ACTIVITY_DIVE_SPOT_NOT_FOUND, false);
+                    break;
+            }
+
+        }
+    };
+
+    private DDScannerRestClient.ResultListener<Void> deleteCommentResultListener = new DDScannerRestClient.ResultListener<Void>() {
+        @Override
+        public void onSuccess(Void result) {
+            getComments();
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_CONNECTION_FAILURE, false);
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            switch (errorType) {
+                case USER_NOT_FOUND_ERROR_C801:
+                    SharedPreferenceHelper.logout();
+                    SocialNetworks.showForResult(ReviewsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_DELETE_COMMENT);
+                    break;
+                case COMMENT_NOT_FOUND_ERROR_C803:
+                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_message_comment_not_found, DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_DELETED_COMMENT_NOT_FOUND, false);
+                    break;
+                default:
+                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error_title, DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_FAILED_TO_CONNECT, false);
+                    break;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,7 +294,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
        // comments = (ArrayList<Comment>) bundle.getSerializable("COMMENTS");
         diveSpotId = bundle.getString(Constants.DIVESPOTID);
         path = bundle.getString("PATH");
-        getReportsTypes();
+        DDScannerApplication.getDdScannerRestClient().getReportTypes(filtersResponseEntityResultListener);
         findViews();
         toolbarSettings();
         setContent();
@@ -150,7 +341,6 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
             case ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_WRITE_REVIEW:
                 if (resultCode == Activity.RESULT_OK) {
                     getComments();
-                    isHasNewComment = true;
                 }
                 if (resultCode == Activity.RESULT_CANCELED) {
                     //Write your code if there's no result
@@ -198,67 +388,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
         commentsRc.setVisibility(View.GONE);
         progressView.setVisibility(View.VISIBLE);
         isHasNewComment = true;
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getComments(diveSpotId, Helpers.getUserQuryMapRequest());
-        call.enqueue(new BaseCallbackOld() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    String responseString = "";
-                    try {
-                        responseString = response.body().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    Comments comments = new Gson().fromJson(responseString, Comments.class);
-                    ReviewsActivity.this.comments = (ArrayList<Comment>) comments.getComments();
-                    progressView.setVisibility(View.GONE);
-                    commentsRc.setVisibility(View.VISIBLE);
-                    reviewsListAdapter = new ReviewsListAdapter((ArrayList<Comment>) comments.getComments(), ReviewsActivity.this, path);
-                    commentsRc.setAdapter(reviewsListAdapter);
-                }
-                if (!response.isSuccessful()) {
-                    String responseString = "";
-                    try {
-                        responseString = response.errorBody().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    LogUtils.i("response body is " + responseString);
-                    try {
-                        ErrorsParser.checkForError(response.code(), responseString);
-                    } catch (ServerInternalErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
-                    } catch (BadRequestException e) {
-                        // TODO Handle
-                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
-                    } catch (ValidationErrorException e) {
-                        // TODO Handle
-                    } catch (NotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
-                    } catch (UnknownErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
-                    } catch (DiveSpotNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
-                    } catch (UserNotFoundException e) {
-                        // TODO Handle
-                        SharedPreferenceHelper.logout();
-                        SocialNetworks.showForResult(ReviewsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN);
-                    } catch (CommentNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
-                    }
-                }
-            }
-
-            @Override
-            public void onConnectionFailure() {
-                DialogUtils.showConnectionErrorDialog(ReviewsActivity.this);
-            }
-        });
+        DDScannerApplication.getDdScannerRestClient().getCommentsToDiveSpot(diveSpotId, commentsResultListener);
     }
 
     @Override
@@ -330,85 +460,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
 
     private void deleteUsersComment(String id) {
         commentToDelete = id;
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().deleteComment(id, Helpers.getUserQuryMapRequest());
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    getComments();
-                    isHasNewComment = true;
-                } else {
-                    String responseString = "";
-                    try {
-                        responseString = response.errorBody().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    LogUtils.i("response body is " + responseString);
-                    try {
-                        ErrorsParser.checkForError(response.code(), responseString);
-                    } catch (ServerInternalErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
-                    } catch (BadRequestException e) {
-                        // TODO Handle
-                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
-                    } catch (ValidationErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
-                    } catch (NotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
-                    } catch (UnknownErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
-                    } catch (DiveSpotNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
-                    } catch (UserNotFoundException e) {
-                        // TODO Handle
-                        SharedPreferenceHelper.logout();
-                        SocialNetworks.showForResult(ReviewsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_DELETE_COMMENT);
-                    } catch (CommentNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-            }
-        });
-    }
-
-    private void getReportsTypes() {
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getFilters();
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    String responseString = "";
-                    try {
-                        responseString = response.body().string();
-                    } catch (IOException e) {
-
-                    }
-                    JsonParser parser = new JsonParser();
-                    JsonObject jsonObject = parser.parse(responseString).getAsJsonObject();
-                    JsonObject currentsJsonObject = jsonObject.getAsJsonObject(Constants.FILTERS_VALUE_REPORT);
-                    for (Map.Entry<String, JsonElement> elementEntry : currentsJsonObject.entrySet()) {
-                        filters.getReport().put(elementEntry.getKey(), elementEntry.getValue().getAsString());
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-            }
-        });
+        DDScannerApplication.getDdScannerRestClient().deleteUserComment(id, deleteCommentResultListener);
     }
 
     @Subscribe
@@ -424,8 +476,6 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
                 .itemsCallback(new MaterialDialog.ListCallback() {
                     @Override
                     public void onSelection(final MaterialDialog dialog, View view, int which, CharSequence text) {
-
-                        isClickedReport = true;
                         reportType = Helpers.getMirrorOfHashMap(filters.getReport()).get(text);
                         if (reportType.equals("other")) {
                             showOtherReportDialog();
@@ -456,80 +506,11 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void sendReportRequest(String type, String description) {
-        materialDialog.show();
         if (!SharedPreferenceHelper.isUserLoggedIn()) {
             SocialNetworks.showForResult(ReviewsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_LEAVE_REPORT);
             return;
         }
-        ReportRequest reportRequest = new ReportRequest();
-        if (description != null) {
-            reportRequest.setDescription(description);
-        }
-        if (!SharedPreferenceHelper.getToken().isEmpty()) {
-            reportRequest.setToken(SharedPreferenceHelper.getToken());
-            reportRequest.setSocial(SharedPreferenceHelper.getSn());
-        } else {
-            SocialNetworks.showForResult(ReviewsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_LEAVE_REPORT);
-            return;
-        }
-        reportRequest.setType(type);
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().reportComment(reportCommentId, reportRequest);
-        call.enqueue(new BaseCallbackOld() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                materialDialog.dismiss();
-                if (response.isSuccessful()) {
-                    EventsTracker.trackDiveSpotReviewReportSent();
-                    isClickedReport = false;
-                    reportType = null;
-                    reportDescription = null;
-                    getComments();
-                    isHasNewComment = true;
-                    Toast.makeText(ReviewsActivity.this, R.string.report_sent, Toast.LENGTH_SHORT).show();
-                } else {
-                    String responseString = "";
-                    try {
-                        responseString = response.errorBody().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    LogUtils.i("response body is " + responseString);
-                    try {
-                        ErrorsParser.checkForError(response.code(), responseString);
-                    } catch (ServerInternalErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
-                    } catch (BadRequestException e) {
-                        // TODO Handle
-                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
-                    } catch (ValidationErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
-                    } catch (NotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
-                    } catch (UnknownErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
-                    } catch (DiveSpotNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
-                    } catch (UserNotFoundException e) {
-                        // TODO Handle
-                        SharedPreferenceHelper.logout();
-                        SocialNetworks.showForResult(ReviewsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_LEAVE_REPORT);
-                    } catch (CommentNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
-                    }
-                }
-            }
-
-            @Override
-            public void onConnectionFailure() {
-                DialogUtils.showConnectionErrorDialog(ReviewsActivity.this);
-            }
-        });
+        DDScannerApplication.getDdScannerRestClient().postSendReportToComment(type, description, reportCommentId, reportCommentResultListener);
     }
 
     private void likeComment(String id, final int position) {
@@ -537,74 +518,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
             SocialNetworks.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_LIKE_REVIEW);
             return;
         }
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().likeComment(
-                id, Helpers.getRegisterRequest()
-        );
-        call.enqueue(new BaseCallbackOld() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    if (response.raw().code() == 200) {
-                        EventsTracker.trackCommentLiked();
-                        reviewsListAdapter.commentLiked(position);
-                        isHasNewComment = true;
-                        if (isNeedRefreshComments) {
-                            getComments();
-                            isNeedRefreshComments = !isNeedRefreshComments;
-                        }
-                    }
-                }
-                if (!response.isSuccessful()) {
-                    String responseString = "";
-                    try {
-                        responseString = response.errorBody().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    if (response.raw().code() == 403) {
-                        Gson gson = new Gson();
-                        GeneralError generalError;
-                        generalError = gson.fromJson(responseString, GeneralError.class);
-                        Toast toast = Toast.makeText(ReviewsActivity.this, R.string.yoy_cannot_like_review, Toast.LENGTH_SHORT);
-                        toast.show();
-                        return;
-                    }
-                    LogUtils.i("response body is " + responseString);
-                    try {
-                        ErrorsParser.checkForError(response.code(), responseString);
-                    } catch (ServerInternalErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
-                    } catch (BadRequestException e) {
-                        // TODO Handle
-                        Helpers.showToast(ReviewsActivity.this, R.string.comment_already_liked);
-                    } catch (ValidationErrorException e) {
-                        // TODO Handle
-                    } catch (NotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
-                    } catch (UnknownErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
-                    } catch (DiveSpotNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
-                    } catch (UserNotFoundException e) {
-                        // TODO Handle
-                        SharedPreferenceHelper.logout();
-                        SocialNetworks.showForResult(ReviewsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_LIKE_REVIEW);
-                    } catch (CommentNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
-                    }
-                }
-            }
-
-            @Override
-            public void onConnectionFailure() {
-                DialogUtils.showConnectionErrorDialog(ReviewsActivity.this);
-            }
-        });
+        DDScannerApplication.getDdScannerRestClient().postLikeReview(id, likeCommentResultListener);
     }
 
     private void dislikeComment(String id, final int position) {
@@ -612,74 +526,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
             SocialNetworks.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_DISLIKE_REVIEW);
             return;
         }
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().dislikeComment(
-                id, Helpers.getRegisterRequest()
-        );
-        call.enqueue(new BaseCallbackOld() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    if (response.raw().code() == 200) {
-                        EventsTracker.trackCommentLiked();
-                        isHasNewComment = true;
-                        reviewsListAdapter.commentDisliked(position);
-                        if (isNeedRefreshComments) {
-                            getComments();
-                            isNeedRefreshComments = !isNeedRefreshComments;
-                        }
-                    }
-                }
-                if (!response.isSuccessful()) {
-                    String responseString = "";
-                    try {
-                        responseString = response.errorBody().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    if (response.raw().code() == 403) {
-                        Gson gson = new Gson();
-                        GeneralError generalError;
-                        generalError = gson.fromJson(responseString, GeneralError.class);
-                        Toast toast = Toast.makeText(ReviewsActivity.this, R.string.yoy_cannot_like_review, Toast.LENGTH_SHORT);
-                        toast.show();
-                        return;
-                    }
-                    LogUtils.i("response body is " + responseString);
-                    try {
-                        ErrorsParser.checkForError(response.code(), responseString);
-                    } catch (ServerInternalErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(ReviewsActivity.this, R.string.comment_already_disliked);
-                    } catch (BadRequestException e) {
-                        // TODO Handle
-                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
-                    } catch (ValidationErrorException e) {
-                        // TODO Handle
-                    } catch (NotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
-                    } catch (UnknownErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
-                    } catch (DiveSpotNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
-                    } catch (UserNotFoundException e) {
-                        // TODO Handle
-                        SharedPreferenceHelper.logout();
-                        SocialNetworks.showForResult(ReviewsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_DISLIKE_REVIEW);
-                    } catch (CommentNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(ReviewsActivity.this, R.string.toast_server_error);
-                    }
-                }
-            }
-
-            @Override
-            public void onConnectionFailure() {
-                DialogUtils.showConnectionErrorDialog(ReviewsActivity.this);
-            }
-        });
+        DDScannerApplication.getDdScannerRestClient().postDislikeReview(id, dislikeCommentResultListener);
     }
 
     @Subscribe
@@ -697,5 +544,25 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     @Subscribe
     public void showSliderActivity(ShowSliderForReviewImagesEvent event) {
         ReviewImageSliderActivity.show(this, event.getPhotos(), event.getPosition(), event.isSelfReview(), true, path);
+    }
+
+    @Override
+    public void onDialogClosed(int requestCode) {
+        switch (requestCode) {
+            case DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_CONNECTION_FAILURE:
+                finish();
+                break;
+            case DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_FAILED_TO_CONNECT:
+                finish();
+                break;
+            case DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_DIVE_SPOT_NOT_FOUND:
+                finish();
+                break;
+            case DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_REPORTED_COMMENT_NOT_FOUND:
+                getComments();
+                break;
+
+
+        }
     }
 }

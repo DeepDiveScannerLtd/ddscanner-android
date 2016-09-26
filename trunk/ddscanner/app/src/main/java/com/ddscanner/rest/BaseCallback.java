@@ -63,6 +63,14 @@ abstract class BaseCallback<T> implements Callback<ResponseBody> {
                     resultListener.onError(DDScannerRestClient.ErrorType.JSON_SYNTAX_EXCEPTION, null, call.request().url().toString(), e.getMessage());
                 }
                 break;
+            case 403:
+                try {
+                    generalError = gson.fromJson(json, GeneralError.class);
+                    resultListener.onError(DDScannerRestClient.ErrorType.RIGHTS_NOT_FOUND_403, generalError, call.request().url().toString(), generalError.getMessage());
+                } catch (JsonSyntaxException e) {
+                    resultListener.onError(DDScannerRestClient.ErrorType.JSON_SYNTAX_EXCEPTION, null, call.request().url().toString(), e.getMessage());
+                }
+                break;
             case 404:
                 // entity not found
                 try {
