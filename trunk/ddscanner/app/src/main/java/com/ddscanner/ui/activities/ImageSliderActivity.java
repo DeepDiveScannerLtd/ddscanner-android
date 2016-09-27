@@ -133,8 +133,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
             materialDialog.dismiss();
             switch (errorType) {
                 case BAD_REQUEST_ERROR_400:
-                    DDScannerApplication.getDdScannerRestClient().getDiveSpotPhotos(diveSpotId, imagesResulListener);
-                    InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_message_you_cannot_report_self_photo, false);
+                     InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_message_you_cannot_report_self_photo, false);
                     break;
                 case USER_NOT_FOUND_ERROR_C801:
                     SharedPreferenceHelper.logout();
@@ -419,15 +418,16 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         switch (requestCode) {
             case ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_REPORT:
                 if (resultCode == RESULT_OK) {
+                    setResult(RESULT_OK);
                     reportImage(reportName, reportType, reportDescription);
+               //     DDScannerApplication.getDdScannerRestClient().getDiveSpotPhotos(diveSpotId, imagesResulListener);
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_DELETE:
                 if (resultCode == RESULT_OK) {
+                    setResult(RESULT_OK);
                     deleteImage(deleteImageName);
-                }
-                if (resultCode == RESULT_CANCELED) {
-
+              //      DDScannerApplication.getDdScannerRestClient().getDiveSpotPhotos(diveSpotId, imagesResulListener);
                 }
                 break;
         }
