@@ -32,6 +32,9 @@ public class DialogsRequestCodes {
 
     // UserLikesDislikesActivity
     public static final int DRC_USER_LIKES_DISLIKES_ACTIVITY_FAILED_TO_CONNECT = 1401;
+    
+    // ForeignUserDiveSpotListActivity
+    public static final int DRC_FOREIGN_USER_DIVE_SPOTS_ACTIVITY_FAILED_TO_CONNECT = 1501;
 
     // SplashActivity
     public static final int DRC_SPLASH_ACTIVITY_FAILED_TO_CONNECT = 1701;
