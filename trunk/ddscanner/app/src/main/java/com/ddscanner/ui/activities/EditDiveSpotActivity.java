@@ -352,7 +352,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
 
     private void pickPhotoFromGallery() {
         if (checkReadStoragePermission()) {
-            MultiImageSelector.create(this)
+            MultiImageSelector.create().showCamera(false).multi()
                     .count(maxPhotosCount)
                     .start(this, ActivitiesRequestCodes.REQUEST_CODE_EDIT_DIVE_SPOT_ACTIVITY_PICK_PHOTO);
         } else {

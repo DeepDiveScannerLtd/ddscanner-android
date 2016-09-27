@@ -215,7 +215,7 @@ public class EditCommentActivity extends AppCompatActivity implements View.OnCli
 
     private void pickPhotoFromGallery() {
         if (checkReadStoragePermission()) {
-            MultiImageSelector.create(this)
+            MultiImageSelector.create().showCamera(false).multi()
                     .count(maxPhotos)
                     .start(this, ActivitiesRequestCodes.REQUEST_CODE_EDIT_COMMENT_ACTIVITY_PICK_PHOTOS);
         } else {

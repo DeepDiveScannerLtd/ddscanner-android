@@ -332,7 +332,7 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
 
     private void pickPhotoFromGallery() {
         if (checkReadStoragePermission()) {
-            MultiImageSelector.create(this)
+            MultiImageSelector.create().showCamera(false).multi()
                     .count(maxPhotos)
                     .start(this, ActivitiesRequestCodes.REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_PICK_PHOTO);
         } else {

@@ -690,7 +690,7 @@ public class MainActivity extends BaseAppCompatActivity
     }
 
     private void pickphotoFromGallery() {
-        MultiImageSelector.create(this).count(1).start(this, ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_PICK_PHOTO);
+        MultiImageSelector.create().showCamera(false).multi().count(1).start(this, ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_PICK_PHOTO);
     }
 
     private boolean checkPermissionReadStorage() {

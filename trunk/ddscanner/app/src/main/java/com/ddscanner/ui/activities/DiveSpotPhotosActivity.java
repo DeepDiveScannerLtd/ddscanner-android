@@ -191,7 +191,7 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_LOGIN:
                 if (resultCode == RESULT_OK) {
-                    MultiImageSelector.create(this).start(this, ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_SELECT_PHOTOS);
+                    MultiImageSelector.create().showCamera(false).multi().count(3).start(this, ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_SELECT_PHOTOS);
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_ACTIVITY_SLIDER:
@@ -220,7 +220,7 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
             Intent intent = new Intent(this, SocialNetworks.class);
             startActivityForResult(intent, ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_LOGIN);
         } else {
-            MultiImageSelector.create(this).count(3).start(this, ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_SELECT_PHOTOS);
+            MultiImageSelector.create().showCamera(false).multi().count(3).start(this, ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_SELECT_PHOTOS);
         }
     }
 
