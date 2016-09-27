@@ -9,6 +9,7 @@ import com.ddscanner.entities.DivespotsWrapper;
 import com.ddscanner.entities.FiltersResponseEntity;
 import com.ddscanner.entities.ForeignUserDislikesWrapper;
 import com.ddscanner.entities.ForeignUserLikeWrapper;
+import com.ddscanner.entities.request.IdentifyRequest;
 import com.ddscanner.entities.request.RegisterRequest;
 import com.ddscanner.entities.request.ReportRequest;
 import com.ddscanner.entities.request.ValidationRequest;
@@ -180,6 +181,11 @@ public class DDScannerRestClient {
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 
+    public void postIdentifyUser(String lat, String lng, ResultListener<Void> resultListener) {
+        final Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().identify(getUserIdentifyData(lat, lng));
+        call.enqueue(new NoResponseEntityCallback(gson, resultListener));
+    }
+
     private ReportRequest getReportRequest(String reportType, String reportDescription) {
         ReportRequest reportRequest = new ReportRequest();
         reportRequest.setType(reportType);
@@ -221,6 +227,25 @@ public class DDScannerRestClient {
         registerRequest.setAppId(SharedPreferenceHelper.getUserAppId());
         registerRequest.setpush(SharedPreferenceHelper.getGcmId());
         return registerRequest;
+    }
+
+    private IdentifyRequest getUserIdentifyData(String lat, String lng) {
+        IdentifyRequest identifyRequest = new IdentifyRequest();
+        identifyRequest.setAppId(SharedPreferenceHelper.getUserAppId());
+        if (SharedPreferenceHelper.isUserLoggedIn()) {
+            identifyRequest.setSocial(SharedPreferenceHelper.getSn());
+            identifyRequest.setToken(SharedPreferenceHelper.getToken());
+            if (SharedPreferenceHelper.getSn().equals("tw")) {
+                identifyRequest.setSecret(SharedPreferenceHelper.getSecret());
+            }
+        }
+        identifyRequest.setpush(SharedPreferenceHelper.getGcmId());
+        if (lat != null && lng != null) {
+            identifyRequest.setLat(lat);
+            identifyRequest.setLng(lng);
+        }
+        identifyRequest.setType("android");
+        return identifyRequest;
     }
 
     public interface ResultListener<T> {

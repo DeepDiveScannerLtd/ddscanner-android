@@ -57,9 +57,11 @@ import com.ddscanner.events.PlaceChoosedEvent;
 import com.ddscanner.events.ShowLoginActivityIntent;
 import com.ddscanner.events.TakePhotoFromCameraEvent;
 import com.ddscanner.rest.BaseCallbackOld;
+import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.MainActivityPagerAdapter;
+import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.ui.fragments.ActivityNotificationsFragment;
 import com.ddscanner.ui.fragments.AllNotificationsFragment;
 import com.ddscanner.ui.fragments.NotificationsFragment;
@@ -661,9 +663,6 @@ public class MainActivity extends BaseAppCompatActivity
         for (Integer code : event.getRequestCodes()) {
             switch (code) {
                 case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_GO_TO_MY_LOCATION:
-                    if (SharedPreferenceHelper.isUserAppIdReceived()) {
-                        identifyUser(String.valueOf(event.getLocation().getLatitude()), String.valueOf(event.getLocation().getLongitude()));
-                    }
                     DDScannerApplication.bus.post(new PlaceChoosedEvent(new LatLngBounds(new LatLng(event.getLocation().getLatitude() - 1, event.getLocation().getLongitude() - 1), new LatLng(event.getLocation().getLatitude() + 1, event.getLocation().getLongitude() + 1))));
                     break;
             }

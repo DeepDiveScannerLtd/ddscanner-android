@@ -1,11 +1,8 @@
 package com.ddscanner.ui.activities;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
@@ -13,23 +10,26 @@ import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.events.InstanceIDReceivedEvent;
-import com.ddscanner.events.UserIdentificationFailedEvent;
-import com.ddscanner.events.UserSuccessfullyIdentifiedEvent;
+import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.services.RegistrationIntentService;
+import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.ui.views.DDProgressBarView;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogUtils;
+import com.ddscanner.utils.DialogsRequestCodes;
+import com.ddscanner.utils.EventTrackerHelper;
 import com.ddscanner.utils.Helpers;
-import com.ddscanner.utils.LocationHelper;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.squareup.otto.Subscribe;
 
-public class SplashActivity extends BaseAppCompatActivity {
+public class SplashActivity extends BaseAppCompatActivity implements InfoDialogFragment.DialogClosedListener {
 
     private static final String TAG = SplashActivity.class.getName();
 
@@ -37,10 +37,34 @@ public class SplashActivity extends BaseAppCompatActivity {
     private Runnable showMainActivityRunnable;
     private long activityShowTimestamp;
 
-    private LinearLayout mainLayout;
-    private Animation fadeInAnimation;
-
     private TextView progressMessage;
+
+    private DDScannerRestClient.ResultListener<Void> identifyResultListener = new DDScannerRestClient.ResultListener<Void>() {
+        @Override
+        public void onSuccess(Void result) {
+            progressMessage.setText("");
+            showMainActivity();
+            SharedPreferenceHelper.setIsFirstLaunch(false);
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_SPLASH_ACTIVITY_FAILED_TO_CONNECT, false);
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            switch (errorType) {
+                case USER_NOT_FOUND_ERROR_C801:
+                    // Currently handle it as an unexpected error. Later identify request will be removed
+                    Crashlytics.log("801 error on identify");
+                default:
+                    EventsTracker.trackUnknownServerError(url, errorMessage);
+                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_SPLASH_ACTIVITY_UNEXPECTED_ERROR, false);
+                    break;
+            }
+        }
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,9 +82,8 @@ public class SplashActivity extends BaseAppCompatActivity {
 
         progressMessage = (TextView) findViewById(R.id.message);
 
-        mainLayout = (LinearLayout) findViewById(R.id.main);
-
-        fadeInAnimation = AnimationUtils.loadAnimation(this, R.anim.fadein);
+        LinearLayout mainLayout = (LinearLayout) findViewById(R.id.main);
+        Animation fadeInAnimation = AnimationUtils.loadAnimation(this, R.anim.fadein);
 
         mainLayout.startAnimation(fadeInAnimation);
 
@@ -85,7 +108,7 @@ public class SplashActivity extends BaseAppCompatActivity {
         } else {
             // This means we've received appId but failed to make identify request.Try again
             progressMessage.setText(R.string.start_process_register_for_ddscanner);
-            identifyUser("", "");
+            DDScannerApplication.getDdScannerRestClient().postIdentifyUser("", "", identifyResultListener);
         }
     }
 
@@ -152,20 +175,7 @@ public class SplashActivity extends BaseAppCompatActivity {
     @Subscribe
     public void onAppInstanceIdReceived(InstanceIDReceivedEvent event) {
         progressMessage.setText(R.string.start_process_register_for_ddscanner);
-        identifyUser("", "");
-    }
-
-    @Subscribe
-    public void onUserIdentified(UserSuccessfullyIdentifiedEvent event) {
-        progressMessage.setText("");
-        showMainActivity();
-        SharedPreferenceHelper.setIsFirstLaunch(false);
-    }
-
-    @Subscribe
-    public void onUserIdentificationFailed(UserIdentificationFailedEvent event) {
-        DialogUtils.showConnectionErrorDialog(SplashActivity.this);
-        finish();
+        DDScannerApplication.getDdScannerRestClient().postIdentifyUser("", "", identifyResultListener);
     }
 
     @Override
@@ -175,4 +185,13 @@ public class SplashActivity extends BaseAppCompatActivity {
         finish();
     }
 
+    @Override
+    public void onDialogClosed(int requestCode) {
+        switch (requestCode) {
+            case DialogsRequestCodes.DRC_SPLASH_ACTIVITY_UNEXPECTED_ERROR:
+            case DialogsRequestCodes.DRC_SPLASH_ACTIVITY_FAILED_TO_CONNECT:
+                finish();
+                break;
+        }
+    }
 }

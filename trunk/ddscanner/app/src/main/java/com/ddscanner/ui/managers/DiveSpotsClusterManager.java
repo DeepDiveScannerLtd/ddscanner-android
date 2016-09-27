@@ -379,7 +379,6 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         @Override
         protected void onClusterItemRendered(DiveSpot diveSpot, final Marker marker) {
             super.onClusterItemRendered(diveSpot, marker);
-            Log.i(TAG, "Marker id- " + marker.toString());
             try {
                 if (diveSpot.getStatus().equals("waiting")) {
                     if (lastClickedMarker == null || !lastClickedMarker.equals(marker)) {
@@ -391,7 +390,6 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
 
                 if (newDiveSpotId != -1) {
                     if (diveSpot.getId() == newDiveSpotId) {
-                        Log.i(TAG, "New marker id - " + marker.toString());
                         onMarkerClick(marker);
                         newDiveSpotId = -1;
                     }
@@ -409,7 +407,6 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         ArrayList<DiveSpot> newList = new ArrayList<>();
         for (DiveSpot diveSpot : oldList) {
             if (isSpotVisibleOnScreen(Float.valueOf(diveSpot.getLat()), Float.valueOf(diveSpot.getLng()))) {
-                Log.i(TAG, "DiveSpotInVisibleRegion");
                 newList.add(diveSpot);
             }
         }
@@ -420,7 +417,6 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         LatLng southwest = googleMap.getProjection().getVisibleRegion().latLngBounds.southwest;
         LatLng northeast = googleMap.getProjection().getVisibleRegion().latLngBounds.northeast;
         if (lat < northeast.latitude && lat > southwest.latitude && lng < northeast.longitude && lng > southwest.longitude) {
-            Log.i(TAG, "Coordinates in visible region");
             return true;
         }
         return false;
