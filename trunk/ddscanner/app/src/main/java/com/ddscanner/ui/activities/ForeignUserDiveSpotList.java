@@ -39,9 +39,9 @@ public class ForeignUserDiveSpotList extends AppCompatActivity implements InfoDi
     private boolean isCreated;
     private boolean isCheckIn;
 
-    private GetListOfDiveSpotsListener getAddedListener = new GetListOfDiveSpotsListener();
-    private GetListOfDiveSpotsListener getCheckinsListener = new GetListOfDiveSpotsListener();
-    private GetListOfDiveSpotsListener getEditedListener = new GetListOfDiveSpotsListener();
+    private GetListOfDiveSpotsListener getAddedListener = new GetListOfDiveSpotsListener(ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_SPOT_LIST_LOGIN_TO_GET_ADDED);
+    private GetListOfDiveSpotsListener getCheckinsListener = new GetListOfDiveSpotsListener(ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_SPOT_LIST_LOGIN_TO_GET_CHECKINS);
+    private GetListOfDiveSpotsListener getEditedListener = new GetListOfDiveSpotsListener(ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_SPOT_LIST_LOGIN_TO_GET_EDITED);
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,17 +55,14 @@ public class ForeignUserDiveSpotList extends AppCompatActivity implements InfoDi
         if (isEdited) {
             toolbarTitle = getString(R.string.edited);
             DDScannerApplication.getDdScannerRestClient().getEditedDiveSpots(userId, getEditedListener);
-        //    getEditedDiveSpotList();
         }
         if (isCreated) {
             toolbarTitle = getString(R.string.created);
             DDScannerApplication.getDdScannerRestClient().getAddedDiveSpots(userId, getAddedListener);
-        //    getAddedDiveSpotList();
         }
         if (isCheckIn) {
             toolbarTitle = getString(R.string.toolbar_title_check_ins);
             DDScannerApplication.getDdScannerRestClient().getUsersCheckins(userId, getCheckinsListener);
-           // getUsersCheckinList();
         }
         toolbarSettings();
     }
@@ -119,17 +116,25 @@ public class ForeignUserDiveSpotList extends AppCompatActivity implements InfoDi
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-            case ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_SPOT_LIST_LOGIN:
+            case ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_SPOT_LIST_LOGIN_TO_GET_ADDED:
                 if (resultCode == RESULT_OK) {
-                    if (isCheckIn) {
-                        DDScannerApplication.getDdScannerRestClient().getUsersCheckins(userId, getEditedListener);
-                    }
-                    if (isEdited) {
-                        DDScannerApplication.getDdScannerRestClient().getEditedDiveSpots(userId, getEditedListener);
-                    }
-                    if (isCreated) {
-                        DDScannerApplication.getDdScannerRestClient().getAddedDiveSpots(userId, getEditedListener);
-                    }
+                    DDScannerApplication.getDdScannerRestClient().getAddedDiveSpots(userId, getAddedListener);
+                } else {
+                    setResult(RESULT_CANCELED);
+                    finish();
+                }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_SPOT_LIST_LOGIN_TO_GET_EDITED:
+                if (resultCode == RESULT_OK) {
+                    DDScannerApplication.getDdScannerRestClient().getEditedDiveSpots(userId, getEditedListener);
+                } else {
+                    setResult(RESULT_CANCELED);
+                    finish();
+                }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_SPOT_LIST_LOGIN_TO_GET_CHECKINS:
+                if (resultCode == RESULT_OK) {
+                    DDScannerApplication.getDdScannerRestClient().getUsersCheckins(userId, getCheckinsListener);
                 } else {
                     setResult(RESULT_CANCELED);
                     finish();
@@ -155,6 +160,12 @@ public class ForeignUserDiveSpotList extends AppCompatActivity implements InfoDi
 
     private class GetListOfDiveSpotsListener implements DDScannerRestClient.ResultListener<DivespotsWrapper> {
 
+        private int requestCodeForLogin;
+
+        GetListOfDiveSpotsListener(int requestCodeForLogin) {
+            this.requestCodeForLogin = requestCodeForLogin;
+        }
+
         @Override
         public void onSuccess(DivespotsWrapper result) {
             progressBarFull.setVisibility(View.GONE);
@@ -173,7 +184,7 @@ public class ForeignUserDiveSpotList extends AppCompatActivity implements InfoDi
             switch (errorType) {
                 case USER_NOT_FOUND_ERROR_C801:
                     SharedPreferenceHelper.logout();
-                    SocialNetworks.showForResult(ForeignUserDiveSpotList.this, ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_SPOT_LIST_LOGIN);
+                    SocialNetworks.showForResult(ForeignUserDiveSpotList.this, requestCodeForLogin);
                     break;
                 default:
                     EventsTracker.trackUnknownServerError(url, errorMessage);
