@@ -85,7 +85,6 @@ public class ProfileFragment extends Fragment
 
     private static final String TAG = ProfileFragment.class.getName();
 
-    static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int MAX_LENGTH_NAME = 30;
     private static final int MAX_LENGTH_ABOUT = 250;
 
@@ -416,8 +415,6 @@ public class ProfileFragment extends Fragment
         this.uriFromCamera = uri;
         this.uri = null;
     }
-
-
 
     private void getUserDataRequest(String id) {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserInfo(id, Helpers.getUserQuryMapRequest());

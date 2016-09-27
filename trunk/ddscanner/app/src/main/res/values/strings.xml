@@ -303,7 +303,7 @@
     <string name="error_message_already_added_to_favourites">You have already added this dive spot to favourites</string>
     <string name="error_message_already_removed_from_favourites">You have already removed this dive spot from favourites</string>
     <string name="error_message_already_validated_dive_spot_data">You have already validated this dive spot data</string>
-    <string name="error_connection_failed">Failed to connect to DDScanner service. Please try again later.</string>
+    <string name="error_connection_failed">Failed to connect to DDScanner service. Please check your internet connection.</string>
     <string name="error_self_comment_like_banned">You cannot like your comment</string>
     <string name="error_self_comment_dislike_banned">You cannot dislike your comment</string>
 </resources>

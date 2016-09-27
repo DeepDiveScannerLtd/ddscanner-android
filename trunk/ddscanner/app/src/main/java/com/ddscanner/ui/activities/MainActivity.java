@@ -24,20 +24,12 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.crashlytics.android.Crashlytics;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.RegisterResponse;
 import com.ddscanner.entities.SignInType;
-import com.ddscanner.entities.errors.BadRequestException;
-import com.ddscanner.entities.errors.CommentNotFoundException;
-import com.ddscanner.entities.errors.DiveSpotNotFoundException;
-import com.ddscanner.entities.errors.NotFoundException;
-import com.ddscanner.entities.errors.ServerInternalErrorException;
-import com.ddscanner.entities.errors.UnknownErrorException;
-import com.ddscanner.entities.errors.UserNotFoundException;
-import com.ddscanner.entities.errors.ValidationErrorException;
-import com.ddscanner.entities.request.RegisterRequest;
 import com.ddscanner.events.ChangePageOfMainViewPagerEvent;
 import com.ddscanner.events.CloseInfoWindowEvent;
 import com.ddscanner.events.CloseListEvent;
@@ -56,10 +48,7 @@ import com.ddscanner.events.PickPhotoFromGallery;
 import com.ddscanner.events.PlaceChoosedEvent;
 import com.ddscanner.events.ShowLoginActivityIntent;
 import com.ddscanner.events.TakePhotoFromCameraEvent;
-import com.ddscanner.rest.BaseCallbackOld;
 import com.ddscanner.rest.DDScannerRestClient;
-import com.ddscanner.rest.ErrorsParser;
-import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.MainActivityPagerAdapter;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.ui.fragments.ActivityNotificationsFragment;
@@ -68,7 +57,6 @@ import com.ddscanner.ui.fragments.NotificationsFragment;
 import com.ddscanner.ui.fragments.ProfileFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
-import com.ddscanner.utils.DialogUtils;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
@@ -87,17 +75,13 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.OptionalPendingResult;
-import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.gson.Gson;
 import com.squareup.otto.Subscribe;
 
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
@@ -105,9 +89,6 @@ import java.util.List;
 
 import me.nereo.multi_image_selector.MultiImageSelector;
 import me.nereo.multi_image_selector.MultiImageSelectorActivity;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Response;
 
 public class MainActivity extends BaseAppCompatActivity
         implements ViewPager.OnPageChangeListener, View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
@@ -137,11 +118,11 @@ public class MainActivity extends BaseAppCompatActivity
 
     private CallbackManager facebookCallbackManager;
     private GoogleApiClient mGoogleApiClient;
-    private com.ddscanner.entities.User selfProfile;
-    private RegisterResponse registerResponse = new RegisterResponse();
 
     private boolean loggedInDuringLastOnStart;
     private boolean needToClearDefaultAccount;
+
+    private DRegistrationResultListener registerResultListener = new DRegistrationResultListener();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -224,8 +205,7 @@ public class MainActivity extends BaseAppCompatActivity
                         GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
                             @Override
                             public void onCompleted(JSONObject object, GraphResponse response) {
-                                sendRegisterRequest(putTokensToMap(SharedPreferenceHelper.getUserAppId(), "fb", loginResult.getAccessToken().getToken()), SignInType.FACEBOOK);
-
+                                sendRegisterRequest(SharedPreferenceHelper.getUserAppId(), SignInType.FACEBOOK, loginResult.getAccessToken().getToken());
                             }
                         }).executeAsync();
                     }
@@ -337,12 +317,12 @@ public class MainActivity extends BaseAppCompatActivity
 //                openSearchLocationWindow();
 
                 SearchSpotOrLocationActivity.showForResult(MainActivity.this, ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_PLACE_AUTOCOMPLETE);
-        //        EventsTracker.trackSearchActivityOpened();
+                //        EventsTracker.trackSearchActivityOpened();
                 break;
             case R.id.filter_menu_button:
                 Intent intent = new Intent(MainActivity.this, FilterActivity.class);
                 startActivity(intent);
-        //        EventsTracker.trackFiltersActivityOpened();
+                //        EventsTracker.trackFiltersActivityOpened();
                 break;
         }
     }
@@ -413,8 +393,12 @@ public class MainActivity extends BaseAppCompatActivity
                 Log.d(TAG, "onActivityResult:GET_TOKEN:success:" + result.getStatus().isSuccess());
                 if (result.isSuccess()) {
                     GoogleSignInAccount acct = result.getSignInAccount();
-                    String idToken = acct.getIdToken();
-                    sendRegisterRequest(putTokensToMap(SharedPreferenceHelper.getUserAppId(), "go", idToken), SignInType.GOOGLE);
+                    if (acct == null) {
+                        Helpers.handleUnexpectedServerError(getSupportFragmentManager(), "google_login", "result.getSignInAccount() returned null");
+                    } else {
+                        String idToken = acct.getIdToken();
+                        sendRegisterRequest(SharedPreferenceHelper.getUserAppId(), SignInType.GOOGLE, idToken);
+                    }
                 }
                 break;
             case Constants.MAIN_ACTIVITY_ACTVITY_REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY:
@@ -490,155 +474,76 @@ public class MainActivity extends BaseAppCompatActivity
         }
     }
 
-    private RegisterRequest putTokensToMap(String... args) {
-        RegisterRequest registerRequest = new RegisterRequest();
-        registerRequest.setAppId(args[0]);
-        registerRequest.setSocial(args[1]);
-        registerRequest.setToken(args[2]);
-        if (args.length == 4) {
-            registerRequest.setSecret(args[3]);
-        }
-        return registerRequest;
-    }
-
-    private void sendRegisterRequest(final RegisterRequest userData, final SignInType signInType) {
+    private void sendRegisterRequest(String appId, SignInType signInType, String token) {
+        registerResultListener.setToken(token);
+        registerResultListener.setSocialNetwork(signInType);
         materialDialog.show();
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().registerUser(userData);
-        call.enqueue(new BaseCallbackOld() {
-            @Override
-            public void onResponse(Call<ResponseBody> call,
-                                   retrofit2.Response<ResponseBody> response) {
-                materialDialog.dismiss();
-                if (response.isSuccessful()) {
-                    String responseString = "";
-                    try {
-                        responseString = response.body().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    Log.i(TAG, responseString);
-                    SharedPreferenceHelper.setToken(userData.getToken());
-                    SharedPreferenceHelper.setSn(userData.getSocial());
-                    if (userData.getSocial().equals("tw")) {
-                        SharedPreferenceHelper.setSecret(userData.getSecret());
-                    }
-                    registerResponse = new Gson().fromJson(responseString, RegisterResponse.class);
-                    selfProfile = registerResponse.getUser();
-                    SharedPreferenceHelper.setUserServerId(selfProfile.getId());
-                    SharedPreferenceHelper.setIsUserSignedIn(true, signInType);
-                    DDScannerApplication.bus.post(new LoggedInEvent());
-                } else {
-                    String responseString = "";
-                    try {
-                        responseString = response.errorBody().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    LogUtils.i("response body is " + responseString);
-                    try {
-                        ErrorsParser.checkForError(response.code(), responseString);
-                    } catch (ServerInternalErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(MainActivity.this, R.string.toast_server_error);
-                    } catch (BadRequestException e) {
-                        // TODO Handle
-                        Helpers.showToast(MainActivity.this, R.string.toast_server_error);
-                    } catch (ValidationErrorException e) {
-                        // TODO Handle
-                    } catch (NotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(MainActivity.this, R.string.toast_server_error);
-                    } catch (UnknownErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(MainActivity.this, R.string.toast_server_error);
-                    } catch (DiveSpotNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(MainActivity.this, R.string.toast_server_error);
-                    } catch (UserNotFoundException e) {
-                        // TODO Handle
-                    } catch (CommentNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(MainActivity.this, R.string.toast_server_error);
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                super.onFailure(call, t);
-                materialDialog.dismiss();
-            }
-
-            @Override
-            public void onConnectionFailure() {
-                DialogUtils.showConnectionErrorDialog(MainActivity.this);
-            }
-        });
+        DDScannerApplication.getDdScannerRestClient().postRegisterUser(appId, signInType, token, registerResultListener);
     }
 
-    private void validateIdToken() {
-        Call<ResponseBody> call = RestClient.getGoogleApisServiceInstance().getTokenInfo("eyJhbGciOiJSUzI1NiIsImtpZCI6IjIyZjJiN2RjMzI5ZWIxMWU0ZTA1MjEzMjRjNjZiZGJmNjNiYzNhNzIifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhdWQiOiIxOTU3MDY5MTQ2MTgtaXN0OWY4aW5zNDg1azJnZ2xib21nZHA0bDJwbjU3aXEuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMDA4MjExMDgxMDk2NzM2OTc1NjMiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiYXpwIjoiMTk1NzA2OTE0NjE4LXUydGlsdTZ0cGU3bDA2bzNjZzcwNWJlZzB0bmdqMmdpLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwiZW1haWwiOiJteWxhbmd2dWlAZ21haWwuY29tIiwiaWF0IjoxNDY4MTYxMTk0LCJleHAiOjE0NjgxNjQ3OTQsIm5hbWUiOiJMYW5nIFZ1aSIsImdpdmVuX25hbWUiOiJMYW5nIiwiZmFtaWx5X25hbWUiOiJWdWkiLCJsb2NhbGUiOiJlbiJ9.PcDkSOYFFv8TvkPM9LfZ2F5TaNOk6aLy0x8kqci4RLmisWAbomnnBtlPhZ-KVgsmjvTevwKb8DDCkJysxLkngh8ZjuPj-wDbNrPaHQMiawFW1pABorygWLU7fbd2ddnj6lY7DabeI1YW_fnux1Ep_36WUULGyz5YPstA0zsZNUWC9ndu_m-kTnlL-di5WXaqLadD9YMisZMStgYrTzr7LCwtg_x1A5xo2zCr5wISjI7eQN4xoRX9kff7vCoJMCUPmK-jyBnM62DRelxEELvhVppUl5ypqY6GHkajA8t8viug7ZdPbUh9i8OlGY3hCvCFilNALVDVRLZFbjXqTZPQ6Q");
-        call.enqueue(new BaseCallbackOld() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                Log.i(TAG, "createAddDiveSpotRequest success");
-                if (!response.isSuccessful()) {
-                    String responseString = "";
-                    try {
-                        responseString = response.errorBody().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    LogUtils.i("createAddDiveSpotRequest response body is " + responseString);
-                } else {
-                    if (response.raw().code() == 200) {
-                        String responseString = "";
-                        try {
-                            responseString = response.body().string();
-                            LogUtils.i("createAddDiveSpotRequest response body is " + responseString);
-                        } catch (IOException e) {
-
-                        }
-
-                    }
-                }
-            }
-
-            @Override
-            public void onConnectionFailure() {
-                DialogUtils.showConnectionErrorDialog(MainActivity.this);
-            }
-        });
-    }
-
-    private void refreshIdTokenSilently() {
-        if (mGoogleApiClient == null) {
-            Log.i(TAG, "refreshIdTokenSilently initGoogleLoginManager");
-            initGoogleLoginManager();
-        }
-        OptionalPendingResult<GoogleSignInResult> pendingResult = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
-        if (pendingResult.isDone()) {
-            // There's immediate result available.
-            GoogleSignInAccount acct = pendingResult.get().getSignInAccount();
-            String idToken = acct.getIdToken();
-            Log.i(TAG, "refreshIdTokenSilently pendingResult.isDone idToken = " + idToken);
-        } else {
-            // There's no immediate result ready, displays some progress indicator and waits for the
-            // async callback.
-            pendingResult.setResultCallback(new ResultCallback<GoogleSignInResult>() {
-                @Override
-                public void onResult(@NonNull GoogleSignInResult result) {
-                    Log.i(TAG, "refreshIdTokenSilently onResult result.isSuccess = " + result.isSuccess());
-                    if (result.isSuccess()) {
-                        GoogleSignInAccount acct = result.getSignInAccount();
-                        String idToken = acct.getIdToken();
-                        Log.i(TAG, "refreshIdTokenSilently onResult idToken = " + idToken);
-                    }
-                }
-            });
-        }
-
-    }
+//    private void validateIdToken() {
+//        Call<ResponseBody> call = RestClient.getGoogleApisServiceInstance().getTokenInfo("eyJhbGciOiJSUzI1NiIsImtpZCI6IjIyZjJiN2RjMzI5ZWIxMWU0ZTA1MjEzMjRjNjZiZGJmNjNiYzNhNzIifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhdWQiOiIxOTU3MDY5MTQ2MTgtaXN0OWY4aW5zNDg1azJnZ2xib21nZHA0bDJwbjU3aXEuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMDA4MjExMDgxMDk2NzM2OTc1NjMiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiYXpwIjoiMTk1NzA2OTE0NjE4LXUydGlsdTZ0cGU3bDA2bzNjZzcwNWJlZzB0bmdqMmdpLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwiZW1haWwiOiJteWxhbmd2dWlAZ21haWwuY29tIiwiaWF0IjoxNDY4MTYxMTk0LCJleHAiOjE0NjgxNjQ3OTQsIm5hbWUiOiJMYW5nIFZ1aSIsImdpdmVuX25hbWUiOiJMYW5nIiwiZmFtaWx5X25hbWUiOiJWdWkiLCJsb2NhbGUiOiJlbiJ9.PcDkSOYFFv8TvkPM9LfZ2F5TaNOk6aLy0x8kqci4RLmisWAbomnnBtlPhZ-KVgsmjvTevwKb8DDCkJysxLkngh8ZjuPj-wDbNrPaHQMiawFW1pABorygWLU7fbd2ddnj6lY7DabeI1YW_fnux1Ep_36WUULGyz5YPstA0zsZNUWC9ndu_m-kTnlL-di5WXaqLadD9YMisZMStgYrTzr7LCwtg_x1A5xo2zCr5wISjI7eQN4xoRX9kff7vCoJMCUPmK-jyBnM62DRelxEELvhVppUl5ypqY6GHkajA8t8viug7ZdPbUh9i8OlGY3hCvCFilNALVDVRLZFbjXqTZPQ6Q");
+//        call.enqueue(new BaseCallbackOld() {
+//            @Override
+//            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+//                Log.i(TAG, "createAddDiveSpotRequest success");
+//                if (!response.isSuccessful()) {
+//                    String responseString = "";
+//                    try {
+//                        responseString = response.errorBody().string();
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//                    LogUtils.i("createAddDiveSpotRequest response body is " + responseString);
+//                } else {
+//                    if (response.raw().code() == 200) {
+//                        String responseString = "";
+//                        try {
+//                            responseString = response.body().string();
+//                            LogUtils.i("createAddDiveSpotRequest response body is " + responseString);
+//                        } catch (IOException e) {
+//
+//                        }
+//
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onConnectionFailure() {
+//                DialogUtils.showConnectionErrorDialog(MainActivity.this);
+//            }
+//        });
+//    }
+//
+//    private void refreshIdTokenSilently() {
+//        if (mGoogleApiClient == null) {
+//            Log.i(TAG, "refreshIdTokenSilently initGoogleLoginManager");
+//            initGoogleLoginManager();
+//        }
+//        OptionalPendingResult<GoogleSignInResult> pendingResult = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
+//        if (pendingResult.isDone()) {
+//            // There's immediate result available.
+//            GoogleSignInAccount acct = pendingResult.get().getSignInAccount();
+//            String idToken = acct.getIdToken();
+//            Log.i(TAG, "refreshIdTokenSilently pendingResult.isDone idToken = " + idToken);
+//        } else {
+//            // There's no immediate result ready, displays some progress indicator and waits for the
+//            // async callback.
+//            pendingResult.setResultCallback(new ResultCallback<GoogleSignInResult>() {
+//                @Override
+//                public void onResult(@NonNull GoogleSignInResult result) {
+//                    Log.i(TAG, "refreshIdTokenSilently onResult result.isSuccess = " + result.isSuccess());
+//                    if (result.isSuccess()) {
+//                        GoogleSignInAccount acct = result.getSignInAccount();
+//                        String idToken = acct.getIdToken();
+//                        Log.i(TAG, "refreshIdTokenSilently onResult idToken = " + idToken);
+//                    }
+//                }
+//            });
+//        }
+//
+//    }
 
     @Subscribe
     public void onLoginViaFacebookClick(LoginViaFacebookClickEvent event) {
@@ -671,7 +576,7 @@ public class MainActivity extends BaseAppCompatActivity
 
     @Subscribe
     public void changeProfileFragmentView(TakePhotoFromCameraEvent event) {
-        if (checkWriteStoragePermision(this)) {
+        if (checkWriteStoragePermission()) {
             dispatchTakePictureIntent();
         } else {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_PERMISSION_CAMERA_AND_WRITE_STORAGE);
@@ -824,7 +729,7 @@ public class MainActivity extends BaseAppCompatActivity
                 }
                 return;
             }
-            case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_PERMISSION_CAMERA:{
+            case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_PERMISSION_CAMERA: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     dispatchTakePictureIntent();
                 } else {
@@ -832,7 +737,7 @@ public class MainActivity extends BaseAppCompatActivity
                 }
                 return;
             }
-            case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_PERMISSION_CAMERA_AND_WRITE_STORAGE:{
+            case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_PERMISSION_CAMERA_AND_WRITE_STORAGE: {
                 if (grantResults.length > 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
                     dispatchTakePictureIntent();
                 } else {
@@ -840,7 +745,7 @@ public class MainActivity extends BaseAppCompatActivity
                 }
                 return;
             }
-            case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_PERMISSION_WRITE_STORAGE:{
+            case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_PERMISSION_WRITE_STORAGE: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     dispatchTakePictureIntent();
                 } else {
@@ -873,7 +778,7 @@ public class MainActivity extends BaseAppCompatActivity
         return true;
     }
 
-    public boolean checkWriteStoragePermision(Activity context) {
+    public boolean checkWriteStoragePermission() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             return false;
         }
@@ -894,5 +799,46 @@ public class MainActivity extends BaseAppCompatActivity
     private void clearFilterSharedPrefences() {
         SharedPreferenceHelper.setObject("");
         SharedPreferenceHelper.setLevel("");
+    }
+
+    private class DRegistrationResultListener implements DDScannerRestClient.ResultListener<RegisterResponse> {
+
+        private String token;
+        private SignInType socialNetwork;
+
+        public void setToken(String token) {
+            this.token = token;
+        }
+
+        public void setSocialNetwork(SignInType socialNetwork) {
+            this.socialNetwork = socialNetwork;
+        }
+
+        @Override
+        public void onSuccess(RegisterResponse result) {
+            materialDialog.dismiss();
+            SharedPreferenceHelper.setToken(token);
+            SharedPreferenceHelper.setSn(socialNetwork.getName());
+            SharedPreferenceHelper.setIsUserSignedIn(true, socialNetwork);
+            SharedPreferenceHelper.setUserServerId(result.getUser().getId());
+            DDScannerApplication.bus.post(new LoggedInEvent());
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            materialDialog.dismiss();
+            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            materialDialog.dismiss();
+            switch (errorType) {
+                case USER_NOT_FOUND_ERROR_C801:
+                    Crashlytics.log("801 error on identify");
+                default:
+                    Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);
+            }
+        }
     }
 }

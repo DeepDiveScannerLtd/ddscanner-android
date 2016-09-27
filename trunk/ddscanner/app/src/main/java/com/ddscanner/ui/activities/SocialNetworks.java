@@ -232,8 +232,7 @@ public class SocialNetworks extends AppCompatActivity
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().registerUser(userData);
         call.enqueue(new BaseCallbackOld() {
             @Override
-            public void onResponse(Call<ResponseBody> call,
-                                   retrofit2.Response<ResponseBody> response) {
+            public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
                 materialDialog.dismiss();
                 if (response.isSuccessful()) {
                     String responseString = "";

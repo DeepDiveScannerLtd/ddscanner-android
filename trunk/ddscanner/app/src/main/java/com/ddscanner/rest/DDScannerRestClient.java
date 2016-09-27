@@ -9,6 +9,8 @@ import com.ddscanner.entities.DivespotsWrapper;
 import com.ddscanner.entities.FiltersResponseEntity;
 import com.ddscanner.entities.ForeignUserDislikesWrapper;
 import com.ddscanner.entities.ForeignUserLikeWrapper;
+import com.ddscanner.entities.RegisterResponse;
+import com.ddscanner.entities.SignInType;
 import com.ddscanner.entities.request.IdentifyRequest;
 import com.ddscanner.entities.request.RegisterRequest;
 import com.ddscanner.entities.request.ReportRequest;
@@ -197,6 +199,17 @@ public class DDScannerRestClient {
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 
+    public void postRegisterUser(String appId, SignInType signInType, String token, @NonNull final ResultListener<RegisterResponse> resultListener) {
+        final Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().registerUser(generateRegisterRequest(appId, signInType.getName(), token));
+        call.enqueue(new ResponseEntityCallback<RegisterResponse>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<RegisterResponse> resultListener, String responseString) {
+                RegisterResponse registerResponse = new Gson().fromJson(responseString, RegisterResponse.class);
+                resultListener.onSuccess(registerResponse);
+            }
+        });
+    }
+
     private ReportRequest getReportRequest(String reportType, String reportDescription) {
         ReportRequest reportRequest = new ReportRequest();
         reportRequest.setType(reportType);
@@ -257,6 +270,14 @@ public class DDScannerRestClient {
         }
         identifyRequest.setType("android");
         return identifyRequest;
+    }
+
+    private RegisterRequest generateRegisterRequest(String appId, String socialNetworkName, String token) {
+        RegisterRequest registerRequest = new RegisterRequest();
+        registerRequest.setAppId(appId);
+        registerRequest.setSocial(socialNetworkName);
+        registerRequest.setToken(token);
+        return registerRequest;
     }
 
     public interface ResultListener<T> {
