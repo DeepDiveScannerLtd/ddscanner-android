@@ -324,10 +324,14 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
                 isMapShown = !isMapShown;
                 break;
             case R.id.zoom_plus:
-                diveSpotsClusterManager.mapZoomPlus();
+                if (diveSpotsClusterManager != null) {
+                    diveSpotsClusterManager.mapZoomPlus();
+                }
                 break;
             case R.id.zoom_minus:
-                diveSpotsClusterManager.mapZoomMinus();
+                if (diveSpotsClusterManager != null) {
+                    diveSpotsClusterManager.mapZoomMinus();
+                }
                 break;
             case R.id.go_to_my_location:
                 goToMyLocation.setVisibility(View.GONE);
