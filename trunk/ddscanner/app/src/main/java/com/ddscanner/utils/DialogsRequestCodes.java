@@ -36,4 +36,5 @@ public class DialogsRequestCodes {
     //ImageSliderActivity
     public static final int DRC_IMAGE_SLIDER_ACTIVITY_FAILED_TO_CONNECT = 1601;
     public static final int DRC_IMAGE_SLIDER_ACTIVITY_CONNECTION_FAILURE_GET_REPORT_TYPES = 1602;
+    public static final int DRC_IMAGE_SLIDER_ACTIVITY_BAD_REQUEST_IN_REPORT = 1603;
 }

@@ -109,16 +109,16 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
         if (diveSpotImages != null) {
             diveSpotImages = Helpers.appendFullImagesWithPath(diveSpotImages, path);
         }
-        diveSpotPhotosFragment.setList(diveSpotImages, path);
+        diveSpotPhotosFragment.setList(diveSpotImages, path, dsId);
 
         if (reviewsImages != null) {
             reviewsImages = Helpers.appendFullImagesWithPath(reviewsImages, path);
         }
-        diveSpotReviewsPhoto.setList(reviewsImages, path);
+        diveSpotReviewsPhoto.setList(reviewsImages, path, dsId);
 
         allPhotos = Helpers.compareObjectsArray(reviewsImages, diveSpotImages);
 
-        diveSpotAllPhotosFragment.setList(allPhotos, path);
+        diveSpotAllPhotosFragment.setList(allPhotos, path, dsId);
 
         setupViewPager();
         setUi();
@@ -264,11 +264,11 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
             reviewsImages = Helpers.appendFullImagesWithPath(reviewsImages, path);
         }
 
-        diveSpotReviewsPhoto.setList(reviewsImages, path);
+        diveSpotReviewsPhoto.setList(reviewsImages, path, dsId);
         allPhotos = new ArrayList<>();
         allPhotos = Helpers.compareObjectsArray(reviewsImages, diveSpotImages);
-        diveSpotAllPhotosFragment.setList(allPhotos, path);
-        diveSpotPhotosFragment.setList(diveSpotImages, path);
+        diveSpotAllPhotosFragment.setList(allPhotos, path, dsId);
+        diveSpotPhotosFragment.setList(diveSpotImages, path, dsId);
 
         progressView.setVisibility(View.GONE);
         photosViewPager.setVisibility(View.VISIBLE);
