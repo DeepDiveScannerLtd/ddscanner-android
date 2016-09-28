@@ -122,14 +122,14 @@ public class MainActivity extends BaseAppCompatActivity
     private boolean loggedInDuringLastOnStart;
     private boolean needToClearDefaultAccount;
 
-    private DRegistrationResultListener registerResultListener = new DRegistrationResultListener();
+    private LoginResultListener loginResultListener = new LoginResultListener();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         LogUtils.i(TAG, "onCreate");
         isHasInternetConnection = getIntent().getBooleanExtra(Constants.IS_HAS_INTERNET, false);
-        clearFilterSharedPrefences();
+        clearFilterSharedPreferences();
         startActivity();
         if (!isHasInternetConnection) {
             LogUtils.i(TAG, "internetConnectionClosed 2");
@@ -173,7 +173,7 @@ public class MainActivity extends BaseAppCompatActivity
 
                     @Override
                     public void onConnectionSuspended(int i) {
-
+                        // TODO Implement
                     }
                 })
                 .build();
@@ -205,19 +205,19 @@ public class MainActivity extends BaseAppCompatActivity
                         GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
                             @Override
                             public void onCompleted(JSONObject object, GraphResponse response) {
-                                sendRegisterRequest(SharedPreferenceHelper.getUserAppId(), SignInType.FACEBOOK, loginResult.getAccessToken().getToken());
+                                sendLoginRequest(SharedPreferenceHelper.getUserAppId(), SignInType.FACEBOOK, loginResult.getAccessToken().getToken());
                             }
                         }).executeAsync();
                     }
 
                     @Override
                     public void onCancel() {
-
+                        // TODO Implement
                     }
 
                     @Override
                     public void onError(FacebookException error) {
-
+                        // TODO Implement
                     }
                 });
     }
@@ -397,7 +397,7 @@ public class MainActivity extends BaseAppCompatActivity
                         Helpers.handleUnexpectedServerError(getSupportFragmentManager(), "google_login", "result.getSignInAccount() returned null");
                     } else {
                         String idToken = acct.getIdToken();
-                        sendRegisterRequest(SharedPreferenceHelper.getUserAppId(), SignInType.GOOGLE, idToken);
+                        sendLoginRequest(SharedPreferenceHelper.getUserAppId(), SignInType.GOOGLE, idToken);
                     }
                 }
                 break;
@@ -474,11 +474,11 @@ public class MainActivity extends BaseAppCompatActivity
         }
     }
 
-    private void sendRegisterRequest(String appId, SignInType signInType, String token) {
-        registerResultListener.setToken(token);
-        registerResultListener.setSocialNetwork(signInType);
+    private void sendLoginRequest(String appId, SignInType signInType, String token) {
+        loginResultListener.setToken(token);
+        loginResultListener.setSocialNetwork(signInType);
         materialDialog.show();
-        DDScannerApplication.getDdScannerRestClient().postRegisterUser(appId, signInType, token, registerResultListener);
+        DDScannerApplication.getDdScannerRestClient().postLogin(appId, signInType, token, loginResultListener);
     }
 
 //    private void validateIdToken() {
@@ -617,14 +617,14 @@ public class MainActivity extends BaseAppCompatActivity
 
     @Subscribe
     public void showLoginActivity(ShowLoginActivityIntent event) {
-        Intent intent = new Intent(MainActivity.this, SocialNetworks.class);
+        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
         startActivityForResult(intent, ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_LOGIN);
     }
 
     @Subscribe
     public void openLoginWindowToAdd(OpenAddDsActivityAfterLogin event) {
         isTryToOpenAddDiveSpotActivity = true;
-        Intent intent = new Intent(MainActivity.this, SocialNetworks.class);
+        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
         startActivityForResult(intent, ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_LOGIN);
     }
 
@@ -791,17 +791,17 @@ public class MainActivity extends BaseAppCompatActivity
             AddDiveSpotActivity.showForResult(this, Constants.MAIN_ACTIVITY_ACTVITY_REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY, true);
         } else {
             isTryToOpenAddDiveSpotActivity = true;
-            Intent intent = new Intent(MainActivity.this, SocialNetworks.class);
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             startActivityForResult(intent, ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_LOGIN);
         }
     }
 
-    private void clearFilterSharedPrefences() {
+    private void clearFilterSharedPreferences() {
         SharedPreferenceHelper.setObject("");
         SharedPreferenceHelper.setLevel("");
     }
 
-    private class DRegistrationResultListener implements DDScannerRestClient.ResultListener<RegisterResponse> {
+    private class LoginResultListener implements DDScannerRestClient.ResultListener<RegisterResponse> {
 
         private String token;
         private SignInType socialNetwork;
@@ -810,7 +810,7 @@ public class MainActivity extends BaseAppCompatActivity
             this.token = token;
         }
 
-        public void setSocialNetwork(SignInType socialNetwork) {
+        void setSocialNetwork(SignInType socialNetwork) {
             this.socialNetwork = socialNetwork;
         }
 

@@ -255,7 +255,7 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
                     EventsTracker.trackReviewerCheckInsView();
                     ForeignUserDiveSpotList.show(this, false, false, true, userId);
                 } else {
-                    Intent intent = new Intent(ForeignProfileActivity.this, SocialNetworks.class);
+                    Intent intent = new Intent(ForeignProfileActivity.this, LoginActivity.class);
                     startActivityForResult(intent, ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_LOGIN_TO_SEE_CHECKINS);
                 }
                 break;
@@ -264,7 +264,7 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
                     EventsTracker.trackUserCreatedView();
                     ForeignUserDiveSpotList.show(this, false, true, false, userId);
                 } else {
-                    Intent intent = new Intent(ForeignProfileActivity.this, SocialNetworks.class);
+                    Intent intent = new Intent(ForeignProfileActivity.this, LoginActivity.class);
                     startActivityForResult(intent, ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_LOGIN_TO_SEE_CREATED);
                 }
                 break;
@@ -273,7 +273,7 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
                     EventsTracker.trackReviewerEditedView();
                     ForeignUserDiveSpotList.show(this, true, false, false, userId);
                 } else {
-                    Intent intent = new Intent(ForeignProfileActivity.this, SocialNetworks.class);
+                    Intent intent = new Intent(ForeignProfileActivity.this, LoginActivity.class);
                     startActivityForResult(intent, ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_LOGIN_TO_SEE_EDITED);
                 }
                 break;

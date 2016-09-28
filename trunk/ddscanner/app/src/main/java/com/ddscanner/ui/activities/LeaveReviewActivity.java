@@ -170,7 +170,7 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
 
     private void sendReview() {
         if (!SharedPreferenceHelper.isUserLoggedIn()) {
-            SocialNetworks.showForResult(LeaveReviewActivity.this, ActivitiesRequestCodes.REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_LOGIN);
+            LoginActivity.showForResult(LeaveReviewActivity.this, ActivitiesRequestCodes.REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_LOGIN);
             return;
         }
         List<MultipartBody.Part> images = new ArrayList<>();
@@ -267,7 +267,7 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
                         Helpers.showToast(LeaveReviewActivity.this, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
-                        SocialNetworks.showForResult(LeaveReviewActivity.this, ActivitiesRequestCodes.REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_LOGIN);
+                        LoginActivity.showForResult(LeaveReviewActivity.this, ActivitiesRequestCodes.REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_LOGIN);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
                         Helpers.showToast(LeaveReviewActivity.this, R.string.toast_server_error);

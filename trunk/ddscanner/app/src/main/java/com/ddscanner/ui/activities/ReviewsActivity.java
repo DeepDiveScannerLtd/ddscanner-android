@@ -110,7 +110,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
             switch (errorType) {
                 case USER_NOT_FOUND_ERROR_C801:
                     SharedPreferenceHelper.logout();
-                    SocialNetworks.showForResult(ReviewsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_LIKE_REVIEW);
+                    LoginActivity.showForResult(ReviewsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_LIKE_REVIEW);
                     break;
                 case RIGHTS_NOT_FOUND_403:
                     InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_self_comment_like_banned, DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_RIGHTS_NEED, false);
@@ -151,7 +151,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
             switch (errorType) {
                 case USER_NOT_FOUND_ERROR_C801:
                     SharedPreferenceHelper.logout();
-                    SocialNetworks.showForResult(ReviewsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_DISLIKE_REVIEW);
+                    LoginActivity.showForResult(ReviewsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_DISLIKE_REVIEW);
                     break;
                 case RIGHTS_NOT_FOUND_403:
                     InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_self_comment_dislike_banned, DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_RIGHTS_NEED, false);
@@ -190,7 +190,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
             switch (errorType) {
                 case USER_NOT_FOUND_ERROR_C801:
                     SharedPreferenceHelper.logout();
-                    SocialNetworks.showForResult(ReviewsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_LEAVE_REPORT);
+                    LoginActivity.showForResult(ReviewsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_LEAVE_REPORT);
                     break;
                 case COMMENT_NOT_FOUND_ERROR_C803:
                     InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_message_comment_not_found, DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_REPORTED_COMMENT_NOT_FOUND, false);
@@ -254,7 +254,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
             switch (errorType) {
                 case USER_NOT_FOUND_ERROR_C801:
                     SharedPreferenceHelper.logout();
-                    SocialNetworks.showForResult(ReviewsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_DELETE_COMMENT);
+                    LoginActivity.showForResult(ReviewsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_DELETE_COMMENT);
                     break;
                 case COMMENT_NOT_FOUND_ERROR_C803:
                     InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_message_comment_not_found, DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_DELETED_COMMENT_NOT_FOUND, false);
@@ -425,7 +425,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
 
     @Subscribe
     public void showLoginActivity(ShowLoginActivityIntent event) {
-        SocialNetworks.showForResult(ReviewsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN);
+        LoginActivity.showForResult(ReviewsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN);
     }
 
     @Subscribe
@@ -487,7 +487,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
 
     private void sendReportRequest(String type, String description) {
         if (!SharedPreferenceHelper.isUserLoggedIn()) {
-            SocialNetworks.showForResult(ReviewsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_LEAVE_REPORT);
+            LoginActivity.showForResult(ReviewsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_LEAVE_REPORT);
             return;
         }
         DDScannerApplication.getDdScannerRestClient().postSendReportToComment(type, description, reportCommentId, reportCommentResultListener);
@@ -495,7 +495,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
 
     private void likeComment(String id, final int position) {
         if (!SharedPreferenceHelper.isUserLoggedIn()) {
-            SocialNetworks.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_LIKE_REVIEW);
+            LoginActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_LIKE_REVIEW);
             return;
         }
         DDScannerApplication.getDdScannerRestClient().postLikeReview(id, likeCommentResultListener);
@@ -503,7 +503,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
 
     private void dislikeComment(String id, final int position) {
         if (!SharedPreferenceHelper.isUserLoggedIn()) {
-            SocialNetworks.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_DISLIKE_REVIEW);
+            LoginActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_DISLIKE_REVIEW);
             return;
         }
         DDScannerApplication.getDdScannerRestClient().postDislikeReview(id, dislikeCommentResultListener);

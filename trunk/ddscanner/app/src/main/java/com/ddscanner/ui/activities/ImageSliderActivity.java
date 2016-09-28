@@ -149,7 +149,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
                     break;
                 case USER_NOT_FOUND_ERROR_C801:
                     SharedPreferenceHelper.logout();
-                    SocialNetworks.showForResult(ImageSliderActivity.this, ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_REPORT);
+                    LoginActivity.showForResult(ImageSliderActivity.this, ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_REPORT);
                     break;
                 default:
                     EventsTracker.trackUnknownServerError(url, errorMessage);
@@ -180,7 +180,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
                     break;
                 case USER_NOT_FOUND_ERROR_C801:
                     SharedPreferenceHelper.logout();
-                    SocialNetworks.showForResult(ImageSliderActivity.this, ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_DELETE);
+                    LoginActivity.showForResult(ImageSliderActivity.this, ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_DELETE);
                     break;
                 default:
                     EventsTracker.trackUnknownServerError(url, errorMessage);
@@ -416,6 +416,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         isChanged = true;
         materialDialog.show();
         DDScannerApplication.getDdScannerRestClient().deleteImage(name, deleteImageRequestistener);
+
     }
 
     @Override
@@ -456,10 +457,11 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         isChanged = true;
         materialDialog.show();
         if (!SharedPreferenceHelper.isUserLoggedIn() || SharedPreferenceHelper.getToken().isEmpty() || SharedPreferenceHelper.getSn().isEmpty()) {
-            SocialNetworks.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_REPORT);
+            LoginActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_REPORT);
             return;
         }
        DDScannerApplication.getDdScannerRestClient().postReportImage(imageName, reportType, reportDescription, reportImageRequestListener);
+
     }
 
 
