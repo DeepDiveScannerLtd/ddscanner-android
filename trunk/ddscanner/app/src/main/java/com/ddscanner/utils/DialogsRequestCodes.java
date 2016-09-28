@@ -33,9 +33,14 @@ public class DialogsRequestCodes {
     // UserLikesDislikesActivity
     public static final int DRC_USER_LIKES_DISLIKES_ACTIVITY_FAILED_TO_CONNECT = 1401;
     
-    // ForeignUserDiveSpotListActivity
+// ForeignUserDiveSpotListActivity
     public static final int DRC_FOREIGN_USER_DIVE_SPOTS_ACTIVITY_FAILED_TO_CONNECT = 1501;
 
+    // ImageSliderActivity
+    public static final int DRC_IMAGE_SLIDER_ACTIVITY_FAILED_TO_CONNECT = 1601;
+    public static final int DRC_IMAGE_SLIDER_ACTIVITY_CONNECTION_FAILURE_GET_REPORT_TYPES = 1602;
+    public static final int DRC_IMAGE_SLIDER_ACTIVITY_BAD_REQUEST_IN_REPORT = 1603;
+    
     // SplashActivity
     public static final int DRC_SPLASH_ACTIVITY_FAILED_TO_CONNECT = 1701;
     public static final int DRC_SPLASH_ACTIVITY_UNEXPECTED_ERROR = 1702;
@@ -45,4 +50,8 @@ public class DialogsRequestCodes {
     public static final int DRC_LOGIN_ACTIVITY_UNEXPECTED_ERROR = 1802;
     public static final int DRC_LOGIN_ACTIVITY_USER_NOT_FOUND = 1803;
     public static final int DRC_LOGIN_ACTIVITY_GOOGLE_SIGN_IN_FAIL = 1804;
+    
+    // SearchActivity
+    public static final int DRC_SEARCH_ACTIVITY_FAILED_TO_CONNECT = 1901;
+    public static final int DRC_SEARCH_ACTIVITY_UNKNOWN_ERROR = 1902;
 }

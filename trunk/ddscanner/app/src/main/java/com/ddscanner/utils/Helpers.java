@@ -159,8 +159,10 @@ public class Helpers {
         }
         if (first != null) {
             allPhotos = (ArrayList<Image>) first.clone();
-            for (int i = 0; i < second.size(); i++) {
-                allPhotos.add(second.get(i));
+            if (second != null) {
+                for (int i = 0; i < second.size(); i++) {
+                    allPhotos.add(second.get(i));
+                }
             }
             return allPhotos;
         }
