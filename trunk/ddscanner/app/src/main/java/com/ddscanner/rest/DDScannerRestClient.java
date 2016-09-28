@@ -11,12 +11,16 @@ import com.ddscanner.entities.ForeignUserDislikesWrapper;
 import com.ddscanner.entities.ForeignUserLikeWrapper;
 import com.ddscanner.entities.RegisterResponse;
 import com.ddscanner.entities.SignInType;
+import com.ddscanner.entities.User;
 import com.ddscanner.entities.request.IdentifyRequest;
 import com.ddscanner.entities.request.RegisterRequest;
 import com.ddscanner.entities.request.ReportRequest;
 import com.ddscanner.entities.request.ValidationRequest;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.gson.Gson;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.List;
@@ -158,6 +162,19 @@ public class DDScannerRestClient {
             void handleResponseString(ResultListener<DivespotsWrapper> resultListener, String responseString) {
                 DivespotsWrapper divespotsWrapper = new Gson().fromJson(responseString, DivespotsWrapper.class);
                 resultListener.onSuccess(divespotsWrapper);
+            }
+        });
+    }
+
+    public void getUserInformation(String userId, final ResultListener<User> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserInfo(userId, getUserQueryMapRequest());
+        call.enqueue(new ResponseEntityCallback<User>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<User> resultListener, String responseString) throws JSONException {
+                JSONObject jsonObject = new JSONObject(responseString);
+                responseString = jsonObject.getString("user");
+                User user = new Gson().fromJson(responseString, User.class);
+                resultListener.onSuccess(user);
             }
         });
     }

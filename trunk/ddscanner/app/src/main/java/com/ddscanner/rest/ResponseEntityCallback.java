@@ -4,6 +4,8 @@ import com.ddscanner.utils.LogUtils;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
+import org.json.JSONException;
+
 import java.io.IOException;
 
 import okhttp3.ResponseBody;
@@ -29,7 +31,7 @@ abstract class ResponseEntityCallback<T> extends BaseCallback<T> {
             LogUtils.i("response body is " + responseString);
             try {
                 handleResponseString(resultListener, responseString);
-            } catch (JsonSyntaxException e) {
+            } catch (JsonSyntaxException | JSONException e) {
                 resultListener.onError(DDScannerRestClient.ErrorType.JSON_SYNTAX_EXCEPTION, null, call.request().url().toString(), e.getMessage());
             }
         } else {
@@ -44,5 +46,5 @@ abstract class ResponseEntityCallback<T> extends BaseCallback<T> {
         }
     }
 
-    abstract void handleResponseString(DDScannerRestClient.ResultListener<T> resultListener, String responseString);
+    abstract void handleResponseString(DDScannerRestClient.ResultListener<T> resultListener, String responseString) throws JSONException;
 }
