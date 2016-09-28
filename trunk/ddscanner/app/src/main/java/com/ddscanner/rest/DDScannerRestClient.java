@@ -182,6 +182,17 @@ public class DDScannerRestClient {
         });
     }
 
+    public void getUsersComments(String userId, final ResultListener<Comments> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserComments(userId, getUserQueryMapRequest());
+        call.enqueue(new ResponseEntityCallback<Comments>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<Comments> resultListener, String responseString) throws JSONException {
+                Comments comments = new Gson().fromJson(responseString, Comments.class);
+                resultListener.onSuccess(comments);
+            }
+        });
+    }
+
     public void postValidateDiveSpot(String diveSpotId, boolean isValid, @NonNull final ResultListener<Void> resultListener) {
         ValidationRequest validationRequest = new ValidationRequest();
         validationRequest.setSocial(SharedPreferenceHelper.getSn());
