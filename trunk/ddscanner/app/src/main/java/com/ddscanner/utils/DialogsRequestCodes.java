@@ -63,12 +63,16 @@ public class DialogsRequestCodes {
     public static final int DRC_SELF_COMMENTS_ACTIVITY_FAILED_TO_CONNECT = 2101;
     public static final int DRC_SELF_COMMENTS_ACTIVITY_UNKNOWN_ERROR = 2102;
        public static final int DRC_SELF_COMMENTS_ACTIVITY_COMMENT_NOT_FOUND = 2103;
- 
-    // AddDiveSpotActivity
+// AddDiveSpotActivity
     public static final int DRC_ADD_DIVE_SPOT_ACTIVITY_CONNECTION_ERROR = 2301;
     public static final int DRC_ADD_DIVE_SPOT_ACTIVITY_UNEXPECTED_ERROR = 2302;
 
+    // LeaveReviewActivity
+    public static final int DRC_LEAVE_REVIEW_ACTIVITY_FAILED_TO_CONNECT = 2401;
+    public static final int DRC_LEAVE_REVIEW_ACTIVITY_UNKNOWN_ERROR = 2402;
+    
     // UsersDivespotListSwipableActivity
     public static final int DRC_USERS_DIVESPOT_LIST_SWIPABLE_ACTIVITY_CONNECTION_ERROR = 2501;
     public static final int DRC_USERS_DIVESPOT_LIST_SWIPABLE_ACTIVITY_UNEXPECTED_ERROR = 2502;
+
 }

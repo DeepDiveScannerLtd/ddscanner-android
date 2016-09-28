@@ -67,8 +67,7 @@ public interface DDScannerRestService {
             @Part("rating") RequestBody rating,
             @Part List<MultipartBody.Part> image,
             @Part("token") RequestBody token,
-            @Part("social") RequestBody sn,
-            @Part("secret") RequestBody secret
+            @Part("social") RequestBody sn
     );
 
     @POST("/diving/identify")
