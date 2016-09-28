@@ -390,7 +390,7 @@ public class EditCommentActivity extends AppCompatActivity implements View.OnCli
                         Helpers.showToast(EditCommentActivity.this, R.string.toast_server_error);
                     } catch (UserNotFoundException e) {
                         // TODO Handle
-                        SocialNetworks.showForResult(EditCommentActivity.this, ActivitiesRequestCodes.REQUEST_CODE_EDIT_COMMENT_ACTIVITY_LOGIN);
+                        LoginActivity.showForResult(EditCommentActivity.this, ActivitiesRequestCodes.REQUEST_CODE_EDIT_COMMENT_ACTIVITY_LOGIN);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
                         Helpers.showToast(EditCommentActivity.this, R.string.toast_server_error);

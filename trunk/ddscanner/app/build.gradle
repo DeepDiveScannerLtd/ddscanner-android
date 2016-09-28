@@ -4,7 +4,8 @@ buildscript {
     }
 
     dependencies {
-        classpath 'io.fabric.tools:gradle:1.+'
+        // last version index can be found here - https://twittersdk.artifactoryonline.com/twittersdk/repo/io/fabric/tools/gradle/
+        classpath 'io.fabric.tools:gradle:1.21.5'
     }
 }
 apply plugin: 'com.android.application'
@@ -55,7 +56,7 @@ repositories {
     maven { url "https://jitpack.io" }
 }
 
-def playServicesVersion="9.4.0"
+def playServicesVersion="9.6.1"
 def supportVersionVersion="24.2.1"
 
 dependencies {

@@ -184,7 +184,7 @@ public class ForeignUserDiveSpotList extends AppCompatActivity implements InfoDi
             switch (errorType) {
                 case USER_NOT_FOUND_ERROR_C801:
                     SharedPreferenceHelper.logout();
-                    SocialNetworks.showForResult(ForeignUserDiveSpotList.this, requestCodeForLogin);
+                    LoginActivity.showForResult(ForeignUserDiveSpotList.this, requestCodeForLogin);
                     break;
                 default:
                     EventsTracker.trackUnknownServerError(url, errorMessage);

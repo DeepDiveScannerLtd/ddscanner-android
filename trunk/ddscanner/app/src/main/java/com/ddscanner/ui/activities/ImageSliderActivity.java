@@ -333,7 +333,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         SharedPreferenceHelper.logout();
-                        SocialNetworks.showForResult(ImageSliderActivity.this, ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_DELETE);
+                        LoginActivity.showForResult(ImageSliderActivity.this, ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_DELETE);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
                         Helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
@@ -386,7 +386,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         materialDialog.show();
         ReportRequest reportRequest = new ReportRequest();
         if (!SharedPreferenceHelper.isUserLoggedIn() || SharedPreferenceHelper.getToken().isEmpty() || SharedPreferenceHelper.getSn().isEmpty()) {
-            SocialNetworks.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_REPORT);
+            LoginActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_REPORT);
             return;
         }
         reportRequest.setName(imageName);
@@ -437,7 +437,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         SharedPreferenceHelper.logout();
-                        SocialNetworks.showForResult(ImageSliderActivity.this, ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_REPORT);
+                        LoginActivity.showForResult(ImageSliderActivity.this, ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_REPORT);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
                         Helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);

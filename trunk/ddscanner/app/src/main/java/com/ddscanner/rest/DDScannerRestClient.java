@@ -199,8 +199,8 @@ public class DDScannerRestClient {
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 
-    public void postRegisterUser(String appId, SignInType signInType, String token, @NonNull final ResultListener<RegisterResponse> resultListener) {
-        final Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().registerUser(generateRegisterRequest(appId, signInType.getName(), token));
+    public void postLogin(String appId, SignInType signInType, String token, @NonNull final ResultListener<RegisterResponse> resultListener) {
+        final Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().login(generateRegisterRequest(appId, signInType.getName(), token));
         call.enqueue(new ResponseEntityCallback<RegisterResponse>(gson, resultListener) {
             @Override
             void handleResponseString(ResultListener<RegisterResponse> resultListener, String responseString) {

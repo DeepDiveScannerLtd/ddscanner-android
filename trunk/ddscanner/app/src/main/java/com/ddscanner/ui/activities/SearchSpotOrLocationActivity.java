@@ -353,7 +353,7 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
     @Subscribe
     public void openLoginWindowToAdd(OpenAddDsActivityAfterLogin event) {
         isTryToOpenAddDiveSpotActivity = true;
-        Intent intent = new Intent(SearchSpotOrLocationActivity.this, SocialNetworks.class);
+        Intent intent = new Intent(SearchSpotOrLocationActivity.this, LoginActivity.class);
         startActivityForResult(intent, ActivitiesRequestCodes.REQUEST_CODE_SEARCH_ACTIVITY_LOGIN);
     }
 

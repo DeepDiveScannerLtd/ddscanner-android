@@ -137,7 +137,7 @@ public class SelfCommentsActivity extends AppCompatActivity {
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         SharedPreferenceHelper.logout();
-                        SocialNetworks.showForResult(SelfCommentsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_SELF_REVIEWS_LOGIN_TO_VIEW_COMMENTS);
+                        LoginActivity.showForResult(SelfCommentsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_SELF_REVIEWS_LOGIN_TO_VIEW_COMMENTS);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
                         Helpers.showToast(SelfCommentsActivity.this, R.string.toast_server_error);
@@ -237,7 +237,7 @@ public class SelfCommentsActivity extends AppCompatActivity {
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         SharedPreferenceHelper.logout();
-                        SocialNetworks.showForResult(SelfCommentsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_SELF_REVIEWS_LOGIN_TO_DELETE_COMMENTS);
+                        LoginActivity.showForResult(SelfCommentsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_SELF_REVIEWS_LOGIN_TO_DELETE_COMMENTS);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
                         Helpers.showToast(SelfCommentsActivity.this, R.string.toast_server_error);

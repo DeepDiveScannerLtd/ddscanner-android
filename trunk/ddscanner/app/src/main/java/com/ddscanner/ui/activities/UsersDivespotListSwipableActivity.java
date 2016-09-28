@@ -183,7 +183,7 @@ public class UsersDivespotListSwipableActivity extends AppCompatActivity {
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         SharedPreferenceHelper.logout();
-                        SocialNetworks.showForResult(UsersDivespotListSwipableActivity.this, ActivitiesRequestCodes.REQUEST_CODE_USERS_DIVESPOT_LIST_SWIPABLE_ACTIVITY_LOGIN);
+                        LoginActivity.showForResult(UsersDivespotListSwipableActivity.this, ActivitiesRequestCodes.REQUEST_CODE_USERS_DIVESPOT_LIST_SWIPABLE_ACTIVITY_LOGIN);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
                         Helpers.showToast(UsersDivespotListSwipableActivity.this, R.string.toast_server_error);
@@ -255,7 +255,7 @@ public class UsersDivespotListSwipableActivity extends AppCompatActivity {
                     } catch (UserNotFoundException e) {
                         // TODO Handle
                         SharedPreferenceHelper.logout();
-                        SocialNetworks.showForResult(UsersDivespotListSwipableActivity.this, ActivitiesRequestCodes.REQUEST_CODE_USERS_DIVESPOT_LIST_SWIPABLE_ACTIVITY_LOGIN);
+                        LoginActivity.showForResult(UsersDivespotListSwipableActivity.this, ActivitiesRequestCodes.REQUEST_CODE_USERS_DIVESPOT_LIST_SWIPABLE_ACTIVITY_LOGIN);
                     } catch (CommentNotFoundException e) {
                         // TODO Handle
                         Helpers.showToast(UsersDivespotListSwipableActivity.this, R.string.toast_server_error);

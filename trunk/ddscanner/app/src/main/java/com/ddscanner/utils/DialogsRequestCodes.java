@@ -39,4 +39,10 @@ public class DialogsRequestCodes {
     // SplashActivity
     public static final int DRC_SPLASH_ACTIVITY_FAILED_TO_CONNECT = 1701;
     public static final int DRC_SPLASH_ACTIVITY_UNEXPECTED_ERROR = 1702;
+
+    // LoginActivity
+    public static final int DRC_LOGIN_ACTIVITY_FAILED_TO_CONNECT = 1801;
+    public static final int DRC_LOGIN_ACTIVITY_UNEXPECTED_ERROR = 1802;
+    public static final int DRC_LOGIN_ACTIVITY_USER_NOT_FOUND = 1803;
+    public static final int DRC_LOGIN_ACTIVITY_GOOGLE_SIGN_IN_FAIL = 1804;
 }
