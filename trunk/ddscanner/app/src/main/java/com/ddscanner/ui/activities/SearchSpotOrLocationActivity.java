@@ -87,7 +87,7 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             EventsTracker.trackUnknownServerError(url, errorMessage);
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_SEARCH_ACTIVITY_UNKNOWN_ERROR, false);
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_SEARCH_ACTIVITY_UNEXPECTED_ERROR, false);
         }
     };
 
@@ -357,7 +357,7 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
     @Override
     public void onDialogClosed(int requestCode) {
         switch (requestCode) {
-            case DialogsRequestCodes.DRC_SEARCH_ACTIVITY_UNKNOWN_ERROR:
+            case DialogsRequestCodes.DRC_SEARCH_ACTIVITY_UNEXPECTED_ERROR:
             case DialogsRequestCodes.DRC_SEARCH_ACTIVITY_FAILED_TO_CONNECT:
                 finish();
                 break;

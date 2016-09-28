@@ -46,14 +46,18 @@ import com.ddscanner.entities.errors.UserNotFoundException;
 import com.ddscanner.entities.errors.ValidationErrorException;
 import com.ddscanner.events.ImageDeletedEvent;
 import com.ddscanner.rest.BaseCallbackOld;
+import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.AddPhotoToDsListAdapter;
 import com.ddscanner.ui.adapters.SealifeListAddingDiveSpotAdapter;
 import com.ddscanner.ui.adapters.SpinnerItemsAdapter;
+import com.ddscanner.ui.dialogs.InfoDialogFragment;
+import com.ddscanner.ui.dialogs.InfoDialogFragment.DialogClosedListener;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogUtils;
+import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
@@ -82,12 +86,10 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class AddDiveSpotActivity extends AppCompatActivity implements View.OnClickListener {
+public class AddDiveSpotActivity extends AppCompatActivity implements View.OnClickListener, DialogClosedListener {
 
     private static final String TAG = AddDiveSpotActivity.class.getSimpleName();
     private static final String DIVE_SPOT_NAME_PATTERN = "^[a-zA-Z0-9 ]*$";
-
-    private ProgressDialog progressDialog;
 
     private ImageButton btnAddPhoto;
     private ImageView btnAddSealife;
@@ -111,7 +113,6 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     private Button btnSave;
     private RecyclerView sealifesRc;
     private SealifeListAddingDiveSpotAdapter sealifeListAddingDiveSpotAdapter = null;
-    private AddPhotoToDsListAdapter addPhotoToDsListAdapter = null;
     private ScrollView mainLayout;
     private ProgressView progressView;
     private MaterialDialog progressDialogUpload;
@@ -130,14 +131,34 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     private Map<String, TextView> errorsMap = new HashMap<>();
     private FiltersResponseEntity filters;
 
-    private RequestBody requestName = null, requestLat = null, requestLng = null,
-            requestDepth = null, requestCurrents = null,
-            requestLevel = null, requestObject = null,
-            requestDescription = null, requestSocial = null, requestToken = null,
-            requestSecret = null, requestMinVisibility = null, requestMaxVisibility = null;
+    private RequestBody requestName, requestLat, requestLng,
+            requestDepth, requestCurrents,
+            requestLevel, requestObject,
+            requestDescription, requestSocial, requestToken,
+            requestSecret, requestMinVisibility, requestMaxVisibility;
     private List<MultipartBody.Part> sealife = new ArrayList<>();
     private List<MultipartBody.Part> images = new ArrayList<>();
     private boolean isFromMap;
+
+    private DDScannerRestClient.ResultListener<FiltersResponseEntity> filtersResultListener = new DDScannerRestClient.ResultListener<FiltersResponseEntity>() {
+        @Override
+        public void onSuccess(FiltersResponseEntity result) {
+            setSpinnerValues(objectSpinner, filters.getObject(), "");
+            setSpinnerValues(levelSpinner, filters.getLevel(), "");
+            setSpinnerValues(currentsSpinner, filters.getCurrents(), "");
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_ADD_DIVE_SPOT_ACTIVITY_CONNECTION_ERROR, false);
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            EventsTracker.trackUnknownServerError(url, errorMessage);
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_unexpected_error, R.string.error_connection_failed, DialogsRequestCodes.DRC_ADD_DIVE_SPOT_ACTIVITY_UNEXPECTED_ERROR, false);
+        }
+    };
 
     public static void show(Context context) {
         Intent intent = new Intent(context, AddDiveSpotActivity.class);
@@ -152,16 +173,9 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         isFromMap = getIntent().getBooleanExtra(Constants.ADD_DIVE_SPOT_INTENT_IS_FROM_MAP, false);
         findViews();
         setUi();
-        loadFiltersDataRequest();
+        DDScannerApplication.getDdScannerRestClient().getFilters(filtersResultListener);
         makeErrorsMap();
     }
-
-
-    /**
-     * Find views in current activity_add_dive_spot
-     *
-     * @author Andrei Lashkevich
-     */
 
     private void findViews() {
         name = (EditText) findViewById(R.id.name);
@@ -194,15 +208,9 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         visibilityMin = (EditText) findViewById(R.id.minVisibility);
     }
 
-    /**
-     * Set UI settings for activity views
-     *
-     * @author Andrei Lashkevich
-     */
-
     private void setUi() {
         progressDialogUpload = Helpers.getMaterialDialog(this);
-        progressDialog = new ProgressDialog(this);
+        ProgressDialog progressDialog = new ProgressDialog(this);
         btnSave.setOnClickListener(this);
         pickLocation.setOnClickListener(this);
         btnAddPhoto.setOnClickListener(this);
@@ -235,7 +243,6 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         progressView.setVisibility(View.GONE);
         mainLayout.setVisibility(View.VISIBLE);
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -284,7 +291,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_LOGIN_TO_GET_DATA:
                 if (resultCode == RESULT_OK) {
-                    loadFiltersDataRequest();
+                    DDScannerApplication.getDdScannerRestClient().getFilters(filtersResultListener);
                 } else {
                     finish();
                 }
@@ -302,76 +309,6 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         }
         ArrayAdapter<String> adapter = new SpinnerItemsAdapter(this, R.layout.spinner_item, objects);
         spinner.setAdapter(adapter);
-    }
-
-    private void loadFiltersDataRequest() {
-
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getFilters();
-        call.enqueue(new BaseCallbackOld() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (!response.isSuccessful()) {
-                    String responseString = "";
-                    try {
-                        responseString = response.errorBody().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    LogUtils.i("response body is " + responseString);
-                    try {
-                        ErrorsParser.checkForError(response.code(), responseString);
-                    } catch (ServerInternalErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(AddDiveSpotActivity.this, R.string.toast_server_error);
-                    } catch (BadRequestException e) {
-                        // TODO Handle
-                        Helpers.showToast(AddDiveSpotActivity.this, R.string.toast_server_error);
-                    } catch (ValidationErrorException e) {
-                        // TODO Handle
-                        Helpers.errorHandling(AddDiveSpotActivity.this, errorsMap, responseString);
-                    } catch (NotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(AddDiveSpotActivity.this, R.string.toast_server_error);
-                    } catch (UnknownErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(AddDiveSpotActivity.this, R.string.toast_server_error);
-                    } catch (DiveSpotNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(AddDiveSpotActivity.this, R.string.toast_server_error);
-                    } catch (UserNotFoundException e) {
-                        // TODO Handle
-                        SharedPreferenceHelper.logout();
-                        LoginActivity.showForResult(AddDiveSpotActivity.this, ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_LOGIN_TO_GET_DATA);
-                    } catch (CommentNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(AddDiveSpotActivity.this, R.string.toast_server_error);
-                    }
-                }
-                if (response.isSuccessful()) {
-                    String responseString = "";
-                    try {
-                        responseString = response.body().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    filters = new FiltersResponseEntity();
-                    filters = new Gson().fromJson(responseString, FiltersResponseEntity.class);
-
-                    Log.i(TAG, responseString);
-
-                    setSpinnerValues(objectSpinner, filters.getObject(), "");
-                    setSpinnerValues(levelSpinner, filters.getLevel(), "");
-                    setSpinnerValues(currentsSpinner, filters.getCurrents(), "");
-
-                }
-            }
-
-            @Override
-            public void onConnectionFailure() {
-                DialogUtils.showConnectionErrorDialog(AddDiveSpotActivity.this);
-            }
-        });
     }
 
     private void createAddDiveSpotRequest() {
@@ -695,4 +632,12 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         context.startActivityForResult(intent, requestCode);
     }
 
+    @Override
+    public void onDialogClosed(int requestCode) {
+        switch (requestCode) {
+            case DialogsRequestCodes.DRC_ADD_DIVE_SPOT_ACTIVITY_CONNECTION_ERROR:
+            case DialogsRequestCodes.DRC_ADD_DIVE_SPOT_ACTIVITY_UNEXPECTED_ERROR:
+                finish();
+        }
+    }
 }

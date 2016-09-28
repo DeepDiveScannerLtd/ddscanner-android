@@ -2,8 +2,10 @@ package com.ddscanner.rest;
 
 import android.support.annotation.NonNull;
 
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.CheckIns;
 import com.ddscanner.entities.Comments;
+import com.ddscanner.entities.DiveSpot;
 import com.ddscanner.entities.DiveSpotDetails;
 import com.ddscanner.entities.DivespotsWrapper;
 import com.ddscanner.entities.FiltersResponseEntity;
@@ -15,8 +17,12 @@ import com.ddscanner.entities.request.IdentifyRequest;
 import com.ddscanner.entities.request.RegisterRequest;
 import com.ddscanner.entities.request.ReportRequest;
 import com.ddscanner.entities.request.ValidationRequest;
+import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.gson.Gson;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.List;
@@ -107,7 +113,7 @@ public class DDScannerRestClient {
             }
         });
     }
-    
+
     public void getUsersCheckins(String userId, final ResultListener<DivespotsWrapper> resultListener) {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUsersCheckins(userId, getUserQueryMapRequest());
         call.enqueue(new ResponseEntityCallback<DivespotsWrapper>(gson, resultListener) {
@@ -204,7 +210,7 @@ public class DDScannerRestClient {
     }
 
     public void postSendReportToComment(String reportType, String reportDescription, String commentId, @NonNull final ResultListener<Void> resultListener) {
-        final Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().reportComment(commentId, getReportRequest(reportType,  reportDescription));
+        final Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().reportComment(commentId, getReportRequest(reportType, reportDescription));
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 
@@ -234,6 +240,30 @@ public class DDScannerRestClient {
         });
     }
 
+    public void getFilters(@NonNull final ResultListener<FiltersResponseEntity> resultListener) {
+        final Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getFilters();
+        call.enqueue(new ResponseEntityCallback<FiltersResponseEntity>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<FiltersResponseEntity> resultListener, String responseString) {
+                FiltersResponseEntity filtersResponseEntity = new Gson().fromJson(responseString, FiltersResponseEntity.class);
+                resultListener.onSuccess(filtersResponseEntity);
+            }
+        });
+    }
+
+    public void postAddDiveSpot(@NonNull final ResultListener<DiveSpot> resultListener) {
+        final Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getFilters();
+        call.enqueue(new ResponseEntityCallback<DiveSpot>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<DiveSpot> resultListener, String responseString) throws JSONException {
+                JSONObject jsonObject = new JSONObject(responseString);
+                String diveSpotString = jsonObject.getString(Constants.ADD_DIVE_SPOT_ACTIVITY_DIVESPOT);
+                DiveSpot diveSpot = new Gson().fromJson(diveSpotString, DiveSpot.class);
+                resultListener.onSuccess(diveSpot);
+            }
+        });
+    }
+
     private ReportRequest getReportRequest(String reportType, String reportDescription) {
         ReportRequest reportRequest = new ReportRequest();
         reportRequest.setType(reportType);
@@ -244,6 +274,7 @@ public class DDScannerRestClient {
         }
         return reportRequest;
     }
+
     private ReportRequest getReportRequest(String reportType, String reportDescription, String imageName) {
         ReportRequest reportRequest = new ReportRequest();
         reportRequest.setType(reportType);
