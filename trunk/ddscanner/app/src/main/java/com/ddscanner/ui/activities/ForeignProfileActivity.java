@@ -99,7 +99,7 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
             switch (errorType) {
                 case USER_NOT_FOUND_ERROR_C801:
                     SharedPreferenceHelper.logout();
-                    SocialNetworks.showForResult(ForeignProfileActivity.this, ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_LOGIN);
+                    LoginActivity.showForResult(ForeignProfileActivity.this, ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_LOGIN);
                     break;
                 default:
                     EventsTracker.trackUnknownServerError(url, errorMessage);
