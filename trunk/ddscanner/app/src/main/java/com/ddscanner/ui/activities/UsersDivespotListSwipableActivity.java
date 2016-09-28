@@ -25,47 +25,53 @@ import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.DiveSpot;
 import com.ddscanner.entities.DivespotsWrapper;
-import com.ddscanner.entities.errors.BadRequestException;
-import com.ddscanner.entities.errors.CommentNotFoundException;
-import com.ddscanner.entities.errors.DiveSpotNotFoundException;
-import com.ddscanner.entities.errors.NotFoundException;
-import com.ddscanner.entities.errors.ServerInternalErrorException;
-import com.ddscanner.entities.errors.UnknownErrorException;
-import com.ddscanner.entities.errors.UserNotFoundException;
-import com.ddscanner.entities.errors.ValidationErrorException;
-import com.ddscanner.rest.BaseCallbackOld;
-import com.ddscanner.rest.ErrorsParser;
-import com.ddscanner.rest.RestClient;
+import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.adapters.SwipableDiveSpotListAdapter;
+import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
-import com.ddscanner.utils.DialogUtils;
+import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
-import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
-import com.google.gson.Gson;
 import com.rey.material.widget.ProgressView;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Response;
-
-public class UsersDivespotListSwipableActivity extends AppCompatActivity {
+public class UsersDivespotListSwipableActivity extends AppCompatActivity implements InfoDialogFragment.DialogClosedListener {
 
     private static final String BUNDLE_KEY_SPOT_VIEW_SOURCE = "BUNDLE_KEY_SPOT_VIEW_SOURCE";
 
     private RecyclerView rc;
-    private Toolbar toolbar;
     private SwipableDiveSpotListAdapter swipableDiveSpotListAdapter;
     private List<DiveSpot> diveSpots = new ArrayList<>();
     private boolean isCheckin = false;
     private ProgressView progressBarFull;
     private EventsTracker.SpotViewSource spotViewSource;
+
+    private DDScannerRestClient.ResultListener<DivespotsWrapper> getDiveSpotsResultListener = new DDScannerRestClient.ResultListener<DivespotsWrapper>() {
+        @Override
+        public void onSuccess(DivespotsWrapper result) {
+            diveSpots = result.getDiveSpots();
+            setUi();
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_USERS_DIVESPOT_LIST_SWIPABLE_ACTIVITY_CONNECTION_ERROR, false);
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            switch (errorType) {
+                case USER_NOT_FOUND_ERROR_C801:
+                    SharedPreferenceHelper.logout();
+                    LoginActivity.showForResult(UsersDivespotListSwipableActivity.this, ActivitiesRequestCodes.REQUEST_CODE_USERS_DIVESPOT_LIST_SWIPABLE_ACTIVITY_LOGIN);
+                    break;
+                default:
+                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_USERS_DIVESPOT_LIST_SWIPABLE_ACTIVITY_UNEXPECTED_ERROR, false);
+            }
+        }
+    };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -75,9 +81,9 @@ public class UsersDivespotListSwipableActivity extends AppCompatActivity {
         isCheckin = getIntent().getBooleanExtra("ISCHECKIN", false);
         findViews();
         if (isCheckin) {
-            getListOfDiveSPotsCheckins();
+            DDScannerApplication.getDdScannerRestClient().getUsersCheckins(SharedPreferenceHelper.getUserServerId(), getDiveSpotsResultListener);
         } else {
-            getListOfDiveSPotsFavorites();
+            DDScannerApplication.getDdScannerRestClient().getUsersFavourites(SharedPreferenceHelper.getUserServerId(), getDiveSpotsResultListener);
         }
         spotViewSource = EventsTracker.SpotViewSource.getByName(getIntent().getStringExtra(BUNDLE_KEY_SPOT_VIEW_SOURCE));
     }
@@ -89,9 +95,9 @@ public class UsersDivespotListSwipableActivity extends AppCompatActivity {
             case ActivitiesRequestCodes.REQUEST_CODE_USERS_DIVESPOT_LIST_SWIPABLE_ACTIVITY_LOGIN:
                 if (resultCode == RESULT_OK) {
                     if (isCheckin) {
-                        getListOfDiveSPotsCheckins();
+                        DDScannerApplication.getDdScannerRestClient().getUsersCheckins(SharedPreferenceHelper.getUserServerId(), getDiveSpotsResultListener);
                     } else {
-                        getListOfDiveSPotsFavorites();
+                        DDScannerApplication.getDdScannerRestClient().getUsersFavourites(SharedPreferenceHelper.getUserServerId(), getDiveSpotsResultListener);
                     }
                 }
                 if (resultCode == RESULT_CANCELED) {
@@ -103,7 +109,7 @@ public class UsersDivespotListSwipableActivity extends AppCompatActivity {
 
     private void findViews() {
         rc = (RecyclerView) findViewById(R.id.divespots_rc);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         progressBarFull = (ProgressView) findViewById(R.id.progressBar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -124,150 +130,6 @@ public class UsersDivespotListSwipableActivity extends AppCompatActivity {
         initSwipe();
         progressBarFull.setVisibility(View.GONE);
         rc.setVisibility(View.VISIBLE);
-    }
-
-    private void getListOfDiveSPotsCheckins() {
-        Map<String, String> map = new HashMap<>();
-        if (SharedPreferenceHelper.isUserLoggedIn()) {
-            map.put("social", SharedPreferenceHelper.getSn());
-            map.put("token", SharedPreferenceHelper.getToken());
-            if (SharedPreferenceHelper.getSn().equals("tw")) {
-                map.put("secret", SharedPreferenceHelper.getSecret());
-            }
-        }
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUsersCheckins(
-                SharedPreferenceHelper.getUserServerId(), map);
-        call.enqueue(new BaseCallbackOld() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    String responseString = "";
-                    try {
-                        responseString = response.body().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    LogUtils.i("response body is " + responseString);
-                    DivespotsWrapper divespotsWrapper = new Gson()
-                            .fromJson(responseString, DivespotsWrapper.class);
-                    diveSpots = divespotsWrapper.getDiveSpots();
-                    setUi();
-                }
-                if (!response.isSuccessful()) {
-                    String responseString = "";
-                    try {
-                        responseString = response.errorBody().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    LogUtils.i("response body is " + responseString);
-                    try {
-                        ErrorsParser.checkForError(response.code(), responseString);
-                    } catch (ServerInternalErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(UsersDivespotListSwipableActivity.this, R.string.toast_server_error);
-                    } catch (BadRequestException e) {
-                        // TODO Handle
-                        Helpers.showToast(UsersDivespotListSwipableActivity.this, R.string.toast_server_error);
-                    } catch (ValidationErrorException e) {
-                        // TODO Handle
-                    } catch (NotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(UsersDivespotListSwipableActivity.this, R.string.toast_server_error);
-                    } catch (UnknownErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(UsersDivespotListSwipableActivity.this, R.string.toast_server_error);
-                    } catch (DiveSpotNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(UsersDivespotListSwipableActivity.this, R.string.toast_server_error);
-                    } catch (UserNotFoundException e) {
-                        // TODO Handle
-                        SharedPreferenceHelper.logout();
-                        LoginActivity.showForResult(UsersDivespotListSwipableActivity.this, ActivitiesRequestCodes.REQUEST_CODE_USERS_DIVESPOT_LIST_SWIPABLE_ACTIVITY_LOGIN);
-                    } catch (CommentNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(UsersDivespotListSwipableActivity.this, R.string.toast_server_error);
-                    }
-                }
-            }
-
-            @Override
-            public void onConnectionFailure() {
-                DialogUtils.showConnectionErrorDialog(UsersDivespotListSwipableActivity.this);
-            }
-        });
-    }
-
-    private void getListOfDiveSPotsFavorites() {
-        Map<String, String> map = new HashMap<>();
-        if (SharedPreferenceHelper.isUserLoggedIn()) {
-            map.put("social", SharedPreferenceHelper.getSn());
-            map.put("token", SharedPreferenceHelper.getToken());
-            if (SharedPreferenceHelper.getSn().equals("tw")) {
-                map.put("secret", SharedPreferenceHelper.getSecret());
-            }
-        }
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUsersFavorites(
-                SharedPreferenceHelper.getUserServerId(), map);
-        call.enqueue(new BaseCallbackOld() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    String responseString = "";
-                    try {
-                        responseString = response.body().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    LogUtils.i("response body is " + responseString);
-                    DivespotsWrapper divespotsWrapper = new Gson()
-                            .fromJson(responseString, DivespotsWrapper.class);
-                    diveSpots = divespotsWrapper.getDiveSpots();
-                    setUi();
-                }
-                if (!response.isSuccessful()) {
-                    String responseString = "";
-                    try {
-                        responseString = response.errorBody().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    LogUtils.i("response body is " + responseString);
-                    try {
-                        ErrorsParser.checkForError(response.code(), responseString);
-                    } catch (ServerInternalErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(UsersDivespotListSwipableActivity.this, R.string.toast_server_error);
-                    } catch (BadRequestException e) {
-                        // TODO Handle
-                        Helpers.showToast(UsersDivespotListSwipableActivity.this, R.string.toast_server_error);
-                    } catch (ValidationErrorException e) {
-                        // TODO Handle
-                    } catch (NotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(UsersDivespotListSwipableActivity.this, R.string.toast_server_error);
-                    } catch (UnknownErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(UsersDivespotListSwipableActivity.this, R.string.toast_server_error);
-                    } catch (DiveSpotNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(UsersDivespotListSwipableActivity.this, R.string.toast_server_error);
-                    } catch (UserNotFoundException e) {
-                        // TODO Handle
-                        SharedPreferenceHelper.logout();
-                        LoginActivity.showForResult(UsersDivespotListSwipableActivity.this, ActivitiesRequestCodes.REQUEST_CODE_USERS_DIVESPOT_LIST_SWIPABLE_ACTIVITY_LOGIN);
-                    } catch (CommentNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(UsersDivespotListSwipableActivity.this, R.string.toast_server_error);
-                    }
-                }
-            }
-
-            @Override
-            public void onConnectionFailure() {
-                DialogUtils.showConnectionErrorDialog(UsersDivespotListSwipableActivity.this);
-            }
-        });
     }
 
     public static void show(Context context, boolean isCheckins, EventsTracker.SpotViewSource spotViewSource) {
@@ -362,4 +224,12 @@ public class UsersDivespotListSwipableActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onDialogClosed(int requestCode) {
+        switch (requestCode) {
+            case DialogsRequestCodes.DRC_USERS_DIVESPOT_LIST_SWIPABLE_ACTIVITY_CONNECTION_ERROR:
+            case DialogsRequestCodes.DRC_USERS_DIVESPOT_LIST_SWIPABLE_ACTIVITY_UNEXPECTED_ERROR:
+                finish();
+        }
+    }
 }

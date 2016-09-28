@@ -67,4 +67,8 @@ public class DialogsRequestCodes {
     // AddDiveSpotActivity
     public static final int DRC_ADD_DIVE_SPOT_ACTIVITY_CONNECTION_ERROR = 2301;
     public static final int DRC_ADD_DIVE_SPOT_ACTIVITY_UNEXPECTED_ERROR = 2302;
+
+    // UsersDivespotListSwipableActivity
+    public static final int DRC_USERS_DIVESPOT_LIST_SWIPABLE_ACTIVITY_CONNECTION_ERROR = 2501;
+    public static final int DRC_USERS_DIVESPOT_LIST_SWIPABLE_ACTIVITY_UNEXPECTED_ERROR = 2502;
 }

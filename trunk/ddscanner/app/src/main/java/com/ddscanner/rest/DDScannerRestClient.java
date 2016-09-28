@@ -296,6 +296,17 @@ public class DDScannerRestClient {
         });
     }
 
+    public void getUsersFavourites(String userId, @NonNull final ResultListener<DivespotsWrapper> resultListener) {
+        final Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUsersFavorites(userId, getUserQueryMapRequest());
+        call.enqueue(new ResponseEntityCallback<DivespotsWrapper>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<DivespotsWrapper> resultListener, String responseString) {
+                DivespotsWrapper filtersResponseEntity = new Gson().fromJson(responseString, DivespotsWrapper.class);
+                resultListener.onSuccess(filtersResponseEntity);
+            }
+        });
+    }
+
     private ReportRequest getReportRequest(String reportType, String reportDescription) {
         ReportRequest reportRequest = new ReportRequest();
         reportRequest.setType(reportType);
