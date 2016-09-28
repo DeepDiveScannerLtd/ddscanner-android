@@ -22,6 +22,8 @@ import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.Image;
 import com.ddscanner.entities.Sealife;
+import com.ddscanner.entities.errors.Field;
+import com.ddscanner.entities.errors.ValidationError;
 import com.ddscanner.entities.request.RegisterRequest;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.google.gson.JsonElement;
@@ -173,7 +175,6 @@ public class Helpers {
     }
 
 
-
     /**
      * Change key-value params to value-keys to using this in spinners
      *
@@ -225,6 +226,29 @@ public class Helpers {
         } catch (JsonSyntaxException exception) {
             LogUtils.i(TAG, "errors: " + errors);
             exception.printStackTrace();
+        }
+    }
+
+    /**
+     * Handling errors and showing this in textviews
+     *
+     * @param errorsMap
+     * @param validationError
+     */
+    public static void errorHandling(Map<String, TextView> errorsMap, ValidationError validationError) {
+        for (Field field : validationError.getFields()) {
+            if ("token".equals(field.getName())) {
+                return;
+            }
+            if ("lat".equals(field.getName()) || "lng".equals(field.getName())) {
+                errorsMap.get("location").setVisibility(View.VISIBLE);
+                errorsMap.get("location").setText("Please choose location");
+            }
+            if (errorsMap.get(field.getName()) != null) {
+                String key = field.getName();
+                errorsMap.get(key).setVisibility(View.VISIBLE);
+                errorsMap.get(key).setText(field.getErrors().toString().replace("[", "").replace("]", ""));
+            }
         }
     }
 
@@ -475,7 +499,7 @@ public class Helpers {
         int itemsCount = Integer.parseInt(count);
         String returnedString = "";
         if (itemsCount > 999) {
-            return String.valueOf(itemsCount/1000) + "K";
+            return String.valueOf(itemsCount / 1000) + "K";
         } else {
             return count;
         }
@@ -484,7 +508,7 @@ public class Helpers {
     public static void hideKeyboard(Activity context) {
         View view = context.getCurrentFocus();
         if (view != null) {
-            InputMethodManager imm = (InputMethodManager)context.getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }

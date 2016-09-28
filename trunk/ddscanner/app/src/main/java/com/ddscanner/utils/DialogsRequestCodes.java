@@ -55,6 +55,10 @@ public class DialogsRequestCodes {
     public static final int DRC_SEARCH_ACTIVITY_FAILED_TO_CONNECT = 1901;
     public static final int DRC_SEARCH_ACTIVITY_UNEXPECTED_ERROR = 1902;
 
+    //ForeignProfileActivity
+    public static final int DRC_FOREIGN_PROFILE_ACTIVITY_FAILED_TO_CONNECT = 2001;
+    public static final int DRC_FOREIGN_PROFILE_ACTIVITY_UNKNOWN_ERROR = 2002;
+    
     // AddDiveSpotActivity
     public static final int DRC_ADD_DIVE_SPOT_ACTIVITY_CONNECTION_ERROR = 2301;
     public static final int DRC_ADD_DIVE_SPOT_ACTIVITY_UNEXPECTED_ERROR = 2302;

@@ -13,6 +13,7 @@ import com.ddscanner.entities.ForeignUserDislikesWrapper;
 import com.ddscanner.entities.ForeignUserLikeWrapper;
 import com.ddscanner.entities.RegisterResponse;
 import com.ddscanner.entities.SignInType;
+import com.ddscanner.entities.User;
 import com.ddscanner.entities.request.IdentifyRequest;
 import com.ddscanner.entities.request.RegisterRequest;
 import com.ddscanner.entities.request.ReportRequest;
@@ -168,6 +169,19 @@ public class DDScannerRestClient {
         });
     }
 
+    public void getUserInformation(String userId, final ResultListener<User> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserInfo(userId, getUserQueryMapRequest());
+        call.enqueue(new ResponseEntityCallback<User>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<User> resultListener, String responseString) throws JSONException {
+                JSONObject jsonObject = new JSONObject(responseString);
+                responseString = jsonObject.getString("user");
+                User user = new Gson().fromJson(responseString, User.class);
+                resultListener.onSuccess(user);
+            }
+        });
+    }
+
     public void postValidateDiveSpot(String diveSpotId, boolean isValid, @NonNull final ResultListener<Void> resultListener) {
         ValidationRequest validationRequest = new ValidationRequest();
         validationRequest.setSocial(SharedPreferenceHelper.getSn());
@@ -251,8 +265,15 @@ public class DDScannerRestClient {
         });
     }
 
-    public void postAddDiveSpot(@NonNull final ResultListener<DiveSpot> resultListener) {
-        final Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getFilters();
+    public void postAddDiveSpot(@NonNull final ResultListener<DiveSpot> resultListener, List<MultipartBody.Part> sealife, List<MultipartBody.Part> images, RequestBody... requestBodies) {
+        if (requestBodies.length != 13) {
+            throw new RuntimeException("RequestBody parameters count must be 13");
+        }
+        final Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().addDiveSpot(
+                requestBodies[0], requestBodies[1], requestBodies[2], requestBodies[3], requestBodies[4], requestBodies[5],
+                requestBodies[6], requestBodies[7], requestBodies[8], requestBodies[9],
+                sealife, images, requestBodies[10], requestBodies[11], requestBodies[12]
+        );
         call.enqueue(new ResponseEntityCallback<DiveSpot>(gson, resultListener) {
             @Override
             void handleResponseString(ResultListener<DiveSpot> resultListener, String responseString) throws JSONException {

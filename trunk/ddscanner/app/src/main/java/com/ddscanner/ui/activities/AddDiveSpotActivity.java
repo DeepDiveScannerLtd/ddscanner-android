@@ -43,6 +43,7 @@ import com.ddscanner.entities.errors.NotFoundException;
 import com.ddscanner.entities.errors.ServerInternalErrorException;
 import com.ddscanner.entities.errors.UnknownErrorException;
 import com.ddscanner.entities.errors.UserNotFoundException;
+import com.ddscanner.entities.errors.ValidationError;
 import com.ddscanner.entities.errors.ValidationErrorException;
 import com.ddscanner.events.ImageDeletedEvent;
 import com.ddscanner.rest.BaseCallbackOld;
@@ -143,6 +144,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     private DDScannerRestClient.ResultListener<FiltersResponseEntity> filtersResultListener = new DDScannerRestClient.ResultListener<FiltersResponseEntity>() {
         @Override
         public void onSuccess(FiltersResponseEntity result) {
+            filters = result;
             setSpinnerValues(objectSpinner, filters.getObject(), "");
             setSpinnerValues(levelSpinner, filters.getLevel(), "");
             setSpinnerValues(currentsSpinner, filters.getCurrents(), "");
@@ -157,6 +159,38 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             EventsTracker.trackUnknownServerError(url, errorMessage);
             InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_unexpected_error, R.string.error_connection_failed, DialogsRequestCodes.DRC_ADD_DIVE_SPOT_ACTIVITY_UNEXPECTED_ERROR, false);
+        }
+    };
+
+    private DDScannerRestClient.ResultListener<DiveSpot> addDiveSpotResultListener = new DDScannerRestClient.ResultListener<DiveSpot>() {
+        @Override
+        public void onSuccess(DiveSpot diveSpot) {
+            progressDialogUpload.dismiss();
+            EventsTracker.trackDivespotCreated();
+            showSuccessDialog(String.valueOf(diveSpot.getId()));
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            progressDialogUpload.dismiss();
+            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            progressDialogUpload.dismiss();
+            switch (errorType) {
+                case USER_NOT_FOUND_ERROR_C801:
+                    SharedPreferenceHelper.logout();
+                    LoginActivity.showForResult(AddDiveSpotActivity.this, ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_LOGIN_TO_SEND);
+                    break;
+                case UNPROCESSABLE_ENTITY_ERROR_422:
+                    Helpers.errorHandling(errorsMap, (ValidationError) errorData);
+                    break;
+                case SERVER_INTERNAL_ERROR_500:
+                default:
+                    Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);
+            }
         }
     };
 
@@ -272,7 +306,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
             case ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_SEALIFE:
                 Helpers.hideKeyboard(this);
                 if (resultCode == RESULT_OK) {
-                    Sealife sealife =(Sealife) data.getSerializableExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_SEALIFE);
+                    Sealife sealife = (Sealife) data.getSerializableExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_SEALIFE);
 
                     if (Helpers.checkIsSealifeAlsoInList((ArrayList<Sealife>) sealifes, sealife.getId())) {
                         Helpers.showToast(AddDiveSpotActivity.this, R.string.sealife_already_added);
@@ -286,7 +320,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_LOGIN_TO_SEND:
                 if (resultCode == RESULT_OK) {
-                    createAddDiveSpotRequest();
+                    makeAddDiveSpotRequest();
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_LOGIN_TO_GET_DATA:
@@ -311,88 +345,9 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         spinner.setAdapter(adapter);
     }
 
-    private void createAddDiveSpotRequest() {
+    private void makeAddDiveSpotRequest() {
         progressDialogUpload.show();
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().addDiveSpot(
-                requestName, requestLat, requestLng, requestDepth, requestMinVisibility, requestMaxVisibility,
-                requestCurrents, requestLevel, requestObject, requestDescription,
-                sealife, images, requestToken, requestSocial, requestSecret
-                );
-        call.enqueue(new BaseCallbackOld() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                Log.i(TAG, "success");
-                progressDialogUpload.dismiss();
-                if (!response.isSuccessful()) {
-                    String responseString = "";
-                    try {
-                        responseString = response.errorBody().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    LogUtils.i("response body is " + responseString);
-                    try {
-                        ErrorsParser.checkForError(response.code(), responseString);
-                    } catch (ServerInternalErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(AddDiveSpotActivity.this, R.string.toast_server_error);
-                    } catch (BadRequestException e) {
-                        // TODO Handle
-                        Helpers.showToast(AddDiveSpotActivity.this, R.string.toast_server_error);
-                    } catch (ValidationErrorException e) {
-                        // TODO Handle
-                        Helpers.errorHandling(AddDiveSpotActivity.this, errorsMap, responseString);
-                    } catch (NotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(AddDiveSpotActivity.this, R.string.toast_server_error);
-                    } catch (UnknownErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(AddDiveSpotActivity.this, R.string.toast_server_error);
-                    } catch (DiveSpotNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(AddDiveSpotActivity.this, R.string.toast_server_error);
-                    } catch (UserNotFoundException e) {
-                        // TODO Handle
-                        SharedPreferenceHelper.logout();
-                        LoginActivity.showForResult(AddDiveSpotActivity.this, ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_LOGIN_TO_SEND);
-                    } catch (CommentNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(AddDiveSpotActivity.this, R.string.toast_server_error);
-                    }
-                } else {
-                    if (response.raw().code() == 200) {
-                        String responseString = "";
-                        try {
-                            responseString = response.body().string();
-                            try {
-                                JSONObject jsonObject = new JSONObject(responseString);
-                                responseString = jsonObject.getString(Constants.ADD_DIVE_SPOT_ACTIVITY_DIVESPOT);
-                            } catch (JSONException e) {
-
-                            }
-                            EventsTracker.trackDivespotCreated();
-                            DiveSpot diveSpot = new Gson().fromJson(responseString, DiveSpot.class);
-                            showSuccessDialog(String.valueOf(diveSpot.getId()));
-                           // finish();
-                        } catch (IOException e) {
-
-                        }
-
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                super.onFailure(call, t);
-                progressDialogUpload.dismiss();
-            }
-
-            @Override
-            public void onConnectionFailure() {
-                DialogUtils.showConnectionErrorDialog(AddDiveSpotActivity.this);
-            }
-        });
+        DDScannerApplication.getDdScannerRestClient().postAddDiveSpot(addDiveSpotResultListener, sealife, images, requestName, requestLat, requestLng, requestDepth, requestMinVisibility, requestMaxVisibility, requestCurrents, requestLevel, requestObject, requestDescription, requestToken, requestSocial, requestSecret);
     }
 
     private void pickPhotoFromGallery() {
@@ -430,7 +385,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                 break;
             case R.id.button_create:
 //                if (SharedPreferenceHelper.isUserLoggedIn()) {
-                    createRequestBodyies();
+                createRequestBodyies();
 //                } else {
 //                    Intent loginIntent = new Intent(this, SocialNetworks.class);
 //                    startActivityForResult(loginIntent, ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_LOGIN);
@@ -512,7 +467,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         } else {
             images = null;
         }
-        createAddDiveSpotRequest();
+        makeAddDiveSpotRequest();
     }
 
     @Override
