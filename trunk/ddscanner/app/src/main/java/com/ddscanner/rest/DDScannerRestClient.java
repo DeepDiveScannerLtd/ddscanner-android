@@ -138,6 +138,16 @@ public class DDScannerRestClient {
         });
     }
 
+    public void postReportImage(String imageName, String reportName, String reportDescription, final ResultListener<Void> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().reportImage(getReportRequest(reportName, reportDescription, imageName));
+        call.enqueue(new NoResponseEntityCallback(gson, resultListener));
+    }
+
+    public void deleteImage(String imageName, final ResultListener<Void> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().deleteImage(imageName, getUserQueryMapRequest());
+        call.enqueue(new NoResponseEntityCallback(gson, resultListener));
+    }
+
     public void postValidateDiveSpot(String diveSpotId, boolean isValid, @NonNull final ResultListener<Void> resultListener) {
         ValidationRequest validationRequest = new ValidationRequest();
         validationRequest.setSocial(SharedPreferenceHelper.getSn());
@@ -214,6 +224,17 @@ public class DDScannerRestClient {
         ReportRequest reportRequest = new ReportRequest();
         reportRequest.setType(reportType);
         reportRequest.setDescription(reportDescription);
+        if (!SharedPreferenceHelper.getToken().isEmpty()) {
+            reportRequest.setSocial(SharedPreferenceHelper.getSn());
+            reportRequest.setToken(SharedPreferenceHelper.getToken());
+        }
+        return reportRequest;
+    }
+    private ReportRequest getReportRequest(String reportType, String reportDescription, String imageName) {
+        ReportRequest reportRequest = new ReportRequest();
+        reportRequest.setType(reportType);
+        reportRequest.setDescription(reportDescription);
+        reportRequest.setName(imageName);
         if (!SharedPreferenceHelper.getToken().isEmpty()) {
             reportRequest.setSocial(SharedPreferenceHelper.getSn());
             reportRequest.setToken(SharedPreferenceHelper.getToken());

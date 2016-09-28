@@ -22,8 +22,10 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
+import com.ddscanner.entities.DiveSpotDetails;
 import com.ddscanner.entities.FiltersResponseEntity;
 import com.ddscanner.entities.Image;
+import com.ddscanner.entities.PhotoOpenedSource;
 import com.ddscanner.entities.errors.BadRequestException;
 import com.ddscanner.entities.errors.CommentNotFoundException;
 import com.ddscanner.entities.errors.DiveSpotNotFoundException;
@@ -34,13 +36,16 @@ import com.ddscanner.entities.errors.UserNotFoundException;
 import com.ddscanner.entities.errors.ValidationErrorException;
 import com.ddscanner.entities.request.ReportRequest;
 import com.ddscanner.rest.BaseCallbackOld;
+import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.SliderImagesAdapter;
+import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.ui.views.SimpleGestureFilter;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogUtils;
+import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
@@ -60,7 +65,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ImageSliderActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener, View.OnClickListener, SimpleGestureFilter.SimpleGestureListener{
+public class ImageSliderActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener, View.OnClickListener, SimpleGestureFilter.SimpleGestureListener, InfoDialogFragment.DialogClosedListener {
 
     private LinearLayout pager_indicator;
     private int dotsCount = 0;
@@ -86,8 +91,122 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     private String deleteImageName;
     private MaterialDialog materialDialog;
     private SimpleGestureFilter detector;
-    float x1,x2;
+    private String diveSpotId;
+    float x1, x2;
     float y1, y2;
+    PhotoOpenedSource photoOpenedSource;
+
+    private DDScannerRestClient.ResultListener<DiveSpotDetails> imagesResulListener = new DDScannerRestClient.ResultListener<DiveSpotDetails>() {
+        @Override
+        public void onSuccess(DiveSpotDetails result) {
+            switch (photoOpenedSource) {
+                case ALL:
+                    images =Helpers.compareObjectsArray((ArrayList<Image>) result.getDivespot().getImages(), (ArrayList<Image>) result.getDivespot().getCommentImages());
+                    break;
+                case DIVESPOT:
+                    images = (ArrayList<Image>) result.getDivespot().getImages();
+                    break;
+                case REVIEWS:
+                    images = (ArrayList<Image>) result.getDivespot().getCommentImages();
+                    break;
+            }
+            changeUiAccrodingPosition(position);
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_IMAGE_SLIDER_ACTIVITY_FAILED_TO_CONNECT, false);
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            EventsTracker.trackUnknownServerError(url, errorMessage);
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_IMAGE_SLIDER_ACTIVITY_FAILED_TO_CONNECT, false);
+        }
+    };
+
+    private DDScannerRestClient.ResultListener<Void> reportImageRequestListener = new DDScannerRestClient.ResultListener<Void>() {
+        @Override
+        public void onSuccess(Void result) {
+            materialDialog.dismiss();
+            EventsTracker.trackDiveSpotphotoReportSent();
+            Toast.makeText(ImageSliderActivity.this, R.string.report_sent, Toast.LENGTH_SHORT).show();
+            imageDeleted(ImageSliderActivity.this.position);
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            materialDialog.dismiss();
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_IMAGE_SLIDER_ACTIVITY_FAILED_TO_CONNECT, false);
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            materialDialog.dismiss();
+            switch (errorType) {
+                case BAD_REQUEST_ERROR_400:
+                     InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_message_you_cannot_report_self_photo, true);
+                    break;
+                case USER_NOT_FOUND_ERROR_C801:
+                    SharedPreferenceHelper.logout();
+                    SocialNetworks.showForResult(ImageSliderActivity.this, ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_REPORT);
+                    break;
+                default:
+                    EventsTracker.trackUnknownServerError(url, errorMessage);
+                    InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, true);
+                    break;
+            }
+        }
+    };
+
+    private DDScannerRestClient.ResultListener<Void> deleteImageRequestistener = new DDScannerRestClient.ResultListener<Void>() {
+        @Override
+        public void onSuccess(Void result) {
+            materialDialog.dismiss();
+            imageDeleted(ImageSliderActivity.this.position);
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            materialDialog.dismiss();
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_IMAGE_SLIDER_ACTIVITY_FAILED_TO_CONNECT, false);
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            materialDialog.dismiss();
+            switch (errorType) {
+                case BAD_REQUEST_ERROR_400:
+                    break;
+                case USER_NOT_FOUND_ERROR_C801:
+                    SharedPreferenceHelper.logout();
+                    SocialNetworks.showForResult(ImageSliderActivity.this, ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_DELETE);
+                    break;
+                default:
+                    EventsTracker.trackUnknownServerError(url, errorMessage);
+                    InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, true);
+                    break;
+            }
+        }
+    };
+
+    private DDScannerRestClient.ResultListener<FiltersResponseEntity> filtersResponseEntityResultListener = new DDScannerRestClient.ResultListener<FiltersResponseEntity>() {
+        @Override
+        public void onSuccess(FiltersResponseEntity result) {
+            filters = result;
+            options.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_IMAGE_SLIDER_ACTIVITY_FAILED_TO_CONNECT, false);
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_IMAGE_SLIDER_ACTIVITY_CONNECTION_FAILURE_GET_REPORT_TYPES, false);
+        }
+    };
 
 
     @Override
@@ -95,18 +214,20 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_slider);
         findViews();
-        detector = new SimpleGestureFilter(this,this);
+        detector = new SimpleGestureFilter(this, this);
         materialDialog = Helpers.getMaterialDialog(this);
-        getReportsTypes();
+        DDScannerApplication.getDdScannerRestClient().getReportTypes(filtersResponseEntityResultListener);
         Bundle bundle = getIntent().getExtras();
         images = bundle.getParcelableArrayList("IMAGES");
         position = getIntent().getIntExtra("position", 0);
         path = getIntent().getStringExtra("path");
+        diveSpotId = getIntent().getStringExtra("divespotid");
+        photoOpenedSource = (PhotoOpenedSource) getIntent().getSerializableExtra("source");
         viewPager.addOnPageChangeListener(this);
         sliderImagesAdapter = new SliderImagesAdapter(getFragmentManager(), images);
         viewPager.setAdapter(sliderImagesAdapter);
         close.setOnClickListener(this);
-        options.setVisibility(View.VISIBLE);
+//        options.setVisibility(View.VISIBLE);
         changeUiAccrodingPosition(position);
         setUi();
 
@@ -155,7 +276,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         dotsCount = sliderImagesAdapter.getCount();
         dots = new ImageView[dotsCount];
         pager_indicator.removeAllViews();
-        for (int i=0; i < dotsCount; i++) {
+        for (int i = 0; i < dotsCount; i++) {
             dots[i] = new ImageView(this);
             dots[i].setImageDrawable(ContextCompat.getDrawable(this, R.drawable.nonselecteditem_dot));
 
@@ -164,9 +285,9 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
                     LinearLayout.LayoutParams.WRAP_CONTENT
             );
 
-            params.setMargins(4,0,4,0);
+            params.setMargins(4, 0, 4, 0);
 
-            pager_indicator.addView(dots[i],  params);
+            pager_indicator.addView(dots[i], params);
         }
         dots[position].setImageDrawable(ContextCompat.getDrawable(this, R.drawable.selecteditem_dot));
         viewPager.setCurrentItem(position);
@@ -180,8 +301,6 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
                 break;
         }
     }
-
-
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -238,11 +357,13 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         popup.show();
     }
 
-    public static void showForResult(Activity context, ArrayList<Image> images, int position, String path, int requestCode) {
+    public static void showForResult(Activity context, ArrayList<Image> images, int position, String path, int requestCode, String diveSpotId, PhotoOpenedSource photoOpenedSource) {
         Intent intent = new Intent(context, ImageSliderActivity.class);
         intent.putParcelableArrayListExtra("IMAGES", images);
         intent.putExtra("position", position);
         intent.putExtra("path", path);
+        intent.putExtra("divespotid", diveSpotId);
+        intent.putExtra("source", photoOpenedSource);
         context.startActivityForResult(intent, requestCode);
     }
 
@@ -294,58 +415,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     private void deleteImage(String name) {
         isChanged = true;
         materialDialog.show();
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().deleteImage(name, Helpers.getUserQuryMapRequest());
-        call.enqueue(new BaseCallbackOld() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                materialDialog.dismiss();
-                if (response.isSuccessful()) {
-                    imageDeleted(ImageSliderActivity.this.position);
-                }
-                if (!response.isSuccessful()) {
-                    String responseString = "";
-                    try {
-                        responseString = response.errorBody().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    LogUtils.i("response body is " + responseString);
-                    try {
-                        ErrorsParser.checkForError(response.code(), responseString);
-                    } catch (ServerInternalErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
-                    } catch (BadRequestException e) {
-                        // TODO Handle
-                        Helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
-                    } catch (ValidationErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
-                    } catch (NotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
-                    } catch (UnknownErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
-                    } catch (DiveSpotNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
-                    } catch (UserNotFoundException e) {
-                        // TODO Handle
-                        SharedPreferenceHelper.logout();
-                        SocialNetworks.showForResult(ImageSliderActivity.this, ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_DELETE);
-                    } catch (CommentNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
-                    }
-                }
-            }
-
-            @Override
-            public void onConnectionFailure() {
-                DialogUtils.showConnectionErrorDialog(ImageSliderActivity.this);
-            }
-        });
+        DDScannerApplication.getDdScannerRestClient().deleteImage(name, deleteImageRequestistener);
     }
 
     @Override
@@ -366,15 +436,16 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         switch (requestCode) {
             case ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_REPORT:
                 if (resultCode == RESULT_OK) {
+                    setResult(RESULT_OK);
                     reportImage(reportName, reportType, reportDescription);
+                    DDScannerApplication.getDdScannerRestClient().getDiveSpotPhotos(diveSpotId, imagesResulListener);
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_DELETE:
                 if (resultCode == RESULT_OK) {
+                    setResult(RESULT_OK);
                     deleteImage(deleteImageName);
-                }
-                if (resultCode == RESULT_CANCELED) {
-
+                    DDScannerApplication.getDdScannerRestClient().getDiveSpotPhotos(diveSpotId, imagesResulListener);
                 }
                 break;
         }
@@ -384,101 +455,13 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     private void reportImage(String imageName, String reportType, String reportDescription) {
         isChanged = true;
         materialDialog.show();
-        ReportRequest reportRequest = new ReportRequest();
         if (!SharedPreferenceHelper.isUserLoggedIn() || SharedPreferenceHelper.getToken().isEmpty() || SharedPreferenceHelper.getSn().isEmpty()) {
             SocialNetworks.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_REPORT);
             return;
         }
-        reportRequest.setName(imageName);
-        reportRequest.setType(reportType);
-        if (reportDescription != null) {
-            reportRequest.setDescription(reportDescription);
-        }
-        reportRequest.setSocial(SharedPreferenceHelper.getSn());
-        reportRequest.setToken(SharedPreferenceHelper.getToken());
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().reportImage(reportRequest);
-        call.enqueue(new BaseCallbackOld() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                materialDialog.dismiss();
-                if (response.isSuccessful()) {
-                    EventsTracker.trackDiveSpotphotoReportSent();
-                    Toast.makeText(ImageSliderActivity.this, R.string.report_sent, Toast.LENGTH_SHORT).show();
-                    imageDeleted(ImageSliderActivity.this.position);
-                }
-                if (!response.isSuccessful()) {
-                    String responseString = "";
-                    try {
-                        responseString = response.errorBody().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    LogUtils.i("response body is " + responseString);
-                    try {
-                        ErrorsParser.checkForError(response.code(), responseString);
-                    } catch (ServerInternalErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
-                    } catch (BadRequestException e) {
-                        // TODO Handle
-                        Helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
-                    } catch (ValidationErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
-                    } catch (NotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
-                    } catch (UnknownErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
-                    } catch (DiveSpotNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
-                    } catch (UserNotFoundException e) {
-                        // TODO Handle
-                        SharedPreferenceHelper.logout();
-                        SocialNetworks.showForResult(ImageSliderActivity.this, ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_REPORT);
-                    } catch (CommentNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(ImageSliderActivity.this, R.string.toast_server_error);
-                    }
-                }
-            }
-
-            @Override
-            public void onConnectionFailure() {
-                DialogUtils.showConnectionErrorDialog(ImageSliderActivity.this);
-            }
-        });
+       DDScannerApplication.getDdScannerRestClient().postReportImage(imageName, reportType, reportDescription, reportImageRequestListener);
     }
 
-    private void getReportsTypes() {
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getFilters();
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    String responseString = "";
-                    try {
-                        responseString = response.body().string();
-                    } catch (IOException e) {
-
-                    }
-                    JsonParser parser = new JsonParser();
-                    JsonObject jsonObject = parser.parse(responseString).getAsJsonObject();
-                    JsonObject currentsJsonObject = jsonObject.getAsJsonObject(Constants.FILTERS_VALUE_REPORT);
-                    for (Map.Entry<String, JsonElement> elementEntry : currentsJsonObject.entrySet()) {
-                        filters.getReport().put(elementEntry.getKey(), elementEntry.getValue().getAsString());
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-            }
-        });
-    }
 
     public void showReportDialog() {
         List<String> objects = new ArrayList<String>();
@@ -523,16 +506,13 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
 
     @Override
     public boolean onTouchEvent(MotionEvent touchevent) {
-        switch (touchevent.getAction())
-        {
-            case MotionEvent.ACTION_DOWN:
-            {
+        switch (touchevent.getAction()) {
+            case MotionEvent.ACTION_DOWN: {
                 x1 = touchevent.getX();
                 y1 = touchevent.getY();
                 break;
             }
-            case MotionEvent.ACTION_UP:
-            {
+            case MotionEvent.ACTION_UP: {
                 x2 = touchevent.getX();
                 y2 = touchevent.getY();
                 break;
@@ -542,18 +522,19 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     }
 
     @Override
-    public boolean dispatchTouchEvent(MotionEvent me){
+    public boolean dispatchTouchEvent(MotionEvent me) {
         // Call onTouchEvent of SimpleGestureFilter class
         this.detector.onTouchEvent(me);
         return super.dispatchTouchEvent(me);
     }
+
     @Override
     public void onSwipe(int direction) {
         String str = "";
 
         switch (direction) {
             case SimpleGestureFilter.SWIPE_DOWN:
-               // onBackPressed();
+                // onBackPressed();
                 break;
             case SimpleGestureFilter.SWIPE_UP:
                 onBackPressed();
@@ -567,4 +548,13 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
 
     }
 
+    @Override
+    public void onDialogClosed(int requestCode) {
+        switch (requestCode) {
+            case DialogsRequestCodes.DRC_IMAGE_SLIDER_ACTIVITY_FAILED_TO_CONNECT:
+            case DialogsRequestCodes.DRC_IMAGE_SLIDER_ACTIVITY_CONNECTION_FAILURE_GET_REPORT_TYPES:
+                finish();
+                break;
+        }
+    }
 }
