@@ -53,7 +53,7 @@ public class DialogsRequestCodes {
     
     // SearchActivity
     public static final int DRC_SEARCH_ACTIVITY_FAILED_TO_CONNECT = 1901;
-    public static final int DRC_SEARCH_ACTIVITY_UNKNOWN_ERROR = 1902;
+    public static final int DRC_SEARCH_ACTIVITY_UNEXPECTED_ERROR = 1902;
 
     //ForeignProfileActivity
     public static final int DRC_FOREIGN_PROFILE_ACTIVITY_FAILED_TO_CONNECT = 2001;
@@ -62,7 +62,10 @@ public class DialogsRequestCodes {
     //SelfCommentsActivity
     public static final int DRC_SELF_COMMENTS_ACTIVITY_FAILED_TO_CONNECT = 2101;
     public static final int DRC_SELF_COMMENTS_ACTIVITY_UNKNOWN_ERROR = 2102;
-    public static final int DRC_SELF_COMMENTS_ACTIVITY_COMMENT_NOT_FOUND = 2103;
+       public static final int DRC_SELF_COMMENTS_ACTIVITY_COMMENT_NOT_FOUND = 2103;
+// AddDiveSpotActivity
+    public static final int DRC_ADD_DIVE_SPOT_ACTIVITY_CONNECTION_ERROR = 2301;
+    public static final int DRC_ADD_DIVE_SPOT_ACTIVITY_UNEXPECTED_ERROR = 2302;
 
     // LeaveReviewActivity
     public static final int DRC_LEAVE_REVIEW_ACTIVITY_FAILED_TO_CONNECT = 2401;
