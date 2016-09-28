@@ -19,8 +19,11 @@ import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.gson.Gson;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 
@@ -146,6 +149,17 @@ public class DDScannerRestClient {
     public void deleteImage(String imageName, final ResultListener<Void> resultListener) {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().deleteImage(imageName, getUserQueryMapRequest());
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
+    }
+
+    public void getDiveSpotsByParameters(RequestBody name, List<MultipartBody.Part> like, RequestBody order, RequestBody sort, RequestBody limit, List<MultipartBody.Part> select, final ResultListener<DivespotsWrapper> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDivespotsByParameters(name, like, order, sort, limit, select);
+        call.enqueue(new ResponseEntityCallback<DivespotsWrapper>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<DivespotsWrapper> resultListener, String responseString) {
+                DivespotsWrapper divespotsWrapper = new Gson().fromJson(responseString, DivespotsWrapper.class);
+                resultListener.onSuccess(divespotsWrapper);
+            }
+        });
     }
 
     public void postValidateDiveSpot(String diveSpotId, boolean isValid, @NonNull final ResultListener<Void> resultListener) {

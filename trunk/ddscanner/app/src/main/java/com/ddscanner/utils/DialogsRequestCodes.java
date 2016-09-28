@@ -44,4 +44,8 @@ public class DialogsRequestCodes {
     //SplashActivity
     public static final int DRC_SPLASH_ACTIVITY_FAILED_TO_CONNECT = 1701;
     public static final int DRC_SPLASH_ACTIVITY_UNEXPECTED_ERROR = 1702;
+
+    //SearchActivity
+    public static final int DRC_SEARCH_ACTIVITY_FAILED_TO_CONNECT = 1901;
+    public static final int DRC_SEARCH_ACTIVITY_UNKNOWN_ERROR = 1902;
 }
