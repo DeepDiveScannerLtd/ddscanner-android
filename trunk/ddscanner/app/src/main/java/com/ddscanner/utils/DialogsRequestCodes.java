@@ -63,4 +63,9 @@ public class DialogsRequestCodes {
     public static final int DRC_SELF_COMMENTS_ACTIVITY_FAILED_TO_CONNECT = 2101;
     public static final int DRC_SELF_COMMENTS_ACTIVITY_UNKNOWN_ERROR = 2102;
     public static final int DRC_SELF_COMMENTS_ACTIVITY_COMMENT_NOT_FOUND = 2103;
+
+    // LeaveReviewActivity
+    public static final int DRC_LEAVE_REVIEW_ACTIVITY_FAILED_TO_CONNECT = 2401;
+    public static final int DRC_LEAVE_REVIEW_ACTIVITY_UNKNOWN_ERROR = 2402;
+
 }

@@ -37,12 +37,15 @@ import com.ddscanner.entities.errors.UserNotFoundException;
 import com.ddscanner.entities.errors.ValidationErrorException;
 import com.ddscanner.events.ImageDeletedEvent;
 import com.ddscanner.rest.BaseCallbackOld;
+import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.AddPhotoToDsListAdapter;
+import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogUtils;
+import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
@@ -96,6 +99,33 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
     private int maxPhotos = 3;
 
     private EventsTracker.SendReviewSource sendReviewSource;
+
+    private DDScannerRestClient.ResultListener<Void> commentAddedResultListener = new DDScannerRestClient.ResultListener<Void>() {
+        @Override
+        public void onSuccess(Void result) {
+            setResult(RESULT_OK);
+            finish();
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            switch (errorType) {
+                case USER_NOT_FOUND_ERROR_C801:
+                    SharedPreferenceHelper.logout();
+                    LoginActivity.showForResult(LeaveReviewActivity.this, ActivitiesRequestCodes.REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_LOGIN);
+                    break;
+                case UNPROCESSABLE_ENTITY_ERROR_422:
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -203,10 +233,6 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
                     SharedPreferenceHelper.getSn());
             requessToken = RequestBody.create(MediaType.parse("multipart/form-data"),
                     SharedPreferenceHelper.getToken());
-            if (SharedPreferenceHelper.getSn().equals("tw")) {
-                requestSecret = RequestBody.create(MediaType.parse("multipart/form-data"),
-                        SharedPreferenceHelper.getSecret());
-            }
         }
 
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().addCommentToDiveSpot(
@@ -215,8 +241,7 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
                 requestRating,
                 images,
                 requessToken,
-                requestSocial,
-                requestSecret
+                requestSocial
         );
         call.enqueue(new BaseCallbackOld() {
             @Override
