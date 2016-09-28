@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.Image;
+import com.ddscanner.entities.PhotoOpenedSource;
 import com.ddscanner.ui.activities.ImageSliderActivity;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Helpers;
@@ -26,12 +27,14 @@ public class AllPhotosDiveSpotAdapter extends RecyclerView.Adapter<AllPhotosDive
     private ArrayList<Image> images;
     private Activity context;
     private String diveSpotId;
+    private PhotoOpenedSource photoOpenedSource;
 
-    public AllPhotosDiveSpotAdapter(ArrayList<Image> photos, Activity context, String path, String diveSpotId) {
+    public AllPhotosDiveSpotAdapter(ArrayList<Image> photos, Activity context, String path, String diveSpotId, PhotoOpenedSource photoOpenedSource) {
         images = photos;
         this.context = context;
         this.path = path;
         this.diveSpotId = diveSpotId;
+        this.photoOpenedSource = photoOpenedSource;
     }
 
     @Override
@@ -73,7 +76,7 @@ public class AllPhotosDiveSpotAdapter extends RecyclerView.Adapter<AllPhotosDive
         @Override
         public void onClick(View v) {
             EventsTracker.trackDiveSpotPhotosView();
-            ImageSliderActivity.showForResult(context, images, getAdapterPosition(), path, ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_ACTIVITY_SLIDER, diveSpotId);
+            ImageSliderActivity.showForResult(context, images, getAdapterPosition(), path, ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_ACTIVITY_SLIDER, diveSpotId, photoOpenedSource);
         }
     }
 

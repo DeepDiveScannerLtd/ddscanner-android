@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 
 import com.ddscanner.R;
 import com.ddscanner.entities.Image;
+import com.ddscanner.entities.PhotoOpenedSource;
 import com.ddscanner.ui.adapters.AllPhotosDiveSpotAdapter;
 import com.ddscanner.utils.Helpers;
 
@@ -43,7 +44,7 @@ public class DiveSpotAllPhotosFragment extends Fragment {
         recyclerView = (RecyclerView) view.findViewById(R.id.photos);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(),3));
        // recyclerView.addItemDecoration(new GridSpacingItemDecoration(3));
-        recyclerView.setAdapter(new AllPhotosDiveSpotAdapter(images, getActivity(), path, diveSpotId));
+        recyclerView.setAdapter(new AllPhotosDiveSpotAdapter(images, getActivity(), path, diveSpotId, PhotoOpenedSource.ALL));
         return view;
     }
 
@@ -71,6 +72,6 @@ public class DiveSpotAllPhotosFragment extends Fragment {
             this.images = images;
             return;
         }
-        recyclerView.setAdapter(new AllPhotosDiveSpotAdapter(images, getActivity(), path, this.diveSpotId));
+        recyclerView.setAdapter(new AllPhotosDiveSpotAdapter(images, getActivity(), path, this.diveSpotId, PhotoOpenedSource.ALL));
     }
 }

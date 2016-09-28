@@ -25,6 +25,7 @@ import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.DiveSpotDetails;
 import com.ddscanner.entities.FiltersResponseEntity;
 import com.ddscanner.entities.Image;
+import com.ddscanner.entities.PhotoOpenedSource;
 import com.ddscanner.entities.errors.BadRequestException;
 import com.ddscanner.entities.errors.CommentNotFoundException;
 import com.ddscanner.entities.errors.DiveSpotNotFoundException;
@@ -93,11 +94,22 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     private String diveSpotId;
     float x1, x2;
     float y1, y2;
+    PhotoOpenedSource photoOpenedSource;
 
     private DDScannerRestClient.ResultListener<DiveSpotDetails> imagesResulListener = new DDScannerRestClient.ResultListener<DiveSpotDetails>() {
         @Override
         public void onSuccess(DiveSpotDetails result) {
-            images = (ArrayList<Image>) result.getDivespot().getImages();
+            switch (photoOpenedSource) {
+                case ALL:
+                    images =Helpers.compareObjectsArray((ArrayList<Image>) result.getDivespot().getImages(), (ArrayList<Image>) result.getDivespot().getCommentImages());
+                    break;
+                case DIVESPOT:
+                    images = (ArrayList<Image>) result.getDivespot().getImages();
+                    break;
+                case REVIEWS:
+                    images = (ArrayList<Image>) result.getDivespot().getCommentImages();
+                    break;
+            }
             changeUiAccrodingPosition(position);
         }
 
@@ -109,7 +121,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             EventsTracker.trackUnknownServerError(url, errorMessage);
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_IMAGE_SLIDER_ACTIVITY_FAILED_TO_CONNECT, false);
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_IMAGE_SLIDER_ACTIVITY_FAILED_TO_CONNECT, false);
         }
     };
 
@@ -133,13 +145,15 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
             materialDialog.dismiss();
             switch (errorType) {
                 case BAD_REQUEST_ERROR_400:
-                     InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_message_you_cannot_report_self_photo, false);
+                     InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_message_you_cannot_report_self_photo, true);
                     break;
                 case USER_NOT_FOUND_ERROR_C801:
                     SharedPreferenceHelper.logout();
                     SocialNetworks.showForResult(ImageSliderActivity.this, ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_REPORT);
                     break;
                 default:
+                    EventsTracker.trackUnknownServerError(url, errorMessage);
+                    InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, true);
                     break;
             }
         }
@@ -169,6 +183,8 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
                     SocialNetworks.showForResult(ImageSliderActivity.this, ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_DELETE);
                     break;
                 default:
+                    EventsTracker.trackUnknownServerError(url, errorMessage);
+                    InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, true);
                     break;
             }
         }
@@ -206,6 +222,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         position = getIntent().getIntExtra("position", 0);
         path = getIntent().getStringExtra("path");
         diveSpotId = getIntent().getStringExtra("divespotid");
+        photoOpenedSource = (PhotoOpenedSource) getIntent().getSerializableExtra("source");
         viewPager.addOnPageChangeListener(this);
         sliderImagesAdapter = new SliderImagesAdapter(getFragmentManager(), images);
         viewPager.setAdapter(sliderImagesAdapter);
@@ -340,12 +357,13 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         popup.show();
     }
 
-    public static void showForResult(Activity context, ArrayList<Image> images, int position, String path, int requestCode, String diveSpotId) {
+    public static void showForResult(Activity context, ArrayList<Image> images, int position, String path, int requestCode, String diveSpotId, PhotoOpenedSource photoOpenedSource) {
         Intent intent = new Intent(context, ImageSliderActivity.class);
         intent.putParcelableArrayListExtra("IMAGES", images);
         intent.putExtra("position", position);
         intent.putExtra("path", path);
         intent.putExtra("divespotid", diveSpotId);
+        intent.putExtra("source", photoOpenedSource);
         context.startActivityForResult(intent, requestCode);
     }
 
@@ -420,14 +438,14 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
                 if (resultCode == RESULT_OK) {
                     setResult(RESULT_OK);
                     reportImage(reportName, reportType, reportDescription);
-               //     DDScannerApplication.getDdScannerRestClient().getDiveSpotPhotos(diveSpotId, imagesResulListener);
+                    DDScannerApplication.getDdScannerRestClient().getDiveSpotPhotos(diveSpotId, imagesResulListener);
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_DELETE:
                 if (resultCode == RESULT_OK) {
                     setResult(RESULT_OK);
                     deleteImage(deleteImageName);
-              //      DDScannerApplication.getDdScannerRestClient().getDiveSpotPhotos(diveSpotId, imagesResulListener);
+                    DDScannerApplication.getDdScannerRestClient().getDiveSpotPhotos(diveSpotId, imagesResulListener);
                 }
                 break;
         }
