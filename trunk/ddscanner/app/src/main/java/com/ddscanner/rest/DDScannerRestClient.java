@@ -8,6 +8,7 @@ import com.ddscanner.entities.Comments;
 import com.ddscanner.entities.DiveSpot;
 import com.ddscanner.entities.DiveSpotDetails;
 import com.ddscanner.entities.DivespotsWrapper;
+import com.ddscanner.entities.EditDiveSpotWrapper;
 import com.ddscanner.entities.FiltersResponseEntity;
 import com.ddscanner.entities.ForeignUserDislikesWrapper;
 import com.ddscanner.entities.ForeignUserLikeWrapper;
@@ -19,6 +20,7 @@ import com.ddscanner.entities.request.RegisterRequest;
 import com.ddscanner.entities.request.ReportRequest;
 import com.ddscanner.entities.request.ValidationRequest;
 import com.ddscanner.utils.Constants;
+import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.gson.Gson;
 
@@ -310,6 +312,44 @@ public class DDScannerRestClient {
                 resultListener.onSuccess(filtersResponseEntity);
             }
         });
+    }
+
+    public void getDiveSpotForEdit(String diveSpotId, @NonNull final ResultListener<EditDiveSpotWrapper> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveSpotForEdit(diveSpotId, Helpers.getUserQuryMapRequest());
+        call.enqueue(new ResponseEntityCallback<EditDiveSpotWrapper>(gson, resultListener) {
+            @Override
+            void handleResponseString(DDScannerRestClient.ResultListener<EditDiveSpotWrapper> resultListener, String responseString) {
+                EditDiveSpotWrapper diveSpotDetailsWrapper = new Gson().fromJson(responseString, EditDiveSpotWrapper.class);
+                resultListener.onSuccess(diveSpotDetailsWrapper);
+            }
+        });
+    }
+
+    public void putUpdateDiveSpot(String diveSpotId, List<MultipartBody.Part> sealifeRequest, List<MultipartBody.Part> newImages, List<MultipartBody.Part> deletedImages, @NonNull final ResultListener<Void> resultListener, RequestBody... requestBodies) {
+        if (requestBodies.length != 14) {
+            throw new RuntimeException("RequestBody parameters count must be 14");
+        }
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().updateDiveSpot(
+                diveSpotId,
+                requestBodies[0],
+                requestBodies[1],
+                requestBodies[2],
+                requestBodies[3],
+                requestBodies[4],
+                requestBodies[5],
+                requestBodies[6],
+                requestBodies[7],
+                requestBodies[8],
+                requestBodies[9],
+                requestBodies[10],
+                sealifeRequest,
+                newImages,
+                deletedImages,
+                requestBodies[11],
+                requestBodies[12],
+                requestBodies[13]
+        );
+        call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 
     private ReportRequest getReportRequest(String reportType, String reportDescription) {
