@@ -33,6 +33,7 @@ import com.ddscanner.entities.SignInType;
 import com.ddscanner.events.ChangePageOfMainViewPagerEvent;
 import com.ddscanner.events.CloseInfoWindowEvent;
 import com.ddscanner.events.CloseListEvent;
+import com.ddscanner.events.GetNotificationsEvent;
 import com.ddscanner.events.InfowWindowOpenedEvent;
 import com.ddscanner.events.InternetConnectionClosedEvent;
 import com.ddscanner.events.ListOpenedEvent;
@@ -267,46 +268,49 @@ public class MainActivity extends BaseAppCompatActivity
 
     @Override
     public void onPageSelected(int position) {
-        if (position != 2) {
-            View view = this.getCurrentFocus();
-            if (view != null) {
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-            }
+        switch (position) {
+            case 0:
+                showSearchFilterMenuItems();
+                Helpers.hideKeyboard(this);
+                break;
+            case 1:
+                DDScannerApplication.bus.post(new GetNotificationsEvent());
+                hideSearchFilterMenuItems();
+                Helpers.hideKeyboard(this);
+                break;
+            case 2:
+                EventsTracker.trackUserProfileView();
+                hideSearchFilterMenuItems();
+                break;
         }
-        if (position != 0) {
-            menuItemsLayout.animate()
-                    .translationX(menuItemsLayout.getWidth())
-                    .alpha(0.0f)
-                    .setDuration(300)
-                    .setListener(new AnimatorListenerAdapter() {
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            super.onAnimationEnd(animation);
-                            menuItemsLayout.setVisibility(View.GONE);
-                        }
-                    });
-        } else {
-            menuItemsLayout.animate()
-                    .translationX(0)
-                    .alpha(1.0f)
-                    .setDuration(300)
-                    .setListener(new AnimatorListenerAdapter() {
-                        @Override
-                        public void onAnimationStart(Animator animation) {
-                            super.onAnimationStart(animation);
-                            menuItemsLayout.setVisibility(View.VISIBLE);
-                        }
-                    });
-        }
-        if (position == 2) {
-            EventsTracker.trackUserProfileView();
-        }
-//        if ((position == 2 || position == 1) && !SharedPreferenceHelper.isUserLoggedIn()) {
-//            positionToScroll = position;
-//            Intent intent = new Intent(MainActivity.this, SocialNetworks.class);
-//            startActivityForResult(intent, REQUEST_CODE_MAIN_ACTIVITY_LOGIN);
-//        }
+    }
+
+    private void showSearchFilterMenuItems() {
+        menuItemsLayout.animate()
+                .translationX(0)
+                .alpha(1.0f)
+                .setDuration(300)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+                        super.onAnimationStart(animation);
+                        menuItemsLayout.setVisibility(View.VISIBLE);
+                    }
+                });
+    }
+
+    private void hideSearchFilterMenuItems() {
+        menuItemsLayout.animate()
+                .translationX(menuItemsLayout.getWidth())
+                .alpha(0.0f)
+                .setDuration(300)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        menuItemsLayout.setVisibility(View.GONE);
+                    }
+                });
     }
 
     @Override
