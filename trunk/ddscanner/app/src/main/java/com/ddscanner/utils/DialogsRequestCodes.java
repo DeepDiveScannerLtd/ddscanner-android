@@ -99,4 +99,8 @@ public class DialogsRequestCodes {
     public static final int DRC_NOTIFICATIONS_FRAGMENT_FAILED_TO_CONNECT = 3301;
     public static final int DRC_NOTIFICATIONS_FRAGMENT_UNEXPECTED_ERROR = 3302;
 
+    //ProfileFragment
+    public static final int DRC_PROFILE_FRAGMENT_FAILED_TO_CONNECT = 3401;
+    public static final int DRC_PROFILE_FRAGMENT_UNEXPECTED_ERROR = 3402;
+
 }
