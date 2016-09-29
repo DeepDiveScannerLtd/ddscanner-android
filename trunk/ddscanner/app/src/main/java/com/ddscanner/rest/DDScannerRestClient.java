@@ -12,6 +12,7 @@ import com.ddscanner.entities.EditDiveSpotWrapper;
 import com.ddscanner.entities.FiltersResponseEntity;
 import com.ddscanner.entities.ForeignUserDislikesWrapper;
 import com.ddscanner.entities.ForeignUserLikeWrapper;
+import com.ddscanner.entities.Notifications;
 import com.ddscanner.entities.RegisterResponse;
 import com.ddscanner.entities.Sealife;
 import com.ddscanner.entities.SealifeResponseEntity;
@@ -322,6 +323,18 @@ public class DDScannerRestClient {
                 resultListener.onSuccess(filtersResponseEntity);
             }
         });
+    }
+
+    public void getUserNotifications(@NonNull final ResultListener<Notifications> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getNotifications(SharedPreferenceHelper.getUserServerId(), getUserQueryMapRequest());
+        call.enqueue(new ResponseEntityCallback<Notifications>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<Notifications> resultListener, String responseString) throws JSONException {
+                Notifications notifications = new Gson().fromJson(responseString, Notifications.class);
+                resultListener.onSuccess(notifications);
+            }
+        });
+
     }
 
     public void postAddDiveSpot(@NonNull final ResultListener<DiveSpot> resultListener, List<MultipartBody.Part> sealife, List<MultipartBody.Part> images, RequestBody... requestBodies) {

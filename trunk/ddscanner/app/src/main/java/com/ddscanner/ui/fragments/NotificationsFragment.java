@@ -29,6 +29,7 @@ import com.ddscanner.entities.errors.UserNotFoundException;
 import com.ddscanner.entities.errors.ValidationErrorException;
 import com.ddscanner.events.LoggedOutEvent;
 import com.ddscanner.rest.BaseCallbackOld;
+import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.activities.MainActivity;
@@ -65,6 +66,31 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
     private AllNotificationsFragment allNotificationsFragment = new AllNotificationsFragment();
     private ActivityNotificationsFragment activityNotificationsFragment = new ActivityNotificationsFragment();
     private boolean isViewNull = true;
+
+    private DDScannerRestClient.ResultListener<Notifications> notificationsResultListener = new DDScannerRestClient.ResultListener<Notifications>() {
+        @Override
+        public void onSuccess(Notifications result) {
+            notifications = result;
+            progressView.setVisibility(View.GONE);
+            notificationsViewPager.setVisibility(View.VISIBLE);
+            setData();
+        }
+
+        @Override
+        public void onConnectionFailure() {
+
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            switch (errorType) {
+                case USER_NOT_FOUND_ERROR_C801:
+                    SharedPreferenceHelper.logout();
+                    DDScannerApplication.bus.post(new LoggedOutEvent());
+                    break;
+            }
+        }
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -201,76 +227,7 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
     }
 
     private void getUserNotifications() {
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getNotifications(
-                SharedPreferenceHelper.getUserServerId(), Helpers.getUserQuryMapRequest());
-        call.enqueue(new BaseCallbackOld() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                String responseString = "";
-                if (response.isSuccessful()) {
-                    if (response.raw().code() == 200) {
-                        try {
-                            responseString = response.body().string();
-                            notifications = new Gson().fromJson(responseString, Notifications.class);
-//                            if (notifications.getActivities() != null) {
-//                                activities = notifications.getActivities();
-//                                activityNotificationsFragment.addList((ArrayList<Activity>) activities);
-//                            }
-//                            if (notifications.getNotifications() != null) {
-//                                allNotificationsFragment.addList((ArrayList<Notification>)
-//                                        notifications.getNotifications());
-//                            }
-                            progressView.setVisibility(View.GONE);
-                            notificationsViewPager.setVisibility(View.VISIBLE);
-
-                            setData();
-                        } catch (IOException e) {
-
-                        }
-                    }
-                }
-                if (!response.isSuccessful()) {
-                    try {
-                        responseString = response.errorBody().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    LogUtils.i("response body is " + responseString);
-                    try {
-                        ErrorsParser.checkForError(response.code(), responseString);
-                    } catch (ServerInternalErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(getContext(), R.string.toast_server_error);
-                    } catch (BadRequestException e) {
-                        // TODO Handle
-                        Helpers.showToast(getContext(), R.string.toast_server_error);
-                    } catch (ValidationErrorException e) {
-                        // TODO Handle
-                    } catch (NotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(getContext(), R.string.toast_server_error);
-                    } catch (UnknownErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(getContext(), R.string.toast_server_error);
-                    } catch (DiveSpotNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(getContext(), R.string.toast_server_error);
-                    } catch (UserNotFoundException e) {
-                        // TODO Handle
-                        SharedPreferenceHelper.logout();
-                        DDScannerApplication.bus.post(new LoggedOutEvent());
-                    } catch (CommentNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(getContext(), R.string.toast_server_error);
-                    }
-                }
-            }
-
-            @Override
-            public void onConnectionFailure() {
-                DialogUtils.showConnectionErrorDialog(getActivity());
-            }
-        });
+       DDScannerApplication.getDdScannerRestClient().getUserNotifications(notificationsResultListener);
     }
 
     private void setData() {
