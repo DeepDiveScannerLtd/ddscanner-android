@@ -210,11 +210,10 @@ public interface DDScannerRestService {
     @Multipart
     Call<ResponseBody> addImagesToDiveSpot(
             @Path("id") String id,
-            @Part("_method") RequestBody _method,
             @Part List<MultipartBody.Part> images,
+            @Part("_method") RequestBody _method,
             @Part("token") RequestBody token,
-            @Part("social") RequestBody sn,
-            @Part("secret") RequestBody secret
+            @Part("social") RequestBody sn
     );
 
     @GET("/diving/divespot/{id}/editors")
@@ -250,8 +249,7 @@ public interface DDScannerRestService {
             @Part List<MultipartBody.Part> images_new,
             @Part List<MultipartBody.Part> images_del,
             @Part("token") RequestBody token,
-            @Part("social") RequestBody sn,
-            @Part("secret") RequestBody secret
+            @Part("social") RequestBody sn
     );
 
     @POST("diving/divespot/comment/{id}/report")
