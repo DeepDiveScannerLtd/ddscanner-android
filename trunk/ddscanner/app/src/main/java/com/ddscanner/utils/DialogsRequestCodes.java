@@ -91,4 +91,8 @@ public class DialogsRequestCodes {
     public static final int DRC_FILTER_ACTIVITY_FAILED_TO_CONNECT = 3001;
     public static final int DRC_FILTER_ACTIVITY_UNEXPECTED_ERROR = 3002;
 
+    //SearchSealifeActivity
+    public static final int DRC_SEARCH_SEALIFE_ACTIVITY_FAILED_TO_CONNECT = 3101;
+    public static final int DRC_SEARCH_SEALIFE_ACTIVITY_UNEXPECTED_ERROR = 3102;
+
 }

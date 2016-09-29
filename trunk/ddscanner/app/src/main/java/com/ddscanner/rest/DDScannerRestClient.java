@@ -14,6 +14,7 @@ import com.ddscanner.entities.ForeignUserDislikesWrapper;
 import com.ddscanner.entities.ForeignUserLikeWrapper;
 import com.ddscanner.entities.RegisterResponse;
 import com.ddscanner.entities.Sealife;
+import com.ddscanner.entities.SealifeResponseEntity;
 import com.ddscanner.entities.SignInType;
 import com.ddscanner.entities.User;
 import com.ddscanner.entities.request.IdentifyRequest;
@@ -225,6 +226,17 @@ public class DDScannerRestClient {
                 responseString = jsonObject.getString(Constants.ADD_DIVE_SPOT_ACTIVITY_SEALIFE);
                 Sealife sealife = new Gson().fromJson(responseString, Sealife.class);
                 resultListener.onSuccess(sealife);
+            }
+        });
+    }
+
+    public void getAllSealifes(final ResultListener<SealifeResponseEntity> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getSealifes();
+        call.enqueue(new ResponseEntityCallback<SealifeResponseEntity>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<SealifeResponseEntity> resultListener, String responseString) throws JSONException {
+                SealifeResponseEntity sealifeResponseEntity = new Gson().fromJson(responseString, SealifeResponseEntity.class);
+                resultListener.onSuccess(sealifeResponseEntity);
             }
         });
     }
