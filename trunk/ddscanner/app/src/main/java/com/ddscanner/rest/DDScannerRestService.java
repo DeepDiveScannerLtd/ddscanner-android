@@ -250,8 +250,7 @@ public interface DDScannerRestService {
             @Part List<MultipartBody.Part> images_new,
             @Part List<MultipartBody.Part> images_del,
             @Part("token") RequestBody token,
-            @Part("social") RequestBody sn,
-            @Part("secret") RequestBody secret
+            @Part("social") RequestBody sn
     );
 
     @POST("diving/divespot/comment/{id}/report")

@@ -71,4 +71,8 @@ public class DialogsRequestCodes {
     public static final int DRC_LEAVE_REVIEW_ACTIVITY_FAILED_TO_CONNECT = 2401;
     public static final int DRC_LEAVE_REVIEW_ACTIVITY_UNKNOWN_ERROR = 2402;
 
+    //EditCommentActivity
+    public static final int DRC_EDIT_COMMENT_ACTIVITY_COMMENT_NOT_FOUND = 2601;
+
+
 }
