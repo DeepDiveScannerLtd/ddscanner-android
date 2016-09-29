@@ -37,27 +37,22 @@ import com.ddscanner.entities.FiltersResponseEntity;
 import com.ddscanner.entities.Sealife;
 import com.ddscanner.entities.errors.ValidationError;
 import com.ddscanner.events.ImageDeletedEvent;
-import com.ddscanner.rest.BaseCallbackOld;
 import com.ddscanner.rest.DDScannerRestClient;
-import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.AddPhotoToDsListAdapter;
 import com.ddscanner.ui.adapters.SealifeListAddingDiveSpotAdapter;
 import com.ddscanner.ui.adapters.SpinnerItemsAdapter;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
-import com.ddscanner.utils.DialogUtils;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.gson.Gson;
 import com.rey.material.widget.ProgressView;
 import com.rey.material.widget.Spinner;
 import com.squareup.otto.Subscribe;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -68,9 +63,6 @@ import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Response;
 
 public class EditDiveSpotActivity extends AppCompatActivity implements View.OnClickListener, InfoDialogFragment.DialogClosedListener {
 
@@ -146,7 +138,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
             addPhotoToDsListAdapter = new AddPhotoToDsListAdapter(imageUris, EditDiveSpotActivity.this, addPhotoTitle);
             diveSpotLocation = new LatLng(divespotDetails.getDivespot().getLat(),
                     divespotDetails.getDivespot().getLng());
-            loadFiltersDataRequest();
+            DDScannerApplication.getDdScannerRestClient().getFilters(getFiltersResultListener);
             setUi();
         }
 
@@ -219,6 +211,30 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
                     Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage, R.string.error_server_error_title, R.string.error_unexpected_error);
                     break;
             }
+        }
+    };
+
+    private DDScannerRestClient.ResultListener<FiltersResponseEntity> getFiltersResultListener = new DDScannerRestClient.ResultListener<FiltersResponseEntity>() {
+        @Override
+        public void onSuccess(FiltersResponseEntity result) {
+            progressView.setVisibility(View.GONE);
+            mainLayout.setVisibility(View.VISIBLE);
+
+            filters = result;
+            setSpinnerValues(objectSpinner, filters.getObject(), diveSpot.getObject());
+            setSpinnerValues(levelSpinner, filters.getLevel(), diveSpot.getLevel());
+            setSpinnerValues(currentsSpinner, filters.getCurrents(), diveSpot.getCurrents());
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_EDIT_DIVE_SPOT_ACTIVITY_FAILED_TO_CONNECT, false);
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            EventsTracker.trackUnknownServerError(url, errorMessage);
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_EDIT_DIVE_SPOT_ACTIVITY_UNEXPECTED_ERROR, false);
         }
     };
 
@@ -547,40 +563,6 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
                 requestSocial,
                 requestSecret
         );
-    }
-
-    private void loadFiltersDataRequest() {
-
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getFilters();
-        call.enqueue(new BaseCallbackOld() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    String responseString = "";
-                    try {
-                        responseString = response.body().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    filters = new FiltersResponseEntity();
-                    filters = new Gson().fromJson(responseString, FiltersResponseEntity.class);
-
-                    Log.i(TAG, responseString);
-
-                    setSpinnerValues(objectSpinner, filters.getObject(), diveSpot.getObject());
-                    setSpinnerValues(levelSpinner, filters.getLevel(), diveSpot.getLevel());
-                    setSpinnerValues(currentsSpinner, filters.getCurrents(), diveSpot.getCurrents());
-
-                }
-            }
-
-            @Override
-            public void onConnectionFailure() {
-                DialogUtils.showConnectionErrorDialog(EditDiveSpotActivity.this);
-            }
-
-        });
     }
 
     private void setSpinnerValues(Spinner spinner, Map<String, String> values, String tag) {
