@@ -75,11 +75,20 @@ public class DialogsRequestCodes {
     public static final int DRC_USERS_DIVESPOT_LIST_SWIPABLE_ACTIVITY_CONNECTION_ERROR = 2501;
     public static final int DRC_USERS_DIVESPOT_LIST_SWIPABLE_ACTIVITY_UNEXPECTED_ERROR = 2502;
 
-    //EditCommentActivity
+    // EditCommentActivity
     public static final int DRC_EDIT_COMMENT_ACTIVITY_COMMENT_NOT_FOUND = 2601;
+    
+    // EditDiveSpotActivity
+    public static final int DRC_EDIT_DIVE_SPOT_ACTIVITY_FAILED_TO_CONNECT = 2701;
+    public static final int DRC_EDIT_DIVE_SPOT_ACTIVITY_DIVE_SPOT_NOT_FOUND = 2702;
+    public static final int DRC_EDIT_DIVE_SPOT_ACTIVITY_UNEXPECTED_ERROR = 2703;
+    public static final int DRC_EDIT_DIVE_SPOT_ACTIVITY_NO_RIGHTS_ERROR = 2704;
 
-    //AddPhotosActivity
+    // AddPhotosActivity
     public static final int DRC_ADD_PHOTOS_ACTIVITY_DIVE_SPOT_NOT_FOUND = 2801;
 
+    // FilterActivity
+    public static final int DRC_FILTER_ACTIVITY_FAILED_TO_CONNECT = 3001;
+    public static final int DRC_FILTER_ACTIVITY_UNEXPECTED_ERROR = 3002;
 
 }
