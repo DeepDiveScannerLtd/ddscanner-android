@@ -95,4 +95,8 @@ public class DialogsRequestCodes {
     public static final int DRC_SEARCH_SEALIFE_ACTIVITY_FAILED_TO_CONNECT = 3101;
     public static final int DRC_SEARCH_SEALIFE_ACTIVITY_UNEXPECTED_ERROR = 3102;
 
+    //NotificationsFragment
+    public static final int DRC_NOTIFICATIONS_FRAGMENT_FAILED_TO_CONNECT = 3301;
+    public static final int DRC_NOTIFICATIONS_FRAGMENT_UNEXPECTED_ERROR = 3302;
+
 }
