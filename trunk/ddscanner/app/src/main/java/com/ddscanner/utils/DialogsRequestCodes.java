@@ -87,4 +87,8 @@ public class DialogsRequestCodes {
     // AddPhotosActivity
     public static final int DRC_ADD_PHOTOS_ACTIVITY_DIVE_SPOT_NOT_FOUND = 2801;
 
+    // FilterActivity
+    public static final int DRC_FILTER_ACTIVITY_FAILED_TO_CONNECT = 3001;
+    public static final int DRC_FILTER_ACTIVITY_UNEXPECTED_ERROR = 3002;
+
 }
