@@ -78,5 +78,8 @@ public class DialogsRequestCodes {
     //EditCommentActivity
     public static final int DRC_EDIT_COMMENT_ACTIVITY_COMMENT_NOT_FOUND = 2601;
 
+    //AddPhotosActivity
+    public static final int DRC_ADD_PHOTOS_ACTIVITY_DIVE_SPOT_NOT_FOUND = 2801;
+
 
 }

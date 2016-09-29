@@ -203,6 +203,13 @@ public class DDScannerRestClient {
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 
+    public void postAddPhotosToDiveSpot(String diveSpotId, List<MultipartBody.Part> images, final ResultListener<Void> resultListener, RequestBody... requestBodyies) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().addImagesToDiveSpot(
+                diveSpotId, images, requestBodyies[0], requestBodyies[1], requestBodyies[2]
+        );
+        call.enqueue(new NoResponseEntityCallback(gson, resultListener));
+    }
+
     public void postValidateDiveSpot(String diveSpotId, boolean isValid, @NonNull final ResultListener<Void> resultListener) {
         ValidationRequest validationRequest = new ValidationRequest();
         validationRequest.setSocial(SharedPreferenceHelper.getSn());
