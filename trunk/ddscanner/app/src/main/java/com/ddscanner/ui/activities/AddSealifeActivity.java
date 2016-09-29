@@ -34,10 +34,13 @@ import com.ddscanner.entities.errors.NotFoundException;
 import com.ddscanner.entities.errors.ServerInternalErrorException;
 import com.ddscanner.entities.errors.UnknownErrorException;
 import com.ddscanner.entities.errors.UserNotFoundException;
+import com.ddscanner.entities.errors.ValidationError;
 import com.ddscanner.entities.errors.ValidationErrorException;
 import com.ddscanner.rest.BaseCallbackOld;
+import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
+import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogUtils;
@@ -108,6 +111,39 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
     private RequestBody requestSocial = null;
     private RequestBody requestToken = null;
 
+    private DDScannerRestClient.ResultListener<Sealife> sealifeResultListener = new DDScannerRestClient.ResultListener<Sealife>() {
+        @Override
+        public void onSuccess(Sealife result) {
+            Intent intent = new Intent();
+            intent.putExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_SEALIFE, result);
+            setResult(RESULT_OK, intent);
+            finish();
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            progressDialogUpload.dismiss();
+            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            progressDialogUpload.dismiss();
+            switch (errorType) {
+                case USER_NOT_FOUND_ERROR_C801:
+                    SharedPreferenceHelper.logout();
+                    LoginActivity.showForResult(AddSealifeActivity.this, ActivitiesRequestCodes.REQUEST_CODE_ADD_SEALIFE_ACTIVITY_LOGIN_TO_SEND);
+                    break;
+                case UNPROCESSABLE_ENTITY_ERROR_422:
+                    Helpers.errorHandling(errorsMap, (ValidationError) errorData);
+                    break;
+                default:
+                    Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);
+                    break;
+            }
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -158,15 +194,19 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_ADD_SEALIFE_ACTIVITY_PICK_PHOTO && resultCode == RESULT_OK) {
-            Uri uri = data.getData();
-            filePath = uri;
-            setBackImage(uri);
-        }
-        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_ADD_SEALIFE_ACTIVITY_LOGIN_TO_SEND) {
-            if (resultCode == RESULT_OK) {
-                sendRequestToAddSealife(filePath);
-            }
+        switch (requestCode) {
+            case ActivitiesRequestCodes.REQUEST_CODE_ADD_SEALIFE_ACTIVITY_PICK_PHOTO:
+                if (resultCode == RESULT_OK) {
+                    Uri uri = data.getData();
+                    filePath = uri;
+                    setBackImage(uri);
+                }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_ADD_SEALIFE_ACTIVITY_LOGIN_TO_SEND:
+                if (resultCode == RESULT_OK) {
+                    createRequestBody();
+                }
+                break;
         }
     }
 
@@ -260,6 +300,7 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
                         SharedPreferenceHelper.getSecret());
             }
         }
+        hideErrorsFields();
         sendRequestToAddSealife(filePath);
     }
 
@@ -274,79 +315,10 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
             RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
             body = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
         }
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().addSealife(
-                requestName, requestDistribution, requestHabitat, body, requestScname,
-                requestLength, requestWeight, requestDepth, requestOrder, requestClass,
-                requestToken, requestSocial, requestSecret);
-        call.enqueue(new BaseCallbackOld() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                progressDialogUpload.dismiss();
-                if (!response.isSuccessful()) {
-                    String responseString = "";
-                    try {
-                        responseString = response.errorBody().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    LogUtils.i("response body is " + responseString);
-                    try {
-                        ErrorsParser.checkForError(response.code(), responseString);
-                    } catch (ServerInternalErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(AddSealifeActivity.this, R.string.toast_server_error);
-                    } catch (BadRequestException e) {
-                        // TODO Handle
-                        Helpers.showToast(AddSealifeActivity.this, R.string.toast_server_error);
-                    } catch (ValidationErrorException e) {
-                        // TODO Handle
-                        Helpers.errorHandling(AddSealifeActivity.this, errorsMap, responseString);
-                    } catch (NotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(AddSealifeActivity.this, R.string.toast_server_error);
-                    } catch (UnknownErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(AddSealifeActivity.this, R.string.toast_server_error);
-                    } catch (DiveSpotNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(AddSealifeActivity.this, R.string.toast_server_error);
-                    } catch (UserNotFoundException e) {
-                        // TODO Handle
-                        SharedPreferenceHelper.logout();
-                        LoginActivity.showForResult(AddSealifeActivity.this, ActivitiesRequestCodes.REQUEST_CODE_ADD_SEALIFE_ACTIVITY_LOGIN_TO_SEND);
-                    } catch (CommentNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(AddSealifeActivity.this, R.string.toast_server_error);
-                    }
-                }
-                if(response.isSuccessful()) {
-                    EventsTracker.trackSealifeCreated();
-                    try {
-                        String responseString = "";
-                        responseString = response.body().string();
-                        try {
-                            JSONObject jsonObject = new JSONObject(responseString);
-                            responseString = jsonObject.getString(Constants.ADD_DIVE_SPOT_ACTIVITY_SEALIFE);
-                            Sealife sealife = new Gson().fromJson(responseString, Sealife.class);
-                            Intent intent = new Intent();
-                            intent.putExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_SEALIFE, sealife);
-                            setResult(RESULT_OK, intent);
-                            finish();
-                        } catch (JSONException e) {
-
-                        }
-                        Log.i(TAG, response.body().string());
-                    } catch (IOException e) {
-
-                    }
-                }
-            }
-
-            @Override
-            public void onConnectionFailure() {
-                DialogUtils.showConnectionErrorDialog(AddSealifeActivity.this);
-            }
-        });
+        DDScannerApplication.getDdScannerRestClient().postAddSealife(
+                sealifeResultListener, body, requestName, requestDistribution, requestHabitat,
+                requestScname, requestLength, requestWeight, requestDepth, requestOrder, requestClass,
+                requestToken, requestSocial);
     }
 
     /**
@@ -397,6 +369,12 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
                 return;
             }
 
+        }
+    }
+
+    private void hideErrorsFields() {
+        for (Map.Entry<String, TextView> entry : errorsMap.entrySet()) {
+            entry.getValue().setVisibility(View.GONE);
         }
     }
 }
