@@ -37,6 +37,7 @@ import com.ddscanner.events.GetNotificationsEvent;
 import com.ddscanner.events.InfowWindowOpenedEvent;
 import com.ddscanner.events.InternetConnectionClosedEvent;
 import com.ddscanner.events.ListOpenedEvent;
+import com.ddscanner.events.LoadUserProfileInfoEvent;
 import com.ddscanner.events.LocationReadyEvent;
 import com.ddscanner.events.LoggedInEvent;
 import com.ddscanner.events.LoggedOutEvent;
@@ -279,6 +280,7 @@ public class MainActivity extends BaseAppCompatActivity
                 Helpers.hideKeyboard(this);
                 break;
             case 2:
+                DDScannerApplication.bus.post(new LoadUserProfileInfoEvent());
                 EventsTracker.trackUserProfileView();
                 hideSearchFilterMenuItems();
                 break;

@@ -96,7 +96,7 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
                     break;
                 default:
                     EventsTracker.trackUnknownServerError(url, errorMessage);
-                    InfoDialogFragment.showForFragmentResult(getFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_NOTIFICATIONS_FRAGMENT_UNEXPECTED_ERROR, false);
+                    InfoDialogFragment.showForFragmentResult(getChildFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_NOTIFICATIONS_FRAGMENT_UNEXPECTED_ERROR, false);
                     break;
             }
         }
@@ -328,7 +328,11 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
 
     @Subscribe
     public void getNotifications(GetNotificationsEvent event) {
-        getUserNotifications();
+        if (SharedPreferenceHelper.isUserLoggedIn()) {
+            getUserNotifications();
+            return;
+        }
+        onLoggedOut();
     }
 
     @Override

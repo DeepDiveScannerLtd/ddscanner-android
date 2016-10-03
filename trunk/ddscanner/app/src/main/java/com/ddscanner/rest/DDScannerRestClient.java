@@ -242,6 +242,24 @@ public class DDScannerRestClient {
         });
     }
 
+    public void postLogout(final ResultListener<Void> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().logout(getRegisterRequest());
+        call.enqueue(new NoResponseEntityCallback(gson, resultListener));
+    }
+
+    public void putUpdateUserProfileInfo(final ResultListener<User> resultListener, String id, MultipartBody.Part image, RequestBody... requestBodies) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().updateUserById(id, image, requestBodies[0], requestBodies[1], requestBodies[2], requestBodies[3], requestBodies[4], requestBodies[5]);
+        call.enqueue(new ResponseEntityCallback<User>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<User> resultListener, String responseString) throws JSONException {
+                JSONObject jsonObject = new JSONObject(responseString);
+                responseString = jsonObject.getString("user");
+                User user = new Gson().fromJson(responseString, User.class);
+                resultListener.onSuccess(user);
+            }
+        });
+    }
+
     public void postValidateDiveSpot(String diveSpotId, boolean isValid, @NonNull final ResultListener<Void> resultListener) {
         ValidationRequest validationRequest = new ValidationRequest();
         validationRequest.setSocial(SharedPreferenceHelper.getSn());

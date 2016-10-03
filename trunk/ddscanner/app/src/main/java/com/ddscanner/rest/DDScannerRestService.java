@@ -173,14 +173,13 @@ public interface DDScannerRestService {
     @Multipart
     Call<ResponseBody> updateUserById(
             @Path("id") String id,
-            @Part("_method") RequestBody _method,
             @Part MultipartBody.Part image,
+            @Part("_method") RequestBody _method,
             @Part("name") RequestBody name,
             @Part("username") RequestBody username,
             @Part("about") RequestBody about,
             @Part("token") RequestBody token,
-            @Part("social") RequestBody sn,
-            @Part("secret") RequestBody secret
+            @Part("social") RequestBody sn
     );
 
     @GET("diving/user/{id}/divespot/checkins")
