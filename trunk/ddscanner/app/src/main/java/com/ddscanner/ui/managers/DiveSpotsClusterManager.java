@@ -259,9 +259,9 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
             try {
                 if (diveSpotsMap.get(marker.getPosition()) != null) {
                     if (diveSpotsMap.get(marker.getPosition()).getStatus().equals("waiting")) {
-                        lastClickedMarker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_ds_new)));
+                        lastClickedMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds_new));
                     } else {
-                        lastClickedMarker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_ds)));
+                        lastClickedMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
                     }
                 } else {
                     if (diveSpotsMap != null) {
