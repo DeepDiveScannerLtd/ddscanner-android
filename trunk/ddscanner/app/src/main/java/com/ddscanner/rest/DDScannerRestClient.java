@@ -18,6 +18,7 @@ import com.ddscanner.entities.Sealife;
 import com.ddscanner.entities.SealifeResponseEntity;
 import com.ddscanner.entities.SignInType;
 import com.ddscanner.entities.User;
+import com.ddscanner.entities.request.DiveSpotsRequestMap;
 import com.ddscanner.entities.request.IdentifyRequest;
 import com.ddscanner.entities.request.RegisterRequest;
 import com.ddscanner.entities.request.ReportRequest;
@@ -404,6 +405,17 @@ public class DDScannerRestClient {
                 requestBodies[13]
         );
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
+    }
+
+    public void getDiveSpotsByArea(DiveSpotsRequestMap diveSpotsRequestMap, ResultListener<DivespotsWrapper> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDivespots(diveSpotsRequestMap);
+        call.enqueue(new ResponseEntityCallback<DivespotsWrapper>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<DivespotsWrapper> resultListener, String responseString) {
+                DivespotsWrapper divespotsWrapper = new Gson().fromJson(responseString, DivespotsWrapper.class);
+                resultListener.onSuccess(divespotsWrapper);
+            }
+        });
     }
 
     private ReportRequest getReportRequest(String reportType, String reportDescription) {
