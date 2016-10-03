@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.CheckIns;
 import com.ddscanner.entities.Comments;
+import com.ddscanner.entities.DiveCentersResponseEntity;
 import com.ddscanner.entities.DiveSpot;
 import com.ddscanner.entities.DiveSpotDetails;
 import com.ddscanner.entities.DivespotsWrapper;
@@ -26,6 +27,7 @@ import com.ddscanner.entities.request.ValidationRequest;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.SharedPreferenceHelper;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 
 import org.json.JSONException;
@@ -436,6 +438,17 @@ public class DDScannerRestClient {
         });
     }
 
+    public void getDiveCenters(LatLng latLng, final ResultListener<DiveCentersResponseEntity> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveCenters(getDivecentersRequestmap(latLng));
+        call.enqueue(new ResponseEntityCallback<DiveCentersResponseEntity>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<DiveCentersResponseEntity> resultListener, String responseString) throws JSONException {
+                DiveCentersResponseEntity diveCentersResponseEntity = new Gson().fromJson(responseString, DiveCentersResponseEntity.class);
+                resultListener.onSuccess(diveCentersResponseEntity);
+            }
+        });
+    }
+
     private ReportRequest getReportRequest(String reportType, String reportDescription) {
         ReportRequest reportRequest = new ReportRequest();
         reportRequest.setType(reportType);
@@ -457,6 +470,15 @@ public class DDScannerRestClient {
             reportRequest.setToken(SharedPreferenceHelper.getToken());
         }
         return reportRequest;
+    }
+
+    private Map<String, String> getDivecentersRequestmap(LatLng latLng) {
+        Map<String, String> map = new HashMap<>();
+        map.put("latLeft", String.valueOf(latLng.latitude - 2.0));
+        map.put("lngLeft", String.valueOf(latLng.longitude - 2.0));
+        map.put("lngRight", String.valueOf(latLng.longitude + 2.0));
+        map.put("latRight", String.valueOf(latLng.latitude + 2.0));
+        return map;
     }
 
     private Map<String, String> getUserQueryMapRequest() {

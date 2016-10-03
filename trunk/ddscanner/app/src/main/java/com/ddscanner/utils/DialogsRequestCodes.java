@@ -103,4 +103,8 @@ public class DialogsRequestCodes {
     public static final int DRC_PROFILE_FRAGMENT_FAILED_TO_CONNECT = 3401;
     public static final int DRC_PROFILE_FRAGMENT_UNEXPECTED_ERROR = 3402;
 
+    //DiveCentersClusterManager
+    public static final int DRC_DIVE_CENTERS_CLUSTER_MANAGER_FAILED_TO_CONNECT = 3501;
+    public static final int DRC_DIVE_CENTERS_CLUSTER_MANAGER_UNEXPECTED_ERROR = 3502;
+
 }

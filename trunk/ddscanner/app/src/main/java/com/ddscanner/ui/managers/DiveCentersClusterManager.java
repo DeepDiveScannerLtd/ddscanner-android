@@ -1,9 +1,11 @@
 package com.ddscanner.ui.managers;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,9 +20,12 @@ import com.ddscanner.events.DiveCenterMarkerClickEvent;
 import com.ddscanner.events.OnMapClickEvent;
 import com.ddscanner.events.PutDiveCentersToListEvent;
 import com.ddscanner.rest.BaseCallbackOld;
+import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.activities.DiveCenterDetailsActivity;
+import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.utils.DialogUtils;
+import com.ddscanner.utils.DialogsRequestCodes;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -53,7 +58,7 @@ public class DiveCentersClusterManager extends ClusterManager<DiveCenter> implem
     private static final String TAG = DiveCentersClusterManager.class.getName();
     private static final int CAMERA_ANIMATION_DURATION = 300;
 
-    private Context context;
+    private FragmentActivity context;
     private GoogleMap googleMap;
     private Marker lastClickedMarker;
     private Marker diveSpotMarker;
@@ -71,7 +76,29 @@ public class DiveCentersClusterManager extends ClusterManager<DiveCenter> implem
     private final IconGenerator clusterIconGenerator2Symbols;
     private final IconGenerator clusterIconGenerator3Symbols;
 
-    public DiveCentersClusterManager(Context context, GoogleMap googleMap, LatLng diveSpotLatLng, String diveSpotName) {
+    private DDScannerRestClient.ResultListener<DiveCentersResponseEntity> diveCentersResponseEntityResultListener = new DDScannerRestClient.ResultListener<DiveCentersResponseEntity>() {
+        @Override
+        public void onSuccess(DiveCentersResponseEntity result) {
+            diveCentersResponseEntity = result;
+            logoPath = diveCentersResponseEntity.getLogoPath();
+            diveCenters = diveCentersResponseEntity.getDivecenters();
+            DDScannerApplication.bus.post(new PutDiveCentersToListEvent(changeListToListFragment((ArrayList<DiveCenter>)diveCenters), logoPath));
+            showingMarkers(diveCenters);
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            InfoDialogFragment.showForActivityResult(context.getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_DIVE_CENTERS_CLUSTER_MANAGER_FAILED_TO_CONNECT, false);
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            EventsTracker.trackUnknownServerError(url, errorMessage);
+            InfoDialogFragment.showForActivityResult(context.getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_DIVE_CENTERS_CLUSTER_MANAGER_UNEXPECTED_ERROR, false);
+        }
+    };
+
+    public DiveCentersClusterManager(FragmentActivity context, GoogleMap googleMap, LatLng diveSpotLatLng, String diveSpotName) {
         super(context, googleMap);
         this.context = context;
         this.googleMap = googleMap;
@@ -103,7 +130,7 @@ public class DiveCentersClusterManager extends ClusterManager<DiveCenter> implem
         setRenderer(new IconRenderer(context, googleMap, this));
         setOnClusterClickListener(this);
         this.googleMap.setOnMapClickListener(this);
-        requestDiveCenters(diveSpotLatLng);
+        DDScannerApplication.getDdScannerRestClient().getDiveCenters(diveSpotLatLng, diveCentersResponseEntityResultListener);
 
         for (DiveCenter diveCenter : diveCenters) {
             addItem(diveCenter);
@@ -262,52 +289,6 @@ public class DiveCentersClusterManager extends ClusterManager<DiveCenter> implem
             return true;
         }
         return false;
-    }
-
-    public void requestDiveCenters(LatLng latLng) {
-
-        Map<String, String> map = new HashMap<>();
-        map.put("latLeft", String.valueOf(latLng.latitude - 2.0));
-        map.put("lngLeft", String.valueOf(latLng.longitude - 2.0));
-        map.put("lngRight", String.valueOf(latLng.longitude + 2.0));
-        map.put("latRight", String.valueOf(latLng.latitude + 2.0));
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveCenters(map);
-        call.enqueue(new BaseCallbackOld() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    String responseString = "";
-                    try {
-                        responseString = response.body().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    System.out.println(responseString);
-                    diveCentersResponseEntity = new Gson().fromJson(responseString, DiveCentersResponseEntity.class);
-                    logoPath = diveCentersResponseEntity.getLogoPath();
-                    diveCenters = diveCentersResponseEntity.getDivecenters();
-                    DDScannerApplication.bus.post(new PutDiveCentersToListEvent(changeListToListFragment((ArrayList<DiveCenter>)diveCenters), logoPath));
-                 //   diveCentersPagerAdapter.populateDiveCentersList(changeListToListFragment((ArrayList<DiveCenter>) diveCenters), logoPath);
-                    showingMarkers(diveCenters);
-                } else {
-                    // TODO Handle errors
-//                    if (error.getKind().equals(RetrofitError.Kind.NETWORK)) {
-//                        //   Toast.makeText(DiveCentersActivity.this, "Please check your internet connection", Toast.LENGTH_LONG).show();
-//                    } else if (error.getKind().equals(RetrofitError.Kind.HTTP)) {
-//                        //   Toast.makeText(DiveCentersActivity.this, "Server is not responsible, please try later", Toast.LENGTH_LONG).show();
-//                    }
-//                    if (error != null) {
-//                        String json = new String(((TypedByteArray) error.getResponse().getBody()).getBytes());
-//                        Log.i(TAG, json);
-//                    }
-                }
-            }
-
-            @Override
-            public void onConnectionFailure() {
-                DialogUtils.showConnectionErrorDialog(context);
-            }
-        });
     }
 
     public void setUserCurrentLocationMarker(Marker userCurrentLocationMarker) {
