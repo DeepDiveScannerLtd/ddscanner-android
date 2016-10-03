@@ -149,6 +149,4 @@ public class ActivitiesRequestCodes {
     //    SocialNetworks
     public static final int REQUEST_CODE_SOCIAL_NETWORKS_SIGN_IN = 3701;
 
-    //    UsersDivespotListSwipableActivity
-    public static final int REQUEST_CODE_USERS_DIVESPOT_LIST_SWIPABLE_ACTIVITY_LOGIN = 3801;
 }

@@ -29,6 +29,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
+import com.ddscanner.entities.DiveSpotListSource;
 import com.ddscanner.entities.User;
 import com.ddscanner.entities.errors.BadRequestException;
 import com.ddscanner.entities.errors.CommentNotFoundException;
@@ -53,7 +54,6 @@ import com.ddscanner.ui.activities.DiveSpotsListActivity;
 import com.ddscanner.ui.activities.UserLikesDislikesActivity;
 import com.ddscanner.ui.activities.MainActivity;
 import com.ddscanner.ui.activities.SelfCommentsActivity;
-import com.ddscanner.ui.activities.UsersDivespotListSwipableActivity;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.ui.views.LoginView;
 import com.ddscanner.utils.Constants;
@@ -429,19 +429,19 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
                 break;
             case R.id.checkins_activity:
                 EventsTracker.trackUserCheckinsView();
-                UsersDivespotListSwipableActivity.show(getContext(), true, EventsTracker.SpotViewSource.FROM_PROFILE_CHECKINS);
+                DiveSpotsListActivity.show(getContext(), DiveSpotListSource.CHECKINS, EventsTracker.SpotViewSource.FROM_PROFILE_CHECKINS   );
                 break;
             case R.id.favorites_activity:
                 EventsTracker.trackUserFavoritesView();
-                UsersDivespotListSwipableActivity.show(getContext(), false, EventsTracker.SpotViewSource.FROM_PROFILE_FAVOURITES);
+                DiveSpotsListActivity.show(getContext(), DiveSpotListSource.FAVORITES, EventsTracker.SpotViewSource.FROM_PROFILE_FAVOURITES);
                 break;
             case R.id.edited_activity:
                 EventsTracker.trackUserEditedView();
-                DiveSpotsListActivity.show(getContext(), false, EventsTracker.SpotViewSource.FROM_PROFILE_EDITED);
+                DiveSpotsListActivity.show(getContext(), DiveSpotListSource.EDITED, EventsTracker.SpotViewSource.FROM_PROFILE_EDITED);
                 break;
             case R.id.created_activity:
                 EventsTracker.trackUserCreatedView();
-                DiveSpotsListActivity.show(getContext(), true, EventsTracker.SpotViewSource.FROM_PROFILE_CREATED);
+                DiveSpotsListActivity.show(getContext(), DiveSpotListSource.ADDED, EventsTracker.SpotViewSource.FROM_PROFILE_CREATED);
                 break;
             case R.id.about_dss_layout:
                 AboutActivity.show(getContext());
