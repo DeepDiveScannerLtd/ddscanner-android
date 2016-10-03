@@ -114,24 +114,6 @@ public class Helpers {
         return images;
     }
 
-    public static RegisterRequest getRegisterRequest() {
-        RegisterRequest registerRequest = new RegisterRequest();
-        if (!SharedPreferenceHelper.isUserLoggedIn()) {
-            registerRequest.setAppId(SharedPreferenceHelper.getUserAppId());
-            registerRequest.setpush(SharedPreferenceHelper.getGcmId());
-            return registerRequest;
-        }
-
-        registerRequest.setSocial(SharedPreferenceHelper.getSn());
-        registerRequest.setToken(SharedPreferenceHelper.getToken());
-        if (SharedPreferenceHelper.getSn().equals("tw")) {
-            registerRequest.setSecret(SharedPreferenceHelper.getSecret());
-        }
-        registerRequest.setAppId(SharedPreferenceHelper.getUserAppId());
-        registerRequest.setpush(SharedPreferenceHelper.getGcmId());
-        return registerRequest;
-    }
-
     /**
      * Comparing two arrays to third
      *
@@ -194,44 +176,6 @@ public class Helpers {
     /**
      * Handling errors and showing this in textviews
      *
-     * @param context
-     * @param errorsMap
-     * @param errors
-     */
-    public static void errorHandling(Context context, Map<String, TextView> errorsMap, String errors) {
-        try {
-            JsonObject jsonObject = new JsonParser().parse(errors).getAsJsonObject();
-            for (Map.Entry<String, TextView> entry : errorsMap.entrySet()) {
-                entry.getValue().setVisibility(View.GONE);
-            }
-            for (Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) {
-                if (!entry.getKey().equals("")) {
-                    if (entry.getKey().equals("token")) {
-                        return;
-                    }
-                    if (entry.getKey().equals("lat") || entry.getKey().equals("lng")) {
-                        errorsMap.get("location").setVisibility(View.VISIBLE);
-                        errorsMap.get("location").setText("Please choose location");
-                    }
-                    if (errorsMap.get(entry.getKey()) != null) {
-                        String key = entry.getKey();
-                        String value = entry.getValue().toString();
-                        value = value.replace("[\"", "");
-                        value = value.replace("\"]", "");
-                        errorsMap.get(key).setVisibility(View.VISIBLE);
-                        errorsMap.get(key).setText(value);
-                    }
-                }
-            }
-        } catch (JsonSyntaxException exception) {
-            LogUtils.i(TAG, "errors: " + errors);
-            exception.printStackTrace();
-        }
-    }
-
-    /**
-     * Handling errors and showing this in textviews
-     *
      * @param errorsMap
      * @param validationError
      */
@@ -250,21 +194,6 @@ public class Helpers {
                 errorsMap.get(key).setText(field.getErrors().toString().replace("[", "").replace("]", ""));
             }
         }
-    }
-
-    /**
-     * Check if error caused by login
-     *
-     * @param errors
-     * @return checking Error causing
-     * @author Andrei Lashkevich
-     */
-    public static boolean checkIsErrorByLogin(String errors) {
-        if (errors.contains("token") || errors.contains("social") || errors.contains("secret") || errors.contains("user not found")) {
-            SharedPreferenceHelper.logout();
-            return true;
-        }
-        return false;
     }
 
     /**
@@ -297,20 +226,6 @@ public class Helpers {
             }
             return false;
         }
-    }
-
-    public static Map<String, String> getUserQuryMapRequest() {
-        Map<String, String> map = new HashMap<>();
-        if (SharedPreferenceHelper.isUserLoggedIn()) {
-            map.put("social", SharedPreferenceHelper.getSn());
-            map.put("token", SharedPreferenceHelper.getToken());
-            if (SharedPreferenceHelper.getSn().equals("tw")) {
-                map.put("secret", SharedPreferenceHelper.getSecret());
-            }
-        } else {
-            return new HashMap<>();
-        }
-        return map;
     }
 
     public static MaterialDialog getMaterialDialog(Context context) {
@@ -497,7 +412,6 @@ public class Helpers {
 
     public static String formatLikesCommentsCountNumber(String count) {
         int itemsCount = Integer.parseInt(count);
-        String returnedString = "";
         if (itemsCount > 999) {
             return String.valueOf(itemsCount / 1000) + "K";
         } else {

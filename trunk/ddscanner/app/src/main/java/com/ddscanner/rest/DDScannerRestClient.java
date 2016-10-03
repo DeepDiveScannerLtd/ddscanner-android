@@ -390,7 +390,7 @@ public class DDScannerRestClient {
     }
 
     public void getDiveSpotForEdit(String diveSpotId, @NonNull final ResultListener<EditDiveSpotWrapper> resultListener) {
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveSpotForEdit(diveSpotId, Helpers.getUserQuryMapRequest());
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveSpotForEdit(diveSpotId, getUserQueryMapRequest());
         call.enqueue(new ResponseEntityCallback<EditDiveSpotWrapper>(gson, resultListener) {
             @Override
             void handleResponseString(DDScannerRestClient.ResultListener<EditDiveSpotWrapper> resultListener, String responseString) {

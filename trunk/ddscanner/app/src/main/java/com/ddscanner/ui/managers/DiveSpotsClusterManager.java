@@ -1,6 +1,7 @@
 package com.ddscanner.ui.managers;
 
 import android.content.Context;
+import android.graphics.BitmapFactory;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
