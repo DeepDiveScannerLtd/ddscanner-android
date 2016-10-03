@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,40 +17,21 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.FiltersResponseEntity;
-import com.ddscanner.entities.errors.BadRequestException;
-import com.ddscanner.entities.errors.CommentNotFoundException;
-import com.ddscanner.entities.errors.DiveSpotNotFoundException;
-import com.ddscanner.entities.errors.NotFoundException;
-import com.ddscanner.entities.errors.ServerInternalErrorException;
-import com.ddscanner.entities.errors.UnknownErrorException;
-import com.ddscanner.entities.errors.UserNotFoundException;
-import com.ddscanner.entities.errors.ValidationErrorException;
-import com.ddscanner.events.FilterChosedEvent;
-import com.ddscanner.rest.BaseCallbackOld;
+import com.ddscanner.events.FilterChosenEvent;
 import com.ddscanner.rest.DDScannerRestClient;
-import com.ddscanner.rest.ErrorsParser;
-import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.SpinnerItemsAdapter;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
-import com.ddscanner.utils.DialogUtils;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
-import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
-import com.google.gson.Gson;
 import com.rey.material.widget.Button;
 import com.rey.material.widget.ProgressView;
 import com.rey.material.widget.Spinner;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Response;
 
 public class FilterActivity extends AppCompatActivity implements View.OnClickListener, InfoDialogFragment.DialogClosedListener {
 
@@ -64,7 +44,7 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
     private Button save;
     private Map<String,String> objectsMap = new HashMap<>();
     private Map<String, String> levelsMap = new HashMap<>();
-    private FilterChosedEvent filterChosedEvent = new FilterChosedEvent();
+    private FilterChosenEvent filterChosedEvent = new FilterChosenEvent();
     private MaterialDialog materialDialog;
     private ProgressView progressView;
     private LinearLayout mainLayout;
