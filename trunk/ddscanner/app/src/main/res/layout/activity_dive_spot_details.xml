@@ -705,6 +705,15 @@
                             android:clickable="false"
                             tools:clickable="false" />
                     </LinearLayout>
+                    <Button
+                        android:visibility="visible"
+                        android:id="@+id/button_show_divecenters"
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"
+                        android:background="@color/orange"
+                        android:text="@string/contact_dive_centers"
+                        android:layout_alignParentBottom="true"
+                        />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
@@ -723,13 +732,4 @@
         app:layout_collapseMode="pin" />
 
 </android.support.design.widget.CoordinatorLayout>
-    <Button
-        android:visibility="gone"
-        android:id="@+id/button_show_divecenters"
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:background="@color/orange"
-        android:text="@string/contact_dive_centers"
-        android:layout_alignParentBottom="true"
-        />
     </RelativeLayout>
