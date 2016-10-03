@@ -209,6 +209,8 @@ public class SharedPreferenceHelper {
       //  SharedPreferenceHelper.setToken("");
         SharedPreferenceHelper.setUserServerId("");
         SharedPreferenceHelper.setSecret("");
+        SharedPreferenceHelper.setSn("");
+        SharedPreferenceHelper.setToken("");
         SharedPreferenceHelper.setIsUserSignedIn(false, null);
     }
 

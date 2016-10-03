@@ -1,6 +1,5 @@
 package com.ddscanner.ui.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
@@ -12,7 +11,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -31,13 +29,16 @@ import com.ddscanner.entities.errors.UnknownErrorException;
 import com.ddscanner.entities.errors.UserNotFoundException;
 import com.ddscanner.entities.errors.ValidationErrorException;
 import com.ddscanner.events.SealifeChoosedEvent;
-import com.ddscanner.rest.BaseCallback;
+import com.ddscanner.rest.BaseCallbackOld;
+import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.SealifeSearchAdapter;
+import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogUtils;
+import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
 import com.google.gson.Gson;
@@ -52,7 +53,7 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class SearchSealifeActivity extends AppCompatActivity implements SearchView.OnQueryTextListener, View.OnClickListener {
+public class SearchSealifeActivity extends AppCompatActivity implements SearchView.OnQueryTextListener, View.OnClickListener, InfoDialogFragment.DialogClosedListener {
 
     private Toolbar toolbar;
     private RecyclerView mRecyclerView;
@@ -65,9 +66,32 @@ public class SearchSealifeActivity extends AppCompatActivity implements SearchVi
     private ProgressView progressView;
     private RelativeLayout contentLayout;
 
-
     private List<Sealife> sealifes = new ArrayList<>();
     private SealifeResponseEntity sealifeResponseEntity = new SealifeResponseEntity();
+
+    private DDScannerRestClient.ResultListener<SealifeResponseEntity> sealifeResponseEntityResultListener = new DDScannerRestClient.ResultListener<SealifeResponseEntity>() {
+        @Override
+        public void onSuccess(SealifeResponseEntity result) {
+            sealifeResponseEntity = result;
+            sealifes = sealifeResponseEntity.getSealifes();
+            mRecyclerView.setVisibility(View.VISIBLE);
+            mAdapter = new SealifeSearchAdapter(SearchSealifeActivity.this, sealifes);
+            progressView.setVisibility(View.GONE);
+            contentLayout.setVisibility(View.VISIBLE);
+            mRecyclerView.setAdapter(mAdapter);
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_SEARCH_SEALIFE_ACTIVITY_FAILED_TO_CONNECT, false);
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            EventsTracker.trackUnknownServerError(url, errorMessage);
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_SEARCH_SEALIFE_ACTIVITY_UNEXPECTED_ERROR, false);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,9 +110,8 @@ public class SearchSealifeActivity extends AppCompatActivity implements SearchVi
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);
         getSupportActionBar().setTitle(R.string.search_sealife);
-        getAllSealifes();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-
+        DDScannerApplication.getDdScannerRestClient().getAllSealifes(sealifeResponseEntityResultListener);
     }
 
     @Override
@@ -144,75 +167,6 @@ public class SearchSealifeActivity extends AppCompatActivity implements SearchVi
                 startActivityForResult(i, ActivitiesRequestCodes.REQUEST_CODE_SEARCH_SEALIFE_ACTIVITY_ADD_SEALIFE);
                 break;
         }
-    }
-
-    private void getAllSealifes() {
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getSealifes();
-        call.enqueue(new BaseCallback() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    String responseString = "";
-                    try {
-                        responseString = response.body().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    sealifeResponseEntity = new Gson().fromJson(responseString, SealifeResponseEntity.class);
-                    sealifes = sealifeResponseEntity.getSealifes();
-                    mRecyclerView.setVisibility(View.VISIBLE);
-                    mAdapter = new SealifeSearchAdapter(SearchSealifeActivity.this, sealifes);
-                    progressView.setVisibility(View.GONE);
-                    contentLayout.setVisibility(View.VISIBLE);
-                    mRecyclerView.setAdapter(mAdapter);
-                }
-                if (!response.isSuccessful()) {
-                    String responseString = "";
-                    try {
-                        responseString = response.errorBody().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    LogUtils.i("response body is " + responseString);
-                    try {
-                        ErrorsParser.checkForError(response.code(), responseString);
-                    } catch (ServerInternalErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(SearchSealifeActivity.this, R.string.toast_server_error);
-                        finish();
-                    } catch (BadRequestException e) {
-                        // TODO Handle
-                        Helpers.showToast(SearchSealifeActivity.this, R.string.toast_server_error);
-                        finish();
-                    } catch (ValidationErrorException e) {
-                        // TODO Handle
-                    } catch (NotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(SearchSealifeActivity.this, R.string.toast_server_error);
-                        finish();
-                    } catch (UnknownErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(SearchSealifeActivity.this, R.string.toast_server_error);
-                        finish();
-                    } catch (DiveSpotNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(SearchSealifeActivity.this, R.string.toast_server_error);
-                        finish();
-                    } catch (UserNotFoundException e) {
-                        // TODO Handle
-                    } catch (CommentNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(SearchSealifeActivity.this, R.string.toast_server_error);
-                        finish();
-                    }
-                }
-            }
-
-            @Override
-            public void onConnectionFailure() {
-                DialogUtils.showConnectionErrorDialog(SearchSealifeActivity.this);
-            }
-        });
     }
 
     @Override
@@ -276,5 +230,13 @@ public class SearchSealifeActivity extends AppCompatActivity implements SearchVi
         }
     }
 
-
+    @Override
+    public void onDialogClosed(int requestCode) {
+        switch (requestCode) {
+            case DialogsRequestCodes.DRC_SEARCH_SEALIFE_ACTIVITY_UNEXPECTED_ERROR:
+            case DialogsRequestCodes.DRC_SEARCH_SEALIFE_ACTIVITY_FAILED_TO_CONNECT:
+                finish();
+                break;
+        }
+    }
 }

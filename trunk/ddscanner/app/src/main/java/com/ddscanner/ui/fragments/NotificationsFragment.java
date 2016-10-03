@@ -16,6 +16,7 @@ import android.widget.RelativeLayout;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.Activity;
 import com.ddscanner.entities.Notification;
 import com.ddscanner.entities.Notifications;
@@ -27,20 +28,26 @@ import com.ddscanner.entities.errors.ServerInternalErrorException;
 import com.ddscanner.entities.errors.UnknownErrorException;
 import com.ddscanner.entities.errors.UserNotFoundException;
 import com.ddscanner.entities.errors.ValidationErrorException;
+import com.ddscanner.events.ChangePageOfMainViewPagerEvent;
+import com.ddscanner.events.GetNotificationsEvent;
 import com.ddscanner.events.LoggedOutEvent;
-import com.ddscanner.rest.BaseCallback;
+import com.ddscanner.rest.BaseCallbackOld;
+import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.activities.MainActivity;
 import com.ddscanner.ui.adapters.NotificationsPagerAdapter;
+import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.ui.views.LoginView;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogUtils;
+import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.gson.Gson;
 import com.rey.material.widget.ProgressView;
+import com.squareup.otto.Subscribe;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -51,7 +58,7 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class NotificationsFragment extends Fragment implements ViewPager.OnPageChangeListener, LoginView.LoginStateChangeListener {
+public class NotificationsFragment extends Fragment implements ViewPager.OnPageChangeListener, LoginView.LoginStateChangeListener, InfoDialogFragment.DialogClosedListener {
 
     private static final String TAG = NotificationsFragment.class.getName();
 
@@ -65,6 +72,35 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
     private AllNotificationsFragment allNotificationsFragment = new AllNotificationsFragment();
     private ActivityNotificationsFragment activityNotificationsFragment = new ActivityNotificationsFragment();
     private boolean isViewNull = true;
+
+    private DDScannerRestClient.ResultListener<Notifications> notificationsResultListener = new DDScannerRestClient.ResultListener<Notifications>() {
+        @Override
+        public void onSuccess(Notifications result) {
+            notifications = result;
+            progressView.setVisibility(View.GONE);
+            notificationsViewPager.setVisibility(View.VISIBLE);
+            setData();
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            InfoDialogFragment.showForFragmentResult(getFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_NOTIFICATIONS_FRAGMENT_FAILED_TO_CONNECT, false);
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            switch (errorType) {
+                case USER_NOT_FOUND_ERROR_C801:
+                    SharedPreferenceHelper.logout();
+                    DDScannerApplication.bus.post(new LoggedOutEvent());
+                    break;
+                default:
+                    EventsTracker.trackUnknownServerError(url, errorMessage);
+                    InfoDialogFragment.showForFragmentResult(getChildFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_NOTIFICATIONS_FRAGMENT_UNEXPECTED_ERROR, false);
+                    break;
+            }
+        }
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -80,7 +116,7 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
         if (SharedPreferenceHelper.isUserLoggedIn()) {
             progressView.setVisibility(View.VISIBLE);
             notificationsViewPager.setVisibility(View.GONE);
-            getUserNotifications();
+          //  getUserNotifications();
         }
         if (SharedPreferenceHelper.isUserLoggedIn()) {
             onLoggedIn();
@@ -157,7 +193,7 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
             if (SharedPreferenceHelper.isUserLoggedIn()) {
                 progressView.setVisibility(View.VISIBLE);
                 notificationsViewPager.setVisibility(View.GONE);
-                getUserNotifications();
+               // getUserNotifications();
             }
         }
         if (!getUserVisibleHint()) {
@@ -191,7 +227,7 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
                     if (SharedPreferenceHelper.isUserLoggedIn()) {
                         progressView.setVisibility(View.VISIBLE);
                         notificationsViewPager.setVisibility(View.GONE);
-                        getUserNotifications();
+                   //     getUserNotifications();
                     }
                 }
             } else {
@@ -201,76 +237,7 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
     }
 
     private void getUserNotifications() {
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getNotifications(
-                SharedPreferenceHelper.getUserServerId(), Helpers.getUserQuryMapRequest());
-        call.enqueue(new BaseCallback() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                String responseString = "";
-                if (response.isSuccessful()) {
-                    if (response.raw().code() == 200) {
-                        try {
-                            responseString = response.body().string();
-                            notifications = new Gson().fromJson(responseString, Notifications.class);
-//                            if (notifications.getActivities() != null) {
-//                                activities = notifications.getActivities();
-//                                activityNotificationsFragment.addList((ArrayList<Activity>) activities);
-//                            }
-//                            if (notifications.getNotifications() != null) {
-//                                allNotificationsFragment.addList((ArrayList<Notification>)
-//                                        notifications.getNotifications());
-//                            }
-                            progressView.setVisibility(View.GONE);
-                            notificationsViewPager.setVisibility(View.VISIBLE);
-
-                            setData();
-                        } catch (IOException e) {
-
-                        }
-                    }
-                }
-                if (!response.isSuccessful()) {
-                    try {
-                        responseString = response.errorBody().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    LogUtils.i("response body is " + responseString);
-                    try {
-                        ErrorsParser.checkForError(response.code(), responseString);
-                    } catch (ServerInternalErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(getContext(), R.string.toast_server_error);
-                    } catch (BadRequestException e) {
-                        // TODO Handle
-                        Helpers.showToast(getContext(), R.string.toast_server_error);
-                    } catch (ValidationErrorException e) {
-                        // TODO Handle
-                    } catch (NotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(getContext(), R.string.toast_server_error);
-                    } catch (UnknownErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(getContext(), R.string.toast_server_error);
-                    } catch (DiveSpotNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(getContext(), R.string.toast_server_error);
-                    } catch (UserNotFoundException e) {
-                        // TODO Handle
-                        SharedPreferenceHelper.logout();
-                        DDScannerApplication.bus.post(new LoggedOutEvent());
-                    } catch (CommentNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(getContext(), R.string.toast_server_error);
-                    }
-                }
-            }
-
-            @Override
-            public void onConnectionFailure() {
-                DialogUtils.showConnectionErrorDialog(getActivity());
-            }
-        });
+       DDScannerApplication.getDdScannerRestClient().getUserNotifications(notificationsResultListener);
     }
 
     private void setData() {
@@ -357,5 +324,24 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
 
     public void setAllNotificationsFragment(AllNotificationsFragment allNotificationsFragment) {
         this.allNotificationsFragment = allNotificationsFragment;
+    }
+
+    @Subscribe
+    public void getNotifications(GetNotificationsEvent event) {
+        if (SharedPreferenceHelper.isUserLoggedIn()) {
+            getUserNotifications();
+            return;
+        }
+        onLoggedOut();
+    }
+
+    @Override
+    public void onDialogClosed(int requestCode) {
+        switch (requestCode) {
+            case DialogsRequestCodes.DRC_NOTIFICATIONS_FRAGMENT_UNEXPECTED_ERROR:
+            case DialogsRequestCodes.DRC_NOTIFICATIONS_FRAGMENT_FAILED_TO_CONNECT:
+                DDScannerApplication.bus.post(new ChangePageOfMainViewPagerEvent(0));
+                break;
+        }
     }
 }

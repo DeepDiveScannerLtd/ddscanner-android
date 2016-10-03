@@ -74,9 +74,15 @@ public class ActivitiesRequestCodes {
     public static final int REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_ADD_PHOTOS_ACTIVITY = 2203;
     public static final int REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LEAVE_REVIEW = 2204;
     public static final int REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_EDIT_DIVE_SPOT = 2205;
-    public static final int REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN = 2206;
     public static final int REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_PHOTOS = 2207;
     public static final int REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_REVIEWS = 2208;
+    public static final int REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_VALIDATE_SPOT = 2209;
+    public static final int REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_INVALIDATE_SPOT = 2210;
+    public static final int REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_EDIT_SPOT = 2211;
+    public static final int REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_CHECK_IN = 2212;
+    public static final int REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_CHECK_OUT = 2213;
+    public static final int REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_ADD_TO_FAVOURITES = 2214;
+    public static final int REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_REMOVE_FROM_FAVOURITES = 2215;
 
     //    SelfCommentsActivity
     public static final int REQUEST_CODE_SELF_REVIEWS_LOGIN_TO_VIEW_COMMENTS = 2301;
@@ -98,7 +104,9 @@ public class ActivitiesRequestCodes {
     public static final int REQUEST_CODE_ADD_PHOTOS_DO_DIVE_SPOT_ACTIVITY_LOGIN_TO_SEND = 2601;
 
     //    ForeignUserDiveSpotList
-    public static final int REQUEST_CODE_FOREIGN_USER_SPOT_LIST_LOGIN = 2701;
+    public static final int REQUEST_CODE_FOREIGN_USER_SPOT_LIST_LOGIN_TO_GET_CHECKINS = 2701;
+    public static final int REQUEST_CODE_FOREIGN_USER_SPOT_LIST_LOGIN_TO_GET_ADDED = 2702;
+    public static final int REQUEST_CODE_FOREIGN_USER_SPOT_LIST_LOGIN_TO_GET_EDITED = 2703;
 
     //    DiveSpotsListActivity
     public static final int REQUEST_CODE_DIVE_SPOTS_LIST_ACTIVITY_LOGIN = 2801;
@@ -141,6 +149,4 @@ public class ActivitiesRequestCodes {
     //    SocialNetworks
     public static final int REQUEST_CODE_SOCIAL_NETWORKS_SIGN_IN = 3701;
 
-    //    UsersDivespotListSwipableActivity
-    public static final int REQUEST_CODE_USERS_DIVESPOT_LIST_SWIPABLE_ACTIVITY_LOGIN = 3801;
 }

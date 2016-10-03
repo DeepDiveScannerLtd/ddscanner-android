@@ -7,6 +7,7 @@ import android.support.multidex.MultiDex;
 
 import com.crashlytics.android.Crashlytics;
 import com.ddscanner.analytics.AnalyticsSystemsManager;
+import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.activities.InternetClosedActivity;
 import com.ddscanner.utils.LogUtils;
 import com.facebook.FacebookSdk;
@@ -29,6 +30,7 @@ public class DDScannerApplication extends Application {
     public static Bus bus = new Bus();
     private static boolean activityVisible;
     public static boolean isActivitiesFragmentVisible = false;
+    private static DDScannerRestClient ddScannerRestClient;
 
     private static DDScannerApplication instance;
 
@@ -46,6 +48,8 @@ public class DDScannerApplication extends Application {
         FacebookSdk.sdkInitialize(this);
         instance = this;
         AnalyticsSystemsManager.initAnalyticsSystems(this);
+
+        ddScannerRestClient = new DDScannerRestClient();
     }
 
     protected void attachBaseContext(Context base) {
@@ -70,6 +74,10 @@ public class DDScannerApplication extends Application {
 
     public static void activityPaused() {
         activityVisible = false;
+    }
+
+    public static DDScannerRestClient getDdScannerRestClient() {
+        return ddScannerRestClient;
     }
 
 }

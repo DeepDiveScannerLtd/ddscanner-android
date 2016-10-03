@@ -27,12 +27,15 @@ import com.ddscanner.entities.errors.ServerInternalErrorException;
 import com.ddscanner.entities.errors.UnknownErrorException;
 import com.ddscanner.entities.errors.UserNotFoundException;
 import com.ddscanner.entities.errors.ValidationErrorException;
-import com.ddscanner.rest.BaseCallback;
+import com.ddscanner.rest.BaseCallbackOld;
+import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
+import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogUtils;
+import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
@@ -50,7 +53,7 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class ForeignProfileActivity extends AppCompatActivity implements View.OnClickListener {
+public class ForeignProfileActivity extends AppCompatActivity implements View.OnClickListener, InfoDialogFragment.DialogClosedListener {
 
     private String FACEBOOK_URL;
     private String FACEBOOK_PAGE_ID;
@@ -77,6 +80,35 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
     private LinearLayout dislikeLayout;
     private LinearLayout openOnSocialLayout;
 
+    private DDScannerRestClient.ResultListener<User> userResultListener = new DDScannerRestClient.ResultListener<User>() {
+        @Override
+        public void onSuccess(User result) {
+            user = result;
+            FACEBOOK_URL = Constants.PROFILE_DIALOG_FACEBOOK_URL + user.getSocialId();
+            FACEBOOK_PAGE_ID = user.getSocialId();
+            setUi(user);
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_FOREIGN_PROFILE_ACTIVITY_FAILED_TO_CONNECT, false);
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            switch (errorType) {
+                case USER_NOT_FOUND_ERROR_C801:
+                    SharedPreferenceHelper.logout();
+                    LoginActivity.showForResult(ForeignProfileActivity.this, ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_LOGIN);
+                    break;
+                default:
+                    EventsTracker.trackUnknownServerError(url, errorMessage);
+                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_FOREIGN_PROFILE_ACTIVITY_UNKNOWN_ERROR, false);
+                    break;
+            }
+        }
+    };
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,7 +116,7 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
         userId = getIntent().getStringExtra("USERID");
         findViews();
         toolbarSettings();
-        requestUserData();
+        DDScannerApplication.getDdScannerRestClient().getUserInformation(userId, userResultListener);
     }
 
     private void findViews() {
@@ -169,73 +201,6 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
         return "";
     }
 
-    private void requestUserData() {
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserInfo(userId, Helpers.getUserQuryMapRequest());
-        call.enqueue(new BaseCallback() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    String responseString = "";
-                    if (response.raw().code() == 200) {
-                        try {
-                            responseString = response.body().string();
-                            JSONObject jsonObject = new JSONObject(responseString);
-                            responseString = jsonObject.getString("user");
-                            user = new Gson().fromJson(responseString, User.class);
-                            FACEBOOK_URL = Constants.PROFILE_DIALOG_FACEBOOK_URL + user.getSocialId();
-                            FACEBOOK_PAGE_ID = user.getSocialId();
-                            setUi(user);
-                        } catch (IOException e) {
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-                if (!response.isSuccessful()) {
-                    String responseString = "";
-                    try {
-                        responseString = response.errorBody().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    LogUtils.i("response body is " + responseString);
-                    try {
-                        ErrorsParser.checkForError(response.code(), responseString);
-                    } catch (ServerInternalErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(ForeignProfileActivity.this, R.string.toast_server_error);
-                    } catch (BadRequestException e) {
-                        // TODO Handle
-                        Helpers.showToast(ForeignProfileActivity.this, R.string.toast_server_error);
-                    } catch (ValidationErrorException e) {
-                        // TODO Handle
-                    } catch (NotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(ForeignProfileActivity.this, R.string.toast_server_error);
-                    } catch (UnknownErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(ForeignProfileActivity.this, R.string.toast_server_error);
-                    } catch (DiveSpotNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(ForeignProfileActivity.this, R.string.toast_server_error);
-                    } catch (UserNotFoundException e) {
-                        // TODO Handle
-                        SocialNetworks.showForResult(ForeignProfileActivity.this, ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_LOGIN);
-                    } catch (CommentNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(ForeignProfileActivity.this, R.string.toast_server_error);
-                    }
-                }
-            }
-
-            @Override
-            public void onConnectionFailure() {
-                DialogUtils.showConnectionErrorDialog(ForeignProfileActivity.this);
-            }
-        });
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -258,7 +223,7 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
         switch (requestCode) {
             case ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_LOGIN:
                 if (resultCode == RESULT_OK) {
-                    requestUserData();
+                    DDScannerApplication.getDdScannerRestClient().getUserInformation(userId, userResultListener);
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_LOGIN_TO_SEE_CHECKINS:
@@ -290,7 +255,7 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
                     EventsTracker.trackReviewerCheckInsView();
                     ForeignUserDiveSpotList.show(this, false, false, true, userId);
                 } else {
-                    Intent intent = new Intent(ForeignProfileActivity.this, SocialNetworks.class);
+                    Intent intent = new Intent(ForeignProfileActivity.this, LoginActivity.class);
                     startActivityForResult(intent, ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_LOGIN_TO_SEE_CHECKINS);
                 }
                 break;
@@ -299,7 +264,7 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
                     EventsTracker.trackUserCreatedView();
                     ForeignUserDiveSpotList.show(this, false, true, false, userId);
                 } else {
-                    Intent intent = new Intent(ForeignProfileActivity.this, SocialNetworks.class);
+                    Intent intent = new Intent(ForeignProfileActivity.this, LoginActivity.class);
                     startActivityForResult(intent, ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_LOGIN_TO_SEE_CREATED);
                 }
                 break;
@@ -308,7 +273,7 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
                     EventsTracker.trackReviewerEditedView();
                     ForeignUserDiveSpotList.show(this, true, false, false, userId);
                 } else {
-                    Intent intent = new Intent(ForeignProfileActivity.this, SocialNetworks.class);
+                    Intent intent = new Intent(ForeignProfileActivity.this, LoginActivity.class);
                     startActivityForResult(intent, ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_LOGIN_TO_SEE_EDITED);
                 }
                 break;
@@ -378,6 +343,16 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
         DDScannerApplication.activityResumed();
         if (!Helpers.hasConnection(this)) {
             DDScannerApplication.showErrorActivity(this);
+        }
+    }
+
+    @Override
+    public void onDialogClosed(int requestCode) {
+        switch (requestCode) {
+            case DialogsRequestCodes.DRC_FOREIGN_PROFILE_ACTIVITY_UNKNOWN_ERROR:
+            case DialogsRequestCodes.DRC_FOREIGN_PROFILE_ACTIVITY_FAILED_TO_CONNECT:
+                finish();
+                break;
         }
     }
 }

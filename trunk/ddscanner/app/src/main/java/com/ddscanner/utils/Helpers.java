@@ -9,6 +9,7 @@ import android.net.Network;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -18,9 +19,13 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.Image;
 import com.ddscanner.entities.Sealife;
+import com.ddscanner.entities.errors.Field;
+import com.ddscanner.entities.errors.ValidationError;
 import com.ddscanner.entities.request.RegisterRequest;
+import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -156,8 +161,10 @@ public class Helpers {
         }
         if (first != null) {
             allPhotos = (ArrayList<Image>) first.clone();
-            for (int i = 0; i < second.size(); i++) {
-                allPhotos.add(second.get(i));
+            if (second != null) {
+                for (int i = 0; i < second.size(); i++) {
+                    allPhotos.add(second.get(i));
+                }
             }
             return allPhotos;
         }
@@ -166,7 +173,6 @@ public class Helpers {
         }
         return allPhotos;
     }
-
 
 
     /**
@@ -220,6 +226,29 @@ public class Helpers {
         } catch (JsonSyntaxException exception) {
             LogUtils.i(TAG, "errors: " + errors);
             exception.printStackTrace();
+        }
+    }
+
+    /**
+     * Handling errors and showing this in textviews
+     *
+     * @param errorsMap
+     * @param validationError
+     */
+    public static void errorHandling(Map<String, TextView> errorsMap, ValidationError validationError) {
+        for (Field field : validationError.getFields()) {
+            if ("token".equals(field.getName())) {
+                return;
+            }
+            if ("lat".equals(field.getName()) || "lng".equals(field.getName())) {
+                errorsMap.get("location").setVisibility(View.VISIBLE);
+                errorsMap.get("location").setText("Please choose location");
+            }
+            if (errorsMap.get(field.getName()) != null) {
+                String key = field.getName();
+                errorsMap.get(key).setVisibility(View.VISIBLE);
+                errorsMap.get(key).setText(field.getErrors().toString().replace("[", "").replace("]", ""));
+            }
         }
     }
 
@@ -470,7 +499,7 @@ public class Helpers {
         int itemsCount = Integer.parseInt(count);
         String returnedString = "";
         if (itemsCount > 999) {
-            return String.valueOf(itemsCount/1000) + "K";
+            return String.valueOf(itemsCount / 1000) + "K";
         } else {
             return count;
         }
@@ -479,9 +508,19 @@ public class Helpers {
     public static void hideKeyboard(Activity context) {
         View view = context.getCurrentFocus();
         if (view != null) {
-            InputMethodManager imm = (InputMethodManager)context.getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
+    }
+
+    public static void handleUnexpectedServerError(FragmentManager fragmentManager, String requestUrl, String errorMessage) {
+        handleUnexpectedServerError(fragmentManager, requestUrl, errorMessage, R.string.error_server_error_title, R.string.error_unexpected_error);
+    }
+
+    public static void handleUnexpectedServerError(FragmentManager fragmentManager, String requestUrl, String errorMessage, int titleResId, int messageResId) {
+        // TODO May be should use another tracking mechanism
+        EventsTracker.trackUnknownServerError(requestUrl, errorMessage);
+        InfoDialogFragment.show(fragmentManager, titleResId, messageResId, false);
     }
 
 }

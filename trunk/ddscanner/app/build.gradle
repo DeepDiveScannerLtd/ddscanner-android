@@ -4,7 +4,8 @@ buildscript {
     }
 
     dependencies {
-        classpath 'io.fabric.tools:gradle:1.+'
+        // last version index can be found here - https://twittersdk.artifactoryonline.com/twittersdk/repo/io/fabric/tools/gradle/
+        classpath 'io.fabric.tools:gradle:1.21.5'
     }
 }
 apply plugin: 'com.android.application'
@@ -55,8 +56,8 @@ repositories {
     maven { url "https://jitpack.io" }
 }
 
-def playServicesVersion="9.4.0"
-def supportVersionVersion="24.1.1"
+def playServicesVersion="9.6.1"
+def supportVersionVersion="24.2.1"
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
@@ -104,7 +105,7 @@ dependencies {
     compile 'com.github.lovetuzitong:MultiImageSelector:1.2'
     compile 'jp.wasabeef:picasso-transformations:2.1.0'
     compile 'com.flurry.android:analytics:6.4.0'
-    compile 'com.appsflyer:af-android-sdk:4+@aar'
+    compile 'com.appsflyer:af-android-sdk:4.6.0@aar'
     compile 'com.github.liuguangqiang.swipeback:library:1.0.2@aar'
     compile 'at.blogc:expandabletextview:1.0.3'
 }

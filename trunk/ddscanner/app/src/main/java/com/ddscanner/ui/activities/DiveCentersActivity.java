@@ -30,8 +30,10 @@ import com.ddscanner.events.LocationReadyEvent;
 import com.ddscanner.events.OnMapClickEvent;
 import com.ddscanner.events.PutDiveCentersToListEvent;
 import com.ddscanner.ui.adapters.DiveCentersListAdapter;
+import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.ui.managers.DiveCentersClusterManager;
 import com.ddscanner.utils.ActivitiesRequestCodes;
+import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -49,7 +51,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.rey.material.widget.ProgressView;
 import com.squareup.otto.Subscribe;
 
-public class DiveCentersActivity extends BaseAppCompatActivity implements View.OnClickListener {
+public class DiveCentersActivity extends BaseAppCompatActivity implements View.OnClickListener, InfoDialogFragment.DialogClosedListener {
     private static final String TAG = "DiveCentersActivity";
     private Toolbar toolbar;
     private LatLng latLng;
@@ -423,5 +425,13 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
         }
     }
 
-
+    @Override
+    public void onDialogClosed(int requestCode) {
+        switch (requestCode) {
+            case DialogsRequestCodes.DRC_DIVE_CENTERS_CLUSTER_MANAGER_UNEXPECTED_ERROR:
+            case DialogsRequestCodes.DRC_DIVE_CENTERS_CLUSTER_MANAGER_FAILED_TO_CONNECT:
+                finish();
+                break;
+        }
+    }
 }

@@ -4,13 +4,11 @@ import android.Manifest;
 import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
-import android.content.res.Resources;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -30,7 +28,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -50,37 +47,25 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
-import com.ddscanner.entities.Checkins;
+import com.ddscanner.entities.CheckIns;
 import com.ddscanner.entities.Comment;
 import com.ddscanner.entities.Comments;
+import com.ddscanner.entities.DiveSpotDetails;
 import com.ddscanner.entities.DiveSpotFull;
-import com.ddscanner.entities.DivespotDetails;
 import com.ddscanner.entities.Image;
 import com.ddscanner.entities.Sealife;
 import com.ddscanner.entities.User;
-import com.ddscanner.entities.errors.BadRequestException;
-import com.ddscanner.entities.errors.CommentNotFoundException;
-import com.ddscanner.entities.errors.DiveSpotNotFoundException;
-import com.ddscanner.entities.errors.NotFoundException;
-import com.ddscanner.entities.errors.ServerInternalErrorException;
-import com.ddscanner.entities.errors.UnknownErrorException;
-import com.ddscanner.entities.errors.UserNotFoundException;
-import com.ddscanner.entities.errors.ValidationErrorException;
-import com.ddscanner.entities.request.ValidationReguest;
 import com.ddscanner.events.OpenPhotosActivityEvent;
 import com.ddscanner.events.UnknownErrorCatchedEvent;
-import com.ddscanner.rest.BaseCallback;
-import com.ddscanner.rest.ErrorsParser;
-import com.ddscanner.rest.RestClient;
-import com.ddscanner.rest.ServerErrorCallback;
+import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.adapters.DiveSpotsPhotosAdapter;
 import com.ddscanner.ui.adapters.EditorsListAdapter;
 import com.ddscanner.ui.adapters.SealifeListAdapter;
+import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
-import com.ddscanner.utils.DialogUtils;
+import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
-import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -90,37 +75,32 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.gson.Gson;
 import com.rey.material.widget.ProgressView;
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 import me.nereo.multi_image_selector.MultiImageSelector;
 import me.nereo.multi_image_selector.MultiImageSelectorActivity;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Response;
 
-public class DiveSpotDetailsActivity extends AppCompatActivity implements View.OnClickListener, RatingBar.OnRatingBarChangeListener {
+public class DiveSpotDetailsActivity extends AppCompatActivity implements View.OnClickListener, RatingBar.OnRatingBarChangeListener, InfoDialogFragment.DialogClosedListener {
 
     private static final String TAG = DiveSpotDetailsActivity.class.getName();
 
     private static final String EXTRA_ID = "ID";
 
-    private DivespotDetails divespotDetails;
-    private ProgressDialog progressDialog;
-    private String productId;
+    private DiveSpotDetails diveSpotDetails;
+    private String diveSpotId;
     private LatLng diveSpotCoordinates;
     private boolean isCheckedIn = false;
+    private boolean isFavorite = false;
+    private boolean isNewDiveSpot = false;
     private DiveSpotFull diveSpot;
+    private boolean editorsListExpanded;
 
     /*Ui*/
     private TextView diveSpotName;
@@ -131,7 +111,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private ProgressView progressBar;
     private ProgressView progressBarFull;
     private RecyclerView photosRecyclerView;
-    private RecyclerView sealifeRecyclerview;
+    private RecyclerView sealifeRecyclerView;
     private MapFragment mapFragment;
     private Toolbar toolbar;
     private CollapsingToolbarLayout collapsingToolbarLayout;
@@ -161,8 +141,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private TextView newDiveSpotView;
     private ImageView creatorAvatar;
     private ImageButton btnAddPhoto;
-    private int avatarImageSize;
-    private int avatarImageRadius;
     private ImageView expandEditorsArrow;
     private Menu menu;
     private List<User> creatorsEditorsList = new ArrayList<>();
@@ -171,15 +149,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private RecyclerView editorsRecyclerView;
     private MaterialDialog materialDialog;
 
-    private boolean isCLickedFavorite = false;
-    private boolean isClickedCHeckin = false;
-    private boolean isClickedCheckOut = false;
-    private boolean isClickedYesValidation = false;
-    private boolean isClickedNoValidation = false;
-    private boolean isFavorite = false;
-    private boolean isClickedRemoveFromFavorites = false;
-    private boolean isClickedEdit = false;
-    private boolean isNewDiveSpot = false;
     private LinearLayout serveConnectionErrorLayout;
     private Button btnRefreshLayout;
     private CoordinatorLayout mainLayout;
@@ -188,22 +157,113 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private List<Comment> usersComments;
     private List<User> usersCheckins;
 
-    private boolean editorsListExpanded;
+    private DDScannerRestClient.ResultListener<DiveSpotDetails> diveSpotDetailsResultListener = new DDScannerRestClient.ResultListener<DiveSpotDetails>() {
+        @Override
+        public void onSuccess(DiveSpotDetails result) {
+            diveSpotDetails = result;
+            diveSpotCoordinates = new LatLng(diveSpotDetails.getDivespot().getLat(),
+                    diveSpotDetails.getDivespot().getLng());
+            usersComments = diveSpotDetails.getComments();
+            setUi();
+        }
 
-    public static float convertDpToPixel(float dp, Context context) {
-        Resources resources = context.getResources();
-        DisplayMetrics metrics = resources.getDisplayMetrics();
-        float px = dp * ((float) metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
-        return px;
-    }
+        @Override
+        public void onConnectionFailure() {
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_DIVE_SPOT_DETAILS_ACTIVITY_FAILED_TO_CONNECT, false);
+        }
 
-    /**
-     * Show current activity from another place of app
-     *
-     * @param context
-     * @param id
-     * Andrei Lashkevich
-     */
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+
+            switch (errorType) {
+                case DIVE_SPOT_NOT_FOUND_ERROR_C802:
+                    // This is unexpected so track it
+                    EventsTracker.trackUnknownServerError(url, errorMessage);
+                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_message_dive_spot_not_found, DialogsRequestCodes.DRC_DIVE_SPOT_DETAILS_ACTIVITY_DIVE_SPOT_NOT_FOUND, false);
+                    break;
+                default:
+                    EventsTracker.trackUnknownServerError(url, errorMessage);
+                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_DIVE_SPOT_DETAILS_ACTIVITY_DIVE_SPOT_NOT_FOUND, false);
+                    break;
+            }
+        }
+    };
+
+    private CheckInCheckoutResultListener checkInResultListener = new CheckInCheckoutResultListener(true);
+    private CheckInCheckoutResultListener checkOutResultListener = new CheckInCheckoutResultListener(false);
+    private AddRemoveFromFavouritesResultListener addToFavouritesResultListener = new AddRemoveFromFavouritesResultListener(true);
+    private AddRemoveFromFavouritesResultListener removeToFavouritesResultListener = new AddRemoveFromFavouritesResultListener(false);
+
+    private DDScannerRestClient.ResultListener<CheckIns> checkInsResultListener = new DDScannerRestClient.ResultListener<CheckIns>() {
+        @Override
+        public void onSuccess(CheckIns checkIns) {
+            if (checkIns.getCheckins() != null) {
+                usersCheckins = checkIns.getCheckins();
+                if (usersCheckins.size() == 1) {
+                    setCheckinsCountPeople(String.valueOf(usersCheckins.size()) + " " +
+                            getString(R.string.one_person_checked_in), false);
+                } else {
+                    setCheckinsCountPeople(String.valueOf(usersCheckins.size()) + " " +
+                            getString(R.string.peoples_checked_in_here), false);
+                }
+            } else {
+                setCheckinsCountPeople(getString(R.string.no_one_has_checked_in_here), true);
+            }
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+
+            switch (errorType) {
+                case DIVE_SPOT_NOT_FOUND_ERROR_C802:
+                    // This is unexpected so track it
+                    Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage, R.string.error_server_error_title, R.string.error_message_dive_spot_not_found_checkins_counter);
+                    break;
+                default:
+                    Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage, R.string.error_server_error_title, R.string.error_unexpected_error_checkins_counter);
+                    break;
+            }
+        }
+    };
+
+    private DDScannerRestClient.ResultListener<Comments> commentsResultListener = new DDScannerRestClient.ResultListener<Comments>() {
+        @Override
+        public void onSuccess(Comments comments) {
+            usersComments = comments.getComments();
+            if (usersComments != null && usersComments.size() > 0) {
+                setReviewsCount(getString(R.string.show_all, String.valueOf(usersComments.size())));
+            } else {
+                setReviewsCount(getString(R.string.write_review));
+            }
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+
+            switch (errorType) {
+                case DIVE_SPOT_NOT_FOUND_ERROR_C802:
+                    // This is unexpected so track it
+                    Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage, R.string.error_server_error_title, R.string.error_message_dive_spot_not_found_reviews_counter);
+                    break;
+                default:
+                    Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage, R.string.error_server_error_title, R.string.error_unexpected_error_reviews_counter);
+                    break;
+            }
+        }
+    };
+
+    private DiveSpotValidationListener diveSpotValidationResultListener = new DiveSpotValidationListener();
+
     public static void show(Context context, String id, EventsTracker.SpotViewSource spotViewSource) {
         if (spotViewSource != null) {
             EventsTracker.trackDiveSpotView(id, spotViewSource);
@@ -229,20 +289,14 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         findViews();
         toolbarSettings();
         isNewDiveSpot = getIntent().getBooleanExtra(Constants.DIVE_SPOT_DETAILS_ACTIVITY_EXTRA_IS_FROM_AD_DIVE_SPOT, false);
-        productId = getIntent().getStringExtra(EXTRA_ID);
-        requestProductDetails(productId);
+        diveSpotId = getIntent().getStringExtra(EXTRA_ID);
+        DDScannerApplication.getDdScannerRestClient().getDiveSpotDetails(diveSpotId, diveSpotDetailsResultListener);
     }
-
-    /**
-     * Find views in activity
-     *
-     * Andrei Lashkevich
-     */
 
     private void findViews() {
         checkinsArrow = (ImageView) findViewById(R.id.checkins_arrow);
         serveConnectionErrorLayout = (LinearLayout) findViewById(R.id.server_error);
-        btnRefreshLayout =(Button) findViewById(R.id.button_refresh);
+        btnRefreshLayout = (Button) findViewById(R.id.button_refresh);
         mainLayout = (CoordinatorLayout) findViewById(R.id.main_layout);
         photos = (LinearLayout) findViewById(R.id.photos);
         diveSpotName = (TextView) findViewById(R.id.dive_spot_name);
@@ -253,7 +307,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         progressBar = (ProgressView) findViewById(R.id.progressBar);
         progressBarFull = (ProgressView) findViewById(R.id.progressBarFull);
         photosRecyclerView = (RecyclerView) findViewById(R.id.photos_rc);
-        sealifeRecyclerview = (RecyclerView) findViewById(R.id.sealife_rc);
+        sealifeRecyclerView = (RecyclerView) findViewById(R.id.sealife_rc);
         mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.google_map_fragment);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
@@ -288,12 +342,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         btnAddPhoto = (ImageButton) findViewById(R.id.btn_add_photo);
     }
 
-    /**
-     * Create toolbar ui
-     *
-     * Andrei Lashkevich
-     */
-
     private void toolbarSettings() {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -304,16 +352,10 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         //  collapsingToolbarLayout.setCollapsedTitleTextColor(ContextCompat.getColor(this, android.R.color.transparent));
     }
 
-    /**
-     * Set ui data at current activity
-     *
-     * Andrei Lashkevich
-     */
-
     private void setUi() {
-        avatarImageRadius = (int) getResources().getDimension(R.dimen.editor_avatar_radius);
+        int avatarImageRadius = (int) getResources().getDimension(R.dimen.editor_avatar_radius);
         rating.removeAllViews();
-        avatarImageSize = 2 * avatarImageRadius;
+        int avatarImageSize = 2 * avatarImageRadius;
         btnRefreshLayout.setOnClickListener(this);
         btnAddPhoto.setOnClickListener(this);
         materialDialog = Helpers.getMaterialDialog(this);
@@ -322,16 +364,16 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         btnDsDetailsIsValid.setOnClickListener(this);
         btnCheckIn.setOnClickListener(this);
         photos.setOnClickListener(this);
-     //   creatorLayout.setOnClickListener(this);
+        //   creatorLayout.setOnClickListener(this);
         ratingBar.setOnRatingBarChangeListener(this);
         //checkInPeoples.setOnClickListener(this);
         showMore.setOnClickListener(this);
         showAllReviews.setOnClickListener(this);
-        diveSpot = divespotDetails.getDivespot();
+        diveSpot = diveSpotDetails.getDivespot();
         isFavorite = diveSpot.getIsFavorite();
         updateMenuItems(menu, isFavorite);
-        if (divespotDetails.getComments() != null) {
-            showAllReviews.setText(getString(R.string.show_all, String.valueOf(divespotDetails.getComments().size())));
+        if (diveSpotDetails.getComments() != null) {
+            showAllReviews.setText(getString(R.string.show_all, String.valueOf(diveSpotDetails.getComments().size())));
         } else {
             showAllReviews.setText(R.string.write_review);
         }
@@ -414,11 +456,11 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 diveSpot.getDiveSpotPathMedium(), DiveSpotDetailsActivity.this, (ArrayList<Image>) diveSpot.getCommentImages()));
         LinearLayoutManager layoutManager = new LinearLayoutManager(DiveSpotDetailsActivity.this);
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        sealifeRecyclerview.setNestedScrollingEnabled(false);
-        sealifeRecyclerview.setHasFixedSize(false);
-        sealifeRecyclerview.setLayoutManager(layoutManager);
-        sealifeRecyclerview.setAdapter(new SealifeListAdapter(
-                (ArrayList<Sealife>) divespotDetails.getSealifes(),
+        sealifeRecyclerView.setNestedScrollingEnabled(false);
+        sealifeRecyclerView.setHasFixedSize(false);
+        sealifeRecyclerView.setLayoutManager(layoutManager);
+        sealifeRecyclerView.setAdapter(new SealifeListAdapter(
+                (ArrayList<Sealife>) diveSpotDetails.getSealifes(),
                 this, diveSpot.getSealifePathMedium(),
                 diveSpot.getSealifePathMedium()));
         mapFragment.getMapAsync(new OnMapReadyCallback() {
@@ -454,9 +496,9 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         progressBarFull.setVisibility(View.GONE);
         informationLayout.setVisibility(View.VISIBLE);
         if (diveSpot.getCheckin()) {
-            checkinUi();
+            checkInUi();
         } else {
-            checkoutUi();
+            checkOutUi();
         }
         if (diveSpot.getValidation() != null) {
             if (!diveSpot.getValidation()) {
@@ -473,9 +515,9 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             }
         }
 
-        if (divespotDetails.getCheckins() != null) {
+        if (diveSpotDetails.getCheckins() != null) {
             checkinsArrow.setVisibility(View.GONE);
-            usersCheckins = divespotDetails.getCheckins();
+            usersCheckins = diveSpotDetails.getCheckins();
             if (usersCheckins.size() == 1) {
                 setCheckinsCountPeople(String.valueOf(usersCheckins.size()) + " " +
                         getString(R.string.one_person_checked_in), false);
@@ -484,13 +526,13 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                         getString(R.string.peoples_checked_in_here), false);
             }
         }
-        if (divespotDetails.getEditors() != null) {
-            for (User user : divespotDetails.getEditors()) {
+        if (diveSpotDetails.getEditors() != null) {
+            for (User user : diveSpotDetails.getEditors()) {
                 creatorsEditorsList.add(user);
             }
             expandEditorsArrow.setVisibility(View.VISIBLE);
             creatorLayout.setOnClickListener(this);
-           // EditorsListActivity.show(DiveSpotDetailsActivity.this, (ArrayList<User>) creatorsEditorsList);
+            // EditorsListActivity.show(DiveSpotDetailsActivity.this, (ArrayList<User>) creatorsEditorsList);
 
         }
         showDiveCenters.setVisibility(View.VISIBLE);
@@ -515,8 +557,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     /**
      * Handling map click events
      *
-     * @param googleMap
-     * Andrei Lashkevich
+     * @param googleMap Andrei Lashkevich
      */
     private void workWithMap(GoogleMap googleMap) {
         // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
@@ -546,88 +587,17 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         });
     }
 
-    /**
-     * Request for getting data about dive spot
-     *
-     * @param productId
-     * Andrei Lashkevich
-     */
-    private void requestProductDetails(String productId) {
-        showDiveCenters.setVisibility(View.GONE);
-        Map<String, String> map = new HashMap<>();
-        map = Helpers.getUserQuryMapRequest();
-        map.put("isImageAuthor", "true");
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveSpotById(productId, map);
-        call.enqueue(new ServerErrorCallback() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    String responseString = "";
-                    try {
-                        responseString = response.body().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    LogUtils.i("response body is " + responseString);
-                    divespotDetails = new Gson().fromJson(responseString, DivespotDetails.class);
-                    diveSpotCoordinates = new LatLng(divespotDetails.getDivespot().getLat(),
-                            divespotDetails.getDivespot().getLng());
-                    usersComments = divespotDetails.getComments();
-                    setUi();
-                } else {
-                    String responseString = "";
-                    try {
-                        responseString = response.errorBody().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    LogUtils.i("response body is " + responseString);
-                    try {
-                        ErrorsParser.checkForError(response.code(), responseString);
-                    } catch (ServerInternalErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
-                    } catch (BadRequestException e) {
-                        // TODO Handle
-                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
-                    } catch (ValidationErrorException e) {
-                        // TODO Handle
-                    } catch (NotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
-                    } catch (UnknownErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
-                    } catch (DiveSpotNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
-                    } catch (UserNotFoundException e) {
-                        // TODO Handle
-                    } catch (CommentNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
-                    }
-                }
-            }
-
-            @Override
-            public void onConnectionFailure() {
-                DialogUtils.showConnectionErrorDialog(DiveSpotDetailsActivity.this);
-            }
-        });
-    }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.button_refresh:
                 mainLayout.setVisibility(View.VISIBLE);
                 serveConnectionErrorLayout.setVisibility(View.GONE);
-                requestProductDetails(productId);
+                DDScannerApplication.getDdScannerRestClient().getDiveSpotDetails(diveSpotId, diveSpotDetailsResultListener);
                 break;
             case R.id.map_layout:
                 Intent intent = new Intent(DiveSpotDetailsActivity.this, ShowDsLocationActivity.class);
-                intent.putExtra("LATLNG", new LatLng(divespotDetails.getDivespot().getLat(), divespotDetails.getDivespot().getLng()));
+                intent.putExtra("LATLNG", new LatLng(diveSpotDetails.getDivespot().getLat(), diveSpotDetails.getDivespot().getLng()));
                 startActivity(intent);
                 break;
             case R.id.check_in_peoples:
@@ -647,13 +617,13 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 }
                 break;
             case R.id.btn_show_all_reviews:
-                if (divespotDetails.getComments() != null || usersComments != null) {
+                if (diveSpotDetails.getComments() != null || usersComments != null) {
                     EventsTracker.trackDeviSpotReviewsView();
                     Intent reviewsIntent = new Intent(DiveSpotDetailsActivity.this, ReviewsActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("COMMENTS", (ArrayList<Comment>) usersComments);
-                    bundle.putString(Constants.DIVESPOTID, String.valueOf(divespotDetails.getDivespot().getId()));
-                    bundle.putString("PATH", divespotDetails.getDivespot().getDiveSpotPathMedium());
+                    bundle.putString(Constants.DIVESPOTID, String.valueOf(diveSpotDetails.getDivespot().getId()));
+                    bundle.putString("PATH", diveSpotDetails.getDivespot().getDiveSpotPathMedium());
                     reviewsIntent.putExtras(bundle);
                     startActivityForResult(reviewsIntent, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_REVIEWS);
                 } else {
@@ -661,7 +631,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 }
                 break;
             case R.id.yes_button:
-                diveSpotValidation(true);
+                validateDiveSpot(true);
                 break;
             case R.id.no_button:
                 showEditDiveSpotDialog();
@@ -686,10 +656,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     }
 
     public boolean checkReadStoragePermission(Activity context) {
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            return false;
-        }
-        return true;
+        return ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
     }
 
     @Override
@@ -701,14 +668,14 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 } else {
                     Toast.makeText(DiveSpotDetailsActivity.this, "Grand permission to pick photo from gallery!", Toast.LENGTH_SHORT).show();
                 }
-                return;
+                break;
             }
         }
     }
 
     private void addPhotosToDiveSpot() {
         if (!SharedPreferenceHelper.isUserLoggedIn()) {
-            SocialNetworks.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_PICK_PHOTOS);
+            LoginActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_PICK_PHOTOS);
         } else {
             MultiImageSelector.create().showCamera(false).multi().count(3).start(this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_PICK_PHOTOS);
         }
@@ -722,8 +689,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                     .putExtra(Constants.DIVESPOTID, String.valueOf(diveSpot.getId()));
             startActivityForResult(editDiveSpotIntent, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_EDIT_DIVE_SPOT);
         } else {
-            isClickedEdit = true;
-            showLoginActivity();
+            LoginActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_EDIT_SPOT);
         }
     }
 
@@ -746,7 +712,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog,
                                         @NonNull DialogAction which) {
-                        diveSpotValidation(false);
+                        validateDiveSpot(false);
                         dialog.dismiss();
                     }
                 });
@@ -785,159 +751,37 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         dialog.show();
     }
 
-    /**
-     * Sending request when try to check in in dive spot and change FAB style
-     *
-     * Andrei Lashkevich
-     */
-
     private void checkIn() {
-        checkinUi();
+        checkInUi();
         if (!SharedPreferenceHelper.isUserLoggedIn()) {
-            checkoutUi();
-            isClickedCHeckin = true;
-            showLoginActivity();
+            checkOutUi();
+            LoginActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_CHECK_IN);
             return;
         }
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().checkIn(
-                String.valueOf(divespotDetails.getDivespot().getId()),
-                Helpers.getRegisterRequest()
-        );
-        call.enqueue(new BaseCallback() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    getCheckins();
-                    EventsTracker.trackCheckIn(EventsTracker.CheckInStatus.SUCCESS);
-                } else {
-                    checkoutUi();
-                    String responseString = "";
-                    try {
-                        responseString = response.errorBody().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    LogUtils.i("response body is " + responseString);
-                    try {
-                        ErrorsParser.checkForError(response.code(), responseString);
-                    } catch (ServerInternalErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
-                    } catch (BadRequestException e) {
-                        // TODO Handle
-                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
-                    } catch (ValidationErrorException e) {
-                        // TODO Handle
-
-                    } catch (NotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
-                    } catch (UnknownErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
-                    } catch (DiveSpotNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
-                    } catch (UserNotFoundException e) {
-                        // TODO Handle
-                        isClickedCHeckin = true;
-                        showLoginActivity();
-                    } catch (CommentNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
-                    }
-                }
-            }
-
-            @Override
-            public void onConnectionFailure() {
-                DialogUtils.showConnectionErrorDialog(DiveSpotDetailsActivity.this);
-            }
-        });
+        DDScannerApplication.getDdScannerRestClient().postCheckIn(diveSpotId, checkInResultListener);
     }
 
-    private void checkinUi() {
+    private void checkInUi() {
         btnCheckIn.setImageDrawable(AppCompatDrawableManager.get().getDrawable(
                 DiveSpotDetailsActivity.this, R.drawable.ic_acb_pin_checked));
         btnCheckIn.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.white)));
         isCheckedIn = true;
     }
 
-    private void checkoutUi() {
+    private void checkOutUi() {
         btnCheckIn.setImageDrawable(AppCompatDrawableManager.get().getDrawable(DiveSpotDetailsActivity.this, R.drawable.ic_acb_pin));
         btnCheckIn.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.orange)));
         isCheckedIn = false;
     }
 
-    /**
-     * Sending request when try to check out in dive spot and change FAB style
-     *
-     * Andrei Lashkevich
-     */
-
     private void checkOut() {
-        checkoutUi();
+        checkOutUi();
         if (!SharedPreferenceHelper.isUserLoggedIn()) {
-            checkinUi();
-            isClickedCheckOut = true;
-            showLoginActivity();
+            checkInUi();
+            LoginActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_CHECK_OUT);
             return;
         }
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().checkOutUser(
-                String.valueOf(divespotDetails.getDivespot().getId()),
-                Helpers.getUserQuryMapRequest()
-        );
-        call.enqueue(new BaseCallback() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (!response.isSuccessful()) {
-                    checkinUi();
-                    String responseString = "";
-                    try {
-                        responseString = response.errorBody().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    LogUtils.i("response body is " + responseString);
-                    try {
-                        ErrorsParser.checkForError(response.code(), responseString);
-                    } catch (ServerInternalErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
-                    } catch (BadRequestException e) {
-                        // TODO Handle
-                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
-                    } catch (ValidationErrorException e) {
-                        // TODO Handle
-
-                    } catch (NotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
-                    } catch (UnknownErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
-                    } catch (DiveSpotNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
-                    } catch (UserNotFoundException e) {
-                        // TODO Handle
-                        isClickedCheckOut = true;
-                        showLoginActivity();
-                    } catch (CommentNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
-                    }
-                } else {
-                    EventsTracker.trackCheckOut();
-                    getCheckins();
-                }
-            }
-
-            @Override
-            public void onConnectionFailure() {
-                DialogUtils.showConnectionErrorDialog(DiveSpotDetailsActivity.this);
-            }
-        });
+        DDScannerApplication.getDdScannerRestClient().postCheckOut(diveSpotId, checkOutResultListener);
     }
 
     @Override
@@ -955,7 +799,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 if (!isFavorite) {
                     addDiveSpotToFavorites();
                 } else {
-                    removeFromFavorites(String.valueOf(diveSpot.getId()));
+                    removeFromFavorites();
                 }
                 break;
             case R.id.edit_dive_spot:
@@ -965,62 +809,14 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         return super.onOptionsItemSelected(item);
     }
 
-    private void diveSpotValidation(final boolean isValid) {
-        materialDialog.show();
-        ValidationReguest validationReguest = new ValidationReguest();
-        validationReguest.setAppId(Helpers.getRegisterRequest().getAppId());
-        validationReguest.setToken(Helpers.getRegisterRequest().getToken());
-        validationReguest.setSocial(Helpers.getRegisterRequest().getSocial());
-        if (SharedPreferenceHelper.getSn().equals("tw")) {
-            validationReguest.setSecret(Helpers.getRegisterRequest().getSecret());
+    private void validateDiveSpot(final boolean isValid) {
+        if (!SharedPreferenceHelper.isUserLoggedIn()) {
+            LoginActivity.showForResult(DiveSpotDetailsActivity.this, isValid ? ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_VALIDATE_SPOT : ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_INVALIDATE_SPOT);
+            return;
         }
-        validationReguest.setValid(isValid);
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance()
-                .divespotValidation(String.valueOf(divespotDetails.getDivespot().getId()),
-                        validationReguest);
-        call.enqueue(new BaseCallback() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                materialDialog.dismiss();
-                if (response.isSuccessful()) {
-                    if (menu != null && menu.findItem(R.id.edit_dive_spot) != null) {
-                        menu.findItem(R.id.edit_dive_spot).setVisible(false);
-                    }
-                    isInfoValidLayout.setVisibility(View.GONE);
-                    thanksLayout.setVisibility(View.VISIBLE);
-                    hideThanksLayout();
-                    if (isValid) {
-                        EventsTracker.trackDiveSpotValid();
-                    } else {
-                        EventsTracker.trackDiveSpotInvalid();
-                    }
-                } else {
-                    if (response.raw().code() == 422) {
-                        String error = "";
-                        try {
-                            error = response.errorBody().string();
-                            if (Helpers.checkIsErrorByLogin(error)) {
-                                if (isValid) {
-                                    isClickedYesValidation = true;
-                                    isClickedNoValidation = false;
-                                } else {
-                                    isClickedNoValidation = true;
-                                    isClickedYesValidation = false;
-                                }
-                                showLoginActivity();
-                                return;
-                            }
-                        } catch (IOException e) {
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onConnectionFailure() {
-                DialogUtils.showConnectionErrorDialog(DiveSpotDetailsActivity.this);
-            }
-        });
+        materialDialog.show();
+        diveSpotValidationResultListener.setValid(isValid);
+        DDScannerApplication.getDdScannerRestClient().postValidateDiveSpot(diveSpotId, isValid, diveSpotValidationResultListener);
     }
 
     private void hideThanksLayout() {
@@ -1028,205 +824,25 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-               thanksLayout.setVisibility(View.GONE);
+                thanksLayout.setVisibility(View.GONE);
             }
         }, 3000);
     }
 
     private void addDiveSpotToFavorites() {
         if (!SharedPreferenceHelper.isUserLoggedIn()) {
-            isCLickedFavorite = true;
-            showLoginActivity();
+            LoginActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_ADD_TO_FAVOURITES);
             return;
         }
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().addDiveSpotToFavourites(
-                String.valueOf(diveSpot.getId()),
-                Helpers.getRegisterRequest()
-        );
-        call.enqueue(new BaseCallback() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.raw().code() == 200) {
-                    isFavorite = true;
-                    updateMenuItems(menu, isFavorite);
-                    Toast.makeText(DiveSpotDetailsActivity.this, R.string.added_to_favorites, Toast.LENGTH_SHORT).show();
-                }
-                if (!response.isSuccessful()) {
-                    String responseString = "";
-                    try {
-                        responseString = response.errorBody().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    LogUtils.i("response body is " + responseString);
-                    try {
-                        ErrorsParser.checkForError(response.code(), responseString);
-                    } catch (ServerInternalErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
-                    } catch (BadRequestException e) {
-                        // TODO Handle
-                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.also_added_to_favorites);
-                    } catch (ValidationErrorException e) {
-                        // TODO Handle
-
-                    } catch (NotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
-                    } catch (UnknownErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
-                    } catch (DiveSpotNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
-                    } catch (UserNotFoundException e) {
-                        // TODO Handle
-                        isCLickedFavorite = true;
-                        showLoginActivity();
-                    } catch (CommentNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
-                    }
-                }
-            }
-
-            @Override
-            public void onConnectionFailure() {
-                DialogUtils.showConnectionErrorDialog(DiveSpotDetailsActivity.this);
-            }
-        });
+        DDScannerApplication.getDdScannerRestClient().postAddDiveSpotToFavourites(diveSpotId, addToFavouritesResultListener);
     }
 
-    private void removeFromFavorites(String id) {
+    private void removeFromFavorites() {
         if (!SharedPreferenceHelper.isUserLoggedIn()) {
-            isCLickedFavorite = true;
-            showLoginActivity();
+            LoginActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_REMOVE_FROM_FAVOURITES);
             return;
         }
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance()
-                .removeSpotFromFavorites(id, Helpers.getUserQuryMapRequest());
-        call.enqueue(new BaseCallback() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.raw().code() == 200) {
-                    isFavorite = false;
-                    updateMenuItems(menu, isFavorite);
-                    Toast.makeText(DiveSpotDetailsActivity.this, R.string.removed_from_favorites, Toast.LENGTH_SHORT).show();
-                }
-                if (!response.isSuccessful()) {
-                    String responseString = "";
-                    try {
-                        responseString = response.errorBody().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    LogUtils.i("response body is " + responseString);
-                    try {
-                        ErrorsParser.checkForError(response.code(), responseString);
-                    } catch (ServerInternalErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
-                    } catch (BadRequestException e) {
-                        // TODO Handle
-                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
-                    } catch (ValidationErrorException e) {
-                        // TODO Handle
-
-                    } catch (NotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
-                    } catch (UnknownErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
-                    } catch (DiveSpotNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
-                    } catch (UserNotFoundException e) {
-                        // TODO Handle
-                        isClickedRemoveFromFavorites = true;
-                        showLoginActivity();
-                    } catch (CommentNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(DiveSpotDetailsActivity.this, R.string.toast_server_error);
-                    }
-                }
-            }
-
-            @Override
-            public void onConnectionFailure() {
-                DialogUtils.showConnectionErrorDialog(DiveSpotDetailsActivity.this);
-            }
-        });
-    }
-
-    private void getCheckins() {
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getCheckins(String.valueOf(diveSpot.getId()));
-        call.enqueue(new BaseCallback() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                String responseString = "";
-                if (response.isSuccessful()) {
-                    Checkins checkins = new Checkins();
-                    try {
-                        responseString = response.body().string();
-                        checkins = new Gson().fromJson(responseString, Checkins.class);
-                        if (checkins.getCheckins() != null) {
-                            usersCheckins = checkins.getCheckins();
-                            if (usersCheckins.size() == 1) {
-                                setCheckinsCountPeople(String.valueOf(usersCheckins.size()) + " " +
-                                        getString(R.string.one_person_checked_in), false);
-                            } else {
-                                setCheckinsCountPeople(String.valueOf(usersCheckins.size()) + " " +
-                                        getString(R.string.peoples_checked_in_here), false);
-                            }
-                        } else {
-                            setCheckinsCountPeople(getString(R.string.no_one_has_checked_in_here), true);
-                        }
-                    } catch (IOException e) {
-
-                    }
-                }
-            }
-
-            @Override
-            public void onConnectionFailure() {
-                DialogUtils.showConnectionErrorDialog(DiveSpotDetailsActivity.this);
-            }
-        });
-    }
-
-    private void getComments() {
-
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance()
-                .getComments(String.valueOf(diveSpot.getId()), Helpers.getUserQuryMapRequest());
-        call.enqueue(new BaseCallback() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                String responseString = "";
-                if (response.isSuccessful()) {
-                    try {
-                        usersComments = null;
-                        responseString = response.body().string();
-                        Comments comments = new Gson().fromJson(responseString, Comments.class);
-                        if (comments.getComments() != null) {
-                            usersComments = comments.getComments();
-                        }
-                        if (usersComments != null && usersComments.size() > 0) {
-                            setReviewsCount(getString(R.string.show_all,String.valueOf(usersComments.size())));
-                        } else {
-                            setReviewsCount(getString(R.string.write_review));
-                        }
-                    } catch (IOException e) {
-
-                    }
-                }
-            }
-
-            @Override
-            public void onConnectionFailure() {
-                DialogUtils.showConnectionErrorDialog(DiveSpotDetailsActivity.this);
-            }
-        });
+        DDScannerApplication.getDdScannerRestClient().deleteDiveSpotFromFavourites(diveSpotId, removeToFavouritesResultListener);
     }
 
     @Override
@@ -1235,14 +851,14 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LEAVE_REVIEW:
                 if (resultCode == RESULT_OK) {
                     if (diveSpot != null) {
-                        getComments();
+                        DDScannerApplication.getDdScannerRestClient().getComments(diveSpotId, commentsResultListener);
                     }
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_REVIEWS:
                 if (resultCode == RESULT_OK) {
                     if (diveSpot != null) {
-                        getComments();
+                        DDScannerApplication.getDdScannerRestClient().getComments(diveSpotId, commentsResultListener);
                     }
                 }
                 break;
@@ -1256,74 +872,74 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                     refreshActivity();
                 }
                 break;
-            case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN:
-                if (resultCode == RESULT_OK) {
-                    if (isClickedCHeckin) {
-                        checkIn();
-                        isClickedCHeckin = false;
-                    }
-                    if (isClickedCheckOut) {
-                        checkOut();
-                        isClickedCheckOut = false;
-                    }
-                    if (isCLickedFavorite) {
-                        addDiveSpotToFavorites();
-                        isCLickedFavorite = false;
-                    }
-                    if (isClickedRemoveFromFavorites) {
-                        removeFromFavorites(String.valueOf(diveSpot.getId()));
-                        isClickedRemoveFromFavorites = false;
-                    }
-                    if (isClickedNoValidation) {
-                        diveSpotValidation(false);
-                    }
-                    if (isClickedYesValidation) {
-                        diveSpotValidation(true);
-                    }
-                    if (isClickedEdit) {
-                        Intent editDiveSpotIntent = new Intent(DiveSpotDetailsActivity.this,
-                                EditDiveSpotActivity.class);
-                        editDiveSpotIntent
-                                .putExtra(Constants.DIVESPOTID, String.valueOf(diveSpot.getId()));
-                        startActivityForResult(editDiveSpotIntent, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_EDIT_DIVE_SPOT);
-                        isClickedEdit = false;
-                    }
-                } else {
-                    if (isClickedCHeckin) {
-                        checkoutUi();
-                        isClickedCHeckin = false;
-                    }
-                    if (isClickedCheckOut) {
-                        checkinUi();
-                        isClickedCheckOut = false;
-                    }
-                    if (isCLickedFavorite) {
-                        updateMenuItems(menu, false);
-                    }
-                    if (isClickedRemoveFromFavorites) {
-                        updateMenuItems(menu, true);
-                    }
-                    if (isClickedYesValidation || isClickedNoValidation) {
-                        isInfoValidLayout.setVisibility(View.VISIBLE);
-                        thanksLayout.setVisibility(View.GONE);
-                    }
-                }
-                break;
             case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_PICK_PHOTOS:
                 if (resultCode == RESULT_OK) {
                     List<String> path = data.getStringArrayListExtra(MultiImageSelectorActivity
                             .EXTRA_RESULT);
-                    AddPhotosDoDiveSpotActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_ADD_PHOTOS_ACTIVITY, (ArrayList<String>)path, String.valueOf(diveSpot.getId()));
+                    AddPhotosDoDiveSpotActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_ADD_PHOTOS_ACTIVITY, (ArrayList<String>) path, String.valueOf(diveSpot.getId()));
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_ADD_PHOTOS_ACTIVITY:
                 if (resultCode == RESULT_OK) {
-                    requestProductDetails(String.valueOf(diveSpot.getId()));
+                    DDScannerApplication.getDdScannerRestClient().getDiveSpotDetails(String.valueOf(diveSpot.getId()), diveSpotDetailsResultListener);
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_PICK_PHOTOS:
                 if (resultCode == RESULT_OK) {
                     MultiImageSelector.create().showCamera(false).multi().count(3).start(this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_ADD_PHOTOS_ACTIVITY);
+                }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_VALIDATE_SPOT:
+                if (resultCode == RESULT_OK) {
+                    validateDiveSpot(true);
+                } else {
+                    isInfoValidLayout.setVisibility(View.VISIBLE);
+                    thanksLayout.setVisibility(View.GONE);
+                }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_INVALIDATE_SPOT:
+                if (resultCode == RESULT_OK) {
+                    validateDiveSpot(false);
+                } else {
+                    isInfoValidLayout.setVisibility(View.VISIBLE);
+                    thanksLayout.setVisibility(View.GONE);
+                }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_EDIT_SPOT:
+                if (resultCode == RESULT_OK) {
+                    Intent editDiveSpotIntent = new Intent(DiveSpotDetailsActivity.this,
+                            EditDiveSpotActivity.class);
+                    editDiveSpotIntent
+                            .putExtra(Constants.DIVESPOTID, String.valueOf(diveSpot.getId()));
+                    startActivityForResult(editDiveSpotIntent, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_EDIT_DIVE_SPOT);
+                }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_CHECK_IN:
+                if (resultCode == RESULT_OK) {
+                    checkIn();
+                } else {
+                    checkOutUi();
+                }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_CHECK_OUT:
+                if (resultCode == RESULT_OK) {
+                    checkOut();
+                } else {
+                    checkInUi();
+                }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_ADD_TO_FAVOURITES:
+                if (resultCode == RESULT_OK) {
+                    addDiveSpotToFavorites();
+                } else {
+                    updateMenuItems(menu, false);
+                }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_REMOVE_FROM_FAVOURITES:
+                if (resultCode == RESULT_OK) {
+                    removeFromFavorites();
+                } else {
+                    updateMenuItems(menu, true);
                 }
                 break;
         }
@@ -1351,11 +967,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 menu.findItem(R.id.favorite).setTitle("Add to favorites");
             }
         }
-    }
-
-    private void showLoginActivity() {
-        Intent intent = new Intent(this, SocialNetworks.class);
-        startActivityForResult(intent, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN);
     }
 
     @Override
@@ -1403,9 +1014,9 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private void showEditorsList() {
         editorsWrapperView.setVisibility(View.VISIBLE);
         editorsRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        editorsRecyclerView.setAdapter(new EditorsListAdapter(this, divespotDetails.getEditors()));
+        editorsRecyclerView.setAdapter(new EditorsListAdapter(this, diveSpotDetails.getEditors()));
         editorsRecyclerView.setHasFixedSize(true);
-        final int viewHeight = (int) (getResources().getDimension(R.dimen.editor_item_height) * divespotDetails.getEditors().size());
+        final int viewHeight = (int) (getResources().getDimension(R.dimen.editor_item_height) * diveSpotDetails.getEditors().size());
         ValueAnimator editorsAnimator = ValueAnimator.ofInt(0, viewHeight);
         editorsAnimator.setDuration(300);
         editorsAnimator.addListener(new Animator.AnimatorListener() {
@@ -1461,7 +1072,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
     private void hideEditorsList() {
         // TODO Implement
-        final int viewHeight = (int) (getResources().getDimension(R.dimen.editor_item_height) * divespotDetails.getEditors().size());
+        final int viewHeight = (int) (getResources().getDimension(R.dimen.editor_item_height) * diveSpotDetails.getEditors().size());
         ValueAnimator editorsAnimator = ValueAnimator.ofInt(viewHeight, 0);
         editorsAnimator.setDuration(300);
         editorsAnimator.addListener(new Animator.AnimatorListener() {
@@ -1514,6 +1125,16 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         editorsListExpanded = false;
     }
 
+    @Override
+    public void onDialogClosed(int requestCode) {
+        switch (requestCode) {
+            case DialogsRequestCodes.DRC_DIVE_SPOT_DETAILS_ACTIVITY_FAILED_TO_CONNECT:
+            case DialogsRequestCodes.DRC_DIVE_SPOT_DETAILS_ACTIVITY_DIVE_SPOT_NOT_FOUND:
+                finish();
+                break;
+        }
+    }
+
     private class ImageLoadedCallback implements Callback {
         ProgressView progressBar;
 
@@ -1544,7 +1165,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
             int position = parent.getChildAdapterPosition(view);
             if (position >= spanCount) {
-                outRect.top = Math.round(convertDpToPixel(Float.valueOf(10), DiveSpotDetailsActivity.this));
+                outRect.top = Math.round(Helpers.convertDpToPixel(10f, DiveSpotDetailsActivity.this));
             }
         }
     }
@@ -1576,4 +1197,176 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         finish();
     }
 
+    private class CheckInCheckoutResultListener implements DDScannerRestClient.ResultListener<Void> {
+        private boolean isCheckIn;
+
+        CheckInCheckoutResultListener(boolean isCheckIn) {
+            this.isCheckIn = isCheckIn;
+        }
+
+        @Override
+        public void onSuccess(Void result) {
+            DDScannerApplication.getDdScannerRestClient().getCheckIns(diveSpotId, checkInsResultListener);
+            if (isCheckIn) {
+                DiveSpotDetailsActivity.this.isCheckedIn = true;
+                EventsTracker.trackCheckIn(EventsTracker.CheckInStatus.SUCCESS);
+            } else {
+                DiveSpotDetailsActivity.this.isCheckedIn = false;
+                EventsTracker.trackCheckOut();
+            }
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            if (isCheckIn) {
+                checkOutUi();
+            } else {
+                checkInUi();
+            }
+            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            switch (errorType) {
+                case DIVE_SPOT_NOT_FOUND_ERROR_C802:
+                    if (isCheckIn) {
+                        checkOutUi();
+                    } else {
+                        checkInUi();
+                    }
+                    // This is unexpected so track it
+                    Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage, R.string.error_server_error_title, R.string.error_message_dive_spot_not_found);
+                    break;
+                case USER_NOT_FOUND_ERROR_C801:
+                    SharedPreferenceHelper.logout();
+                    if (isCheckIn) {
+                        checkOutUi();
+                        LoginActivity.showForResult(DiveSpotDetailsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_CHECK_IN);
+                    } else {
+                        checkInUi();
+                        LoginActivity.showForResult(DiveSpotDetailsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_CHECK_OUT);
+                    }
+                    break;
+                case BAD_REQUEST_ERROR_400:
+                    if (isCheckIn) {
+                        checkInUi();
+                    } else {
+                        checkOutUi();
+                    }
+                    InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, isCheckIn ? R.string.error_message_already_checked_in : R.string.error_message_already_checked_out, false);
+                    break;
+                default:
+                    if (isCheckIn) {
+                        checkOutUi();
+                    } else {
+                        checkInUi();
+                    }
+                    Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);
+            }
+        }
+    }
+
+    private class AddRemoveFromFavouritesResultListener implements DDScannerRestClient.ResultListener<Void> {
+
+        private boolean isAddToFavourites;
+
+        AddRemoveFromFavouritesResultListener(boolean isAddToFavourites) {
+            this.isAddToFavourites = isAddToFavourites;
+        }
+
+        @Override
+        public void onSuccess(Void result) {
+            isFavorite = isAddToFavourites;
+            updateMenuItems(menu, isFavorite);
+            Toast.makeText(DiveSpotDetailsActivity.this, isAddToFavourites ? R.string.added_to_favorites : R.string.removed_from_favorites, Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            updateMenuItems(menu, isFavorite);
+            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            switch (errorType) {
+                case DIVE_SPOT_NOT_FOUND_ERROR_C802:
+                    // This is unexpected so track it
+                    Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage, R.string.error_server_error_title, R.string.error_message_dive_spot_not_found);
+                    break;
+                case USER_NOT_FOUND_ERROR_C801:
+                    SharedPreferenceHelper.logout();
+                    if (isAddToFavourites) {
+                        LoginActivity.showForResult(DiveSpotDetailsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_ADD_TO_FAVOURITES);
+                    } else {
+                        LoginActivity.showForResult(DiveSpotDetailsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_REMOVE_FROM_FAVOURITES);
+                    }
+                    break;
+                case BAD_REQUEST_ERROR_400:
+                    isFavorite = isAddToFavourites;
+                    InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, isAddToFavourites ? R.string.error_message_already_added_to_favourites : R.string.error_message_already_removed_from_favourites, false);
+                    break;
+                case UNPROCESSABLE_ENTITY_ERROR_422:
+                default:
+                    Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);
+            }
+            updateMenuItems(menu, isFavorite);
+        }
+    }
+
+    private class DiveSpotValidationListener implements DDScannerRestClient.ResultListener<Void> {
+        private boolean isValid;
+
+        public void setValid(boolean valid) {
+            isValid = valid;
+        }
+
+        @Override
+        public void onSuccess(Void result) {
+            materialDialog.dismiss();
+            if (menu != null && menu.findItem(R.id.edit_dive_spot) != null) {
+                menu.findItem(R.id.edit_dive_spot).setVisible(false);
+            }
+            isInfoValidLayout.setVisibility(View.GONE);
+            thanksLayout.setVisibility(View.VISIBLE);
+            hideThanksLayout();
+            if (isValid) {
+                EventsTracker.trackDiveSpotValid();
+            } else {
+                EventsTracker.trackDiveSpotInvalid();
+            }
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            materialDialog.dismiss();
+            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            materialDialog.dismiss();
+            switch (errorType) {
+                case DIVE_SPOT_NOT_FOUND_ERROR_C802:
+                    // This is unexpected so track it
+                    Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage, R.string.error_server_error_title, R.string.error_message_dive_spot_not_found);
+                    break;
+                case USER_NOT_FOUND_ERROR_C801:
+                    SharedPreferenceHelper.logout();
+                    LoginActivity.showForResult(DiveSpotDetailsActivity.this, isValid ? ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_VALIDATE_SPOT : ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_INVALIDATE_SPOT);
+                    break;
+                case BAD_REQUEST_ERROR_400:
+                    if (menu != null && menu.findItem(R.id.edit_dive_spot) != null) {
+                        menu.findItem(R.id.edit_dive_spot).setVisible(false);
+                    }
+                    isInfoValidLayout.setVisibility(View.GONE);
+                    InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_message_already_validated_dive_spot_data, false);
+                    break;
+                case UNPROCESSABLE_ENTITY_ERROR_422:
+                default:
+                    Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);
+            }
+        }
+    }
 }

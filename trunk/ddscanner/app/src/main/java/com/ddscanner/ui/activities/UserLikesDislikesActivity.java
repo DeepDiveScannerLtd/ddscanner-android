@@ -13,43 +13,82 @@ import android.view.View;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.ForeignUserDislikesWrapper;
 import com.ddscanner.entities.ForeignUserLike;
 import com.ddscanner.entities.ForeignUserLikeWrapper;
-import com.ddscanner.entities.errors.BadRequestException;
-import com.ddscanner.entities.errors.CommentNotFoundException;
-import com.ddscanner.entities.errors.DiveSpotNotFoundException;
-import com.ddscanner.entities.errors.NotFoundException;
-import com.ddscanner.entities.errors.ServerInternalErrorException;
-import com.ddscanner.entities.errors.UnknownErrorException;
-import com.ddscanner.entities.errors.UserNotFoundException;
-import com.ddscanner.entities.errors.ValidationErrorException;
-import com.ddscanner.rest.BaseCallback;
-import com.ddscanner.rest.ErrorsParser;
-import com.ddscanner.rest.RestClient;
+import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.adapters.ForeignUserLikesAdapter;
+import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
-import com.ddscanner.utils.DialogUtils;
+import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
-import com.ddscanner.utils.LogUtils;
-import com.google.gson.Gson;
 import com.rey.material.widget.ProgressView;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Response;
-
-public class UserLikesDislikesActivity extends AppCompatActivity {
+public class UserLikesDislikesActivity extends AppCompatActivity implements InfoDialogFragment.DialogClosedListener {
 
     private Toolbar toolbar;
     private RecyclerView recyclerView;
     private boolean isLikes;
     private String userId;
     private ProgressView progressView;
+
+    private DDScannerRestClient.ResultListener<ForeignUserLikeWrapper> foreignUserLikeWrapperResultListener = new DDScannerRestClient.ResultListener<ForeignUserLikeWrapper>() {
+        @Override
+        public void onSuccess(ForeignUserLikeWrapper result) {
+            recyclerView.setAdapter(new ForeignUserLikesAdapter(UserLikesDislikesActivity.this, (ArrayList<ForeignUserLike>) result.getLikes(), true));
+            recyclerView.setVisibility(View.VISIBLE);
+            progressView.setVisibility(View.GONE);
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_USER_LIKES_DISLIKES_ACTIVITY_FAILED_TO_CONNECT, false);
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            switch (errorType) {
+                case USER_NOT_FOUND_ERROR_C801:
+                    LoginActivity.showForResult(UserLikesDislikesActivity.this, ActivitiesRequestCodes.REQUEST_CODE_USER_LIKES_DISLIKES_ACTIVITY_LOGIN);
+                    break;
+                default:
+                    EventsTracker.trackUnknownServerError(url, errorMessage);
+                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_USER_LIKES_DISLIKES_ACTIVITY_FAILED_TO_CONNECT, false);
+                    break;
+            }
+        }
+    };
+
+    private DDScannerRestClient.ResultListener<ForeignUserDislikesWrapper> foreignUserDislikesWrapperResultListener = new DDScannerRestClient.ResultListener<ForeignUserDislikesWrapper>() {
+        @Override
+        public void onSuccess(ForeignUserDislikesWrapper result) {
+            recyclerView.setAdapter(new ForeignUserLikesAdapter(UserLikesDislikesActivity.this, (ArrayList<ForeignUserLike>) result.getDislikes(), false));
+            recyclerView.setVisibility(View.VISIBLE);
+            progressView.setVisibility(View.GONE);
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_USER_LIKES_DISLIKES_ACTIVITY_FAILED_TO_CONNECT, false);
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            switch (errorType) {
+                case USER_NOT_FOUND_ERROR_C801:
+                    LoginActivity.showForResult(UserLikesDislikesActivity.this, ActivitiesRequestCodes.REQUEST_CODE_USER_LIKES_DISLIKES_ACTIVITY_LOGIN);
+                    break;
+                default:
+                    EventsTracker.trackUnknownServerError(url, errorMessage);
+                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_USER_LIKES_DISLIKES_ACTIVITY_FAILED_TO_CONNECT, false);
+                    break;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,9 +98,9 @@ public class UserLikesDislikesActivity extends AppCompatActivity {
         userId = getIntent().getStringExtra(Constants.USER_LIKES_ACTIVITY_INTENT_USER_ID);
         findViews();
         if (isLikes) {
-            getUserLikes();
+            DDScannerApplication.getDdScannerRestClient().getUserLikes(userId, foreignUserLikeWrapperResultListener);
         } else {
-            getUserDislikes();
+            DDScannerApplication.getDdScannerRestClient().getUserDislikes(userId, foreignUserDislikesWrapperResultListener);
         }
     }
 
@@ -74,129 +113,6 @@ public class UserLikesDislikesActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(linearLayoutManager);
         toolbarSettings();
     }
-
-    private void getUserDislikes() {
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getForeignUserDislikes(userId, Helpers.getUserQuryMapRequest());
-        call.enqueue(new BaseCallback() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    String responseString = "";
-                    try {
-                        responseString = response.body().string();
-                        ForeignUserDislikesWrapper foreignUserDislikesWrapper = new Gson().fromJson(responseString, ForeignUserDislikesWrapper.class);
-                        recyclerView.setAdapter(new ForeignUserLikesAdapter(UserLikesDislikesActivity.this, (ArrayList<ForeignUserLike>) foreignUserDislikesWrapper.getDislikes(), false));
-                        recyclerView.setVisibility(View.VISIBLE);
-                        progressView.setVisibility(View.GONE);
-                    } catch (IOException e) {
-
-                    }
-                }
-                if (!response.isSuccessful()) {
-                    String responseString = "";
-                    try {
-                        responseString = response.errorBody().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    LogUtils.i("response body is " + responseString);
-                    try {
-                        ErrorsParser.checkForError(response.code(), responseString);
-                    } catch (ServerInternalErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(UserLikesDislikesActivity.this, R.string.toast_server_error);
-                    } catch (BadRequestException e) {
-                        // TODO Handle
-                        Helpers.showToast(UserLikesDislikesActivity.this, R.string.toast_server_error);
-                    } catch (ValidationErrorException e) {
-                        // TODO Handle
-                    } catch (NotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(UserLikesDislikesActivity.this, R.string.toast_server_error);
-                    } catch (UnknownErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(UserLikesDislikesActivity.this, R.string.toast_server_error);
-                    } catch (DiveSpotNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(UserLikesDislikesActivity.this, R.string.toast_server_error);
-                    } catch (UserNotFoundException e) {
-                        // TODO Handle
-                        SocialNetworks.showForResult(UserLikesDislikesActivity.this, ActivitiesRequestCodes.REQUEST_CODE_USER_LIKES_DISLIKES_ACTIVITY_LOGIN);
-                    } catch (CommentNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(UserLikesDislikesActivity.this, R.string.toast_server_error);
-                    }
-                }
-            }
-
-            @Override
-            public void onConnectionFailure() {
-                DialogUtils.showConnectionErrorDialog(UserLikesDislikesActivity.this);
-            }
-        });
-    }
-
-    private void getUserLikes() {
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getForeignUserLikes(userId, Helpers.getUserQuryMapRequest());
-        call.enqueue(new BaseCallback() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    String responseString = "";
-                    try {
-                        responseString = response.body().string();
-                        ForeignUserLikeWrapper foreignUserLikeWrapper = new Gson().fromJson(responseString, ForeignUserLikeWrapper.class);
-                        recyclerView.setAdapter(new ForeignUserLikesAdapter(UserLikesDislikesActivity.this, (ArrayList<ForeignUserLike>) foreignUserLikeWrapper.getLikes(), true));
-                        recyclerView.setVisibility(View.VISIBLE);
-                        progressView.setVisibility(View.GONE);
-                    } catch (IOException e) {
-
-                    }
-                }
-                if (!response.isSuccessful()) {
-                    String responseString = "";
-                    try {
-                        responseString = response.errorBody().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    LogUtils.i("response body is " + responseString);
-                    try {
-                        ErrorsParser.checkForError(response.code(), responseString);
-                    } catch (ServerInternalErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(UserLikesDislikesActivity.this, R.string.toast_server_error);
-                    } catch (BadRequestException e) {
-                        // TODO Handle
-                        Helpers.showToast(UserLikesDislikesActivity.this, R.string.toast_server_error);
-                    } catch (ValidationErrorException e) {
-                        // TODO Handle
-                    } catch (NotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(UserLikesDislikesActivity.this, R.string.toast_server_error);
-                    } catch (UnknownErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(UserLikesDislikesActivity.this, R.string.toast_server_error);
-                    } catch (DiveSpotNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(UserLikesDislikesActivity.this, R.string.toast_server_error);
-                    } catch (UserNotFoundException e) {
-                        // TODO Handle
-                        SocialNetworks.showForResult(UserLikesDislikesActivity.this, ActivitiesRequestCodes.REQUEST_CODE_USER_LIKES_DISLIKES_ACTIVITY_LOGIN);
-                    } catch (CommentNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(UserLikesDislikesActivity.this, R.string.toast_server_error);
-                    }
-                }
-            }
-
-            @Override
-            public void onConnectionFailure() {
-                DialogUtils.showConnectionErrorDialog(UserLikesDislikesActivity.this);
-            }
-        });
-    }
-
     private void toolbarSettings() {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -240,9 +156,9 @@ public class UserLikesDislikesActivity extends AppCompatActivity {
             case ActivitiesRequestCodes.REQUEST_CODE_USER_LIKES_DISLIKES_ACTIVITY_LOGIN:
                 if (resultCode == RESULT_OK) {
                     if (isLikes) {
-                        getUserLikes();
+                        DDScannerApplication.getDdScannerRestClient().getUserLikes(userId, foreignUserLikeWrapperResultListener);
                     } else {
-                        getUserDislikes();
+                        DDScannerApplication.getDdScannerRestClient().getUserDislikes(userId, foreignUserDislikesWrapperResultListener);
                     }
                 } else {
                     setResult(RESULT_CANCELED);
@@ -273,4 +189,12 @@ public class UserLikesDislikesActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onDialogClosed(int requestCode) {
+        switch (requestCode) {
+            case DialogsRequestCodes.DRC_USER_LIKES_DISLIKES_ACTIVITY_FAILED_TO_CONNECT:
+                finish();
+                break;
+        }
+    }
 }

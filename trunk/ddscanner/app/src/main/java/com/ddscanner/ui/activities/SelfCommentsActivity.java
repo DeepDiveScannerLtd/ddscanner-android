@@ -14,6 +14,7 @@ import android.view.View;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.Comment;
 import com.ddscanner.entities.Comments;
 import com.ddscanner.entities.errors.BadRequestException;
@@ -27,13 +28,16 @@ import com.ddscanner.entities.errors.ValidationErrorException;
 import com.ddscanner.events.DeleteCommentEvent;
 import com.ddscanner.events.EditCommentEvent;
 import com.ddscanner.events.ShowLoginActivityIntent;
-import com.ddscanner.rest.BaseCallback;
+import com.ddscanner.rest.BaseCallbackOld;
+import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.SelfReviewsListAdapter;
+import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogUtils;
+import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
@@ -49,7 +53,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class SelfCommentsActivity extends AppCompatActivity {
+public class SelfCommentsActivity extends AppCompatActivity implements InfoDialogFragment.DialogClosedListener {
 
     private ArrayList<Comment> comments;
     private RecyclerView commentsRc;
@@ -61,6 +65,64 @@ public class SelfCommentsActivity extends AppCompatActivity {
     private String commentToDelete;
     private String userId;
     private String path;
+
+    private DDScannerRestClient.ResultListener<Comments> commentsResultListener = new DDScannerRestClient.ResultListener<Comments>() {
+        @Override
+        public void onSuccess(Comments result) {
+            Comments comments = result;
+            progressView.setVisibility(View.GONE);
+            commentsRc.setVisibility(View.VISIBLE);
+            path = comments.getDiveSpotPathMedium();
+            commentsRc.setAdapter(new SelfReviewsListAdapter((ArrayList<Comment>) comments.getComments(), SelfCommentsActivity.this, comments.getDiveSpotPathMedium()));
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_SELF_COMMENTS_ACTIVITY_FAILED_TO_CONNECT, false);
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            switch (errorType) {
+                case USER_NOT_FOUND_ERROR_C801:
+                    SharedPreferenceHelper.logout();
+                    LoginActivity.showForResult(SelfCommentsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_SELF_REVIEWS_LOGIN_TO_VIEW_COMMENTS);
+                    break;
+                default:
+                    EventsTracker.trackUnknownServerError(url, errorMessage);
+                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_SELF_COMMENTS_ACTIVITY_UNKNOWN_ERROR, false);
+                    break;
+            }
+        }
+    };
+
+    private DDScannerRestClient.ResultListener<Void> deleteCommentResulListener = new DDScannerRestClient.ResultListener<Void>() {
+        @Override
+        public void onSuccess(Void result) {
+            getComments();
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_SELF_COMMENTS_ACTIVITY_FAILED_TO_CONNECT, false);
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            switch (errorType) {
+                case COMMENT_NOT_FOUND_ERROR_C803:
+                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_message_comment_not_found, DialogsRequestCodes.DRC_SELF_COMMENTS_ACTIVITY_COMMENT_NOT_FOUND, false);
+                    break;
+                case USER_NOT_FOUND_ERROR_C801:
+                    SharedPreferenceHelper.logout();
+                    LoginActivity.showForResult(SelfCommentsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_SELF_REVIEWS_LOGIN_TO_DELETE_COMMENTS);
+                    break;
+                default:
+                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_SELF_COMMENTS_ACTIVITY_UNKNOWN_ERROR, false);
+                    break;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -90,66 +152,7 @@ public class SelfCommentsActivity extends AppCompatActivity {
     private void getComments() {
         commentsRc.setVisibility(View.GONE);
         progressView.setVisibility(View.VISIBLE);
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserComments(userId, Helpers.getUserQuryMapRequest());
-        call.enqueue(new BaseCallback() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    String responseString = "";
-                    try {
-                        responseString = response.body().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    Comments comments = new Gson().fromJson(responseString, Comments.class);
-                    progressView.setVisibility(View.GONE);
-                    commentsRc.setVisibility(View.VISIBLE);
-                    path = comments.getDiveSpotPathMedium();
-                    commentsRc.setAdapter(new SelfReviewsListAdapter((ArrayList<Comment>) comments.getComments(), SelfCommentsActivity.this, comments.getDiveSpotPathMedium()));
-                }
-                if (!response.isSuccessful()) {
-                    String responseString = "";
-                    try {
-                        responseString = response.errorBody().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    LogUtils.i("response body is " + responseString);
-                    try {
-                        ErrorsParser.checkForError(response.code(), responseString);
-                    } catch (ServerInternalErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(SelfCommentsActivity.this, R.string.toast_server_error);
-                    } catch (BadRequestException e) {
-                        // TODO Handle
-                        Helpers.showToast(SelfCommentsActivity.this, R.string.toast_server_error);
-                    } catch (ValidationErrorException e) {
-                        // TODO Handle
-                    } catch (NotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(SelfCommentsActivity.this, R.string.toast_server_error);
-                    } catch (UnknownErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(SelfCommentsActivity.this, R.string.toast_server_error);
-                    } catch (DiveSpotNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(SelfCommentsActivity.this, R.string.toast_server_error);
-                    } catch (UserNotFoundException e) {
-                        // TODO Handle
-                        SharedPreferenceHelper.logout();
-                        SocialNetworks.showForResult(SelfCommentsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_SELF_REVIEWS_LOGIN_TO_VIEW_COMMENTS);
-                    } catch (CommentNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(SelfCommentsActivity.this, R.string.toast_server_error);
-                    }
-                }
-            }
-
-            @Override
-            public void onConnectionFailure() {
-                DialogUtils.showConnectionErrorDialog(SelfCommentsActivity.this);
-            }
-        });
+        DDScannerApplication.getDdScannerRestClient().getUsersComments(userId, commentsResultListener);
     }
 
     public static void show(Context context, String userId) {
@@ -200,56 +203,7 @@ public class SelfCommentsActivity extends AppCompatActivity {
 
     private void deleteUsersComment(String id) {
         commentToDelete = id;
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().deleteComment(id, Helpers.getUserQuryMapRequest());
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    getComments();
-                } else {
-                    String responseString = "";
-                    try {
-                        responseString = response.errorBody().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    LogUtils.i("response body is " + responseString);
-                    try {
-                        ErrorsParser.checkForError(response.code(), responseString);
-                    } catch (ServerInternalErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(SelfCommentsActivity.this, R.string.toast_server_error);
-                    } catch (BadRequestException e) {
-                        // TODO Handle
-                        Helpers.showToast(SelfCommentsActivity.this, R.string.toast_server_error);
-                    } catch (ValidationErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(SelfCommentsActivity.this, R.string.toast_server_error);
-                    } catch (NotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(SelfCommentsActivity.this, R.string.toast_server_error);
-                    } catch (UnknownErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(SelfCommentsActivity.this, R.string.toast_server_error);
-                    } catch (DiveSpotNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(SelfCommentsActivity.this, R.string.toast_server_error);
-                    } catch (UserNotFoundException e) {
-                        // TODO Handle
-                        SharedPreferenceHelper.logout();
-                        SocialNetworks.showForResult(SelfCommentsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_SELF_REVIEWS_LOGIN_TO_DELETE_COMMENTS);
-                    } catch (CommentNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(SelfCommentsActivity.this, R.string.toast_server_error);
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-            }
-        });
+        DDScannerApplication.getDdScannerRestClient().deleteUserComment(id, deleteCommentResulListener);
     }
 
     @Subscribe
@@ -294,4 +248,16 @@ public class SelfCommentsActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onDialogClosed(int requestCode) {
+        switch (requestCode) {
+            case DialogsRequestCodes.DRC_SELF_COMMENTS_ACTIVITY_UNKNOWN_ERROR:
+            case DialogsRequestCodes.DRC_SELF_COMMENTS_ACTIVITY_FAILED_TO_CONNECT:
+                finish();
+                break;
+            case DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_DELETED_COMMENT_NOT_FOUND:
+                getComments();
+                break;
+        }
+    }
 }

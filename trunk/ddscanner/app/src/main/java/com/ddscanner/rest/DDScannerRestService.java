@@ -4,7 +4,7 @@ package com.ddscanner.rest;
 import com.ddscanner.entities.request.IdentifyRequest;
 import com.ddscanner.entities.request.RegisterRequest;
 import com.ddscanner.entities.request.ReportRequest;
-import com.ddscanner.entities.request.ValidationReguest;
+import com.ddscanner.entities.request.ValidationRequest;
 
 import java.util.List;
 import java.util.Map;
@@ -39,12 +39,12 @@ public interface DDScannerRestService {
     Call<ResponseBody> getDivespots(@QueryMap Map<String, Object> map);
 
     @POST("/diving/login")
-    Call<ResponseBody> registerUser(@Body RegisterRequest registerRequest);
+    Call<ResponseBody> login(@Body RegisterRequest registerRequest);
 
     @POST("/diving/divespot/{id}/validation")
     Call<ResponseBody> divespotValidation(
             @Path("id") String id,
-            @Body ValidationReguest validationReguest
+            @Body ValidationRequest validationReguest
             );
 
     @POST("/diving/divespot/{id}/favorite")
@@ -67,8 +67,7 @@ public interface DDScannerRestService {
             @Part("rating") RequestBody rating,
             @Part List<MultipartBody.Part> image,
             @Part("token") RequestBody token,
-            @Part("social") RequestBody sn,
-            @Part("secret") RequestBody secret
+            @Part("social") RequestBody sn
     );
 
     @POST("/diving/identify")
@@ -77,10 +76,10 @@ public interface DDScannerRestService {
     @POST("/diving/sealife")
     @Multipart
     Call<ResponseBody> addSealife(
+            @Part MultipartBody.Part image,
             @Part("name") RequestBody name,
             @Part("distribution") RequestBody distribution,
             @Part("habitat") RequestBody habitat,
-            @Part MultipartBody.Part image,
             @Part("scName") RequestBody scName,
             @Part("length") RequestBody length,
             @Part("weight") RequestBody weight,
@@ -88,8 +87,7 @@ public interface DDScannerRestService {
             @Part("order") RequestBody order,
             @Part("scClass") RequestBody sealifeClass,
             @Part("token") RequestBody token,
-            @Part("social") RequestBody sn,
-            @Part("secret") RequestBody secret);
+            @Part("social") RequestBody sn);
 
     @POST("diving/divespot")
     @Multipart
@@ -121,8 +119,8 @@ public interface DDScannerRestService {
       );
 
     @DELETE("diving/divespot/{id}/checkin")
-    Call<ResponseBody> checkOutUser( @Path("id") String id,
-                                     @QueryMap Map<String, String> map);
+    Call<ResponseBody> checkOut(@Path("id") String id,
+                                @QueryMap Map<String, String> map);
 
     @POST("diving/divespot/{id}")
     @Multipart
@@ -175,14 +173,13 @@ public interface DDScannerRestService {
     @Multipart
     Call<ResponseBody> updateUserById(
             @Path("id") String id,
-            @Part("_method") RequestBody _method,
             @Part MultipartBody.Part image,
+            @Part("_method") RequestBody _method,
             @Part("name") RequestBody name,
             @Part("username") RequestBody username,
             @Part("about") RequestBody about,
             @Part("token") RequestBody token,
-            @Part("social") RequestBody sn,
-            @Part("secret") RequestBody secret
+            @Part("social") RequestBody sn
     );
 
     @GET("diving/user/{id}/divespot/checkins")
@@ -211,11 +208,10 @@ public interface DDScannerRestService {
     @Multipart
     Call<ResponseBody> addImagesToDiveSpot(
             @Path("id") String id,
-            @Part("_method") RequestBody _method,
             @Part List<MultipartBody.Part> images,
+            @Part("_method") RequestBody _method,
             @Part("token") RequestBody token,
-            @Part("social") RequestBody sn,
-            @Part("secret") RequestBody secret
+            @Part("social") RequestBody sn
     );
 
     @GET("/diving/divespot/{id}/editors")
@@ -251,8 +247,7 @@ public interface DDScannerRestService {
             @Part List<MultipartBody.Part> images_new,
             @Part List<MultipartBody.Part> images_del,
             @Part("token") RequestBody token,
-            @Part("social") RequestBody sn,
-            @Part("secret") RequestBody secret
+            @Part("social") RequestBody sn
     );
 
     @POST("diving/divespot/comment/{id}/report")

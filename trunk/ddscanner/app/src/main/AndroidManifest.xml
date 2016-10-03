@@ -120,9 +120,6 @@
             android:value="@string/google_maps_api_key" />
 
         <activity
-            android:name=".ui.activities.UsersDivespotListSwipableActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".ui.activities.DiveSpotsListActivity"
             android:screenOrientation="portrait" />
         <activity
@@ -226,7 +223,7 @@
             android:name=".ui.activities.GuideDescriptionActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activities.SocialNetworks"
+            android:name=".ui.activities.LoginActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activities.APIUpdatedActivity"

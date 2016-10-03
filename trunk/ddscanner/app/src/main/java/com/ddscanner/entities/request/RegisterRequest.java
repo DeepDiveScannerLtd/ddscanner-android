@@ -4,11 +4,12 @@ package com.ddscanner.entities.request;
  * Created by lashket on 11.3.16.
  */
 public class RegisterRequest {
-    private String appId;
-    private String social;
-    private String token;
-    private String secret;
-    private String push;
+
+    protected String appId;
+    protected String social;
+    protected String token;
+    protected String secret;
+    protected String push;
 
     public String getpush() {
         return push;

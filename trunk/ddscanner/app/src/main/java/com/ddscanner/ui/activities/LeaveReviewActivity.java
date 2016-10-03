@@ -34,15 +34,19 @@ import com.ddscanner.entities.errors.NotFoundException;
 import com.ddscanner.entities.errors.ServerInternalErrorException;
 import com.ddscanner.entities.errors.UnknownErrorException;
 import com.ddscanner.entities.errors.UserNotFoundException;
+import com.ddscanner.entities.errors.ValidationError;
 import com.ddscanner.entities.errors.ValidationErrorException;
 import com.ddscanner.events.ImageDeletedEvent;
-import com.ddscanner.rest.BaseCallback;
+import com.ddscanner.rest.BaseCallbackOld;
+import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.rest.ErrorsParser;
 import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.adapters.AddPhotoToDsListAdapter;
+import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogUtils;
+import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
@@ -96,6 +100,37 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
     private int maxPhotos = 3;
 
     private EventsTracker.SendReviewSource sendReviewSource;
+
+    private DDScannerRestClient.ResultListener<Void> commentAddedResultListener = new DDScannerRestClient.ResultListener<Void>() {
+        @Override
+        public void onSuccess(Void result) {
+            setResult(RESULT_OK);
+            finish();
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            materialDialog.dismiss();
+            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            materialDialog.dismiss();
+            switch (errorType) {
+                case USER_NOT_FOUND_ERROR_C801:
+                    SharedPreferenceHelper.logout();
+                    LoginActivity.showForResult(LeaveReviewActivity.this, ActivitiesRequestCodes.REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_LOGIN);
+                    break;
+                case UNPROCESSABLE_ENTITY_ERROR_422:
+                    Helpers.errorHandling(errorsMap, (ValidationError) errorData);
+                    break;
+                default:
+                    Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);
+                    break;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -170,7 +205,7 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
 
     private void sendReview() {
         if (!SharedPreferenceHelper.isUserLoggedIn()) {
-            SocialNetworks.showForResult(LeaveReviewActivity.this, ActivitiesRequestCodes.REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_LOGIN);
+            LoginActivity.showForResult(LeaveReviewActivity.this, ActivitiesRequestCodes.REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_LOGIN);
             return;
         }
         List<MultipartBody.Part> images = new ArrayList<>();
@@ -203,84 +238,8 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
                     SharedPreferenceHelper.getSn());
             requessToken = RequestBody.create(MediaType.parse("multipart/form-data"),
                     SharedPreferenceHelper.getToken());
-            if (SharedPreferenceHelper.getSn().equals("tw")) {
-                requestSecret = RequestBody.create(MediaType.parse("multipart/form-data"),
-                        SharedPreferenceHelper.getSecret());
-            }
         }
-
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().addCommentToDiveSpot(
-                requestId,
-                requestComment,
-                requestRating,
-                images,
-                requessToken,
-                requestSocial,
-                requestSecret
-        );
-        call.enqueue(new BaseCallback() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.raw().isSuccessful()) {
-                    String responseString = null;
-                    try {
-                        responseString = response.body().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    Toast.makeText(LeaveReviewActivity.this, R.string.review_sent, Toast.LENGTH_SHORT).show();
-                    EventsTracker.trackReviewSending(sendReviewSource);
-//                    comment = new Gson().fromJson(responseString, Comment.class);
-                    Intent returnIntent = new Intent();
-//                    returnIntent.putExtra("COMMENT", comment);
-                    setResult(Activity.RESULT_OK, returnIntent);
-                    finish();
-                    materialDialog.dismiss();
-                } else {
-                    String responseString = "";
-                    try {
-                        responseString = response.errorBody().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    materialDialog.dismiss();
-                    LogUtils.i("response body is " + responseString);
-                    try {
-                        ErrorsParser.checkForError(response.code(), responseString);
-                    } catch (ServerInternalErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(LeaveReviewActivity.this, R.string.toast_server_error);
-                    } catch (BadRequestException e) {
-                        // TODO Handle
-                        Helpers.showToast(LeaveReviewActivity.this, R.string.toast_server_error);
-                    } catch (ValidationErrorException e) {
-                        // TODO Handle
-                        Helpers.errorHandling(LeaveReviewActivity.this, errorsMap, responseString);
-                    } catch (NotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(LeaveReviewActivity.this, R.string.toast_server_error);
-                    } catch (UnknownErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(LeaveReviewActivity.this, R.string.toast_server_error);
-                    } catch (DiveSpotNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(LeaveReviewActivity.this, R.string.toast_server_error);
-                    } catch (UserNotFoundException e) {
-                        // TODO Handle
-                        SocialNetworks.showForResult(LeaveReviewActivity.this, ActivitiesRequestCodes.REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_LOGIN);
-                    } catch (CommentNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(LeaveReviewActivity.this, R.string.toast_server_error);
-                    }
-                }
-
-            }
-
-            @Override
-            public void onConnectionFailure() {
-                DialogUtils.showConnectionErrorDialog(LeaveReviewActivity.this);
-            }
-        });
+        DDScannerApplication.getDdScannerRestClient().postLeaveReview(requestId, requestComment, requestRating, images, requessToken, requestSocial, commentAddedResultListener);
     }
 
 
