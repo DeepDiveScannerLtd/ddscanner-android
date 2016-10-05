@@ -21,11 +21,15 @@ import android.widget.TextView;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
+import com.ddscanner.entities.FiltersResponseEntity;
 import com.ddscanner.entities.Image;
+import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.adapters.ReviewImageSLiderAdapter;
 import com.ddscanner.ui.adapters.SliderImagesAdapter;
+import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.ui.views.SimpleGestureFilter;
 import com.ddscanner.utils.Constants;
+import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;
 
@@ -54,7 +58,27 @@ public class ReviewImageSliderActivity extends AppCompatActivity implements View
     private String deleteImageName;
     private ImageView menu;
     private String path;
+    private FiltersResponseEntity filters = new FiltersResponseEntity();
 
+    private DDScannerRestClient.ResultListener<FiltersResponseEntity> filtersResponseEntityResultListener = new DDScannerRestClient.ResultListener<FiltersResponseEntity>() {
+        @Override
+        public void onSuccess(FiltersResponseEntity result) {
+            filters = result;
+            if (isFromReviews) {
+                menu.setVisibility(View.VISIBLE);
+            }
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_IMAGE_SLIDER_ACTIVITY_FAILED_TO_CONNECT, false);
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_IMAGE_SLIDER_ACTIVITY_CONNECTION_FAILURE_GET_REPORT_TYPES, false);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,14 +89,12 @@ public class ReviewImageSliderActivity extends AppCompatActivity implements View
         isSelfImages = getIntent().getBooleanExtra("isSelf", false);
         isFromReviews = getIntent().getBooleanExtra("isFromReviews", false);
         path = getIntent().getStringExtra("path");
-        if (isFromReviews) {
-         //   menu.setVisibility(View.VISIBLE);
-        }
         detector = new SimpleGestureFilter(this,this);
         position = getIntent().getIntExtra(Constants.REVIEWS_IMAGES_SLIDE_INTENT_POSITION, 0);
         viewPager.addOnPageChangeListener(this);
         sliderImagesAdapter = new ReviewImageSLiderAdapter(getFragmentManager(), images);
         viewPager.setAdapter(sliderImagesAdapter);
+        DDScannerApplication.getDdScannerRestClient().getReportTypes(filtersResponseEntityResultListener);
         setUi();
 
     }

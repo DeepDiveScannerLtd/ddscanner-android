@@ -39,7 +39,7 @@ public class ReviewPhotosAdapter extends RecyclerView.Adapter<ReviewPhotosAdapte
         this.path = path;
         this.isSelfPhotos =  isSelfPhotos;
 
-        Helpers.appendImagesWithPath(photos, path);
+       // Helpers.appendImagesWithPath(photos, path);
     }
 
     @Override

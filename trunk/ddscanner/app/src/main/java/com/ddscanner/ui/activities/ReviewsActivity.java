@@ -208,11 +208,17 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     private DDScannerRestClient.ResultListener<Comments> commentsResultListener = new DDScannerRestClient.ResultListener<Comments>() {
         @Override
         public void onSuccess(Comments result) {
-            Comments comments = result;
-            ReviewsActivity.this.comments = (ArrayList<Comment>) comments.getComments();
+            ReviewsActivity.this.comments = (ArrayList<Comment>) result.getComments();
             progressView.setVisibility(View.GONE);
             commentsRc.setVisibility(View.VISIBLE);
-            reviewsListAdapter = new ReviewsListAdapter((ArrayList<Comment>) comments.getComments(), ReviewsActivity.this, path);
+            ArrayList<Comment> commentsList = new ArrayList<>();
+            if (result.getComments() != null) {
+                for (Comment comment : result.getComments()) {
+                    comment.setImages(Helpers.appendImagesWithPath((ArrayList<String>) comment.getImages(), path));
+                    commentsList.add(comment);
+                }
+            }
+            reviewsListAdapter = new ReviewsListAdapter(commentsList, ReviewsActivity.this, path);
             commentsRc.setAdapter(reviewsListAdapter);
         }
 

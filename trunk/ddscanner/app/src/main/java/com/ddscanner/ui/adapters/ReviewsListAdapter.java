@@ -70,7 +70,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         reviewsListViewHolder.date.setText("");
         reviewsListViewHolder.dislikeImage.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_review_dislike_empty));
         reviewsListViewHolder.likeImage.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_review_like_empty));
-        reviewsListViewHolder.photos.setVisibility(View.GONE);
+       // reviewsListViewHolder.photos.setVisibility(View.GONE);
         reviewsListViewHolder.expand.setText("");
         reviewsListViewHolder.dislikesCount.setText("");
         reviewsListViewHolder.likesCount.setText("");
@@ -84,8 +84,10 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
             reviewsListViewHolder.dislikeImage.setImageDrawable(AppCompatDrawableManager.get()
                     .getDrawable(context, R.drawable.ic_review_dislike));
         }
+        Log.i(TAG, reviewsListViewHolder.toString());
         if (comments.get(reviewsListViewHolder.getAdapterPosition()).getImages() != null) {
-            reviewsListViewHolder.photos.setVisibility(View.VISIBLE);
+       //     reviewsListViewHolder.photos.setVisibility(View.VISIBLE);
+            Log.i(TAG, comments.get(i).getImages().get(0).toString());
             LinearLayoutManager layoutManager = new LinearLayoutManager(context);
             layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
             reviewsListViewHolder.photos.setNestedScrollingEnabled(false);
