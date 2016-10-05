@@ -24,8 +24,8 @@ android {
         minSdkVersion 16
         targetSdkVersion 23
         multiDexEnabled true
-        versionCode 22
-        versionName "2.0.16"
+        versionCode 23
+        versionName "2.0.17"
     }
     buildTypes {
         debug {
@@ -35,6 +35,7 @@ android {
             resValue "string", "appsflyer_dev_key", "5A7vyAMVwKT4RBiTaxrpSU"
             resValue "string", "flurry_api_key", "DQ8GM2FPPSTBGK7QX4D8"
             resValue "string", "google_maps_api_key", "AIzaSyDt6pJZggDyU-aQy2Ks6i7WgZd6ayKK-I8"
+            resValue "string", "server_api_address", "https://ddsapi.ilave.pro"
 //            minifyEnabled false
 //            shrinkResources false
 //            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules-debug.pro'
@@ -44,6 +45,7 @@ android {
             resValue "string", "appsflyer_dev_key", "5A7vyAMVwKT4RBiTaxrpSU"
             resValue "string", "flurry_api_key", "D45ZMHZZJWDVD8X6G55B"
             resValue "string", "google_maps_api_key", "AIzaSyA5jpAj7uwrxA4oaYvI_bdV9IDbb7gUrZc"
+            resValue "string", "server_api_address", "https://api.ddscanner.com"
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
