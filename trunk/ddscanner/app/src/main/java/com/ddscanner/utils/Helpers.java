@@ -423,6 +423,9 @@ public class Helpers {
     }
 
     public static void hideKeyboard(Activity context) {
+        if (context == null || context.getCurrentFocus() == null) {
+            return;
+        }
         View view = context.getCurrentFocus();
         if (view != null) {
             InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
