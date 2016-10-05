@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -28,44 +29,29 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
+import com.ddscanner.entities.DiveSpotListSource;
 import com.ddscanner.entities.User;
-import com.ddscanner.entities.errors.BadRequestException;
-import com.ddscanner.entities.errors.CommentNotFoundException;
-import com.ddscanner.entities.errors.DiveSpotNotFoundException;
-import com.ddscanner.entities.errors.NotFoundException;
-import com.ddscanner.entities.errors.ServerInternalErrorException;
-import com.ddscanner.entities.errors.UnknownErrorException;
-import com.ddscanner.entities.errors.UserNotFoundException;
-import com.ddscanner.entities.errors.ValidationErrorException;
 import com.ddscanner.events.ChangePageOfMainViewPagerEvent;
+import com.ddscanner.events.LoadUserProfileInfoEvent;
 import com.ddscanner.events.LoggedOutEvent;
 import com.ddscanner.events.PickPhotoFromGallery;
-import com.ddscanner.events.ShowLoginActivityIntent;
 import com.ddscanner.events.TakePhotoFromCameraEvent;
-import com.ddscanner.rest.BaseCallback;
-import com.ddscanner.rest.ErrorsParser;
-import com.ddscanner.rest.RestClient;
+import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.activities.AboutActivity;
 import com.ddscanner.ui.activities.DiveSpotsListActivity;
-import com.ddscanner.ui.activities.UserLikesDislikesActivity;
 import com.ddscanner.ui.activities.MainActivity;
 import com.ddscanner.ui.activities.SelfCommentsActivity;
-import com.ddscanner.ui.activities.UsersDivespotListSwipableActivity;
+import com.ddscanner.ui.activities.UserLikesDislikesActivity;
+import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.ui.views.LoginView;
-import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
-import com.ddscanner.utils.DialogUtils;
+import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
-import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
-import com.google.gson.Gson;
+import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -73,19 +59,14 @@ import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Response;
 
 /**
  * Created by lashket on 20.4.16.
  */
-public class ProfileFragment extends Fragment
-        implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, LoginView.LoginStateChangeListener {
+public class ProfileFragment extends Fragment implements View.OnClickListener, LoginView.LoginStateChangeListener, InfoDialogFragment.DialogClosedListener {
 
     private static final String TAG = ProfileFragment.class.getName();
 
-    static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int MAX_LENGTH_NAME = 30;
     private static final int MAX_LENGTH_ABOUT = 250;
 
@@ -143,6 +124,92 @@ public class ProfileFragment extends Fragment
     private String uri = null;
     private Uri uriFromCamera = null;
 
+    private DDScannerRestClient.ResultListener<User> updateProfileInfoResultListener = new DDScannerRestClient.ResultListener<User>() {
+        @Override
+        public void onSuccess(User result) {
+            materialDialog.dismiss();
+            uri = null;
+            changeUi(user);
+            aboutLayout.setVisibility(View.VISIBLE);
+            aboutLayout.scrollTo(0,0);
+            editLayout.setVisibility(View.GONE);
+            getUserDataRequest(SharedPreferenceHelper.getUserServerId());
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            materialDialog.dismiss();
+            InfoDialogFragment.show(getFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            materialDialog.dismiss();
+            switch (errorType) {
+                case USER_NOT_FOUND_ERROR_C801:
+                    SharedPreferenceHelper.logout();
+                    onLoggedOut();
+                    break;
+                default:
+                    Helpers.handleUnexpectedServerError(getFragmentManager(), url, errorMessage);
+                    break;
+            }
+        }
+    };
+
+    private DDScannerRestClient.ResultListener<Void> logoutReslutListener = new DDScannerRestClient.ResultListener<Void>() {
+        @Override
+        public void onSuccess(Void result) {
+            materialDialog.dismiss();
+            aboutLayout.setVisibility(View.GONE);
+            SharedPreferenceHelper.logout();
+            DDScannerApplication.bus.post(new LoggedOutEvent());
+            DDScannerApplication.bus.post(new ChangePageOfMainViewPagerEvent(0));
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            materialDialog.dismiss();
+            InfoDialogFragment.show(getFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            materialDialog.dismiss();
+            Helpers.handleUnexpectedServerError(getFragmentManager(), url, errorMessage);
+        }
+    };
+
+    private DDScannerRestClient.ResultListener<User> getUserInformationResultListener = new DDScannerRestClient.ResultListener<User>() {
+        @Override
+        public void onSuccess(User result) {
+            if (editLayout.getVisibility() != View.VISIBLE) {
+                aboutLayout.setVisibility(View.VISIBLE);
+            }
+            user = result;
+            changeUi(user);
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            InfoDialogFragment.showForFragmentResult(getFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_PROFILE_FRAGMENT_FAILED_TO_CONNECT, false);
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            switch (errorType) {
+                case USER_NOT_FOUND_ERROR_C801:
+                    SharedPreferenceHelper.logout();
+                    DDScannerApplication.bus.post(new LoggedOutEvent());
+                    break;
+                default:
+                    EventsTracker.trackUnknownServerError(url, errorMessage);
+                    InfoDialogFragment.showForFragmentResult(getFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_PROFILE_FRAGMENT_UNEXPECTED_ERROR, false);
+                    break;
+            }
+        }
+    };
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -162,7 +229,7 @@ public class ProfileFragment extends Fragment
         pickPhotoFromGallery.setOnClickListener(this);
         logout.setOnClickListener(this);
         if (SharedPreferenceHelper.isUserLoggedIn()) {
-            getUserDataRequest(SharedPreferenceHelper.getUserServerId());
+        //    getUserDataRequest(SharedPreferenceHelper.getUserServerId());
         }
         materialDialog = Helpers.getMaterialDialog(getContext());
         createErrorsMap();
@@ -253,7 +320,7 @@ public class ProfileFragment extends Fragment
                     aboutLeftSymbols.setVisibility(View.VISIBLE);
                 }
                 if (MAX_LENGTH_ABOUT - aboutEdit.length() < 10) {
-                    aboutLeftSymbols.setTextColor(getResources().getColor(R.color.tw__composer_red));
+                    aboutLeftSymbols.setTextColor(ContextCompat.getColor(getContext(), R.color.tw__composer_red));
                 } else {
                     aboutLeftSymbols.setTextColor(Color.parseColor("#b2b2b2"));
                 }
@@ -279,7 +346,7 @@ public class ProfileFragment extends Fragment
                     nameLeftSymbols.setVisibility(View.VISIBLE);
                 }
                 if (MAX_LENGTH_NAME - fullNameEdit.length() < 10) {
-                    nameLeftSymbols.setTextColor(getResources().getColor(R.color.tw__composer_red));
+                    nameLeftSymbols.setTextColor(ContextCompat.getColor(getContext(), R.color.tw__composer_red));
                 } else {
                     nameLeftSymbols.setTextColor(Color.parseColor("#b2b2b2"));
                 }
@@ -335,23 +402,23 @@ public class ProfileFragment extends Fragment
             case R.id.logout:
                 materialDialog.show();
                 SharedPreferenceHelper.setLastShowingNotificationTime(0);
-                logout();
+                DDScannerApplication.getDdScannerRestClient().postLogout(logoutReslutListener);
                 break;
             case R.id.checkins_activity:
                 EventsTracker.trackUserCheckinsView();
-                UsersDivespotListSwipableActivity.show(getContext(), true, EventsTracker.SpotViewSource.FROM_PROFILE_CHECKINS);
+                DiveSpotsListActivity.show(getContext(), DiveSpotListSource.CHECKINS, EventsTracker.SpotViewSource.FROM_PROFILE_CHECKINS   );
                 break;
             case R.id.favorites_activity:
                 EventsTracker.trackUserFavoritesView();
-                UsersDivespotListSwipableActivity.show(getContext(), false, EventsTracker.SpotViewSource.FROM_PROFILE_FAVOURITES);
+                DiveSpotsListActivity.show(getContext(), DiveSpotListSource.FAVORITES, EventsTracker.SpotViewSource.FROM_PROFILE_FAVOURITES);
                 break;
             case R.id.edited_activity:
                 EventsTracker.trackUserEditedView();
-                DiveSpotsListActivity.show(getContext(), false, EventsTracker.SpotViewSource.FROM_PROFILE_EDITED);
+                DiveSpotsListActivity.show(getContext(), DiveSpotListSource.EDITED, EventsTracker.SpotViewSource.FROM_PROFILE_EDITED);
                 break;
             case R.id.created_activity:
                 EventsTracker.trackUserCreatedView();
-                DiveSpotsListActivity.show(getContext(), true, EventsTracker.SpotViewSource.FROM_PROFILE_CREATED);
+                DiveSpotsListActivity.show(getContext(), DiveSpotListSource.ADDED, EventsTracker.SpotViewSource.FROM_PROFILE_CREATED);
                 break;
             case R.id.about_dss_layout:
                 AboutActivity.show(getContext());
@@ -373,14 +440,25 @@ public class ProfileFragment extends Fragment
     @Override
     public void onResume() {
         super.onResume();
-        Log.i(TAG, "ProfileFragment onCreateView, this = " + this);
+//        Log.i(TAG, "ProfileFragment onCreateView, this = " + this);
+//        if (SharedPreferenceHelper.isUserLoggedIn()) {
+//            if (!isClickedChosingPhotoButton) {
+//             //   getUserDataRequest(SharedPreferenceHelper.getUserServerId());
+//            }
+//        }
+//        if (!getUserVisibleHint()) {
+//            return;
+//        }
+    }
+
+    @Subscribe
+    public void getUserProfileInfo(LoadUserProfileInfoEvent event) {
         if (SharedPreferenceHelper.isUserLoggedIn()) {
             if (!isClickedChosingPhotoButton) {
                 getUserDataRequest(SharedPreferenceHelper.getUserServerId());
             }
-        }
-        if (!getUserVisibleHint()) {
-            return;
+        } else {
+            onLoggedOut();
         }
     }
 
@@ -416,55 +494,8 @@ public class ProfileFragment extends Fragment
         this.uri = null;
     }
 
-
-
     private void getUserDataRequest(String id) {
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserInfo(id, Helpers.getUserQuryMapRequest());
-        call.enqueue(new BaseCallback() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    String responseString = "";
-                    if (response.raw().code() == 200) {
-                        try {
-                            if (editLayout.getVisibility() != View.VISIBLE) {
-                                aboutLayout.setVisibility(View.VISIBLE);
-                            }
-                            responseString = response.body().string();
-                            JSONObject jsonObject = new JSONObject(responseString);
-                            responseString = jsonObject.getString("user");
-                            user = new Gson().fromJson(responseString, User.class);
-                            // TODO Server may respond error. For example {"message":"Social user not found","status_code":404}. In This case user will be null.
-                            changeUi(user);
-                        } catch (IOException e) {
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-                if (response.raw().code() == 422 || response.raw().code() == 404 ||
-                        response.raw().code() == 400) {
-                    SharedPreferenceHelper.logout();
-                    DDScannerApplication.bus.post(new LoggedOutEvent());
-                    //  DDScannerApplication.bus.post(new ShowLoginActivityIntent());
-                }
-                if (response.errorBody() != null) {
-                    try {
-                        if (Helpers.checkIsErrorByLogin(response.errorBody().string())) {
-                            SharedPreferenceHelper.logout();
-                        }
-                    } catch (IOException e) {
-
-                    }
-                }
-            }
-
-            @Override
-            public void onConnectionFailure() {
-                DialogUtils.showConnectionErrorDialog(getActivity());
-            }
-        });
+        DDScannerApplication.getDdScannerRestClient().getUserInformation(id, getUserInformationResultListener);
     }
 
     private void changeUi(User user) {
@@ -540,12 +571,12 @@ public class ProfileFragment extends Fragment
     @Override
     public void setUserVisibleHint(final boolean visible) {
         super.setUserVisibleHint(visible);
-        Log.i(TAG, "ProfileFragment setUserVisibleHint, this = " + this);
-        if (visible) {
-            if (SharedPreferenceHelper.isUserLoggedIn()) {
-                getUserDataRequest(SharedPreferenceHelper.getUserServerId());
-            }
-        }
+//        Log.i(TAG, "ProfileFragment setUserVisibleHint, this = " + this);
+//        if (visible) {
+//            if (SharedPreferenceHelper.isUserLoggedIn()) {
+//                getUserDataRequest(SharedPreferenceHelper.getUserServerId());
+//            }
+//        }
     }
 
     private String getDiveSpotString(int count) {
@@ -561,7 +592,7 @@ public class ProfileFragment extends Fragment
     private void createUpdateRequest() {
         isClickedChosingPhotoButton = false;
         materialDialog.show();
-        if (!aboutEdit.equals(user.getAbout()) && !aboutEdit.getText().toString().equals("")) {
+        if (!aboutEdit.equals(user.getAbout())) {
             about = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
                     aboutEdit.getText().toString());
         }
@@ -575,10 +606,6 @@ public class ProfileFragment extends Fragment
                     SharedPreferenceHelper.getSn());
             requestToken = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
                     SharedPreferenceHelper.getToken());
-            if (SharedPreferenceHelper.getSn().equals("tw")) {
-                requestSecret = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
-                        SharedPreferenceHelper.getSecret());
-            }
         }
 
         if (uri != null) {
@@ -605,149 +632,9 @@ public class ProfileFragment extends Fragment
 
         requestType = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), "PUT");
 
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().updateUserById(
-                SharedPreferenceHelper.getUserServerId(),
-                requestType, image, name, username, about, requestToken, requestSocial,
-                requestSecret
-        );
-
-        call.enqueue(new BaseCallback() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                materialDialog.dismiss();
-                if (response.isSuccessful()) {
-                    String responseString = "";
-                    if (response.raw().code() == 200) {
-                        try {
-                            responseString = response.body().string();
-                            JSONObject jsonObject = new JSONObject(responseString);
-                            responseString = jsonObject.getString("user");
-                            user = new Gson().fromJson(responseString, User.class);
-                            uri = null;
-                            changeUi(user);
-                            aboutLayout.setVisibility(View.VISIBLE);
-                            aboutLayout.scrollTo(0,0);
-                            editLayout.setVisibility(View.GONE);
-                        } catch (IOException e) {
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-                if (response.errorBody() != null) {
-                    if (response.raw().code() == 404) {
-                        SharedPreferenceHelper.logout();
-                        DDScannerApplication.bus.post(new ShowLoginActivityIntent());
-                    }
-                    if (response.raw().code() == 422) {
-                        try {
-                            if (Helpers.checkIsErrorByLogin(response.errorBody().string())) {
-                                SharedPreferenceHelper.logout();
-                                DDScannerApplication.bus.post(new ShowLoginActivityIntent());
-                            } else {
-                                try {
-                                    String error = response.errorBody().string();
-                                    Helpers.errorHandling(getContext(), errorsMap, error);
-                                } catch (IOException e) {
-
-                                }
-                            }
-                        } catch (IOException e) {
-
-                        }
-                    }
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                super.onFailure(call, t);
-                materialDialog.dismiss();
-            }
-
-            @Override
-            public void onConnectionFailure() {
-                DialogUtils.showConnectionErrorDialog(getActivity());
-            }
-        });
-
+        DDScannerApplication.getDdScannerRestClient().putUpdateUserProfileInfo(updateProfileInfoResultListener, SharedPreferenceHelper.getUserServerId(), image, requestType,  name, username, about, requestToken, requestSocial);
     }
 
-    @Override
-    public void onRefresh() {
-        getUserDataRequest(SharedPreferenceHelper.getUserServerId());
-        swipeRefreshLayout.setRefreshing(false);
-    }
-
-    private void logout() {
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance()
-                .logout(Helpers.getRegisterRequest());
-        call.enqueue(new BaseCallback() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                materialDialog.dismiss();
-                if (response.raw().code() == 200) {
-                    aboutLayout.setVisibility(View.GONE);
-                    SharedPreferenceHelper.logout();
-                    DDScannerApplication.bus.post(new LoggedOutEvent());
-                    DDScannerApplication.bus.post(new ChangePageOfMainViewPagerEvent(0));
-                }
-                if (!response.isSuccessful()) {
-                    String responseString = "";
-                    try {
-                        responseString = response.errorBody().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    LogUtils.i("response body is " + responseString);
-                    try {
-                        ErrorsParser.checkForError(response.code(), responseString);
-                    } catch (ServerInternalErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(getContext(), R.string.toast_server_error);
-                    } catch (BadRequestException e) {
-                        // TODO Handle
-                        Helpers.showToast(getContext(), R.string.toast_server_error);
-                    } catch (ValidationErrorException e) {
-                        // TODO Handle
-                    } catch (NotFoundException e) {
-                        // TODO Handle
-                      // Helpers.showToast(getContext(), R.string.toast_server_error);
-                        SharedPreferenceHelper.logout();
-                        DDScannerApplication.bus.post(new LoggedOutEvent());
-                        DDScannerApplication.bus.post(new ChangePageOfMainViewPagerEvent(0));
-                    } catch (UnknownErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(getContext(), R.string.toast_server_error);
-                    } catch (DiveSpotNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(getContext(), R.string.toast_server_error);
-                    } catch (UserNotFoundException e) {
-                        // TODO Handle
-                        SharedPreferenceHelper.logout();
-                        DDScannerApplication.bus.post(new LoggedOutEvent());
-                        DDScannerApplication.bus.post(new ChangePageOfMainViewPagerEvent(0));
-                    } catch (CommentNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(getContext(), R.string.toast_server_error);
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                super.onFailure(call, t);
-                materialDialog.dismiss();
-            }
-
-            @Override
-            public void onConnectionFailure() {
-                DialogUtils.showConnectionErrorDialog(getActivity());
-            }
-        });
-    }
 
     private void createErrorsMap() {
         errorsMap.put("name", error_name);
@@ -773,5 +660,10 @@ public class ProfileFragment extends Fragment
             loginView.setVisibility(View.VISIBLE);
             aboutLayout.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public void onDialogClosed(int requestCode) {
+
     }
 }

@@ -1,6 +1,7 @@
 package com.ddscanner.ui.adapters;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.AppCompatDrawableManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,54 +13,28 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.OvershootInterpolator;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.Comment;
-import com.ddscanner.entities.errors.BadRequestException;
-import com.ddscanner.entities.errors.CommentNotFoundException;
-import com.ddscanner.entities.errors.DiveSpotNotFoundException;
-import com.ddscanner.entities.errors.GeneralError;
-import com.ddscanner.entities.errors.NotFoundException;
-import com.ddscanner.entities.errors.ServerInternalErrorException;
-import com.ddscanner.entities.errors.UnknownErrorException;
-import com.ddscanner.entities.errors.UserNotFoundException;
-import com.ddscanner.entities.errors.ValidationErrorException;
 import com.ddscanner.events.DeleteCommentEvent;
 import com.ddscanner.events.DislikeCommentEvent;
 import com.ddscanner.events.EditCommentEvent;
-import com.ddscanner.events.IsCommentLikedEvent;
 import com.ddscanner.events.LikeCommentEvent;
 import com.ddscanner.events.ReportCommentEvent;
-import com.ddscanner.events.ShowLoginActivityIntent;
-import com.ddscanner.rest.BaseCallback;
-import com.ddscanner.rest.ErrorsParser;
-import com.ddscanner.rest.RestClient;
 import com.ddscanner.ui.activities.ForeignProfileActivity;
-import com.ddscanner.ui.dialogs.ProfileDialog;
-import com.ddscanner.ui.views.TransformationRoundImage;
-import com.ddscanner.utils.DialogUtils;
 import com.ddscanner.utils.Helpers;
-import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
-import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import at.blogc.android.views.ExpandableTextView;
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Response;
 
 /**
  * Created by lashket on 12.3.16.
@@ -71,7 +46,6 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
     private Context context;
     private String path;
     private boolean isAdapterSet = false;
-    private static ProfileDialog profileDialog = new ProfileDialog();
 
     public ReviewsListAdapter(ArrayList<Comment> comments, Context context, String path) {
         this.path = path;
@@ -93,6 +67,13 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         boolean isLiked;
         boolean isDisliked;
         reviewsListViewHolder.rating.removeAllViews();
+        reviewsListViewHolder.date.setText("");
+        reviewsListViewHolder.dislikeImage.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_review_dislike_empty));
+        reviewsListViewHolder.likeImage.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_review_like_empty));
+       // reviewsListViewHolder.photos.setVisibility(View.GONE);
+        reviewsListViewHolder.expand.setText("");
+        reviewsListViewHolder.dislikesCount.setText("");
+        reviewsListViewHolder.likesCount.setText("");
         isLiked = comments.get(reviewsListViewHolder.getAdapterPosition()).isLike();
         isDisliked = comments.get(reviewsListViewHolder.getAdapterPosition()).isDislike();
         if (isLiked) {
@@ -103,13 +84,19 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
             reviewsListViewHolder.dislikeImage.setImageDrawable(AppCompatDrawableManager.get()
                     .getDrawable(context, R.drawable.ic_review_dislike));
         }
+        Log.i(TAG, reviewsListViewHolder.toString());
         if (comments.get(reviewsListViewHolder.getAdapterPosition()).getImages() != null) {
+       //     reviewsListViewHolder.photos.setVisibility(View.VISIBLE);
             LinearLayoutManager layoutManager = new LinearLayoutManager(context);
             layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
             reviewsListViewHolder.photos.setNestedScrollingEnabled(false);
             reviewsListViewHolder.photos.setHasFixedSize(false);
             reviewsListViewHolder.photos.setLayoutManager(layoutManager);
-            reviewsListViewHolder.photos.setAdapter(new ReviewPhotosAdapter((ArrayList<String>) comments.get(reviewsListViewHolder.getAdapterPosition()).getImages(), context, path));
+            if (comments.get(reviewsListViewHolder.getAdapterPosition()).getUser().getId().equals(SharedPreferenceHelper.getUserServerId())) {
+                reviewsListViewHolder.photos.setAdapter(new ReviewPhotosAdapter((ArrayList<String>) comments.get(reviewsListViewHolder.getAdapterPosition()).getImages(), context, path, true, reviewsListViewHolder.getAdapterPosition()));
+            } else {
+                reviewsListViewHolder.photos.setAdapter(new ReviewPhotosAdapter((ArrayList<String>) comments.get(reviewsListViewHolder.getAdapterPosition()).getImages(), context, path, false, reviewsListViewHolder.getAdapterPosition()));
+            }
         } else {
             reviewsListViewHolder.photos.setAdapter(null);
         }
@@ -215,6 +202,16 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         inflater.inflate(R.menu.menu_comment_report, popup.getMenu());
         popup.setOnMenuItemClickListener(new MenuItemClickListener(commentId, comment));
         popup.show();
+    }
+
+    public void imageDeleted(int commentPosition, ArrayList<String> deletedImages) {
+        ArrayList<String> newImagesList = (ArrayList<String>) comments.get(commentPosition).getImages();
+        newImagesList.removeAll(deletedImages);
+        if (newImagesList.size() == 0) {
+            newImagesList = null;
+        }
+        comments.get(commentPosition).setImages(newImagesList);
+        notifyItemChanged(commentPosition);
     }
 
     @Override

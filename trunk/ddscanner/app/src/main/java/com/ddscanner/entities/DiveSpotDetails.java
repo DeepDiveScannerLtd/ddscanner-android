@@ -2,10 +2,7 @@ package com.ddscanner.entities;
 
 import java.util.List;
 
-/**
- * Created by lashket on 22.1.16.
- */
-public class DivespotDetails {
+public class DiveSpotDetails {
 
     private List<Comment> comments;
     private DiveSpotFull divespot;

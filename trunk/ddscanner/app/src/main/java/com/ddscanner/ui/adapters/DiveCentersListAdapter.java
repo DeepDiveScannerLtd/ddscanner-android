@@ -61,7 +61,7 @@ public class DiveCentersListAdapter extends RecyclerView.Adapter<DiveCentersList
         }
         if (diveCenter.getLogo() != null) {
             String imageUrlPath = logoPath + diveCenter.getLogo();
-            Picasso.with(context).load(imageUrlPath).into(diveCentersListViewHolder.imgLogo);
+            Picasso.with(context).load(imageUrlPath).placeholder(R.drawable.avatar_dc_list_empty).into(diveCentersListViewHolder.imgLogo);
         } else {
             diveCentersListViewHolder.imgLogo.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.avatar_dc_list_empty));
         }
@@ -119,7 +119,7 @@ public class DiveCentersListAdapter extends RecyclerView.Adapter<DiveCentersList
 
         @Override
         public void onClick(View v) {
-            DiveCenterDetailsActivity.show(context, diveCenters.get(getPosition()), DiveCentersListAdapter.this.getLogopath(), EventsTracker.SpotViewSource.FROM_LIST);
+            DiveCenterDetailsActivity.show(context, diveCenters.get(getAdapterPosition()), DiveCentersListAdapter.this.getLogopath(), EventsTracker.SpotViewSource.FROM_LIST);
         }
 
     }

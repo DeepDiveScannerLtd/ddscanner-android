@@ -71,7 +71,7 @@ public class SealifeListAdapter extends RecyclerView.Adapter<SealifeListAdapter.
 
         @Override
         public void onClick(View v) {
-            SealifeDetails.show(context, sealifes.get(getPosition()), pathMedium);
+            SealifeDetails.show(context, sealifes.get(getAdapterPosition()), pathMedium);
             EventsTracker.trackDiveSpotSealifeView();
         }
     }

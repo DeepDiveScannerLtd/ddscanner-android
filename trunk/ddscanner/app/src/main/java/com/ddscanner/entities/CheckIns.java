@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Created by lashket on 12.5.16.
  */
-public class Checkins implements Serializable {
+public class CheckIns implements Serializable {
 
     private List<User> checkins;
 

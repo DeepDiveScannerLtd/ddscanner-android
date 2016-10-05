@@ -65,7 +65,7 @@ public class AddPhotoToDiveSpotAdapter extends RecyclerView.Adapter<AddPhotoToDi
         @Override
         public void onClick(View v) {
             EventsTracker.trackDiveSpotPhotosView();
-            ReviewImageSliderActivity.show(context, images, getAdapterPosition());
+            ReviewImageSliderActivity.show(context, images, getAdapterPosition(), false, false, null);
         }
     }
 

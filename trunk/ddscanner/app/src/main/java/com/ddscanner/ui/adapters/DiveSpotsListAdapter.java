@@ -55,7 +55,7 @@ public class DiveSpotsListAdapter
         DiveSpot divespot = new DiveSpot();
         divespot = divespots.get(i);
         productListViewHolder.progressBar.getIndeterminateDrawable().
-                setColorFilter(context.getResources().getColor(R.color.primary),
+                setColorFilter(ContextCompat.getColor(context, R.color.primary),
                         PorterDuff.Mode.MULTIPLY);
         if (divespot.getImage() != null) {
             Picasso.with(context).load(divespot.getImage()).resize(Math.round(Helpers.convertDpToPixel(130, context)), Math.round(Helpers.convertDpToPixel(130, context))).centerCrop()

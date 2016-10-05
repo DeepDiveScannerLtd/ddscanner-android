@@ -7,13 +7,13 @@ import android.support.multidex.MultiDex;
 
 import com.crashlytics.android.Crashlytics;
 import com.ddscanner.analytics.AnalyticsSystemsManager;
+import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.activities.InternetClosedActivity;
 import com.ddscanner.utils.LogUtils;
 import com.facebook.FacebookSdk;
-import com.facebook.drawee.backends.pipeline.Fresco;
 import com.squareup.otto.Bus;
-import com.twitter.sdk.android.Twitter;
-import com.twitter.sdk.android.core.TwitterAuthConfig;
+
+import java.util.Locale;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -30,6 +30,7 @@ public class DDScannerApplication extends Application {
     public static Bus bus = new Bus();
     private static boolean activityVisible;
     public static boolean isActivitiesFragmentVisible = false;
+    private static DDScannerRestClient ddScannerRestClient;
 
     private static DDScannerApplication instance;
 
@@ -40,14 +41,15 @@ public class DDScannerApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
+        Locale.setDefault(new Locale("en_EN"));
 //        if (!BuildConfig.DEBUG) {
-            Fabric.with(this, new Crashlytics(), new Twitter(authConfig));
+            Fabric.with(this, new Crashlytics());
 //        }
         FacebookSdk.sdkInitialize(this);
         instance = this;
-        Fresco.initialize(this);
         AnalyticsSystemsManager.initAnalyticsSystems(this);
+
+        ddScannerRestClient = new DDScannerRestClient();
     }
 
     protected void attachBaseContext(Context base) {
@@ -72,6 +74,10 @@ public class DDScannerApplication extends Application {
 
     public static void activityPaused() {
         activityVisible = false;
+    }
+
+    public static DDScannerRestClient getDdScannerRestClient() {
+        return ddScannerRestClient;
     }
 
 }

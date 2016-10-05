@@ -1,6 +1,11 @@
 package com.ddscanner.rest;
 
 
+import android.support.v4.content.ContextCompat;
+
+import com.ddscanner.DDScannerApplication;
+import com.ddscanner.R;
+
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
@@ -44,8 +49,7 @@ public abstract class RestClient {
             OkHttpClient client = builder.build();
 
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl("https://api.ddscanner.com")
-//                    .baseUrl("https://ddsapi.ilave.pro") // dev
+                    .baseUrl(DDScannerApplication.getInstance().getString(R.string.server_api_address))
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(client)
                     .build();

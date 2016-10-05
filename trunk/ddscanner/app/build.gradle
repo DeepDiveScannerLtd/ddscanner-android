@@ -4,7 +4,8 @@ buildscript {
     }
 
     dependencies {
-        classpath 'io.fabric.tools:gradle:1.+'
+        // last version index can be found here - https://twittersdk.artifactoryonline.com/twittersdk/repo/io/fabric/tools/gradle/
+        classpath 'io.fabric.tools:gradle:1.21.5'
     }
 }
 apply plugin: 'com.android.application'
@@ -23,8 +24,8 @@ android {
         minSdkVersion 16
         targetSdkVersion 23
         multiDexEnabled true
-        versionCode 22
-        versionName "2.0.16"
+        versionCode 23
+        versionName "2.0.17"
     }
     buildTypes {
         debug {
@@ -34,6 +35,7 @@ android {
             resValue "string", "appsflyer_dev_key", "5A7vyAMVwKT4RBiTaxrpSU"
             resValue "string", "flurry_api_key", "DQ8GM2FPPSTBGK7QX4D8"
             resValue "string", "google_maps_api_key", "AIzaSyDt6pJZggDyU-aQy2Ks6i7WgZd6ayKK-I8"
+            resValue "string", "server_api_address", "https://ddsapi.ilave.pro"
 //            minifyEnabled false
 //            shrinkResources false
 //            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules-debug.pro'
@@ -43,6 +45,7 @@ android {
             resValue "string", "appsflyer_dev_key", "5A7vyAMVwKT4RBiTaxrpSU"
             resValue "string", "flurry_api_key", "D45ZMHZZJWDVD8X6G55B"
             resValue "string", "google_maps_api_key", "AIzaSyA5jpAj7uwrxA4oaYvI_bdV9IDbb7gUrZc"
+            resValue "string", "server_api_address", "https://api.ddscanner.com"
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -55,8 +58,8 @@ repositories {
     maven { url "https://jitpack.io" }
 }
 
-def playServicesVersion="9.4.0"
-def supportVersionVersion="24.1.1"
+def playServicesVersion="9.6.1"
+def supportVersionVersion="24.2.1"
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
@@ -66,13 +69,7 @@ dependencies {
     //    }
     //   compile 'com.google.android.gms:play-services-auth:8.4.0'
     //  compile 'com.google.android.gms:play-services-maps:8.4.0'
-    compile('com.facebook.fresco:fresco:0.9.0') {
-        exclude group: 'com.parse.bolts', module: 'bolts-android'
-    }
     //  compile 'com.google.android.gms:play-services-gcm:8.4.0'
-    compile('com.twitter.sdk.android:twitter:1.12.0@aar') {
-        transitive = true;
-    }
     // compile 'com.google.android.gms:play-services:8.4.0'
     compile('com.crashlytics.sdk.android:crashlytics:2.6.1@aar') {
         transitive = true;
@@ -106,12 +103,11 @@ dependencies {
     compile 'com.github.rey5137:material:1.2.2'
     compile 'com.weiwangcn.betterspinner:library-material:1.1.0'
     compile 'com.afollestad.material-dialogs:core:0.8.5.9'
-    compile 'com.daimajia.swipelayout:library:1.2.0@aar'
     compile 'com.github.ganfra:material-spinner:1.1.1'
-    compile 'com.github.lovetuzitong:MultiImageSelector:1.1'
+    compile 'com.github.lovetuzitong:MultiImageSelector:1.2'
     compile 'jp.wasabeef:picasso-transformations:2.1.0'
     compile 'com.flurry.android:analytics:6.4.0'
-    compile 'com.appsflyer:af-android-sdk:4+@aar'
+    compile 'com.appsflyer:af-android-sdk:4.6.0@aar'
     compile 'com.github.liuguangqiang.swipeback:library:1.0.2@aar'
     compile 'at.blogc:expandabletextview:1.0.3'
 }

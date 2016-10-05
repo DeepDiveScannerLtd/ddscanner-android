@@ -16,34 +16,19 @@ import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.DiveSpot;
 import com.ddscanner.entities.DivespotsWrapper;
-import com.ddscanner.entities.errors.BadRequestException;
-import com.ddscanner.entities.errors.CommentNotFoundException;
-import com.ddscanner.entities.errors.DiveSpotNotFoundException;
-import com.ddscanner.entities.errors.NotFoundException;
-import com.ddscanner.entities.errors.ServerInternalErrorException;
-import com.ddscanner.entities.errors.UnknownErrorException;
-import com.ddscanner.entities.errors.UserNotFoundException;
-import com.ddscanner.entities.errors.ValidationErrorException;
-import com.ddscanner.rest.BaseCallback;
-import com.ddscanner.rest.ErrorsParser;
-import com.ddscanner.rest.RestClient;
+import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.adapters.DiveSpotsListAdapter;
+import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
-import com.ddscanner.utils.DialogUtils;
+import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
-import com.ddscanner.utils.LogUtils;
-import com.google.gson.Gson;
+import com.ddscanner.utils.SharedPreferenceHelper;
 import com.rey.material.widget.ProgressView;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Response;
-
-public class ForeignUserDiveSpotList extends AppCompatActivity {
+public class ForeignUserDiveSpotList extends AppCompatActivity implements InfoDialogFragment.DialogClosedListener{
 
     private RecyclerView rc;
     private Toolbar toolbar;
@@ -53,6 +38,10 @@ public class ForeignUserDiveSpotList extends AppCompatActivity {
     private boolean isEdited;
     private boolean isCreated;
     private boolean isCheckIn;
+
+    private GetListOfDiveSpotsListener getAddedListener = new GetListOfDiveSpotsListener(ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_SPOT_LIST_LOGIN_TO_GET_ADDED);
+    private GetListOfDiveSpotsListener getCheckinsListener = new GetListOfDiveSpotsListener(ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_SPOT_LIST_LOGIN_TO_GET_CHECKINS);
+    private GetListOfDiveSpotsListener getEditedListener = new GetListOfDiveSpotsListener(ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_SPOT_LIST_LOGIN_TO_GET_EDITED);
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,200 +54,17 @@ public class ForeignUserDiveSpotList extends AppCompatActivity {
         findViews();
         if (isEdited) {
             toolbarTitle = getString(R.string.edited);
-            getEditedDiveSpotList();
+            DDScannerApplication.getDdScannerRestClient().getEditedDiveSpots(userId, getEditedListener);
         }
         if (isCreated) {
             toolbarTitle = getString(R.string.created);
-            getAddedDiveSpotList();
+            DDScannerApplication.getDdScannerRestClient().getAddedDiveSpots(userId, getAddedListener);
         }
         if (isCheckIn) {
             toolbarTitle = getString(R.string.toolbar_title_check_ins);
-            getUsersCheckinList();
+            DDScannerApplication.getDdScannerRestClient().getUsersCheckins(userId, getCheckinsListener);
         }
         toolbarSettings();
-    }
-
-    private void getAddedDiveSpotList() {
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUsersAdded(userId, Helpers.getUserQuryMapRequest());
-        call.enqueue(new BaseCallback() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    String responseString = "";
-                    try {
-                        responseString = response.body().string();
-                        DivespotsWrapper divespotsWrapper = new Gson().fromJson(responseString, DivespotsWrapper.class);
-                        progressBarFull.setVisibility(View.GONE);
-                        rc.setVisibility(View.VISIBLE);
-                        rc.setAdapter(new DiveSpotsListAdapter((ArrayList<DiveSpot>) divespotsWrapper.getDiveSpots(), ForeignUserDiveSpotList.this, EventsTracker.SpotViewSource.FROM_PROFILE_CREATED));
-                    } catch (IOException e) {
-
-                    }
-                }
-                if (!response.isSuccessful()) {
-                    String responseString = "";
-                    try {
-                        responseString = response.errorBody().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    LogUtils.i("response body is " + responseString);
-                    try {
-                        ErrorsParser.checkForError(response.code(), responseString);
-                    } catch (ServerInternalErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
-                    } catch (BadRequestException e) {
-                        // TODO Handle
-                        Helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
-                    } catch (ValidationErrorException e) {
-                        // TODO Handle
-                    } catch (NotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
-                    } catch (UnknownErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
-                    } catch (DiveSpotNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
-                    } catch (UserNotFoundException e) {
-                        // TODO Handle
-                        SocialNetworks.showForResult(ForeignUserDiveSpotList.this, ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_SPOT_LIST_LOGIN);
-                    } catch (CommentNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
-                    }
-                }
-            }
-
-            @Override
-            public void onConnectionFailure() {
-                DialogUtils.showConnectionErrorDialog(ForeignUserDiveSpotList.this);
-            }
-        });
-    }
-
-    private void getEditedDiveSpotList() {
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUsersEdited(userId, Helpers.getUserQuryMapRequest());
-        call.enqueue(new BaseCallback() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    String responseString = "";
-                    try {
-                        responseString = response.body().string();
-                        DivespotsWrapper divespotsWrapper = new Gson().fromJson(responseString, DivespotsWrapper.class);
-                        progressBarFull.setVisibility(View.GONE);
-                        rc.setVisibility(View.VISIBLE);
-                        rc.setAdapter(new DiveSpotsListAdapter((ArrayList<DiveSpot>) divespotsWrapper.getDiveSpots(), ForeignUserDiveSpotList.this, EventsTracker.SpotViewSource.FROM_PROFILE_EDITED));
-                    } catch (IOException e) {
-
-                    }
-                }
-                if (!response.isSuccessful()) {
-                    String responseString = "";
-                    try {
-                        responseString = response.errorBody().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    LogUtils.i("response body is " + responseString);
-                    try {
-                        ErrorsParser.checkForError(response.code(), responseString);
-                    } catch (ServerInternalErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
-                    } catch (BadRequestException e) {
-                        // TODO Handle
-                        Helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
-                    } catch (ValidationErrorException e) {
-                        // TODO Handle
-                    } catch (NotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
-                    } catch (UnknownErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
-                    } catch (DiveSpotNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
-                    } catch (UserNotFoundException e) {
-                        // TODO Handle
-                        SocialNetworks.showForResult(ForeignUserDiveSpotList.this, ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_SPOT_LIST_LOGIN);
-                    } catch (CommentNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
-                    }
-                }
-            }
-
-            @Override
-            public void onConnectionFailure() {
-                DialogUtils.showConnectionErrorDialog(ForeignUserDiveSpotList.this);
-            }
-        });
-    }
-
-    private void getUsersCheckinList() {
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUsersCheckins(userId, Helpers.getUserQuryMapRequest());
-        call.enqueue(new BaseCallback() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    String responseString = "";
-                    try {
-                        responseString = response.body().string();
-                        DivespotsWrapper divespotsWrapper = new Gson().fromJson(responseString, DivespotsWrapper.class);
-                        progressBarFull.setVisibility(View.GONE);
-                        rc.setVisibility(View.VISIBLE);
-                        rc.setAdapter(new DiveSpotsListAdapter((ArrayList<DiveSpot>) divespotsWrapper.getDiveSpots(), ForeignUserDiveSpotList.this, EventsTracker.SpotViewSource.FROM_PROFILE_CHECKINS));
-                    } catch (IOException e) {
-
-                    }
-                }
-                if (!response.isSuccessful()) {
-                    String responseString = "";
-                    try {
-                        responseString = response.errorBody().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    LogUtils.i("response body is " + responseString);
-                    try {
-                        ErrorsParser.checkForError(response.code(), responseString);
-                    } catch (ServerInternalErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
-                    } catch (BadRequestException e) {
-                        // TODO Handle
-                        Helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
-                    } catch (ValidationErrorException e) {
-                        // TODO Handle
-                    } catch (NotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
-                    } catch (UnknownErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
-                    } catch (DiveSpotNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
-                    } catch (UserNotFoundException e) {
-                        // TODO Handle
-                        SocialNetworks.showForResult(ForeignUserDiveSpotList.this, ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_SPOT_LIST_LOGIN);
-                    } catch (CommentNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(ForeignUserDiveSpotList.this, R.string.toast_server_error);
-                    }
-                }
-            }
-
-            @Override
-            public void onConnectionFailure() {
-                DialogUtils.showConnectionErrorDialog(ForeignUserDiveSpotList.this);
-            }
-        });
     }
 
     private void findViews() {
@@ -310,17 +116,25 @@ public class ForeignUserDiveSpotList extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-            case ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_SPOT_LIST_LOGIN:
+            case ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_SPOT_LIST_LOGIN_TO_GET_ADDED:
                 if (resultCode == RESULT_OK) {
-                    if (isCheckIn) {
-                        getUsersCheckinList();
-                    }
-                    if (isEdited) {
-                        getEditedDiveSpotList();
-                    }
-                    if (isCreated) {
-                        getAddedDiveSpotList();
-                    }
+                    DDScannerApplication.getDdScannerRestClient().getAddedDiveSpots(userId, getAddedListener);
+                } else {
+                    setResult(RESULT_CANCELED);
+                    finish();
+                }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_SPOT_LIST_LOGIN_TO_GET_EDITED:
+                if (resultCode == RESULT_OK) {
+                    DDScannerApplication.getDdScannerRestClient().getEditedDiveSpots(userId, getEditedListener);
+                } else {
+                    setResult(RESULT_CANCELED);
+                    finish();
+                }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_SPOT_LIST_LOGIN_TO_GET_CHECKINS:
+                if (resultCode == RESULT_OK) {
+                    DDScannerApplication.getDdScannerRestClient().getUsersCheckins(userId, getCheckinsListener);
                 } else {
                     setResult(RESULT_CANCELED);
                     finish();
@@ -344,4 +158,48 @@ public class ForeignUserDiveSpotList extends AppCompatActivity {
         }
     }
 
+    private class GetListOfDiveSpotsListener implements DDScannerRestClient.ResultListener<DivespotsWrapper> {
+
+        private int requestCodeForLogin;
+
+        GetListOfDiveSpotsListener(int requestCodeForLogin) {
+            this.requestCodeForLogin = requestCodeForLogin;
+        }
+
+        @Override
+        public void onSuccess(DivespotsWrapper result) {
+            progressBarFull.setVisibility(View.GONE);
+            rc.setVisibility(View.VISIBLE);
+            rc.setAdapter(new DiveSpotsListAdapter((ArrayList<DiveSpot>) result.getDiveSpots(), ForeignUserDiveSpotList.this, EventsTracker.SpotViewSource.FROM_PROFILE_CHECKINS));
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_FOREIGN_USER_DIVE_SPOTS_ACTIVITY_FAILED_TO_CONNECT, false);
+
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            switch (errorType) {
+                case USER_NOT_FOUND_ERROR_C801:
+                    SharedPreferenceHelper.logout();
+                    LoginActivity.showForResult(ForeignUserDiveSpotList.this, requestCodeForLogin);
+                    break;
+                default:
+                    EventsTracker.trackUnknownServerError(url, errorMessage);
+                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_FOREIGN_USER_DIVE_SPOTS_ACTIVITY_FAILED_TO_CONNECT, false);
+                    break;
+            }
+        }
+    }
+
+    @Override
+    public void onDialogClosed(int requestCode) {
+        switch (requestCode) {
+            case DialogsRequestCodes.DRC_FOREIGN_USER_DIVE_SPOTS_ACTIVITY_FAILED_TO_CONNECT:
+                finish();
+                break;
+        }
+    }
 }

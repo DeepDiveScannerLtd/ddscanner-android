@@ -2,6 +2,7 @@ package com.ddscanner.ui.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
@@ -43,7 +44,7 @@ public class NeedToLoginFragment extends Fragment implements View.OnClickListene
 
         fbCustomLogin.setOnClickListener(this);
         googleCustomSignIn.setOnClickListener(this);
-        int color = getContext().getResources().getColor(R.color.primary);
+        int color = ContextCompat.getColor(getContext(), R.color.primary);
         SpannableString spannableString = new SpannableString(privacyPolicy.getText());
         spannableString.setSpan(new ForegroundColorSpan(color), 32, 48, 0);
         spannableString.setSpan(new ForegroundColorSpan(color), 53, spannableString.length(), 0);

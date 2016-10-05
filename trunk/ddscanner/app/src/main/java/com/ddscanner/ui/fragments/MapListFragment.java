@@ -220,13 +220,13 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
         MapsInitializer.initialize(getActivity());
 
         infoWindowBackgroundImages.put(Constants.OBJECT_TYPE_WRECK, AppCompatDrawableManager.get().getDrawable(getActivity(),
-                R.drawable.iw_card_wreck, false));
+                R.drawable.iw_card_wreck));
         infoWindowBackgroundImages.put(Constants.OBJECT_TYPE_CAVE, AppCompatDrawableManager.get().getDrawable(getActivity(),
-                R.drawable.iw_card_cave, false));
+                R.drawable.iw_card_cave));
         infoWindowBackgroundImages.put(Constants.OBJECT_TYPE_REEF, AppCompatDrawableManager.get().getDrawable(getActivity(),
-                R.drawable.iw_card_reef, false));
+                R.drawable.iw_card_reef));
         infoWindowBackgroundImages.put(Constants.OBJECT_TYPE_OTHER, AppCompatDrawableManager.get().getDrawable(getActivity(),
-                R.drawable.iw_card_other, false));
+                R.drawable.iw_card_other));
 
         addDsFab.setOnClickListener(this);
         mapListFAB.setOnClickListener(this);
@@ -324,10 +324,14 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
                 isMapShown = !isMapShown;
                 break;
             case R.id.zoom_plus:
-                diveSpotsClusterManager.mapZoomPlus();
+                if (diveSpotsClusterManager != null) {
+                    diveSpotsClusterManager.mapZoomPlus();
+                }
                 break;
             case R.id.zoom_minus:
-                diveSpotsClusterManager.mapZoomMinus();
+                if (diveSpotsClusterManager != null) {
+                    diveSpotsClusterManager.mapZoomMinus();
+                }
                 break;
             case R.id.go_to_my_location:
                 goToMyLocation.setVisibility(View.GONE);
@@ -394,9 +398,9 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
         if (diveSpotsClusterManager != null && diveSpotsClusterManager.getLastClickedMarker() != null) {
             try {
                 if (diveSpotsClusterManager.isLastClickedMarkerNew()) {
-                    diveSpotsClusterManager.getLastClickedMarker().setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.ic_ds_new)));
+                    diveSpotsClusterManager.getLastClickedMarker().setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds_new));
                 } else {
-                    diveSpotsClusterManager.getLastClickedMarker().setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.ic_ds)));
+                    diveSpotsClusterManager.getLastClickedMarker().setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
                 }
             } catch (NullPointerException e) {
 
@@ -422,15 +426,13 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
 
     @Subscribe
     public void hideDiveSpotinfo(OnMapClickEvent event) {
-        // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
-//                event.getMarker().setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
         if (event.getMarker() != null) {
             try {
 
                 if (event.getIsNew()) {
-                    event.getMarker().setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.ic_ds_new)));
+                    event.getMarker().setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds_new));
                 } else {
-                    event.getMarker().setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.ic_ds)));
+                    event.getMarker().setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
                 }
             } catch (NullPointerException e) {
 
@@ -466,13 +468,9 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
         if (diveSpots == null || diveSpots.isEmpty() || diveSpots.size() == 0) {
             rc.setVisibility(View.GONE);
             please.setVisibility(View.VISIBLE);
-//            mapListFAB.setVisibility(View.GONE);
-//            addDsFab.setVisibility(View.GONE);
         } else {
             rc.setVisibility(View.VISIBLE);
             please.setVisibility(View.GONE);
-//            mapListFAB.setVisibility(View.VISIBLE);
-//            addDsFab.setVisibility(View.VISIBLE);
         }
 
     }
@@ -492,15 +490,10 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
                     goToMyLocation.setVisibility(View.VISIBLE);
                     progressBarMyLocation.setVisibility(View.GONE);
                     if (circle == null) {
-                        // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
-//                myLocationMarker = mGoogleMap.addMarker(new MarkerOptions()
-//                        .position(myLocation)
-//                        .anchor(0.5f, 0.5f)
-//                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.pin_me)));
                         myLocationMarker = mGoogleMap.addMarker(new MarkerOptions()
                                 .position(myLocation)
                                 .anchor(0.5f, 0.5f)
-                                .icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.ic_pin_me))));
+                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_me)));
                         CircleOptions circleOptions = new CircleOptions()
                                 .center(myLocation)
                                 .radius(200)

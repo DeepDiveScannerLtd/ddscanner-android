@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v13.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -29,26 +30,17 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.Comment;
-import com.ddscanner.entities.errors.BadRequestException;
-import com.ddscanner.entities.errors.CommentNotFoundException;
-import com.ddscanner.entities.errors.DiveSpotNotFoundException;
-import com.ddscanner.entities.errors.NotFoundException;
-import com.ddscanner.entities.errors.ServerInternalErrorException;
-import com.ddscanner.entities.errors.UnknownErrorException;
-import com.ddscanner.entities.errors.UserNotFoundException;
-import com.ddscanner.entities.errors.ValidationErrorException;
 import com.ddscanner.events.ImageDeletedEvent;
-import com.ddscanner.rest.ErrorsParser;
-import com.ddscanner.rest.RestClient;
+import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.adapters.AddPhotoToDsListAdapter;
+import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
+import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
-import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.squareup.otto.Subscribe;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -59,12 +51,8 @@ import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
-public class EditCommentActivity extends AppCompatActivity implements View.OnClickListener{
+public class EditCommentActivity extends AppCompatActivity implements View.OnClickListener, InfoDialogFragment.DialogClosedListener{
 
     private static final String TAG = LeaveReviewActivity.class.getSimpleName();
     private static final String ID = "ID";
@@ -99,6 +87,38 @@ public class EditCommentActivity extends AppCompatActivity implements View.OnCli
     private Comment comment;
     private ArrayList<String> deleted = new ArrayList<>();
     private String path;
+
+    private DDScannerRestClient.ResultListener<Void> editCommentResultListener = new DDScannerRestClient.ResultListener<Void>() {
+        @Override
+        public void onSuccess(Void result) {
+            EventsTracker.trackReviewEdited();
+            setResult(RESULT_OK);
+            finish();
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            materialDialog.dismiss();
+            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            materialDialog.dismiss();
+            switch (errorType) {
+                case USER_NOT_FOUND_ERROR_C801:
+                    SharedPreferenceHelper.logout();
+                    LoginActivity.showForResult(EditCommentActivity.this, ActivitiesRequestCodes.REQUEST_CODE_EDIT_COMMENT_ACTIVITY_LOGIN);
+                    break;
+                case COMMENT_NOT_FOUND_ERROR_C803:
+                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_message_comment_not_found, DialogsRequestCodes.DRC_EDIT_COMMENT_ACTIVITY_COMMENT_NOT_FOUND, false);
+                    break;
+                default:
+                    Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);
+                    break;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -148,7 +168,7 @@ public class EditCommentActivity extends AppCompatActivity implements View.OnCli
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (COMMENT_MAX_LENGTH - text.length() < 10) {
-                    symbolNumberLeft.setTextColor(getResources().getColor(R.color.tw__composer_red));
+                    symbolNumberLeft.setTextColor(ContextCompat.getColor(EditCommentActivity.this, R.color.tw__composer_red));
                 } else {
                     symbolNumberLeft.setTextColor(Color.parseColor("#9f9f9f"));
                 }
@@ -164,15 +184,6 @@ public class EditCommentActivity extends AppCompatActivity implements View.OnCli
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Edit Comment");
         setUi();
-    }
-
-    private void setRcSettings() {
-        LinearLayoutManager layoutManager = new LinearLayoutManager(EditCommentActivity.this);
-        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        photos_rc.setNestedScrollingEnabled(false);
-        photos_rc.setHasFixedSize(false);
-        photos_rc.setLayoutManager(layoutManager);
-        photos_rc.setAdapter(addPhotoToDsListAdapter);
     }
 
     @Override
@@ -214,7 +225,7 @@ public class EditCommentActivity extends AppCompatActivity implements View.OnCli
 
     private void pickPhotoFromGallery() {
         if (checkReadStoragePermission()) {
-            MultiImageSelector.create(this)
+            MultiImageSelector.create().showCamera(false).multi()
                     .count(maxPhotos)
                     .start(this, ActivitiesRequestCodes.REQUEST_CODE_EDIT_COMMENT_ACTIVITY_PICK_PHOTOS);
         } else {
@@ -301,10 +312,6 @@ public class EditCommentActivity extends AppCompatActivity implements View.OnCli
                     SharedPreferenceHelper.getSn());
             requessToken = RequestBody.create(MediaType.parse("multipart/form-data"),
                     SharedPreferenceHelper.getToken());
-            if (SharedPreferenceHelper.getSn().equals("tw")) {
-                requestSecret = RequestBody.create(MediaType.parse("multipart/form-data"),
-                        SharedPreferenceHelper.getSecret());
-            }
         }
         requestRating = RequestBody.create(MediaType.parse("multipart/form-data"),
                 String.valueOf(Math.round(ratingBar.getRating())));
@@ -339,69 +346,7 @@ public class EditCommentActivity extends AppCompatActivity implements View.OnCli
                 deletedImages.add(MultipartBody.Part.createFormData("images_del[]", deleted.get(i)));
             }
         }
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().updateComment(
-                comment.getId(),
-                _method,
-                requestComment,
-                requestRating,
-                newImages,
-                deletedImages,
-                requessToken,
-                requestSocial,
-                requestSecret);
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                materialDialog.dismiss();
-                if (response.isSuccessful()) {
-                    EventsTracker.trackReviewEdited();
-                    setResult(RESULT_OK);
-                    finish();
-                }
-                if (!response.isSuccessful()) {
-                    String responseString = "";
-                    try {
-                        responseString = response.errorBody().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    materialDialog.dismiss();
-                    LogUtils.i("response body is " + responseString);
-                    try {
-                        ErrorsParser.checkForError(response.code(), responseString);
-                    } catch (ServerInternalErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(EditCommentActivity.this, R.string.toast_server_error);
-                    } catch (BadRequestException e) {
-                        // TODO Handle
-                        Helpers.showToast(EditCommentActivity.this, R.string.toast_server_error);
-                    } catch (ValidationErrorException e) {
-                        // TODO Handle
-                        Helpers.errorHandling(EditCommentActivity.this, errorsMap, responseString);
-                    } catch (NotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(EditCommentActivity.this, R.string.toast_server_error);
-                    } catch (UnknownErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(EditCommentActivity.this, R.string.toast_server_error);
-                    } catch (DiveSpotNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(EditCommentActivity.this, R.string.toast_server_error);
-                    } catch (UserNotFoundException e) {
-                        // TODO Handle
-                        SocialNetworks.showForResult(EditCommentActivity.this, ActivitiesRequestCodes.REQUEST_CODE_EDIT_COMMENT_ACTIVITY_LOGIN);
-                    } catch (CommentNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(EditCommentActivity.this, R.string.toast_server_error);
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-            }
-        });
+        DDScannerApplication.getDdScannerRestClient().putEditComment(comment.getId(), _method, requestComment, requestRating, newImages, deletedImages, requessToken, requestSocial, editCommentResultListener);
     }
 
     private ArrayList<String> removeAdressPart(ArrayList<String> deleted) {
@@ -440,6 +385,15 @@ public class EditCommentActivity extends AppCompatActivity implements View.OnCli
                 return;
             }
 
+        }
+    }
+
+    @Override
+    public void onDialogClosed(int requestCode) {
+        switch (requestCode) {
+            case DialogsRequestCodes.DRC_EDIT_COMMENT_ACTIVITY_COMMENT_NOT_FOUND:
+                finish();
+                break;
         }
     }
 }

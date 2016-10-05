@@ -11,7 +11,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -20,27 +19,17 @@ import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.DiveSpot;
 import com.ddscanner.entities.DivespotsWrapper;
-import com.ddscanner.entities.errors.BadRequestException;
-import com.ddscanner.entities.errors.CommentNotFoundException;
-import com.ddscanner.entities.errors.DiveSpotNotFoundException;
-import com.ddscanner.entities.errors.NotFoundException;
-import com.ddscanner.entities.errors.ServerInternalErrorException;
-import com.ddscanner.entities.errors.UnknownErrorException;
-import com.ddscanner.entities.errors.UserNotFoundException;
-import com.ddscanner.entities.errors.ValidationErrorException;
 import com.ddscanner.events.GoToMyLocationButtonClickedEvent;
 import com.ddscanner.events.LocationChosedEvent;
 import com.ddscanner.events.OpenAddDsActivityAfterLogin;
-import com.ddscanner.rest.BaseCallback;
-import com.ddscanner.rest.ErrorsParser;
-import com.ddscanner.rest.RestClient;
+import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.adapters.CustomPagerAdapter;
+import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.ui.fragments.SearchDiveSpotsFragment;
 import com.ddscanner.ui.fragments.SearchLocationFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
-import com.ddscanner.utils.DialogUtils;
-import com.ddscanner.utils.Helpers;
+import com.ddscanner.utils.DialogsRequestCodes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.places.AutocompletePrediction;
@@ -50,21 +39,16 @@ import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.gson.Gson;
 import com.squareup.otto.Subscribe;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Response;
 
-public class SearchSpotOrLocationActivity extends AppCompatActivity implements SearchView.OnQueryTextListener, ViewPager.OnPageChangeListener {
+public class SearchSpotOrLocationActivity extends AppCompatActivity implements SearchView.OnQueryTextListener, ViewPager.OnPageChangeListener, InfoDialogFragment.DialogClosedListener {
 
     private static final String TAG = SearchSpotOrLocationActivity.class.getName();
 
@@ -88,6 +72,24 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
     private List<MultipartBody.Part> select = new ArrayList<>();// fields (id,name)
     private boolean isTryToOpenAddDiveSpotActivity = false;
     private Runnable sendingSearchRequestRunnable;
+
+    private DDScannerRestClient.ResultListener<DivespotsWrapper> divespotsWrapperResultListener = new DDScannerRestClient.ResultListener<DivespotsWrapper>() {
+        @Override
+        public void onSuccess(DivespotsWrapper result) {
+            searchDiveSpotFragment.setDiveSpots((ArrayList<DiveSpot>) result.getDiveSpots());
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_SEARCH_ACTIVITY_FAILED_TO_CONNECT, false);
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            EventsTracker.trackUnknownServerError(url, errorMessage);
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_SEARCH_ACTIVITY_UNEXPECTED_ERROR, false);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -224,56 +226,7 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
     }
 
     private void sendRequest() {
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDivespotsByParameters(name, like, order, sort, limit, select);
-        call.enqueue(new BaseCallback() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    String responseString = "";
-                    try {
-                        responseString = response.body().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    try {
-                        ErrorsParser.checkForError(response.code(), responseString);
-                        DivespotsWrapper divespotsWrapper;
-                        divespotsWrapper = new Gson().fromJson(responseString, DivespotsWrapper.class);
-                        if (divespotsWrapper.getDiveSpots() != null) {
-                            searchDiveSpotFragment.setDiveSpots((ArrayList<DiveSpot>) divespotsWrapper.getDiveSpots());
-                        }
-                    } catch (ServerInternalErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(SearchSpotOrLocationActivity.this, R.string.toast_server_error);
-                    } catch (BadRequestException e) {
-                        // TODO Handle
-                        Helpers.showToast(SearchSpotOrLocationActivity.this, R.string.toast_server_error);
-                    } catch (ValidationErrorException e) {
-                        // TODO Handle
-                    } catch (NotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(SearchSpotOrLocationActivity.this, R.string.toast_server_error);
-                    } catch (UnknownErrorException e) {
-                        // TODO Handle
-                        Helpers.showToast(SearchSpotOrLocationActivity.this, R.string.toast_server_error);
-                    } catch (DiveSpotNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(SearchSpotOrLocationActivity.this, R.string.toast_server_error);
-                    } catch (UserNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(SearchSpotOrLocationActivity.this, R.string.toast_server_error);
-                    } catch (CommentNotFoundException e) {
-                        // TODO Handle
-                        Helpers.showToast(SearchSpotOrLocationActivity.this, R.string.toast_server_error);
-                    }
-                }
-            }
-
-            @Override
-            public void onConnectionFailure() {
-                DialogUtils.showConnectionErrorDialog(SearchSpotOrLocationActivity.this);
-            }
-        });
+        DDScannerApplication.getDdScannerRestClient().getDiveSpotsByParameters(name, like, order, sort, limit, select, divespotsWrapperResultListener);
     }
 
     @Override
@@ -354,7 +307,7 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
     @Subscribe
     public void openLoginWindowToAdd(OpenAddDsActivityAfterLogin event) {
         isTryToOpenAddDiveSpotActivity = true;
-        Intent intent = new Intent(SearchSpotOrLocationActivity.this, SocialNetworks.class);
+        Intent intent = new Intent(SearchSpotOrLocationActivity.this, LoginActivity.class);
         startActivityForResult(intent, ActivitiesRequestCodes.REQUEST_CODE_SEARCH_ACTIVITY_LOGIN);
     }
 
@@ -399,5 +352,15 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
     @Override
     public void onPageScrollStateChanged(int state) {
 
+    }
+
+    @Override
+    public void onDialogClosed(int requestCode) {
+        switch (requestCode) {
+            case DialogsRequestCodes.DRC_SEARCH_ACTIVITY_UNEXPECTED_ERROR:
+            case DialogsRequestCodes.DRC_SEARCH_ACTIVITY_FAILED_TO_CONNECT:
+                finish();
+                break;
+        }
     }
 }

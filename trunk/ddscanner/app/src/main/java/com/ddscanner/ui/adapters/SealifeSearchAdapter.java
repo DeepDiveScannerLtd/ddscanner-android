@@ -119,7 +119,7 @@ public class SealifeSearchAdapter extends RecyclerView.Adapter<SealifeSearchAdap
 
         @Override
         public void onClick(View v) {
-            DDScannerApplication.bus.post(new SealifeChoosedEvent(mModels.get(getPosition())));
+            DDScannerApplication.bus.post(new SealifeChoosedEvent(mModels.get(getAdapterPosition())));
         }
     }
     

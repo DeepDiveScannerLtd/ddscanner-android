@@ -30,8 +30,10 @@ import com.ddscanner.events.LocationReadyEvent;
 import com.ddscanner.events.OnMapClickEvent;
 import com.ddscanner.events.PutDiveCentersToListEvent;
 import com.ddscanner.ui.adapters.DiveCentersListAdapter;
+import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.ui.managers.DiveCentersClusterManager;
 import com.ddscanner.utils.ActivitiesRequestCodes;
+import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -49,7 +51,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.rey.material.widget.ProgressView;
 import com.squareup.otto.Subscribe;
 
-public class DiveCentersActivity extends BaseAppCompatActivity implements View.OnClickListener {
+public class DiveCentersActivity extends BaseAppCompatActivity implements View.OnClickListener, InfoDialogFragment.DialogClosedListener {
     private static final String TAG = "DiveCentersActivity";
     private Toolbar toolbar;
     private LatLng latLng;
@@ -304,11 +306,9 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
 
     @Subscribe
     public void hidediveCenterInfo(OnMapClickEvent event) {
-        // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
-//                event.getMarker().setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
         if (event.getMarker() != null) {
             try {
-                event.getMarker().setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.pin_dc)));
+                event.getMarker().setIcon(BitmapDescriptorFactory.fromResource(R.drawable.pin_dc));
             } catch (NullPointerException e) {
 
             } catch (IllegalArgumentException e) {
@@ -393,7 +393,7 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
                         myLocationMarker = mGoogleMap.addMarker(new MarkerOptions()
                                 .position(myLocation)
                                 .anchor(0.5f, 0.5f)
-                                .icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(this.getResources(), R.drawable.ic_pin_me))));
+                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_me)));
                         CircleOptions circleOptions = new CircleOptions()
                                 .center(myLocation)
                                 .radius(200)
@@ -425,5 +425,13 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
         }
     }
 
-
+    @Override
+    public void onDialogClosed(int requestCode) {
+        switch (requestCode) {
+            case DialogsRequestCodes.DRC_DIVE_CENTERS_CLUSTER_MANAGER_UNEXPECTED_ERROR:
+            case DialogsRequestCodes.DRC_DIVE_CENTERS_CLUSTER_MANAGER_FAILED_TO_CONNECT:
+                finish();
+                break;
+        }
+    }
 }
