@@ -362,7 +362,7 @@ public class EditCommentActivity extends AppCompatActivity implements View.OnCli
                 deletedImages.add(MultipartBody.Part.createFormData("images_del[]", deleted.get(i)));
             }
         }
-        DDScannerApplication.getDdScannerRestClient().putEditComment("100000000000000", _method, requestComment, requestRating, newImages, deletedImages, requessToken, requestSocial, editCommentResultListener);
+        DDScannerApplication.getDdScannerRestClient().putEditComment(comment.getId(), _method, requestComment, requestRating, newImages, deletedImages, requessToken, requestSocial, editCommentResultListener);
     }
 
     private ArrayList<String> removeAdressPart(ArrayList<String> deleted) {
