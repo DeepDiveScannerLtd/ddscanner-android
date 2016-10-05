@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,7 +39,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class NotificationsFragment extends Fragment implements ViewPager.OnPageChangeListener, LoginView.LoginStateChangeListener, InfoDialogFragment.DialogClosedListener {
+public class NotificationsFragment extends Fragment implements ViewPager.OnPageChangeListener, LoginView.LoginStateChangeListener, InfoDialogFragment.DialogClosedListener, SwipeRefreshLayout.OnRefreshListener {
 
     private static final String TAG = NotificationsFragment.class.getName();
 
@@ -52,6 +53,7 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
     private AllNotificationsFragment allNotificationsFragment = new AllNotificationsFragment();
     private ActivityNotificationsFragment activityNotificationsFragment = new ActivityNotificationsFragment();
     private boolean isViewNull = true;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     private DDScannerRestClient.ResultListener<Notifications> notificationsResultListener = new DDScannerRestClient.ResultListener<Notifications>() {
         @Override
@@ -60,6 +62,7 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
             progressView.setVisibility(View.GONE);
             notificationsViewPager.setVisibility(View.VISIBLE);
             setData();
+            swipeRefreshLayout.setRefreshing(false);
         }
 
         @Override
@@ -141,6 +144,8 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
         loginView = (RelativeLayout) v.findViewById(R.id.login_view_root);
         progressView = (ProgressView) v.findViewById(R.id.progressBarFull);
         notificationsViewPager.addOnPageChangeListener(this);
+        swipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swiperefresh);
+        swipeRefreshLayout.setOnRefreshListener(this);
     }
 
     private void setUpTabLayout() {
@@ -287,6 +292,7 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
         if (loginView != null && notificationsViewPager != null) {
             loginView.setVisibility(View.GONE);
             notificationsViewPager.setVisibility(View.VISIBLE);
+            swipeRefreshLayout.setEnabled(true);
         }
     }
 
@@ -295,6 +301,7 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
         if (loginView != null && notificationsViewPager != null) {
             loginView.setVisibility(View.VISIBLE);
             notificationsViewPager.setVisibility(View.GONE);
+            swipeRefreshLayout.setEnabled(false);
         }
     }
 
@@ -323,5 +330,10 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
                 DDScannerApplication.bus.post(new ChangePageOfMainViewPagerEvent(0));
                 break;
         }
+    }
+
+    @Override
+    public void onRefresh() {
+        DDScannerApplication.getDdScannerRestClient().getUserNotifications(notificationsResultListener);
     }
 }

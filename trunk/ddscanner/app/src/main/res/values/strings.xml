@@ -121,7 +121,7 @@
     
     <string name="user_made_checkin">%1$s has also checked in at %2$s</string>
     <string name="divespot_was_changed">%1$s has been changed</string>
-    <string name="new_dive_spothas_been_added_near">New dive spot has been added near you %1$s</string>
+    <string name="new_dive_spothas_been_added_near">New dive spot was added - %1$s</string>
     <string name="user_dislike_your_review">%1$s disliked your review %2$s</string>
     <string name="user_liked_your_review">%1$s liked your review %2$s</string>
     <string name="your_changes_accepted">You changes on the %1$s have been accepted</string>
@@ -277,7 +277,7 @@
     <string name="errr">Name may contain only numbers and letters</string>
     <string name="description_length_error">Description should contain at least 150 symbols</string>
     <string name="also_added_to_favorites">Dive spot has already been added to favorite</string>
-    <string name="description_at_least_150_symbols">Description (At least 150 symbols)</string>
+    <string name="description_at_least_150_symbols">Description</string>
     <string name="added_to_favorites">Added to favorites</string>
     <string name="removed_from_favorites">Removed from favorites</string>
     <string name="review_error">Review must contain at least 30 characters</string>
