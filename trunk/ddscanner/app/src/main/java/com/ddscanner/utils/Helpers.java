@@ -101,6 +101,9 @@ public class Helpers {
      */
 
     public static ArrayList<String> appendImagesWithPath(ArrayList<String> images, String path) {
+        if (images == null) {
+            return images;
+        }
         for (int i = 0; i < images.size(); i++) {
             images.set(i, path + images.get(i));
         }

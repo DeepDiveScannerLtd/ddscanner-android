@@ -60,7 +60,6 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     private boolean isHasNewComment = false;
 
     private FiltersResponseEntity filters = new FiltersResponseEntity();
-    private ReviewsListAdapter reviewsListAdapter;
 
     private List<String> reportItems = new ArrayList<>();
 
@@ -68,8 +67,10 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     private String reportType;
     private String reportDescription = null;
     private MaterialDialog materialDialog;
+    private ReviewsListAdapter reviewsListAdapter;
     private int reviewPositionToRate;
     private boolean isNeedRefreshComments;
+    private int commentPosition;
 
     private DDScannerRestClient.ResultListener<FiltersResponseEntity> filtersResponseEntityResultListener = new DDScannerRestClient.ResultListener<FiltersResponseEntity>() {
         @Override
@@ -208,11 +209,17 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     private DDScannerRestClient.ResultListener<Comments> commentsResultListener = new DDScannerRestClient.ResultListener<Comments>() {
         @Override
         public void onSuccess(Comments result) {
-            Comments comments = result;
-            ReviewsActivity.this.comments = (ArrayList<Comment>) comments.getComments();
+            ReviewsActivity.this.comments = (ArrayList<Comment>) result.getComments();
             progressView.setVisibility(View.GONE);
             commentsRc.setVisibility(View.VISIBLE);
-            reviewsListAdapter = new ReviewsListAdapter((ArrayList<Comment>) comments.getComments(), ReviewsActivity.this, path);
+            ArrayList<Comment> commentsList = new ArrayList<>();
+            if (result.getComments() != null) {
+                for (Comment comment : result.getComments()) {
+                    comment.setImages(Helpers.appendImagesWithPath((ArrayList<String>) comment.getImages(), path));
+                    commentsList.add(comment);
+                }
+            }
+            reviewsListAdapter = new ReviewsListAdapter(commentsList, ReviewsActivity.this, path);
             commentsRc.setAdapter(reviewsListAdapter);
         }
 
@@ -359,6 +366,13 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
                 if (resultCode == RESULT_OK) {
                     dislikeComment(comments.get(reviewPositionToRate).getId(), reviewPositionToRate);
                     isNeedRefreshComments = true;
+                }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_SHOW_SLIDER:
+                if (resultCode == RESULT_OK) {
+                    if (data.getSerializableExtra("deletedImages") != null) {
+                        reviewsListAdapter.imageDeleted(commentPosition, (ArrayList<String>) data.getSerializableExtra("deletedImages"));
+                    }
                 }
                 break;
         }
@@ -523,7 +537,8 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
 
     @Subscribe
     public void showSliderActivity(ShowSliderForReviewImagesEvent event) {
-        ReviewImageSliderActivity.show(this, event.getPhotos(), event.getPosition(), event.isSelfReview(), true, path);
+        this.commentPosition = event.getCommentPosition();
+        ReviewImageSliderActivity.showForResult(this, event.getPhotos(), event.getPosition(), event.isSelfReview(), true, path, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_SHOW_SLIDER);
     }
 
     @Override

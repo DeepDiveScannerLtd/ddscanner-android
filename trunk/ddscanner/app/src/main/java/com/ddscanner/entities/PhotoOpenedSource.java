@@ -5,5 +5,5 @@ package com.ddscanner.entities;
  */
 
 public enum PhotoOpenedSource {
-    ALL, DIVESPOT, REVIEWS
+    ALL, DIVESPOT, REVIEWS, REVIEWSLIST
 }

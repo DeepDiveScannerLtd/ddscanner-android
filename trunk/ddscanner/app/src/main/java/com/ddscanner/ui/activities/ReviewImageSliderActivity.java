@@ -1,5 +1,6 @@
 package com.ddscanner.ui.activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -17,23 +18,33 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
+import com.ddscanner.entities.FiltersResponseEntity;
 import com.ddscanner.entities.Image;
+import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.adapters.ReviewImageSLiderAdapter;
 import com.ddscanner.ui.adapters.SliderImagesAdapter;
+import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.ui.views.SimpleGestureFilter;
+import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
+import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
+import com.ddscanner.utils.SharedPreferenceHelper;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
-public class ReviewImageSliderActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener, View.OnClickListener , SimpleGestureFilter.SimpleGestureListener{
+public class ReviewImageSliderActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener, View.OnClickListener , SimpleGestureFilter.SimpleGestureListener, InfoDialogFragment.DialogClosedListener {
 
     private LinearLayout pager_indicator;
     private int dotsCount = 0;
@@ -54,25 +65,77 @@ public class ReviewImageSliderActivity extends AppCompatActivity implements View
     private String deleteImageName;
     private ImageView menu;
     private String path;
+    private FiltersResponseEntity filters = new FiltersResponseEntity();
+    private String reportType;
+    private String reportDescription;
+    private boolean isSomethingReported;
+    private MaterialDialog materialDialog;
+    private ArrayList<String> deletedImages = new ArrayList<>();
 
+    private DDScannerRestClient.ResultListener<Void> reportImageResultListener = new DDScannerRestClient.ResultListener<Void>() {
+        @Override
+        public void onSuccess(Void result) {
+            isSomethingReported = true;
+            materialDialog.dismiss();
+            deletedImages.add(images.get(ReviewImageSliderActivity.this.position));
+            imageDeleted(ReviewImageSliderActivity.this.position);
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_REVIEWS_SLIDER_ACTIVITY_FAILED_TO_CONNECT, false);
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            switch (errorType) {
+                case USER_NOT_FOUND_ERROR_C801:
+                    LoginActivity.showForResult(ReviewImageSliderActivity.this, ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_REPORT);
+                    break;
+                default:
+                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_REVIEWS_SLIDER_ACTIVITY_UNEXPECTED_ERROR, false);
+                    break;
+            }
+        }
+    };
+
+
+    private DDScannerRestClient.ResultListener<FiltersResponseEntity> filtersResponseEntityResultListener = new DDScannerRestClient.ResultListener<FiltersResponseEntity>() {
+        @Override
+        public void onSuccess(FiltersResponseEntity result) {
+            filters = result;
+            if (isFromReviews && !isSelfImages) {
+                menu.setVisibility(View.VISIBLE);
+            }
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_REVIEWS_SLIDER_ACTIVITY_FAILED_TO_CONNECT, false);
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_REVIEWS_SLIDER_ACTIVITY_UNEXPECTED_ERROR, false);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_slider);
         findViews();
+        materialDialog = Helpers.getMaterialDialog(this);
         images = (ArrayList<String>) getIntent().getSerializableExtra(Constants.REVIEWS_IMAGES_SLIDE_INTENT_IMAGES);
         isSelfImages = getIntent().getBooleanExtra("isSelf", false);
         isFromReviews = getIntent().getBooleanExtra("isFromReviews", false);
         path = getIntent().getStringExtra("path");
-        if (isFromReviews) {
-         //   menu.setVisibility(View.VISIBLE);
-        }
         detector = new SimpleGestureFilter(this,this);
         position = getIntent().getIntExtra(Constants.REVIEWS_IMAGES_SLIDE_INTENT_POSITION, 0);
         viewPager.addOnPageChangeListener(this);
         sliderImagesAdapter = new ReviewImageSLiderAdapter(getFragmentManager(), images);
         viewPager.setAdapter(sliderImagesAdapter);
+        DDScannerApplication.getDdScannerRestClient().getReportTypes(filtersResponseEntityResultListener);
         setUi();
 
     }
@@ -112,7 +175,7 @@ public class ReviewImageSliderActivity extends AppCompatActivity implements View
     private void setUi() {
         dotsCount = sliderImagesAdapter.getCount();
         dots = new ImageView[dotsCount];
-
+        pager_indicator.removeAllViews();
         for (int i=0; i < dotsCount; i++) {
             dots[i] = new ImageView(this);
             dots[i].setImageDrawable(ContextCompat.getDrawable(this, R.drawable.nonselecteditem_dot));
@@ -143,14 +206,87 @@ public class ReviewImageSliderActivity extends AppCompatActivity implements View
         public boolean onMenuItemClick(MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.photo_report:
+                    reportName = imageName.replace(path, "");
                     EventsTracker.trackPhotoReport();
+                    showReportDialog();
                     break;
                 case R.id.photo_delete:
+                    deleteImageName = imageName.replace(path, "");
                     break;
             }
             return false;
         }
     }
+
+    private void imageDeleted(int position) {
+        images.remove(position);
+        if (images.size() > 0) {
+            sliderImagesAdapter = new ReviewImageSLiderAdapter(getFragmentManager(), images);
+            viewPager.setAdapter(sliderImagesAdapter);
+            if (images.size() == 1) {
+                this.position = 0;
+            } else if (position + 1 <= images.size()) {
+                this.position = position;
+            } else if (position == images.size()) {
+                this.position = images.size() - 1;
+            }
+            setUi();
+        } else {
+            onBackPressed();
+        }
+    }
+
+
+    public void showReportDialog() {
+        List<String> objects = new ArrayList<String>();
+        for (Map.Entry<String, String> entry : filters.getReport().entrySet()) {
+            objects.add(entry.getValue());
+        }
+        new MaterialDialog.Builder(this)
+                .title("Report")
+                .items(objects)
+                .itemsCallback(new MaterialDialog.ListCallback() {
+                    @Override
+                    public void onSelection(final MaterialDialog dialog, View view, int which, CharSequence text) {
+                        reportType = Helpers.getMirrorOfHashMap(filters.getReport()).get(text);
+                        if (reportType.equals("other")) {
+                            showOtherReportDialog();
+                            dialog.dismiss();
+                        } else {
+                            reportImage(reportName, reportType, null);
+                        }
+                    }
+                })
+                .show();
+    }
+
+    private void reportImage(String imageName, String reportType, String reportDescription) {
+        materialDialog.show();
+        if (!SharedPreferenceHelper.isUserLoggedIn() || SharedPreferenceHelper.getToken().isEmpty() || SharedPreferenceHelper.getSn().isEmpty()) {
+            LoginActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_REPORT);
+            return;
+        }
+        DDScannerApplication.getDdScannerRestClient().postReportImage(imageName, reportType, reportDescription, reportImageResultListener);
+
+    }
+
+    private void showOtherReportDialog() {
+        new MaterialDialog.Builder(this)
+                .title("Other")
+                .widgetColor(ContextCompat.getColor(this, R.color.primary))
+                .input("Write reason", "", new MaterialDialog.InputCallback() {
+                    @Override
+                    public void onInput(MaterialDialog dialog, CharSequence input) {
+                        if (input.toString().trim().length() > 1) {
+                            reportImage(reportName, "other", input.toString());
+                            reportDescription = input.toString();
+                        } else {
+                            Toast.makeText(ReviewImageSliderActivity.this, "Write a reason", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }).show();
+    }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -159,11 +295,10 @@ public class ReviewImageSliderActivity extends AppCompatActivity implements View
                 overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
                 break;
             case R.id.options:
-                if (isSelfImages) {
-                    showDeleteMenu(menu);
+                if (!isSelfImages) {
+                    showReportMenu(menu);
                     break;
                 }
-                showReportMenu(menu);
                 break;
         }
     }
@@ -260,4 +395,47 @@ public class ReviewImageSliderActivity extends AppCompatActivity implements View
 
     }
 
+    @Override
+    public void onBackPressed() {
+        if (isSomethingReported) {
+            Intent intent = new Intent();
+            intent.putExtra("deletedImages", deletedImages);
+            setResult(RESULT_OK, intent);
+            finish();
+        } else {
+            finish();
+        }
+    }
+
+    public static void showForResult(Activity context, ArrayList<String> images, int position, boolean isSelfImages, boolean isFromReviews, String path, int requestCode) {
+        Intent intent = new Intent(context, ReviewImageSliderActivity.class);
+        intent.putExtra(Constants.REVIEWS_IMAGES_SLIDE_INTENT_IMAGES, images);
+        intent.putExtra(Constants.REVIEWS_IMAGES_SLIDE_INTENT_POSITION, position);
+        intent.putExtra("isSelf", isSelfImages);
+        intent.putExtra("isFromReviews", isFromReviews);
+        intent.putExtra("path", path);
+        context.startActivityForResult(intent, requestCode);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_REPORT:
+                if (resultCode == RESULT_OK) {
+                    DDScannerApplication.getDdScannerRestClient().postReportImage(reportName, reportType, reportDescription,reportImageResultListener);
+                }
+                break;
+        }
+    }
+
+    @Override
+    public void onDialogClosed(int requestCode) {
+        switch (requestCode) {
+            case DialogsRequestCodes.DRC_REVIEWS_SLIDER_ACTIVITY_UNEXPECTED_ERROR:
+            case DialogsRequestCodes.DRC_REVIEWS_SLIDER_ACTIVITY_FAILED_TO_CONNECT:
+                onBackPressed();
+                break;
+        }
+    }
 }

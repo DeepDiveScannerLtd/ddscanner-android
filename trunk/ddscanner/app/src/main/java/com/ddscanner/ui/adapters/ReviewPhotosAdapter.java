@@ -32,14 +32,16 @@ public class ReviewPhotosAdapter extends RecyclerView.Adapter<ReviewPhotosAdapte
     public String path;
     public Context context;
     public boolean isSelfPhotos;
+    public int commentPosition;
 
-    public ReviewPhotosAdapter(ArrayList<String> photos, Context context, String path, boolean isSelfPhotos) {
+    public ReviewPhotosAdapter(ArrayList<String> photos, Context context, String path, boolean isSelfPhotos, int commentPosition) {
         this.photos = photos;
         this.context = context;
         this.path = path;
         this.isSelfPhotos =  isSelfPhotos;
+        this.commentPosition = commentPosition;
 
-        Helpers.appendImagesWithPath(photos, path);
+       // Helpers.appendImagesWithPath(photos, path);
     }
 
     @Override
@@ -92,7 +94,7 @@ public class ReviewPhotosAdapter extends RecyclerView.Adapter<ReviewPhotosAdapte
         @Override
         public void onClick(View v) {
           // ReviewImageSliderActivity.show(context, photos, getAdapterPosition());
-            DDScannerApplication.bus.post(new ShowSliderForReviewImagesEvent(isSelfPhotos, photos, getAdapterPosition()));
+            DDScannerApplication.bus.post(new ShowSliderForReviewImagesEvent(isSelfPhotos, photos, getAdapterPosition(), commentPosition));
         }
     }
 
