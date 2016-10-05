@@ -103,4 +103,8 @@ public class DialogsRequestCodes {
     public static final int DRC_DIVE_CENTERS_CLUSTER_MANAGER_FAILED_TO_CONNECT = 3501;
     public static final int DRC_DIVE_CENTERS_CLUSTER_MANAGER_UNEXPECTED_ERROR = 3502;
 
+    //ReviewImagesSlider
+    public static final int DRC_REVIEWS_SLIDER_ACTIVITY_FAILED_TO_CONNECT = 3601;
+    public static final int DRC_REVIEWS_SLIDER_ACTIVITY_UNEXPECTED_ERROR = 3602;
+
 }

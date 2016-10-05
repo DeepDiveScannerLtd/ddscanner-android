@@ -142,11 +142,15 @@ public class ActivitiesRequestCodes {
     public static final int REQUEST_CODE_REVIEWS_ACTIVITY_EDIT_MY_REVIEW = 3505;
     public static final int REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_LIKE_REVIEW = 3506;
     public static final int REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_DISLIKE_REVIEW = 3507;
+    public static final int REQUEST_CODE_REVIEWS_ACTIVITY_SHOW_SLIDER = 3508;
 
     //    SearchSealifeActivity
     public static final int REQUEST_CODE_SEARCH_SEALIFE_ACTIVITY_ADD_SEALIFE = 3601;
 
     //    SocialNetworks
     public static final int REQUEST_CODE_SOCIAL_NETWORKS_SIGN_IN = 3701;
+
+    //ReviewsPhotosImageSliderActivity
+    public static final int REQUEST_CODE_LOGIN_TO_LEAVE_REPORT = 3801;
 
 }

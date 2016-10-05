@@ -11,11 +11,13 @@ public class ShowSliderForReviewImagesEvent {
     private boolean isSelfReview;
     private ArrayList<String> photos;
     private int position;
+    private int commentPosition;
 
-    public ShowSliderForReviewImagesEvent(boolean isSelfReview, ArrayList<String> photos, int position) {
+    public ShowSliderForReviewImagesEvent(boolean isSelfReview, ArrayList<String> photos, int position, int commentPosition) {
         this.isSelfReview = isSelfReview;
         this.photos = photos;
         this.position = position;
+        this.commentPosition = commentPosition;
     }
 
     public boolean isSelfReview() {
@@ -28,5 +30,9 @@ public class ShowSliderForReviewImagesEvent {
 
     public int getPosition() {
         return position;
+    }
+
+    public int getCommentPosition() {
+        return commentPosition;
     }
 }

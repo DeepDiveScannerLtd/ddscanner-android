@@ -60,7 +60,6 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     private boolean isHasNewComment = false;
 
     private FiltersResponseEntity filters = new FiltersResponseEntity();
-    private ReviewsListAdapter reviewsListAdapter;
 
     private List<String> reportItems = new ArrayList<>();
 
@@ -68,8 +67,10 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     private String reportType;
     private String reportDescription = null;
     private MaterialDialog materialDialog;
+    private ReviewsListAdapter reviewsListAdapter;
     private int reviewPositionToRate;
     private boolean isNeedRefreshComments;
+    private int commentPosition;
 
     private DDScannerRestClient.ResultListener<FiltersResponseEntity> filtersResponseEntityResultListener = new DDScannerRestClient.ResultListener<FiltersResponseEntity>() {
         @Override
@@ -367,6 +368,13 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
                     isNeedRefreshComments = true;
                 }
                 break;
+            case ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_SHOW_SLIDER:
+                if (resultCode == RESULT_OK) {
+                    if (data.getSerializableExtra("deletedImages") != null) {
+                        reviewsListAdapter.imageDeleted(commentPosition, (ArrayList<String>) data.getSerializableExtra("deletedImages"));
+                    }
+                }
+                break;
         }
     }
 
@@ -529,7 +537,8 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
 
     @Subscribe
     public void showSliderActivity(ShowSliderForReviewImagesEvent event) {
-        ReviewImageSliderActivity.show(this, event.getPhotos(), event.getPosition(), event.isSelfReview(), true, path);
+        this.commentPosition = event.getCommentPosition();
+        ReviewImageSliderActivity.showForResult(this, event.getPhotos(), event.getPosition(), event.isSelfReview(), true, path, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_SHOW_SLIDER);
     }
 
     @Override

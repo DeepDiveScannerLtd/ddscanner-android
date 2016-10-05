@@ -87,16 +87,15 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         Log.i(TAG, reviewsListViewHolder.toString());
         if (comments.get(reviewsListViewHolder.getAdapterPosition()).getImages() != null) {
        //     reviewsListViewHolder.photos.setVisibility(View.VISIBLE);
-            Log.i(TAG, comments.get(i).getImages().get(0).toString());
             LinearLayoutManager layoutManager = new LinearLayoutManager(context);
             layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
             reviewsListViewHolder.photos.setNestedScrollingEnabled(false);
             reviewsListViewHolder.photos.setHasFixedSize(false);
             reviewsListViewHolder.photos.setLayoutManager(layoutManager);
             if (comments.get(reviewsListViewHolder.getAdapterPosition()).getUser().getId().equals(SharedPreferenceHelper.getUserServerId())) {
-                reviewsListViewHolder.photos.setAdapter(new ReviewPhotosAdapter((ArrayList<String>) comments.get(reviewsListViewHolder.getAdapterPosition()).getImages(), context, path, true));
+                reviewsListViewHolder.photos.setAdapter(new ReviewPhotosAdapter((ArrayList<String>) comments.get(reviewsListViewHolder.getAdapterPosition()).getImages(), context, path, true, reviewsListViewHolder.getAdapterPosition()));
             } else {
-                reviewsListViewHolder.photos.setAdapter(new ReviewPhotosAdapter((ArrayList<String>) comments.get(reviewsListViewHolder.getAdapterPosition()).getImages(), context, path, false));
+                reviewsListViewHolder.photos.setAdapter(new ReviewPhotosAdapter((ArrayList<String>) comments.get(reviewsListViewHolder.getAdapterPosition()).getImages(), context, path, false, reviewsListViewHolder.getAdapterPosition()));
             }
         } else {
             reviewsListViewHolder.photos.setAdapter(null);
@@ -203,6 +202,16 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         inflater.inflate(R.menu.menu_comment_report, popup.getMenu());
         popup.setOnMenuItemClickListener(new MenuItemClickListener(commentId, comment));
         popup.show();
+    }
+
+    public void imageDeleted(int commentPosition, ArrayList<String> deletedImages) {
+        ArrayList<String> newImagesList = (ArrayList<String>) comments.get(commentPosition).getImages();
+        newImagesList.removeAll(deletedImages);
+        if (newImagesList.size() == 0) {
+            newImagesList = null;
+        }
+        comments.get(commentPosition).setImages(newImagesList);
+        notifyItemChanged(commentPosition);
     }
 
     @Override
