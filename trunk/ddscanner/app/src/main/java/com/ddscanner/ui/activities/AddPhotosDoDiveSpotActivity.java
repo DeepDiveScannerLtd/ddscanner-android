@@ -54,6 +54,7 @@ public class AddPhotosDoDiveSpotActivity extends AppCompatActivity implements Vi
     private DDScannerRestClient.ResultListener<Void> addingPhotosToDiveSpotResultListener = new DDScannerRestClient.ResultListener<Void>() {
         @Override
         public void onSuccess(Void result) {
+            materialDialog.dismiss();
             EventsTracker.trackDiveSpotPhotoAdded();
             setResult(RESULT_OK);
             finish();
@@ -61,11 +62,13 @@ public class AddPhotosDoDiveSpotActivity extends AppCompatActivity implements Vi
 
         @Override
         public void onConnectionFailure() {
+            materialDialog.dismiss();
             InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            materialDialog.dismiss();
             switch (errorType) {
                 case USER_NOT_FOUND_ERROR_C801:
                     SharedPreferenceHelper.logout();
