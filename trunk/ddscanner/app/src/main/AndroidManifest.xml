@@ -181,7 +181,7 @@
             android:name=".ui.activities.EditDiveSpotActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activities.SealifeDetails"
+            android:name=".ui.activities.SealifeDetailsActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activities.EditCommentActivity"

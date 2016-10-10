@@ -4,11 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.Point;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -30,9 +27,8 @@ import com.ddscanner.entities.Sealife;
 import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
-public class SealifeDetails extends AppCompatActivity {
+public class SealifeDetailsActivity extends AppCompatActivity {
 
     private TextView length, weight, depth, scname, order, distribution, scclass, habitat,name;
     private ImageView photo;
@@ -47,7 +43,7 @@ public class SealifeDetails extends AppCompatActivity {
     private ProgressBar progressBar;
 
     public static void show(Context context, Sealife sealife, String pathMedium) {
-        Intent intent = new Intent(context, SealifeDetails.class);
+        Intent intent = new Intent(context, SealifeDetailsActivity.class);
         intent.putExtra("SEALIFE", sealife);
         intent.putExtra("PATH", pathMedium);
         context.startActivity(intent);
