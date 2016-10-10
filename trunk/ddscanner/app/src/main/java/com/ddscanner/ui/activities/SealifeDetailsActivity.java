@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
@@ -34,7 +35,7 @@ public class SealifeDetailsActivity extends AppCompatActivity {
     private ImageView photo;
     private Sealife sealife;
     private String pathMedium;
-    private CollapsingToolbarLayout collapsingToolbarLayout = null;
+    private CollapsingToolbarLayout collapsingToolbarLayout;
     private Drawable drawable;
     private Bitmap image;
     private AppBarLayout appBarLayout;
@@ -54,6 +55,8 @@ public class SealifeDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sealife_full);
         findViews();
+        collapsingToolbarLayout.setExpandedTitleColor(ContextCompat.getColor(this, android.R.color.transparent));
+        collapsingToolbarLayout.setStatusBarScrimColor(ContextCompat.getColor(this, android.R.color.transparent));
         sealife = (Sealife) getIntent().getSerializableExtra("SEALIFE");
         pathMedium = getIntent().getStringExtra("PATH");
         Log.i("SEALIFEFULL", pathMedium + sealife.getImage());
