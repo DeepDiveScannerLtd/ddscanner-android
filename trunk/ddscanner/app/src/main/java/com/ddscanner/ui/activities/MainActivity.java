@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -19,7 +20,6 @@ import android.support.v13.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -50,6 +50,7 @@ import com.ddscanner.events.PickPhotoFromGallery;
 import com.ddscanner.events.PlaceChoosedEvent;
 import com.ddscanner.events.ShowLoginActivityIntent;
 import com.ddscanner.events.TakePhotoFromCameraEvent;
+import com.ddscanner.events.tutorial.MyLocationHintClosedEvent;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.adapters.MainActivityPagerAdapter;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
@@ -62,6 +63,7 @@ import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
+import com.ddscanner.utils.TutorialHelper;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -125,6 +127,8 @@ public class MainActivity extends BaseAppCompatActivity
     private boolean needToClearDefaultAccount;
 
     private LoginResultListener loginResultListener = new LoginResultListener();
+
+    private Handler handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -846,5 +850,10 @@ public class MainActivity extends BaseAppCompatActivity
                     Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);
             }
         }
+    }
+
+    @Subscribe
+    public void onMyLocationTutorialHintClosed(MyLocationHintClosedEvent event) {
+        TutorialHelper.showForDiveSpotsTab(this, handler, toolbarTabLayout.getTabAt(0).getCustomView());
     }
 }

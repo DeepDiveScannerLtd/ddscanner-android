@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.UiThread;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -48,6 +49,7 @@ import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
+import com.ddscanner.utils.TutorialHelper;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -68,9 +70,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by lashket on 20.4.16.
- */
 public class MapListFragment extends Fragment implements View.OnClickListener {
 
     private static final String TAG = MapListFragment.class.getName();
@@ -116,6 +115,8 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
     private RecyclerView rc;
     private RelativeLayout please;
     private DiveSpotsListAdapter productListAdapter;
+
+    private Handler handler = new Handler();
 
     @Override
     public void onAttach(Context context) {
@@ -175,6 +176,7 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_maplist, container, false);
         findViews();
+        TutorialHelper.showForMyLocation(getActivity(), handler, goToMyLocation);
         setMapView(savedInstanceState);
         Log.i(TAG, "MapListFragment getLocation 1");
         baseAppCompatActivity.getLocation(ActivitiesRequestCodes.REQUEST_CODE_MAP_LIST_FRAGMENT_GET_LOCATION_ON_FRAGMENT_START);
