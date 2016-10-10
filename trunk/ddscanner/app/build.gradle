@@ -110,6 +110,11 @@ dependencies {
     compile 'com.appsflyer:af-android-sdk:4.6.0@aar'
     compile 'com.github.liuguangqiang.swipeback:library:1.0.2@aar'
     compile 'at.blogc:expandabletextview:1.0.3'
+    compile('org.simpleframework:simple-xml:2.7.1'){
+        exclude module: 'stax'
+        exclude module: 'stax-api'
+        exclude module: 'xpp3'
+    }
 }
 
 apply plugin: 'com.google.gms.google-services'

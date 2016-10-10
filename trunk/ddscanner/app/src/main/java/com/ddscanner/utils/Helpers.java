@@ -18,8 +18,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
+import com.ddscanner.entities.Countries;
 import com.ddscanner.entities.Image;
 import com.ddscanner.entities.Sealife;
 import com.ddscanner.entities.errors.Field;
@@ -30,6 +32,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
+
+import org.simpleframework.xml.Serializer;
+import org.simpleframework.xml.core.Persister;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -441,6 +446,28 @@ public class Helpers {
         // TODO May be should use another tracking mechanism
         EventsTracker.trackUnknownServerError(requestUrl, errorMessage);
         InfoDialogFragment.show(fragmentManager, titleResId, messageResId, false);
+    }
+
+    public static Countries getCountries() {
+        Countries countries = null;
+        Serializer serializer = new Persister();
+        String fileName;
+        switch (Locale.getDefault().getLanguage()) {
+            case "ru":
+//                fileName = "countries/countries_ru.xml";
+//                break;
+            case "en":
+            default:
+                fileName = "countries/countries_en.xml";
+                break;
+        }
+        try {
+            countries = serializer.read(Countries.class, DDScannerApplication.getInstance().getAssets().open(fileName));
+        } catch (Exception e) {
+            // Should not happen
+            throw new RuntimeException(e);
+        }
+        return countries;
     }
 
 }
