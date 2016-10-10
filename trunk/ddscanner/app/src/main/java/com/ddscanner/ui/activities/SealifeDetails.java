@@ -12,6 +12,7 @@ import android.media.Image;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
@@ -43,7 +44,6 @@ public class SealifeDetails extends AppCompatActivity {
     private Bitmap image;
     private AppBarLayout appBarLayout;
     private Toolbar toolbar;
-    private ImageView backgroundImage;
     private ProgressBar progressBar;
 
     public static void show(Context context, Sealife sealife, String pathMedium) {
@@ -80,8 +80,6 @@ public class SealifeDetails extends AppCompatActivity {
             }
 
         });
-     //   Picasso.with(this).load(pathMedium + sealife.getImage()).resize(Math.round(dpWidth), 239).centerCrop().into(backgroundImage);
-        backgroundImage.setColorFilter(Color.parseColor("#99000000"), PorterDuff.Mode.SRC_ATOP);
         setContent();
     }
 
@@ -98,7 +96,6 @@ public class SealifeDetails extends AppCompatActivity {
         distribution = (TextView) findViewById(R.id.distribution);
         scclass = (TextView) findViewById(R.id.scclass);
         habitat = (TextView) findViewById(R.id.habitat);
-        backgroundImage = (ImageView) findViewById(R.id.background_photo);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
