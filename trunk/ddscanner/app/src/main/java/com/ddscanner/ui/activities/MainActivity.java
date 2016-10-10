@@ -51,6 +51,7 @@ import com.ddscanner.events.PlaceChoosedEvent;
 import com.ddscanner.events.ShowLoginActivityIntent;
 import com.ddscanner.events.TakePhotoFromCameraEvent;
 import com.ddscanner.events.tutorial.MyLocationHintClosedEvent;
+import com.ddscanner.events.tutorial.ShowForDiveSpotTabsClosedEvent;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.adapters.MainActivityPagerAdapter;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
