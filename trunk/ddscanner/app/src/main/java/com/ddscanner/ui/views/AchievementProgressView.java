@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BlurMaskFilter;
+import android.graphics.Camera;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
@@ -18,6 +19,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 
 import com.ddscanner.R;
 
@@ -35,11 +37,14 @@ public class AchievementProgressView extends View {
     private float koefY = 1;
     private Path tempPath = new Path();
     private ValueAnimator valueAnimator;
+    private ValueAnimator sharkValuesAnimator;
     private PathMeasure linePathMeasure;
     private long startTime;
     private Matrix matrix = new Matrix();
+    private Matrix sharkMatrix = new Matrix();
     Paint paintRect= new Paint();
     private float percents;
+    private Camera camera = new Camera();
 
     private Bitmap backgroundBitmap;
 
@@ -92,8 +97,8 @@ public class AchievementProgressView extends View {
 
         linePathMeasure = new PathMeasure(linePath, false);
         valueAnimator =  new ValueAnimator().ofFloat(0, linePathMeasure.getLength() * percents);
-        valueAnimator.setDuration(3000);
-        valueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+        valueAnimator.setDuration((long)(2000 * percents));
+        valueAnimator.setInterpolator(new DecelerateInterpolator());
         valueAnimator.start();
     }
 
@@ -106,7 +111,7 @@ public class AchievementProgressView extends View {
         matrix.reset();
         float[] points = new float[20];
         linePathMeasure.getMatrix((Float)valueAnimator.getAnimatedValue(), matrix, PathMeasure.POSITION_MATRIX_FLAG);
-        linePathMeasure.getSegment(0, (Float) valueAnimator.getAnimatedValue(), tempPath, false);
+        linePathMeasure.getSegment(0, (Float) valueAnimator.getAnimatedValue(), tempPath, true);
         canvas.drawPath(tempPath, linePaint);
         matrix.mapPoints(points);
         canvas.drawBitmap(sharkBitmap, points[0], (getMeasuredHeight() - sharkBitmap.getHeight()) / 2, null);

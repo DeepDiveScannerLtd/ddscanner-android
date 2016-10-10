@@ -1,18 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="57dp"
+    android:layout_height="wrap_content"
     android:layout_marginTop="6dp"
-    android:background="@color/white"
-    android:orientation="vertical">
+    android:background="@color/white">
 
     <ImageView
         style="@style/DividerStyleFull"
         android:layout_alignParentTop="true" />
-
-    <RelativeLayout
+    <LinearLayout
+        android:paddingTop="7dp"
+        android:paddingBottom="10dp"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true">
@@ -24,6 +28,7 @@
             android:layout_height="16dp"
             android:background="@color/black_text" />
         <LinearLayout
+            android:id="@+id/info"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/country_flag"
             android:layout_width="wrap_content"
@@ -54,7 +59,15 @@
             android:textSize="12sp"
             android:textColor="#bbbbbb"
             android:layout_alignParentRight="true"/>
-    </RelativeLayout>
+         </RelativeLayout>
+        <com.ddscanner.ui.views.AchievementProgressView
+            android:id="@+id/progress_layout"
+            android:layout_width="match_parent"
+            android:layout_marginTop="7dp"
+            android:layout_height="28dp"
+            android:background="@drawable/shark_progress_background"/>
+
+    </LinearLayout>
 
     <ImageView
         style="@style/DividerStyleFull"

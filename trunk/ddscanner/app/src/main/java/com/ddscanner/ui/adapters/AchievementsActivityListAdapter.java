@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ddscanner.R;
+import com.ddscanner.ui.views.AchievementProgressView;
 
 public class AchievementsActivityListAdapter extends RecyclerView.Adapter<AchievementsActivityListAdapter.AchievementActivityListViewHolder> {
 
@@ -20,7 +21,7 @@ public class AchievementsActivityListAdapter extends RecyclerView.Adapter<Achiev
 
     @Override
     public void onBindViewHolder(AchievementActivityListViewHolder holder, int position) {
-
+        holder.progressView.setPercent(position / 10f);
     }
 
     @Override
@@ -34,6 +35,7 @@ public class AchievementsActivityListAdapter extends RecyclerView.Adapter<Achiev
         protected TextView country;
         protected TextView progress;
         protected ImageView countryIcon;
+        protected AchievementProgressView progressView;
 
         public AchievementActivityListViewHolder(View view) {
             super(view);
@@ -41,6 +43,7 @@ public class AchievementsActivityListAdapter extends RecyclerView.Adapter<Achiev
             country = (TextView) view.findViewById(R.id.country);
             progress = (TextView) view.findViewById(R.id.progress);
             countryIcon = (ImageView) view.findViewById(R.id.country_flag);
+            progressView = (AchievementProgressView) view.findViewById(R.id.progress_layout);
 
         }
 
