@@ -43,6 +43,7 @@ import com.ddscanner.ui.activities.MainActivity;
 import com.ddscanner.ui.activities.SelfCommentsActivity;
 import com.ddscanner.ui.activities.UserLikesDislikesActivity;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
+import com.ddscanner.ui.views.CustomSwipeRefreshLayout;
 import com.ddscanner.ui.views.LoginView;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogsRequestCodes;
@@ -102,7 +103,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
     private LinearLayout likeLayout;
     private LinearLayout dislikeLayout;
     private LinearLayout commentsLayout;
-    private SwipeRefreshLayout swipeRefreshLayout;
+    private CustomSwipeRefreshLayout swipeRefreshLayout;
     private TextView error_name;
     private TextView error_about;
     private RelativeLayout loginView;
@@ -310,7 +311,9 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
         likeLayout = (LinearLayout) v.findViewById(R.id.likeLayout);
         dislikeLayout = (LinearLayout) v.findViewById(R.id.dislikeLayout);
         commentsLayout = (LinearLayout) v.findViewById(R.id.comments_layout);
-        swipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swiperefresh);
+        swipeRefreshLayout = (CustomSwipeRefreshLayout) v.findViewById(R.id.swiperefresh);
+
+        swipeRefreshLayout.setSwipeableChildren(R.id.about);
 
         swipeRefreshLayout.setOnRefreshListener(this);
         aboutEdit.addTextChangedListener(new TextWatcher() {
