@@ -175,11 +175,11 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
             long currentDateInMillis = date1.getTime();
             SharedPreferenceHelper.setLastShowingNotificationTime(currentDateInMillis);
         } else {
-            if (SharedPreferenceHelper.isUserLoggedIn()) {
-                progressView.setVisibility(View.VISIBLE);
-                notificationsViewPager.setVisibility(View.GONE);
-               // getUserNotifications();
-            }
+//            if (SharedPreferenceHelper.isUserLoggedIn()) {
+//                progressView.setVisibility(View.VISIBLE);
+//                notificationsViewPager.setVisibility(View.GONE);
+//               // getUserNotifications();
+//            }
         }
         if (!getUserVisibleHint()) {
             return;
@@ -210,9 +210,9 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
                     SharedPreferenceHelper.setLastShowingNotificationTime(currentDateInMillis);
                 } else {
                     if (SharedPreferenceHelper.isUserLoggedIn()) {
-                        progressView.setVisibility(View.VISIBLE);
-                        notificationsViewPager.setVisibility(View.GONE);
-                   //     getUserNotifications();
+//                        progressView.setVisibility(View.VISIBLE);
+//                        notificationsViewPager.setVisibility(View.GONE);
+//                   //     getUserNotifications();
                     }
                 }
             } else {
