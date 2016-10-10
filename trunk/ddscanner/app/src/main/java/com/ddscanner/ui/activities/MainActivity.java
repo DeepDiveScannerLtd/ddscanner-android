@@ -148,6 +148,7 @@ public class MainActivity extends BaseAppCompatActivity
         searchLocationBtn.setOnClickListener(this);
         btnFilter.setOnClickListener(this);
         setupTabLayout();
+        DDScannerApplication.bus.post(new LoadUserProfileInfoEvent());
         EventsTracker.trackDiveSpotMapView();
     }
 

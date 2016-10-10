@@ -63,7 +63,7 @@ import okhttp3.RequestBody;
 /**
  * Created by lashket on 20.4.16.
  */
-public class ProfileFragment extends Fragment implements View.OnClickListener, LoginView.LoginStateChangeListener, InfoDialogFragment.DialogClosedListener {
+public class ProfileFragment extends Fragment implements View.OnClickListener, LoginView.LoginStateChangeListener, InfoDialogFragment.DialogClosedListener, SwipeRefreshLayout.OnRefreshListener {
 
     private static final String TAG = ProfileFragment.class.getName();
 
@@ -134,6 +134,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
             aboutLayout.scrollTo(0,0);
             editLayout.setVisibility(View.GONE);
             getUserDataRequest(SharedPreferenceHelper.getUserServerId());
+            swipeRefreshLayout.setEnabled(true);
         }
 
         @Override
@@ -165,6 +166,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
             SharedPreferenceHelper.logout();
             DDScannerApplication.bus.post(new LoggedOutEvent());
             DDScannerApplication.bus.post(new ChangePageOfMainViewPagerEvent(0));
+            swipeRefreshLayout.setEnabled(false);
         }
 
         @Override
@@ -188,6 +190,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
             }
             user = result;
             changeUi(user);
+            swipeRefreshLayout.setRefreshing(false);
         }
 
         @Override
@@ -229,7 +232,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
         pickPhotoFromGallery.setOnClickListener(this);
         logout.setOnClickListener(this);
         if (SharedPreferenceHelper.isUserLoggedIn()) {
-        //    getUserDataRequest(SharedPreferenceHelper.getUserServerId());
+            getUserDataRequest(SharedPreferenceHelper.getUserServerId());
         }
         materialDialog = Helpers.getMaterialDialog(getContext());
         createErrorsMap();
@@ -307,7 +310,9 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
         likeLayout = (LinearLayout) v.findViewById(R.id.likeLayout);
         dislikeLayout = (LinearLayout) v.findViewById(R.id.dislikeLayout);
         commentsLayout = (LinearLayout) v.findViewById(R.id.comments_layout);
+        swipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swiperefresh);
 
+        swipeRefreshLayout.setOnRefreshListener(this);
         aboutEdit.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -366,6 +371,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.edit_profile:
+                swipeRefreshLayout.setEnabled(false);
                 aboutLayout.setVisibility(View.GONE);
                 editLayout.setVisibility(View.VISIBLE);
                 fullNameEdit.setText(user.getName());
@@ -382,6 +388,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
                 DDScannerApplication.bus.post(new TakePhotoFromCameraEvent());
                 break;
             case R.id.cancel_button:
+                swipeRefreshLayout.setEnabled(true);
                 isClickedChosingPhotoButton = false;
                 aboutLayout.setVisibility(View.VISIBLE);
                 aboutLayout.scrollTo(0,0);
@@ -646,6 +653,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
         Log.i(TAG, "ProfileFragment onLoggedIn, this = " + this);
         if (loginView != null && aboutLayout != null) {
             loginView.setVisibility(View.GONE);
+            swipeRefreshLayout.setEnabled(true);
             if (editLayout.getVisibility() != View.VISIBLE) {
                 aboutLayout.setVisibility(View.VISIBLE);
             } else {
@@ -657,6 +665,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
     @Override
     public void onLoggedOut() {
         if (loginView != null && aboutLayout != null) {
+            swipeRefreshLayout.setEnabled(false);
             loginView.setVisibility(View.VISIBLE);
             aboutLayout.setVisibility(View.GONE);
         }
@@ -665,5 +674,10 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
     @Override
     public void onDialogClosed(int requestCode) {
 
+    }
+
+    @Override
+    public void onRefresh() {
+        DDScannerApplication.getDdScannerRestClient().getUserInformation(SharedPreferenceHelper.getUserServerId(), getUserInformationResultListener);
     }
 }
