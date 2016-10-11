@@ -42,9 +42,15 @@ public class AchievementsActivity extends AppCompatActivity implements InfoDialo
             progressView.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
             achievmentsResponseEntity = result;
-            completeAchievements = achievmentsResponseEntity.getCompleteAchievements();
-            pendingAchievements = achievmentsResponseEntity.getPendingAchievements();
-            completeAchievements.addAll(pendingAchievements);
+            completeAchievements = new ArrayList<>();
+            pendingAchievements = new ArrayList<>();
+            if (achievmentsResponseEntity.getCompleteAchievements() != null) {
+                completeAchievements = achievmentsResponseEntity.getCompleteAchievements();
+            }
+            if (achievmentsResponseEntity.getPendingAchievements() != null) {
+                pendingAchievements = achievmentsResponseEntity.getPendingAchievements();
+                completeAchievements.addAll(pendingAchievements);
+            }
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(AchievementsActivity.this);
             recyclerView.setLayoutManager(linearLayoutManager);
             recyclerView.setAdapter(new AchievementsActivityListAdapter((ArrayList<CompleteAchievement>) completeAchievements, AchievementsActivity.this));
