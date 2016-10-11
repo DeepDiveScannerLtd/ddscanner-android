@@ -102,7 +102,7 @@ public class TutorialHelper {
                         .dimColor(android.R.color.black)            // If set, will dim behind the view with 30% opacity of the given color
                         .drawShadow(true)                   // Whether to draw a drop shadow or not
                         .cancelable(false)                  // Whether tapping outside the outer circle dismisses the view
-                        .tintTarget(true),
+                        .tintTarget(false),
                 new TapTargetView.Listener() {
                     @Override
                     public void onTargetDismissed(TapTargetView view, boolean userInitiated) {
@@ -177,7 +177,7 @@ public class TutorialHelper {
                         .dimColor(android.R.color.black)            // If set, will dim behind the view with 30% opacity of the given color
                         .drawShadow(true)                   // Whether to draw a drop shadow or not
                         .cancelable(false)                  // Whether tapping outside the outer circle dismisses the view
-                        .tintTarget(true),
+                        .tintTarget(false),
                 new TapTargetView.Listener() {
                     @Override
                     public void onTargetDismissed(TapTargetView view, boolean userInitiated) {
@@ -242,7 +242,7 @@ public class TutorialHelper {
         }, DURATION_NOTIFICATION_TAB);
     }
 
-    public static void showForCheckin(final Activity activity, final Handler handler, final View view) {
+    public static void showForCheckin(final Activity activity, final Handler handler, final View view, final boolean isValidation) {
         final TapTargetView tapTargetView = TapTargetView.showFor(activity,
                 TapTarget.forView(view, "Check in")
                         .outerCircleColor(R.color.primary)      // Specify a color for the outer circle
@@ -252,11 +252,15 @@ public class TutorialHelper {
                         .dimColor(android.R.color.black)            // If set, will dim behind the view with 30% opacity of the given color
                         .drawShadow(true)                   // Whether to draw a drop shadow or not
                         .cancelable(false)                  // Whether tapping outside the outer circle dismisses the view
-                        .tintTarget(true),
+                        .tintTarget(false),
                 new TapTargetView.Listener() {
                     @Override
                     public void onTargetDismissed(TapTargetView view, boolean userInitiated) {
-                        DDScannerApplication.bus.post(new CheckinHintClosedEvent());
+                        if (isValidation) {
+                            DDScannerApplication.bus.post(new CheckinHintClosedEvent());
+                        } else {
+                            DDScannerApplication.bus.post(new ValidationHintClosedEvent());
+                        }
                     }
                 });
         handler.postDelayed(new Runnable() {
@@ -277,7 +281,7 @@ public class TutorialHelper {
                         .dimColor(android.R.color.black)            // If set, will dim behind the view with 30% opacity of the given color
                         .drawShadow(true)                   // Whether to draw a drop shadow or not
                         .cancelable(false)                  // Whether tapping outside the outer circle dismisses the view
-                        .tintTarget(true),
+                        .tintTarget(false),
                 new TapTargetView.Listener() {
                     @Override
                     public void onTargetDismissed(TapTargetView view, boolean userInitiated) {
@@ -302,7 +306,7 @@ public class TutorialHelper {
                         .dimColor(android.R.color.black)            // If set, will dim behind the view with 30% opacity of the given color
                         .drawShadow(true)                   // Whether to draw a drop shadow or not
                         .cancelable(false)                  // Whether tapping outside the outer circle dismisses the view
-                        .tintTarget(true),
+                        .tintTarget(false),
                 new TapTargetView.Listener() {
                     @Override
                     public void onTargetDismissed(TapTargetView view, boolean userInitiated) {

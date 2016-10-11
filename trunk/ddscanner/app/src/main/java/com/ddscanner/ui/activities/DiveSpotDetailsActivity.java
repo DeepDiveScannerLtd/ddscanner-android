@@ -57,16 +57,20 @@ import com.ddscanner.entities.Sealife;
 import com.ddscanner.entities.User;
 import com.ddscanner.events.OpenPhotosActivityEvent;
 import com.ddscanner.events.UnknownErrorCatchedEvent;
+import com.ddscanner.events.tutorial.CheckinHintClosedEvent;
+import com.ddscanner.events.tutorial.ValidationHintClosedEvent;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.adapters.DiveSpotsPhotosAdapter;
 import com.ddscanner.ui.adapters.EditorsListAdapter;
 import com.ddscanner.ui.adapters.SealifeListAdapter;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
+import com.ddscanner.ui.views.FlingableNestedScrollView;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.SharedPreferenceHelper;
+import com.ddscanner.utils.TutorialHelper;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -101,6 +105,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private boolean isNewDiveSpot = false;
     private DiveSpotFull diveSpot;
     private boolean editorsListExpanded;
+    private Handler handler = new Handler();
 
     /*Ui*/
     private TextView diveSpotName;
@@ -144,6 +149,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private ImageView expandEditorsArrow;
     private Menu menu;
     private List<User> creatorsEditorsList = new ArrayList<>();
+    private boolean isValidation = true;
 
     private RelativeLayout editorsWrapperView;
     private RecyclerView editorsRecyclerView;
@@ -156,6 +162,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
     private List<Comment> usersComments;
     private List<User> usersCheckins;
+    private FlingableNestedScrollView flingableNestedScrollView;
 
     private DDScannerRestClient.ResultListener<DiveSpotDetails> diveSpotDetailsResultListener = new DDScannerRestClient.ResultListener<DiveSpotDetails>() {
         @Override
@@ -294,6 +301,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     }
 
     private void findViews() {
+        flingableNestedScrollView = (FlingableNestedScrollView) findViewById(R.id.scroll_view);
         checkinsArrow = (ImageView) findViewById(R.id.checkins_arrow);
         serveConnectionErrorLayout = (LinearLayout) findViewById(R.id.server_error);
         btnRefreshLayout = (Button) findViewById(R.id.button_refresh);
@@ -501,6 +509,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             checkOutUi();
         }
         if (diveSpot.getValidation() != null) {
+            isValidation = diveSpot.getValidation();
             if (!diveSpot.getValidation()) {
                 isInfoValidLayout.post(new Runnable() {
                     @Override
@@ -536,6 +545,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
         }
         showDiveCenters.setVisibility(View.VISIBLE);
+        TutorialHelper.showForCheckin(this, handler, btnCheckIn, !isValidation);
     }
 
     private void setCheckinsCountPeople(String count, boolean isNull) {
@@ -1369,4 +1379,18 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             }
         }
     }
+
+    @Subscribe
+    public void onCheckinHintClosed(CheckinHintClosedEvent event) {
+        appBarLayout.setExpanded(false);
+        flingableNestedScrollView.scrollTo(0, Math.round(isInfoValidLayout.getY()));
+        TutorialHelper.showForValidation(this, handler, btnDsDetailsIsInvalid);
+    }
+
+    @Subscribe
+    public void onValidationHintClosed(ValidationHintClosedEvent event) {
+        TutorialHelper.showForWriteReview(this, handler, showAllReviews);
+    }
+
+
 }
