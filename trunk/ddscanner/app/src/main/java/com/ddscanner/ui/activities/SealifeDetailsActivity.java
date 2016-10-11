@@ -4,14 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.Point;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
@@ -30,15 +28,14 @@ import com.ddscanner.entities.Sealife;
 import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
-public class SealifeDetails extends AppCompatActivity {
+public class SealifeDetailsActivity extends AppCompatActivity {
 
     private TextView length, weight, depth, scname, order, distribution, scclass, habitat,name;
     private ImageView photo;
     private Sealife sealife;
     private String pathMedium;
-    private CollapsingToolbarLayout collapsingToolbarLayout = null;
+    private CollapsingToolbarLayout collapsingToolbarLayout;
     private Drawable drawable;
     private Bitmap image;
     private AppBarLayout appBarLayout;
@@ -47,7 +44,7 @@ public class SealifeDetails extends AppCompatActivity {
     private ProgressBar progressBar;
 
     public static void show(Context context, Sealife sealife, String pathMedium) {
-        Intent intent = new Intent(context, SealifeDetails.class);
+        Intent intent = new Intent(context, SealifeDetailsActivity.class);
         intent.putExtra("SEALIFE", sealife);
         intent.putExtra("PATH", pathMedium);
         context.startActivity(intent);
@@ -58,6 +55,8 @@ public class SealifeDetails extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sealife_full);
         findViews();
+        collapsingToolbarLayout.setExpandedTitleColor(ContextCompat.getColor(this, android.R.color.transparent));
+        collapsingToolbarLayout.setStatusBarScrimColor(ContextCompat.getColor(this, android.R.color.transparent));
         sealife = (Sealife) getIntent().getSerializableExtra("SEALIFE");
         pathMedium = getIntent().getStringExtra("PATH");
         Log.i("SEALIFEFULL", pathMedium + sealife.getImage());
