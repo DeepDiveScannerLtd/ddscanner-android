@@ -1,10 +1,15 @@
 package com.ddscanner.entities;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 public class AchievmentsResponseEntity {
 
+    @SerializedName("completed")
     private List<CompleteAchievement> completeAchievements;
+
+    @SerializedName("pending")
     private List<PendingAchievement> pendingAchievements;
 
     public List<CompleteAchievement> getCompleteAchievements() {

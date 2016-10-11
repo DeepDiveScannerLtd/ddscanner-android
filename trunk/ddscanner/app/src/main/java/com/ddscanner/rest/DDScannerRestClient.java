@@ -3,6 +3,7 @@ package com.ddscanner.rest;
 import android.support.annotation.NonNull;
 
 import com.ddscanner.analytics.EventsTracker;
+import com.ddscanner.entities.AchievmentsResponseEntity;
 import com.ddscanner.entities.CheckIns;
 import com.ddscanner.entities.Comments;
 import com.ddscanner.entities.DiveCentersResponseEntity;
@@ -445,6 +446,17 @@ public class DDScannerRestClient {
             void handleResponseString(ResultListener<DiveCentersResponseEntity> resultListener, String responseString) throws JSONException {
                 DiveCentersResponseEntity diveCentersResponseEntity = new Gson().fromJson(responseString, DiveCentersResponseEntity.class);
                 resultListener.onSuccess(diveCentersResponseEntity);
+            }
+        });
+    }
+
+    public void getUserAchievements(String userId, final ResultListener<AchievmentsResponseEntity> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserAchievements(userId, getUserQueryMapRequest());
+        call.enqueue(new ResponseEntityCallback<AchievmentsResponseEntity>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<AchievmentsResponseEntity> resultListener, String responseString) throws JSONException {
+                AchievmentsResponseEntity achievmentsResponseEntity = new Gson().fromJson(responseString, AchievmentsResponseEntity.class);
+                resultListener.onSuccess(achievmentsResponseEntity);
             }
         });
     }

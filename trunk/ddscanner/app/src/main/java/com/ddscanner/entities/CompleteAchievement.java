@@ -5,6 +5,15 @@ public class CompleteAchievement {
     private String type;
     private String country;
     private String points;
+    private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public String getType() {
         return type;

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_marginTop="6dp"
+    android:background="@color/white">
+
+    <ImageView
+        style="@style/DividerStyleFull"
+        android:layout_alignParentTop="true" />
+        <RelativeLayout
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="13dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true">
+
+            <ImageView
+                android:layout_centerVertical="true"
+                android:id="@+id/country_flag"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:background="@color/black_text" />
+            <RelativeLayout
+                android:id="@+id/info"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/country_flag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginLeft="15dp">
+                <TextView
+                    android:id="@+id/type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black_text"
+                    android:text="Professional Photographer" />
+                <TextView
+                    android:layout_below="@+id/type"
+                    android:id="@+id/country"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#959595"
+                    android:textSize="11sp"
+                    tools:text="Vietnam" />
+            </RelativeLayout>
+            <TextView
+                android:id="@+id/progress"
+                android:text="49/50"
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:textColor="#bbbbbb"
+                android:layout_alignParentRight="true"/>
+        </RelativeLayout>
+
+    <ImageView
+        style="@style/DividerStyleFull"
+        android:layout_alignParentBottom="true" />
+
+
+</RelativeLayout>

@@ -97,7 +97,7 @@ public class AchievementProgressView extends View {
 
         linePathMeasure = new PathMeasure(linePath, false);
         valueAnimator =  new ValueAnimator().ofFloat(0, linePathMeasure.getLength() * percents);
-        valueAnimator.setDuration((long)(2000 * percents));
+        valueAnimator.setDuration((long)(3000));
         valueAnimator.setInterpolator(new DecelerateInterpolator());
         valueAnimator.start();
     }
