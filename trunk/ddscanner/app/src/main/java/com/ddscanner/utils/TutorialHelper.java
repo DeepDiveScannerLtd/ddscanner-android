@@ -8,8 +8,15 @@ import android.view.View;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.events.tutorial.AddSpotHintClosedEvent;
+import com.ddscanner.events.tutorial.CheckinHintClosedEvent;
+import com.ddscanner.events.tutorial.DiveSpotListHintClosedEvent;
+import com.ddscanner.events.tutorial.DiveSpotSearchHintClosedEvent;
+import com.ddscanner.events.tutorial.FilterHintClosedEvent;
 import com.ddscanner.events.tutorial.MyLocationHintClosedEvent;
+import com.ddscanner.events.tutorial.ProfileTabHintClosedEvent;
 import com.ddscanner.events.tutorial.ShowForDiveSpotTabsClosedEvent;
+import com.ddscanner.events.tutorial.ValidationHintClosedEvent;
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetView;
 
@@ -33,9 +40,9 @@ public class TutorialHelper {
             @Override
             public void run() {
                 final TapTargetView tapTargetView = TapTargetView.showFor(activity,                 // `this` is an Activity
-                        TapTarget.forView(view, "This is a target", "We have the best targets, believe me")
+                        TapTarget.forView(view, "Use your location to see dive spots nearby")
                                 // All options below are optional
-                                .outerCircleColor(android.R.color.holo_red_light)      // Specify a color for the outer circle
+                                .outerCircleColor(R.color.primary)      // Specify a color for the outer circle
                                 .targetCircleColor(R.color.white)   // Specify a color for the target circle
                                 .textColor(android.R.color.white)            // Specify a color for text
                                 .textTypeface(Typeface.SANS_SERIF)  // Specify a typeface for the text
@@ -61,9 +68,9 @@ public class TutorialHelper {
 
     public static void showForDiveSpotsTab(final Activity activity, final Handler handler, final View view) {
         final TapTargetView tapTargetView = TapTargetView.showFor(activity,                 // `this` is an Activity
-                TapTarget.forView(view, "This is a target", "We have the best targets, believe me")
+                TapTarget.forView(view, "See dive spots on the map")
                         // All options below are optional
-                        .outerCircleColor(android.R.color.holo_red_light)      // Specify a color for the outer circle
+                        .outerCircleColor(R.color.primary)      // Specify a color for the outer circle
                         .targetCircleColor(R.color.white)   // Specify a color for the target circle
                         .textColor(android.R.color.white)            // Specify a color for text
                         .textTypeface(Typeface.SANS_SERIF)  // Specify a typeface for the text
@@ -88,7 +95,7 @@ public class TutorialHelper {
     public static void showForDiveSpotList(final Activity activity, final Handler handler, final View view) {
         final TapTargetView tapTargetView = TapTargetView.showFor(activity,
                 TapTarget.forView(view, "or listed")
-                        .outerCircleColor(android.R.color.holo_red_light)      // Specify a color for the outer circle
+                        .outerCircleColor(R.color.primary)      // Specify a color for the outer circle
                         .targetCircleColor(R.color.white)   // Specify a color for the target circle
                         .textColor(android.R.color.white)            // Specify a color for text
                         .textTypeface(Typeface.SANS_SERIF)  // Specify a typeface for the text
@@ -99,7 +106,7 @@ public class TutorialHelper {
                 new TapTargetView.Listener() {
                     @Override
                     public void onTargetDismissed(TapTargetView view, boolean userInitiated) {
-
+                        DDScannerApplication.bus.post(new DiveSpotListHintClosedEvent());
                     }
                 });
         handler.postDelayed(new Runnable() {
@@ -113,7 +120,7 @@ public class TutorialHelper {
     public static void showForDiveSpotSearch(final Activity activity, final Handler handler, final View view) {
         final TapTargetView tapTargetView = TapTargetView.showFor(activity,
                 TapTarget.forView(view, "Search by location or name of the dive spot ")
-                        .outerCircleColor(android.R.color.holo_red_light)      // Specify a color for the outer circle
+                        .outerCircleColor(R.color.primary)      // Specify a color for the outer circle
                         .targetCircleColor(R.color.white)   // Specify a color for the target circle
                         .textColor(android.R.color.white)            // Specify a color for text
                         .textTypeface(Typeface.SANS_SERIF)  // Specify a typeface for the text
@@ -124,7 +131,7 @@ public class TutorialHelper {
                 new TapTargetView.Listener() {
                     @Override
                     public void onTargetDismissed(TapTargetView view, boolean userInitiated) {
-
+                        DDScannerApplication.bus.post(new DiveSpotSearchHintClosedEvent());
                     }
                 });
         handler.postDelayed(new Runnable() {
@@ -138,7 +145,7 @@ public class TutorialHelper {
     public static void showForDiveSpotFilter(final Activity activity, final Handler handler, final View view) {
         final TapTargetView tapTargetView = TapTargetView.showFor(activity,
                 TapTarget.forView(view, "Filter dive spot by type and level")
-                        .outerCircleColor(android.R.color.holo_red_light)      // Specify a color for the outer circle
+                        .outerCircleColor(R.color.primary)      // Specify a color for the outer circle
                         .targetCircleColor(R.color.white)   // Specify a color for the target circle
                         .textColor(android.R.color.white)            // Specify a color for text
                         .textTypeface(Typeface.SANS_SERIF)  // Specify a typeface for the text
@@ -149,7 +156,7 @@ public class TutorialHelper {
                 new TapTargetView.Listener() {
                     @Override
                     public void onTargetDismissed(TapTargetView view, boolean userInitiated) {
-
+                        DDScannerApplication.bus.post(new FilterHintClosedEvent());
                     }
                 });
         handler.postDelayed(new Runnable() {
@@ -163,7 +170,7 @@ public class TutorialHelper {
     public static void showForAddSpot(final Activity activity, final Handler handler, final View view) {
         final TapTargetView tapTargetView = TapTargetView.showFor(activity,
                 TapTarget.forView(view, "Cannot find the dive spot? Add and become a creator")
-                        .outerCircleColor(android.R.color.holo_red_light)      // Specify a color for the outer circle
+                        .outerCircleColor(R.color.primary)      // Specify a color for the outer circle
                         .targetCircleColor(R.color.white)   // Specify a color for the target circle
                         .textColor(android.R.color.white)            // Specify a color for text
                         .textTypeface(Typeface.SANS_SERIF)  // Specify a typeface for the text
@@ -174,7 +181,7 @@ public class TutorialHelper {
                 new TapTargetView.Listener() {
                     @Override
                     public void onTargetDismissed(TapTargetView view, boolean userInitiated) {
-
+                        DDScannerApplication.bus.post(new AddSpotHintClosedEvent());
                     }
                 });
         handler.postDelayed(new Runnable() {
@@ -188,7 +195,7 @@ public class TutorialHelper {
     public static void showForProfileTab(final Activity activity, final Handler handler, final View view) {
         final TapTargetView tapTargetView = TapTargetView.showFor(activity,
                 TapTarget.forView(view, "Create a unique profile and see your experience")
-                        .outerCircleColor(android.R.color.holo_red_light)      // Specify a color for the outer circle
+                        .outerCircleColor(R.color.primary)      // Specify a color for the outer circle
                         .targetCircleColor(R.color.white)   // Specify a color for the target circle
                         .textColor(android.R.color.white)            // Specify a color for text
                         .textTypeface(Typeface.SANS_SERIF)  // Specify a typeface for the text
@@ -199,7 +206,7 @@ public class TutorialHelper {
                 new TapTargetView.Listener() {
                     @Override
                     public void onTargetDismissed(TapTargetView view, boolean userInitiated) {
-
+                        DDScannerApplication.bus.post(new ProfileTabHintClosedEvent());
                     }
                 });
         handler.postDelayed(new Runnable() {
@@ -213,7 +220,7 @@ public class TutorialHelper {
     public static void showForNotificationsTab(final Activity activity, final Handler handler, final View view) {
         final TapTargetView tapTargetView = TapTargetView.showFor(activity,
                 TapTarget.forView(view, "Track activity nearby")
-                        .outerCircleColor(android.R.color.holo_red_light)      // Specify a color for the outer circle
+                        .outerCircleColor(R.color.primary)      // Specify a color for the outer circle
                         .targetCircleColor(R.color.white)   // Specify a color for the target circle
                         .textColor(android.R.color.white)            // Specify a color for text
                         .textTypeface(Typeface.SANS_SERIF)  // Specify a typeface for the text
@@ -238,7 +245,7 @@ public class TutorialHelper {
     public static void showForCheckin(final Activity activity, final Handler handler, final View view) {
         final TapTargetView tapTargetView = TapTargetView.showFor(activity,
                 TapTarget.forView(view, "Check in")
-                        .outerCircleColor(android.R.color.holo_red_light)      // Specify a color for the outer circle
+                        .outerCircleColor(R.color.primary)      // Specify a color for the outer circle
                         .targetCircleColor(R.color.white)   // Specify a color for the target circle
                         .textColor(android.R.color.white)            // Specify a color for text
                         .textTypeface(Typeface.SANS_SERIF)  // Specify a typeface for the text
@@ -249,7 +256,7 @@ public class TutorialHelper {
                 new TapTargetView.Listener() {
                     @Override
                     public void onTargetDismissed(TapTargetView view, boolean userInitiated) {
-
+                        DDScannerApplication.bus.post(new CheckinHintClosedEvent());
                     }
                 });
         handler.postDelayed(new Runnable() {
@@ -263,7 +270,7 @@ public class TutorialHelper {
     public static void showForValidation(final Activity activity, final Handler handler, final View view) {
         final TapTargetView tapTargetView = TapTargetView.showFor(activity,
                 TapTarget.forView(view, "Edit the dive spot and add unique photos")
-                        .outerCircleColor(android.R.color.holo_red_light)      // Specify a color for the outer circle
+                        .outerCircleColor(R.color.primary)      // Specify a color for the outer circle
                         .targetCircleColor(R.color.white)   // Specify a color for the target circle
                         .textColor(android.R.color.white)            // Specify a color for text
                         .textTypeface(Typeface.SANS_SERIF)  // Specify a typeface for the text
@@ -274,7 +281,7 @@ public class TutorialHelper {
                 new TapTargetView.Listener() {
                     @Override
                     public void onTargetDismissed(TapTargetView view, boolean userInitiated) {
-
+                        DDScannerApplication.bus.post(new ValidationHintClosedEvent());
                     }
                 });
         handler.postDelayed(new Runnable() {
@@ -288,7 +295,7 @@ public class TutorialHelper {
     public static void showForWriteReview(final Activity activity, final Handler handler, final View view) {
         final TapTargetView tapTargetView = TapTargetView.showFor(activity,
                 TapTarget.forView(view, "Write a review to share the experience you got")
-                        .outerCircleColor(android.R.color.holo_red_light)      // Specify a color for the outer circle
+                        .outerCircleColor(R.color.primary)      // Specify a color for the outer circle
                         .targetCircleColor(R.color.white)   // Specify a color for the target circle
                         .textColor(android.R.color.white)            // Specify a color for text
                         .textTypeface(Typeface.SANS_SERIF)  // Specify a typeface for the text

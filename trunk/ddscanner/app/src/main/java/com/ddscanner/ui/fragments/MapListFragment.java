@@ -40,6 +40,7 @@ import com.ddscanner.events.MarkerClickEvent;
 import com.ddscanner.events.OnMapClickEvent;
 import com.ddscanner.events.OpenAddDiveSpotActivity;
 import com.ddscanner.events.OpenAddDsActivityAfterLogin;
+import com.ddscanner.events.tutorial.FilterHintClosedEvent;
 import com.ddscanner.events.tutorial.ShowForDiveSpotTabsClosedEvent;
 import com.ddscanner.ui.activities.AddDiveSpotActivity;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
@@ -537,6 +538,11 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
     @Subscribe
     public void onLocationTabHintClosed(ShowForDiveSpotTabsClosedEvent event) {
         TutorialHelper.showForDiveSpotList(getActivity(), handler, mapListFAB);
+    }
+
+    @Subscribe
+    public void onFilterintClosed(FilterHintClosedEvent event) {
+        TutorialHelper.showForAddSpot(getActivity(), handler, addDsFab);
     }
 
 }

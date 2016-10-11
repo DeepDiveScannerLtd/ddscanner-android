@@ -50,7 +50,11 @@ import com.ddscanner.events.PickPhotoFromGallery;
 import com.ddscanner.events.PlaceChoosedEvent;
 import com.ddscanner.events.ShowLoginActivityIntent;
 import com.ddscanner.events.TakePhotoFromCameraEvent;
+import com.ddscanner.events.tutorial.AddSpotHintClosedEvent;
+import com.ddscanner.events.tutorial.DiveSpotListHintClosedEvent;
+import com.ddscanner.events.tutorial.DiveSpotSearchHintClosedEvent;
 import com.ddscanner.events.tutorial.MyLocationHintClosedEvent;
+import com.ddscanner.events.tutorial.ProfileTabHintClosedEvent;
 import com.ddscanner.events.tutorial.ShowForDiveSpotTabsClosedEvent;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.adapters.MainActivityPagerAdapter;
@@ -856,5 +860,25 @@ public class MainActivity extends BaseAppCompatActivity
     @Subscribe
     public void onMyLocationTutorialHintClosed(MyLocationHintClosedEvent event) {
         TutorialHelper.showForDiveSpotsTab(this, handler, toolbarTabLayout.getTabAt(0).getCustomView());
+    }
+
+    @Subscribe
+    public void onListTutorialHintClosed(DiveSpotListHintClosedEvent event) {
+        TutorialHelper.showForDiveSpotSearch(this, handler, searchLocationBtn);
+    }
+
+    @Subscribe
+    public void onSearchTutorialHintClosed(DiveSpotSearchHintClosedEvent event) {
+        TutorialHelper.showForDiveSpotFilter(this, handler, btnFilter);
+    }
+
+    @Subscribe
+    public void onAddSpotHintClosed(AddSpotHintClosedEvent event) {
+        TutorialHelper.showForProfileTab(this, handler, toolbarTabLayout.getTabAt(2).getCustomView());
+    }
+
+    @Subscribe
+    public void onProfileTutorialHintClosed(ProfileTabHintClosedEvent event) {
+        TutorialHelper.showForNotificationsTab(this, handler, toolbarTabLayout.getTabAt(1).getCustomView());
     }
 }
