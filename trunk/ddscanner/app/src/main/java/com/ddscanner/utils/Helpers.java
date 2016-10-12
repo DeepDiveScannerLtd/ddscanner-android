@@ -470,4 +470,21 @@ public class Helpers {
         return countries;
     }
 
+    /**
+     * It would be used like this:
+     * getResId("icon", Drawable.class);
+     * @param resName
+     * @param c
+     * @return
+     */
+    public static int getResId(String resName, Class<?> c) {
+        try {
+            java.lang.reflect.Field idField = c.getDeclaredField(resName);
+            return idField.getInt(idField);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
 }
