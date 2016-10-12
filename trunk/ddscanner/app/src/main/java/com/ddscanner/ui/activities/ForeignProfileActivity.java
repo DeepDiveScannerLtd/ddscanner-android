@@ -19,6 +19,7 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.User;
+import com.ddscanner.entities.UserResponseEntity;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
@@ -58,13 +59,13 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
     private LinearLayout dislikeLayout;
     private LinearLayout openOnSocialLayout;
 
-    private DDScannerRestClient.ResultListener<User> userResultListener = new DDScannerRestClient.ResultListener<User>() {
+    private DDScannerRestClient.ResultListener<UserResponseEntity> userResultListener = new DDScannerRestClient.ResultListener<UserResponseEntity>() {
         @Override
-        public void onSuccess(User result) {
-            user = result;
+        public void onSuccess(UserResponseEntity result) {
+            user = result.getUser();
             FACEBOOK_URL = Constants.PROFILE_DIALOG_FACEBOOK_URL + user.getSocialId();
             FACEBOOK_PAGE_ID = user.getSocialId();
-            setUi(user);
+            setUi(result);
         }
 
         @Override
@@ -126,7 +127,7 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
         getSupportActionBar().setTitle(R.string.profile);
     }
 
-    private void setUi(User user) {
+    private void setUi(UserResponseEntity userResponseEntity) {
         openOnSocialLayout.setOnClickListener(this);
         userAbout.setVisibility(View.GONE);
         addedCount.setText(user.getCountAdd() + getDiveSpotString(Integer.parseInt(user.getCountAdd())));

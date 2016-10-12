@@ -33,7 +33,9 @@ import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.AchievmentProfile;
 import com.ddscanner.entities.DiveSpotListSource;
+import com.ddscanner.entities.ProfileAchievement;
 import com.ddscanner.entities.User;
+import com.ddscanner.entities.UserResponseEntity;
 import com.ddscanner.events.ChangePageOfMainViewPagerEvent;
 import com.ddscanner.events.LoadUserProfileInfoEvent;
 import com.ddscanner.events.LoggedOutEvent;
@@ -132,12 +134,12 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
     private String uri = null;
     private Uri uriFromCamera = null;
 
-    private DDScannerRestClient.ResultListener<User> updateProfileInfoResultListener = new DDScannerRestClient.ResultListener<User>() {
+    private DDScannerRestClient.ResultListener<UserResponseEntity> updateProfileInfoResultListener = new DDScannerRestClient.ResultListener<UserResponseEntity>() {
         @Override
-        public void onSuccess(User result) {
+        public void onSuccess(UserResponseEntity result) {
             materialDialog.dismiss();
             uri = null;
-            changeUi(user);
+            changeUi(result);
             aboutLayout.setVisibility(View.VISIBLE);
             aboutLayout.scrollTo(0,0);
             editLayout.setVisibility(View.GONE);
@@ -188,14 +190,13 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
         }
     };
 
-    private DDScannerRestClient.ResultListener<User> getUserInformationResultListener = new DDScannerRestClient.ResultListener<User>() {
+    private DDScannerRestClient.ResultListener<UserResponseEntity> getUserInformationResultListener = new DDScannerRestClient.ResultListener<UserResponseEntity>() {
         @Override
-        public void onSuccess(User result) {
+        public void onSuccess(UserResponseEntity result) {
             if (editLayout.getVisibility() != View.VISIBLE) {
                 aboutLayout.setVisibility(View.VISIBLE);
             }
-            user = result;
-            changeUi(user);
+            changeUi(result);
         }
 
         @Override
@@ -511,15 +512,16 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
         DDScannerApplication.getDdScannerRestClient().getUserInformation(id, getUserInformationResultListener);
     }
 
-    private void changeUi(User user) {
+    private void changeUi(UserResponseEntity userResponseEntity) {
         if (getContext() == null) {
             return;
         }
+        this.user = userResponseEntity.getUser();
         showAchivementDetails.setOnClickListener(this);
-        ArrayList<AchievmentProfile> achievmentProfiles = new ArrayList<>();
-        achievmentProfiles.add(new AchievmentProfile("First"));
-        achievmentProfiles.add(new AchievmentProfile("Second"));
-        achievmentProfiles.add(new AchievmentProfile("Third"));
+        ArrayList<ProfileAchievement> achievmentProfiles = new ArrayList<>();
+        if (userResponseEntity.getAchievements() != null) {
+            achievmentProfiles = (ArrayList<ProfileAchievement>) userResponseEntity.getAchievements();
+        }
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         achievmentRecyclerView.setLayoutManager(linearLayoutManager);
         achievmentRecyclerView.setAdapter(new AchievmentProfileListAdapter(achievmentProfiles, getContext()));

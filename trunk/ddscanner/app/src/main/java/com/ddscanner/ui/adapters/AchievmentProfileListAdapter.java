@@ -12,16 +12,17 @@ import android.widget.TextView;
 
 import com.ddscanner.R;
 import com.ddscanner.entities.AchievmentProfile;
+import com.ddscanner.entities.ProfileAchievement;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class AchievmentProfileListAdapter extends RecyclerView.Adapter<AchievmentProfileListAdapter.AchievmentProfileListViewHolder> {
 
-    private ArrayList<AchievmentProfile> achievmentProfiles;
+    private ArrayList<ProfileAchievement> achievmentProfiles;
     private Context context;
 
-    public AchievmentProfileListAdapter(ArrayList<AchievmentProfile> achievmentProfiles, Context context) {
+    public AchievmentProfileListAdapter(ArrayList<ProfileAchievement> achievmentProfiles, Context context) {
         this.achievmentProfiles = achievmentProfiles;
         this.context = context;
     }
@@ -34,7 +35,7 @@ public class AchievmentProfileListAdapter extends RecyclerView.Adapter<Achievmen
 
     @Override
     public void onBindViewHolder(AchievmentProfileListViewHolder holder, int position) {
-        AchievmentProfile achievmentProfile = achievmentProfiles.get(position);
+        ProfileAchievement achievmentProfile = achievmentProfiles.get(position);
         holder.title.setText(achievmentProfile.getName());
         ImageView view = new ImageView(context);
         view.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.path_1));
