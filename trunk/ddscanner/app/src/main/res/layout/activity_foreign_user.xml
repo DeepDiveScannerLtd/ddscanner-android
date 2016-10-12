@@ -85,70 +85,142 @@
                     android:textColor="#616161"
                     android:textSize="13sp"
                     android:visibility="gone" />
-
-                <LinearLayout
+                <ImageView
+                    style="@style/DividerStyleFull" />
+                <android.support.percent.PercentRelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
                     android:gravity="center"
                     android:orientation="horizontal">
 
                     <LinearLayout
-                        android:layout_width="94dp"
-                        android:layout_height="42dp"
-                        android:background="@drawable/border_gray_100px"
+                        android:id="@+id/comments_layout"
+                        android:layout_height="64dp"
+                        android:layout_alignParentLeft="true"
+                        android:background="?attr/selectableItemBackground"
                         android:gravity="center"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/ic_comment_profile" />
+                        android:orientation="vertical"
+                        app:layout_widthPercent="33%">
 
                         <TextView
-                            android:id="@+id/user_comments"
-                            style="@style/ProfileNumberDivespotsSrtyle" />
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-medium"
+                            android:text="@string/reviews_profile"
+                            android:textColor="#a3a3a3"
+                            android:textSize="11sp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/ic_comment_profile" />
+
+                            <TextView
+                                android:id="@+id/user_comments"
+                                style="@style/ProfileNumberDivespotsSrtyle"
+                                tools:text="321" />
+                        </LinearLayout>
                     </LinearLayout>
 
-                    <LinearLayout
+                    <RelativeLayout
                         android:id="@+id/likeLayout"
-                        android:layout_width="94dp"
-                        android:layout_height="42dp"
-                        android:layout_marginLeft="13dp"
-                        android:layout_marginRight="13dp"
-                        android:background="@drawable/border_gray_100px"
-                        android:gravity="center"
-                        android:orientation="horizontal">
+                        android:layout_height="64dp"
+                        android:layout_centerHorizontal="true"
+                        android:background="?attr/selectableItemBackground"
+                        app:layout_widthPercent="33%">
 
-                        <ImageView
+                        <View
+                            android:layout_width="2dp"
+                            android:layout_height="32dp"
+                            android:layout_centerVertical="true"
+                            android:background="#f0f0f0" />
+
+                        <View
+                            android:layout_width="2dp"
+                            android:layout_height="32dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:background="#f0f0f0" />
+
+                        <LinearLayout
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/ic_like_profile" />
+                            android:layout_height="match_parent"
+                            android:layout_centerHorizontal="true"
+                            android:gravity="center"
+                            android:orientation="vertical">
 
-                        <TextView
-                            android:id="@+id/user_likes"
-                            style="@style/ProfileNumberDivespotsSrtyle" />
-                    </LinearLayout>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="sans-serif-medium"
+                                android:text="@string/likes_profile"
+                                android:textColor="#a3a3a3"
+                                android:textSize="11sp" />
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:gravity="center"
+                                android:orientation="horizontal">
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:src="@drawable/ic_like_profile" />
+
+                                <TextView
+                                    android:id="@+id/user_likes"
+                                    style="@style/ProfileNumberDivespotsSrtyle"
+                                    tools:text="321" />
+                            </LinearLayout>
+                        </LinearLayout>
+                    </RelativeLayout>
 
                     <LinearLayout
                         android:id="@+id/dislikeLayout"
-                        android:layout_width="94dp"
-                        android:layout_height="42dp"
-                        android:background="@drawable/border_gray_100px"
+                        android:layout_height="64dp"
+                        android:layout_alignParentRight="true"
+                        android:background="?attr/selectableItemBackground"
                         android:gravity="center"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/ic_dislike_profile" />
+                        android:orientation="vertical"
+                        app:layout_widthPercent="33%">
 
                         <TextView
-                            android:id="@+id/user_dislikes"
-                            style="@style/ProfileNumberDivespotsSrtyle"
-                            tools:text="9" />
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-medium"
+                            android:text="@string/dislikes"
+                            android:textColor="#a3a3a3"
+                            android:textSize="11sp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/ic_dislike_profile" />
+
+                            <TextView
+                                android:id="@+id/user_dislikes"
+                                style="@style/ProfileNumberDivespotsSrtyle"
+                                tools:text="321" />
+                        </LinearLayout>
                     </LinearLayout>
-                </LinearLayout>
+                </android.support.percent.PercentRelativeLayout>
+
             </LinearLayout>
 
             <ImageView style="@style/DividerStyleFull" />
@@ -156,7 +228,61 @@
             <ImageView
                 style="@style/DividerStyleFull"
                 android:layout_marginTop="15dp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="vertical">
 
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/achievment_rv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="12dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingTop="12dp" />
+
+            <ImageView style="@style/DividerStyleFull" />
+
+            <RelativeLayout
+                android:id="@+id/show_achievments_details"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:background="?attr/selectableItemBackground"
+                android:gravity="center_vertical"
+                android:paddingLeft="20dp">
+
+                <ImageView
+                    android:id="@+id/icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/path_1" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="25dp"
+                    android:layout_toRightOf="@+id/icon"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="Show details"
+                    android:textColor="@color/black_text"
+                    android:textSize="14sp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="20dp"
+                    android:src="@drawable/ic_arrow" />
+            </RelativeLayout>
+            </LinearLayout>
+            <ImageView
+                style="@style/DividerStyleFull" />
+
+            <ImageView
+                android:layout_marginTop="15dp"
+                style="@style/DividerStyleFull" />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

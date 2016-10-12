@@ -7,20 +7,25 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
+import com.ddscanner.entities.ProfileAchievement;
 import com.ddscanner.entities.User;
 import com.ddscanner.entities.UserResponseEntity;
 import com.ddscanner.rest.DDScannerRestClient;
+import com.ddscanner.ui.adapters.AchievmentProfileListAdapter;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
@@ -29,6 +34,8 @@ import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.rey.material.widget.ProgressView;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
@@ -55,9 +62,11 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
     private String userId;
     private User user;
     private ProgressView progressView;
-    private LinearLayout likeLayout;
+    private RelativeLayout likeLayout;
     private LinearLayout dislikeLayout;
     private LinearLayout openOnSocialLayout;
+    private RecyclerView achievmentRecyclerView;
+    private RelativeLayout showAchivementDetails;
 
     private DDScannerRestClient.ResultListener<UserResponseEntity> userResultListener = new DDScannerRestClient.ResultListener<UserResponseEntity>() {
         @Override
@@ -99,6 +108,8 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
     }
 
     private void findViews() {
+        showAchivementDetails = (RelativeLayout) findViewById(R.id.show_achievments_details);
+        achievmentRecyclerView = (RecyclerView) findViewById(R.id.achievment_rv);
         checkInCount = (TextView) findViewById(R.id.checkin_count);
         addedCount = (TextView) findViewById(R.id.added_count);
         editedCount = (TextView) findViewById(R.id.edited_count);
@@ -113,7 +124,7 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
         showAllCheckins = (LinearLayout) findViewById(R.id.checkins_activity);
         showAllAdded = (LinearLayout) findViewById(R.id.created_activity);
         showAllEdited = (LinearLayout) findViewById(R.id.edited_activity);
-        likeLayout = (LinearLayout) findViewById(R.id.likeLayout);
+        likeLayout = (RelativeLayout) findViewById(R.id.likeLayout);
         dislikeLayout = (LinearLayout) findViewById(R.id.dislikeLayout);
         openOnSocialLayout = (LinearLayout) findViewById(R.id.openSocialNetwork);
         openOn = (TextView) findViewById(R.id.openOn);
@@ -128,6 +139,11 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
     }
 
     private void setUi(UserResponseEntity userResponseEntity) {
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        achievmentRecyclerView.setLayoutManager(linearLayoutManager);
+        if (userResponseEntity.getAchievements() != null) {
+            achievmentRecyclerView.setAdapter(new AchievmentProfileListAdapter((ArrayList<ProfileAchievement>) userResponseEntity.getAchievements(), this));
+        }
         openOnSocialLayout.setOnClickListener(this);
         userAbout.setVisibility(View.GONE);
         addedCount.setText(user.getCountAdd() + getDiveSpotString(Integer.parseInt(user.getCountAdd())));
@@ -155,6 +171,7 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
                         Math.round(Helpers.convertDpToPixel(100, this))).centerCrop()
                 .transform(new CropCircleTransformation()).into(avatar);
         userFullName.setText(user.getName());
+        showAchivementDetails.setOnClickListener(this);
         progressView.setVisibility(View.GONE);
         aboutLayout.setVisibility(View.VISIBLE);
         switch (user.getType()) {
@@ -258,6 +275,9 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
                 break;
             case R.id.openSocialNetwork:
                 openLink(user.getSocialId(), user.getType());
+                break;
+            case R.id.achievment_rv:
+                AchievementsActivity.show(this);
                 break;
         }
     }
