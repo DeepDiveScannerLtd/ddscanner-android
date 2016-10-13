@@ -472,7 +472,7 @@ public class Helpers {
 
     /**
      * It would be used like this:
-     * getResId("icon", Drawable.class);
+     * getResId("icon", R.drawable.class);
      * @param resName
      * @param c
      * @return

@@ -35,6 +35,7 @@ public class AchievementsActivity extends AppCompatActivity implements InfoDialo
     private List<CompleteAchievement> completeAchievements;
     private List<PendingAchievement> pendingAchievements;
     private ProgressView progressView;
+    private String userId;
 
     private DDScannerRestClient.ResultListener<AchievmentsResponseEntity> responseEntityResultListener = new DDScannerRestClient.ResultListener<AchievmentsResponseEntity>() {
         @Override
@@ -74,8 +75,9 @@ public class AchievementsActivity extends AppCompatActivity implements InfoDialo
         }
     };
 
-    public static void show(Context context) {
+    public static void show(Context context, String userId) {
         Intent intent = new Intent(context, AchievementsActivity.class);
+        intent.putExtra("userid", userId);
         context.startActivity(intent);
     }
 
@@ -83,8 +85,9 @@ public class AchievementsActivity extends AppCompatActivity implements InfoDialo
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ahievments);
+        userId = getIntent().getStringExtra("userid");
         findViews();
-        DDScannerApplication.getDdScannerRestClient().getUserAchievements(SharedPreferenceHelper.getUserServerId(), responseEntityResultListener);
+        DDScannerApplication.getDdScannerRestClient().getUserAchievements(userId, responseEntityResultListener);
     }
 
     private void findViews() {
@@ -130,7 +133,7 @@ public class AchievementsActivity extends AppCompatActivity implements InfoDialo
         switch (requestCode) {
             case ActivitiesRequestCodes.REQUEST_CODE_ACHIEVEMENTS_ACTIVITY_LOGIN_TO_ACHIEVEMNTS:
                 if (resultCode == RESULT_OK) {
-                    DDScannerApplication.getDdScannerRestClient().getUserAchievements(SharedPreferenceHelper.getUserServerId(), responseEntityResultListener);
+                    DDScannerApplication.getDdScannerRestClient().getUserAchievements(userId, responseEntityResultListener);
                 } else {
                     finish();
                 }

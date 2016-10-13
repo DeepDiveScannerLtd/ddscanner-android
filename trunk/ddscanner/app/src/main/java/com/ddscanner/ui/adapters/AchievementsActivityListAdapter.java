@@ -1,6 +1,8 @@
 package com.ddscanner.ui.adapters;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +18,8 @@ import com.ddscanner.utils.Helpers;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class AchievementsActivityListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -51,6 +55,7 @@ public class AchievementsActivityListAdapter extends RecyclerView.Adapter<Recycl
                 CompleteAchievementViewHolder completeAchievementViewHolder = (CompleteAchievementViewHolder) holder;
                 if (!achievements.get(position).getCountry().isEmpty()) {
                     completeAchievementViewHolder.country.setText(Helpers.getCountries().getCountry(achievements.get(position).getCountry()).getCountryName());
+                    completeAchievementViewHolder.countryIcon.setImageDrawable(ContextCompat.getDrawable(context, Helpers.getResId(achievements.get(position).getCountry().toLowerCase(), R.drawable.class)));
                 }
                 completeAchievementViewHolder.type.setText(achievements.get(position).getName());
                 completeAchievementViewHolder.progress.setText(achievements.get(position).getPoints());
@@ -62,6 +67,7 @@ public class AchievementsActivityListAdapter extends RecyclerView.Adapter<Recycl
                 pendingAchievementViewHolder.progress.setText(pendingAchievement.getProgress() + "/" + pendingAchievement.getPoints());
                 if (!pendingAchievement.getCountry().isEmpty()) {
                     pendingAchievementViewHolder.country.setText(Helpers.getCountries().getCountry(pendingAchievement.getCountry()).getCountryName());
+                    pendingAchievementViewHolder.countryIcon.setImageDrawable(ContextCompat.getDrawable(context, Helpers.getResId(pendingAchievement.getCountry().toLowerCase(), R.drawable.class)));
                 }
                 pendingAchievementViewHolder.type.setText(pendingAchievement.getName());
                 break;
@@ -109,14 +115,14 @@ public class AchievementsActivityListAdapter extends RecyclerView.Adapter<Recycl
         protected TextView type;
         protected TextView country;
         protected TextView progress;
-        protected ImageView countryIcon;
+        protected CircleImageView countryIcon;
 
         public CompleteAchievementViewHolder(View view) {
             super(view);
             type = (TextView) view.findViewById(R.id.type);
             country = (TextView) view.findViewById(R.id.country);
             progress = (TextView) view.findViewById(R.id.progress);
-            countryIcon = (ImageView) view.findViewById(R.id.country_flag);
+            countryIcon = (CircleImageView) view.findViewById(R.id.country_flag);
         }
     }
 
