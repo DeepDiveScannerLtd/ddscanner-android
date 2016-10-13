@@ -1,6 +1,7 @@
 package com.ddscanner.ui.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,9 +14,13 @@ import android.widget.TextView;
 import com.ddscanner.R;
 import com.ddscanner.entities.AchievmentProfile;
 import com.ddscanner.entities.ProfileAchievement;
+import com.ddscanner.utils.Helpers;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class AchievmentProfileListAdapter extends RecyclerView.Adapter<AchievmentProfileListAdapter.AchievmentProfileListViewHolder> {
 
@@ -37,14 +42,24 @@ public class AchievmentProfileListAdapter extends RecyclerView.Adapter<Achievmen
     public void onBindViewHolder(AchievmentProfileListViewHolder holder, int position) {
         ProfileAchievement achievmentProfile = achievmentProfiles.get(position);
         holder.title.setText(achievmentProfile.getName());
-        ImageView view = new ImageView(context);
-        view.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.path_1));
-        holder.countries.addView(view);
-        for (int i = 0; i < 6; i++) {
-            view = new ImageView(context);
-            view.setPadding(Integer.parseInt("-10"),0,0,0);
-            view.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.path_1));
-            holder.countries.addView(view);
+        List<String> countries = new ArrayList<String>();
+        if (achievmentProfile.getCountries() != null) {
+            countries = achievmentProfile.getCountries();
+            countries.removeAll(Arrays.asList("", null));
+        }
+        if ( countries.size() > 0) {
+            for (int i = 0; i < countries.size(); i++) {
+                CircleImageView circleImageView = new CircleImageView(context);
+                circleImageView.setImageDrawable(ContextCompat.getDrawable(context, Helpers.getResId(countries.get(i).toLowerCase(), R.drawable.class)));
+                if (i != 0) {
+                    circleImageView.setPadding(Integer.parseInt("-10"), 0, 0, 0);
+                }
+              //  circleImageView.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.path_1));
+                circleImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                circleImageView.setBorderWidth(Math.round(Helpers.convertDpToPixel(2, context)));
+                circleImageView.setBorderColor(Color.parseColor("#ffffff"));
+                holder.countries.addView(circleImageView);
+            }
         }
     }
 

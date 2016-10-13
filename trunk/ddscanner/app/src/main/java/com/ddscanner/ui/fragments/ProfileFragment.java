@@ -446,7 +446,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
                 SelfCommentsActivity.show(getContext(), user.getId());
                 break;
             case R.id.show_achievments_details:
-                AchievementsActivity.show(getContext());
+                AchievementsActivity.show(getContext(), user.getId());
                 break;
         }
     }

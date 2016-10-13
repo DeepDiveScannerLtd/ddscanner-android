@@ -276,8 +276,8 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
             case R.id.openSocialNetwork:
                 openLink(user.getSocialId(), user.getType());
                 break;
-            case R.id.achievment_rv:
-                AchievementsActivity.show(this);
+            case R.id.show_achievments_details:
+                AchievementsActivity.show(this, userId);
                 break;
         }
     }
