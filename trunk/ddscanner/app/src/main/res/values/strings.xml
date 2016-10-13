@@ -314,4 +314,5 @@
     <string name="likes_profile">LIKES</string>
     <string name="dislikes">DISLIKES</string>
     <string name="achievements">Achievements</string>
+    <string name="no_title_yet">There are no titles yet</string>
 </resources>

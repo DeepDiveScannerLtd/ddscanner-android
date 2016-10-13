@@ -116,6 +116,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
     private RelativeLayout loginView;
     private RecyclerView achievmentRecyclerView;
     private RelativeLayout showAchivementDetails;
+    private TextView noAchievements;
     private boolean isClickedChosingPhotoButton = false;
     private boolean isAboutChanged = false;
     private boolean isNamChanged = false;
@@ -281,6 +282,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
     }
 
     private void findViews(View v) {
+        noAchievements = (TextView) v.findViewById(R.id.no_achievements_view);
         showAchivementDetails = (RelativeLayout) v.findViewById(R.id.show_achievments_details);
         checkInCount = (TextView) v.findViewById(R.id.checkin_count);
         achievmentRecyclerView = (RecyclerView) v.findViewById(R.id.achievment_rv);
@@ -519,12 +521,14 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
         this.user = userResponseEntity.getUser();
         showAchivementDetails.setOnClickListener(this);
         ArrayList<ProfileAchievement> achievmentProfiles = new ArrayList<>();
-        if (userResponseEntity.getAchievements() != null) {
+        if (userResponseEntity.getAchievements() != null && userResponseEntity.getAchievements().size() > 0) {
             achievmentProfiles = (ArrayList<ProfileAchievement>) userResponseEntity.getAchievements();
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+            achievmentRecyclerView.setLayoutManager(linearLayoutManager);
+            achievmentRecyclerView.setAdapter(new AchievmentProfileListAdapter(achievmentProfiles, getContext()));
+            noAchievements.setVisibility(View.GONE);
+            achievmentRecyclerView.setVisibility(View.VISIBLE);
         }
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        achievmentRecyclerView.setLayoutManager(linearLayoutManager);
-        achievmentRecyclerView.setAdapter(new AchievmentProfileListAdapter(achievmentProfiles, getContext()));
         if (user != null) {
             if (!user.getCountLike().equals("0")) {
                 likeLayout.setOnClickListener(this);

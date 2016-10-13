@@ -15,12 +15,14 @@ import com.ddscanner.R;
 import com.ddscanner.entities.AchievmentProfile;
 import com.ddscanner.entities.ProfileAchievement;
 import com.ddscanner.utils.Helpers;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 public class AchievmentProfileListAdapter extends RecyclerView.Adapter<AchievmentProfileListAdapter.AchievmentProfileListViewHolder> {
 
@@ -49,16 +51,16 @@ public class AchievmentProfileListAdapter extends RecyclerView.Adapter<Achievmen
         }
         if ( countries.size() > 0) {
             for (int i = 0; i < countries.size(); i++) {
-                CircleImageView circleImageView = new CircleImageView(context);
-                circleImageView.setImageDrawable(ContextCompat.getDrawable(context, Helpers.getResId(countries.get(i).toLowerCase(), R.drawable.class)));
+                ImageView imageView = new ImageView(context);
+                Picasso.with(context).load(Helpers.getResId(countries.get(i).toLowerCase(), R.drawable.class)).transform(new CropCircleTransformation()).into(imageView);
+            //    imageView.setImageDrawable(ContextCompat.getDrawable(context, Helpers.getResId(countries.get(i).toLowerCase(), R.drawable.class)));
+//                CircleImageView circleImageView = new CircleImageView(context);
+//                circleImageView.setImageDrawable(ContextCompat.getDrawable(context, Helpers.getResId(countries.get(i).toLowerCase(), R.drawable.class)));
                 if (i != 0) {
-                    circleImageView.setPadding(Integer.parseInt("-10"), 0, 0, 0);
+                    imageView.setPadding(Integer.parseInt("-10"), 0, 0, 0);
                 }
-              //  circleImageView.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.path_1));
-                circleImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                circleImageView.setBorderWidth(Math.round(Helpers.convertDpToPixel(2, context)));
-                circleImageView.setBorderColor(Color.parseColor("#ffffff"));
-                holder.countries.addView(circleImageView);
+//                imageView.setBackgroundResource(R.drawable.circle_flag);
+                holder.countries.addView(imageView);
             }
         }
     }

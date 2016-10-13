@@ -67,6 +67,7 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
     private LinearLayout openOnSocialLayout;
     private RecyclerView achievmentRecyclerView;
     private RelativeLayout showAchivementDetails;
+    private TextView noAchievements;
 
     private DDScannerRestClient.ResultListener<UserResponseEntity> userResultListener = new DDScannerRestClient.ResultListener<UserResponseEntity>() {
         @Override
@@ -108,6 +109,7 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
     }
 
     private void findViews() {
+        noAchievements = (TextView) findViewById(R.id.no_achievements_view);
         showAchivementDetails = (RelativeLayout) findViewById(R.id.show_achievments_details);
         achievmentRecyclerView = (RecyclerView) findViewById(R.id.achievment_rv);
         checkInCount = (TextView) findViewById(R.id.checkin_count);
@@ -141,7 +143,9 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
     private void setUi(UserResponseEntity userResponseEntity) {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         achievmentRecyclerView.setLayoutManager(linearLayoutManager);
-        if (userResponseEntity.getAchievements() != null) {
+        if (userResponseEntity.getAchievements() != null && userResponseEntity.getAchievements().size() > 0) {
+            noAchievements.setVisibility(View.GONE);
+            achievmentRecyclerView.setVisibility(View.VISIBLE);
             achievmentRecyclerView.setAdapter(new AchievmentProfileListAdapter((ArrayList<ProfileAchievement>) userResponseEntity.getAchievements(), this));
         }
         openOnSocialLayout.setOnClickListener(this);
