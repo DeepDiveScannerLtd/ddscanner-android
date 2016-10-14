@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.RelativeLayout;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
@@ -36,25 +37,30 @@ public class AchievementsActivity extends AppCompatActivity implements InfoDialo
     private List<PendingAchievement> pendingAchievements;
     private ProgressView progressView;
     private String userId;
+    private RelativeLayout noAchievementsView;
 
     private DDScannerRestClient.ResultListener<AchievmentsResponseEntity> responseEntityResultListener = new DDScannerRestClient.ResultListener<AchievmentsResponseEntity>() {
         @Override
         public void onSuccess(AchievmentsResponseEntity result) {
             progressView.setVisibility(View.GONE);
-            recyclerView.setVisibility(View.VISIBLE);
             achievmentsResponseEntity = result;
             completeAchievements = new ArrayList<>();
             pendingAchievements = new ArrayList<>();
-            if (achievmentsResponseEntity.getCompleteAchievements() != null) {
-                completeAchievements = achievmentsResponseEntity.getCompleteAchievements();
-            }
             if (achievmentsResponseEntity.getPendingAchievements() != null) {
                 pendingAchievements = achievmentsResponseEntity.getPendingAchievements();
                 completeAchievements.addAll(pendingAchievements);
             }
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(AchievementsActivity.this);
-            recyclerView.setLayoutManager(linearLayoutManager);
-            recyclerView.setAdapter(new AchievementsActivityListAdapter((ArrayList<CompleteAchievement>) completeAchievements, AchievementsActivity.this));
+            if (achievmentsResponseEntity.getCompleteAchievements() != null) {
+                completeAchievements.addAll(achievmentsResponseEntity.getCompleteAchievements());
+            }
+            if (completeAchievements.size() > 0) {
+                recyclerView.setVisibility(View.VISIBLE);
+                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(AchievementsActivity.this);
+                recyclerView.setLayoutManager(linearLayoutManager);
+                recyclerView.setAdapter(new AchievementsActivityListAdapter((ArrayList<CompleteAchievement>) completeAchievements, AchievementsActivity.this));
+            } else {
+                noAchievementsView.setVisibility(View.VISIBLE);
+            }
         }
 
         @Override
@@ -92,6 +98,7 @@ public class AchievementsActivity extends AppCompatActivity implements InfoDialo
 
     private void findViews() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        noAchievementsView = (RelativeLayout) findViewById(R.id.no_achievements_view);
         recyclerView = (RecyclerView) findViewById(R.id.achievments_rv);
         progressView = (ProgressView) findViewById(R.id.progressBar);
         setUi();
