@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 import com.ddscanner.R;
 import com.ddscanner.entities.AchievmentProfile;
 import com.ddscanner.entities.ProfileAchievement;
+import com.ddscanner.ui.views.AchievementCountryFlagView;
 import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;
 
@@ -51,15 +53,15 @@ public class AchievmentProfileListAdapter extends RecyclerView.Adapter<Achievmen
         }
         if ( countries.size() > 0) {
             for (int i = 0; i < countries.size(); i++) {
-                ImageView imageView = new ImageView(context);
-                Picasso.with(context).load(Helpers.getResId(countries.get(i).toLowerCase(), R.drawable.class)).transform(new CropCircleTransformation()).into(imageView);
-            //    imageView.setImageDrawable(ContextCompat.getDrawable(context, Helpers.getResId(countries.get(i).toLowerCase(), R.drawable.class)));
-//                CircleImageView circleImageView = new CircleImageView(context);
-//                circleImageView.setImageDrawable(ContextCompat.getDrawable(context, Helpers.getResId(countries.get(i).toLowerCase(), R.drawable.class)));
+                AchievementCountryFlagView imageView = new AchievementCountryFlagView(context);
+                imageView.setFlagBitmap(Helpers.getResId(countries.get(i).toLowerCase(), R.drawable.class));
+              //  Picasso.with(context).load(Helpers.getResId(countries.get(i).toLowerCase(), R.drawable.class)).transform(new CropCircleTransformation()).into(imageView)
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(Math.round(Helpers.convertDpToPixel(33, context)), Math.round(Helpers.convertDpToPixel(33, context)));
                 if (i != 0) {
-                    imageView.setPadding(Integer.parseInt("-10"), 0, 0, 0);
+                    layoutParams.setMargins(Integer.parseInt("-" + String.valueOf(Math.round(Helpers.convertDpToPixel(18, context)))), 0, 0, 0);
+                    //layoutParams.setMargins(Integer.parseInt("-40"), 0, 0, 0);
                 }
-//                imageView.setBackgroundResource(R.drawable.circle_flag);
+                imageView.setLayoutParams(layoutParams);
                 holder.countries.addView(imageView);
             }
         }
