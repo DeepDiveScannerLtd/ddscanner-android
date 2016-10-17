@@ -3,6 +3,7 @@ package com.ddscanner.rest;
 import android.support.annotation.NonNull;
 
 import com.ddscanner.analytics.EventsTracker;
+import com.ddscanner.entities.AchievmentsResponseEntity;
 import com.ddscanner.entities.CheckIns;
 import com.ddscanner.entities.Comments;
 import com.ddscanner.entities.DiveCentersResponseEntity;
@@ -19,6 +20,7 @@ import com.ddscanner.entities.Sealife;
 import com.ddscanner.entities.SealifeResponseEntity;
 import com.ddscanner.entities.SignInType;
 import com.ddscanner.entities.User;
+import com.ddscanner.entities.UserResponseEntity;
 import com.ddscanner.entities.request.DiveSpotsRequestMap;
 import com.ddscanner.entities.request.IdentifyRequest;
 import com.ddscanner.entities.request.RegisterRequest;
@@ -177,15 +179,13 @@ public class DDScannerRestClient {
         });
     }
 
-    public void getUserInformation(String userId, final ResultListener<User> resultListener) {
+    public void getUserInformation(String userId, final ResultListener<UserResponseEntity> resultListener) {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserInfo(userId, getUserQueryMapRequest());
-        call.enqueue(new ResponseEntityCallback<User>(gson, resultListener) {
+        call.enqueue(new ResponseEntityCallback<UserResponseEntity>(gson, resultListener) {
             @Override
-            void handleResponseString(ResultListener<User> resultListener, String responseString) throws JSONException {
-                JSONObject jsonObject = new JSONObject(responseString);
-                responseString = jsonObject.getString("user");
-                User user = new Gson().fromJson(responseString, User.class);
-                resultListener.onSuccess(user);
+            void handleResponseString(ResultListener<UserResponseEntity> resultListener, String responseString) throws JSONException {
+                UserResponseEntity userResponseEntity = new Gson().fromJson(responseString, UserResponseEntity.class);
+                resultListener.onSuccess(userResponseEntity);
             }
         });
     }
@@ -250,15 +250,13 @@ public class DDScannerRestClient {
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 
-    public void putUpdateUserProfileInfo(final ResultListener<User> resultListener, String id, MultipartBody.Part image, RequestBody... requestBodies) {
+    public void putUpdateUserProfileInfo(final ResultListener<UserResponseEntity> resultListener, String id, MultipartBody.Part image, RequestBody... requestBodies) {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().updateUserById(id, image, requestBodies[0], requestBodies[1], requestBodies[2], requestBodies[3], requestBodies[4], requestBodies[5]);
-        call.enqueue(new ResponseEntityCallback<User>(gson, resultListener) {
+        call.enqueue(new ResponseEntityCallback<UserResponseEntity>(gson, resultListener) {
             @Override
-            void handleResponseString(ResultListener<User> resultListener, String responseString) throws JSONException {
-                JSONObject jsonObject = new JSONObject(responseString);
-                responseString = jsonObject.getString("user");
-                User user = new Gson().fromJson(responseString, User.class);
-                resultListener.onSuccess(user);
+            void handleResponseString(ResultListener<UserResponseEntity> resultListener, String responseString) throws JSONException {
+                UserResponseEntity userResponseEntity = new Gson().fromJson(responseString, UserResponseEntity.class);
+                resultListener.onSuccess(userResponseEntity);
             }
         });
     }
@@ -445,6 +443,17 @@ public class DDScannerRestClient {
             void handleResponseString(ResultListener<DiveCentersResponseEntity> resultListener, String responseString) throws JSONException {
                 DiveCentersResponseEntity diveCentersResponseEntity = new Gson().fromJson(responseString, DiveCentersResponseEntity.class);
                 resultListener.onSuccess(diveCentersResponseEntity);
+            }
+        });
+    }
+
+    public void getUserAchievements(String userId, final ResultListener<AchievmentsResponseEntity> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserAchievements(userId, getUserQueryMapRequest());
+        call.enqueue(new ResponseEntityCallback<AchievmentsResponseEntity>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<AchievmentsResponseEntity> resultListener, String responseString) throws JSONException {
+                AchievmentsResponseEntity achievmentsResponseEntity = new Gson().fromJson(responseString, AchievmentsResponseEntity.class);
+                resultListener.onSuccess(achievmentsResponseEntity);
             }
         });
     }

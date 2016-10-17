@@ -107,6 +107,12 @@ dependencies {
     compile('com.crashlytics.sdk.android:crashlytics:2.6.1@aar') {
         transitive = true;
     }
+    compile 'de.hdodenhof:circleimageview:2.1.0'
+    compile('org.simpleframework:simple-xml:2.7.1'){
+        exclude module: 'stax'
+        exclude module: 'stax-api'
+        exclude module: 'xpp3'
+    }
 }
 
 apply plugin: 'com.google.gms.google-services'

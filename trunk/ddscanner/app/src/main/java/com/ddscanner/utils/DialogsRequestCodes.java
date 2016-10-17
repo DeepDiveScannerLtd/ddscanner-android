@@ -107,4 +107,8 @@ public class DialogsRequestCodes {
     public static final int DRC_REVIEWS_SLIDER_ACTIVITY_FAILED_TO_CONNECT = 3601;
     public static final int DRC_REVIEWS_SLIDER_ACTIVITY_UNEXPECTED_ERROR = 3602;
 
+    //AchievementsActivity
+    public static final int DRC_ACHIEVEMENTS_ACTIVITY_FAILED_TO_CONNECT = 3701;
+    public static final int DRC_ACHIEVEMENTS_ACTIVITY_UNEXPECTED_ERROR = 3702;
+
 }

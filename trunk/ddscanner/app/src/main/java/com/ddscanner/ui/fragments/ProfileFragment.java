@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -29,8 +31,11 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
+import com.ddscanner.entities.AchievmentProfile;
 import com.ddscanner.entities.DiveSpotListSource;
+import com.ddscanner.entities.ProfileAchievement;
 import com.ddscanner.entities.User;
+import com.ddscanner.entities.UserResponseEntity;
 import com.ddscanner.events.ChangePageOfMainViewPagerEvent;
 import com.ddscanner.events.LoadUserProfileInfoEvent;
 import com.ddscanner.events.LoggedOutEvent;
@@ -38,10 +43,12 @@ import com.ddscanner.events.PickPhotoFromGallery;
 import com.ddscanner.events.TakePhotoFromCameraEvent;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.activities.AboutActivity;
+import com.ddscanner.ui.activities.AchievementsActivity;
 import com.ddscanner.ui.activities.DiveSpotsListActivity;
 import com.ddscanner.ui.activities.MainActivity;
 import com.ddscanner.ui.activities.SelfCommentsActivity;
 import com.ddscanner.ui.activities.UserLikesDislikesActivity;
+import com.ddscanner.ui.adapters.AchievmentProfileListAdapter;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.ui.views.CustomSwipeRefreshLayout;
 import com.ddscanner.ui.views.LoginView;
@@ -53,6 +60,7 @@ import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -100,13 +108,16 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
     private LinearLayout showAllAdded;
     private LinearLayout showAllEdited;
     private LinearLayout aboutDDsLayout;
-    private LinearLayout likeLayout;
+    private RelativeLayout likeLayout;
     private LinearLayout dislikeLayout;
     private LinearLayout commentsLayout;
     private CustomSwipeRefreshLayout swipeRefreshLayout;
     private TextView error_name;
     private TextView error_about;
     private RelativeLayout loginView;
+    private RecyclerView achievmentRecyclerView;
+    private RelativeLayout showAchivementDetails;
+    private TextView noAchievements;
     private boolean isClickedChosingPhotoButton = false;
     private boolean isAboutChanged = false;
     private boolean isNamChanged = false;
@@ -125,12 +136,12 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
     private String uri = null;
     private Uri uriFromCamera = null;
 
-    private DDScannerRestClient.ResultListener<User> updateProfileInfoResultListener = new DDScannerRestClient.ResultListener<User>() {
+    private DDScannerRestClient.ResultListener<UserResponseEntity> updateProfileInfoResultListener = new DDScannerRestClient.ResultListener<UserResponseEntity>() {
         @Override
-        public void onSuccess(User result) {
+        public void onSuccess(UserResponseEntity result) {
             materialDialog.dismiss();
             uri = null;
-            changeUi(user);
+            changeUi(result);
             aboutLayout.setVisibility(View.VISIBLE);
             aboutLayout.scrollTo(0,0);
             editLayout.setVisibility(View.GONE);
@@ -183,14 +194,13 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
         }
     };
 
-    private DDScannerRestClient.ResultListener<User> getUserInformationResultListener = new DDScannerRestClient.ResultListener<User>() {
+    private DDScannerRestClient.ResultListener<UserResponseEntity> getUserInformationResultListener = new DDScannerRestClient.ResultListener<UserResponseEntity>() {
         @Override
-        public void onSuccess(User result) {
+        public void onSuccess(UserResponseEntity result) {
             if (editLayout.getVisibility() != View.VISIBLE) {
                 aboutLayout.setVisibility(View.VISIBLE);
             }
-            user = result;
-            changeUi(user);
+            changeUi(result);
             swipeRefreshLayout.setRefreshing(false);
         }
 
@@ -276,7 +286,10 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
     }
 
     private void findViews(View v) {
+        noAchievements = (TextView) v.findViewById(R.id.no_achievements_view);
+        showAchivementDetails = (RelativeLayout) v.findViewById(R.id.show_achievments_details);
         checkInCount = (TextView) v.findViewById(R.id.checkin_count);
+        achievmentRecyclerView = (RecyclerView) v.findViewById(R.id.achievment_rv);
         addedCount = (TextView) v.findViewById(R.id.added_count);
         favouriteCount = (TextView) v.findViewById(R.id.favourites_count);
         editedCount = (TextView) v.findViewById(R.id.edited_count);
@@ -308,7 +321,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
         loginView = (RelativeLayout) v.findViewById(R.id.login_view_root);
         aboutDDsLayout = (LinearLayout) v.findViewById(R.id.about_dss_layout);
         aboutDDsLayout.setOnClickListener(this);
-        likeLayout = (LinearLayout) v.findViewById(R.id.likeLayout);
+        likeLayout = (RelativeLayout) v.findViewById(R.id.likeLayout);
         dislikeLayout = (LinearLayout) v.findViewById(R.id.dislikeLayout);
         commentsLayout = (LinearLayout) v.findViewById(R.id.comments_layout);
         swipeRefreshLayout = (CustomSwipeRefreshLayout) v.findViewById(R.id.swiperefresh);
@@ -444,6 +457,9 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
             case R.id.comments_layout:
                 SelfCommentsActivity.show(getContext(), user.getId());
                 break;
+            case R.id.show_achievments_details:
+                AchievementsActivity.show(getContext(), user.getId());
+                break;
         }
     }
 
@@ -508,9 +524,20 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
         DDScannerApplication.getDdScannerRestClient().getUserInformation(id, getUserInformationResultListener);
     }
 
-    private void changeUi(User user) {
+    private void changeUi(UserResponseEntity userResponseEntity) {
         if (getContext() == null) {
             return;
+        }
+        this.user = userResponseEntity.getUser();
+        showAchivementDetails.setOnClickListener(this);
+        ArrayList<ProfileAchievement> achievmentProfiles = new ArrayList<>();
+        if (userResponseEntity.getAchievements() != null && userResponseEntity.getAchievements().size() > 0) {
+            achievmentProfiles = (ArrayList<ProfileAchievement>) userResponseEntity.getAchievements();
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+            achievmentRecyclerView.setLayoutManager(linearLayoutManager);
+            achievmentRecyclerView.setAdapter(new AchievmentProfileListAdapter(achievmentProfiles, getContext()));
+            noAchievements.setVisibility(View.GONE);
+            achievmentRecyclerView.setVisibility(View.VISIBLE);
         }
         if (user != null) {
             if (!user.getCountLike().equals("0")) {
@@ -545,7 +572,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
                     .placeholder(R.drawable.avatar_profile_default)
                     .error(R.drawable.avatar_profile_default)
                     .transform(new CropCircleTransformation()).into(newPhoto);
-            if (user.getAbout() != null) {
+            if (user.getAbout() != null && !user.getAbout().isEmpty()) {
                 userAbout.setVisibility(View.VISIBLE);
                 userAbout.setText(user.getAbout());
             } else {

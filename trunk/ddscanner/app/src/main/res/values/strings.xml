@@ -310,4 +310,11 @@
     <string name="error_no_rights_to_edit_dive_spot">Sorry, but only dive centers can edit this dive spot.</string>
     <string name="error_connection_failed_while_getting_dive_spots">Failed to connect to DDScanner service while requesting dive spots. Please check your internet connection.</string>
     <string name="error_unexpected_error_while_getting_dive_spots">Opps. Looks like we have an unexpected issue while trying to get dive spots. Report was captured</string>
+    <string name="reviews_profile">REVIEWS</string>
+    <string name="likes_profile">LIKES</string>
+    <string name="dislikes">DISLIKES</string>
+    <string name="achievements">Achievements</string>
+    <string name="no_title_yet">There are no titles yet</string>
+    <string name="no_achievements_yet">No achievements yet</string>
+    <string name="start_acivity">Start your activity to get the first title</string>
 </resources>

@@ -153,4 +153,7 @@ public class ActivitiesRequestCodes {
     //ReviewsPhotosImageSliderActivity
     public static final int REQUEST_CODE_LOGIN_TO_LEAVE_REPORT = 3801;
 
+    //AchievementsActivity
+    public static final int REQUEST_CODE_ACHIEVEMENTS_ACTIVITY_LOGIN_TO_ACHIEVEMNTS = 3901;
+
 }

@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ddscanner.R;
@@ -101,6 +102,12 @@ public class NotificationsListAdapter
                     holder.text.setText(spannableString);
                     holder.timeAgo.setText(Helpers.getDate(notification.getDate()));
                     break;
+                case ACHIEVE:
+                    holder.mainLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.orange));
+                    holder.image.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_fireworks));
+                    holder.text.setText(notification.getMessage());
+                    holder.timeAgo.setText(Helpers.getDate(notification.getDate()));
+                    break;
             }
         }
     }
@@ -131,18 +138,20 @@ public class NotificationsListAdapter
         private ImageView image;
         private TextView text;
         private TextView timeAgo;
-        private PercentRelativeLayout percentRelativeLayout;
+        private RelativeLayout percentRelativeLayout;
         private Context context;
         private ImageView likeDislikeImage;
+        private RelativeLayout mainLayout;
 
         public NotificationListViewHolder(View v) {
             super(v);
             context = v.getContext();
             timeAgo = (TextView) v.findViewById(R.id.time_ago);
             text = (TextView) v.findViewById(R.id.text);
-            percentRelativeLayout = (PercentRelativeLayout) v.findViewById(R.id.content);
+            percentRelativeLayout = (RelativeLayout) v.findViewById(R.id.content);
             percentRelativeLayout.setOnClickListener(this);
             image = (ImageView) v.findViewById(R.id.image);
+            mainLayout = (RelativeLayout) v.findViewById(R.id.main_layout);
             timeAgo = (TextView) v.findViewById(R.id.time_ago);
             likeDislikeImage = (ImageView) v.findViewById(R.id.like_dislike);
             image.setOnClickListener(this);
@@ -172,16 +181,16 @@ public class NotificationsListAdapter
 
         private void createAction(int position, boolean isImage) {
             Notification notification = notifications.get(position);
+            if (!notification.getType().equals(Notification.Type.ACHIEVE)) {
+                if (isImage && (notification.getType().name().equalsIgnoreCase("like")
+                        || notification.getType().name().equalsIgnoreCase("dislike"))) {
+                    ForeignProfileActivity.show(context, notification.getUser().getId());
+                }
 
-            if (isImage && (notification.getType().name().equalsIgnoreCase("like")
-                    || notification.getType().name().equalsIgnoreCase("dislike"))) {
-                ForeignProfileActivity.show(context, notification.getUser().getId());
+                if (!isImage) {
+                    DiveSpotDetailsActivity.show(context, String.valueOf(notification.getDiveSpot().getId()), EventsTracker.SpotViewSource.FROM_NOTIFICATIONS);
+                }
             }
-
-            if (!isImage) {
-                DiveSpotDetailsActivity.show(context, String.valueOf(notification.getDiveSpot().getId()), EventsTracker.SpotViewSource.FROM_NOTIFICATIONS);
-            }
-
         }
 
     }

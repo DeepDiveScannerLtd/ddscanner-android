@@ -264,4 +264,7 @@ public interface DDScannerRestService {
 
     @GET("diving/user/{id}/comments")
     Call<ResponseBody> getUserComments(@Path("id") String id, @QueryMap Map<String, String> map);
+
+    @GET("diving/user/{id}/achievements")
+    Call<ResponseBody> getUserAchievements(@Path("id") String id, @QueryMap Map<String, String> map);
 }
