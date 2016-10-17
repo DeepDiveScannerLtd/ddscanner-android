@@ -538,6 +538,9 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
             achievmentRecyclerView.setAdapter(new AchievmentProfileListAdapter(achievmentProfiles, getContext()));
             noAchievements.setVisibility(View.GONE);
             achievmentRecyclerView.setVisibility(View.VISIBLE);
+        } else {
+            noAchievements.setVisibility(View.VISIBLE);
+            achievmentRecyclerView.setVisibility(View.GONE);
         }
         if (user != null) {
             if (!user.getCountLike().equals("0")) {
@@ -684,6 +687,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
         if (loginView != null && aboutLayout != null) {
             loginView.setVisibility(View.GONE);
             swipeRefreshLayout.setEnabled(true);
+            DDScannerApplication.getDdScannerRestClient().getUserInformation(SharedPreferenceHelper.getUserServerId(), getUserInformationResultListener);
             if (editLayout.getVisibility() != View.VISIBLE) {
                 aboutLayout.setVisibility(View.VISIBLE);
             } else {
