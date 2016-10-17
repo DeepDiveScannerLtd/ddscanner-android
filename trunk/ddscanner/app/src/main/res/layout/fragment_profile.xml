@@ -720,6 +720,6 @@
     <com.ddscanner.ui.views.LoginView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
+        android:visibility="visible"
         app:title="@string/profile_need_to_login" />
 </RelativeLayout>
