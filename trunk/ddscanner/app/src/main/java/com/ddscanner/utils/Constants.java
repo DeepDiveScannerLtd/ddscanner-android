@@ -23,10 +23,10 @@ public class Constants {
     public static final String SEARCH_ACTIVITY_INTENT_KEY = "LATLNGBOUNDS";
 
     /*Maplist fragment*/
-    public static final String OBJECT_TYPE_REEF = "Reef";
-    public static final String OBJECT_TYPE_CAVE = "Cave";
-    public static final String OBJECT_TYPE_WRECK = "Wreck";
-    public static final String OBJECT_TYPE_OTHER = "Other";
+    public static final String OBJECT_TYPE_REEF = "reef";
+    public static final String OBJECT_TYPE_CAVE = "cave";
+    public static final String OBJECT_TYPE_WRECK = "wreck";
+    public static final String OBJECT_TYPE_OTHER = "other";
 
     /*Add dive spot activity*/
     public static final String ADD_DIVE_SPOT_ACTIVITY_LATLNG = "location";

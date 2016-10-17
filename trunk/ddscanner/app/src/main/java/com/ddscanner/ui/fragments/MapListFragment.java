@@ -376,7 +376,11 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
                 });
         diveSpotName.setText(event.getDiveSpot().getName());
         diveSpotType.setText(event.getDiveSpot().getObject());
-        diveSpotInfo.setBackground(infoWindowBackgroundImages.get(event.getDiveSpot().getObject()));
+        if (infoWindowBackgroundImages.get(event.getDiveSpot().getObject().toLowerCase()) != null) {
+            diveSpotInfo.setBackground(infoWindowBackgroundImages.get(event.getDiveSpot().getObject().toLowerCase()));
+        } else {
+            diveSpotInfo.setBackground(infoWindowBackgroundImages.get(Constants.OBJECT_TYPE_OTHER));
+        }
         lastDiveSpotId = event.getDiveSpot().getId();
         rating.removeAllViews();
         for (int k = 0; k < Math.round(event.getDiveSpot().getRating()); k++) {
