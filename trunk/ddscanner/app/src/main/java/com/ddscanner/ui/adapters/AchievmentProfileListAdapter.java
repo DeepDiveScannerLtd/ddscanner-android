@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,15 +55,19 @@ public class AchievmentProfileListAdapter extends RecyclerView.Adapter<Achievmen
         if ( countries.size() > 0) {
             for (int i = 0; i < countries.size(); i++) {
                 AchievementCountryFlagView imageView = new AchievementCountryFlagView(context);
-                imageView.setFlagBitmap(Helpers.getResId(countries.get(i).toLowerCase(), R.drawable.class));
-              //  Picasso.with(context).load(Helpers.getResId(countries.get(i).toLowerCase(), R.drawable.class)).transform(new CropCircleTransformation()).into(imageView)
-                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(Math.round(Helpers.convertDpToPixel(33, context)), Math.round(Helpers.convertDpToPixel(33, context)));
-                if (i != 0) {
-                    layoutParams.setMargins(Integer.parseInt("-" + String.valueOf(Math.round(Helpers.convertDpToPixel(18, context)))), 0, 0, 0);
-                    //layoutParams.setMargins(Integer.parseInt("-40"), 0, 0, 0);
+                int resiId;
+                try {
+                    resiId = Helpers.getResId(countries.get(i).toLowerCase(), R.drawable.class);
+                    imageView.setFlagBitmap(resiId);
+                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(Math.round(Helpers.convertDpToPixel(33, context)), Math.round(Helpers.convertDpToPixel(33, context)));
+                    if (i != 0) {
+                        layoutParams.setMargins(Integer.parseInt("-" + String.valueOf(Math.round(Helpers.convertDpToPixel(18, context)))), 0, 0, 0);
+                    }
+                    imageView.setLayoutParams(layoutParams);
+                    holder.countries.addView(imageView);
+                } catch (Exception e) {
+
                 }
-                imageView.setLayoutParams(layoutParams);
-                holder.countries.addView(imageView);
             }
         }
     }

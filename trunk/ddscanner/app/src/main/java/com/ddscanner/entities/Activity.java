@@ -1,5 +1,7 @@
 package com.ddscanner.entities;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 /**
@@ -7,17 +9,33 @@ import java.io.Serializable;
  */
 public class Activity implements Serializable {
 
-    private String type;
+    public enum ActivityType {
+
+        @SerializedName("checkin")
+        CHECKIN,
+
+        @SerializedName("store")
+        STORE,
+
+        @SerializedName("update")
+        UPDATE,
+
+        @SerializedName("achieve")
+        ACHIEVE
+
+    }
+
+    private ActivityType type;
     private String date;
     private String message;
     private DiveSpot diveSpot;
     private User user;
 
-    public String getType() {
+    public ActivityType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(ActivityType type) {
         this.type = type;
     }
 

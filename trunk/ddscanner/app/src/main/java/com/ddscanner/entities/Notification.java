@@ -17,7 +17,10 @@ public class Notification implements Serializable {
         DISLIKE,
 
         @SerializedName("accept")
-        ACCEPT;
+        ACCEPT,
+
+        @SerializedName("achieve")
+        ACHIEVE
     };
     @SerializedName("type")
     private Type type;
