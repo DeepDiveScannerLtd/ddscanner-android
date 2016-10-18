@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
@@ -45,14 +46,14 @@ public class AchievementCountryFlagView extends View {
     }
 
     private void init(Context context) {
-        flagHeightPx = Math.round(Helpers.convertDpToPixel(17, context));
-        flagWidthPx = Math.round(Helpers.convertDpToPixel(17, context));
-        backgroundHeightPx = Math.round(Helpers.convertDpToPixel(33, context));
-        backGroundWidthPx = Math.round(Helpers.convertDpToPixel(33, context));
-        if (backgrondBitmap == null) {
-            backgrondBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.circle_flag);
-            backgrondBitmap = Bitmap.createScaledBitmap(backgrondBitmap, backGroundWidthPx, backgroundHeightPx, false);
-        }
+        flagHeightPx = Math.round(Helpers.convertDpToPixel(15, context));
+        flagWidthPx = Math.round(Helpers.convertDpToPixel(15, context));
+//        backgroundHeightPx = Math.round(Helpers.convertDpToPixel(33, context));
+//        backGroundWidthPx = Math.round(Helpers.convertDpToPixel(33, context));
+//        if (backgrondBitmap == null) {
+//            backgrondBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.circle_flag);
+//            backgrondBitmap = Bitmap.createScaledBitmap(backgrondBitmap, backGroundWidthPx, backgroundHeightPx, false);
+//        }
     }
 
     public void setFlagBitmap(int resourceId) {
@@ -63,10 +64,18 @@ public class AchievementCountryFlagView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        if (backgrondBitmap == null) {
+            backgrondBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.circle_flag);
+            backgrondBitmap = Bitmap.createScaledBitmap(backgrondBitmap, getMeasuredWidth(), getMeasuredHeight(), false);
+        }
         Log.i(TAG, String.valueOf(getMeasuredHeight()));
         Log.i(TAG, String.valueOf(getMeasuredWidth()));
-        canvas.drawBitmap(getCroppedBitmap(flagBitmap, flagWidthPx), (backGroundWidthPx - flagWidthPx) / 2, (backgroundHeightPx - flagHeightPx) / 2, null);
-        canvas.drawBitmap(backgrondBitmap, 0, 0, null);
+        Paint paint = new Paint();
+        paint.setColor(Color.parseColor("#ffffff"));
+        if (flagBitmap != null) {
+            canvas.drawBitmap(backgrondBitmap, 0, 0, null);
+            canvas.drawBitmap(getCroppedBitmap(flagBitmap, flagWidthPx), (getMeasuredWidth() - flagWidthPx) / 2, (getMeasuredHeight() - flagHeightPx) / 2, null);
+        }
     }
 
     public static Bitmap getCroppedBitmap(Bitmap bmp, int radius) {
@@ -93,8 +102,8 @@ public class AchievementCountryFlagView extends View {
         paint.setDither(true);
         canvas.drawARGB(0, 0, 0, 0);
         paint.setColor(Color.parseColor("#BAB399"));
-        canvas.drawCircle(radius / 2 + 0.7f,
-                radius / 2 + 0.7f, radius / 2 + 0.1f, paint);
+        canvas.drawCircle(radius / 2,
+                radius / 2, radius / 2, paint);
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
         canvas.drawBitmap(sbmp, rect, rect, paint);
 

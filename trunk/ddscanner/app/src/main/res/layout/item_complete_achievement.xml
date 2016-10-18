@@ -19,14 +19,12 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true">
 
-            <de.hdodenhof.circleimageview.CircleImageView
+            <com.ddscanner.ui.views.AchievementCountryFlagView
                 android:layout_centerVertical="true"
-                android:id="@+id/country_flag"
                 android:layout_width="16dp"
                 android:layout_height="16dp"
-                app:civ_border_width="2dp"
-                app:civ_border_color="#f9f9f9"
-                 />
+                android:id="@+id/country_flag"/>
+
             <RelativeLayout
                 android:id="@+id/info"
                 android:layout_centerVertical="true"
