@@ -67,7 +67,7 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
 
         @Override
         public void onConnectionFailure() {
-            InfoDialogFragment.showForFragmentResult(getFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_NOTIFICATIONS_FRAGMENT_FAILED_TO_CONNECT, false);
+            InfoDialogFragment.showForFragmentResult(getChildFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_NOTIFICATIONS_FRAGMENT_FAILED_TO_CONNECT, false);
         }
 
         @Override

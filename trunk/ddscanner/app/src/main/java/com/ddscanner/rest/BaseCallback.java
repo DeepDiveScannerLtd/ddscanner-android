@@ -1,5 +1,7 @@
 package com.ddscanner.rest;
 
+import android.util.Log;
+
 import com.ddscanner.entities.errors.Field;
 import com.ddscanner.entities.errors.GeneralError;
 import com.ddscanner.entities.errors.ValidationError;
@@ -12,6 +14,7 @@ import com.google.gson.JsonSyntaxException;
 
 import java.lang.ref.WeakReference;
 import java.net.ConnectException;
+import java.net.SocketTimeoutException;
 import java.util.Map;
 import java.util.Set;
 
@@ -40,6 +43,8 @@ abstract class BaseCallback<T> implements Callback<ResponseBody> {
     public final void onFailure(Call<ResponseBody> call, Throwable t) {
         if (resultListenerWeakReference.get() != null) {
             if (t instanceof ConnectException) {
+                resultListenerWeakReference.get().onConnectionFailure();
+            } else if (t instanceof SocketTimeoutException) {
                 resultListenerWeakReference.get().onConnectionFailure();
             } else {
                 resultListenerWeakReference.get().onError(DDScannerRestClient.ErrorType.UNKNOWN_ERROR, null, call.request().url().toString(), t.getMessage());
