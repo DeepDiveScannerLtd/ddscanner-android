@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -31,7 +32,7 @@ public class InfoDialogFragment extends DialogFragment {
         builder
                 .setTitle(args.getInt(ARG_TITLE_RES_ID))
                 .setMessage(args.getInt(ARG_MESSAGE_RES_ID))
-                .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.dismiss();
                         DialogClosedListener dialogClosedListener;
@@ -61,6 +62,12 @@ public class InfoDialogFragment extends DialogFragment {
                     }
                 });
         return builder.create();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        ((AlertDialog) getDialog()).getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.BLACK);
     }
 
     public static void showForActivityResult(FragmentManager fragmentManager, int titleResId, int messageResId, int requestCode, boolean cancelable) {
