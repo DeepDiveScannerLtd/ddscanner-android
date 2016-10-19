@@ -27,8 +27,6 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-import at.blogc.android.views.ExpandableTextView;
-import jp.wasabeef.picasso.transformations.CropSquareTransformation;
 
 /**
  * Created by Lenovo on 26.08.2016.
@@ -150,7 +148,7 @@ public class SelfReviewsListAdapter extends RecyclerView.Adapter<SelfReviewsList
         private ImageView user_avatar;
         private LinearLayout rating;
         private TextView user_name;
-        private ExpandableTextView user_review;
+        private TextView user_review;
         private RecyclerView photos;
         private LinearLayout like;
         private LinearLayout dislike;
@@ -171,7 +169,7 @@ public class SelfReviewsListAdapter extends RecyclerView.Adapter<SelfReviewsList
             user_avatar = (ImageView) v.findViewById(R.id.user_avatar);
             rating = (LinearLayout) v.findViewById(R.id.stars);
             user_name = (TextView) v.findViewById(R.id.user_name);
-            user_review = (ExpandableTextView) v.findViewById(R.id.review);
+            user_review = (TextView) v.findViewById(R.id.review);
             photos = (RecyclerView) v.findViewById(R.id.review_photos_rc);
             like = (LinearLayout) v.findViewById(R.id.like_layout);
             dislike = (LinearLayout) v.findViewById(R.id.dislike_layout);

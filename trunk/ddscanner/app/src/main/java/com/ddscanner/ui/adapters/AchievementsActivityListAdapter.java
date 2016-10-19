@@ -23,9 +23,6 @@ import com.ddscanner.ui.views.AchievementProgressView;
 import com.ddscanner.utils.Helpers;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 public class AchievementsActivityListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
