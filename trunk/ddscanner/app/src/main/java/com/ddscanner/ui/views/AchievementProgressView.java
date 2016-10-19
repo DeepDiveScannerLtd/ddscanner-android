@@ -29,7 +29,7 @@ import java.util.List;
 public class AchievementProgressView extends View {
 
     private int framesPerSecond = 60;
-    private long animationDuration = 3000;
+    private long animationDuration = 1800;
     private float animationLength;
     private List<PointF> points = new ArrayList<>();
     private Paint linePaint;
@@ -109,7 +109,7 @@ public class AchievementProgressView extends View {
         linePathMeasure = new PathMeasure(linePath, false);
         this.animationLength = linePathMeasure.getLength() * percents;
         valueAnimator =  new ValueAnimator().ofFloat(0, linePathMeasure.getLength() * percents);
-        valueAnimator.setDuration((long)(3000));
+        valueAnimator.setDuration(animationDuration);
         valueAnimator.setInterpolator(new DecelerateInterpolator());
         valueAnimator.start();
     }
