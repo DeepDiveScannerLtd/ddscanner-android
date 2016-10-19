@@ -62,5 +62,6 @@
         </RelativeLayout>
     </RelativeLayout>
     <ImageView
+        android:id="@+id/bottom_divider"
         style="@style/DividerStyleFull" />
 </LinearLayout>

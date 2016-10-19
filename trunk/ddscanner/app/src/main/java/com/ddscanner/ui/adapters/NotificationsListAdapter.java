@@ -15,9 +15,11 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.Notification;
+import com.ddscanner.events.ChangePageOfMainViewPagerEvent;
 import com.ddscanner.ui.activities.DiveSpotDetailsActivity;
 import com.ddscanner.ui.activities.ForeignProfileActivity;
 import com.ddscanner.utils.Helpers;
@@ -103,6 +105,7 @@ public class NotificationsListAdapter
                     holder.timeAgo.setText(Helpers.getDate(notification.getDate()));
                     break;
                 case ACHIEVE:
+                    holder.bottomDivider.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.orange_rectangle));
                     holder.mainLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.orange));
                     holder.image.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_fireworks));
                     holder.text.setText(notification.getMessage());
@@ -142,10 +145,12 @@ public class NotificationsListAdapter
         private Context context;
         private ImageView likeDislikeImage;
         private RelativeLayout mainLayout;
+        private ImageView bottomDivider;
 
         public NotificationListViewHolder(View v) {
             super(v);
             context = v.getContext();
+            bottomDivider = (ImageView) v.findViewById(R.id.bottom_divider);
             timeAgo = (TextView) v.findViewById(R.id.time_ago);
             text = (TextView) v.findViewById(R.id.text);
             percentRelativeLayout = (RelativeLayout) v.findViewById(R.id.content);
@@ -181,15 +186,20 @@ public class NotificationsListAdapter
 
         private void createAction(int position, boolean isImage) {
             Notification notification = notifications.get(position);
-            if (!notification.getType().equals(Notification.Type.ACHIEVE)) {
-                if (isImage && (notification.getType().name().equalsIgnoreCase("like")
-                        || notification.getType().name().equalsIgnoreCase("dislike"))) {
-                    ForeignProfileActivity.show(context, notification.getUser().getId());
-                }
+            switch (notification.getType()) {
+                case ACHIEVE:
+                    DDScannerApplication.bus.post(new ChangePageOfMainViewPagerEvent(2));
+                    break;
+                default:
+                    if (isImage && (notification.getType().name().equalsIgnoreCase("like")
+                            || notification.getType().name().equalsIgnoreCase("dislike"))) {
+                        ForeignProfileActivity.show(context, notification.getUser().getId());
+                    }
 
-                if (!isImage) {
-                    DiveSpotDetailsActivity.show(context, String.valueOf(notification.getDiveSpot().getId()), EventsTracker.SpotViewSource.FROM_NOTIFICATIONS);
-                }
+                    if (!isImage) {
+                        DiveSpotDetailsActivity.show(context, String.valueOf(notification.getDiveSpot().getId()), EventsTracker.SpotViewSource.FROM_NOTIFICATIONS);
+                    }
+                    break;
             }
         }
 
