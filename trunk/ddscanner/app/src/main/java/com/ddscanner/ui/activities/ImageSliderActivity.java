@@ -469,7 +469,8 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     private void showOtherReportDialog() {
         new MaterialDialog.Builder(this)
                 .title("Other")
-                .widgetColor(ContextCompat.getColor(this, R.color.primary))
+                .positiveColor(ContextCompat.getColor(this, R.color.black_text))
+                .widgetColor(ContextCompat.getColor(this, R.color.accent))
                 .input("Write reason", "", new MaterialDialog.InputCallback() {
                     @Override
                     public void onInput(MaterialDialog dialog, CharSequence input) {
