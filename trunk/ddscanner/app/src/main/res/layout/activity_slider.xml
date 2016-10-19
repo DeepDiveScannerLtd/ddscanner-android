@@ -68,20 +68,4 @@
         android:layout_height="400dp"
         android:layout_gravity="center" />
 
-    <RelativeLayout
-        android:id="@+id/viewPagerIndicator"
-        android:layout_width="match_parent"
-        android:layout_height="55dp"
-        android:layout_gravity="bottom"
-        android:layout_marginTop="5dp"
-        android:gravity="center">
-
-        <LinearLayout
-            android:id="@+id/viewPagerCountDots"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_centerHorizontal="true"
-            android:gravity="center"
-            android:orientation="horizontal" />
-    </RelativeLayout>
 </FrameLayout>

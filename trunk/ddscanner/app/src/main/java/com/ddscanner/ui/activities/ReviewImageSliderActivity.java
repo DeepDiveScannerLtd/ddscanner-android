@@ -164,7 +164,6 @@ public class ReviewImageSliderActivity extends AppCompatActivity implements View
 
     private void findViews() {
         viewPager = (ViewPager) findViewById(R.id.image_slider);
-        pager_indicator = (LinearLayout) findViewById(R.id.viewPagerCountDots);
         close = (ImageView) findViewById(R.id.close_btn);
         baseLayout = (FrameLayout) findViewById(R.id.swipe_layout);
         menu = (ImageView) findViewById(R.id.options);
@@ -173,23 +172,6 @@ public class ReviewImageSliderActivity extends AppCompatActivity implements View
     }
 
     private void setUi() {
-        dotsCount = sliderImagesAdapter.getCount();
-        dots = new ImageView[dotsCount];
-        pager_indicator.removeAllViews();
-        for (int i=0; i < dotsCount; i++) {
-            dots[i] = new ImageView(this);
-            dots[i].setImageDrawable(ContextCompat.getDrawable(this, R.drawable.nonselecteditem_dot));
-
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-            );
-
-            params.setMargins(4,0,4,0);
-
-            pager_indicator.addView(dots[i],  params);
-        }
-        dots[position].setImageDrawable(ContextCompat.getDrawable(this, R.drawable.selecteditem_dot));
         viewPager.setCurrentItem(position);
     }
 
@@ -310,10 +292,6 @@ public class ReviewImageSliderActivity extends AppCompatActivity implements View
 
     @Override
     public void onPageSelected(int position) {
-        for (int i = 0; i < dotsCount; i++) {
-            dots[i].setImageDrawable(ContextCompat.getDrawable(this, R.drawable.nonselecteditem_dot));
-        }
-        dots[position].setImageDrawable(ContextCompat.getDrawable(this, R.drawable.selecteditem_dot));
         this.position = position;
     }
 
