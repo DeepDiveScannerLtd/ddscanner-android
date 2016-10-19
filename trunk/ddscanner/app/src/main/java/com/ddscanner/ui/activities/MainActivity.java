@@ -52,6 +52,7 @@ import com.ddscanner.events.ShowLoginActivityIntent;
 import com.ddscanner.events.TakePhotoFromCameraEvent;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.adapters.MainActivityPagerAdapter;
+import com.ddscanner.ui.dialogs.AchievementAchievedDialogFragment;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.ui.fragments.ActivityNotificationsFragment;
 import com.ddscanner.ui.fragments.AllNotificationsFragment;
