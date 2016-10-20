@@ -49,6 +49,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONObject;
 
@@ -142,7 +143,7 @@ public class LoginActivity extends AppCompatActivity
                         GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
                             @Override
                             public void onCompleted(JSONObject object, GraphResponse response) {
-                                sendLoginRequest(SharedPreferenceHelper.getUserAppId(), SignInType.FACEBOOK, loginResult.getAccessToken().getToken());
+                                sendLoginRequest(SignInType.FACEBOOK, loginResult.getAccessToken().getToken());
                             }
                         }).executeAsync();
                     }
@@ -189,7 +190,7 @@ public class LoginActivity extends AppCompatActivity
                     InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_LOGIN_ACTIVITY_GOOGLE_SIGN_IN_FAIL, false);
                 } else {
                     String idToken = acct.getIdToken();
-                    sendLoginRequest(SharedPreferenceHelper.getUserAppId(), SignInType.GOOGLE, idToken);
+                    sendLoginRequest(SignInType.GOOGLE, idToken);
                 }
             }
         } else {
@@ -197,11 +198,11 @@ public class LoginActivity extends AppCompatActivity
         }
     }
 
-    private void sendLoginRequest(String appId, SignInType signInType, String token) {
+    private void sendLoginRequest(SignInType signInType, String token) {
         loginResultListener.setToken(token);
         loginResultListener.setSocialNetwork(signInType);
         materialDialog.show();
-        DDScannerApplication.getDdScannerRestClient().postLogin(appId, signInType, token, loginResultListener);
+        DDScannerApplication.getDdScannerRestClient().postLogin(FirebaseInstanceId.getInstance().getId(), signInType, token, loginResultListener);
     }
 
     @Override

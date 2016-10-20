@@ -79,6 +79,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.squareup.otto.Subscribe;
 
 import org.json.JSONObject;
@@ -133,6 +134,7 @@ public class MainActivity extends BaseAppCompatActivity
         isHasInternetConnection = getIntent().getBooleanExtra(Constants.IS_HAS_INTERNET, false);
         clearFilterSharedPreferences();
         startActivity();
+        Log.i(TAG, FirebaseInstanceId.getInstance().getToken());
         if (!isHasInternetConnection) {
             LogUtils.i(TAG, "internetConnectionClosed 2");
             InternetClosedActivity.show(this);
@@ -208,7 +210,7 @@ public class MainActivity extends BaseAppCompatActivity
                         GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
                             @Override
                             public void onCompleted(JSONObject object, GraphResponse response) {
-                                sendLoginRequest(SharedPreferenceHelper.getUserAppId(), SignInType.FACEBOOK, loginResult.getAccessToken().getToken());
+                                sendLoginRequest(SignInType.FACEBOOK, loginResult.getAccessToken().getToken());
                             }
                         }).executeAsync();
                     }
@@ -404,7 +406,7 @@ public class MainActivity extends BaseAppCompatActivity
                         Helpers.handleUnexpectedServerError(getSupportFragmentManager(), "google_login", "result.getSignInAccount() returned null");
                     } else {
                         String idToken = acct.getIdToken();
-                        sendLoginRequest(SharedPreferenceHelper.getUserAppId(), SignInType.GOOGLE, idToken);
+                        sendLoginRequest(SignInType.GOOGLE, idToken);
                     }
                 }
                 break;
@@ -481,11 +483,11 @@ public class MainActivity extends BaseAppCompatActivity
         }
     }
 
-    private void sendLoginRequest(String appId, SignInType signInType, String token) {
+    private void sendLoginRequest(SignInType signInType, String token) {
         loginResultListener.setToken(token);
         loginResultListener.setSocialNetwork(signInType);
         materialDialog.show();
-        DDScannerApplication.getDdScannerRestClient().postLogin(appId, signInType, token, loginResultListener);
+        DDScannerApplication.getDdScannerRestClient().postLogin(FirebaseInstanceId.getInstance().getId(), signInType, token, loginResultListener);
     }
 
 //    private void validateIdToken() {
