@@ -67,6 +67,7 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
     private LinearLayout openOnSocialLayout;
     private RecyclerView achievmentRecyclerView;
     private RelativeLayout showAchivementDetails;
+    private LinearLayout achievementsLayout;
     private TextView noAchievements;
 
     private DDScannerRestClient.ResultListener<UserResponseEntity> userResultListener = new DDScannerRestClient.ResultListener<UserResponseEntity>() {
@@ -109,8 +110,6 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
     }
 
     private void findViews() {
-        noAchievements = (TextView) findViewById(R.id.no_achievements_view);
-        showAchivementDetails = (RelativeLayout) findViewById(R.id.show_achievments_details);
         achievmentRecyclerView = (RecyclerView) findViewById(R.id.achievment_rv);
         checkInCount = (TextView) findViewById(R.id.checkin_count);
         addedCount = (TextView) findViewById(R.id.added_count);
@@ -129,6 +128,7 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
         likeLayout = (RelativeLayout) findViewById(R.id.likeLayout);
         dislikeLayout = (LinearLayout) findViewById(R.id.dislikeLayout);
         openOnSocialLayout = (LinearLayout) findViewById(R.id.openSocialNetwork);
+        achievementsLayout = (LinearLayout) findViewById(R.id.achievements_layout);
         openOn = (TextView) findViewById(R.id.openOn);
     }
 
@@ -144,7 +144,7 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         achievmentRecyclerView.setLayoutManager(linearLayoutManager);
         if (userResponseEntity.getAchievements() != null && userResponseEntity.getAchievements().size() > 0) {
-            noAchievements.setVisibility(View.GONE);
+            achievementsLayout.setVisibility(View.VISIBLE);
             achievmentRecyclerView.setVisibility(View.VISIBLE);
             achievmentRecyclerView.setAdapter(new AchievmentProfileListAdapter((ArrayList<ProfileAchievement>) userResponseEntity.getAchievements(), this));
         }
@@ -175,7 +175,6 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
                         Math.round(Helpers.convertDpToPixel(100, this))).centerCrop()
                 .transform(new CropCircleTransformation()).into(avatar);
         userFullName.setText(user.getName());
-        showAchivementDetails.setOnClickListener(this);
         progressView.setVisibility(View.GONE);
         aboutLayout.setVisibility(View.VISIBLE);
         switch (user.getType()) {
