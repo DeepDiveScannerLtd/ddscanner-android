@@ -503,6 +503,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
     }
 
     public void setImage(String uri) {
+        newPhoto.setImageDrawable(null);
         Picasso.with(getContext()).load("file://" + uri)
                 .resize(Math.round(Helpers.convertDpToPixel(80, getContext())),
                         Math.round(Helpers.convertDpToPixel(80, getContext()))).centerCrop()

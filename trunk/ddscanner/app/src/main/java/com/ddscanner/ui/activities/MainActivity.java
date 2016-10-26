@@ -375,9 +375,29 @@ public class MainActivity extends BaseAppCompatActivity
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_PICK_PHOTO:
                 if (resultCode == RESULT_OK) {
-                    List<String> path = data.getStringArrayListExtra(MultiImageSelectorActivity
-                            .EXTRA_RESULT);
-                    mainViewPagerAdapter.setProfileImage(path.get(0));
+                    String filename = "DDScanner" + String.valueOf(System.currentTimeMillis() / 1232);
+                    Uri uri = Uri.parse("");
+                    try {
+                        uri = data.getData();
+                        String mimeType = getContentResolver().getType(uri);
+                        String sourcePath = getExternalFilesDir(null).toString();
+                        File fileToSend = new File(sourcePath + "/" + filename);
+                        if (Helpers.isFileImage(uri.getPath()) || mimeType.contains("image")) {
+                            try {
+                                Helpers.copyFileStream(fileToSend, uri, this);
+                                Log.i(TAG, fileToSend.toString());
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                            mainViewPagerAdapter.setProfileImage(fileToSend.getPath());
+
+                        } else {
+                            Toast.makeText(this, "You can choose only images", Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_LOGIN:
@@ -601,7 +621,12 @@ public class MainActivity extends BaseAppCompatActivity
     }
 
     private void pickphotoFromGallery() {
-        MultiImageSelector.create().showCamera(false).multi().count(1).start(this, ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_PICK_PHOTO);
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_PICK_PHOTO);
+//        MultiImageSelector.create().showCamera(false).multi().count(1).start(this, ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_PICK_PHOTO);
     }
 
     private boolean checkPermissionReadStorage() {

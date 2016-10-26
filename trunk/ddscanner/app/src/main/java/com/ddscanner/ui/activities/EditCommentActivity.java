@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,6 +17,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -275,15 +277,33 @@ public class EditCommentActivity extends AppCompatActivity implements View.OnCli
         switch (requestCode) {
             case ActivitiesRequestCodes.REQUEST_CODE_EDIT_COMMENT_ACTIVITY_PICK_PHOTOS:
                 if (resultCode == RESULT_OK) {
-                    maxPhotos = maxPhotos - data.getStringArrayListExtra(MultiImageSelectorActivity
-                            .EXTRA_RESULT).size();
-                    imageUris.addAll(data.getStringArrayListExtra(MultiImageSelectorActivity
-                            .EXTRA_RESULT));
-                    addPhotoToDsListAdapter = new AddPhotoToDsListAdapter(imageUris,
-                            EditCommentActivity.this, addPhotoTitle);
-                    addPhotoTitle.setVisibility(View.GONE);
-                    photos_rc.setVisibility(View.VISIBLE);
-                    photos_rc.setAdapter(addPhotoToDsListAdapter);
+                    String filename = "DDScanner" + String.valueOf(System.currentTimeMillis() / 1232);
+                    Uri uri = Uri.parse("");
+                    try {
+                        uri = data.getData();
+                        String mimeType = getContentResolver().getType(uri);
+                        String sourcePath = getExternalFilesDir(null).toString();
+                        File file = new File(sourcePath + "/" + filename);
+                        if (Helpers.isFileImage(uri.getPath()) || mimeType.contains("image")) {
+                            try {
+                                Helpers.copyFileStream(file, uri, this);
+                                Log.i(TAG, file.toString());
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                            imageUris.add(file.getPath());
+                            addPhotoToDsListAdapter = new AddPhotoToDsListAdapter(imageUris,
+                                    EditCommentActivity.this, addPhotoTitle);
+                            addPhotoTitle.setVisibility(View.GONE);
+                            photos_rc.setVisibility(View.VISIBLE);
+                            photos_rc.setAdapter(addPhotoToDsListAdapter);
+                        } else {
+                            Toast.makeText(this, "You can choose only images", Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_EDIT_COMMENT_ACTIVITY_LOGIN:
