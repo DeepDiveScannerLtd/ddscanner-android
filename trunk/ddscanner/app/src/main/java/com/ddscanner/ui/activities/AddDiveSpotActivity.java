@@ -291,7 +291,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                 if (resultCode == RESULT_OK) {
                     if (data.getClipData() != null) {
                         for (int i = 0; i < data.getClipData().getItemCount(); i++) {
-                            String filename = "DDScanner" + String.valueOf(System.currentTimeMillis() / 1232);
+                            String filename = "DDScanner" + String.valueOf(System.currentTimeMillis());
                             try {
                                 uri = data.getClipData().getItemAt(i).getUri();
                                 String mimeType = getContentResolver().getType(uri);
@@ -315,7 +315,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                         }
                     }
                     if (data.getData() != null) {
-                        String filename = "DDScanner" + String.valueOf(System.currentTimeMillis() / 1232);
+                        String filename = "DDScanner" + String.valueOf(System.currentTimeMillis());
                         try {
                             uri = data.getData();
                             String mimeType = getContentResolver().getType(uri);
