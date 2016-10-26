@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -364,6 +365,9 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
             Intent intent = new Intent();
             intent.setType("image/*");
             intent.setAction(Intent.ACTION_GET_CONTENT);
+            if (Build.VERSION.SDK_INT >= 18) {
+                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+            }
             intent.addCategory(Intent.CATEGORY_OPENABLE);
             startActivityForResult(Intent.createChooser(intent, "Select Picture"), ActivitiesRequestCodes.REQUEST_CODE_EDIT_DIVE_SPOT_ACTIVITY_PICK_PHOTO);
         } else {
@@ -427,9 +431,35 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_EDIT_DIVE_SPOT_ACTIVITY_PICK_PHOTO:
+                Uri uri = Uri.parse("");
                 if (resultCode == RESULT_OK) {
-                    String filename = "DDScanner" + String.valueOf(System.currentTimeMillis() / 1232);
-                    Uri uri = Uri.parse("");
+                    if (data.getClipData() != null) {
+                        for (int i = 0; i < data.getClipData().getItemCount(); i++) {
+                            String filename = "DDScanner" + String.valueOf(System.currentTimeMillis() / 1232);
+                            try {
+                                uri = data.getClipData().getItemAt(i).getUri();
+                                String mimeType = getContentResolver().getType(uri);
+                                String sourcePath = getExternalFilesDir(null).toString();
+                                File file = new File(sourcePath + "/" + filename);
+                                if (Helpers.isFileImage(uri.getPath()) || mimeType.contains("image")) {
+                                    try {
+                                        Helpers.copyFileStream(file, uri, this);
+                                        Log.i(TAG, file.toString());
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+
+                                    imageUris.add(file.getPath());
+                                } else {
+                                    Toast.makeText(this, "You can choose only images", Toast.LENGTH_SHORT).show();
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                    if (data.getData() != null) {
+                        String filename = "DDScanner" + String.valueOf(System.currentTimeMillis() / 1232);
                         try {
                             uri = data.getData();
                             String mimeType = getContentResolver().getType(uri);
@@ -444,13 +474,15 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
                                 }
 
                                 imageUris.add(file.getPath());
-                                photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris, EditDiveSpotActivity.this, addPhotoTitle));
                             } else {
                                 Toast.makeText(this, "You can choose only images", Toast.LENGTH_SHORT).show();
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
+                    }
+                    photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris, EditDiveSpotActivity.this, addPhotoTitle));
+
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_EDIT_DIVE_SPOT_ACTIVITY_PICK_SEALIFE:
