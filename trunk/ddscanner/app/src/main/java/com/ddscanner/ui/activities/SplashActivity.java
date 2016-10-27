@@ -129,9 +129,8 @@ public class SplashActivity extends BaseAppCompatActivity implements InfoDialogF
         showMainActivityRunnable = new Runnable() {
             @Override
             public void run() {
-//                MainActivity.show(SplashActivity.this, Helpers.hasConnection(SplashActivity.this));
-//                SplashActivity.this.finish();
-                SignUpActivity.show(SplashActivity.this);
+                MainActivity.show(SplashActivity.this, Helpers.hasConnection(SplashActivity.this));
+                SplashActivity.this.finish();
             }
         };
         if (System.currentTimeMillis() - activityShowTimestamp < DDProgressBarView.ANIMATION_DURATION) {

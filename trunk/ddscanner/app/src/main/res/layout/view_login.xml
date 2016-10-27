@@ -29,24 +29,29 @@
         android:textSize="20sp" />
 
     <Button
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:text="@string/sign_up"
         android:id="@+id/fb_custom"
-        style="?android:attr/borderlessButtonStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="65dp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
         android:layout_below="@+id/need_to_login_message"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="133dp"
-        android:background="@drawable/btn_fb" />
+        style="@style/OrangeButtons" />
 
     <Button
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
         android:id="@+id/custom_google"
-        style="?android:attr/borderlessButtonStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="65dp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
         android:layout_below="@+id/fb_custom"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="5dp"
-        android:background="@drawable/btn_google" />
+        android:layout_marginTop="13dp"
+        android:text="@string/login"
+        android:textColor="@color/orange"
+        android:background="@drawable/splash_activity_login" />
 
     <TextView
         android:id="@+id/privacy_policy"
