@@ -36,12 +36,13 @@ public class SplashActivity extends BaseAppCompatActivity implements InfoDialogF
     private long activityShowTimestamp;
 
     private TextView progressMessage;
+    private TextView skip;
 
     private DDScannerRestClient.ResultListener<Void> identifyResultListener = new DDScannerRestClient.ResultListener<Void>() {
         @Override
         public void onSuccess(Void result) {
             progressMessage.setText("");
-            showMainActivity();
+            //showMainActivity();
             SharedPreferenceHelper.setIsFirstLaunch(false);
         }
 
@@ -79,6 +80,14 @@ public class SplashActivity extends BaseAppCompatActivity implements InfoDialogF
         activityShowTimestamp = System.currentTimeMillis();
 
         progressMessage = (TextView) findViewById(R.id.message);
+        skip = (TextView) findViewById(R.id.skip);
+
+        skip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showMainActivity();
+            }
+        });
 
         LinearLayout mainLayout = (LinearLayout) findViewById(R.id.main);
         Animation fadeInAnimation = AnimationUtils.loadAnimation(this, R.anim.fadein);
@@ -88,7 +97,7 @@ public class SplashActivity extends BaseAppCompatActivity implements InfoDialogF
         if (SharedPreferenceHelper.isFirstLaunch()) {
             registerForGCM();
         } else {
-            showMainActivity();
+      //      showMainActivity();
         }
 
  //       RemoteConfigManager.initRemoteConfig();
