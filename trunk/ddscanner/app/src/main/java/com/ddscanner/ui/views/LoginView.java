@@ -25,7 +25,7 @@ import com.ddscanner.ui.activities.TermsOfServiceActivity;
 public class LoginView extends RelativeLayout implements View.OnClickListener {
 
     private TextView titleTextView;
-    private TextView privacyPolicy;
+   // private TextView privacyPolicy;
     private Button fbCustomLogin;
     private Button googleCustomSignIn;
     
@@ -51,29 +51,29 @@ public class LoginView extends RelativeLayout implements View.OnClickListener {
         inflate(getContext(), R.layout.view_login, this);
 
         titleTextView = (TextView) findViewById(R.id.need_to_login_message);
-        privacyPolicy = (TextView) findViewById(R.id.privacy_policy);
+     //   privacyPolicy = (TextView) findViewById(R.id.privacy_policy);
         fbCustomLogin = (Button) findViewById(R.id.fb_custom);
         googleCustomSignIn = (Button) findViewById(R.id.custom_google);
 
         fbCustomLogin.setOnClickListener(this);
         googleCustomSignIn.setOnClickListener(this);
-        final SpannableString spannableString = new SpannableString(privacyPolicy.getText());
-        privacyPolicy.setHighlightColor(Color.TRANSPARENT);
-        spannableString.setSpan(new MyClickableSpan(privacyPolicy.getText().toString()) {
-            @Override
-            public void onClick(View tv) {
-                TermsOfServiceActivity.show(getContext());
-            }
-        }, 32,48, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannableString.setSpan(new MyClickableSpan(privacyPolicy.getText().toString()) {
-            @Override
-            public void onClick(View tv) {
-                PrivacyPolicyActivity.show(getContext());
-                tv.invalidate();
-            }
-        }, 53, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        privacyPolicy.setMovementMethod(LinkMovementMethod.getInstance());
-        privacyPolicy.setText(spannableString);
+//        final SpannableString spannableString = new SpannableString(privacyPolicy.getText());
+//        privacyPolicy.setHighlightColor(Color.TRANSPARENT);
+//        spannableString.setSpan(new MyClickableSpan(privacyPolicy.getText().toString()) {
+//            @Override
+//            public void onClick(View tv) {
+//                TermsOfServiceActivity.show(getContext());
+//            }
+//        }, 32,48, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//        spannableString.setSpan(new MyClickableSpan(privacyPolicy.getText().toString()) {
+//            @Override
+//            public void onClick(View tv) {
+//                PrivacyPolicyActivity.show(getContext());
+//                tv.invalidate();
+//            }
+//        }, 53, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//        privacyPolicy.setMovementMethod(LinkMovementMethod.getInstance());
+//        privacyPolicy.setText(spannableString);
 
         if (attrs != null) {
             TypedArray arr = getContext().obtainStyledAttributes(attrs, R.styleable.LoginView);
