@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f6f6f6"
+    android:paddingLeft="25dp"
+    android:paddingRight="25dp">
+
+    <LinearLayout
+        android:id="@+id/input_area"
+        android:background="@drawable/email_password_background"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:layout_marginTop="37dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <EditText
+            android:layout_width="match_parent"
+            android:gravity="center_vertical"
+            android:hint="Email"
+            android:lines="1"
+            android:textColorHint="#a3a3a3"
+            android:textColor="@color/black_text"
+            android:layout_height="55dp"
+            android:background="@android:color/transparent"/>
+        <ImageView style="@style/DividerStyleFull"/>
+        <EditText
+            android:textColorHint="#a3a3a3"
+            android:layout_width="match_parent"
+            android:gravity="center_vertical"
+            android:hint="Password"
+            android:textColor="@color/black_text"
+            android:layout_height="55dp"
+            android:lines="1"
+            android:background="@android:color/transparent"/>
+    </LinearLayout>
+    
+    <Button
+        android:id="@+id/btn_sign_up"
+        android:layout_marginTop="15dp"
+        android:layout_below="@+id/input_area"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        style="@style/OrangeButtons"
+        android:text="sign up"/>
+
+    <TextView
+        android:id="@+id/forgot_password"
+        android:layout_below="@+id/btn_sign_up"
+        android:layout_width="match_parent"
+        android:textColor="#bbbbbb"
+        android:layout_marginTop="16dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Forgot password?"/>
+
+    <LinearLayout
+        android:id="@+id/fb_custom"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@+id/forgot_password"
+        android:layout_marginTop="58dp"
+        android:background="@drawable/fb_login_btn_background"
+        android:orientation="horizontal"
+        android:gravity="center">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_facebook"/>
+        <TextView
+            android:layout_marginLeft="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:fontFamily="sans-serif-medium"
+            android:text="Sign in with Facebook"
+            android:textColor="@color/white"/>
+        </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/custom_google"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@+id/fb_custom"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/google_login_button"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_google"/>
+        <TextView
+            android:layout_marginLeft="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:fontFamily="sans-serif-medium"
+            android:text="Sign in with Google"
+            android:textColor="@color/white"/>
+
+        </LinearLayout>
+
+    <TextView
+        android:layout_alignParentBottom="true"
+        android:id="@+id/privacy_policy"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:textColor="#a3a3a3"
+        android:text="@string/show_privacy_policy"
+        />
+</RelativeLayout>

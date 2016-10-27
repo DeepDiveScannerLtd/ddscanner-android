@@ -238,6 +238,9 @@
         <activity
             android:name=".ui.activities.AchievementsActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activities.SignUpActivity"
+            android:screenOrientation="portrait"/>
 
         <receiver
             android:name="com.google.android.gms.gcm.GcmReceiver"
