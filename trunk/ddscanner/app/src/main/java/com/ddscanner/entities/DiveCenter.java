@@ -11,10 +11,10 @@ import java.io.Serializable;
 /**
  * Created by lashket on 5.2.16.
  */
-public class DiveCenter implements Parcelable, ClusterItem {
+public class DiveCenter implements Parcelable, ClusterItem, Comparable<DiveCenter> {
 
     private String id;
-    private String name;
+    private String name = "";
     private String email;
     private String phone;
     private String lat;
@@ -144,5 +144,10 @@ public class DiveCenter implements Parcelable, ClusterItem {
             latLng = new LatLng(Double.valueOf(lat), Double.valueOf(lng));
         }
         return latLng;
+    }
+
+    @Override
+    public int compareTo(DiveCenter diveCenter) {
+        return name.compareTo(diveCenter.getName());
     }
 }
