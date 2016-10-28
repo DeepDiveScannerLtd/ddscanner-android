@@ -52,12 +52,14 @@
         android:orientation="vertical"
         android:layout_marginBottom="53dp">
         <Button
+            android:id="@+id/sign_up"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             style="@style/OrangeButtons"
             android:text="@string/sign_up"/>
 
         <Button
+            android:id="@+id/login"
             android:layout_marginTop="13dp"
             android:layout_width="match_parent"
             android:layout_height="50dp"

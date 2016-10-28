@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -27,7 +28,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.squareup.otto.Subscribe;
 
-public class SplashActivity extends BaseAppCompatActivity implements InfoDialogFragment.DialogClosedListener {
+public class SplashActivity extends BaseAppCompatActivity implements InfoDialogFragment.DialogClosedListener, View.OnClickListener {
 
     private static final String TAG = SplashActivity.class.getName();
 
@@ -37,6 +38,8 @@ public class SplashActivity extends BaseAppCompatActivity implements InfoDialogF
 
     private TextView progressMessage;
     private TextView skip;
+    private Button signUpButton;
+    private Button loginButton;
 
     private DDScannerRestClient.ResultListener<Void> identifyResultListener = new DDScannerRestClient.ResultListener<Void>() {
         @Override
@@ -81,13 +84,12 @@ public class SplashActivity extends BaseAppCompatActivity implements InfoDialogF
 
         progressMessage = (TextView) findViewById(R.id.message);
         skip = (TextView) findViewById(R.id.skip);
+        loginButton = (Button) findViewById(R.id.login);
+        signUpButton = (Button) findViewById(R.id.sign_up);
 
-        skip.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showMainActivity();
-            }
-        });
+        skip.setOnClickListener(this);
+        loginButton.setOnClickListener(this);
+        signUpButton.setOnClickListener(this);
 
         LinearLayout mainLayout = (LinearLayout) findViewById(R.id.main);
         Animation fadeInAnimation = AnimationUtils.loadAnimation(this, R.anim.fadein);
@@ -198,6 +200,21 @@ public class SplashActivity extends BaseAppCompatActivity implements InfoDialogF
             case DialogsRequestCodes.DRC_SPLASH_ACTIVITY_UNEXPECTED_ERROR:
             case DialogsRequestCodes.DRC_SPLASH_ACTIVITY_FAILED_TO_CONNECT:
                 finish();
+                break;
+        }
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.skip:
+                showMainActivity();
+                break;
+            case R.id.login:
+                SignUpActivity.show(this, false);
+                break;
+            case R.id.sign_up:
+                SignUpActivity.show(this, true);
                 break;
         }
     }

@@ -327,4 +327,6 @@
     <string name="skip">SKIP</string>
     <string name="diver">Diver</string>
     <string name="dive_cente">Dive Center</string>
+    <string name="sign_up_toolbar">Sign Up</string>
+    <string name="login_toolbar">Login</string>
 </resources>
