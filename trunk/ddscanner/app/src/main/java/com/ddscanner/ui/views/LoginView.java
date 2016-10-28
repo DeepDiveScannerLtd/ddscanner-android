@@ -18,6 +18,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ddscanner.R;
+import com.ddscanner.ui.activities.ForgotPasswordActivity;
 import com.ddscanner.ui.activities.PrivacyPolicyActivity;
 import com.ddscanner.ui.activities.TermsOfServiceActivity;
 
@@ -33,6 +34,7 @@ public class LoginView extends RelativeLayout implements View.OnClickListener {
     private Button buttonSubmitData;
     private LinearLayout loginWithFacebook;
     private LinearLayout loginWithGoogle;
+    private TextView forgotPasswordView;
 
     public LoginView(Context context) {
         super(context);
@@ -65,6 +67,9 @@ public class LoginView extends RelativeLayout implements View.OnClickListener {
         buttonSubmitData = (Button) findViewById(R.id.btn_sign_up);
         loginWithFacebook = (LinearLayout) findViewById(R.id.fb_custom);
         loginWithGoogle = (LinearLayout) findViewById(R.id.custom_google);
+        forgotPasswordView = (TextView) findViewById(R.id.forgot_password);
+
+        forgotPasswordView.setOnClickListener(this);
         signUpButton.setOnClickListener(this);
         loginButton.setOnClickListener(this);
 
@@ -146,6 +151,9 @@ public class LoginView extends RelativeLayout implements View.OnClickListener {
                 break;
             case R.id.privacy_policy:
                 PrivacyPolicyActivity.show(getContext());
+                break;
+            case R.id.forgot_password:
+                ForgotPasswordActivity.show(getContext());
                 break;
         }
     }

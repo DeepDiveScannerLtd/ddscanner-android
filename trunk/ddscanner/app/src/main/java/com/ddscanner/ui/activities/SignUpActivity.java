@@ -24,7 +24,7 @@ import android.widget.TextView;
 import com.ddscanner.R;
 import com.ddscanner.ui.views.LoginView;
 
-public class SignUpActivity extends AppCompatActivity {
+public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
 
     private TabLayout tabLayout;
     private Toolbar toolbar;
@@ -34,6 +34,7 @@ public class SignUpActivity extends AppCompatActivity {
     private MenuItem signMenuItem;
     private boolean isRegister;
     private TextView privacyPolicy;
+    private TextView forgotPasswordView;
 
     private boolean isSignUpScreen = true;
 
@@ -58,10 +59,12 @@ public class SignUpActivity extends AppCompatActivity {
         googleLogin = (LinearLayout) findViewById(R.id.custom_google);
         buttonSignUp = (Button) findViewById(R.id.btn_sign_up);
         privacyPolicy = (TextView) findViewById(R.id.privacy_policy);
+        forgotPasswordView = (TextView) findViewById(R.id.forgot_password);
         setUi();
     }
 
     private void setUi() {
+        forgotPasswordView.setOnClickListener(this);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);
@@ -135,6 +138,15 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.forgot_password:
+                ForgotPasswordActivity.show(this);
+                break;
+        }
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
@@ -162,4 +174,5 @@ public class SignUpActivity extends AppCompatActivity {
             ds.setUnderlineText(false);
         }
     }
+
 }
