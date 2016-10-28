@@ -17,6 +17,9 @@ android {
             storeFile file('../../../build/debug.keystore')
         }
     }
+    dataBinding {
+        enabled = true
+    }
     compileSdkVersion 24
     buildToolsVersion "24.0.2"
     defaultConfig {
@@ -50,7 +53,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
 }
 repositories {
     mavenCentral()
