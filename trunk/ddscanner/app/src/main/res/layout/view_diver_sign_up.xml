@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    android:id="@+id/sign_up_view"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#f6f6f6"
-    android:paddingLeft="25dp"
-    android:paddingRight="25dp">
-
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#f6f6f6">
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tab_layout"
+        style="@style/tabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@color/white"
+        app:tabMode="fixed" />
+    <RelativeLayout
+        android:layout_below="@+id/tab_layout"
+        android:paddingLeft="25dp"
+        android:paddingRight="25dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <LinearLayout
         android:id="@+id/input_area"
         android:background="@drawable/email_password_background"
@@ -60,7 +73,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_below="@+id/forgot_password"
-        android:layout_marginTop="58dp"
+        android:layout_marginTop="68dp"
         android:background="@drawable/fb_login_btn_background"
         android:orientation="horizontal"
         android:gravity="center">
@@ -109,8 +122,9 @@
         android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="12dp"
         android:textColor="#a3a3a3"
         android:text="@string/show_privacy_policy"
         />
+    </RelativeLayout>
 </RelativeLayout>

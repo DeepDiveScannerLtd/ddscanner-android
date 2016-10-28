@@ -7,7 +7,11 @@
     android:layout_gravity="center"
     android:background="@color/white"
     android:gravity="center">
-
+    <RelativeLayout
+        android:id="@+id/login_view_first"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <ImageView
         android:id="@+id/icon"
         android:layout_width="wrap_content"
@@ -32,7 +36,7 @@
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp"
         android:text="@string/sign_up"
-        android:id="@+id/fb_custom"
+        android:id="@+id/sign_up"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_below="@+id/need_to_login_message"
@@ -43,15 +47,17 @@
     <Button
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp"
-        android:id="@+id/custom_google"
+        android:id="@+id/login"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_below="@+id/fb_custom"
+        android:layout_below="@+id/sign_up"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="13dp"
         android:text="@string/login"
         android:textColor="@color/white"
         android:background="@drawable/primary_button" />
-
-
+    </RelativeLayout>
+    <include
+        android:visibility="gone"
+        layout="@layout/view_diver_sign_up" />
 </RelativeLayout>

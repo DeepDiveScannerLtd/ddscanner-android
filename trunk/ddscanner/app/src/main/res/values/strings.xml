@@ -324,4 +324,7 @@
     <string name="leave">leave</string>
     <string name="sign_up">sign up</string>
     <string name="login">login</string>
+    <string name="skip">SKIP</string>
+    <string name="diver">Diver</string>
+    <string name="dive_cente">Dive Center</string>
 </resources>

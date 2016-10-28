@@ -109,6 +109,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
     private LinearLayout showAllEdited;
     private LinearLayout aboutDDsLayout;
     private RelativeLayout likeLayout;
+    private RelativeLayout signView;
     private LinearLayout dislikeLayout;
     private LinearLayout commentsLayout;
     private CustomSwipeRefreshLayout swipeRefreshLayout;
@@ -324,6 +325,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
         likeLayout = (RelativeLayout) v.findViewById(R.id.likeLayout);
         dislikeLayout = (LinearLayout) v.findViewById(R.id.dislikeLayout);
         commentsLayout = (LinearLayout) v.findViewById(R.id.comments_layout);
+        signView = (RelativeLayout) v.findViewById(R.id.sign_up_view);
         swipeRefreshLayout = (CustomSwipeRefreshLayout) v.findViewById(R.id.swiperefresh);
 
         swipeRefreshLayout.setSwipeableChildren(R.id.about);
@@ -713,5 +715,9 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
     @Override
     public void onRefresh() {
         DDScannerApplication.getDdScannerRestClient().getUserInformation(SharedPreferenceHelper.getUserServerId(), getUserInformationResultListener);
+    }
+
+    public void showSignUView() {
+
     }
 }
