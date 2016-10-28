@@ -8,12 +8,14 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -63,6 +65,7 @@ public class LoginActivity extends AppCompatActivity
 
     private GoogleApiClient mGoogleApiClient;
     private MaterialDialog materialDialog;
+    private Toolbar toolbar;
 
     private LoginResultListener loginResultListener = new LoginResultListener();
 
@@ -74,61 +77,66 @@ public class LoginActivity extends AppCompatActivity
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_social_login);
-        TextView privacyPolicy = (TextView) findViewById(R.id.privacy_policy);
-        ImageView close = (ImageView) findViewById(R.id.close);
-        materialDialog = Helpers.getMaterialDialog(this);
-        close.setOnClickListener(this);
-        final SpannableString spannableString = new SpannableString(privacyPolicy.getText());
-        privacyPolicy.setHighlightColor(Color.TRANSPARENT);
-        spannableString.setSpan(new MyClickableSpan(privacyPolicy.getText().toString()) {
-            @Override
-            public void onClick(View tv) {
-                TermsOfServiceActivity.show(LoginActivity.this);
-            }
-        }, 32, 48, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannableString.setSpan(new MyClickableSpan(privacyPolicy.getText().toString()) {
-            @Override
-            public void onClick(View tv) {
-                PrivacyPolicyActivity.show(LoginActivity.this);
-                tv.invalidate();
-            }
-        }, 53, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        privacyPolicy.setMovementMethod(LinkMovementMethod.getInstance());
-        privacyPolicy.setText(spannableString);
-
-        callbackManager = CallbackManager.Factory.create();
-        Button fbCustomLogin = (Button) findViewById(R.id.fb_custom);
-        fbCustomLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (AccessToken.getCurrentAccessToken() == null) {
-                    fbLogin();
-                    Log.i(TAG, "LOGED IN");
-                } else {
-                    LoginManager.getInstance().logOut();
-                    fbLogin();
-                    Log.i(TAG, "LOGGED OUT");
-                }
-            }
-        });
-        GoogleSignInOptions gso = new GoogleSignInOptions
-                .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken("195706914618-ist9f8ins485k2gglbomgdp4l2pn57iq.apps.googleusercontent.com")
-                .requestEmail()
-                .build();
-
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, this)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
-        Button googleCustomSignIn = (Button) findViewById(R.id.custom_google);
-        googleCustomSignIn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                googleLogin();
-            }
-        });
+        setContentView(R.layout.activity_login_to_continue);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(R.string.login_high);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_close);
+//        TextView privacyPolicy = (TextView) findViewById(R.id.privacy_policy);
+//        ImageView close = (ImageView) findViewById(R.id.close);
+//        materialDialog = Helpers.getMaterialDialog(this);
+//        close.setOnClickListener(this);
+//        final SpannableString spannableString = new SpannableString(privacyPolicy.getText());
+//        privacyPolicy.setHighlightColor(Color.TRANSPARENT);
+//        spannableString.setSpan(new MyClickableSpan(privacyPolicy.getText().toString()) {
+//            @Override
+//            public void onClick(View tv) {
+//                TermsOfServiceActivity.show(LoginActivity.this);
+//            }
+//        }, 32, 48, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//        spannableString.setSpan(new MyClickableSpan(privacyPolicy.getText().toString()) {
+//            @Override
+//            public void onClick(View tv) {
+//                PrivacyPolicyActivity.show(LoginActivity.this);
+//                tv.invalidate();
+//            }
+//        }, 53, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//        privacyPolicy.setMovementMethod(LinkMovementMethod.getInstance());
+//        privacyPolicy.setText(spannableString);
+//
+//        callbackManager = CallbackManager.Factory.create();
+//        Button fbCustomLogin = (Button) findViewById(R.id.fb_custom);
+//        fbCustomLogin.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (AccessToken.getCurrentAccessToken() == null) {
+//                    fbLogin();
+//                    Log.i(TAG, "LOGED IN");
+//                } else {
+//                    LoginManager.getInstance().logOut();
+//                    fbLogin();
+//                    Log.i(TAG, "LOGGED OUT");
+//                }
+//            }
+//        });
+//        GoogleSignInOptions gso = new GoogleSignInOptions
+//                .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+//                .requestIdToken("195706914618-ist9f8ins485k2gglbomgdp4l2pn57iq.apps.googleusercontent.com")
+//                .requestEmail()
+//                .build();
+//
+//        mGoogleApiClient = new GoogleApiClient.Builder(this)
+//                .enableAutoManage(this, this)
+//                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+//                .build();
+//        Button googleCustomSignIn = (Button) findViewById(R.id.custom_google);
+//        googleCustomSignIn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                googleLogin();
+//            }
+//        });
     }
 
     private void fbLogin() {
@@ -320,5 +328,15 @@ public class LoginActivity extends AppCompatActivity
                     InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_LOGIN_ACTIVITY_UNEXPECTED_ERROR, false);
             }
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

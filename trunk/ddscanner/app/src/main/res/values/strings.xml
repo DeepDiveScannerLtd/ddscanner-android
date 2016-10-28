@@ -333,4 +333,6 @@
     <string name="ema">Email</string>
     <string name="send_forgot">send</string>
     <string name="forgot_password">Forgot password</string>
+    <string name="login_to_continuee">Login to continue</string>
+    <string name="login_high">Login</string>
 </resources>
