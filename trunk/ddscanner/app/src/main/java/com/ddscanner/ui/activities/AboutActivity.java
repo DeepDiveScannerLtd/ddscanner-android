@@ -53,7 +53,7 @@ public class AboutActivity extends AppCompatActivity {
         aboutScreenItems.add(new AboutScreenItem(R.drawable.ic_list_policy, getString(R.string.privacy_policy), new Intent(this, PrivacyPolicyActivity.class)));
         aboutScreenItems.add(new AboutScreenItem(R.drawable.ic_list_about, getString(R.string.about_dds), new Intent(this, AboutDDSActivity.class)));
         aboutScreenItems.add(new AboutScreenItem(R.drawable.ic_list_contact, getString(R.string.contact_us), new Intent(this, ContactUsActivity.class)));
-        aboutScreenItems.add(new AboutScreenItem(R.drawable.ic_list_contact, getString(R.string.lienes), new Intent(this, LicensesActivity.class)));
+        aboutScreenItems.add(new AboutScreenItem(R.drawable.ic_list_license, getString(R.string.lienes), new Intent(this, LicensesActivity.class)));
 
         recyclerView.setAdapter(new AboutListAdapter((ArrayList<AboutScreenItem>) aboutScreenItems, this));
 
