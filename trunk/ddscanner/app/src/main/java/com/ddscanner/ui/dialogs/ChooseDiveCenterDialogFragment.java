@@ -44,7 +44,7 @@ public class ChooseDiveCenterDialogFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         View view = getActivity().getLayoutInflater().inflate(R.layout.dialog_choose_dive_center, null);
         radioGroup = (RadioGroup) view.findViewById(R.id.radio_group);
-        searchView = (SearchView) view.findViewById(R.id.searchview);
+       // searchView = (SearchView) view.findViewById(R.id.searchview);
         for (int i = 0; i < 25; i++) {
             AppCompatRadioButton appCompatRadioButton = new AppCompatRadioButton(getContext());
             appCompatRadioButton.setSupportButtonTintList(colorStateList);
@@ -62,7 +62,7 @@ public class ChooseDiveCenterDialogFragment extends DialogFragment {
         super.onStart();
         if (getDialog() == null)
             return;
-        int dialogWidth = Math.round(Helpers.convertDpToPixel(280, getActivity()));
+        int dialogWidth = Math.round(Helpers.convertDpToPixel(300, getActivity()));
         int dialogHeight = LinearLayout.LayoutParams.WRAP_CONTENT;
         getDialog().getWindow().setLayout(dialogWidth, dialogHeight);
     }
