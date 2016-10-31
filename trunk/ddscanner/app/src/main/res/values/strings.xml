@@ -335,4 +335,10 @@
     <string name="forgot_password">Forgot password</string>
     <string name="login_to_continuee">Login to continue</string>
     <string name="login_high">Login</string>
+    <string name="email_input">Email</string>
+    <string name="password">Password</string>
+    <string name="sign_up_btn">sign up</string>
+    <string name="forgot_password_btn">Forgot password?</string>
+    <string name="sign_in_with_facebook">Sign in with Facebook</string>
+    <string name="sign_in_with_google">Sign in with Google</string>
 </resources>

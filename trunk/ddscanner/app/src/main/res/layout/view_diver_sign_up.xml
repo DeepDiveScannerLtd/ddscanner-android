@@ -31,7 +31,7 @@
         <EditText
             android:layout_width="match_parent"
             android:gravity="center_vertical"
-            android:hint="Email"
+            android:hint="@string/email_input"
             android:lines="1"
             android:textColorHint="#a3a3a3"
             android:textColor="@color/black_text"
@@ -39,10 +39,11 @@
             android:background="@android:color/transparent"/>
         <ImageView style="@style/DividerStyleFull"/>
         <EditText
+            android:inputType="textPassword"
             android:textColorHint="#a3a3a3"
             android:layout_width="match_parent"
             android:gravity="center_vertical"
-            android:hint="Password"
+            android:hint="@string/password"
             android:textColor="@color/black_text"
             android:layout_height="55dp"
             android:lines="1"
@@ -56,7 +57,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         style="@style/OrangeButtons"
-        android:text="sign up"/>
+        android:text="@string/sign_up_btn"/>
 
     <TextView
         android:id="@+id/forgot_password"
@@ -66,7 +67,7 @@
         android:layout_marginTop="16dp"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="Forgot password?"/>
+        android:text="@string/forgot_password_btn"/>
 
     <LinearLayout
         android:id="@+id/fb_custom"
@@ -87,7 +88,7 @@
             android:layout_height="wrap_content"
             android:textSize="15sp"
             android:fontFamily="sans-serif-medium"
-            android:text="Sign in with Facebook"
+            android:text="@string/sign_in_with_facebook"
             android:textColor="@color/white"/>
         </LinearLayout>
 
@@ -111,7 +112,7 @@
             android:layout_height="wrap_content"
             android:textSize="15sp"
             android:fontFamily="sans-serif-medium"
-            android:text="Sign in with Google"
+            android:text="@string/sign_in_with_google"
             android:textColor="@color/white"/>
 
         </LinearLayout>
