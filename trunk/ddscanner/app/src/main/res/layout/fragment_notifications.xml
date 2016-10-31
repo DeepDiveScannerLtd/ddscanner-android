@@ -35,6 +35,7 @@
         android:layout_below="@id/notif_tab_layout"
         android:visibility="gone" />
     <com.ddscanner.ui.views.LoginView
+        android:id="@+id/login_view"
         app:title="@string/notifications_need_to_login"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

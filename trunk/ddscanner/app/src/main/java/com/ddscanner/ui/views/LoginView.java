@@ -17,7 +17,9 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.events.SignupLoginButtonClicked;
 import com.ddscanner.ui.activities.ForgotPasswordActivity;
 import com.ddscanner.ui.activities.PrivacyPolicyActivity;
 import com.ddscanner.ui.activities.TermsOfServiceActivity;
@@ -141,12 +143,14 @@ public class LoginView extends RelativeLayout implements View.OnClickListener {
                 signView.setVisibility(VISIBLE);
                 loginView.setVisibility(GONE);
                 buttonSubmitData.setText(R.string.sign_up);
+                DDScannerApplication.bus.post(new SignupLoginButtonClicked(true));
                 //DDScannerApplication.bus.post(new LoginViaFacebookClickEvent());
                 break;
             case R.id.login:
                 loginView.setVisibility(GONE);
                 signView.setVisibility(VISIBLE);
                 buttonSubmitData.setText(R.string.login);
+                DDScannerApplication.bus.post(new SignupLoginButtonClicked(true));
                 //DDScannerApplication.bus.post(new LoginViaGoogleClickEvent());
                 break;
             case R.id.privacy_policy:
@@ -167,6 +171,11 @@ public class LoginView extends RelativeLayout implements View.OnClickListener {
     private void changeSocialButtonsState(int visibility) {
         loginWithFacebook.setVisibility(visibility);
         loginWithGoogle.setVisibility(visibility);
+    }
+
+    public void changeViewToStart() {
+        loginView.setVisibility(VISIBLE);
+        signView.setVisibility(GONE);
     }
 
     class MyClickableSpan extends ClickableSpan {

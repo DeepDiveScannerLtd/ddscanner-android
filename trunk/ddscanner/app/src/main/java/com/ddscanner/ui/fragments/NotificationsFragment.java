@@ -25,6 +25,7 @@ import com.ddscanner.events.ChangePageOfMainViewPagerEvent;
 import com.ddscanner.events.GetNotificationsEvent;
 import com.ddscanner.events.LoggedOutEvent;
 import com.ddscanner.rest.DDScannerRestClient;
+import com.ddscanner.ui.activities.ChangeLoginViewEvent;
 import com.ddscanner.ui.activities.MainActivity;
 import com.ddscanner.ui.adapters.NotificationsPagerAdapter;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
@@ -50,6 +51,7 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
     private ViewPager notificationsViewPager;
     private RelativeLayout loginView;
     private ProgressView progressView;
+    private LoginView customLoginView;
     private AllNotificationsFragment allNotificationsFragment = new AllNotificationsFragment();
     private ActivityNotificationsFragment activityNotificationsFragment = new ActivityNotificationsFragment();
     private boolean isViewNull = true;
@@ -146,6 +148,7 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
         notificationsViewPager.addOnPageChangeListener(this);
         swipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swiperefresh);
         swipeRefreshLayout.setOnRefreshListener(this);
+        customLoginView = (LoginView) v.findViewById(R.id.login_view);
     }
 
     private void setUpTabLayout() {
@@ -335,5 +338,10 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
     @Override
     public void onRefresh() {
         DDScannerApplication.getDdScannerRestClient().getUserNotifications(notificationsResultListener);
+    }
+
+    @Subscribe
+    public void changeLoginView(ChangeLoginViewEvent event) {
+        customLoginView.changeViewToStart();
     }
 }

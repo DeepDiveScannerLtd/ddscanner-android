@@ -31,7 +31,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
-import com.ddscanner.entities.AchievmentProfile;
 import com.ddscanner.entities.DiveSpotListSource;
 import com.ddscanner.entities.ProfileAchievement;
 import com.ddscanner.entities.User;
@@ -44,6 +43,7 @@ import com.ddscanner.events.TakePhotoFromCameraEvent;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.activities.AboutActivity;
 import com.ddscanner.ui.activities.AchievementsActivity;
+import com.ddscanner.ui.activities.ChangeLoginViewEvent;
 import com.ddscanner.ui.activities.DiveSpotsListActivity;
 import com.ddscanner.ui.activities.MainActivity;
 import com.ddscanner.ui.activities.SelfCommentsActivity;
@@ -119,6 +119,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
     private RecyclerView achievmentRecyclerView;
     private RelativeLayout showAchivementDetails;
     private TextView noAchievements;
+    private LoginView customLoginView;
     private boolean isClickedChosingPhotoButton = false;
     private boolean isAboutChanged = false;
     private boolean isNamChanged = false;
@@ -327,7 +328,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
         commentsLayout = (LinearLayout) v.findViewById(R.id.comments_layout);
         signView = (RelativeLayout) v.findViewById(R.id.sign_up_view);
         swipeRefreshLayout = (CustomSwipeRefreshLayout) v.findViewById(R.id.swiperefresh);
-
+        customLoginView = (LoginView) v.findViewById(R.id.login_view);
         swipeRefreshLayout.setSwipeableChildren(R.id.about);
 
         swipeRefreshLayout.setOnRefreshListener(this);
@@ -477,6 +478,11 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
 //        if (!getUserVisibleHint()) {
 //            return;
 //        }
+    }
+
+    @Subscribe
+    public void changeLoginView(ChangeLoginViewEvent event) {
+        customLoginView.changeViewToStart();
     }
 
     @Subscribe

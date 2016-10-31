@@ -49,6 +49,7 @@ import com.ddscanner.events.OpenAddDsActivityAfterLogin;
 import com.ddscanner.events.PickPhotoFromGallery;
 import com.ddscanner.events.PlaceChoosedEvent;
 import com.ddscanner.events.ShowLoginActivityIntent;
+import com.ddscanner.events.SignupLoginButtonClicked;
 import com.ddscanner.events.TakePhotoFromCameraEvent;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.adapters.MainActivityPagerAdapter;
@@ -116,6 +117,7 @@ public class MainActivity extends BaseAppCompatActivity
     private boolean isTryToOpenAddDiveSpotActivity = false;
     private boolean isDiveSpotInfoWindowShown = false;
     private boolean isDiveSpotListIsShown = false;
+    private boolean isSignupClicked = false;
     private int positionToScroll;
 
     private CallbackManager facebookCallbackManager;
@@ -270,6 +272,10 @@ public class MainActivity extends BaseAppCompatActivity
 
     @Override
     public void onPageSelected(int position) {
+        if (position != 0 && isSignupClicked) {
+            DDScannerApplication.bus.post(new ChangeLoginViewEvent());
+            isSignupClicked = !isSignupClicked;
+        }
         switch (position) {
             case 0:
                 showSearchFilterMenuItems();
@@ -672,7 +678,12 @@ public class MainActivity extends BaseAppCompatActivity
     @Override
     public void onBackPressed() {
         if (mainViewPager.getCurrentItem() != 0) {
-            DDScannerApplication.bus.post(new ChangePageOfMainViewPagerEvent(0));
+            if (!isSignupClicked) {
+                DDScannerApplication.bus.post(new ChangePageOfMainViewPagerEvent(0));
+                return;
+            }
+            DDScannerApplication.bus.post(new ChangeLoginViewEvent());
+            isSignupClicked = !isSignupClicked;
             return;
         }
         if (isDiveSpotListIsShown) {
@@ -848,4 +859,10 @@ public class MainActivity extends BaseAppCompatActivity
             }
         }
     }
+
+    @Subscribe
+    public void chengeLoginView(SignupLoginButtonClicked event) {
+        isSignupClicked = event.isShowing();
+    }
+
 }
