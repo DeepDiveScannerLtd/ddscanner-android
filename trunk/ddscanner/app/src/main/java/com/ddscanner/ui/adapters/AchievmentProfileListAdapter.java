@@ -24,9 +24,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import de.hdodenhof.circleimageview.CircleImageView;
-import jp.wasabeef.picasso.transformations.CropCircleTransformation;
-
 public class AchievmentProfileListAdapter extends RecyclerView.Adapter<AchievmentProfileListAdapter.AchievmentProfileListViewHolder> {
 
     private ArrayList<ProfileAchievement> achievmentProfiles;
