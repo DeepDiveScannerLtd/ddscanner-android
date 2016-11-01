@@ -44,7 +44,7 @@ import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 
-public class DDScannerRestClient {
+public class DDScannerRestClient implements DDScannerRestClientContract {
 
     private Gson gson = new Gson();
 
@@ -456,6 +456,11 @@ public class DDScannerRestClient {
                 resultListener.onSuccess(achievmentsResponseEntity);
             }
         });
+    }
+
+    @Override
+    public void getSeaLifeDetails(String seaLifeId, @NonNull ResultListener<Sealife> resultListener) {
+        // TODO Implement
     }
 
     private ReportRequest getReportRequest(String reportType, String reportDescription) {
