@@ -17,12 +17,12 @@ android {
             storeFile file('../../../build/debug.keystore')
         }
     }
-    compileSdkVersion 24
-    buildToolsVersion "24.0.2"
+    compileSdkVersion 25
+    buildToolsVersion "25"
     defaultConfig {
         applicationId "com.ddscanner"
         minSdkVersion 16
-        targetSdkVersion 23
+        targetSdkVersion 25
         multiDexEnabled true
         versionCode 23
         versionName "2.0.17"
@@ -58,8 +58,8 @@ repositories {
     maven { url "https://jitpack.io" }
 }
 
-def playServicesVersion="9.6.1"
-def supportVersionVersion="24.2.1"
+def playServicesVersion="9.8.0"
+def supportVersionVersion="25.0.0"
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
