@@ -4,6 +4,8 @@ package com.ddscanner.rest;
 import com.ddscanner.entities.request.IdentifyRequest;
 import com.ddscanner.entities.request.RegisterRequest;
 import com.ddscanner.entities.request.ReportRequest;
+import com.ddscanner.entities.request.SignInRequest;
+import com.ddscanner.entities.request.SignUpRequest;
 import com.ddscanner.entities.request.ValidationRequest;
 
 import java.util.List;
@@ -267,4 +269,10 @@ public interface DDScannerRestService {
 
     @GET("diving/user/{id}/achievements")
     Call<ResponseBody> getUserAchievements(@Path("id") String id, @QueryMap Map<String, String> map);
+
+    @POST("v2_0/user.login")
+    Call<ResponseBody> loginUser(@Body SignInRequest signInRequest);
+
+    @POST("v2_0/user.signUp")
+    Call<ResponseBody> signUpUser(@Body SignUpRequest signUpRequest);
 }
