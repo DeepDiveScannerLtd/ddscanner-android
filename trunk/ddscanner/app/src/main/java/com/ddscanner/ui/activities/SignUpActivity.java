@@ -48,7 +48,9 @@ import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.squareup.otto.Subscribe;
@@ -105,6 +107,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
     private void setUi() {
         forgotPasswordView.setOnClickListener(this);
+        googleLogin.setOnClickListener(this);
+        fbLogin.setOnClickListener(this);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);
@@ -182,6 +186,17 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         switch (view.getId()) {
             case R.id.forgot_password:
                 ForgotPasswordActivity.show(this);
+                break;
+            case R.id.fb_custom:
+                if (AccessToken.getCurrentAccessToken() == null) {
+                    fbLogin();
+                } else {
+                    LoginManager.getInstance().logOut();
+                    fbLogin();
+                }
+                break;
+            case R.id.custom_google:
+                googleSignIn();
                 break;
         }
     }
@@ -338,30 +353,26 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
-    @Subscribe
-    public void onLoginViaFacebookClick(LoginViaFacebookClickEvent event) {
-        if (AccessToken.getCurrentAccessToken() == null) {
-            fbLogin();
-        } else {
-            LoginManager.getInstance().logOut();
-            fbLogin();
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_CHOSE_GOOGLE_ACCOUNT:
+                GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+                if (result.isSuccess()) {
+                    GoogleSignInAccount acct = result.getSignInAccount();
+                    if (acct == null) {
+                        Helpers.handleUnexpectedServerError(getSupportFragmentManager(), "google_login", "result.getSignInAccount() returned null");
+                    } else {
+                        String idToken = acct.getIdToken();
+                        sendLoginRequest(SharedPreferenceHelper.getUserAppId(), SignInType.GOOGLE, idToken);
+                    }
+                }
+                break;
+            default:
+                if (facebookCallbackManager != null) {
+                    facebookCallbackManager.onActivityResult(requestCode, resultCode, data);
+                }
+                break;
         }
-    }
-
-    @Subscribe
-    public void onLoginViaGoogleClick(LoginViaGoogleClickEvent event) {
-        googleSignIn();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        DDScannerApplication.bus.register(this);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        DDScannerApplication.bus.unregister(this);
     }
 }

@@ -91,6 +91,12 @@ public class SplashActivity extends BaseAppCompatActivity implements InfoDialogF
         loginButton.setOnClickListener(this);
         signUpButton.setOnClickListener(this);
 
+        if (SharedPreferenceHelper.isUserLoggedIn()) {
+            skip.setVisibility(View.GONE);
+            loginButton.setVisibility(View.GONE);
+            signUpButton.setVisibility(View.GONE);
+        }
+
         LinearLayout mainLayout = (LinearLayout) findViewById(R.id.main);
         Animation fadeInAnimation = AnimationUtils.loadAnimation(this, R.anim.fadein);
 
@@ -215,6 +221,18 @@ public class SplashActivity extends BaseAppCompatActivity implements InfoDialogF
                 break;
             case R.id.sign_up:
                 SignUpActivity.showForResult(this, true, ActivitiesRequestCodes.REQUEST_CODE_SPLASH_ACTIVITY_SIGN_UP);
+                break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case ActivitiesRequestCodes.REQUEST_CODE_SPLASH_ACTIVITY_SIGN_UP:
+            case ActivitiesRequestCodes.REQUEST_CODE_SPLASH_ACTIVITY_LOGIN:
+                if (resultCode == RESULT_OK) {
+                    showMainActivity();
+                }
                 break;
         }
     }
