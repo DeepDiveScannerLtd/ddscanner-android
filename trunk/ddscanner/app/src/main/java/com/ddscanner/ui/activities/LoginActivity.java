@@ -67,6 +67,9 @@ public class LoginActivity extends AppCompatActivity
     private MaterialDialog materialDialog;
     private Toolbar toolbar;
 
+    private Button login;
+    private Button signUp;
+
     private LoginResultListener loginResultListener = new LoginResultListener();
 
     public static void show(Context context) {
@@ -78,11 +81,7 @@ public class LoginActivity extends AppCompatActivity
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_to_continue);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(R.string.login_high);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_close);
+        findViews();
 //        TextView privacyPolicy = (TextView) findViewById(R.id.privacy_policy);
 //        ImageView close = (ImageView) findViewById(R.id.close);
 //        materialDialog = Helpers.getMaterialDialog(this);
@@ -137,6 +136,24 @@ public class LoginActivity extends AppCompatActivity
 //                googleLogin();
 //            }
 //        });
+    }
+
+    private void findViews() {
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        signUp = (Button) findViewById(R.id.sign_up);
+        login = (Button) findViewById(R.id.login);
+
+        signUp.setOnClickListener(this);
+        login.setOnClickListener(this);
+
+        setupToolbar();
+    }
+
+    private void setupToolbar() {
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(R.string.login_high);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_close);
     }
 
     private void fbLogin() {
@@ -248,6 +265,12 @@ public class LoginActivity extends AppCompatActivity
                 break;
             case R.id.close:
                 onBackPressed();
+                break;
+            case R.id.login:
+                SignUpActivity.show(this, false);
+                break;
+            case R.id.sign_up:
+                SignUpActivity.show(this, true);
                 break;
         }
     }

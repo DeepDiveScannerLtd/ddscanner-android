@@ -19,6 +19,8 @@ import android.widget.TextView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.events.LoginViaFacebookClickEvent;
+import com.ddscanner.events.LoginViaGoogleClickEvent;
 import com.ddscanner.events.SignupLoginButtonClicked;
 import com.ddscanner.ui.activities.ForgotPasswordActivity;
 import com.ddscanner.ui.activities.PrivacyPolicyActivity;
@@ -74,6 +76,8 @@ public class LoginView extends RelativeLayout implements View.OnClickListener {
         forgotPasswordView.setOnClickListener(this);
         signUpButton.setOnClickListener(this);
         loginButton.setOnClickListener(this);
+        loginWithFacebook.setOnClickListener(this);
+        loginWithGoogle.setOnClickListener(this);
 
         setupTabLayout();
         setPrivacyPolicyText();
@@ -144,20 +148,24 @@ public class LoginView extends RelativeLayout implements View.OnClickListener {
                 loginView.setVisibility(GONE);
                 buttonSubmitData.setText(R.string.sign_up);
                 DDScannerApplication.bus.post(new SignupLoginButtonClicked(true));
-                //DDScannerApplication.bus.post(new LoginViaFacebookClickEvent());
                 break;
             case R.id.login:
                 loginView.setVisibility(GONE);
                 signView.setVisibility(VISIBLE);
                 buttonSubmitData.setText(R.string.login);
                 DDScannerApplication.bus.post(new SignupLoginButtonClicked(true));
-                //DDScannerApplication.bus.post(new LoginViaGoogleClickEvent());
                 break;
             case R.id.privacy_policy:
                 PrivacyPolicyActivity.show(getContext());
                 break;
             case R.id.forgot_password:
                 ForgotPasswordActivity.show(getContext());
+                break;
+            case R.id.fb_custom:
+                DDScannerApplication.bus.post(new LoginViaFacebookClickEvent());
+                break;
+            case R.id.custom_google:
+                DDScannerApplication.bus.post(new LoginViaGoogleClickEvent());
                 break;
         }
     }
