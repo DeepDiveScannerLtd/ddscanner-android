@@ -25,6 +25,7 @@ import com.ddscanner.entities.request.DiveSpotsRequestMap;
 import com.ddscanner.entities.request.IdentifyRequest;
 import com.ddscanner.entities.request.RegisterRequest;
 import com.ddscanner.entities.request.ReportRequest;
+import com.ddscanner.entities.request.SignUpRequest;
 import com.ddscanner.entities.request.ValidationRequest;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
@@ -547,6 +548,11 @@ public class DDScannerRestClient {
         registerRequest.setSocial(socialNetworkName);
         registerRequest.setToken(token);
         return registerRequest;
+    }
+
+    private SignUpRequest getSignUpRequest(String email, String password, String userType, long lat, long lng) {
+        SignUpRequest signUpRequest = new SignUpRequest();
+        return signUpRequest;
     }
 
     public interface ResultListener<T> {
