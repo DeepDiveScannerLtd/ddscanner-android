@@ -31,6 +31,7 @@ import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 
 import org.json.JSONException;
@@ -266,8 +267,8 @@ public class DDScannerRestClient {
         ValidationRequest validationRequest = new ValidationRequest();
         validationRequest.setSocial(SharedPreferenceHelper.getSn());
         validationRequest.setToken(SharedPreferenceHelper.getToken());
-        validationRequest.setAppId(SharedPreferenceHelper.getUserAppId());
-        validationRequest.setpush(SharedPreferenceHelper.getGcmId());
+        validationRequest.setAppId(FirebaseInstanceId.getInstance().getId());
+        validationRequest.setpush(FirebaseInstanceId.getInstance().getToken());
         validationRequest.setValid(isValid);
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().divespotValidation(diveSpotId, validationRequest);
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
@@ -508,8 +509,8 @@ public class DDScannerRestClient {
     private RegisterRequest getRegisterRequest() {
         RegisterRequest registerRequest = new RegisterRequest();
         if (!SharedPreferenceHelper.isUserLoggedIn()) {
-            registerRequest.setAppId(SharedPreferenceHelper.getUserAppId());
-            registerRequest.setpush(SharedPreferenceHelper.getGcmId());
+            registerRequest.setAppId(FirebaseInstanceId.getInstance().getId());
+            registerRequest.setpush(FirebaseInstanceId.getInstance().getToken());
             return registerRequest;
         }
 
@@ -518,14 +519,14 @@ public class DDScannerRestClient {
         if (SharedPreferenceHelper.getSn().equals("tw")) {
             registerRequest.setSecret(SharedPreferenceHelper.getSecret());
         }
-        registerRequest.setAppId(SharedPreferenceHelper.getUserAppId());
-        registerRequest.setpush(SharedPreferenceHelper.getGcmId());
+        registerRequest.setAppId(FirebaseInstanceId.getInstance().getId());
+        registerRequest.setpush(FirebaseInstanceId.getInstance().getToken());
         return registerRequest;
     }
 
     private IdentifyRequest getUserIdentifyData(String lat, String lng) {
         IdentifyRequest identifyRequest = new IdentifyRequest();
-        identifyRequest.setAppId(SharedPreferenceHelper.getUserAppId());
+        identifyRequest.setAppId(FirebaseInstanceId.getInstance().getId());
         if (SharedPreferenceHelper.isUserLoggedIn()) {
             identifyRequest.setSocial(SharedPreferenceHelper.getSn());
             identifyRequest.setToken(SharedPreferenceHelper.getToken());
@@ -533,7 +534,7 @@ public class DDScannerRestClient {
                 identifyRequest.setSecret(SharedPreferenceHelper.getSecret());
             }
         }
-        identifyRequest.setpush(SharedPreferenceHelper.getGcmId());
+        identifyRequest.setpush(FirebaseInstanceId.getInstance().getToken());
         if (lat != null && lng != null) {
             identifyRequest.setLat(lat);
             identifyRequest.setLng(lng);

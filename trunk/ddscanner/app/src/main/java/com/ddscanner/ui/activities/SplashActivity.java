@@ -17,7 +17,6 @@ import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.events.InstanceIDReceivedEvent;
 import com.ddscanner.rest.DDScannerRestClient;
-import com.ddscanner.services.RegistrationIntentService;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.ui.views.DDProgressBarView;
 import com.ddscanner.utils.ActivitiesRequestCodes;
@@ -26,6 +25,8 @@ import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.squareup.otto.Subscribe;
 
 public class SplashActivity extends BaseAppCompatActivity implements InfoDialogFragment.DialogClosedListener, View.OnClickListener {
@@ -103,29 +104,32 @@ public class SplashActivity extends BaseAppCompatActivity implements InfoDialogF
         mainLayout.startAnimation(fadeInAnimation);
 
         if (SharedPreferenceHelper.isFirstLaunch()) {
-            registerForGCM();
+       //     registerForGCM();
+            progressMessage.setText(R.string.start_process_register_for_ddscanner);
+            DDScannerApplication.getDdScannerRestClient().postIdentifyUser("", "", identifyResultListener);
+            showMainActivity();
         } else {
       //      showMainActivity();
         }
-
+//        Log.i(TAG, FirebaseInstanceId.getInstance().getToken());
  //       RemoteConfigManager.initRemoteConfig();
     }
 
-    private void registerForGCM() {
-        if (!SharedPreferenceHelper.isUserAppIdReceived()) {
-            if (checkPlayServices()) {
-                progressMessage.setText(R.string.start_process_register_for_gcm);
-                Intent intent = new Intent(this, RegistrationIntentService.class);
-                startService(intent);
-            } else {
-                // No need to handle. This case was handled in checkPlayServices()
-            }
-        } else {
-            // This means we've received appId but failed to make identify request.Try again
-            progressMessage.setText(R.string.start_process_register_for_ddscanner);
-            DDScannerApplication.getDdScannerRestClient().postIdentifyUser("", "", identifyResultListener);
-        }
-    }
+//    private void registerForGCM() {
+//        if (!SharedPreferenceHelper.isUserAppIdReceived()) {
+//            if (checkPlayServices()) {
+//                progressMessage.setText(R.string.start_process_register_for_gcm);
+//                Intent intent = new Intent(this, RegistrationIntentService.class);
+//                startService(intent);
+//            } else {
+//                // No need to handle. This case was handled in checkPlayServices()
+//            }
+//        } else {
+//            // This means we've received appId but failed to make identify request.Try again
+//            progressMessage.setText(R.string.start_process_register_for_ddscanner);
+//            DDScannerApplication.getDdScannerRestClient().postIdentifyUser("", "", identifyResultListener);
+//        }
+//    }
 
     private boolean checkPlayServices() {
         GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
