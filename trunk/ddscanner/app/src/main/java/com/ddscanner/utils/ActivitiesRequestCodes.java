@@ -16,6 +16,8 @@ public class ActivitiesRequestCodes {
 
     //    SplashActivity
     public static final int REQUEST_CODE_SPLASH_ACTIVITY_PLAY_SERVICES_RESOLUTION = 1201;
+    public static final int REQUEST_CODE_SPLASH_ACTIVITY_LOGIN = 1202;
+    public static final int REQUEST_CODE_SPLASH_ACTIVITY_SIGN_UP = 1203;
 
     //    MainActivity
     public static final int REQUEST_CODE_MAIN_ACTIVITY_GO_TO_MY_LOCATION = 1301;
@@ -149,6 +151,8 @@ public class ActivitiesRequestCodes {
 
     //    SocialNetworks
     public static final int REQUEST_CODE_SOCIAL_NETWORKS_SIGN_IN = 3701;
+    public static final int REQUEST_CODE_SOCIAL_NETWORKS_LOGIN = 3702;
+    public static final int REQUEST_CODE_SOCIAL_NETWORKS_SIGN_UP = 3703;
 
     //ReviewsPhotosImageSliderActivity
     public static final int REQUEST_CODE_LOGIN_TO_LEAVE_REPORT = 3801;

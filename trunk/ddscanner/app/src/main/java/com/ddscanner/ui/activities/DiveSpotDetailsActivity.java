@@ -532,7 +532,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             }
             expandEditorsArrow.setVisibility(View.VISIBLE);
             creatorLayout.setOnClickListener(this);
-            // EditorsListActivity.show(DiveSpotDetailsActivity.this, (ArrayList<User>) creatorsEditorsList);
+            // EditorsListActivity.showForResult(DiveSpotDetailsActivity.this, (ArrayList<User>) creatorsEditorsList);
 
         }
         showDiveCenters.setVisibility(View.VISIBLE);
@@ -998,7 +998,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
     @Subscribe
     public void openImagesActivity(OpenPhotosActivityEvent event) {
-//        DiveSpotPhotosActivity.show(this, (ArrayList<String>) diveSpot.getImages(),
+//        DiveSpotPhotosActivity.showForResult(this, (ArrayList<String>) diveSpot.getImages(),
 //                diveSpot.getDiveSpotPathMedium(), (ArrayList<String>) diveSpot.getCommentImages(),
 //                String.valueOf(diveSpot.getId()));
         Intent intent = new Intent(this, DiveSpotPhotosActivity.class);

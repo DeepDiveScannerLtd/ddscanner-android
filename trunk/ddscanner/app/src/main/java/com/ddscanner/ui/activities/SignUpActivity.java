@@ -1,9 +1,11 @@
 package com.ddscanner.ui.activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +16,7 @@ import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.transition.Visibility;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,10 +24,40 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.entities.RegisterResponse;
+import com.ddscanner.entities.SignInType;
+import com.ddscanner.events.LoggedInEvent;
+import com.ddscanner.events.LoginViaFacebookClickEvent;
+import com.ddscanner.events.LoginViaGoogleClickEvent;
+import com.ddscanner.rest.DDScannerRestClient;
+import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.ui.views.LoginView;
+import com.ddscanner.utils.ActivitiesRequestCodes;
+import com.ddscanner.utils.Helpers;
+import com.ddscanner.utils.LogUtils;
+import com.ddscanner.utils.SharedPreferenceHelper;
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.squareup.otto.Subscribe;
 
-public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
+import org.json.JSONObject;
+
+import java.util.Arrays;
+
+public class SignUpActivity extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
 
     private TabLayout tabLayout;
     private Toolbar toolbar;
@@ -38,10 +71,17 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
     private boolean isSignUpScreen = true;
 
-    public static void show(Context context, boolean isRegister) {
+    private CallbackManager facebookCallbackManager;
+    private GoogleApiClient mGoogleApiClient;
+
+    private boolean needToClearDefaultAccount;
+
+    private LoginResultListener loginResultListener = new LoginResultListener();
+
+    public static void showForResult(Activity context, boolean isRegister, int requestCode) {
         Intent intent = new Intent(context, SignUpActivity.class);
         intent.putExtra("isregister", isRegister);
-        context.startActivity(intent);
+        context.startActivityForResult(intent, requestCode);
     }
 
     @Override
@@ -175,4 +215,153 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
+    private void initGoogleLoginManager() {
+        needToClearDefaultAccount = true;
+        GoogleSignInOptions gso = new GoogleSignInOptions
+                .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken("195706914618-ist9f8ins485k2gglbomgdp4l2pn57iq.apps.googleusercontent.com")
+                .requestEmail()
+                .build();
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
+                    @Override
+                    public void onConnected(@Nullable Bundle bundle) {
+                        if (needToClearDefaultAccount) {
+                            Auth.GoogleSignInApi.signOut(mGoogleApiClient);
+                            mGoogleApiClient.clearDefaultAccountAndReconnect();
+                            needToClearDefaultAccount = false;
+                            Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+                            startActivityForResult(signInIntent, ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_CHOSE_GOOGLE_ACCOUNT);
+                        }
+                    }
+
+                    @Override
+                    public void onConnectionSuspended(int i) {
+                        // TODO Implement
+                    }
+                })
+                .build();
+    }
+
+    private void initFBLoginManager() {
+        facebookCallbackManager = CallbackManager.Factory.create();
+    }
+
+    /*Google*/
+    private void googleSignIn() {
+        if (mGoogleApiClient == null) {
+            initGoogleLoginManager();
+        } else if (mGoogleApiClient.isConnected()) {
+            needToClearDefaultAccount = true;
+            mGoogleApiClient.clearDefaultAccountAndReconnect();
+        }
+    }
+
+    private void fbLogin() {
+        if (facebookCallbackManager == null) {
+            initFBLoginManager();
+        }
+        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("email", "public_profile"));
+        LoginManager.getInstance().registerCallback(facebookCallbackManager,
+                new FacebookCallback<LoginResult>() {
+                    @Override
+                    public void onSuccess(final LoginResult loginResult) {
+                        GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
+                            @Override
+                            public void onCompleted(JSONObject object, GraphResponse response) {
+                                sendLoginRequest(SharedPreferenceHelper.getUserAppId(), SignInType.FACEBOOK, loginResult.getAccessToken().getToken());
+                            }
+                        }).executeAsync();
+                    }
+
+                    @Override
+                    public void onCancel() {
+                        // TODO Implement
+                    }
+
+                    @Override
+                    public void onError(FacebookException error) {
+                        // TODO Implement
+                    }
+                });
+    }
+
+    private void sendLoginRequest(String appId, SignInType signInType, String token) {
+        loginResultListener.setToken(token);
+        loginResultListener.setSocialNetwork(signInType);
+        DDScannerApplication.getDdScannerRestClient().postLogin(appId, signInType, token, loginResultListener);
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    private class LoginResultListener implements DDScannerRestClient.ResultListener<RegisterResponse> {
+
+        private String token;
+        private SignInType socialNetwork;
+
+        public void setToken(String token) {
+            this.token = token;
+        }
+
+        void setSocialNetwork(SignInType socialNetwork) {
+            this.socialNetwork = socialNetwork;
+        }
+
+        @Override
+        public void onSuccess(RegisterResponse result) {
+            SharedPreferenceHelper.setToken(token);
+            SharedPreferenceHelper.setSn(socialNetwork.getName());
+            SharedPreferenceHelper.setIsUserSignedIn(true, socialNetwork);
+            SharedPreferenceHelper.setUserServerId(result.getUser().getId());
+            setResult(RESULT_OK);
+            finish();
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            switch (errorType) {
+                case USER_NOT_FOUND_ERROR_C801:
+                    Crashlytics.log("801 error on identify");
+                default:
+                    Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);
+            }
+        }
+    }
+
+    @Subscribe
+    public void onLoginViaFacebookClick(LoginViaFacebookClickEvent event) {
+        if (AccessToken.getCurrentAccessToken() == null) {
+            fbLogin();
+        } else {
+            LoginManager.getInstance().logOut();
+            fbLogin();
+        }
+    }
+
+    @Subscribe
+    public void onLoginViaGoogleClick(LoginViaGoogleClickEvent event) {
+        googleSignIn();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        DDScannerApplication.bus.register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        DDScannerApplication.bus.unregister(this);
+    }
 }

@@ -96,7 +96,7 @@ public class EditorsUsersListAdapter extends RecyclerView.Adapter<EditorsUsersLi
         @Override
         public void onClick(View v) {
 //            if (userArrayList.get(getAdapterPosition()).getAuthor() != null && userArrayList.get(getAdapterPosition()).getAuthor().equals("social")) {
-//                ForeignProfileActivity.show(context, userArrayList.get(getAdapterPosition()).getId());
+//                ForeignProfileActivity.showForResult(context, userArrayList.get(getAdapterPosition()).getId());
 //            }
         }
     }

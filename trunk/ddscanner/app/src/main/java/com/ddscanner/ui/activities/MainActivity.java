@@ -326,7 +326,7 @@ public class MainActivity extends BaseAppCompatActivity
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.search_location_menu_button:
-//                materialDialog.show();
+//                materialDialog.showForResult();
 //                openSearchLocationWindow();
 
                 SearchSpotOrLocationActivity.showForResult(MainActivity.this, ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_PLACE_AUTOCOMPLETE);

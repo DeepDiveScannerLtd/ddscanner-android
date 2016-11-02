@@ -103,7 +103,7 @@ public class DiveSpotsPhotosAdapter extends RecyclerView.Adapter<DiveSpotsPhotos
 
         @Override
         public void onClick(View v) {
-//            DiveSpotPhotosActivity.show(context, photos, path, reviewsImages);
+//            DiveSpotPhotosActivity.showForResult(context, photos, path, reviewsImages);
             DDScannerApplication.bus.post(new OpenPhotosActivityEvent());
         }
     }

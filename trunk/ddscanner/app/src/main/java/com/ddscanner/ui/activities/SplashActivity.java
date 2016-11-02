@@ -211,10 +211,10 @@ public class SplashActivity extends BaseAppCompatActivity implements InfoDialogF
                 showMainActivity();
                 break;
             case R.id.login:
-                SignUpActivity.show(this, false);
+                SignUpActivity.showForResult(this, false, ActivitiesRequestCodes.REQUEST_CODE_SPLASH_ACTIVITY_LOGIN);
                 break;
             case R.id.sign_up:
-                SignUpActivity.show(this, true);
+                SignUpActivity.showForResult(this, true, ActivitiesRequestCodes.REQUEST_CODE_SPLASH_ACTIVITY_SIGN_UP);
                 break;
         }
     }

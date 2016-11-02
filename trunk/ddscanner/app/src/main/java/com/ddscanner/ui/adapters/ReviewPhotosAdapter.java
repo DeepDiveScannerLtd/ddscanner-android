@@ -93,7 +93,7 @@ public class ReviewPhotosAdapter extends RecyclerView.Adapter<ReviewPhotosAdapte
 
         @Override
         public void onClick(View v) {
-          // ReviewImageSliderActivity.show(context, photos, getAdapterPosition());
+          // ReviewImageSliderActivity.showForResult(context, photos, getAdapterPosition());
             DDScannerApplication.bus.post(new ShowSliderForReviewImagesEvent(isSelfPhotos, photos, getAdapterPosition(), commentPosition));
         }
     }
