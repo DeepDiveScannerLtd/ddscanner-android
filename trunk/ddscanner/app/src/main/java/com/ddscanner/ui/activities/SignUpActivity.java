@@ -79,6 +79,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     private EditText email;
     private EditText password;
     private MaterialDialog materialDialog;
+    private String userType;
 
     private boolean isSignUpScreen = true;
 
@@ -121,6 +122,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
         isRegister = getIntent().getBooleanExtra("isregister", false);
+        userType = Constants.USER_TYPE_DIVER;
         findViews();
     }
 
@@ -196,9 +198,11 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 switch (tab.getPosition()) {
                     case 0:
                         changeSocialButtonsState(View.VISIBLE);
+                        userType = Constants.USER_TYPE_DIVER;
                         break;
                     case 1:
                         changeSocialButtonsState(View.GONE);
+                        userType = Constants.USER_TYPE_DIVE_CENTER;
                         break;
                 }
             }
@@ -236,7 +240,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 //TODO remove hardoced lat and lng
                 materialDialog.show();
                 if (isRegister) {
-                    DDScannerApplication.getDdScannerRestClient().postUserSignUp(email.getText().toString(), password.getText().toString(), Constants.USER_TYPE_DIVER, "24.15151", "21.5454", signUpResultListener);
+                    DDScannerApplication.getDdScannerRestClient().postUserSignUp(email.getText().toString(), password.getText().toString(), userType, "24.15151", "21.5454", signUpResultListener);
                     break;
                 }
                 DDScannerApplication.getDdScannerRestClient().postUserSignIn(email.getText().toString(), password.getText().toString(), "28.13123", "21.323232", null, null, signUpResultListener);
