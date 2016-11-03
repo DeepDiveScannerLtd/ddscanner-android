@@ -17,8 +17,8 @@ import com.ddscanner.entities.Sealife;
 
 public class SealifeDetailsActivity extends AppCompatActivity {
 
-    private static final String EXTRA_SEALIFE = "SEALIFE";
-    private static final String EXTRA_PATH = "PATH";
+    public static final String EXTRA_SEALIFE = "SEALIFE";
+    public static final String EXTRA_PATH = "PATH";
 
     private ActivitySealifeFullBinding binding;
 
