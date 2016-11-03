@@ -42,6 +42,7 @@ import com.ddscanner.events.LoadUserProfileInfoEvent;
 import com.ddscanner.events.LocationReadyEvent;
 import com.ddscanner.events.LoggedInEvent;
 import com.ddscanner.events.LoggedOutEvent;
+import com.ddscanner.events.LoginViaEmailEvent;
 import com.ddscanner.events.LoginViaFacebookClickEvent;
 import com.ddscanner.events.LoginViaGoogleClickEvent;
 import com.ddscanner.events.NewDiveSpotAddedEvent;
@@ -850,6 +851,16 @@ public class MainActivity extends BaseAppCompatActivity
     @Subscribe
     public void chengeLoginView(SignupLoginButtonClicked event) {
         isSignupClicked = event.isShowing();
+    }
+
+    @Subscribe
+    public void emailLogin(LoginViaEmailEvent event) {
+        //TODO remove hardcoded coordinates
+        if (event.isRegister()) {
+            DDScannerApplication.getDdScannerRestClient().postUserSignUp(event.getEmail(), event.getPassword(), event.getUserType(), "23", "22", signUpResultListener);
+            return;
+        }
+        DDScannerApplication.getDdScannerRestClient().postUserSignIn(event.getEmail(), event.getPassword(), "24", "25", null, null, signUpResultListener);
     }
 
 }

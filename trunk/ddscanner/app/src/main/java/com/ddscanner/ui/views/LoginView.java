@@ -13,18 +13,21 @@ import android.text.style.ClickableSpan;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.events.LoginViaEmailEvent;
 import com.ddscanner.events.LoginViaFacebookClickEvent;
 import com.ddscanner.events.LoginViaGoogleClickEvent;
 import com.ddscanner.events.SignupLoginButtonClicked;
 import com.ddscanner.ui.activities.ForgotPasswordActivity;
 import com.ddscanner.ui.activities.PrivacyPolicyActivity;
 import com.ddscanner.ui.activities.TermsOfServiceActivity;
+import com.ddscanner.utils.Constants;
 
 public class LoginView extends RelativeLayout implements View.OnClickListener {
 
@@ -39,6 +42,10 @@ public class LoginView extends RelativeLayout implements View.OnClickListener {
     private LinearLayout loginWithFacebook;
     private LinearLayout loginWithGoogle;
     private TextView forgotPasswordView;
+    private EditText email;
+    private EditText password;
+    private boolean isRegister;
+    private String userType;
 
     public LoginView(Context context) {
         super(context);
@@ -61,6 +68,8 @@ public class LoginView extends RelativeLayout implements View.OnClickListener {
     private void init(AttributeSet attrs) {
         inflate(getContext(), R.layout.view_login, this);
 
+        userType = Constants.USER_TYPE_DIVER;
+
         titleTextView = (TextView) findViewById(R.id.need_to_login_message);
         privacyPolicy = (TextView) findViewById(R.id.privacy_policy);
         signUpButton = (Button) findViewById(R.id.sign_up);
@@ -72,8 +81,11 @@ public class LoginView extends RelativeLayout implements View.OnClickListener {
         loginWithFacebook = (LinearLayout) findViewById(R.id.fb_custom);
         loginWithGoogle = (LinearLayout) findViewById(R.id.custom_google);
         forgotPasswordView = (TextView) findViewById(R.id.forgot_password);
+        email = (EditText) findViewById(R.id.email);
+        password = (EditText) findViewById(R.id.password);
 
         forgotPasswordView.setOnClickListener(this);
+        buttonSubmitData.setOnClickListener(this);
         signUpButton.setOnClickListener(this);
         loginButton.setOnClickListener(this);
         loginWithFacebook.setOnClickListener(this);
@@ -101,9 +113,11 @@ public class LoginView extends RelativeLayout implements View.OnClickListener {
                 switch (tab.getPosition()) {
                     case 0:
                         changeSocialButtonsState(View.VISIBLE);
+                        userType = Constants.USER_TYPE_DIVER;
                         break;
                     case 1:
                         changeSocialButtonsState(View.GONE);
+                        userType = Constants.USER_TYPE_DIVE_CENTER;
                         break;
                 }
             }
@@ -148,12 +162,14 @@ public class LoginView extends RelativeLayout implements View.OnClickListener {
                 loginView.setVisibility(GONE);
                 buttonSubmitData.setText(R.string.sign_up);
                 DDScannerApplication.bus.post(new SignupLoginButtonClicked(true));
+                isRegister = true;
                 break;
             case R.id.login:
                 loginView.setVisibility(GONE);
                 signView.setVisibility(VISIBLE);
                 buttonSubmitData.setText(R.string.login);
                 DDScannerApplication.bus.post(new SignupLoginButtonClicked(true));
+                isRegister = false;
                 break;
             case R.id.privacy_policy:
                 PrivacyPolicyActivity.show(getContext());
@@ -166,6 +182,9 @@ public class LoginView extends RelativeLayout implements View.OnClickListener {
                 break;
             case R.id.custom_google:
                 DDScannerApplication.bus.post(new LoginViaGoogleClickEvent());
+                break;
+            case R.id.btn_sign_up:
+                DDScannerApplication.bus.post(new LoginViaEmailEvent(email.getText().toString(), password.getText().toString(), userType, isRegister));
                 break;
         }
     }
@@ -184,6 +203,7 @@ public class LoginView extends RelativeLayout implements View.OnClickListener {
     public void changeViewToStart() {
         loginView.setVisibility(VISIBLE);
         signView.setVisibility(GONE);
+        userType = Constants.USER_TYPE_DIVER;
     }
 
     class MyClickableSpan extends ClickableSpan {
