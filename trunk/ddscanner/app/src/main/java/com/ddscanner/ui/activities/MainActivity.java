@@ -30,6 +30,7 @@ import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.RegisterResponse;
 import com.ddscanner.entities.SignInType;
+import com.ddscanner.entities.SignUpResponseEntity;
 import com.ddscanner.events.ChangePageOfMainViewPagerEvent;
 import com.ddscanner.events.CloseInfoWindowEvent;
 import com.ddscanner.events.CloseListEvent;
@@ -127,7 +128,32 @@ public class MainActivity extends BaseAppCompatActivity
     private boolean loggedInDuringLastOnStart;
     private boolean needToClearDefaultAccount;
 
-    private LoginResultListener loginResultListener = new LoginResultListener();
+    private DDScannerRestClient.ResultListener<SignUpResponseEntity> signUpResultListener = new DDScannerRestClient.ResultListener<SignUpResponseEntity>() {
+        @Override
+        public void onSuccess(SignUpResponseEntity result) {
+            materialDialog.dismiss();
+            SharedPreferenceHelper.setToken(result.getToken());
+            SharedPreferenceHelper.setIsUserSignedIn(true, SignInType.EMAIL);
+            DDScannerApplication.bus.post(new LoggedInEvent());
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            materialDialog.dismiss();
+            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            materialDialog.dismiss();
+            switch (errorType) {
+                case USER_NOT_FOUND_ERROR_C801:
+                    Crashlytics.log("801 error on identify");
+                default:
+                    Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -490,10 +516,9 @@ public class MainActivity extends BaseAppCompatActivity
     }
 
     private void sendLoginRequest(SignInType signInType, String token) {
-        loginResultListener.setToken(token);
-        loginResultListener.setSocialNetwork(signInType);
         materialDialog.show();
-        DDScannerApplication.getDdScannerRestClient().postLogin(FirebaseInstanceId.getInstance().getId(), signInType, token, loginResultListener);
+        DDScannerApplication.getDdScannerRestClient().postUserSignIn(null, null, "21", "32", signInType, token, signUpResultListener);
+//        DDScannerApplication.getDdScannerRestClient().postLogin(FirebaseInstanceId.getInstance().getId(), signInType, token, loginResultListener);
     }
 
 //    private void validateIdToken() {
@@ -821,46 +846,6 @@ public class MainActivity extends BaseAppCompatActivity
         SharedPreferenceHelper.setLevel("");
     }
 
-    private class LoginResultListener implements DDScannerRestClient.ResultListener<RegisterResponse> {
-
-        private String token;
-        private SignInType socialNetwork;
-
-        public void setToken(String token) {
-            this.token = token;
-        }
-
-        void setSocialNetwork(SignInType socialNetwork) {
-            this.socialNetwork = socialNetwork;
-        }
-
-        @Override
-        public void onSuccess(RegisterResponse result) {
-            materialDialog.dismiss();
-            SharedPreferenceHelper.setToken(token);
-            SharedPreferenceHelper.setSn(socialNetwork.getName());
-            SharedPreferenceHelper.setIsUserSignedIn(true, socialNetwork);
-            SharedPreferenceHelper.setUserServerId(result.getUser().getId());
-            DDScannerApplication.bus.post(new LoggedInEvent());
-        }
-
-        @Override
-        public void onConnectionFailure() {
-            materialDialog.dismiss();
-            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
-        }
-
-        @Override
-        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-            materialDialog.dismiss();
-            switch (errorType) {
-                case USER_NOT_FOUND_ERROR_C801:
-                    Crashlytics.log("801 error on identify");
-                default:
-                    Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);
-            }
-        }
-    }
 
     @Subscribe
     public void chengeLoginView(SignupLoginButtonClicked event) {
