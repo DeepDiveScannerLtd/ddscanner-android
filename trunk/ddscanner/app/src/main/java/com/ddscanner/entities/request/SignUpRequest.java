@@ -1,15 +1,19 @@
 package com.ddscanner.entities.request;
 
+import com.google.gson.annotations.SerializedName;
+
 public class SignUpRequest {
 
     private String email;
     private String password;
-    private int user_type;
+    @SerializedName("user_type")
+    private int userType;
     private String app_id;
     private String push;
     private String lat;
     private String lng;
-    private int device_type;
+    @SerializedName("device_type")
+    private int deviceType;
 
     public String getEmail() {
         return email;
@@ -27,12 +31,12 @@ public class SignUpRequest {
         this.password = password;
     }
 
-    public int getUser_type() {
-        return user_type;
+    public int getUserType() {
+        return userType;
     }
 
-    public void setUser_type(int user_type) {
-        this.user_type = user_type;
+    public void setUserType(int userType) {
+        this.userType = userType;
     }
 
     public String getApp_id() {
@@ -67,11 +71,11 @@ public class SignUpRequest {
         this.lng = lng;
     }
 
-    public int getDevice_type() {
-        return device_type;
+    public int getDeviceType() {
+        return deviceType;
     }
 
-    public void setDevice_type(int device_type) {
-        this.device_type = device_type;
+    public void setDeviceType(int deviceType) {
+        this.deviceType = deviceType;
     }
 }

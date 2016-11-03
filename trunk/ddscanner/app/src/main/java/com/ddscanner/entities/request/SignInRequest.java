@@ -1,16 +1,19 @@
 package com.ddscanner.entities.request;
 
+import com.google.gson.annotations.SerializedName;
+
 public class SignInRequest extends SignUpRequest {
 
-    private Integer provider_type;
+    @SerializedName("provider_type")
+    private Integer providerType;
     private String token;
 
-    public Integer getProvider_type() {
-        return provider_type;
+    public Integer getProviderType() {
+        return providerType;
     }
 
-    public void setProvider_type(Integer provider_type) {
-        this.provider_type = provider_type;
+    public void setProviderType(Integer providerType) {
+        this.providerType = providerType;
     }
 
     public String getToken() {
