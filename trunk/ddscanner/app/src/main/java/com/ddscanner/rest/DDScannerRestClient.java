@@ -2,7 +2,6 @@ package com.ddscanner.rest;
 
 import android.support.annotation.NonNull;
 
-import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.AchievmentsResponseEntity;
 import com.ddscanner.entities.CheckIns;
 import com.ddscanner.entities.Comments;
@@ -20,7 +19,6 @@ import com.ddscanner.entities.Sealife;
 import com.ddscanner.entities.SealifeResponseEntity;
 import com.ddscanner.entities.SignInType;
 import com.ddscanner.entities.SignUpResponseEntity;
-import com.ddscanner.entities.User;
 import com.ddscanner.entities.UserResponseEntity;
 import com.ddscanner.entities.request.DiveSpotsRequestMap;
 import com.ddscanner.entities.request.IdentifyRequest;
@@ -34,8 +32,6 @@ import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.gson.Gson;
 
 import org.json.JSONException;
@@ -581,30 +577,30 @@ public class DDScannerRestClient {
         SignUpRequest signUpRequest = new SignUpRequest();
         signUpRequest.setEmail(email);
         signUpRequest.setPassword(password);
-        signUpRequest.setUser_type(Helpers.getUserType(userType));
+        signUpRequest.setUserType(Helpers.getUserType(userType));
         signUpRequest.setPush(FirebaseInstanceId.getInstance().getToken());
         signUpRequest.setApp_id(FirebaseInstanceId.getInstance().getId());
         signUpRequest.setLat(lat);
         signUpRequest.setLng(lng);
-        signUpRequest.setDevice_type(2);
+        signUpRequest.setDeviceType(2);
         return signUpRequest;
     }
 
     private SignInRequest getSignInRequest(String email, String password, String lat, String lng, SignInType signInType, String token) {
         SignInRequest signInRequest = new SignInRequest();
-        signInRequest.setDevice_type(2);
+        signInRequest.setDeviceType(2);
         signInRequest.setEmail(email);
         signInRequest.setPassword(password);
         if (signInType != null) {
             switch (signInType) {
                 case GOOGLE:
-                    signInRequest.setProvider_type(2);
+                    signInRequest.setProviderType(2);
                     break;
                 case FACEBOOK:
-                    signInRequest.setProvider_type(1);
+                    signInRequest.setProviderType(1);
                     break;
                 default:
-                    signInRequest.setProvider_type(null);
+                    signInRequest.setProviderType(null);
                     break;
             }
         }
