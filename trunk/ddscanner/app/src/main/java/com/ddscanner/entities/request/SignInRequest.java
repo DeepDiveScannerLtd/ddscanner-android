@@ -2,14 +2,14 @@ package com.ddscanner.entities.request;
 
 public class SignInRequest extends SignUpRequest {
 
-    private int provider_type;
+    private Integer provider_type;
     private String token;
 
-    public int getProvider_type() {
+    public Integer getProvider_type() {
         return provider_type;
     }
 
-    public void setProvider_type(int provider_type) {
+    public void setProvider_type(Integer provider_type) {
         this.provider_type = provider_type;
     }
 

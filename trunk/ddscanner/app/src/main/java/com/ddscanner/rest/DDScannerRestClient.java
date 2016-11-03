@@ -26,6 +26,7 @@ import com.ddscanner.entities.request.DiveSpotsRequestMap;
 import com.ddscanner.entities.request.IdentifyRequest;
 import com.ddscanner.entities.request.RegisterRequest;
 import com.ddscanner.entities.request.ReportRequest;
+import com.ddscanner.entities.request.SignInRequest;
 import com.ddscanner.entities.request.SignUpRequest;
 import com.ddscanner.entities.request.ValidationRequest;
 import com.ddscanner.utils.Constants;
@@ -452,6 +453,17 @@ public class DDScannerRestClient {
         });
     }
 
+    public void postUserSignIn(String email, String password, String lat, String lng, SignInType signInType, String token, ResultListener<SignUpResponseEntity> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().loginUser(getSignInRequest(email, password, lat, lng, signInType, token));
+        call.enqueue(new ResponseEntityCallback<SignUpResponseEntity>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<SignUpResponseEntity> resultListener, String responseString) throws JSONException {
+                SignUpResponseEntity signUpResponseEntity = new Gson().fromJson(responseString, SignUpResponseEntity.class);
+                resultListener.onSuccess(signUpResponseEntity);
+            }
+        });
+    }
+
     public void getDiveCenters(LatLng latLng, final ResultListener<DiveCentersResponseEntity> resultListener) {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveCenters(getDivecentersRequestmap(latLng));
         call.enqueue(new ResponseEntityCallback<DiveCentersResponseEntity>(gson, resultListener) {
@@ -574,7 +586,34 @@ public class DDScannerRestClient {
         signUpRequest.setApp_id(FirebaseInstanceId.getInstance().getId());
         signUpRequest.setLat(lat);
         signUpRequest.setLng(lng);
+        signUpRequest.setDevice_type(2);
         return signUpRequest;
+    }
+
+    private SignInRequest getSignInRequest(String email, String password, String lat, String lng, SignInType signInType, String token) {
+        SignInRequest signInRequest = new SignInRequest();
+        signInRequest.setDevice_type(2);
+        signInRequest.setEmail(email);
+        signInRequest.setPassword(password);
+        if (signInType != null) {
+            switch (signInType) {
+                case GOOGLE:
+                    signInRequest.setProvider_type(2);
+                    break;
+                case FACEBOOK:
+                    signInRequest.setProvider_type(1);
+                    break;
+                default:
+                    signInRequest.setProvider_type(null);
+                    break;
+            }
+        }
+        signInRequest.setToken(token);
+        signInRequest.setPush(FirebaseInstanceId.getInstance().getToken());
+        signInRequest.setApp_id(FirebaseInstanceId.getInstance().getId());
+        signInRequest.setLat(lat);
+        signInRequest.setLng(lng);
+        return signInRequest;
     }
 
     public interface ResultListener<T> {

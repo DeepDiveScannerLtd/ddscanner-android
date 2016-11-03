@@ -29,16 +29,19 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
         <EditText
+            android:id="@+id/email"
             android:layout_width="match_parent"
             android:gravity="center_vertical"
             android:hint="@string/email_input"
             android:lines="1"
+            android:inputType="textEmailAddress"
             android:textColorHint="#a3a3a3"
             android:textColor="@color/black_text"
             android:layout_height="55dp"
             android:background="@android:color/transparent"/>
         <ImageView style="@style/DividerStyleFull"/>
         <EditText
+            android:id="@+id/password"
             android:inputType="textPassword"
             android:textColorHint="#a3a3a3"
             android:layout_width="match_parent"

@@ -21,6 +21,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -29,6 +30,7 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.RegisterResponse;
 import com.ddscanner.entities.SignInType;
+import com.ddscanner.entities.SignUpResponseEntity;
 import com.ddscanner.events.LoggedInEvent;
 import com.ddscanner.events.LoginViaFacebookClickEvent;
 import com.ddscanner.events.LoginViaGoogleClickEvent;
@@ -36,6 +38,7 @@ import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.ui.views.LoginView;
 import com.ddscanner.utils.ActivitiesRequestCodes;
+import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
@@ -61,6 +64,8 @@ import java.util.Arrays;
 
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
 
+    private static final String TAG = SignUpActivity.class.getSimpleName();
+
     private TabLayout tabLayout;
     private Toolbar toolbar;
     private LinearLayout fbLogin;
@@ -70,6 +75,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     private boolean isRegister;
     private TextView privacyPolicy;
     private TextView forgotPasswordView;
+    private EditText email;
+    private EditText password;
 
     private boolean isSignUpScreen = true;
 
@@ -78,7 +85,27 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
     private boolean needToClearDefaultAccount;
 
-    private LoginResultListener loginResultListener = new LoginResultListener();
+
+    private DDScannerRestClient.ResultListener<SignUpResponseEntity> signUpResultListener = new DDScannerRestClient.ResultListener<SignUpResponseEntity>() {
+        @Override
+        public void onSuccess(SignUpResponseEntity result) {
+            Log.i(TAG, "onSuccess: ");
+            SharedPreferenceHelper.setToken(result.getToken());
+            SharedPreferenceHelper.setIsUserSignedIn(true, SignInType.EMAIL);
+            setResult(RESULT_OK);
+            finish();
+        }
+
+        @Override
+        public void onConnectionFailure() {
+
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+
+        }
+    };
 
     public static void showForResult(Activity context, boolean isRegister, int requestCode) {
         Intent intent = new Intent(context, SignUpActivity.class);
@@ -102,6 +129,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         buttonSignUp = (Button) findViewById(R.id.btn_sign_up);
         privacyPolicy = (TextView) findViewById(R.id.privacy_policy);
         forgotPasswordView = (TextView) findViewById(R.id.forgot_password);
+        email = (EditText) findViewById(R.id.email);
+        password = (EditText) findViewById(R.id.password);
         setUi();
     }
 
@@ -109,6 +138,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         forgotPasswordView.setOnClickListener(this);
         googleLogin.setOnClickListener(this);
         fbLogin.setOnClickListener(this);
+        buttonSignUp.setOnClickListener(this);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);
@@ -197,6 +227,14 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 break;
             case R.id.custom_google:
                 googleSignIn();
+                break;
+            case R.id.btn_sign_up:
+                //TODO remove hardoced lat and lng
+                if (isRegister) {
+                    DDScannerApplication.getDdScannerRestClient().postUserSignUp(email.getText().toString(), password.getText().toString(), Constants.USER_TYPE_DIVER, "24.15151", "21.5454", signUpResultListener);
+                    break;
+                }
+                DDScannerApplication.getDdScannerRestClient().postUserSignIn(email.getText().toString(), password.getText().toString(), "28.13123", "21.323232", null, null, signUpResultListener);
                 break;
         }
     }
@@ -304,53 +342,14 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void sendLoginRequest(String appId, SignInType signInType, String token) {
-        loginResultListener.setToken(token);
-        loginResultListener.setSocialNetwork(signInType);
-        DDScannerApplication.getDdScannerRestClient().postLogin(appId, signInType, token, loginResultListener);
+//        DDScannerApplication.getDdScannerRestClient().postLogin(appId, signInType, token, loginResultListener);
+        //TODO remove hardoced lat and lng
+        DDScannerApplication.getDdScannerRestClient().postUserSignIn(null, null, "21.1414", "24.15151", signInType, token, signUpResultListener);
     }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
-    }
-
-    private class LoginResultListener implements DDScannerRestClient.ResultListener<RegisterResponse> {
-
-        private String token;
-        private SignInType socialNetwork;
-
-        public void setToken(String token) {
-            this.token = token;
-        }
-
-        void setSocialNetwork(SignInType socialNetwork) {
-            this.socialNetwork = socialNetwork;
-        }
-
-        @Override
-        public void onSuccess(RegisterResponse result) {
-            SharedPreferenceHelper.setToken(token);
-            SharedPreferenceHelper.setSn(socialNetwork.getName());
-            SharedPreferenceHelper.setIsUserSignedIn(true, socialNetwork);
-            SharedPreferenceHelper.setUserServerId(result.getUser().getId());
-            setResult(RESULT_OK);
-            finish();
-        }
-
-        @Override
-        public void onConnectionFailure() {
-            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
-        }
-
-        @Override
-        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-            switch (errorType) {
-                case USER_NOT_FOUND_ERROR_C801:
-                    Crashlytics.log("801 error on identify");
-                default:
-                    Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);
-            }
-        }
     }
 
     @Override

@@ -72,6 +72,8 @@ public class SplashActivity extends BaseAppCompatActivity implements InfoDialogF
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //TODO remove after creating working login mechanism
+        SharedPreferenceHelper.logout();
         getWindow().getDecorView().setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                         | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
@@ -96,6 +98,7 @@ public class SplashActivity extends BaseAppCompatActivity implements InfoDialogF
             skip.setVisibility(View.GONE);
             loginButton.setVisibility(View.GONE);
             signUpButton.setVisibility(View.GONE);
+            showMainActivity();
         }
 
         LinearLayout mainLayout = (LinearLayout) findViewById(R.id.main);
@@ -107,7 +110,6 @@ public class SplashActivity extends BaseAppCompatActivity implements InfoDialogF
        //     registerForGCM();
             progressMessage.setText(R.string.start_process_register_for_ddscanner);
             DDScannerApplication.getDdScannerRestClient().postIdentifyUser("", "", identifyResultListener);
-            showMainActivity();
         } else {
       //      showMainActivity();
         }
