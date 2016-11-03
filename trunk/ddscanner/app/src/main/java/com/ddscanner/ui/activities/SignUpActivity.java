@@ -25,6 +25,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.crashlytics.android.Crashlytics;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
@@ -77,6 +78,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     private TextView forgotPasswordView;
     private EditText email;
     private EditText password;
+    private MaterialDialog materialDialog;
 
     private boolean isSignUpScreen = true;
 
@@ -89,6 +91,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     private DDScannerRestClient.ResultListener<SignUpResponseEntity> signUpResultListener = new DDScannerRestClient.ResultListener<SignUpResponseEntity>() {
         @Override
         public void onSuccess(SignUpResponseEntity result) {
+            materialDialog.dismiss();
             Log.i(TAG, "onSuccess: ");
             SharedPreferenceHelper.setToken(result.getToken());
             SharedPreferenceHelper.setIsUserSignedIn(true, SignInType.EMAIL);
@@ -98,12 +101,12 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
         @Override
         public void onConnectionFailure() {
-
+            materialDialog.dismiss();
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-
+            materialDialog.dismiss();
         }
     };
 
@@ -122,6 +125,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void findViews() {
+        materialDialog = Helpers.getMaterialDialog(this);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         fbLogin = (LinearLayout) findViewById(R.id.fb_custom);
@@ -230,6 +234,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 break;
             case R.id.btn_sign_up:
                 //TODO remove hardoced lat and lng
+                materialDialog.show();
                 if (isRegister) {
                     DDScannerApplication.getDdScannerRestClient().postUserSignUp(email.getText().toString(), password.getText().toString(), Constants.USER_TYPE_DIVER, "24.15151", "21.5454", signUpResultListener);
                     break;
@@ -344,6 +349,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     private void sendLoginRequest(String appId, SignInType signInType, String token) {
 //        DDScannerApplication.getDdScannerRestClient().postLogin(appId, signInType, token, loginResultListener);
         //TODO remove hardoced lat and lng
+        materialDialog.show();
         DDScannerApplication.getDdScannerRestClient().postUserSignIn(null, null, "21.1414", "24.15151", signInType, token, signUpResultListener);
     }
 
