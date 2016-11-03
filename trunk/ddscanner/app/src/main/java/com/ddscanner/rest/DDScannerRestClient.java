@@ -19,6 +19,7 @@ import com.ddscanner.entities.RegisterResponse;
 import com.ddscanner.entities.Sealife;
 import com.ddscanner.entities.SealifeResponseEntity;
 import com.ddscanner.entities.SignInType;
+import com.ddscanner.entities.SignUpResponseEntity;
 import com.ddscanner.entities.User;
 import com.ddscanner.entities.UserResponseEntity;
 import com.ddscanner.entities.request.DiveSpotsRequestMap;
@@ -32,6 +33,8 @@ import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.gson.Gson;
 
 import org.json.JSONException;
@@ -438,6 +441,17 @@ public class DDScannerRestClient {
         });
     }
 
+    public void postUserSignUp(String email, String password, String userType, String lat, String lng, ResultListener<SignUpResponseEntity> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().signUpUser(getSignUpRequest(email, password, userType, lat, lng));
+        call.enqueue(new ResponseEntityCallback<SignUpResponseEntity>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<SignUpResponseEntity> resultListener, String responseString) throws JSONException {
+                SignUpResponseEntity signUpResponseEntity = new Gson().fromJson(responseString, SignUpResponseEntity.class);
+                resultListener.onSuccess(signUpResponseEntity);
+            }
+        });
+    }
+
     public void getDiveCenters(LatLng latLng, final ResultListener<DiveCentersResponseEntity> resultListener) {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveCenters(getDivecentersRequestmap(latLng));
         call.enqueue(new ResponseEntityCallback<DiveCentersResponseEntity>(gson, resultListener) {
@@ -551,8 +565,15 @@ public class DDScannerRestClient {
         return registerRequest;
     }
 
-    private SignUpRequest getSignUpRequest(String email, String password, String userType, long lat, long lng) {
+    private SignUpRequest getSignUpRequest(String email, String password, String userType, String lat, String lng) {
         SignUpRequest signUpRequest = new SignUpRequest();
+        signUpRequest.setEmail(email);
+        signUpRequest.setPassword(password);
+        signUpRequest.setUser_type(Helpers.getUserType(userType));
+        signUpRequest.setPush(FirebaseInstanceId.getInstance().getToken());
+        signUpRequest.setApp_id(FirebaseInstanceId.getInstance().getId());
+        signUpRequest.setLat(lat);
+        signUpRequest.setLng(lng);
         return signUpRequest;
     }
 

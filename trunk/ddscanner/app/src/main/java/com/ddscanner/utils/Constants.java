@@ -82,4 +82,9 @@ public class Constants {
 
     /*Main activity*/
     public static final String MAIN_ACTIVITY_ACTVITY_EXTRA_LATLNGBOUNDS = "LATLNGBOUNDS";
+
+    public static final String USER_TYPE_DIVE_CENTER = "divecenter";
+    public static final String USER_TYPE_DIVER = "diver";
+    public static final String USER_TYPE_INSTRUCTOR = "diver";
+
 }

@@ -41,6 +41,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
@@ -485,6 +486,14 @@ public class Helpers {
             e.printStackTrace();
             return -1;
         }
+    }
+
+    public static int getUserType(String userType) {
+        List<String> list = new ArrayList<>();
+        list.add(Constants.USER_TYPE_DIVE_CENTER);
+        list.add(Constants.USER_TYPE_DIVER);
+        list.add(Constants.USER_TYPE_INSTRUCTOR);
+        return list.indexOf(userType);
     }
 
 }
