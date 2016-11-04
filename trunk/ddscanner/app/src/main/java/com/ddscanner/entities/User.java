@@ -1,5 +1,7 @@
 package com.ddscanner.entities;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 public class User {
@@ -8,6 +10,17 @@ public class User {
     private String photo;
     private ProfileCounters counters;
     private List<ProfileAchievement> achievements;
+
+    @SerializedName("about_me")
+    private String about;
+
+    public String getAbout() {
+        return about;
+    }
+
+    public void setAbout(String about) {
+        this.about = about;
+    }
 
     public String getName() {
         return name;
