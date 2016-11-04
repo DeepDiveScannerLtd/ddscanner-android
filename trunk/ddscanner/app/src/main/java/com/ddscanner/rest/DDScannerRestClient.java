@@ -19,6 +19,7 @@ import com.ddscanner.entities.Sealife;
 import com.ddscanner.entities.SealifeResponseEntity;
 import com.ddscanner.entities.SignInType;
 import com.ddscanner.entities.SignUpResponseEntity;
+import com.ddscanner.entities.User;
 import com.ddscanner.entities.UserResponseEntity;
 import com.ddscanner.entities.request.DiveSpotsRequestMap;
 import com.ddscanner.entities.request.IdentifyRequest;
@@ -438,6 +439,8 @@ public class DDScannerRestClient {
         });
     }
 
+    /*Methods using in API v2_0*/
+
     public void postUserSignUp(String email, String password, String userType, String lat, String lng, ResultListener<SignUpResponseEntity> resultListener) {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().signUpUser(getSignUpRequest(email, password, userType, lat, lng));
         call.enqueue(new ResponseEntityCallback<SignUpResponseEntity>(gson, resultListener) {
@@ -456,6 +459,17 @@ public class DDScannerRestClient {
             void handleResponseString(ResultListener<SignUpResponseEntity> resultListener, String responseString) throws JSONException {
                 SignUpResponseEntity signUpResponseEntity = new Gson().fromJson(responseString, SignUpResponseEntity.class);
                 resultListener.onSuccess(signUpResponseEntity);
+            }
+        });
+    }
+
+    public void getUserSelfInformation(final ResultListener<User> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getSelfProfileInformation();
+        call.enqueue(new ResponseEntityCallback<User>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<User> resultListener, String responseString) throws JSONException {
+                User user = new Gson().fromJson(responseString, User.class);
+                resultListener.onSuccess(user);
             }
         });
     }

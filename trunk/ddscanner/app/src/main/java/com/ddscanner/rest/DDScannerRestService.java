@@ -168,6 +168,7 @@ public interface DDScannerRestService {
     @GET("diving/divespot/{id}/comments")
     Call<ResponseBody> getComments(@Path("id") String id, @QueryMap Map<String, String> map);
 
+    @Deprecated
     @GET("diving/user/{id}")
     Call<ResponseBody> getUserInfo(@Path("id") String id, @QueryMap Map<String, String> map);
 
@@ -275,4 +276,7 @@ public interface DDScannerRestService {
 
     @POST("v2_0/user.signUp")
     Call<ResponseBody> signUpUser(@Body SignUpRequest signUpRequest);
+
+    @GET("v2_0/user.getProfile")
+    Call<ResponseBody> getSelfProfileInformation();
 }

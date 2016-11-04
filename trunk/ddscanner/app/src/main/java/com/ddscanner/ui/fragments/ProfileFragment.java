@@ -196,6 +196,23 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
         }
     };
 
+    private DDScannerRestClient.ResultListener<User> userResultListener = new DDScannerRestClient.ResultListener<User>() {
+        @Override
+        public void onSuccess(User result) {
+
+        }
+
+        @Override
+        public void onConnectionFailure() {
+
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+
+        }
+    };
+
     private DDScannerRestClient.ResultListener<UserResponseEntity> getUserInformationResultListener = new DDScannerRestClient.ResultListener<UserResponseEntity>() {
         @Override
         public void onSuccess(UserResponseEntity result) {
@@ -529,7 +546,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
     }
 
     private void getUserDataRequest(String id) {
-        DDScannerApplication.getDdScannerRestClient().getUserInformation(id, getUserInformationResultListener);
+     //   DDScannerApplication.getDdScannerRestClient().getUserInformation(id, getUserInformationResultListener);
+        DDScannerApplication.getDdScannerRestClient().getUserSelfInformation(userResultListener);
     }
 
     private void changeUi(UserResponseEntity userResponseEntity) {
@@ -695,7 +713,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
         if (loginView != null && aboutLayout != null) {
             loginView.setVisibility(View.GONE);
             swipeRefreshLayout.setEnabled(true);
-            DDScannerApplication.getDdScannerRestClient().getUserInformation(SharedPreferenceHelper.getUserServerId(), getUserInformationResultListener);
+            DDScannerApplication.getDdScannerRestClient().getUserSelfInformation(userResultListener);
+          //  DDScannerApplication.getDdScannerRestClient().getUserInformation(SharedPreferenceHelper.getUserServerId(), getUserInformationResultListener);
             if (editLayout.getVisibility() != View.VISIBLE) {
                 aboutLayout.setVisibility(View.VISIBLE);
             } else {
@@ -720,7 +739,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
 
     @Override
     public void onRefresh() {
-        DDScannerApplication.getDdScannerRestClient().getUserInformation(SharedPreferenceHelper.getUserServerId(), getUserInformationResultListener);
+        DDScannerApplication.getDdScannerRestClient().getUserSelfInformation(userResultListener);
+      //  DDScannerApplication.getDdScannerRestClient().getUserInformation(SharedPreferenceHelper.getUserServerId(), getUserInformationResultListener);
     }
 
     public void showSignUView() {
