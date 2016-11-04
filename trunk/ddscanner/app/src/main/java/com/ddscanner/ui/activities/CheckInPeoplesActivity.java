@@ -12,7 +12,7 @@ import android.view.MenuItem;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
-import com.ddscanner.entities.User;
+import com.ddscanner.entities.UserOld;
 import com.ddscanner.ui.adapters.UserListAdapter;
 import com.ddscanner.utils.Helpers;
 
@@ -25,13 +25,13 @@ public class CheckInPeoplesActivity extends AppCompatActivity {
 
     private RecyclerView usersRecyclerView;
     private Toolbar toolbar;
-    private ArrayList<User> users;
+    private ArrayList<UserOld> userOlds;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_peoples_checkin);
-        users = getIntent().getParcelableArrayListExtra("USERS");
+        userOlds = getIntent().getParcelableArrayListExtra("USERS");
         findViews();
         setupToolbar();
         setUi();
@@ -67,7 +67,7 @@ public class CheckInPeoplesActivity extends AppCompatActivity {
     private void setUi() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         usersRecyclerView.setLayoutManager(linearLayoutManager);
-        usersRecyclerView.setAdapter(new UserListAdapter(this, users));
+        usersRecyclerView.setAdapter(new UserListAdapter(this, userOlds));
     }
 
     /**
@@ -76,9 +76,9 @@ public class CheckInPeoplesActivity extends AppCompatActivity {
      * @param context
      */
 
-    public static void show(Context context, ArrayList<User> users) {
+    public static void show(Context context, ArrayList<UserOld> userOlds) {
         Intent intent = new Intent(context, CheckInPeoplesActivity.class);
-        intent.putParcelableArrayListExtra("USERS", users);
+        intent.putParcelableArrayListExtra("USERS", userOlds);
         context.startActivity(intent);
     }
 

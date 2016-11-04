@@ -54,7 +54,7 @@ public class Constants {
     public static final String FOREIGN_USER_ACTIVITY_INTENT_ISCHECKIN = "ISCHECKIN";
     public static final String FOREIGN_USER_ACTIVITY_INTENT_USER_ID = "USERID";
 
-    /*User Likes activity*/
+    /*UserOld Likes activity*/
     public static final String USER_LIKES_ACTIVITY_INTENT_IS_LIKE = "ISLIKE";
     public static final String USER_LIKES_ACTIVITY_INTENT_USER_ID = "USERID";
 

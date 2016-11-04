@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +15,8 @@ import android.widget.LinearLayout;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.Activity;
-import com.ddscanner.entities.Notification;
 import com.ddscanner.ui.activities.MainActivity;
 import com.ddscanner.ui.adapters.ActivitiesListAdapter;
-import com.ddscanner.ui.adapters.NotificationsListAdapter;
 import com.ddscanner.ui.adapters.SectionedRecyclerViewAdapter;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.SharedPreferenceHelper;
@@ -170,7 +167,7 @@ public class ActivityNotificationsFragment extends Fragment {
     private boolean checkIsListDifferent(ArrayList<Activity> newNotifications, ArrayList<Activity> oldNotifications) {
         for (Activity notification : oldNotifications) {
             for (Activity notification1 : newNotifications) {
-                if (!notification.getType().equals(notification1.getType()) || !notification.getUser().getId().equals(notification1.getUser().getId()) || notification.getDiveSpot().getId() != notification1.getDiveSpot().getId()) {
+                if (!notification.getType().equals(notification1.getType()) || !notification.getUserOld().getId().equals(notification1.getUserOld().getId()) || notification.getDiveSpot().getId() != notification1.getDiveSpot().getId()) {
                     return true;
                 }
             }

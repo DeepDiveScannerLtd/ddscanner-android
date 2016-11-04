@@ -3,17 +3,15 @@ package com.ddscanner.entities;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.io.Serializable;
-
 public class Photo implements Parcelable{
 
     private String name;
     private boolean isReport;
-    private User user;
+    private UserOld userOld;
 
     protected Photo(Parcel in) {
         name = in.readString();
-        user = in.readParcelable(User.class.getClassLoader());
+        userOld = in.readParcelable(UserOld.class.getClassLoader());
         isReport = in.readByte() != 0;
     }
 
@@ -39,7 +37,7 @@ public class Photo implements Parcelable{
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(name);
-        parcel.writeParcelable(user, i);
+        parcel.writeParcelable(userOld, i);
         parcel.writeByte((byte) (isReport ? 1 : 0));
     }
 
@@ -59,11 +57,11 @@ public class Photo implements Parcelable{
         this.name = name;
     }
 
-    public User getUser() {
-        return user;
+    public UserOld getUserOld() {
+        return userOld;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserOld(UserOld userOld) {
+        this.userOld = userOld;
     }
 }

@@ -1,7 +1,6 @@
 package com.ddscanner.ui.adapters;
 
 import android.content.Context;
-import android.support.percent.PercentRelativeLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatDrawableManager;
@@ -72,12 +71,12 @@ public class NotificationsListAdapter
                     holder.likeDislikeImage.setImageDrawable(AppCompatDrawableManager.get()
                             .getDrawable(context, R.drawable.icon_like));
                     Picasso.with(context)
-                            .load(notification.getUser().getPicture())
+                            .load(notification.getUserOld().getPicture())
                             .resize(Math.round(Helpers.convertDpToPixel(64, context)),Math.round(Helpers.convertDpToPixel(64, context)))
                             .centerCrop()
                             .transform(new CropCircleTransformation())
                             .into(holder.image);
-                    String name = notification.getUser().getName();
+                    String name = notification.getUserOld().getName();
                     divespot = notification.getDiveSpot().getName();
                     // text = String.format(text, name, divespot);
                     text = context.getResources().getString(R.string.user_liked_your_review, name, divespot);
@@ -91,11 +90,11 @@ public class NotificationsListAdapter
                     holder.likeDislikeImage.setImageDrawable(AppCompatDrawableManager.get()
                             .getDrawable(context, R.drawable.icon_dislike));
                     Picasso.with(context)
-                            .load(notification.getUser().getPicture())
+                            .load(notification.getUserOld().getPicture())
                             .resize(Math.round(Helpers.convertDpToPixel(64, context)),Math.round(Helpers.convertDpToPixel(64, context)))
                             .transform(new CropCircleTransformation())
                             .into(holder.image);
-                    name = notification.getUser().getName();
+                    name = notification.getUserOld().getName();
                     divespot = notification.getDiveSpot().getName();
                     text = context.getResources().getString(R.string.user_dislike_your_review, name, divespot);
                     spannableString = new SpannableString(text);
@@ -193,7 +192,7 @@ public class NotificationsListAdapter
                 default:
                     if (isImage && (notification.getType().name().equalsIgnoreCase("like")
                             || notification.getType().name().equalsIgnoreCase("dislike"))) {
-                        ForeignProfileActivity.show(context, notification.getUser().getId());
+                        ForeignProfileActivity.show(context, notification.getUserOld().getId());
                     }
 
                     if (!isImage) {

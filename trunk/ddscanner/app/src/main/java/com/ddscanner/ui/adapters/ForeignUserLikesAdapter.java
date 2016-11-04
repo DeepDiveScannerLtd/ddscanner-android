@@ -18,10 +18,8 @@ import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
-import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
 /**
  * Created by lashket on 20.7.16.
@@ -51,7 +49,7 @@ public class ForeignUserLikesAdapter extends RecyclerView.Adapter<ForeignUserLik
     public void onBindViewHolder(ForeignUserLikesViewHolder holder, int position) {
         ForeignUserLike foreignUserLike = likes.get(position);
         Picasso.with(context)
-                .load(foreignUserLike.getUser().getPicture())
+                .load(foreignUserLike.getUserOld().getPicture())
                 .resize(Math.round(Helpers.convertDpToPixel(40, context)), Math.round(Helpers.convertDpToPixel(40, context)))
                 .transform(new CropCircleTransformation())
                 .into(holder.avatar);
@@ -65,9 +63,9 @@ public class ForeignUserLikesAdapter extends RecyclerView.Adapter<ForeignUserLik
         holder.mainText.setText(mainText);
 
         if (isLikes) {
-            holder.whoCreatedAction.setText(context.getResources().getString(R.string.foreign_user_like_by, foreignUserLike.getUser().getName()));
+            holder.whoCreatedAction.setText(context.getResources().getString(R.string.foreign_user_like_by, foreignUserLike.getUserOld().getName()));
         } else {
-            holder.whoCreatedAction.setText(context.getResources().getString(R.string.foreign_user_dislike_by, foreignUserLike.getUser().getName()));
+            holder.whoCreatedAction.setText(context.getResources().getString(R.string.foreign_user_dislike_by, foreignUserLike.getUserOld().getName()));
         }
     }
 
@@ -111,7 +109,7 @@ public class ForeignUserLikesAdapter extends RecyclerView.Adapter<ForeignUserLik
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.avatar:
-                    ForeignProfileActivity.show(context, likes.get(getAdapterPosition()).getUser().getId());
+                    ForeignProfileActivity.show(context, likes.get(getAdapterPosition()).getUserOld().getId());
                     break;
                 case R.id.main_layout:
                     DiveSpotDetailsActivity.show(context, String.valueOf(likes.get(getAdapterPosition()).getDiveSpotId()), EventsTracker.SpotViewSource.FROM_LIST);

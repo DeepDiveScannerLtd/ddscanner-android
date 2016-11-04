@@ -54,7 +54,7 @@ import com.ddscanner.entities.DiveSpotDetails;
 import com.ddscanner.entities.DiveSpotFull;
 import com.ddscanner.entities.Image;
 import com.ddscanner.entities.Sealife;
-import com.ddscanner.entities.User;
+import com.ddscanner.entities.UserOld;
 import com.ddscanner.events.OpenPhotosActivityEvent;
 import com.ddscanner.events.UnknownErrorCatchedEvent;
 import com.ddscanner.rest.DDScannerRestClient;
@@ -143,7 +143,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private ImageButton btnAddPhoto;
     private ImageView expandEditorsArrow;
     private Menu menu;
-    private List<User> creatorsEditorsList = new ArrayList<>();
+    private List<UserOld> creatorsEditorsList = new ArrayList<>();
 
     private RelativeLayout editorsWrapperView;
     private RecyclerView editorsRecyclerView;
@@ -155,7 +155,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private ImageView checkinsArrow;
 
     private List<Comment> usersComments;
-    private List<User> usersCheckins;
+    private List<UserOld> usersCheckins;
 
     private DDScannerRestClient.ResultListener<DiveSpotDetails> diveSpotDetailsResultListener = new DDScannerRestClient.ResultListener<DiveSpotDetails>() {
         @Override
@@ -489,8 +489,8 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                     .centerCrop()
                     .placeholder(R.drawable.avatar_profile_default)
                     .transform(new CropCircleTransformation()).into(creatorAvatar);
-            User user = new User("DDScanner", String.valueOf(R.drawable.avatar_profile_dds));
-            creatorsEditorsList.add(user);
+            UserOld userOld = new UserOld("DDScanner", String.valueOf(R.drawable.avatar_profile_dds));
+            creatorsEditorsList.add(userOld);
         }
 
         progressBarFull.setVisibility(View.GONE);
@@ -527,12 +527,12 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             }
         }
         if (diveSpotDetails.getEditors() != null) {
-            for (User user : diveSpotDetails.getEditors()) {
-                creatorsEditorsList.add(user);
+            for (UserOld userOld : diveSpotDetails.getEditors()) {
+                creatorsEditorsList.add(userOld);
             }
             expandEditorsArrow.setVisibility(View.VISIBLE);
             creatorLayout.setOnClickListener(this);
-            // EditorsListActivity.showForResult(DiveSpotDetailsActivity.this, (ArrayList<User>) creatorsEditorsList);
+            // EditorsListActivity.showForResult(DiveSpotDetailsActivity.this, (ArrayList<UserOld>) creatorsEditorsList);
 
         }
         showDiveCenters.setVisibility(View.VISIBLE);
@@ -602,7 +602,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 break;
             case R.id.check_in_peoples:
                 EventsTracker.trackDiveSpotCheckinsView();
-                CheckInPeoplesActivity.show(DiveSpotDetailsActivity.this, (ArrayList<User>) usersCheckins);
+                CheckInPeoplesActivity.show(DiveSpotDetailsActivity.this, (ArrayList<UserOld>) usersCheckins);
                 break;
             case R.id.showmore:
                 showMore.setVisibility(View.GONE);
@@ -637,7 +637,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 showEditDiveSpotDialog();
                 break;
             case R.id.creator:
-                EditorsListActivity.show(DiveSpotDetailsActivity.this, (ArrayList<User>) creatorsEditorsList);
+                EditorsListActivity.show(DiveSpotDetailsActivity.this, (ArrayList<UserOld>) creatorsEditorsList);
                 break;
             case R.id.button_show_divecenters:
                 DiveCentersActivity.show(this, new LatLng(diveSpot.getLat(), diveSpot.getLng()), diveSpot.getName());

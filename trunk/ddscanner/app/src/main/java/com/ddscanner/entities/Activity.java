@@ -29,7 +29,7 @@ public class Activity implements Serializable {
     private String date;
     private String message;
     private DiveSpot diveSpot;
-    private User user;
+    private UserOld userOld;
 
     public ActivityType getType() {
         return type;
@@ -63,11 +63,11 @@ public class Activity implements Serializable {
         this.diveSpot = diveSpot;
     }
 
-    public User getUser() {
-        return user;
+    public UserOld getUserOld() {
+        return userOld;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserOld(UserOld userOld) {
+        this.userOld = userOld;
     }
 }

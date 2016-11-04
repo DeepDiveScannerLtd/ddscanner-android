@@ -22,7 +22,7 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.ProfileAchievement;
-import com.ddscanner.entities.User;
+import com.ddscanner.entities.UserOld;
 import com.ddscanner.entities.UserResponseEntity;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.adapters.AchievmentProfileListAdapter;
@@ -60,7 +60,7 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
     private LinearLayout openInSocialNetwork;
     private ScrollView aboutLayout;
     private String userId;
-    private User user;
+    private UserOld userOld;
     private ProgressView progressView;
     private RelativeLayout likeLayout;
     private LinearLayout dislikeLayout;
@@ -73,9 +73,9 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
     private DDScannerRestClient.ResultListener<UserResponseEntity> userResultListener = new DDScannerRestClient.ResultListener<UserResponseEntity>() {
         @Override
         public void onSuccess(UserResponseEntity result) {
-            user = result.getUser();
-            FACEBOOK_URL = Constants.PROFILE_DIALOG_FACEBOOK_URL + user.getSocialId();
-            FACEBOOK_PAGE_ID = user.getSocialId();
+            userOld = result.getUserOld();
+            FACEBOOK_URL = Constants.PROFILE_DIALOG_FACEBOOK_URL + userOld.getSocialId();
+            FACEBOOK_PAGE_ID = userOld.getSocialId();
             setUi(result);
         }
 
@@ -150,34 +150,34 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
         }
         openOnSocialLayout.setOnClickListener(this);
         userAbout.setVisibility(View.GONE);
-        addedCount.setText(user.getCountAdd() + getDiveSpotString(Integer.parseInt(user.getCountAdd())));
-        editedCount.setText(user.getCountEdit() + getDiveSpotString(Integer.parseInt(user.getCountEdit())));
-        checkInCount.setText(user.getCountCheckin() + getDiveSpotString(Integer.parseInt(user.getCountFavorite())));
-        if (!user.getCountCheckin().equals("0")) {
+        addedCount.setText(userOld.getCountAdd() + getDiveSpotString(Integer.parseInt(userOld.getCountAdd())));
+        editedCount.setText(userOld.getCountEdit() + getDiveSpotString(Integer.parseInt(userOld.getCountEdit())));
+        checkInCount.setText(userOld.getCountCheckin() + getDiveSpotString(Integer.parseInt(userOld.getCountFavorite())));
+        if (!userOld.getCountCheckin().equals("0")) {
             showAllCheckins.setOnClickListener(this);
         }
-        if (!user.getCountEdit().equals("0")) {
+        if (!userOld.getCountEdit().equals("0")) {
             showAllEdited.setOnClickListener(this);
         }
-        if (!user.getCountAdd().equals("0")) {
+        if (!userOld.getCountAdd().equals("0")) {
             showAllAdded.setOnClickListener(this);
         }
 
-        if (user.getAbout() != null && !user.getAbout().isEmpty()) {
+        if (userOld.getAbout() != null && !userOld.getAbout().isEmpty()) {
             userAbout.setVisibility(View.VISIBLE);
-            userAbout.setText(user.getAbout());
+            userAbout.setText(userOld.getAbout());
         }
-        userCommentsCount.setText(Helpers.formatLikesCommentsCountNumber(user.getCountComment()));
-        userDislikesCount.setText(Helpers.formatLikesCommentsCountNumber(user.getCountDislike()));
-        userLikesCount.setText(Helpers.formatLikesCommentsCountNumber(user.getCountLike()));
-        Picasso.with(this).load(user.getPicture())
+        userCommentsCount.setText(Helpers.formatLikesCommentsCountNumber(userOld.getCountComment()));
+        userDislikesCount.setText(Helpers.formatLikesCommentsCountNumber(userOld.getCountDislike()));
+        userLikesCount.setText(Helpers.formatLikesCommentsCountNumber(userOld.getCountLike()));
+        Picasso.with(this).load(userOld.getPicture())
                 .resize(Math.round(Helpers.convertDpToPixel(100, this)),
                         Math.round(Helpers.convertDpToPixel(100, this))).centerCrop()
                 .transform(new CropCircleTransformation()).into(avatar);
-        userFullName.setText(user.getName());
+        userFullName.setText(userOld.getName());
         progressView.setVisibility(View.GONE);
         aboutLayout.setVisibility(View.VISIBLE);
-        switch (user.getType()) {
+        switch (userOld.getType()) {
             case "fb":
                 openOn.setText(R.string.open_on_facebook);
                 break;
@@ -277,7 +277,7 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
                 }
                 break;
             case R.id.openSocialNetwork:
-                openLink(user.getSocialId(), user.getType());
+                openLink(userOld.getSocialId(), userOld.getType());
                 break;
             case R.id.show_achievments_details:
                 AchievementsActivity.show(this, userId);

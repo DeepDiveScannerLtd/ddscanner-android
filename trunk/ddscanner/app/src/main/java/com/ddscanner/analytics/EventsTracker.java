@@ -77,7 +77,7 @@ public class EventsTracker {
     private static final String EVENT_NAME_REVIEW_SHOW_ALL = "review_show_all";
 
     // ----------------------------------------------------
-    // User activity
+    // UserOld activity
     // ----------------------------------------------------
 
     private static final String EVENT_NAME_CHECK_IN = "check_in";

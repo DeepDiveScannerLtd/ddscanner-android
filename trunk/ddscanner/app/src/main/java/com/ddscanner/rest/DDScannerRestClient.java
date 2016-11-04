@@ -19,7 +19,7 @@ import com.ddscanner.entities.Sealife;
 import com.ddscanner.entities.SealifeResponseEntity;
 import com.ddscanner.entities.SignInType;
 import com.ddscanner.entities.SignUpResponseEntity;
-import com.ddscanner.entities.User;
+import com.ddscanner.entities.UserOld;
 import com.ddscanner.entities.UserResponseEntity;
 import com.ddscanner.entities.request.DiveSpotsRequestMap;
 import com.ddscanner.entities.request.IdentifyRequest;
@@ -463,13 +463,13 @@ public class DDScannerRestClient implements DDScannerRestClientContract {
         });
     }
 
-    public void getUserSelfInformation(final ResultListener<User> resultListener) {
+    public void getUserSelfInformation(final ResultListener<UserOld> resultListener) {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getSelfProfileInformation();
-        call.enqueue(new ResponseEntityCallback<User>(gson, resultListener) {
+        call.enqueue(new ResponseEntityCallback<UserOld>(gson, resultListener) {
             @Override
-            void handleResponseString(ResultListener<User> resultListener, String responseString) throws JSONException {
-                User user = new Gson().fromJson(responseString, User.class);
-                resultListener.onSuccess(user);
+            void handleResponseString(ResultListener<UserOld> resultListener, String responseString) throws JSONException {
+                UserOld userOld = new Gson().fromJson(responseString, UserOld.class);
+                resultListener.onSuccess(userOld);
             }
         });
     }

@@ -205,7 +205,7 @@
     <string name="terms_title_4">4. Revisions and Errata</string>
     <string name="terms_text_4">The materials appearing in Deep Dive Scanner could include technical, typographical, or photographic errors. Deep Dive Scanner does not warrant that any of these materials are accurate, complete, or current. Deep Dive Scanner may make changes to the materials contained in its app at any time without notice. Deep Dive Scanner does not, however, make any commitment to update the materials.</string>
     <string name="terms_title_5">5. Links</string>
-    <string name="terms_text_5">Deep Dive Scanner has not reviewed all of the internet web sites linked to from its app and is not responsible for the contents of any such linked site. The inclusion of any link does not imply endorsement by Deep Dive Scanner of the site. Use of any such linked site is at the user\'s own risk.</string>
+    <string name="terms_text_5">Deep Dive Scanner has not reviewed all of the internet web sites linked to from its app and is not responsible for the contents of any such linked site. The inclusion of any link does not imply endorsement by Deep Dive Scanner of the site. Use of any such linked site is at the userOld\'s own risk.</string>
     <string name="terms_title_6">6. Site Terms of Use Modifications</string>
     <string name="terms_text_6">Deep Dive Scanner may revise these terms of use for its app at any time without notice. By using this app you are agreeing to be bound by the then current version of these Terms and Conditions of Use.</string>
     <string name="terms">Terms and Conditions of Use</string>
@@ -221,7 +221,7 @@
     <string name="guide_question_4">How to edit a dive spot?</string>
     <string name="guide_question_5">How to leave a review?</string>
     <string name="guide_question_6">Why can’t I edit a dive spot?</string>
-    <string name="guide_description_1">The most active users can become experts of a certain country due to their activity. We really appreciate every member of our diving community and grant the status of experts to those who participate actively in Deep Dive Scanner’s life. That can be those who left lots of reviews or added new dive spots, edited the information and shared lots of photos, etc.  Divers can ask experts for their opinion that is highly respective and informative. We will also give experts new bonuses that will be helpful .</string>
+    <string name="guide_description_1">The most active userOlds can become experts of a certain country due to their activity. We really appreciate every member of our diving community and grant the status of experts to those who participate actively in Deep Dive Scanner’s life. That can be those who left lots of reviews or added new dive spots, edited the information and shared lots of photos, etc.  Divers can ask experts for their opinion that is highly respective and informative. We will also give experts new bonuses that will be helpful .</string>
     <string name="guide_description_2">You can add a new dive spot that we could have missed. Just open your app and find the icon with plus on the right side, tap on it and fill in all the fields and add photos to tell our diving community more about this dive spot.</string>
     <string name="guide_description_3">If you did not find a certain fish or other marine inhabitant you can create it either while adding a new dive spot or editing the existing one. Just tap on plus, type the name of the inhabitant you’d like to add, after that you see «add new», tap on this button and fill all the field required to provide necessary information to describe this inhabitant.</string>
     <string name="guide_description_4">Open your app and find the dive spot you’d like to edit. Scroll down and you see the question «Is the information valid?». If you want to change choose «no» and correct the information that is not accurate.</string>
@@ -290,7 +290,7 @@
     <string name="error_unexpected_error">Opps. Looks like we have an unexpected issue here. Report was captured</string>
     <string name="error_message_dive_spot_not_found">For some reason this dive spot was not found. Report was captured</string>
     <string name="error_message_you_cannot_report_self_photo">You cannot report self photo</string>
-    <string name="error_message_user_not_found">For some reason this user was not found. Report was captured</string>
+    <string name="error_message_user_not_found">For some reason this userOld was not found. Report was captured</string>
     <string name="error_unexpected_error_checkins_counter">Opps. Looks like we have an unexpected issue while updating checkins count. Report was captured</string>
     <string name="error_message_dive_spot_not_found_checkins_counter">For some reason while updating checkins count this dive spot was not found. Report was captured</string>
     <string name="error_unexpected_error_reviews_counter">Opps. Looks like we have an unexpected issue while updating reviews count. Report was captured</string>
