@@ -1,196 +1,244 @@
 <?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <import type="android.view.View"/>
+        <import type="android.text.TextUtils"/>
+        <variable
+            name="sealifeViewModel"
+            type="com.ddscanner.screens.sealife.details.SealifeViewModel" />
+    </data>
 
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/appbar"
+    <android.support.design.widget.CoordinatorLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="239dp"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        android:background="@color/black_text"
-       >
+        android:layout_height="match_parent">
 
-        <android.support.design.widget.CollapsingToolbarLayout
-            android:id="@+id/collapsing_toolbar"
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/app_bar_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:contentScrim="@color/primary"
+            android:layout_height="239dp"
+            android:background="@color/black_text"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
-            <ImageView
-                android:id="@+id/sealife_full_photo"
+            <android.support.design.widget.CollapsingToolbarLayout
+                android:id="@+id/collapsing_toolbar_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:layout_collapseMode="parallax"
-                android:layout_gravity="center"/>
-            <ProgressBar
-                android:id="@+id/progressBar"
-                style="?android:attr/progressBarStyleSmall"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_gravity="center"
-                android:visibility="gone"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"/>
+                app:contentScrim="@color/primary"
 
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar_collapse"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+                <ImageView
+                    android:id="@+id/sealife_full_photo"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    app:layout_collapseMode="parallax"
+                    app:sealifeViewModel="@{sealifeViewModel}"/>
+
+                <ProgressBar
+                    android:id="@+id/progress_bar"
+                    style="?android:attr/progressBarStyleSmall"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginTop="20dp"
+                    android:visibility="gone" />
+
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    app:layout_collapseMode="pin" />
+
+            </android.support.design.widget.CollapsingToolbarLayout>
+        </android.support.design.widget.AppBarLayout>
+
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin" />
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-        </android.support.design.widget.CollapsingToolbarLayout>
-    </android.support.design.widget.AppBarLayout>
-    <android.support.v4.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-        <LinearLayout
-            android:background="@color/white"
-            android:orientation="vertical"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="20dp">
-            <LinearLayout
-                android:orientation="vertical"
-                android:visibility="visible"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-                <TextView
-                    style="@style/SealifeCharachteristicTitle"
-                    android:text="@string/name"/>
-                <TextView
-                    android:id="@+id/name"
-                    style="@style/SealifeCharachteristicValue"
-                    />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:orientation="vertical"
+                    android:paddingBottom="20dp"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/SealifeCharachteristicTitle"
+                            android:text="@string/name" />
+
+                        <TextView
+                            android:id="@+id/name"
+                            style="@style/SealifeCharachteristicValue"
+                            android:text="@{sealifeViewModel.sealife.name}" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/char_length"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="@{TextUtils.isEmpty(sealifeViewModel.sealife.length) ? View.GONE : View.VISIBLE}">
+
+                        <TextView
+                            android:id="@+id/title_length"
+                            style="@style/SealifeCharachteristicTitle"
+                            android:text="@string/length" />
+
+                        <TextView
+                            android:id="@+id/length"
+                            style="@style/SealifeCharachteristicValue"
+                            android:text="@{sealifeViewModel.sealife.length}" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/char_weight"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="@{TextUtils.isEmpty(sealifeViewModel.sealife.weight) ? View.GONE : View.VISIBLE}">
+
+                        <TextView
+                            android:id="@+id/title_weight"
+                            style="@style/SealifeCharachteristicTitle"
+                            android:text="@string/weight" />
+
+                        <TextView
+                            android:id="@+id/weight"
+                            style="@style/SealifeCharachteristicValue"
+                            android:text="@{sealifeViewModel.sealife.weight}" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/char_depth"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="@{TextUtils.isEmpty(sealifeViewModel.sealife.depth) ? View.GONE : View.VISIBLE}">
+
+                        <TextView
+                            android:id="@+id/title_depth"
+                            style="@style/SealifeCharachteristicTitle"
+                            android:text="@string/depth" />
+
+                        <TextView
+                            android:id="@+id/depth"
+                            style="@style/SealifeCharachteristicValue"
+                            android:text="@{sealifeViewModel.sealife.depth}" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/char_scname"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/char_depth"
+                        android:orientation="vertical"
+                        android:visibility="@{TextUtils.isEmpty(sealifeViewModel.sealife.scName) ? View.GONE : View.VISIBLE}">
+
+                        <TextView
+                            android:id="@+id/title_scname"
+                            style="@style/SealifeCharachteristicTitle"
+                            android:text="@string/sc_name" />
+
+                        <TextView
+                            android:id="@+id/scname"
+                            style="@style/SealifeCharachteristicValue"
+                            android:text="@{sealifeViewModel.sealife.scName}" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/char_order"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="@{TextUtils.isEmpty(sealifeViewModel.sealife.order) ? View.GONE : View.VISIBLE}">
+
+                        <TextView
+                            android:id="@+id/title_order"
+                            style="@style/SealifeCharachteristicTitle"
+                            android:text="@string/order" />
+
+                        <TextView
+                            android:id="@+id/order"
+                            style="@style/SealifeCharachteristicValue"
+                            android:text="@{sealifeViewModel.sealife.order}" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/char_scclass"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="@{TextUtils.isEmpty(sealifeViewModel.sealife.scClass) ? View.GONE : View.VISIBLE}">
+
+                        <TextView
+                            android:id="@+id/title_scclass"
+                            style="@style/SealifeCharachteristicTitle"
+                            android:text="@string/scclass" />
+
+                        <TextView
+                            android:id="@+id/scclass"
+                            style="@style/SealifeCharachteristicValue"
+                            android:text="@{sealifeViewModel.sealife.scClass}" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/char_distribution"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="@{TextUtils.isEmpty(sealifeViewModel.sealife.distribution) ? View.GONE : View.VISIBLE}">
+
+                        <TextView
+                            android:id="@+id/title_distribution"
+                            style="@style/SealifeCharachteristicTitle"
+                            android:text="@string/distribution" />
+
+                        <TextView
+                            android:id="@+id/distribution"
+                            style="@style/SealifeCharachteristicValue"
+                            android:text="@{sealifeViewModel.sealife.distribution}" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/char_habitat"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="@{TextUtils.isEmpty(sealifeViewModel.sealife.habitat) ? View.GONE : View.VISIBLE}">
+
+                        <TextView
+                            android:id="@+id/title_habitat"
+                            style="@style/SealifeCharachteristicTitle"
+                            android:text="@string/habitat" />
+
+                        <TextView
+                            android:id="@+id/habitat"
+                            style="@style/SealifeCharachteristicValue"
+                            android:text="@{sealifeViewModel.sealife.habitat}" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <ImageView style="@style/DividerStyleFull" />
             </LinearLayout>
-            <LinearLayout
-                android:orientation="vertical"
-                android:id="@+id/char_length"
-                android:visibility="gone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:id="@+id/title_length"
-                    style="@style/SealifeCharachteristicTitle"
-                    android:text="@string/length"/>
-                <TextView
-                    android:id="@+id/length"
-                    style="@style/SealifeCharachteristicValue"
-                    />
-            </LinearLayout>
-            <LinearLayout
-                android:orientation="vertical"
-                android:id="@+id/char_weight"
-                android:visibility="gone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:id="@+id/title_weight"
-                    style="@style/SealifeCharachteristicTitle"
-                    android:text="@string/weight"/>
-                <TextView
-                    android:id="@+id/weight"
-                    style="@style/SealifeCharachteristicValue"/>
-            </LinearLayout>
-            <LinearLayout
-                android:orientation="vertical"
-                android:id="@+id/char_depth"
-                android:visibility="gone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:id="@+id/title_depth"
-                    style="@style/SealifeCharachteristicTitle"
-                    android:text="@string/depth"/>
-                <TextView
-                    android:id="@+id/depth"
-                    style="@style/SealifeCharachteristicValue"/>
-            </LinearLayout>
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_below="@+id/char_depth"
-                android:id="@+id/char_scname"
-                android:visibility="gone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:id="@+id/title_scname"
-                    style="@style/SealifeCharachteristicTitle"
-                    android:text="@string/sc_name"/>
-                <TextView
-                    android:id="@+id/scname"
-                    style="@style/SealifeCharachteristicValue"/>
-            </LinearLayout>
-            <LinearLayout
-                android:orientation="vertical"
-                android:id="@+id/char_order"
-                android:layout_width="wrap_content"
-                android:visibility="gone"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:id="@+id/title_order"
-                    style="@style/SealifeCharachteristicTitle"
-                    android:text="@string/order"/>
-                <TextView
-                    android:id="@+id/order"
-                    style="@style/SealifeCharachteristicValue"/>
-            </LinearLayout>
-            <LinearLayout
-                android:orientation="vertical"
-                android:id="@+id/char_scclass"
-                android:visibility="gone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:id="@+id/title_scclass"
-                    style="@style/SealifeCharachteristicTitle"
-                    android:text="@string/scclass"/>
-                <TextView
-                    android:id="@+id/scclass"
-                    style="@style/SealifeCharachteristicValue"/>
-            </LinearLayout>
-            <LinearLayout
-                android:orientation="vertical"
-                android:id="@+id/char_distribution"
-                android:visibility="gone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:id="@+id/title_distribution"
-                    style="@style/SealifeCharachteristicTitle"
-                    android:text="@string/distribution"/>
-                <TextView
-                    android:id="@+id/distribution"
-                    style="@style/SealifeCharachteristicValue"/>
-            </LinearLayout>
-            <LinearLayout
-                android:orientation="vertical"
-                android:id="@+id/char_habitat"
-                android:visibility="gone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:id="@+id/title_habitat"
-                    style="@style/SealifeCharachteristicTitle"
-                    android:text="@string/habitat"/>
-                <TextView
-                    android:id="@+id/habitat"
-                    style="@style/SealifeCharachteristicValue"/>
-            </LinearLayout>
-        </LinearLayout>
-            <ImageView
-                style="@style/DividerStyleFull" />
-        </LinearLayout>
-    </android.support.v4.widget.NestedScrollView>
-</android.support.design.widget.CoordinatorLayout>
+        </android.support.v4.widget.NestedScrollView>
+    </android.support.design.widget.CoordinatorLayout>
+</layout>

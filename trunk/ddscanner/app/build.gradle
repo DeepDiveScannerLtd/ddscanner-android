@@ -17,6 +17,9 @@ android {
             storeFile file('../../../build/debug.keystore')
         }
     }
+    dataBinding {
+        enabled = true
+    }
     compileSdkVersion 25
     buildToolsVersion "25"
     defaultConfig {
@@ -26,6 +29,8 @@ android {
         multiDexEnabled true
         versionCode 23
         versionName "2.0.17"
+
+        testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
     }
     buildTypes {
         debug {
@@ -62,8 +67,18 @@ def playServicesVersion="9.8.0"
 def supportVersionVersion="25.0.0"
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    // tests
+    // Required for local unit tests (JUnit 4 framework)
     testCompile 'junit:junit:4.12'
+    // Required for instrumented tests
+    androidTestCompile "com.android.support:support-annotations:$supportVersionVersion"
+    androidTestCompile "com.android.support.test:runner:0.5"
+    //
+    testCompile 'org.mockito:mockito-core:1.10.19'
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
+
+    // project
+    compile fileTree(dir: 'libs', include: ['*.jar'])
     // support libraries
     compile "com.android.support:appcompat-v7:$supportVersionVersion"
     compile "com.android.support:recyclerview-v7:$supportVersionVersion"

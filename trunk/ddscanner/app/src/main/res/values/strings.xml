@@ -324,5 +324,6 @@
     <string name="dialog_leave_review_message">If you leave the page your review will be lost</string>
     <string name="cencel_dialog">cancel</string>
     <string name="leave">leave</string>
+    <string name="details">Details</string>
     <string name="dialog_leave_title">Are you sure?</string>
 </resources>

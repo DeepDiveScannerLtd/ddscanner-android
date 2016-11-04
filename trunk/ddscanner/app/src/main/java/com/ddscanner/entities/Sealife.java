@@ -18,48 +18,92 @@ public class Sealife implements Serializable {
     private String habitat;
     private String image;
 
-    public String getId() { return id; }
+    public String getId() {
+        return id;
+    }
 
-    public void setId(String id) { this.id = id; }
+    public void setId(String id) {
+        this.id = id;
+    }
 
-    public String getName() { return name; }
+    public String getName() {
+        return name;
+    }
 
-    public void setName(String name) { this.name = name; }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    public String getLength() { return length; }
+    public String getLength() {
+        return length;
+    }
 
-    public void setLength(String length) { this.length = length; }
+    public void setLength(String length) {
+        this.length = length;
+    }
 
-    public String getWeight() { return weight; }
+    public String getWeight() {
+        return weight;
+    }
 
-    public void setWeight(String weight) { this.weight = weight; }
+    public void setWeight(String weight) {
+        this.weight = weight;
+    }
 
-    public String getScName() { return scName; }
+    public String getScName() {
+        return scName;
+    }
 
-    public void setScName(String scName) { this.scName = scName; }
+    public void setScName(String scName) {
+        this.scName = scName;
+    }
 
-    public String getOrder() { return order;}
+    public String getOrder() {
+        return order;
+    }
 
-    public void setOrder(String order) { this.order = order; }
+    public void setOrder(String order) {
+        this.order = order;
+    }
 
-    public String getDepth() { return depth; }
+    public String getDepth() {
+        return depth;
+    }
 
-    public void setDepth(String depth) { this.depth = depth; }
+    public void setDepth(String depth) {
+        this.depth = depth;
+    }
 
-    public String getDistribution() { return distribution; }
+    public String getDistribution() {
+        return distribution;
+    }
 
-    public void setDistribution(String distribution) { this.distribution = distribution; }
+    public void setDistribution(String distribution) {
+        this.distribution = distribution;
+    }
 
-    public String getScCLass() { return scClass; }
+    public String getScClass() {
+        return scClass;
+    }
 
-    public void setScCLass(String scCLass) { this.scClass = scCLass; }
+    public void setScClass(String scCLass) {
+        this.scClass = scCLass;
+    }
 
-    public String getHabitat() { return habitat; }
+    public String getHabitat() {
+        return habitat;
+    }
 
-    public void setHabitat(String habitat) { this.habitat = habitat; }
+    public void setHabitat(String habitat) {
+        this.habitat = habitat;
+    }
 
-    public String getImage() { return image; }
+    public String getImage() {
+        return image;
+    }
 
-    public void setImage(String image) { this.image = image; }
+    public void setImage(String image) {
+        this.image = image;
+    }
 
 }
