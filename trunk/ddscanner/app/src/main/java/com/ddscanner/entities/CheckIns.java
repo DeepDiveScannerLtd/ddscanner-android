@@ -8,13 +8,13 @@ import java.util.List;
  */
 public class CheckIns implements Serializable {
 
-    private List<User> checkins;
+    private List<UserOld> checkins;
 
-    public List<User> getCheckins() {
+    public List<UserOld> getCheckins() {
         return checkins;
     }
 
-    public void setCheckins(List<User> checkins) {
+    public void setCheckins(List<UserOld> checkins) {
         this.checkins = checkins;
     }
 }

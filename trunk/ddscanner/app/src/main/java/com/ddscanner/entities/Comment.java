@@ -1,10 +1,6 @@
 package com.ddscanner.entities;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,7 +14,7 @@ public class Comment implements Serializable{
     private String date;
     private String likes;
     private String dislikes;
-    private User user;
+    private UserOld userOld;
     private boolean isLike;
     private boolean isDislike;
     private boolean isEdit;
@@ -138,11 +134,11 @@ public class Comment implements Serializable{
         this.comment = comment;
     }
 
-    public User getUser() {
-        return user;
+    public UserOld getUserOld() {
+        return userOld;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserOld(UserOld userOld) {
+        this.userOld = userOld;
     }
 }

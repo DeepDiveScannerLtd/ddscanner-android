@@ -319,7 +319,7 @@ public class LoginActivity extends AppCompatActivity
             SharedPreferenceHelper.setToken(token);
             SharedPreferenceHelper.setSn(socialNetwork.getName());
             SharedPreferenceHelper.setIsUserSignedIn(true, socialNetwork);
-            SharedPreferenceHelper.setUserServerId(result.getUser().getId());
+            SharedPreferenceHelper.setUserServerId(result.getUserOld().getId());
             DDScannerApplication.bus.post(new LoggedInEvent());
             setResult(Activity.RESULT_OK);
             finish();

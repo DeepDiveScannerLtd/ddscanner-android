@@ -4,13 +4,13 @@ import java.util.List;
 
 public class DiveSpotEditorsResponseEntity {
 
-    private List<User> editors;
+    private List<UserOld> editors;
 
-    public List<User> getEditors() {
+    public List<UserOld> getEditors() {
         return editors;
     }
 
-    public void setEditors(List<User> editors) {
+    public void setEditors(List<UserOld> editors) {
         this.editors = editors;
     }
 }

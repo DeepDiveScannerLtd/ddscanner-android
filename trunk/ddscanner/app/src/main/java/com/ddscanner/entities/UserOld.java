@@ -8,7 +8,7 @@ import java.io.Serializable;
 /**
  * Created by lashket on 10.3.16.
  */
-public class User implements Serializable, Parcelable{
+public class UserOld implements Serializable, Parcelable{
 
     private String name;
     private String picture;
@@ -45,12 +45,12 @@ public class User implements Serializable, Parcelable{
         this.countFavorite = countFavorite;
     }
 
-    public User(String name, String picture) {
+    public UserOld(String name, String picture) {
         this.name = name;
         this.picture = picture;
     }
 
-    protected User(Parcel in) {
+    protected UserOld(Parcel in) {
         name = in.readString();
         picture = in.readString();
         link = in.readString();
@@ -69,15 +69,15 @@ public class User implements Serializable, Parcelable{
         author = in.readString();
     }
 
-    public static final Creator<User> CREATOR = new Creator<User>() {
+    public static final Creator<UserOld> CREATOR = new Creator<UserOld>() {
         @Override
-        public User createFromParcel(android.os.Parcel in) {
-            return new User(in);
+        public UserOld createFromParcel(android.os.Parcel in) {
+            return new UserOld(in);
         }
 
         @Override
-        public User[] newArray(int size) {
-            return new User[size];
+        public UserOld[] newArray(int size) {
+            return new UserOld[size];
         }
     };
 

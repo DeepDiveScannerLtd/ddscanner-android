@@ -27,7 +27,7 @@ public class Notification implements Serializable {
     private String date;
     private String message;
     private DiveSpot diveSpot;
-    private User user;
+    private UserOld userOld;
     private Comment comment;
 
     public Type getType() {
@@ -62,12 +62,12 @@ public class Notification implements Serializable {
         this.diveSpot = diveSpot;
     }
 
-    public User getUser() {
-        return user;
+    public UserOld getUserOld() {
+        return userOld;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserOld(UserOld userOld) {
+        this.userOld = userOld;
     }
 
     public Comment getComment() {

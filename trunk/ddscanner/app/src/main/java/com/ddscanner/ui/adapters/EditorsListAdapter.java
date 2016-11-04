@@ -8,12 +8,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
-import com.ddscanner.entities.User;
-import com.ddscanner.events.ShowUserDialogEvent;
+import com.ddscanner.entities.UserOld;
 import com.ddscanner.ui.activities.ForeignProfileActivity;
-import com.ddscanner.ui.views.TransformationRoundImage;
 import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;
 
@@ -29,12 +26,12 @@ public class EditorsListAdapter extends RecyclerView.Adapter<EditorsListAdapter.
     private static final String TAG = EditorsListAdapter.class.getName();
 
     private Context context;
-    private List<User> userArrayList;
+    private List<UserOld> userOldArrayList;
     private int avatarImageSize;
     private int avatarImageRadius;
 
-    public EditorsListAdapter(Context context, List<User> users) {
-        userArrayList = users;
+    public EditorsListAdapter(Context context, List<UserOld> userOlds) {
+        userOldArrayList = userOlds;
         this.context = context;
         avatarImageRadius = (int) context.getResources().getDimension(R.dimen.editor_avatar_radius);
         avatarImageSize = 2 * avatarImageRadius;
@@ -50,17 +47,17 @@ public class EditorsListAdapter extends RecyclerView.Adapter<EditorsListAdapter.
 
     @Override
     public void onBindViewHolder(UserListViewHolder holder, int position) {
-        Picasso.with(context).load(userArrayList.get(position).getPicture())
+        Picasso.with(context).load(userOldArrayList.get(position).getPicture())
                 .resize(Math.round(Helpers.convertDpToPixel(avatarImageSize, context)), Math.round(Helpers.convertDpToPixel(avatarImageSize, context)))
                 .centerCrop()
                 .transform(new CropCircleTransformation())
                 .into(holder.userAvatar);
-        holder.userName.setText(userArrayList.get(position).getName());
+        holder.userName.setText(userOldArrayList.get(position).getName());
     }
 
     @Override
     public int getItemCount() {
-        return userArrayList.size();
+        return userOldArrayList.size();
     }
 
     public class UserListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -77,7 +74,7 @@ public class EditorsListAdapter extends RecyclerView.Adapter<EditorsListAdapter.
 
         @Override
         public void onClick(View v) {
-            ForeignProfileActivity.show(context, userArrayList.get(getAdapterPosition()).getId());
+            ForeignProfileActivity.show(context, userOldArrayList.get(getAdapterPosition()).getId());
         }
     }
 

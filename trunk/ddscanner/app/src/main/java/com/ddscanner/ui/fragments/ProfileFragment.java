@@ -33,7 +33,7 @@ import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.DiveSpotListSource;
 import com.ddscanner.entities.ProfileAchievement;
-import com.ddscanner.entities.User;
+import com.ddscanner.entities.UserOld;
 import com.ddscanner.entities.UserResponseEntity;
 import com.ddscanner.events.ChangePageOfMainViewPagerEvent;
 import com.ddscanner.events.LoadUserProfileInfoEvent;
@@ -86,7 +86,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
     private LinearLayout capturePhoto;
     private ImageView newPhoto;
     private Button cancelButton;
-    private User user;
+    private UserOld userOld;
     private TextView userCommentsCount;
     private TextView userLikesCount;
     private TextView userDislikesCount;
@@ -196,9 +196,9 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
         }
     };
 
-    private DDScannerRestClient.ResultListener<User> userResultListener = new DDScannerRestClient.ResultListener<User>() {
+    private DDScannerRestClient.ResultListener<UserOld> userResultListener = new DDScannerRestClient.ResultListener<UserOld>() {
         @Override
-        public void onSuccess(User result) {
+        public void onSuccess(UserOld result) {
 
         }
 
@@ -410,11 +410,11 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
                 swipeRefreshLayout.setEnabled(false);
                 aboutLayout.setVisibility(View.GONE);
                 editLayout.setVisibility(View.VISIBLE);
-                fullNameEdit.setText(user.getName());
-                fullNameEdit.setSelection(user.getName().length());
-                if (user.getAbout() != null) {
-                    aboutEdit.setText(user.getAbout());
-                    aboutEdit.setSelection(user.getAbout().length());
+                fullNameEdit.setText(userOld.getName());
+                fullNameEdit.setSelection(userOld.getName().length());
+                if (userOld.getAbout() != null) {
+                    aboutEdit.setText(userOld.getAbout());
+                    aboutEdit.setSelection(userOld.getAbout().length());
                 }
                 nameLeftSymbols.setVisibility(View.GONE);
                 aboutLeftSymbols.setVisibility(View.GONE);
@@ -468,17 +468,17 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
                 break;
             case R.id.likeLayout:
                 EventsTracker.trackUserLikesView();
-                UserLikesDislikesActivity.show(getActivity(), true, user.getId());
+                UserLikesDislikesActivity.show(getActivity(), true, userOld.getId());
                 break;
             case R.id.dislikeLayout:
                 EventsTracker.trackUserDislikesView();
-                UserLikesDislikesActivity.show(getActivity(), false, user.getId());
+                UserLikesDislikesActivity.show(getActivity(), false, userOld.getId());
                 break;
             case R.id.comments_layout:
-                SelfCommentsActivity.show(getContext(), user.getId());
+                SelfCommentsActivity.show(getContext(), userOld.getId());
                 break;
             case R.id.show_achievments_details:
-                AchievementsActivity.show(getContext(), user.getId());
+                AchievementsActivity.show(getContext(), userOld.getId());
                 break;
         }
     }
@@ -554,7 +554,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
         if (getContext() == null) {
             return;
         }
-        this.user = userResponseEntity.getUser();
+        this.userOld = userResponseEntity.getUserOld();
         showAchivementDetails.setOnClickListener(this);
         ArrayList<ProfileAchievement> achievmentProfiles = new ArrayList<>();
         if (userResponseEntity.getAchievements() != null && userResponseEntity.getAchievements().size() > 0) {
@@ -568,65 +568,65 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
             noAchievements.setVisibility(View.VISIBLE);
             achievmentRecyclerView.setVisibility(View.GONE);
         }
-        if (user != null) {
-            if (!user.getCountLike().equals("0")) {
+        if (userOld != null) {
+            if (!userOld.getCountLike().equals("0")) {
                 likeLayout.setOnClickListener(this);
             }
-            if (!user.getCountDislike().equals("0")) {
+            if (!userOld.getCountDislike().equals("0")) {
                 dislikeLayout.setOnClickListener(this);
             }
-            if (!user.getCountComment().equals("0")) {
+            if (!userOld.getCountComment().equals("0")) {
                 commentsLayout.setOnClickListener(this);
             }
-            if (user.getPicture() == null) {
+            if (userOld.getPicture() == null) {
                 Picasso.with(getContext()).load(R.drawable.avatar_profile_default)
                         .resize(Math.round(Helpers.convertDpToPixel(100, getContext())),
                                 Math.round(Helpers.convertDpToPixel(100, getContext()))).centerCrop()
                         .placeholder(R.drawable.avatar_profile_default)
                         .transform(new CropCircleTransformation()).into(avatar);
             } else {
-                Picasso.with(getContext()).load(user.getPicture())
+                Picasso.with(getContext()).load(userOld.getPicture())
                         .resize(Math.round(Helpers.convertDpToPixel(80, getContext())),
                                 Math.round(Helpers.convertDpToPixel(80, getContext()))).centerCrop()
                         .placeholder(R.drawable.avatar_profile_default)
                         .error(R.drawable.avatar_profile_default)
                         .transform(new CropCircleTransformation()).into(avatar);
             }
-            userCommentsCount.setText(Helpers.formatLikesCommentsCountNumber(user.getCountComment()));
-            userLikesCount.setText(Helpers.formatLikesCommentsCountNumber(user.getCountLike()));
-            userDislikesCount.setText(Helpers.formatLikesCommentsCountNumber(user.getCountDislike()));
-            Picasso.with(getContext()).load(user.getPicture())
+            userCommentsCount.setText(Helpers.formatLikesCommentsCountNumber(userOld.getCountComment()));
+            userLikesCount.setText(Helpers.formatLikesCommentsCountNumber(userOld.getCountLike()));
+            userDislikesCount.setText(Helpers.formatLikesCommentsCountNumber(userOld.getCountDislike()));
+            Picasso.with(getContext()).load(userOld.getPicture())
                     .resize(Math.round(Helpers.convertDpToPixel(80, getContext())),
                             Math.round(Helpers.convertDpToPixel(80, getContext()))).centerCrop()
                     .placeholder(R.drawable.avatar_profile_default)
                     .error(R.drawable.avatar_profile_default)
                     .transform(new CropCircleTransformation()).into(newPhoto);
-            if (user.getAbout() != null && !user.getAbout().isEmpty()) {
+            if (userOld.getAbout() != null && !userOld.getAbout().isEmpty()) {
                 userAbout.setVisibility(View.VISIBLE);
-                userAbout.setText(user.getAbout());
+                userAbout.setText(userOld.getAbout());
             } else {
                 userAbout.setVisibility(View.GONE);
             }
-            userFullName.setText(user.getName());
-            addedCount.setText( user.getCountAdd() + getDiveSpotString(Integer.parseInt(user.getCountAdd())));
-            editedCount.setText(user.getCountEdit() + getDiveSpotString(Integer.parseInt(user.getCountEdit())));
-            favouriteCount.setText(user.getCountFavorite() + getDiveSpotString(Integer.parseInt(user.getCountFavorite())));
-            checkInCount.setText(user.getCountCheckin() + getDiveSpotString(Integer.parseInt(user.getCountFavorite())));
+            userFullName.setText(userOld.getName());
+            addedCount.setText( userOld.getCountAdd() + getDiveSpotString(Integer.parseInt(userOld.getCountAdd())));
+            editedCount.setText(userOld.getCountEdit() + getDiveSpotString(Integer.parseInt(userOld.getCountEdit())));
+            favouriteCount.setText(userOld.getCountFavorite() + getDiveSpotString(Integer.parseInt(userOld.getCountFavorite())));
+            checkInCount.setText(userOld.getCountCheckin() + getDiveSpotString(Integer.parseInt(userOld.getCountFavorite())));
             showAllCheckins.setOnClickListener(this);
-            if (Integer.parseInt(user.getCountCheckin()) == 0) {
+            if (Integer.parseInt(userOld.getCountCheckin()) == 0) {
                 showAllCheckins.setOnClickListener(null);
             }
             showAllFavorites.setOnClickListener(this);
 
-            if (user.getCountFavorite() == null || Integer.parseInt(user.getCountFavorite()) == 0) {
+            if (userOld.getCountFavorite() == null || Integer.parseInt(userOld.getCountFavorite()) == 0) {
                 showAllFavorites.setOnClickListener(null);
             }
             showAllEdited.setOnClickListener(this);
-            if (Integer.parseInt(user.getCountEdit()) == 0) {
+            if (Integer.parseInt(userOld.getCountEdit()) == 0) {
                 showAllEdited.setOnClickListener(null);
             }
             showAllAdded.setOnClickListener(this);
-            if (Integer.parseInt(user.getCountAdd()) == 0) {
+            if (Integer.parseInt(userOld.getCountAdd()) == 0) {
                 showAllAdded.setOnClickListener(null);
             }
         } else {
@@ -658,11 +658,11 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
     private void createUpdateRequest() {
         isClickedChosingPhotoButton = false;
         materialDialog.show();
-        if (!aboutEdit.equals(user.getAbout())) {
+        if (!aboutEdit.equals(userOld.getAbout())) {
             about = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
                     aboutEdit.getText().toString());
         }
-        if (!fullNameEdit.equals(user.getName()) && !fullNameEdit.getText().toString().equals("")) {
+        if (!fullNameEdit.equals(userOld.getName()) && !fullNameEdit.getText().toString().equals("")) {
             name = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
                     fullNameEdit.getText().toString());
         }

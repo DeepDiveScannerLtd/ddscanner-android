@@ -4,7 +4,6 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,10 +16,8 @@ import android.widget.LinearLayout;
 
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
-import com.ddscanner.entities.Activity;
 import com.ddscanner.entities.Notification;
 import com.ddscanner.ui.activities.MainActivity;
-import com.ddscanner.ui.adapters.ActivitiesListAdapter;
 import com.ddscanner.ui.adapters.NotificationsListAdapter;
 import com.ddscanner.ui.adapters.SectionedRecyclerViewAdapter;
 import com.ddscanner.utils.Helpers;
@@ -172,7 +169,7 @@ public class AllNotificationsFragment extends Fragment {
     private boolean checkIsListDifferent( ArrayList<Notification> newNotifications, ArrayList<Notification> oldNotifications) {
         for (Notification notification : oldNotifications) {
             for (Notification notification1 : newNotifications) {
-                if (!notification.getType().equals(notification1.getType()) || !notification.getUser().getId().equals(notification1.getUser().getId()) || notification.getDiveSpot().getId() != notification1.getDiveSpot().getId()) {
+                if (!notification.getType().equals(notification1.getType()) || !notification.getUserOld().getId().equals(notification1.getUserOld().getId()) || notification.getDiveSpot().getId() != notification1.getDiveSpot().getId()) {
                     return true;
                 }
             }
