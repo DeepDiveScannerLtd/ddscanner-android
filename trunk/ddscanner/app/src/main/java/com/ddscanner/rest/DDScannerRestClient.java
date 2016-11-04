@@ -2,7 +2,6 @@ package com.ddscanner.rest;
 
 import android.support.annotation.NonNull;
 
-import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.AchievmentsResponseEntity;
 import com.ddscanner.entities.CheckIns;
 import com.ddscanner.entities.Comments;
@@ -19,17 +18,21 @@ import com.ddscanner.entities.RegisterResponse;
 import com.ddscanner.entities.Sealife;
 import com.ddscanner.entities.SealifeResponseEntity;
 import com.ddscanner.entities.SignInType;
+import com.ddscanner.entities.SignUpResponseEntity;
 import com.ddscanner.entities.User;
 import com.ddscanner.entities.UserResponseEntity;
 import com.ddscanner.entities.request.DiveSpotsRequestMap;
 import com.ddscanner.entities.request.IdentifyRequest;
 import com.ddscanner.entities.request.RegisterRequest;
 import com.ddscanner.entities.request.ReportRequest;
+import com.ddscanner.entities.request.SignInRequest;
+import com.ddscanner.entities.request.SignUpRequest;
 import com.ddscanner.entities.request.ValidationRequest;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 
 import org.json.JSONException;
@@ -265,8 +268,8 @@ public class DDScannerRestClient implements DDScannerRestClientContract {
         ValidationRequest validationRequest = new ValidationRequest();
         validationRequest.setSocial(SharedPreferenceHelper.getSn());
         validationRequest.setToken(SharedPreferenceHelper.getToken());
-        validationRequest.setAppId(SharedPreferenceHelper.getUserAppId());
-        validationRequest.setpush(SharedPreferenceHelper.getGcmId());
+        validationRequest.setAppId(FirebaseInstanceId.getInstance().getId());
+        validationRequest.setpush(FirebaseInstanceId.getInstance().getToken());
         validationRequest.setValid(isValid);
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().divespotValidation(diveSpotId, validationRequest);
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
@@ -436,6 +439,41 @@ public class DDScannerRestClient implements DDScannerRestClientContract {
         });
     }
 
+    /*Methods using in API v2_0*/
+
+    public void postUserSignUp(String email, String password, String userType, String lat, String lng, ResultListener<SignUpResponseEntity> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().signUpUser(getSignUpRequest(email, password, userType, lat, lng));
+        call.enqueue(new ResponseEntityCallback<SignUpResponseEntity>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<SignUpResponseEntity> resultListener, String responseString) throws JSONException {
+                SignUpResponseEntity signUpResponseEntity = new Gson().fromJson(responseString, SignUpResponseEntity.class);
+                resultListener.onSuccess(signUpResponseEntity);
+            }
+        });
+    }
+
+    public void postUserSignIn(String email, String password, String lat, String lng, SignInType signInType, String token, ResultListener<SignUpResponseEntity> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().loginUser(getSignInRequest(email, password, lat, lng, signInType, token));
+        call.enqueue(new ResponseEntityCallback<SignUpResponseEntity>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<SignUpResponseEntity> resultListener, String responseString) throws JSONException {
+                SignUpResponseEntity signUpResponseEntity = new Gson().fromJson(responseString, SignUpResponseEntity.class);
+                resultListener.onSuccess(signUpResponseEntity);
+            }
+        });
+    }
+
+    public void getUserSelfInformation(final ResultListener<User> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getSelfProfileInformation();
+        call.enqueue(new ResponseEntityCallback<User>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<User> resultListener, String responseString) throws JSONException {
+                User user = new Gson().fromJson(responseString, User.class);
+                resultListener.onSuccess(user);
+            }
+        });
+    }
+
     public void getDiveCenters(LatLng latLng, final ResultListener<DiveCentersResponseEntity> resultListener) {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveCenters(getDivecentersRequestmap(latLng));
         call.enqueue(new ResponseEntityCallback<DiveCentersResponseEntity>(gson, resultListener) {
@@ -512,8 +550,8 @@ public class DDScannerRestClient implements DDScannerRestClientContract {
     private RegisterRequest getRegisterRequest() {
         RegisterRequest registerRequest = new RegisterRequest();
         if (!SharedPreferenceHelper.isUserLoggedIn()) {
-            registerRequest.setAppId(SharedPreferenceHelper.getUserAppId());
-            registerRequest.setpush(SharedPreferenceHelper.getGcmId());
+            registerRequest.setAppId(FirebaseInstanceId.getInstance().getId());
+            registerRequest.setpush(FirebaseInstanceId.getInstance().getToken());
             return registerRequest;
         }
 
@@ -522,14 +560,14 @@ public class DDScannerRestClient implements DDScannerRestClientContract {
         if (SharedPreferenceHelper.getSn().equals("tw")) {
             registerRequest.setSecret(SharedPreferenceHelper.getSecret());
         }
-        registerRequest.setAppId(SharedPreferenceHelper.getUserAppId());
-        registerRequest.setpush(SharedPreferenceHelper.getGcmId());
+        registerRequest.setAppId(FirebaseInstanceId.getInstance().getId());
+        registerRequest.setpush(FirebaseInstanceId.getInstance().getToken());
         return registerRequest;
     }
 
     private IdentifyRequest getUserIdentifyData(String lat, String lng) {
         IdentifyRequest identifyRequest = new IdentifyRequest();
-        identifyRequest.setAppId(SharedPreferenceHelper.getUserAppId());
+        identifyRequest.setAppId(FirebaseInstanceId.getInstance().getId());
         if (SharedPreferenceHelper.isUserLoggedIn()) {
             identifyRequest.setSocial(SharedPreferenceHelper.getSn());
             identifyRequest.setToken(SharedPreferenceHelper.getToken());
@@ -537,7 +575,7 @@ public class DDScannerRestClient implements DDScannerRestClientContract {
                 identifyRequest.setSecret(SharedPreferenceHelper.getSecret());
             }
         }
-        identifyRequest.setpush(SharedPreferenceHelper.getGcmId());
+        identifyRequest.setpush(FirebaseInstanceId.getInstance().getToken());
         if (lat != null && lng != null) {
             identifyRequest.setLat(lat);
             identifyRequest.setLng(lng);
@@ -552,6 +590,45 @@ public class DDScannerRestClient implements DDScannerRestClientContract {
         registerRequest.setSocial(socialNetworkName);
         registerRequest.setToken(token);
         return registerRequest;
+    }
+
+    private SignUpRequest getSignUpRequest(String email, String password, String userType, String lat, String lng) {
+        SignUpRequest signUpRequest = new SignUpRequest();
+        signUpRequest.setEmail(email);
+        signUpRequest.setPassword(password);
+        signUpRequest.setUserType(Helpers.getUserType(userType));
+        signUpRequest.setPush(FirebaseInstanceId.getInstance().getToken());
+        signUpRequest.setApp_id(FirebaseInstanceId.getInstance().getId());
+        signUpRequest.setLat(lat);
+        signUpRequest.setLng(lng);
+        signUpRequest.setDeviceType(2);
+        return signUpRequest;
+    }
+
+    private SignInRequest getSignInRequest(String email, String password, String lat, String lng, SignInType signInType, String token) {
+        SignInRequest signInRequest = new SignInRequest();
+        signInRequest.setDeviceType(2);
+        signInRequest.setEmail(email);
+        signInRequest.setPassword(password);
+        if (signInType != null) {
+            switch (signInType) {
+                case GOOGLE:
+                    signInRequest.setProviderType(2);
+                    break;
+                case FACEBOOK:
+                    signInRequest.setProviderType(1);
+                    break;
+                default:
+                    signInRequest.setProviderType(null);
+                    break;
+            }
+        }
+        signInRequest.setToken(token);
+        signInRequest.setPush(FirebaseInstanceId.getInstance().getToken());
+        signInRequest.setApp_id(FirebaseInstanceId.getInstance().getId());
+        signInRequest.setLat(lat);
+        signInRequest.setLng(lng);
+        return signInRequest;
     }
 
     public interface ResultListener<T> {

@@ -344,7 +344,7 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.add_ds_fab:
 //                if (SharedPreferenceHelper.isUserLoggedIn()) {
-//                    AddDiveSpotActivity.show(getActivity());
+//                    AddDiveSpotActivity.showForResult(getActivity());
 //                } else {
 //                    DDScannerApplication.bus.post(new OpenAddDsActivityAfterLogin());
 //                }

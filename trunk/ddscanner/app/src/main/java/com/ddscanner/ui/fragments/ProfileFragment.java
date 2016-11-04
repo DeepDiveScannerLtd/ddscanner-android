@@ -31,7 +31,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
-import com.ddscanner.entities.AchievmentProfile;
 import com.ddscanner.entities.DiveSpotListSource;
 import com.ddscanner.entities.ProfileAchievement;
 import com.ddscanner.entities.User;
@@ -44,6 +43,7 @@ import com.ddscanner.events.TakePhotoFromCameraEvent;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.activities.AboutActivity;
 import com.ddscanner.ui.activities.AchievementsActivity;
+import com.ddscanner.ui.activities.ChangeLoginViewEvent;
 import com.ddscanner.ui.activities.DiveSpotsListActivity;
 import com.ddscanner.ui.activities.MainActivity;
 import com.ddscanner.ui.activities.SelfCommentsActivity;
@@ -109,6 +109,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
     private LinearLayout showAllEdited;
     private LinearLayout aboutDDsLayout;
     private RelativeLayout likeLayout;
+    private RelativeLayout signView;
     private LinearLayout dislikeLayout;
     private LinearLayout commentsLayout;
     private CustomSwipeRefreshLayout swipeRefreshLayout;
@@ -118,6 +119,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
     private RecyclerView achievmentRecyclerView;
     private RelativeLayout showAchivementDetails;
     private TextView noAchievements;
+    private LoginView customLoginView;
     private boolean isClickedChosingPhotoButton = false;
     private boolean isAboutChanged = false;
     private boolean isNamChanged = false;
@@ -191,6 +193,23 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             materialDialog.dismiss();
             Helpers.handleUnexpectedServerError(getFragmentManager(), url, errorMessage);
+        }
+    };
+
+    private DDScannerRestClient.ResultListener<User> userResultListener = new DDScannerRestClient.ResultListener<User>() {
+        @Override
+        public void onSuccess(User result) {
+
+        }
+
+        @Override
+        public void onConnectionFailure() {
+
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+
         }
     };
 
@@ -324,8 +343,9 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
         likeLayout = (RelativeLayout) v.findViewById(R.id.likeLayout);
         dislikeLayout = (LinearLayout) v.findViewById(R.id.dislikeLayout);
         commentsLayout = (LinearLayout) v.findViewById(R.id.comments_layout);
+        signView = (RelativeLayout) v.findViewById(R.id.sign_up_view);
         swipeRefreshLayout = (CustomSwipeRefreshLayout) v.findViewById(R.id.swiperefresh);
-
+        customLoginView = (LoginView) v.findViewById(R.id.login_view);
         swipeRefreshLayout.setSwipeableChildren(R.id.about);
 
         swipeRefreshLayout.setOnRefreshListener(this);
@@ -478,6 +498,11 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
     }
 
     @Subscribe
+    public void changeLoginView(ChangeLoginViewEvent event) {
+        customLoginView.changeViewToStart();
+    }
+
+    @Subscribe
     public void getUserProfileInfo(LoadUserProfileInfoEvent event) {
         if (SharedPreferenceHelper.isUserLoggedIn()) {
             if (!isClickedChosingPhotoButton) {
@@ -521,7 +546,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
     }
 
     private void getUserDataRequest(String id) {
-        DDScannerApplication.getDdScannerRestClient().getUserInformation(id, getUserInformationResultListener);
+     //   DDScannerApplication.getDdScannerRestClient().getUserInformation(id, getUserInformationResultListener);
+        DDScannerApplication.getDdScannerRestClient().getUserSelfInformation(userResultListener);
     }
 
     private void changeUi(UserResponseEntity userResponseEntity) {
@@ -687,7 +713,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
         if (loginView != null && aboutLayout != null) {
             loginView.setVisibility(View.GONE);
             swipeRefreshLayout.setEnabled(true);
-            DDScannerApplication.getDdScannerRestClient().getUserInformation(SharedPreferenceHelper.getUserServerId(), getUserInformationResultListener);
+            DDScannerApplication.getDdScannerRestClient().getUserSelfInformation(userResultListener);
+          //  DDScannerApplication.getDdScannerRestClient().getUserInformation(SharedPreferenceHelper.getUserServerId(), getUserInformationResultListener);
             if (editLayout.getVisibility() != View.VISIBLE) {
                 aboutLayout.setVisibility(View.VISIBLE);
             } else {
@@ -712,6 +739,11 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
 
     @Override
     public void onRefresh() {
-        DDScannerApplication.getDdScannerRestClient().getUserInformation(SharedPreferenceHelper.getUserServerId(), getUserInformationResultListener);
+        DDScannerApplication.getDdScannerRestClient().getUserSelfInformation(userResultListener);
+      //  DDScannerApplication.getDdScannerRestClient().getUserInformation(SharedPreferenceHelper.getUserServerId(), getUserInformationResultListener);
+    }
+
+    public void showSignUView() {
+
     }
 }

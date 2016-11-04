@@ -29,6 +29,7 @@ import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.RegisterResponse;
 import com.ddscanner.entities.SignInType;
+import com.ddscanner.entities.SignUpResponseEntity;
 import com.ddscanner.events.ChangePageOfMainViewPagerEvent;
 import com.ddscanner.events.CloseInfoWindowEvent;
 import com.ddscanner.events.CloseListEvent;
@@ -40,6 +41,7 @@ import com.ddscanner.events.LoadUserProfileInfoEvent;
 import com.ddscanner.events.LocationReadyEvent;
 import com.ddscanner.events.LoggedInEvent;
 import com.ddscanner.events.LoggedOutEvent;
+import com.ddscanner.events.LoginViaEmailEvent;
 import com.ddscanner.events.LoginViaFacebookClickEvent;
 import com.ddscanner.events.LoginViaGoogleClickEvent;
 import com.ddscanner.events.NewDiveSpotAddedEvent;
@@ -48,6 +50,7 @@ import com.ddscanner.events.OpenAddDsActivityAfterLogin;
 import com.ddscanner.events.PickPhotoFromGallery;
 import com.ddscanner.events.PlaceChoosedEvent;
 import com.ddscanner.events.ShowLoginActivityIntent;
+import com.ddscanner.events.SignupLoginButtonClicked;
 import com.ddscanner.events.TakePhotoFromCameraEvent;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.adapters.MainActivityPagerAdapter;
@@ -78,6 +81,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.squareup.otto.Subscribe;
 
 import org.json.JSONObject;
@@ -115,6 +119,7 @@ public class MainActivity extends BaseAppCompatActivity
     private boolean isTryToOpenAddDiveSpotActivity = false;
     private boolean isDiveSpotInfoWindowShown = false;
     private boolean isDiveSpotListIsShown = false;
+    private boolean isSignupClicked = false;
     private int positionToScroll;
 
     private CallbackManager facebookCallbackManager;
@@ -123,7 +128,32 @@ public class MainActivity extends BaseAppCompatActivity
     private boolean loggedInDuringLastOnStart;
     private boolean needToClearDefaultAccount;
 
-    private LoginResultListener loginResultListener = new LoginResultListener();
+    private DDScannerRestClient.ResultListener<SignUpResponseEntity> signUpResultListener = new DDScannerRestClient.ResultListener<SignUpResponseEntity>() {
+        @Override
+        public void onSuccess(SignUpResponseEntity result) {
+            materialDialog.dismiss();
+            SharedPreferenceHelper.setToken(result.getToken());
+            SharedPreferenceHelper.setIsUserSignedIn(true, SignInType.EMAIL);
+            DDScannerApplication.bus.post(new LoggedInEvent());
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            materialDialog.dismiss();
+            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            materialDialog.dismiss();
+            switch (errorType) {
+                case USER_NOT_FOUND_ERROR_C801:
+                    Crashlytics.log("801 error on identify");
+                default:
+                    Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,6 +162,7 @@ public class MainActivity extends BaseAppCompatActivity
         isHasInternetConnection = getIntent().getBooleanExtra(Constants.IS_HAS_INTERNET, false);
         clearFilterSharedPreferences();
         startActivity();
+        Log.i(TAG, FirebaseInstanceId.getInstance().getToken());
         if (!isHasInternetConnection) {
             LogUtils.i(TAG, "internetConnectionClosed 2");
             InternetClosedActivity.show(this);
@@ -207,7 +238,7 @@ public class MainActivity extends BaseAppCompatActivity
                         GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
                             @Override
                             public void onCompleted(JSONObject object, GraphResponse response) {
-                                sendLoginRequest(SharedPreferenceHelper.getUserAppId(), SignInType.FACEBOOK, loginResult.getAccessToken().getToken());
+                                sendLoginRequest(SignInType.FACEBOOK, loginResult.getAccessToken().getToken());
                             }
                         }).executeAsync();
                     }
@@ -269,6 +300,10 @@ public class MainActivity extends BaseAppCompatActivity
 
     @Override
     public void onPageSelected(int position) {
+        if (position != 0 && isSignupClicked) {
+            DDScannerApplication.bus.post(new ChangeLoginViewEvent());
+            isSignupClicked = !isSignupClicked;
+        }
         switch (position) {
             case 0:
                 showSearchFilterMenuItems();
@@ -319,7 +354,7 @@ public class MainActivity extends BaseAppCompatActivity
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.search_location_menu_button:
-//                materialDialog.show();
+//                materialDialog.showForResult();
 //                openSearchLocationWindow();
 
                 SearchSpotOrLocationActivity.showForResult(MainActivity.this, ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_PLACE_AUTOCOMPLETE);
@@ -403,7 +438,7 @@ public class MainActivity extends BaseAppCompatActivity
                         Helpers.handleUnexpectedServerError(getSupportFragmentManager(), "google_login", "result.getSignInAccount() returned null");
                     } else {
                         String idToken = acct.getIdToken();
-                        sendLoginRequest(SharedPreferenceHelper.getUserAppId(), SignInType.GOOGLE, idToken);
+                        sendLoginRequest(SignInType.GOOGLE, idToken);
                     }
                 }
                 break;
@@ -480,11 +515,10 @@ public class MainActivity extends BaseAppCompatActivity
         }
     }
 
-    private void sendLoginRequest(String appId, SignInType signInType, String token) {
-        loginResultListener.setToken(token);
-        loginResultListener.setSocialNetwork(signInType);
+    private void sendLoginRequest(SignInType signInType, String token) {
         materialDialog.show();
-        DDScannerApplication.getDdScannerRestClient().postLogin(appId, signInType, token, loginResultListener);
+        DDScannerApplication.getDdScannerRestClient().postUserSignIn(null, null, "21", "32", signInType, token, signUpResultListener);
+//        DDScannerApplication.getDdScannerRestClient().postLogin(FirebaseInstanceId.getInstance().getId(), signInType, token, loginResultListener);
     }
 
 //    private void validateIdToken() {
@@ -671,7 +705,12 @@ public class MainActivity extends BaseAppCompatActivity
     @Override
     public void onBackPressed() {
         if (mainViewPager.getCurrentItem() != 0) {
-            DDScannerApplication.bus.post(new ChangePageOfMainViewPagerEvent(0));
+            if (!isSignupClicked) {
+                DDScannerApplication.bus.post(new ChangePageOfMainViewPagerEvent(0));
+                return;
+            }
+            DDScannerApplication.bus.post(new ChangeLoginViewEvent());
+            isSignupClicked = !isSignupClicked;
             return;
         }
         if (isDiveSpotListIsShown) {
@@ -807,44 +846,20 @@ public class MainActivity extends BaseAppCompatActivity
         SharedPreferenceHelper.setLevel("");
     }
 
-    private class LoginResultListener implements DDScannerRestClient.ResultListener<RegisterResponse> {
 
-        private String token;
-        private SignInType socialNetwork;
-
-        public void setToken(String token) {
-            this.token = token;
-        }
-
-        void setSocialNetwork(SignInType socialNetwork) {
-            this.socialNetwork = socialNetwork;
-        }
-
-        @Override
-        public void onSuccess(RegisterResponse result) {
-            materialDialog.dismiss();
-            SharedPreferenceHelper.setToken(token);
-            SharedPreferenceHelper.setSn(socialNetwork.getName());
-            SharedPreferenceHelper.setIsUserSignedIn(true, socialNetwork);
-            SharedPreferenceHelper.setUserServerId(result.getUser().getId());
-            DDScannerApplication.bus.post(new LoggedInEvent());
-        }
-
-        @Override
-        public void onConnectionFailure() {
-            materialDialog.dismiss();
-            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
-        }
-
-        @Override
-        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-            materialDialog.dismiss();
-            switch (errorType) {
-                case USER_NOT_FOUND_ERROR_C801:
-                    Crashlytics.log("801 error on identify");
-                default:
-                    Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);
-            }
-        }
+    @Subscribe
+    public void chengeLoginView(SignupLoginButtonClicked event) {
+        isSignupClicked = event.isShowing();
     }
+
+    @Subscribe
+    public void emailLogin(LoginViaEmailEvent event) {
+        //TODO remove hardcoded coordinates
+        if (event.isRegister()) {
+            DDScannerApplication.getDdScannerRestClient().postUserSignUp(event.getEmail(), event.getPassword(), event.getUserType(), "23", "22", signUpResultListener);
+            return;
+        }
+        DDScannerApplication.getDdScannerRestClient().postUserSignIn(event.getEmail(), event.getPassword(), "24", "25", null, null, signUpResultListener);
+    }
+
 }

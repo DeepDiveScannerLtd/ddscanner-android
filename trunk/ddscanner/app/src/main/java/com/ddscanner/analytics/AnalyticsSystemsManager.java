@@ -12,6 +12,7 @@ import com.flurry.android.FlurryAgent;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 public class AnalyticsSystemsManager {
 
@@ -31,8 +32,8 @@ public class AnalyticsSystemsManager {
 
         // Init flurry
         FlurryAgent.init(context, context.getString(R.string.flurry_api_key));
-        if (!TextUtils.isEmpty(SharedPreferenceHelper.getUserAppId())) {
-            FlurryAgent.setUserId(SharedPreferenceHelper.getUserAppId());
+        if (!TextUtils.isEmpty(FirebaseInstanceId.getInstance().getId())) {
+            FlurryAgent.setUserId(FirebaseInstanceId.getInstance().getId());
         }
 
         // Google analytics

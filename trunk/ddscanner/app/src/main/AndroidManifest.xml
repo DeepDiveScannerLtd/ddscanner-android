@@ -241,34 +241,25 @@
         <activity
             android:name=".ui.activities.LicensesActivity"
             android:screenOrientation="portrait" />
-        <receiver
-            android:name="com.google.android.gms.gcm.GcmReceiver"
-            android:exported="true"
-            android:permission="com.google.android.c2dm.permission.SEND" >
-            <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-
-                <category android:name="gcm.play.android.samples.com.gcmquickstart" />
-            </intent-filter>
-        </receiver>
-
+        <activity
+            android:name=".ui.activities.SignUpActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ui.activities.ForgotPasswordActivity"
+            android:screenOrientation="portrait" />
         <service
-            android:name=".services.GCMListenerService"
-            android:exported="false" >
+            android:name=".services.FirebaseMessagingService">
             <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
+
         <service
-            android:name=".services.DDSInstanceIDListenerService"
-            android:exported="false" >
+            android:name=".services.FirebaseInstanceIDService">
             <intent-filter>
-                <action android:name="com.google.android.gms.iid.InstanceID" />
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
             </intent-filter>
         </service>
-        <service
-            android:name=".services.RegistrationIntentService"
-            android:exported="false" />
 
         <meta-data
             android:name="io.fabric.ApiKey"

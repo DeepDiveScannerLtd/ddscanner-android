@@ -326,4 +326,23 @@
     <string name="leave">leave</string>
     <string name="details">Details</string>
     <string name="dialog_leave_title">Are you sure?</string>
+    <string name="sign_up">sign up</string>
+    <string name="login">login</string>
+    <string name="skip">SKIP</string>
+    <string name="diver">Diver</string>
+    <string name="dive_cente">Dive Center</string>
+    <string name="sign_up_toolbar">Sign Up</string>
+    <string name="login_toolbar">Login</string>
+    <string name="enter_your_email_address_below_and_we_ll_send_you_password_reset_instructions">Enter your email address below and we’ll send you password reset instructions</string>
+    <string name="ema">Email</string>
+    <string name="send_forgot">send</string>
+    <string name="forgot_password">Forgot password</string>
+    <string name="login_to_continuee">Login to continue</string>
+    <string name="login_high">Login</string>
+    <string name="email_input">Email</string>
+    <string name="password">Password</string>
+    <string name="sign_up_btn">sign up</string>
+    <string name="forgot_password_btn">Forgot password?</string>
+    <string name="sign_in_with_facebook">Sign in with Facebook</string>
+    <string name="sign_in_with_google">Sign in with Google</string>
 </resources>
