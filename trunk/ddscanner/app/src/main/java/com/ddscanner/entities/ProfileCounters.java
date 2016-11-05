@@ -5,79 +5,79 @@ import com.google.gson.annotations.SerializedName;
 public class ProfileCounters {
 
     @SerializedName("likes")
-    private String likesCount;
+    private Integer likesCount;
 
     @SerializedName("dislikes")
-    private String dislikesCount;
+    private Integer dislikesCount;
 
     @SerializedName("checkins")
-    private String checkinsCount;
+    private Integer checkinsCount;
 
     @SerializedName("additions")
-    private String addedCount;
+    private Integer addedCount;
 
     @SerializedName("changes")
-    private String editedCount;
+    private Integer editedCount;
 
     @SerializedName("comments")
-    private String commentsCount;
+    private Integer commentsCount;
 
     @SerializedName("favourites")
-    private String favoritesCount;
+    private Integer favoritesCount;
 
-    public String getLikesCount() {
+    public Integer getLikesCount() {
         return likesCount;
     }
 
-    public void setLikesCount(String likesCount) {
+    public void setLikesCount(Integer likesCount) {
         this.likesCount = likesCount;
     }
 
-    public String getDislikesCount() {
+    public Integer getDislikesCount() {
         return dislikesCount;
     }
 
-    public void setDislikesCount(String dislikesCount) {
+    public void setDislikesCount(Integer dislikesCount) {
         this.dislikesCount = dislikesCount;
     }
 
-    public String getCheckinsCount() {
+    public Integer getCheckinsCount() {
         return checkinsCount;
     }
 
-    public void setCheckinsCount(String checkinsCount) {
+    public void setCheckinsCount(Integer checkinsCount) {
         this.checkinsCount = checkinsCount;
     }
 
-    public String getAddedCount() {
+    public Integer getAddedCount() {
         return addedCount;
     }
 
-    public void setAddedCount(String addedCount) {
+    public void setAddedCount(Integer addedCount) {
         this.addedCount = addedCount;
     }
 
-    public String getEditedCount() {
+    public Integer getEditedCount() {
         return editedCount;
     }
 
-    public void setEditedCount(String editedCount) {
+    public void setEditedCount(Integer editedCount) {
         this.editedCount = editedCount;
     }
 
-    public String getCommentsCount() {
+    public Integer getCommentsCount() {
         return commentsCount;
     }
 
-    public void setCommentsCount(String commentsCount) {
+    public void setCommentsCount(Integer commentsCount) {
         this.commentsCount = commentsCount;
     }
 
-    public String getFavoritesCount() {
+    public Integer getFavoritesCount() {
         return favoritesCount;
     }
 
-    public void setFavoritesCount(String favoritesCount) {
+    public void setFavoritesCount(Integer favoritesCount) {
         this.favoritesCount = favoritesCount;
     }
 }

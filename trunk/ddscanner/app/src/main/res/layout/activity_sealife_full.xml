@@ -34,7 +34,7 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     app:layout_collapseMode="parallax"
-                    app:sealifeViewModel="@{sealifeViewModel}"/>
+                    app:loadImageFrom="@{sealifeViewModel}"/>
 
                 <ProgressBar
                     android:id="@+id/progress_bar"

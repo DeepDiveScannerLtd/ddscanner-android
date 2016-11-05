@@ -39,7 +39,7 @@ public class SealifeViewModel {
         return progressBar;
     }
 
-    @BindingAdapter({"sealifeViewModel"})
+    @BindingAdapter({"loadImageFrom"})
     public static void loadImage(ImageView view, SealifeViewModel sealifeViewModel) {
         Picasso.with(view.getContext())
                 .load(sealifeViewModel.getImagePath() + sealifeViewModel.getSealife().getImage())
