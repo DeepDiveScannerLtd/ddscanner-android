@@ -164,29 +164,11 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
     private DDScannerRestClient.ResultListener<User> userResultListener = new DDScannerRestClient.ResultListener<User>() {
         @Override
         public void onSuccess(User result) {
-            result.setPhoto("https://pp.vk.me/c626824/v626824069/3fae/lZ_07Lvm9MA.jpg");
+            if (binding != null && binding.editProfileLayout.getVisibility() != View.VISIBLE) {
+                binding.about.setVisibility(View.VISIBLE);
+            }
             binding.setUserViewModel(new UserViewModel(result));
-        }
-
-        @Override
-        public void onConnectionFailure() {
-
-        }
-
-        @Override
-        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-
-        }
-    };
-
-    private DDScannerRestClient.ResultListener<UserResponseEntity> getUserInformationResultListener = new DDScannerRestClient.ResultListener<UserResponseEntity>() {
-        @Override
-        public void onSuccess(UserResponseEntity result) {
-//            if (editLayout.getVisibility() != View.VISIBLE) {
-//                aboutLayout.setVisibility(View.VISIBLE);
-//            }
-//            changeUi(result);
-//            swipeRefreshLayout.setRefreshing(false);
+            binding.swiperefresh.setRefreshing(false);
         }
 
         @Override
@@ -209,6 +191,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
         }
     };
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -220,7 +203,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
         Log.i(TAG, "ProfileFragment onCreateView, this = " + this);
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_profile, container, false);
         View v = binding.getRoot();
-        findViews(v);
+        setupUi();
         binding.setHandlers(this);
 
         if (SharedPreferenceHelper.isUserLoggedIn()) {
@@ -266,7 +249,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
         }
     }
 
-    private void findViews(View v) {
+    private void setupUi() {
 
         binding.swiperefresh.setOnRefreshListener(this);
         binding.aboutEdit.addTextChangedListener(new TextWatcher() {
@@ -406,7 +389,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
         if (getContext() == null) {
             return;
         }
-        this.userOld = userResponseEntity.getUserOld();
 //        showAchivementDetails.setOnClickListener(this);
 //        ArrayList<ProfileAchievement> achievmentProfiles = new ArrayList<>();
 //        if (userResponseEntity.getAchievements() != null && userResponseEntity.getAchievements().size() > 0) {
@@ -420,24 +402,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
 //            noAchievements.setVisibility(View.VISIBLE);
 //            achievmentRecyclerView.setVisibility(View.GONE);
 //        }
-        if (userOld != null) {
-            if (userOld.getPicture() == null) {
-                Picasso.with(getContext()).load(R.drawable.avatar_profile_default)
-                        .resize(Math.round(Helpers.convertDpToPixel(100, getContext())),
-                                Math.round(Helpers.convertDpToPixel(100, getContext()))).centerCrop()
-                        .placeholder(R.drawable.avatar_profile_default)
-                        .transform(new CropCircleTransformation()).into(binding.userAvatar);
-            } else {
-                Picasso.with(getContext()).load(userOld.getPicture())
-                        .resize(Math.round(Helpers.convertDpToPixel(80, getContext())),
-                                Math.round(Helpers.convertDpToPixel(80, getContext()))).centerCrop()
-                        .placeholder(R.drawable.avatar_profile_default)
-                        .error(R.drawable.avatar_profile_default)
-                        .transform(new CropCircleTransformation()).into(binding.userAvatar);
-            }
-        } else {
-            SharedPreferenceHelper.logout();
-        }
     }
 
     @Override
