@@ -5,6 +5,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v13.app.ActivityCompat;
@@ -261,13 +263,58 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_PICK_PHOTO:
+                Uri uri = Uri.parse("");
                 if (resultCode == RESULT_OK) {
-                    maxPhotos = maxPhotos - data.getStringArrayListExtra(MultiImageSelectorActivity
-                            .EXTRA_RESULT).size();
-                    imageUris.addAll(data.getStringArrayListExtra(MultiImageSelectorActivity
-                            .EXTRA_RESULT));
-                    photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris,
-                            LeaveReviewActivity.this, addPhotoTitle));
+                    if (data.getClipData() != null) {
+                        for (int i = 0; i < data.getClipData().getItemCount(); i++) {
+                            String filename = "DDScanner" + String.valueOf(System.currentTimeMillis());
+                            try {
+                                uri = data.getClipData().getItemAt(i).getUri();
+                                String mimeType = getContentResolver().getType(uri);
+                                String sourcePath = getExternalFilesDir(null).toString();
+                                File file = new File(sourcePath + "/" + filename);
+                                if (Helpers.isFileImage(uri.getPath()) || mimeType.contains("image")) {
+                                    try {
+                                        Helpers.copyFileStream(file, uri, this);
+                                        Log.i(TAG, file.toString());
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+
+                                    imageUris.add(file.getPath());
+                                } else {
+                                    Toast.makeText(this, "You can choose only images", Toast.LENGTH_SHORT).show();
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                    if (data.getData() != null) {
+                        String filename = "DDScanner" + String.valueOf(System.currentTimeMillis());
+                        try {
+                            uri = data.getData();
+                            String mimeType = getContentResolver().getType(uri);
+                            String sourcePath = getExternalFilesDir(null).toString();
+                            File file = new File(sourcePath + "/" + filename);
+                            if (Helpers.isFileImage(uri.getPath()) || mimeType.contains("image")) {
+                                try {
+                                    Helpers.copyFileStream(file, uri, this);
+                                    Log.i(TAG, file.toString());
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+
+                                imageUris.add(file.getPath());
+                            } else {
+                                Toast.makeText(this, "You can choose only images", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris, LeaveReviewActivity.this, addPhotoTitle));
+
                 }
                 break;
         }
@@ -275,9 +322,14 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
 
     private void pickPhotoFromGallery() {
         if (checkReadStoragePermission()) {
-            MultiImageSelector.create().showCamera(false).multi()
-                    .count(maxPhotos)
-                    .start(this, ActivitiesRequestCodes.REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_PICK_PHOTO);
+            Intent intent = new Intent();
+            intent.setType("image/*");
+            if (Build.VERSION.SDK_INT >= 18) {
+                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+            }
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+            startActivityForResult(Intent.createChooser(intent, "Select Picture"), ActivitiesRequestCodes.REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_PICK_PHOTO);
         } else {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, ActivitiesRequestCodes.REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_PERMISSION_READ_STORAGE);
         }

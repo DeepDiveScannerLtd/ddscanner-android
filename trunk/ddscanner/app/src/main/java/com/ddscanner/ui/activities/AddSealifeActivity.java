@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Display;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,6 +29,7 @@ import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.Sealife;
 import com.ddscanner.entities.errors.ValidationError;
 import com.ddscanner.rest.DDScannerRestClient;
+import com.ddscanner.ui.adapters.AddPhotoToDsListAdapter;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
@@ -72,6 +74,7 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
     private TextView image_error;
     private ImageView sealifePhoto;
     private MaterialDialog progressDialogUpload;
+    private File fileToSend;
 
     private Map<String, TextView> errorsMap = new HashMap<>();
 
@@ -175,9 +178,29 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
         switch (requestCode) {
             case ActivitiesRequestCodes.REQUEST_CODE_ADD_SEALIFE_ACTIVITY_PICK_PHOTO:
                 if (resultCode == RESULT_OK) {
-                    Uri uri = data.getData();
-                    filePath = uri;
-                    setBackImage(uri);
+                    String filename = "DDScanner" + String.valueOf(System.currentTimeMillis() / 1232);
+                    Uri uri = Uri.parse("");
+                    try {
+                        uri = data.getData();
+                        String mimeType = getContentResolver().getType(uri);
+                        String sourcePath = getExternalFilesDir(null).toString();
+                        fileToSend = new File(sourcePath + "/" + filename);
+                        if (Helpers.isFileImage(uri.getPath()) || mimeType.contains("image")) {
+                            try {
+                                Helpers.copyFileStream(fileToSend, uri, this);
+                                Log.i(TAG, fileToSend.toString());
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                            filePath = uri;
+                            setBackImage(fileToSend.getPath());
+                        } else {
+                            Toast.makeText(this, "You can choose only images", Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_ADD_SEALIFE_ACTIVITY_LOGIN_TO_SEND:
@@ -191,16 +214,19 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
     /**
      * Change background image in layout add photo
      *
-     * @param uri
+     * @param path
      * @author Andrei Lashkevich
      */
-    private void setBackImage(Uri uri) {
+    private void setBackImage(String path) {
+        if (!path.contains(Constants.images) && !path.contains("file:")) {
+            path = "file://" + path;
+        }
         Display display = getWindowManager().getDefaultDisplay();
         DisplayMetrics outMetrics = new DisplayMetrics();
         display.getMetrics(outMetrics);
         float density = getResources().getDisplayMetrics().density;
         float dpWidth = outMetrics.widthPixels / density;
-        Picasso.with(this).load(uri).resize(Math.round(Helpers.convertDpToPixel(dpWidth, this)), Math.round(Helpers.convertDpToPixel(230, this))).centerCrop().into(sealifePhoto);
+        Picasso.with(this).load(path).resize(Math.round(Helpers.convertDpToPixel(dpWidth, this)), Math.round(Helpers.convertDpToPixel(230, this))).centerCrop().into(sealifePhoto);
         centerLayout.setVisibility(View.GONE);
         btnDelete.setVisibility(View.VISIBLE);
         addPhoto.setOnClickListener(null);
@@ -227,9 +253,11 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
 
     private void pickPhotoFromGallery() {
         if (checkReadStoragePermission()) {
-            Intent i = new Intent(Intent.ACTION_PICK,
-                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            startActivityForResult(i, ActivitiesRequestCodes.REQUEST_CODE_ADD_SEALIFE_ACTIVITY_PICK_PHOTO);
+            Intent intent = new Intent();
+            intent.setType("image/*");
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+            startActivityForResult(Intent.createChooser(intent, "Select Picture"), ActivitiesRequestCodes.REQUEST_CODE_ADD_SEALIFE_ACTIVITY_PICK_PHOTO);
         } else {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, ActivitiesRequestCodes.REQUEST_CODE_ADD_SEALIFE_ACTIVITY_PERMISSION_READ_STORAGE);
         }
@@ -289,9 +317,9 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
     private void sendRequestToAddSealife(Uri imageFileUri) {
         MultipartBody.Part body = null;
         if (imageFileUri != null) {
-            File file = new File(Helpers.getRealPathFromURI(this, imageFileUri));
-            RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
-            body = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
+           // File file = new File(Helpers.getRealPathFromURI(this, imageFileUri));
+            RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), fileToSend);
+            body = MultipartBody.Part.createFormData("image", fileToSend.getName(), requestFile);
         }
         DDScannerApplication.getDdScannerRestClient().postAddSealife(
                 sealifeResultListener, body, requestName, requestDistribution, requestHabitat,
