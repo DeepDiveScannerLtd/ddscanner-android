@@ -94,8 +94,6 @@ public class SeaLifeDetailsTest {
     public void seaLifeDisplayedWithout_SeveralFields_3() {
         seaLife_DisplayedWithoutView(TestData.SEA_LIFE_DETAILS_NO_FIELDS_3, R.id.habitat);
     }
-    
-    
 
     private Intent generateSeaLifeDetailsActivityIntent(Sealife sealife) {
         Intent intent = new Intent();
