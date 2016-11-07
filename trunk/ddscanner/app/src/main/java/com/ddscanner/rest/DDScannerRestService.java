@@ -268,8 +268,9 @@ public interface DDScannerRestService {
     @GET("diving/user/{id}/comments")
     Call<ResponseBody> getUserComments(@Path("id") String id, @QueryMap Map<String, String> map);
 
+    @Deprecated
     @GET("diving/user/{id}/achievements")
-    Call<ResponseBody> getUserAchievements(@Path("id") String id, @QueryMap Map<String, String> map);
+    Call<ResponseBody> getUserAchievementsOld(@Path("id") String id, @QueryMap Map<String, String> map);
 
     @POST("v2_0/user.login")
     Call<ResponseBody> loginUser(@Body SignInRequest signInRequest);
@@ -279,4 +280,8 @@ public interface DDScannerRestService {
 
     @GET("v2_0/user.getProfile")
     Call<ResponseBody> getSelfProfileInformation();
+
+    @GET("v2_0/user.getAchievements")
+    Call<ResponseBody> getUserAchievements();
+
 }

@@ -20,7 +20,6 @@ import com.ddscanner.entities.SealifeResponseEntity;
 import com.ddscanner.entities.SignInType;
 import com.ddscanner.entities.SignUpResponseEntity;
 import com.ddscanner.entities.User;
-import com.ddscanner.entities.UserOld;
 import com.ddscanner.entities.UserResponseEntity;
 import com.ddscanner.entities.request.DiveSpotsRequestMap;
 import com.ddscanner.entities.request.IdentifyRequest;
@@ -440,6 +439,29 @@ public class DDScannerRestClient implements DDScannerRestClientContract {
         });
     }
 
+    public void getDiveCenters(LatLng latLng, final ResultListener<DiveCentersResponseEntity> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveCenters(getDivecentersRequestmap(latLng));
+        call.enqueue(new ResponseEntityCallback<DiveCentersResponseEntity>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<DiveCentersResponseEntity> resultListener, String responseString) throws JSONException {
+                DiveCentersResponseEntity diveCentersResponseEntity = new Gson().fromJson(responseString, DiveCentersResponseEntity.class);
+                resultListener.onSuccess(diveCentersResponseEntity);
+            }
+        });
+    }
+
+    @Deprecated
+    public void getUserAchievementsOld(String userId, final ResultListener<AchievmentsResponseEntity> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserAchievementsOld(userId, getUserQueryMapRequest());
+        call.enqueue(new ResponseEntityCallback<AchievmentsResponseEntity>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<AchievmentsResponseEntity> resultListener, String responseString) throws JSONException {
+                AchievmentsResponseEntity achievmentsResponseEntity = new Gson().fromJson(responseString, AchievmentsResponseEntity.class);
+                resultListener.onSuccess(achievmentsResponseEntity);
+            }
+        });
+    }
+
     /*Methods using in API v2_0*/
 
     public void postUserSignUp(String email, String password, String userType, String lat, String lng, ResultListener<SignUpResponseEntity> resultListener) {
@@ -475,24 +497,13 @@ public class DDScannerRestClient implements DDScannerRestClientContract {
         });
     }
 
-    public void getDiveCenters(LatLng latLng, final ResultListener<DiveCentersResponseEntity> resultListener) {
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveCenters(getDivecentersRequestmap(latLng));
-        call.enqueue(new ResponseEntityCallback<DiveCentersResponseEntity>(gson, resultListener) {
-            @Override
-            void handleResponseString(ResultListener<DiveCentersResponseEntity> resultListener, String responseString) throws JSONException {
-                DiveCentersResponseEntity diveCentersResponseEntity = new Gson().fromJson(responseString, DiveCentersResponseEntity.class);
-                resultListener.onSuccess(diveCentersResponseEntity);
-            }
-        });
-    }
-
-    public void getUserAchievements(String userId, final ResultListener<AchievmentsResponseEntity> resultListener) {
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserAchievements(userId, getUserQueryMapRequest());
+    public void getUserAchivements(final ResultListener<AchievmentsResponseEntity> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserAchievements();
         call.enqueue(new ResponseEntityCallback<AchievmentsResponseEntity>(gson, resultListener) {
+
             @Override
             void handleResponseString(ResultListener<AchievmentsResponseEntity> resultListener, String responseString) throws JSONException {
-                AchievmentsResponseEntity achievmentsResponseEntity = new Gson().fromJson(responseString, AchievmentsResponseEntity.class);
-                resultListener.onSuccess(achievmentsResponseEntity);
+
             }
         });
     }

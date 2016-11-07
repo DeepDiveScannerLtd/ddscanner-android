@@ -22,7 +22,6 @@ import com.ddscanner.ui.adapters.AchievementsActivityListAdapter;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogsRequestCodes;
-import com.ddscanner.utils.SharedPreferenceHelper;
 import com.rey.material.widget.ProgressView;
 
 import java.util.ArrayList;
@@ -93,7 +92,7 @@ public class AchievementsActivity extends AppCompatActivity implements InfoDialo
         setContentView(R.layout.activity_ahievments);
         userId = getIntent().getStringExtra("userid");
         findViews();
-        DDScannerApplication.getDdScannerRestClient().getUserAchievements(userId, responseEntityResultListener);
+        DDScannerApplication.getDdScannerRestClient().getUserAchievementsOld(userId, responseEntityResultListener);
     }
 
     private void findViews() {
@@ -140,7 +139,7 @@ public class AchievementsActivity extends AppCompatActivity implements InfoDialo
         switch (requestCode) {
             case ActivitiesRequestCodes.REQUEST_CODE_ACHIEVEMENTS_ACTIVITY_LOGIN_TO_ACHIEVEMNTS:
                 if (resultCode == RESULT_OK) {
-                    DDScannerApplication.getDdScannerRestClient().getUserAchievements(userId, responseEntityResultListener);
+                    DDScannerApplication.getDdScannerRestClient().getUserAchievementsOld(userId, responseEntityResultListener);
                 } else {
                     finish();
                 }
