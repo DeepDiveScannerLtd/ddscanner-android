@@ -293,9 +293,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
             case R.id.button_save:
              //   createUpdateRequest();
                 break;
-            case R.id.show_achievments_details:
-                AchievementsActivity.show(getContext(), userOld.getId());
-                break;
         }
     }
 
@@ -565,6 +562,10 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
     public void pickPhotoFromGallery(View view) {
         isClickedChosingPhotoButton = true;
         DDScannerApplication.bus.post(new PickPhotoFromGallery());
+    }
+
+    public void showAchievementsDetails(View view) {
+        AchievementsActivity.show(getContext());
     }
 
 }

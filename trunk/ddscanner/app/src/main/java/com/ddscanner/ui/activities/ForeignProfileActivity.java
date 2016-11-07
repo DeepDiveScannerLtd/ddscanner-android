@@ -280,7 +280,7 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
                 openLink(userOld.getSocialId(), userOld.getType());
                 break;
             case R.id.show_achievments_details:
-                AchievementsActivity.show(this, userId);
+                AchievementsActivity.show(this);
                 break;
         }
     }

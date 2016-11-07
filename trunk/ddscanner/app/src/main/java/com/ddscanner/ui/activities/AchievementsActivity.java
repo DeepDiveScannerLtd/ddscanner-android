@@ -80,9 +80,8 @@ public class AchievementsActivity extends AppCompatActivity implements InfoDialo
         }
     };
 
-    public static void show(Context context, String userId) {
+    public static void show(Context context) {
         Intent intent = new Intent(context, AchievementsActivity.class);
-        intent.putExtra("userid", userId);
         context.startActivity(intent);
     }
 
@@ -90,9 +89,8 @@ public class AchievementsActivity extends AppCompatActivity implements InfoDialo
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ahievments);
-        userId = getIntent().getStringExtra("userid");
         findViews();
-        DDScannerApplication.getDdScannerRestClient().getUserAchievementsOld(userId, responseEntityResultListener);
+        DDScannerApplication.getDdScannerRestClient().getUserAchivements(responseEntityResultListener);
     }
 
     private void findViews() {
@@ -139,7 +137,7 @@ public class AchievementsActivity extends AppCompatActivity implements InfoDialo
         switch (requestCode) {
             case ActivitiesRequestCodes.REQUEST_CODE_ACHIEVEMENTS_ACTIVITY_LOGIN_TO_ACHIEVEMNTS:
                 if (resultCode == RESULT_OK) {
-                    DDScannerApplication.getDdScannerRestClient().getUserAchievementsOld(userId, responseEntityResultListener);
+                    DDScannerApplication.getDdScannerRestClient().getUserAchivements(responseEntityResultListener);
                 } else {
                     finish();
                 }

@@ -503,7 +503,10 @@ public class DDScannerRestClient implements DDScannerRestClientContract {
 
             @Override
             void handleResponseString(ResultListener<AchievmentsResponseEntity> resultListener, String responseString) throws JSONException {
-
+                JSONObject jsonObject = new JSONObject(responseString);
+                String achievementsResponse = jsonObject.getString("achievements");
+                AchievmentsResponseEntity achievmentsResponseEntity = new Gson().fromJson(achievementsResponse, AchievmentsResponseEntity.class);
+                resultListener.onSuccess(achievmentsResponseEntity);
             }
         });
     }
