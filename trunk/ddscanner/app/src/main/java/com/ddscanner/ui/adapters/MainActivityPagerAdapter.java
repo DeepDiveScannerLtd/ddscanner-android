@@ -4,16 +4,12 @@ import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 
-import com.ddscanner.R;
 import com.ddscanner.ui.fragments.ActivityNotificationsFragment;
 import com.ddscanner.ui.fragments.AllNotificationsFragment;
 import com.ddscanner.ui.fragments.MapListFragment;
-import com.ddscanner.ui.fragments.NeedToLoginFragment;
 import com.ddscanner.ui.fragments.NotificationsFragment;
-import com.ddscanner.ui.fragments.ProfileFragment;
+import com.ddscanner.screens.profile.ProfileFragment;
 import com.ddscanner.ui.views.LoginView;
 import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;

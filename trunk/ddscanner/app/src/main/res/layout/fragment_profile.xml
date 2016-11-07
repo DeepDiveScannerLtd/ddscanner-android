@@ -10,11 +10,11 @@
         <import type="java.lang.String" />
 
         <variable
-            name="userViewModel"
-            type="com.ddscanner.ui.fragments.UserViewModel" />
+            name="profileFragmentViewModel"
+            type="com.ddscanner.screens.profile.ProfileFragmentViewModel" />
         <variable
             name="handlers"
-            type="com.ddscanner.ui.fragments.ProfileFragment" />
+            type="com.ddscanner.screens.profile.ProfileFragment" />
     </data>
 
     <com.ddscanner.ui.views.CustomSwipeRefreshLayout
@@ -49,7 +49,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="80dp"
                             android:layout_marginTop="32dp"
-                            app:loadImageFrom="@{userViewModel}"/>
+                            app:loadImageFrom="@{profileFragmentViewModel}"/>
 
                         <TextView
                             android:id="@+id/user_name"
@@ -62,8 +62,8 @@
                             android:gravity="center"
                             android:textColor="@color/black_text"
                             android:textSize="18sp"
-                            android:visibility="@{userViewModel.user.name != null ? View.VISIBLE : View.GONE}"
-                            android:text="@{userViewModel.user.name != null ? userViewModel.user.name : null}"/>
+                            android:visibility="@{profileFragmentViewModel.user.name != null ? View.VISIBLE : View.GONE}"
+                            android:text="@{profileFragmentViewModel.user.name != null ? profileFragmentViewModel.user.name : null}"/>
 
                         <TextView
                             android:id="@+id/user_about"
@@ -75,8 +75,8 @@
                             android:gravity="center"
                             android:textColor="#616161"
                             android:textSize="13sp"
-                            android:visibility="@{userViewModel.user.about != null ? View.VISIBLE : View.GONE}"
-                            android:text="@{userViewModel.user.about != null ? userViewModel.user.about : null}"/>
+                            android:visibility="@{profileFragmentViewModel.user.about != null ? View.VISIBLE : View.GONE}"
+                            android:text="@{profileFragmentViewModel.user.about != null ? profileFragmentViewModel.user.about : null}"/>
 
                         <ImageView style="@style/DividerStyleFull" />
 
@@ -120,7 +120,7 @@
                                         android:id="@+id/user_comments"
                                         style="@style/ProfileNumberDivespotsSrtyle"
                                         tools:text="321"
-                                        android:text="@{String.valueOf(userViewModel.user.counters.commentsCount)}"/>
+                                        android:text="@{String.valueOf(profileFragmentViewModel.user.counters.commentsCount)}"/>
                                 </LinearLayout>
                             </LinearLayout>
 
@@ -176,7 +176,7 @@
                                             android:id="@+id/user_likes"
                                             style="@style/ProfileNumberDivespotsSrtyle"
                                             tools:text="321"
-                                            android:text="@{String.valueOf(userViewModel.user.counters.likesCount)}"/>
+                                            android:text="@{String.valueOf(profileFragmentViewModel.user.counters.likesCount)}"/>
                                     </LinearLayout>
                                 </LinearLayout>
                             </RelativeLayout>
@@ -215,7 +215,7 @@
                                         android:id="@+id/user_dislikes"
                                         style="@style/ProfileNumberDivespotsSrtyle"
                                         tools:text="321"
-                                        android:text="@{String.valueOf(userViewModel.user.counters.dislikesCount)}"/>
+                                        android:text="@{String.valueOf(profileFragmentViewModel.user.counters.dislikesCount)}"/>
                                 </LinearLayout>
                             </LinearLayout>
                         </android.support.percent.PercentRelativeLayout>
@@ -330,7 +330,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="3dp"
-                                    app:countCheckinsFrom="@{userViewModel}"/>
+                                    app:countCheckinsFrom="@{profileFragmentViewModel}"/>
                             </LinearLayout>
 
                             <ImageView
@@ -370,7 +370,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="3dp"
-                                    app:countAddedFrom="@{userViewModel}"
+                                    app:countAddedFrom="@{profileFragmentViewModel}"
                                     />
                             </LinearLayout>
 
@@ -411,7 +411,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="3dp"
-                                    app:countEditedFrom="@{userViewModel}"/>
+                                    app:countEditedFrom="@{profileFragmentViewModel}"/>
                             </LinearLayout>
 
                             <ImageView
@@ -451,7 +451,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="3dp"
-                                    app:countFavoriteFrom="@{userViewModel}"/>
+                                    app:countFavoriteFrom="@{profileFragmentViewModel}"/>
                             </LinearLayout>
 
                             <ImageView
@@ -593,7 +593,7 @@
                                 android:id="@+id/user_chosed_photo"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                app:loadImageFrom="@{userViewModel}"/>
+                                app:loadImageFrom="@{profileFragmentViewModel}"/>
                         </LinearLayout>
 
                         <LinearLayout
@@ -672,7 +672,7 @@
                                     android:background="@android:color/transparent"
                                     android:hint="Full name"
                                     android:maxLength="30"
-                                    android:text="@{TextUtils.isEmpty(userViewModel.user.name) ? null : userViewModel.user.name}"
+                                    android:text="@{TextUtils.isEmpty(profileFragmentViewModel.user.name) ? null : profileFragmentViewModel.user.name}"
                                     android:textSize="16sp" />
                             </LinearLayout>
 
@@ -733,7 +733,7 @@
                                     android:background="@android:color/transparent"
                                     android:hint="About"
                                     android:maxLength="250"
-                                    android:text="@{userViewModel.user.about != null ? null : userViewModel.user.about}"
+                                    android:text="@{profileFragmentViewModel.user.about != null ? null : profileFragmentViewModel.user.about}"
                                     android:textSize="16sp" />
                             </LinearLayout>
 

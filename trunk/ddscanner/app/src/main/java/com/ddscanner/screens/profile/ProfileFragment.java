@@ -1,4 +1,4 @@
-package com.ddscanner.ui.fragments;
+package com.ddscanner.screens.profile;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -11,8 +11,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -20,12 +18,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -33,8 +25,6 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.databinding.FragmentProfileBinding;
-import com.ddscanner.entities.DiveSpotListSource;
-import com.ddscanner.entities.ProfileAchievement;
 import com.ddscanner.entities.User;
 import com.ddscanner.entities.UserOld;
 import com.ddscanner.entities.UserResponseEntity;
@@ -47,28 +37,19 @@ import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.activities.AboutActivity;
 import com.ddscanner.ui.activities.AchievementsActivity;
 import com.ddscanner.ui.activities.ChangeLoginViewEvent;
-import com.ddscanner.ui.activities.DiveSpotsListActivity;
 import com.ddscanner.ui.activities.MainActivity;
-import com.ddscanner.ui.activities.SelfCommentsActivity;
-import com.ddscanner.ui.activities.UserLikesDislikesActivity;
-import com.ddscanner.ui.adapters.AchievmentProfileListAdapter;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
-import com.ddscanner.ui.views.CustomSwipeRefreshLayout;
 import com.ddscanner.ui.views.LoginView;
-import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
-import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
@@ -167,7 +148,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
             if (binding != null && binding.editProfileLayout.getVisibility() != View.VISIBLE) {
                 binding.about.setVisibility(View.VISIBLE);
             }
-            binding.setUserViewModel(new UserViewModel(result));
+            binding.setProfileFragmentViewModel(new ProfileFragmentViewModel(result));
             binding.swiperefresh.setRefreshing(false);
         }
 
@@ -510,43 +491,43 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
     }
 
     public void showComments(View view) {
-        if (binding.getUserViewModel().getUser().getCounters().getCommentsCount() > 0) {
+        if (binding.getProfileFragmentViewModel().getUser().getCounters().getCommentsCount() > 0) {
             //TODO show comments activity
         }
     }
 
     public void showLikes(View view) {
-        if (binding.getUserViewModel().getUser().getCounters().getLikesCount() > 0) {
+        if (binding.getProfileFragmentViewModel().getUser().getCounters().getLikesCount() > 0) {
             //TODO show comments activity
         }
     }
 
     public void showDislikes(View view) {
-        if (binding.getUserViewModel().getUser().getCounters().getDislikesCount() > 0) {
+        if (binding.getProfileFragmentViewModel().getUser().getCounters().getDislikesCount() > 0) {
             //TODO show comments activity
         }
     }
 
     public void showCheckinns(View view) {
-        if (binding.getUserViewModel().getUser().getCounters().getCheckinsCount() > 0) {
+        if (binding.getProfileFragmentViewModel().getUser().getCounters().getCheckinsCount() > 0) {
             //TODO show comments activity
         }
     }
 
     public void showAdded(View view) {
-        if (binding.getUserViewModel().getUser().getCounters().getAddedCount() > 0) {
+        if (binding.getProfileFragmentViewModel().getUser().getCounters().getAddedCount() > 0) {
             //TODO show comments activity
         }
     }
 
     public void showEdited(View view) {
-        if (binding.getUserViewModel().getUser().getCounters().getEditedCount() > 0) {
+        if (binding.getProfileFragmentViewModel().getUser().getCounters().getEditedCount() > 0) {
             //TODO show comments activity
         }
     }
 
     public void showFavorites(View view) {
-        if (binding.getUserViewModel().getUser().getCounters().getFavoritesCount() > 0) {
+        if (binding.getProfileFragmentViewModel().getUser().getCounters().getFavoritesCount() > 0) {
             //TODO show comments activity
         }
     }
