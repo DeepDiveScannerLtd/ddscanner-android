@@ -40,7 +40,7 @@ public class CompletedAchievementItemViewModel {
 
             }
         };
-
+        //TODO change to image address
         Picasso.with(view.getContext()).load(viewModel.getCompleteAchievement().getCountry()).into(target);
     }
 
