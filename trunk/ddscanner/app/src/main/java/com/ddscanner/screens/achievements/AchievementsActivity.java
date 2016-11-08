@@ -1,4 +1,4 @@
-package com.ddscanner.ui.activities;
+package com.ddscanner.screens.achievements;
 
 import android.content.Context;
 import android.content.Intent;
@@ -18,7 +18,7 @@ import com.ddscanner.entities.AchievmentsResponseEntity;
 import com.ddscanner.entities.CompleteAchievement;
 import com.ddscanner.entities.PendingAchievement;
 import com.ddscanner.rest.DDScannerRestClient;
-import com.ddscanner.ui.adapters.AchievementsActivityListAdapter;
+import com.ddscanner.ui.activities.LoginActivity;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogsRequestCodes;
