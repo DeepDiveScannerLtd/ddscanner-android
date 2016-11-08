@@ -1,6 +1,7 @@
 package com.ddscanner.screens.achievements;
 
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,6 +11,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ddscanner.R;
+import com.ddscanner.databinding.ItemCompleteAchievementBinding;
+import com.ddscanner.databinding.ItemPendingAchievmentBinding;
 import com.ddscanner.entities.CompleteAchievement;
 import com.ddscanner.entities.Countries;
 import com.ddscanner.entities.PendingAchievement;
@@ -42,11 +45,13 @@ public class AchievementsActivityListAdapter extends RecyclerView.Adapter<Recycl
         View itemView;
         switch (viewType) {
             case COMPLETE_ACHIEVEMNT_INDEX:
-                itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_complete_achievement, parent, false);
-                return new CompleteAchievementViewHolder(itemView);
+                LayoutInflater completeInflater = LayoutInflater.from(parent.getContext());
+                ItemCompleteAchievementBinding completeAchievementBinding = ItemCompleteAchievementBinding.inflate(completeInflater, parent, false);
+                return new CompleteAchievementViewHolder(completeAchievementBinding.getRoot());
             case PENDING_ACHIEVEMNT_INDEX:
-                itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_pending_achievment, parent, false);
-                return new PendingAchievementViewHolder(itemView);
+                LayoutInflater pendingInflater = LayoutInflater.from(parent.getContext());
+                ItemPendingAchievmentBinding pendingAchievmentBinding = ItemPendingAchievmentBinding.inflate(pendingInflater, parent, false);
+                return new PendingAchievementViewHolder(pendingAchievmentBinding.getRoot());
         }
         return null;
     }
@@ -56,34 +61,11 @@ public class AchievementsActivityListAdapter extends RecyclerView.Adapter<Recycl
         switch (getItemViewType(position)) {
             case COMPLETE_ACHIEVEMNT_INDEX:
                 CompleteAchievementViewHolder completeAchievementViewHolder = (CompleteAchievementViewHolder) holder;
-                if (!achievements.get(position).getCountry().isEmpty() && !achievements.get(position).getCountry().equals("NT")) {
-                    try {
-                        completeAchievementViewHolder.country.setText(countries.getCountry(achievements.get(position).getCountry()).getCountryName());
-                        completeAchievementViewHolder.countryIcon.setFlagBitmap(Helpers.getResId(achievements.get(position).getCountry().toLowerCase(), R.drawable.class));
-                    } catch (NullPointerException e) {
-
-                    } catch (Exception e) {
-
-                    }
-                }
-                completeAchievementViewHolder.type.setText(achievements.get(position).getName());
-                completeAchievementViewHolder.progress.setText(achievements.get(position).getPoints());
+                completeAchievementViewHolder.binding.setAchievementViewModel(new CompletedAchievementItemViewModel(achievements.get(position)));
                 break;
             case PENDING_ACHIEVEMNT_INDEX:
                 PendingAchievementViewHolder pendingAchievementViewHolder = (PendingAchievementViewHolder) holder;
-                PendingAchievement pendingAchievement = (PendingAchievement) achievements.get(position);
-                pendingAchievementViewHolder.progressView.setPercent(Float.valueOf(pendingAchievement.getProgress()) / Float.valueOf(pendingAchievement.getPoints()));
-                pendingAchievementViewHolder.progress.setText(pendingAchievement.getProgress() + "/" + pendingAchievement.getPoints());
-                if (!pendingAchievement.getCountry().isEmpty() && !achievements.get(position).getCountry().equals("NT")) {
-                    Log.i(TAG, pendingAchievement.getCountry());
-                    try {
-                        pendingAchievementViewHolder.countryIcon.setFlagBitmap(Helpers.getResId(pendingAchievement.getCountry().toLowerCase(), R.drawable.class));
-                        pendingAchievementViewHolder.country.setText(countries.getCountry(pendingAchievement.getCountry()).getCountryName());
-                    } catch (Exception e) {
-
-                    }
-                }
-                pendingAchievementViewHolder.type.setText(pendingAchievement.getName());
+                pendingAchievementViewHolder.binding.setAchievementViewModel(new PendingAchievementItemViewModel((PendingAchievement) achievements.get(position)));
                 break;
         }
     }
@@ -106,22 +88,14 @@ public class AchievementsActivityListAdapter extends RecyclerView.Adapter<Recycl
 
     class PendingAchievementViewHolder extends RecyclerView.ViewHolder {
 
-        protected TextView type;
-        protected TextView country;
-        protected TextView progress;
-        protected AchievementCountryFlagView countryIcon;
-        protected AchievementProgressView progressView;
+        ItemPendingAchievmentBinding binding;
 
         public PendingAchievementViewHolder(View view) {
             super(view);
+            binding = DataBindingUtil.bind(view);
             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(Math.round(Helpers.convertDpToPixel(33, context)), Math.round(Helpers.convertDpToPixel(33, context)));
             layoutParams.addRule(RelativeLayout.CENTER_VERTICAL);
-            type = (TextView) view.findViewById(R.id.type);
-            country = (TextView) view.findViewById(R.id.country);
-            progress = (TextView) view.findViewById(R.id.progress);
-            countryIcon = (AchievementCountryFlagView) view.findViewById(R.id.country_flag);
-            progressView = (AchievementProgressView) view.findViewById(R.id.progress_layout);
-            countryIcon.setLayoutParams(layoutParams);
+            binding.countryFlag.setLayoutParams(layoutParams);
 
         }
 
@@ -129,20 +103,14 @@ public class AchievementsActivityListAdapter extends RecyclerView.Adapter<Recycl
 
     class CompleteAchievementViewHolder extends RecyclerView.ViewHolder {
 
-        protected TextView type;
-        protected TextView country;
-        protected TextView progress;
-        protected AchievementCountryFlagView countryIcon;
+        ItemCompleteAchievementBinding binding;
 
         public CompleteAchievementViewHolder(View view) {
             super(view);
+            binding = DataBindingUtil.bind(view);
             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(Math.round(Helpers.convertDpToPixel(33, context)), Math.round(Helpers.convertDpToPixel(33, context)));
             layoutParams.addRule(RelativeLayout.CENTER_VERTICAL);
-            type = (TextView) view.findViewById(R.id.type);
-            country = (TextView) view.findViewById(R.id.country);
-            progress = (TextView) view.findViewById(R.id.progress);
-            countryIcon = (AchievementCountryFlagView) view.findViewById(R.id.country_flag);
-            countryIcon.setLayoutParams(layoutParams);
+            binding.countryFlag.setLayoutParams(layoutParams);
         }
     }
 
