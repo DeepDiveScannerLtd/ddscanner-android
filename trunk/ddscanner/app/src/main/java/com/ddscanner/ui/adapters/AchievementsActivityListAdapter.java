@@ -1,22 +1,17 @@
 package com.ddscanner.ui.adapters;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ddscanner.R;
 import com.ddscanner.entities.CompleteAchievement;
 import com.ddscanner.entities.Countries;
-import com.ddscanner.entities.Country;
 import com.ddscanner.entities.PendingAchievement;
 import com.ddscanner.ui.views.AchievementCountryFlagView;
 import com.ddscanner.ui.views.AchievementProgressView;
@@ -50,7 +45,7 @@ public class AchievementsActivityListAdapter extends RecyclerView.Adapter<Recycl
                 itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_complete_achievement, parent, false);
                 return new CompleteAchievementViewHolder(itemView);
             case PENDING_ACHIEVEMNT_INDEX:
-                itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_full_achievment, parent, false);
+                itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_pending_achievment, parent, false);
                 return new PendingAchievementViewHolder(itemView);
         }
         return null;
