@@ -35,7 +35,7 @@ import com.ddscanner.events.PickPhotoFromGallery;
 import com.ddscanner.events.TakePhotoFromCameraEvent;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.activities.AboutActivity;
-import com.ddscanner.ui.activities.AchievementsActivity;
+import com.ddscanner.screens.achievements.AchievementsActivity;
 import com.ddscanner.ui.activities.ChangeLoginViewEvent;
 import com.ddscanner.ui.activities.MainActivity;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
