@@ -25,6 +25,7 @@ import com.ddscanner.entities.ProfileAchievement;
 import com.ddscanner.entities.UserOld;
 import com.ddscanner.entities.UserResponseEntity;
 import com.ddscanner.rest.DDScannerRestClient;
+import com.ddscanner.screens.achievements.AchievementsActivity;
 import com.ddscanner.ui.adapters.AchievmentProfileListAdapter;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;

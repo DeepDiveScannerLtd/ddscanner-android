@@ -61,6 +61,10 @@ public class AchievementCountryFlagView extends View {
         flagBitmap = Bitmap.createScaledBitmap(flagBitmap, flagWidthPx, flagHeightPx, false);
     }
 
+    public void setFlagBitmap(Bitmap bitmap) {
+        flagBitmap = bitmap;
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);

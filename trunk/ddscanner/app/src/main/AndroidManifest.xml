@@ -236,7 +236,7 @@
             android:name=".ui.activities.AboutDDSActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activities.AchievementsActivity"
+            android:name=".screens.achievements.AchievementsActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activities.LicensesActivity"
