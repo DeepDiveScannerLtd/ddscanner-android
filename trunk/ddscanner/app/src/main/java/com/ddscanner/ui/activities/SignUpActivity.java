@@ -237,10 +237,9 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 googleSignIn();
                 break;
             case R.id.btn_sign_up:
-                //TODO remove hardoced lat and lng
                 materialDialog.show();
                 if (isRegister) {
-                    DDScannerApplication.getDdScannerRestClient().postUserSignUp(email.getText().toString(), password.getText().toString(), userType, "24.15151", "21.5454", signUpResultListener);
+                    DDScannerApplication.getDdScannerRestClient().postUserSignUp(email.getText().toString(), password.getText().toString(), userType, null, null, signUpResultListener);
                     break;
                 }
                 DDScannerApplication.getDdScannerRestClient().postUserSignIn(email.getText().toString(), password.getText().toString(), "28.13123", "21.323232", null, null, signUpResultListener);
@@ -352,9 +351,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
     private void sendLoginRequest(String appId, SignInType signInType, String token) {
 //        DDScannerApplication.getDdScannerRestClient().postLogin(appId, signInType, token, loginResultListener);
-        //TODO remove hardoced lat and lng
         materialDialog.show();
-        DDScannerApplication.getDdScannerRestClient().postUserSignIn(null, null, "21.1414", "24.15151", signInType, token, signUpResultListener);
+        DDScannerApplication.getDdScannerRestClient().postUserSignIn(null, null, null, null, signInType, token, signUpResultListener);
     }
 
     @Override
