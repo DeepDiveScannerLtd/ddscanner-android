@@ -68,6 +68,14 @@ abstract class BaseCallback<T> implements Callback<ResponseBody> {
                     resultListener.onError(DDScannerRestClient.ErrorType.JSON_SYNTAX_EXCEPTION, null, call.request().url().toString(), e.getMessage());
                 }
                 break;
+            case 401:
+                try {
+                    generalError = gson.fromJson(json, GeneralError.class);
+                    resultListener.onError(DDScannerRestClient.ErrorType.UNAUTHORIZED_401, generalError, call.request().url().toString(), generalError.getMessage());
+                } catch (JsonSyntaxException e) {
+                    resultListener.onError(DDScannerRestClient.ErrorType.JSON_SYNTAX_EXCEPTION, null, call.request().url().toString(), e.getMessage());
+                }
+                break;
             case 403:
                 try {
                     generalError = gson.fromJson(json, GeneralError.class);
@@ -81,10 +89,6 @@ abstract class BaseCallback<T> implements Callback<ResponseBody> {
                 try {
                     generalError = gson.fromJson(json, GeneralError.class);
                     switch (generalError.getStatusCode()) {
-                        case 801:
-                            // user not found
-                            resultListener.onError(DDScannerRestClient.ErrorType.USER_NOT_FOUND_ERROR_C801, generalError, call.request().url().toString(), generalError.getMessage());
-                            break;
                         case 802:
                             // dive spot not found
                             resultListener.onError(DDScannerRestClient.ErrorType.DIVE_SPOT_NOT_FOUND_ERROR_C802, generalError, call.request().url().toString(), generalError.getMessage());

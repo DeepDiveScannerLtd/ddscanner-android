@@ -70,7 +70,7 @@ public class AchievementsActivity extends AppCompatActivity implements InfoDialo
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             switch (errorType) {
-                case USER_NOT_FOUND_ERROR_C801:
+                case UNAUTHORIZED_401:
                     LoginActivity.showForResult(AchievementsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_ACHIEVEMENTS_ACTIVITY_LOGIN_TO_ACHIEVEMNTS);
                     break;
                 default:

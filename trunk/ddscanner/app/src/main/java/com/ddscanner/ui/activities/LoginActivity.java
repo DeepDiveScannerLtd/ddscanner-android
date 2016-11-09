@@ -335,7 +335,7 @@ public class LoginActivity extends AppCompatActivity
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             materialDialog.dismiss();
             switch (errorType) {
-                case USER_NOT_FOUND_ERROR_C801:
+                case UNAUTHORIZED_401:
                     Crashlytics.log("801 error on identify");
                     EventsTracker.trackUnknownServerError(url, errorMessage);
                     InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_message_user_not_found, DialogsRequestCodes.DRC_LOGIN_ACTIVITY_USER_NOT_FOUND, false);

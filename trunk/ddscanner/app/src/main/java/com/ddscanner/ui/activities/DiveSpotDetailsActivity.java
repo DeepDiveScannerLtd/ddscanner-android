@@ -1238,7 +1238,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                     // This is unexpected so track it
                     Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage, R.string.error_server_error_title, R.string.error_message_dive_spot_not_found);
                     break;
-                case USER_NOT_FOUND_ERROR_C801:
+                case UNAUTHORIZED_401:
                     SharedPreferenceHelper.logout();
                     if (isCheckIn) {
                         checkOutUi();
@@ -1295,7 +1295,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                     // This is unexpected so track it
                     Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage, R.string.error_server_error_title, R.string.error_message_dive_spot_not_found);
                     break;
-                case USER_NOT_FOUND_ERROR_C801:
+                case UNAUTHORIZED_401:
                     SharedPreferenceHelper.logout();
                     if (isAddToFavourites) {
                         LoginActivity.showForResult(DiveSpotDetailsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_ADD_TO_FAVOURITES);
@@ -1352,7 +1352,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                     // This is unexpected so track it
                     Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage, R.string.error_server_error_title, R.string.error_message_dive_spot_not_found);
                     break;
-                case USER_NOT_FOUND_ERROR_C801:
+                case UNAUTHORIZED_401:
                     SharedPreferenceHelper.logout();
                     LoginActivity.showForResult(DiveSpotDetailsActivity.this, isValid ? ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_VALIDATE_SPOT : ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_INVALIDATE_SPOT);
                     break;

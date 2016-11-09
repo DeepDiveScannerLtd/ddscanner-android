@@ -75,7 +75,7 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             switch (errorType) {
-                case USER_NOT_FOUND_ERROR_C801:
+                case UNAUTHORIZED_401:
                     SharedPreferenceHelper.logout();
                     DDScannerApplication.bus.post(new LoggedOutEvent());
                     break;

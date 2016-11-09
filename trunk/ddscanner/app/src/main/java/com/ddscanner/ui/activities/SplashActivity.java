@@ -25,8 +25,6 @@ import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.messaging.FirebaseMessaging;
 import com.squareup.otto.Subscribe;
 
 public class SplashActivity extends BaseAppCompatActivity implements InfoDialogFragment.DialogClosedListener, View.OnClickListener {
@@ -58,7 +56,7 @@ public class SplashActivity extends BaseAppCompatActivity implements InfoDialogF
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             switch (errorType) {
-                case USER_NOT_FOUND_ERROR_C801:
+                case UNAUTHORIZED_401:
                     // Currently handle it as an unexpected error. Later identify request will be removed
                     Crashlytics.log("801 error on identify");
                 default:

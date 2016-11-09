@@ -182,7 +182,7 @@ public class ForeignUserDiveSpotList extends AppCompatActivity implements InfoDi
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             switch (errorType) {
-                case USER_NOT_FOUND_ERROR_C801:
+                case UNAUTHORIZED_401:
                     SharedPreferenceHelper.logout();
                     LoginActivity.showForResult(ForeignUserDiveSpotList.this, requestCodeForLogin);
                     break;

@@ -124,7 +124,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
                 case BAD_REQUEST_ERROR_400:
                      InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_message_you_cannot_report_self_photo, true);
                     break;
-                case USER_NOT_FOUND_ERROR_C801:
+                case UNAUTHORIZED_401:
                     SharedPreferenceHelper.logout();
                     LoginActivity.showForResult(ImageSliderActivity.this, ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_REPORT);
                     break;
@@ -155,7 +155,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
             switch (errorType) {
                 case BAD_REQUEST_ERROR_400:
                     break;
-                case USER_NOT_FOUND_ERROR_C801:
+                case UNAUTHORIZED_401:
                     SharedPreferenceHelper.logout();
                     LoginActivity.showForResult(ImageSliderActivity.this, ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_DELETE);
                     break;

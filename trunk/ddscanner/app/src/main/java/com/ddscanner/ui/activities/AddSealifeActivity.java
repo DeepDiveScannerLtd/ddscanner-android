@@ -29,7 +29,6 @@ import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.Sealife;
 import com.ddscanner.entities.errors.ValidationError;
 import com.ddscanner.rest.DDScannerRestClient;
-import com.ddscanner.ui.adapters.AddPhotoToDsListAdapter;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
@@ -111,7 +110,7 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             progressDialogUpload.dismiss();
             switch (errorType) {
-                case USER_NOT_FOUND_ERROR_C801:
+                case UNAUTHORIZED_401:
                     SharedPreferenceHelper.logout();
                     LoginActivity.showForResult(AddSealifeActivity.this, ActivitiesRequestCodes.REQUEST_CODE_ADD_SEALIFE_ACTIVITY_LOGIN_TO_SEND);
                     break;

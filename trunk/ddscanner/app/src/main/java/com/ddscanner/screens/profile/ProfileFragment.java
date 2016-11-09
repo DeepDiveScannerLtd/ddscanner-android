@@ -28,7 +28,6 @@ import com.ddscanner.databinding.FragmentProfileBinding;
 import com.ddscanner.entities.User;
 import com.ddscanner.entities.UserOld;
 import com.ddscanner.entities.UserResponseEntity;
-import com.ddscanner.events.ChangePageOfMainViewPagerEvent;
 import com.ddscanner.events.LoadUserProfileInfoEvent;
 import com.ddscanner.events.LoggedOutEvent;
 import com.ddscanner.events.PickPhotoFromGallery;
@@ -107,7 +106,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             materialDialog.dismiss();
             switch (errorType) {
-                case USER_NOT_FOUND_ERROR_C801:
+                case UNAUTHORIZED_401:
                     SharedPreferenceHelper.logout();
                     onLoggedOut();
                     break;
@@ -115,30 +114,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
                     Helpers.handleUnexpectedServerError(getFragmentManager(), url, errorMessage);
                     break;
             }
-        }
-    };
-
-    private DDScannerRestClient.ResultListener<Void> logoutReslutListener = new DDScannerRestClient.ResultListener<Void>() {
-        @Override
-        public void onSuccess(Void result) {
-            materialDialog.dismiss();
-         //   aboutLayout.setVisibility(View.GONE);
-            SharedPreferenceHelper.logout();
-            DDScannerApplication.bus.post(new LoggedOutEvent());
-            DDScannerApplication.bus.post(new ChangePageOfMainViewPagerEvent(0));
-            binding.swiperefresh.setEnabled(false);
-        }
-
-        @Override
-        public void onConnectionFailure() {
-            materialDialog.dismiss();
-            InfoDialogFragment.show(getFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
-        }
-
-        @Override
-        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-            materialDialog.dismiss();
-            Helpers.handleUnexpectedServerError(getFragmentManager(), url, errorMessage);
         }
     };
 
@@ -160,7 +135,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             switch (errorType) {
-                case USER_NOT_FOUND_ERROR_C801:
+                case UNAUTHORIZED_401:
                     SharedPreferenceHelper.logout();
                     DDScannerApplication.bus.post(new LoggedOutEvent());
                     break;
