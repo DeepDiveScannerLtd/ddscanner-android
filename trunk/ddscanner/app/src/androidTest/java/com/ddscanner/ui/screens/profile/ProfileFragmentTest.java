@@ -6,7 +6,7 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.v4.app.Fragment;
 
-import com.ddscanner.ui.fragments.ProfileFragment;
+import com.ddscanner.screens.profile.ProfileFragment;
 import com.ddscanner.ui.screens.FragmentTestActivity;
 
 import org.junit.Before;
