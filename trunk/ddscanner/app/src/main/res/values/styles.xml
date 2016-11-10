@@ -286,4 +286,24 @@
         <item name="android:windowBackground">@drawable/splash_bg</item>
     </style>
 
+    <style name="PhotosTabActive">
+        <item name="android:textColor">@color/black_text</item>
+        <item name="android:background">@drawable/gray_rectangle</item>
+        <item name="android:paddingBottom">7dp</item>
+        <item name="android:paddingTop">7dp</item>
+        <item name="android:paddingLeft">12dp</item>
+        <item name="android:paddingRight">12dp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="PhotosTabDisabled">
+        <item name="android:textColor">#afafaf</item>
+        <item name="android:paddingBottom">7dp</item>
+        <item name="android:paddingTop">7dp</item>
+        <item name="android:paddingLeft">12dp</item>
+        <item name="android:paddingRight">12dp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:background">@null</item>
+    </style>
+
 </resources>

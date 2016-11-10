@@ -17,13 +17,14 @@
         app:pv_autostart="true"
         app:pv_circular="true"
         app:pv_progressMode="indeterminate"
+        android:visibility="gone"
         app:pv_progressStyle="@style/CircularProgress" />
 
     <ScrollView
         android:id="@+id/main_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -32,47 +33,45 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
+                android:layout_height="wrap_content"
                 android:background="@color/white">
 
                 <TextView
-                    android:id="@+id/add_photo_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:text="@string/add_divespot_s_photo"
-                    android:textColor="#b2b2b2"
-                    android:textSize="14sp" />
-
-                <TextView
+                    android:id="@+id/photos"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
                     android:layout_marginTop="15dp"
-                    android:fontFamily="sans-serif-medium"
                     android:text="@string/photos_title"
-                    android:textColor="@color/black_text"
-                    android:textSize="15sp" />
-
-                <ImageButton
-                    android:id="@+id/btn_add_photo"
+                    style="@style/PhotosTabActive"/>
+                <TextView
+                    android:id="@+id/maps"
+                    android:layout_toRightOf="@+id/photos"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:paddingRight="15dp"
-                    android:paddingTop="15dp"
-                    android:paddingBottom="15dp"
-                    android:scaleType="fitCenter"
-                    android:paddingLeft="15dp"
-                    android:background="@android:color/transparent"
-                    android:src="@drawable/ic_addds_plus"/>
+                    android:text="@string/maps"
+                    android:layout_marginTop="15dp"
+                    style="@style/PhotosTabDisabled"/>
+
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/photos_rc"
                     android:layout_width="wrap_content"
                     android:layout_height="90dp"
-                    android:layout_below="@+id/btn_add_photo"
-                    android:layout_marginLeft="10dp" />
+                    android:layout_below="@+id/maps"
+                    android:layout_marginTop="13dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginBottom="20dp"/>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/maps_rc"
+                    android:layout_width="wrap_content"
+                    android:visibility="gone"
+                    android:layout_height="90dp"
+                    android:layout_below="@+id/maps"
+                    android:layout_marginTop="13dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginBottom="20dp"/>
 
             </RelativeLayout>
 

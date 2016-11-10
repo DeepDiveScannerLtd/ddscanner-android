@@ -345,4 +345,5 @@
     <string name="forgot_password_btn">Forgot password?</string>
     <string name="sign_in_with_facebook">Sign in with Facebook</string>
     <string name="sign_in_with_google">Sign in with Google</string>
+    <string name="maps">Maps</string>
 </resources>

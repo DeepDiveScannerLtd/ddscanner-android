@@ -106,11 +106,15 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     private TextView error_visibility_min;
     private TextView error_visibility_max;
     private int maxPhotos = 3;
+    private TextView photos;
+    private TextView maps;
+    private RecyclerView mapsRecyclerView;
 
     private List<String> imageUris = new ArrayList<>();
     private List<Sealife> sealifes = new ArrayList<>();
     private Map<String, TextView> errorsMap = new HashMap<>();
     private FiltersResponseEntity filters;
+    private boolean isShownMapsPhotos = false;
 
     private RequestBody requestName, requestLat, requestLng,
             requestDepth, requestCurrents,
@@ -196,9 +200,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         depth = (EditText) findViewById(R.id.depth);
         description = (EditText) findViewById(R.id.description);
         btnAddSealife = (ImageView) findViewById(R.id.btn_add_sealife);
-        addPhotoTitle = (TextView) findViewById(R.id.add_photo_title);
         photos_rc = (RecyclerView) findViewById(R.id.photos_rc);
-        btnAddPhoto = (ImageButton) findViewById(R.id.btn_add_photo);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         levelSpinner = (Spinner) findViewById(R.id.level_spinner);
         objectSpinner = (Spinner) findViewById(R.id.object_spinner);
@@ -220,6 +222,9 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         error_visibility_min = (TextView) findViewById(R.id.error_visibility_min);
         visibilityMax = (EditText) findViewById(R.id.maxVisibility);
         visibilityMin = (EditText) findViewById(R.id.minVisibility);
+        photos = (TextView) findViewById(R.id.photos);
+        maps = (TextView) findViewById(R.id.maps);
+        mapsRecyclerView = (RecyclerView) findViewById(R.id.maps_rc);
     }
 
     private void setUi() {
@@ -227,9 +232,8 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         ProgressDialog progressDialog = new ProgressDialog(this);
         btnSave.setOnClickListener(this);
         pickLocation.setOnClickListener(this);
-        btnAddPhoto.setOnClickListener(this);
         btnAddSealife.setOnClickListener(this);
-
+        maps.setOnClickListener(this);
         /* Recycler view with images settings*/
         LinearLayoutManager layoutManager = new LinearLayoutManager(AddDiveSpotActivity.this);
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -324,7 +328,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                             e.printStackTrace();
                         }
                     }
-                    photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris, AddDiveSpotActivity.this, addPhotoTitle));
+                    photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris, AddDiveSpotActivity.this));
 
                 }
                 break;
@@ -424,6 +428,12 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
 //                    startActivityForResult(loginIntent, ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_LOGIN);
 //                }
                 break;
+            case R.id.photos:
+                changeViewState(photos, maps);
+                break;
+            case R.id.maps:
+                changeViewState(maps, photos);
+                break;
         }
     }
 
@@ -438,6 +448,16 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                         SharedPreferenceHelper.getSecret());
             }
         }
+    }
+
+    private void changeViewState(TextView activeTextView, TextView disableTextView) {
+        activeTextView.setTextColor(ContextCompat.getColor(this, R.color.black_text));
+        activeTextView.setBackground(ContextCompat.getDrawable(this, R.drawable.gray_rectangle));
+        activeTextView.setOnClickListener(null);
+
+        disableTextView.setTextColor(ContextCompat.getColor(this, R.color.gray_bg));
+        disableTextView.setBackground(null);
+        disableTextView.setOnClickListener(this);
     }
 
     private void createRequestBodyies() {
@@ -562,8 +582,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     public void deleteImage(ImageDeletedEvent event) {
         maxPhotos++;
         imageUris.remove(event.getImageIndex());
-        photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris,
-                AddDiveSpotActivity.this, addPhotoTitle));
+        photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris, AddDiveSpotActivity.this));
     }
 
     private void showSuccessDialog(final String diveSpotId) {
