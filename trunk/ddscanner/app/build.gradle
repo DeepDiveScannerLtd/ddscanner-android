@@ -20,8 +20,9 @@ android {
     dataBinding {
         enabled = true
     }
-    compileSdkVersion 25
-    buildToolsVersion "25"
+    //TODO compileSdkVersion 25 buildToolsVersion "25"
+    compileSdkVersion 24
+    buildToolsVersion "24.0.2"
     defaultConfig {
         applicationId "com.ddscanner"
         minSdkVersion 16
@@ -62,9 +63,9 @@ repositories {
     maven { url 'https://maven.fabric.io/public' }
     maven { url "https://jitpack.io" }
 }
-
-def playServicesVersion="9.8.0"
-def supportVersionVersion="25.0.0"
+//TODO def playServicesVersion="9.8.0" def supportVersionVersion="25.0.0"
+def playServicesVersion="9.6.1"
+def supportVersionVersion="24.2.1"
 
 dependencies {
     // tests
