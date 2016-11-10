@@ -53,6 +53,7 @@ import com.ddscanner.events.SignupLoginButtonClicked;
 import com.ddscanner.events.TakePhotoFromCameraEvent;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.adapters.MainActivityPagerAdapter;
+import com.ddscanner.ui.dialogs.CheckedInDialogFragment;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.ui.fragments.ActivityNotificationsFragment;
 import com.ddscanner.ui.fragments.AllNotificationsFragment;
@@ -155,6 +156,8 @@ public class MainActivity extends BaseAppCompatActivity
         super.onCreate(savedInstanceState);
         LogUtils.i(TAG, "onCreate");
         isHasInternetConnection = getIntent().getBooleanExtra(Constants.IS_HAS_INTERNET, false);
+        CheckedInDialogFragment checkedInDialogFragment = CheckedInDialogFragment.newInstance("15");
+        checkedInDialogFragment.show(getSupportFragmentManager(), "");
         clearFilterSharedPreferences();
         startActivity();
         Log.i(TAG, FirebaseInstanceId.getInstance().getToken());
