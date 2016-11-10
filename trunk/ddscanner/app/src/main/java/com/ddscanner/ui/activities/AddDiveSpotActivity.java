@@ -240,6 +240,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         photos_rc.setNestedScrollingEnabled(false);
         photos_rc.setHasFixedSize(false);
         photos_rc.setLayoutManager(layoutManager);
+        photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris, this));
 
         /* Recycler view with sealifes settings*/
         LinearLayoutManager sealifeLayoutManager = new LinearLayoutManager(
