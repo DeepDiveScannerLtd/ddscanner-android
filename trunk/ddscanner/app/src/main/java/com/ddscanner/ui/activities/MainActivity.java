@@ -156,8 +156,6 @@ public class MainActivity extends BaseAppCompatActivity
         super.onCreate(savedInstanceState);
         LogUtils.i(TAG, "onCreate");
         isHasInternetConnection = getIntent().getBooleanExtra(Constants.IS_HAS_INTERNET, false);
-        CheckedInDialogFragment checkedInDialogFragment = CheckedInDialogFragment.newInstance("15");
-        checkedInDialogFragment.show(getSupportFragmentManager(), "");
         clearFilterSharedPreferences();
         startActivity();
         Log.i(TAG, FirebaseInstanceId.getInstance().getToken());
