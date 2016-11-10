@@ -140,7 +140,7 @@ public class EditCommentActivity extends AppCompatActivity implements View.OnCli
         if (comment.getImages() != null) {
             maxPhotos = maxPhotos - comment.getImages().size();
             imageUris = comment.getImages();
-            addPhotoToDsListAdapter = new AddPhotoToDsListAdapter(comment.getImages(), this, addPhotoTitle);
+            addPhotoToDsListAdapter = new AddPhotoToDsListAdapter(comment.getImages(), this);
             photos_rc.setAdapter(addPhotoToDsListAdapter);
            // setRcSettings();
         }
@@ -330,8 +330,7 @@ public class EditCommentActivity extends AppCompatActivity implements View.OnCli
                             e.printStackTrace();
                         }
                     }
-                    addPhotoToDsListAdapter = new AddPhotoToDsListAdapter(imageUris,
-                            EditCommentActivity.this, addPhotoTitle);
+                    addPhotoToDsListAdapter = new AddPhotoToDsListAdapter(imageUris, EditCommentActivity.this);
                     addPhotoTitle.setVisibility(View.GONE);
                     photos_rc.setVisibility(View.VISIBLE);
                     photos_rc.setAdapter(addPhotoToDsListAdapter);
@@ -418,8 +417,7 @@ public class EditCommentActivity extends AppCompatActivity implements View.OnCli
         if (addPhotoToDsListAdapter.getListOfDeletedImages() != null) {
             deleted.addAll((ArrayList<String>) addPhotoToDsListAdapter.getListOfDeletedImages());
         }
-        addPhotoToDsListAdapter = new AddPhotoToDsListAdapter(imageUris,
-                EditCommentActivity.this, addPhotoTitle);
+        addPhotoToDsListAdapter = new AddPhotoToDsListAdapter(imageUris, EditCommentActivity.this);
         photos_rc.setAdapter(addPhotoToDsListAdapter);
         if (addPhotoToDsListAdapter.getNewFilesUrisList() != null) {
             maxPhotos = 3 - addPhotoToDsListAdapter.getNewFilesUrisList().size();

@@ -136,7 +136,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
             if (diveSpot.getImages() != null) {
                 imageUris = changeImageAddresses(diveSpot.getImages());
             }
-            addPhotoToDsListAdapter = new AddPhotoToDsListAdapter(imageUris, EditDiveSpotActivity.this, addPhotoTitle);
+            addPhotoToDsListAdapter = new AddPhotoToDsListAdapter(imageUris, EditDiveSpotActivity.this);
             diveSpotLocation = new LatLng(divespotDetails.getDivespot().getLat(),
                     divespotDetails.getDivespot().getLng());
             DDScannerApplication.getDdScannerRestClient().getFilters(getFiltersResultListener);
@@ -261,7 +261,6 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
         depth = (EditText) findViewById(R.id.depth);
         description = (EditText) findViewById(R.id.description);
         btnAddSealife = (ImageView) findViewById(R.id.btn_add_sealife);
-        addPhotoTitle = (TextView) findViewById(R.id.add_photo_title);
         photos_rc = (RecyclerView) findViewById(R.id.photos_rc);
         btnAddPhoto = (ImageButton) findViewById(R.id.btn_add_photo);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -479,7 +478,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
                             e.printStackTrace();
                         }
                     }
-                    photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris, EditDiveSpotActivity.this, addPhotoTitle));
+                    photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris, EditDiveSpotActivity.this));
 
                 }
                 break;
@@ -671,8 +670,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
         if (addPhotoToDsListAdapter.getListOfDeletedImages() != null) {
             deleted.addAll(addPhotoToDsListAdapter.getListOfDeletedImages());
         }
-        addPhotoToDsListAdapter = new AddPhotoToDsListAdapter(imageUris,
-                EditDiveSpotActivity.this, addPhotoTitle);
+        addPhotoToDsListAdapter = new AddPhotoToDsListAdapter(imageUris, EditDiveSpotActivity.this);
         photos_rc.setAdapter(addPhotoToDsListAdapter);
         if (addPhotoToDsListAdapter.getNewFilesUrisList() != null) {
             maxPhotosCount = 3 - addPhotoToDsListAdapter.getNewFilesUrisList().size();

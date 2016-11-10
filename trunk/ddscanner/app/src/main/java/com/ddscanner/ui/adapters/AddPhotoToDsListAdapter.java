@@ -27,12 +27,10 @@ public class AddPhotoToDsListAdapter extends RecyclerView.Adapter<AddPhotoToDsLi
     private List<String> uris;
     private List<String> newImagesUriList = new ArrayList<>();
     private List<String> deletedImages = new ArrayList<>();
-    private TextView textView;
 
-    public AddPhotoToDsListAdapter(List<String> uris, Context context, TextView textView) {
+    public AddPhotoToDsListAdapter(List<String> uris, Context context) {
         this.context = context;
         this.uris = uris;
-        this.textView = textView;
         this.deletedImages = new ArrayList<>();
         for (String uri : uris) {
             if (!uri.contains(Constants.images)) {
@@ -86,11 +84,6 @@ public class AddPhotoToDsListAdapter extends RecyclerView.Adapter<AddPhotoToDsLi
 
     @Override
     public int getItemCount() {
-        if (uris.size() > 0) {
-            textView.setVisibility(View.GONE);
-        } else {
-            textView.setVisibility(View.VISIBLE);
-        }
         return uris.size();
     }
 
