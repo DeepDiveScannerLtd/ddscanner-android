@@ -443,6 +443,31 @@
                 android:id="@+id/error_sealife"
                 style="@style/ValidationErrorTextView" />
 
+            <ImageView
+                android:layout_marginTop="15dp"
+                style="@style/DividerStyleFull" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:background="@color/white"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_edit"
+                    android:layout_marginLeft="21dp"/>
+                <android.support.v7.widget.SwitchCompat
+                    android:paddingLeft="23dp"
+                    android:id="@+id/switchButton"
+                    android:layout_width="match_parent"
+                    android:textSize="15sp"
+                    android:layout_height="match_parent"
+                    android:text="@string/everyone_can_edit"
+                    android:paddingRight="20dp"
+                    style="@style/ColorSwitchStyle"
+                    />
+            </LinearLayout>
+
             <Button
                 android:id="@+id/button_create"
                 android:layout_width="match_parent"

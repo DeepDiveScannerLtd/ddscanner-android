@@ -8,8 +8,7 @@
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
         <item name="android:actionMenuTextColor">@color/orange</item>
         <item name="android:popupMenuStyle">@style/popupMenuStyle</item>
-        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:windowContentTransitions">true</item>
+        <item name="colorControlActivated">@color/primary</item>
     </style>
 
     <style name="ToolbarMenuStyle" parent="ThemeOverlay.AppCompat.Light">
@@ -119,8 +118,8 @@
         <item name="android:layout_marginBottom">10dp</item>
     </style>
 
-    <style name="Color1SwitchStyle">
-        <item name="colorControlActivated">@color/orange</item>
+    <style name="ColorSwitchStyle">
+        <item name="colorControlActivated">@color/primary</item>
     </style>
 
     <style name="CircularProgress" parent="Material.Drawable.CircularProgress">
