@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.events.AddPhotoDoListEvent;
 import com.ddscanner.events.ImageDeletedEvent;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
@@ -140,7 +141,7 @@ public class AddPhotoToDsListAdapter extends RecyclerView.Adapter<RecyclerView.V
 
         @Override
         public void onClick(View view) {
-
+            DDScannerApplication.bus.post(new AddPhotoDoListEvent());
         }
     }
 

@@ -75,7 +75,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
     private String diveSpotId;
 
     private ImageButton btnAddPhoto;
-    private ImageView btnAddSealife;
+    private LinearLayout btnAddSealife;
 
     private Toolbar toolbar;
     private LatLng diveSpotLocation;
@@ -84,7 +84,6 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
     private RecyclerView photos_rc;
     private TextView addPhotoTitle;
     private TextView locationTitle;
-    private TextView addSealifeTitle;
     private Spinner levelSpinner;
     private Spinner currentsSpinner;
     private Spinner objectSpinner;
@@ -259,7 +258,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
         name = (EditText) findViewById(R.id.name);
         depth = (EditText) findViewById(R.id.depth);
         description = (EditText) findViewById(R.id.description);
-        btnAddSealife = (ImageView) findViewById(R.id.btn_add_sealife);
+        btnAddSealife = (LinearLayout) findViewById(R.id.btn_add_sealife);
         photos_rc = (RecyclerView) findViewById(R.id.photos_rc);
         btnAddPhoto = (ImageButton) findViewById(R.id.btn_add_photo);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -270,7 +269,6 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
         locationTitle = (TextView) findViewById(R.id.location);
         btnSave = (Button) findViewById(R.id.button_create);
         sealifesRc = (RecyclerView) findViewById(R.id.sealifes_rc);
-        addSealifeTitle = (TextView) findViewById(R.id.add_sealife_text);
         mainLayout = (ScrollView) findViewById(R.id.main_layout);
         progressView = (ProgressView) findViewById(R.id.progressBarFull);
         error_depth = (TextView) findViewById(R.id.error_depth);
@@ -319,8 +317,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
         sealifesRc.setNestedScrollingEnabled(false);
         sealifesRc.setHasFixedSize(false);
         sealifesRc.setLayoutManager(sealifeLayoutManager);
-        sealifeListAddingDiveSpotAdapter = new SealifeListAddingDiveSpotAdapter((ArrayList<Sealife>) sealifes,
-                EditDiveSpotActivity.this, addSealifeTitle);
+        sealifeListAddingDiveSpotAdapter = new SealifeListAddingDiveSpotAdapter((ArrayList<Sealife>) sealifes, EditDiveSpotActivity.this);
         sealifesRc.setAdapter(sealifeListAddingDiveSpotAdapter);
         progressView.stop();
         progressView.setVisibility(View.GONE);
