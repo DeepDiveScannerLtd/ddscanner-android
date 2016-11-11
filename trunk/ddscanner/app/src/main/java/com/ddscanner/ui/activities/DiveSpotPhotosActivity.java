@@ -35,7 +35,6 @@ import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
-import com.ddscanner.utils.SharedPreferenceHelper;
 import com.rey.material.widget.ProgressView;
 
 import java.io.File;
@@ -43,7 +42,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import me.nereo.multi_image_selector.MultiImageSelector;
-import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 
 public class DiveSpotPhotosActivity extends AppCompatActivity implements View.OnClickListener, InfoDialogFragment.DialogClosedListener {
 
@@ -290,7 +288,7 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
     }
 
     private void addPhotosToDiveSpot() {
-        if (!SharedPreferenceHelper.isUserLoggedIn()) {
+        if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
             LoginActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_LOGIN);
         } else {
             Intent intent = new Intent();
@@ -308,7 +306,7 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
     private void getDiveSpotPhotos() {
         progressView.setVisibility(View.VISIBLE);
         photosViewPager.setVisibility(View.GONE);
-        DDScannerApplication.getDdScannerRestClient().getDiveSpotPhotos(dsId, diveSpotDetailsResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotPhotos(dsId, diveSpotDetailsResultListener);
     }
 
     private void updateFragments(DiveSpotDetails diveSpotDetails) {

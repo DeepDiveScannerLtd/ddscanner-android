@@ -33,15 +33,14 @@ import com.ddscanner.events.LoggedOutEvent;
 import com.ddscanner.events.PickPhotoFromGallery;
 import com.ddscanner.events.TakePhotoFromCameraEvent;
 import com.ddscanner.rest.DDScannerRestClient;
-import com.ddscanner.ui.activities.AboutActivity;
 import com.ddscanner.screens.achievements.AchievementsActivity;
+import com.ddscanner.ui.activities.AboutActivity;
 import com.ddscanner.ui.activities.ChangeLoginViewEvent;
 import com.ddscanner.ui.activities.MainActivity;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.ui.views.LoginView;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
-import com.ddscanner.utils.SharedPreferenceHelper;
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 
@@ -52,9 +51,6 @@ import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
-/**
- * Created by lashket on 20.4.16.
- */
 public class ProfileFragment extends Fragment implements View.OnClickListener, LoginView.LoginStateChangeListener, InfoDialogFragment.DialogClosedListener, SwipeRefreshLayout.OnRefreshListener {
 
     private static final String TAG = ProfileFragment.class.getName();
@@ -92,7 +88,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
 //            aboutLayout.setVisibility(View.VISIBLE);
 //            aboutLayout.scrollTo(0,0);
 //            editLayout.setVisibility(View.GONE);
-//            getUserDataRequest(SharedPreferenceHelper.getUserServerId());
+//            getUserDataRequest(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId());
 //            swipeRefreshLayout.setEnabled(true);
         }
 
@@ -107,7 +103,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
             materialDialog.dismiss();
             switch (errorType) {
                 case UNAUTHORIZED_401:
-                    SharedPreferenceHelper.logout();
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logout();
                     onLoggedOut();
                     break;
                 default:
@@ -136,7 +132,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             switch (errorType) {
                 case UNAUTHORIZED_401:
-                    SharedPreferenceHelper.logout();
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logout();
                     DDScannerApplication.bus.post(new LoggedOutEvent());
                     break;
                 default:
@@ -162,12 +158,12 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
         setupUi();
         binding.setHandlers(this);
 
-        if (SharedPreferenceHelper.isUserLoggedIn()) {
-            getUserDataRequest(SharedPreferenceHelper.getUserServerId());
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
+            getUserDataRequest(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId());
         }
 //        materialDialog = Helpers.getMaterialDialog(getContext());
         createErrorsMap();
-        if (SharedPreferenceHelper.isUserLoggedIn()) {
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
             onLoggedIn();
         } else {
             onLoggedOut();
@@ -275,9 +271,9 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
     public void onResume() {
         super.onResume();
 //        Log.i(TAG, "ProfileFragment onCreateView, this = " + this);
-//        if (SharedPreferenceHelper.isUserLoggedIn()) {
+//        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
 //            if (!isClickedChosingPhotoButton) {
-//             //   getUserDataRequest(SharedPreferenceHelper.getUserServerId());
+//             //   getUserDataRequest(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId());
 //            }
 //        }
 //        if (!getUserVisibleHint()) {
@@ -292,9 +288,9 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
 
     @Subscribe
     public void getUserProfileInfo(LoadUserProfileInfoEvent event) {
-        if (SharedPreferenceHelper.isUserLoggedIn()) {
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
             if (!isClickedChosingPhotoButton) {
-                getUserDataRequest(SharedPreferenceHelper.getUserServerId());
+                getUserDataRequest(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId());
             }
         } else {
             onLoggedOut();
@@ -335,7 +331,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
 
     private void getUserDataRequest(String id) {
      //   DDScannerApplication.getDdScannerRestClient().getUserInformation(id, getUserInformationResultListener);
-        DDScannerApplication.getDdScannerRestClient().getUserSelfInformation(userResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient().getUserSelfInformation(userResultListener);
     }
 
     private void changeUi(UserResponseEntity userResponseEntity) {
@@ -362,8 +358,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
         super.setUserVisibleHint(visible);
 //        Log.i(TAG, "ProfileFragment setUserVisibleHint, this = " + this);
 //        if (visible) {
-//            if (SharedPreferenceHelper.isUserLoggedIn()) {
-//                getUserDataRequest(SharedPreferenceHelper.getUserServerId());
+//            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
+//                getUserDataRequest(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId());
 //            }
 //        }
     }
@@ -380,11 +376,11 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
 //                    fullNameEdit.getText().toString());
 //        }
 //
-//        if (SharedPreferenceHelper.isUserLoggedIn()) {
+//        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
 //            requestSocial = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
-//                    SharedPreferenceHelper.getSn());
+//                    DDScannerApplication.getInstance().getSharedPreferenceHelper().getSn());
 //            requestToken = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
-//                    SharedPreferenceHelper.getToken());
+//                    DDScannerApplication.getInstance().getSharedPreferenceHelper().getToken());
 //        }
 //
 //        if (uri != null) {
@@ -411,7 +407,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
 //
 //        requestType = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), "PUT");
 //
-//        DDScannerApplication.getDdScannerRestClient().putUpdateUserProfileInfo(updateProfileInfoResultListener, SharedPreferenceHelper.getUserServerId(), image, requestType,  name, username, about, requestToken, requestSocial);
+//        DDScannerApplication.getDdScannerRestClient().putUpdateUserProfileInfo(updateProfileInfoResultListener, DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId(), image, requestType,  name, username, about, requestToken, requestSocial);
 //    }
 
 
@@ -426,8 +422,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
         if (binding != null && binding.loginView != null && binding.about != null) {
             binding.loginView.setVisibility(View.GONE);
             binding.swiperefresh.setEnabled(true);
-            DDScannerApplication.getDdScannerRestClient().getUserSelfInformation(userResultListener);
-          //  DDScannerApplication.getDdScannerRestClient().getUserInformation(SharedPreferenceHelper.getUserServerId(), getUserInformationResultListener);
+            DDScannerApplication.getInstance().getDdScannerRestClient().getUserSelfInformation(userResultListener);
+          //  DDScannerApplication.getDdScannerRestClient().getUserInformation(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId(), getUserInformationResultListener);
             if (binding.editProfileLayout.getVisibility() != View.VISIBLE) {
                 binding.about.setVisibility(View.VISIBLE);
             } else {
@@ -452,13 +448,13 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
 
     @Override
     public void onRefresh() {
-        DDScannerApplication.getDdScannerRestClient().getUserSelfInformation(userResultListener);
-      //  DDScannerApplication.getDdScannerRestClient().getUserInformation(SharedPreferenceHelper.getUserServerId(), getUserInformationResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient().getUserSelfInformation(userResultListener);
+      //  DDScannerApplication.getDdScannerRestClient().getUserInformation(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId(), getUserInformationResultListener);
     }
 
     public void logoutUser(View view) {
-        SharedPreferenceHelper.setLastShowingNotificationTime(0);
-        SharedPreferenceHelper.logout();
+        DDScannerApplication.getInstance().getSharedPreferenceHelper().setLastShowingNotificationTime(0);
+        DDScannerApplication.getInstance().getSharedPreferenceHelper().logout();
         onLoggedOut();
     }
 

@@ -22,7 +22,6 @@ import com.ddscanner.ui.views.DDProgressBarView;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
-import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.squareup.otto.Subscribe;
@@ -45,7 +44,7 @@ public class SplashActivity extends BaseAppCompatActivity implements InfoDialogF
         public void onSuccess(Void result) {
             progressMessage.setText("");
             //showMainActivity();
-            SharedPreferenceHelper.setIsFirstLaunch(false);
+            DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsFirstLaunch(false);
         }
 
         @Override
@@ -71,7 +70,7 @@ public class SplashActivity extends BaseAppCompatActivity implements InfoDialogF
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //TODO remove after creating working login mechanism
-       // SharedPreferenceHelper.logout();
+       // DDScannerApplication.getInstance().getSharedPreferenceHelper().logout();
         getWindow().getDecorView().setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                         | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
@@ -92,7 +91,7 @@ public class SplashActivity extends BaseAppCompatActivity implements InfoDialogF
         loginButton.setOnClickListener(this);
         signUpButton.setOnClickListener(this);
 
-        if (SharedPreferenceHelper.isUserLoggedIn()) {
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
             skip.setVisibility(View.GONE);
             loginButton.setVisibility(View.GONE);
             signUpButton.setVisibility(View.GONE);
@@ -104,10 +103,10 @@ public class SplashActivity extends BaseAppCompatActivity implements InfoDialogF
 
         mainLayout.startAnimation(fadeInAnimation);
 
-        if (SharedPreferenceHelper.isFirstLaunch()) {
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isFirstLaunch()) {
        //     registerForGCM();
             progressMessage.setText(R.string.start_process_register_for_ddscanner);
-            DDScannerApplication.getDdScannerRestClient().postIdentifyUser("", "", identifyResultListener);
+            DDScannerApplication.getInstance().getDdScannerRestClient().postIdentifyUser("", "", identifyResultListener);
         } else {
       //      showMainActivity();
         }
@@ -116,7 +115,7 @@ public class SplashActivity extends BaseAppCompatActivity implements InfoDialogF
     }
 
 //    private void registerForGCM() {
-//        if (!SharedPreferenceHelper.isUserAppIdReceived()) {
+//        if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserAppIdReceived()) {
 //            if (checkPlayServices()) {
 //                progressMessage.setText(R.string.start_process_register_for_gcm);
 //                Intent intent = new Intent(this, RegistrationIntentService.class);
@@ -194,7 +193,7 @@ public class SplashActivity extends BaseAppCompatActivity implements InfoDialogF
     @Subscribe
     public void onAppInstanceIdReceived(InstanceIDReceivedEvent event) {
         progressMessage.setText(R.string.start_process_register_for_ddscanner);
-        DDScannerApplication.getDdScannerRestClient().postIdentifyUser("", "", identifyResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient().postIdentifyUser("", "", identifyResultListener);
     }
 
     @Override

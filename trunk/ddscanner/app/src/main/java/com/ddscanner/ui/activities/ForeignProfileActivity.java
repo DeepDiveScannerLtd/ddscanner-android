@@ -32,7 +32,6 @@ import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
-import com.ddscanner.utils.SharedPreferenceHelper;
 import com.rey.material.widget.ProgressView;
 import com.squareup.picasso.Picasso;
 
@@ -89,7 +88,7 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             switch (errorType) {
                 case UNAUTHORIZED_401:
-                    SharedPreferenceHelper.logout();
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logout();
                     LoginActivity.showForResult(ForeignProfileActivity.this, ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_LOGIN);
                     break;
                 default:
@@ -107,7 +106,7 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
         userId = getIntent().getStringExtra("USERID");
         findViews();
         toolbarSettings();
-        DDScannerApplication.getDdScannerRestClient().getUserInformation(userId, userResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient().getUserInformation(userId, userResultListener);
     }
 
     private void findViews() {
@@ -223,7 +222,7 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
         switch (requestCode) {
             case ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_LOGIN:
                 if (resultCode == RESULT_OK) {
-                    DDScannerApplication.getDdScannerRestClient().getUserInformation(userId, userResultListener);
+                    DDScannerApplication.getInstance().getDdScannerRestClient().getUserInformation(userId, userResultListener);
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_LOGIN_TO_SEE_CHECKINS:
@@ -251,7 +250,7 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.checkins_activity:
-                if (SharedPreferenceHelper.isUserLoggedIn()) {
+                if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
                     EventsTracker.trackReviewerCheckInsView();
                     ForeignUserDiveSpotList.show(this, false, false, true, userId);
                 } else {
@@ -260,7 +259,7 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
                 }
                 break;
             case R.id.created_activity:
-                if (SharedPreferenceHelper.isUserLoggedIn()) {
+                if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
                     EventsTracker.trackUserCreatedView();
                     ForeignUserDiveSpotList.show(this, false, true, false, userId);
                 } else {
@@ -269,7 +268,7 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
                 }
                 break;
             case R.id.edited_activity:
-                if (SharedPreferenceHelper.isUserLoggedIn()) {
+                if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
                     EventsTracker.trackReviewerEditedView();
                     ForeignUserDiveSpotList.show(this, true, false, false, userId);
                 } else {

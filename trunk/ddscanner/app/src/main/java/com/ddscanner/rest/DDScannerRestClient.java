@@ -2,6 +2,7 @@ package com.ddscanner.rest;
 
 import android.support.annotation.NonNull;
 
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.entities.AchievmentsResponseEntity;
 import com.ddscanner.entities.CheckIns;
 import com.ddscanner.entities.Comments;
@@ -30,7 +31,6 @@ import com.ddscanner.entities.request.SignUpRequest;
 import com.ddscanner.entities.request.ValidationRequest;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
-import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
@@ -47,9 +47,9 @@ import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 
-public class DDScannerRestClient implements DDScannerRestClientContract {
+public class DDScannerRestClient {
 
-    private Gson gson = new Gson();
+    protected Gson gson = new Gson();
 
     public void getDiveSpotDetails(String diveSpotId, @NonNull final ResultListener<DiveSpotDetails> resultListener) {
         Map<String, String> map = getUserQueryMapRequest();
@@ -266,8 +266,8 @@ public class DDScannerRestClient implements DDScannerRestClientContract {
 
     public void postValidateDiveSpot(String diveSpotId, boolean isValid, @NonNull final ResultListener<Void> resultListener) {
         ValidationRequest validationRequest = new ValidationRequest();
-        validationRequest.setSocial(SharedPreferenceHelper.getSn());
-        validationRequest.setToken(SharedPreferenceHelper.getToken());
+        validationRequest.setSocial(DDScannerApplication.getInstance().getSharedPreferenceHelper().getSn());
+        validationRequest.setToken(DDScannerApplication.getInstance().getSharedPreferenceHelper().getToken());
         validationRequest.setAppId(FirebaseInstanceId.getInstance().getId());
         validationRequest.setpush(FirebaseInstanceId.getInstance().getToken());
         validationRequest.setValid(isValid);
@@ -348,7 +348,7 @@ public class DDScannerRestClient implements DDScannerRestClientContract {
     }
 
     public void getUserNotifications(@NonNull final ResultListener<Notifications> resultListener) {
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getNotifications(SharedPreferenceHelper.getUserServerId(), getUserQueryMapRequest());
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getNotifications(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId(), getUserQueryMapRequest());
         call.enqueue(new ResponseEntityCallback<Notifications>(gson, resultListener) {
             @Override
             void handleResponseString(ResultListener<Notifications> resultListener, String responseString) throws JSONException {
@@ -509,7 +509,6 @@ public class DDScannerRestClient implements DDScannerRestClientContract {
         });
     }
 
-    @Override
     public void getSeaLifeDetails(String seaLifeId, @NonNull ResultListener<Sealife> resultListener) {
         // TODO Implement
     }
@@ -518,9 +517,9 @@ public class DDScannerRestClient implements DDScannerRestClientContract {
         ReportRequest reportRequest = new ReportRequest();
         reportRequest.setType(reportType);
         reportRequest.setDescription(reportDescription);
-        if (!SharedPreferenceHelper.getToken().isEmpty()) {
-            reportRequest.setSocial(SharedPreferenceHelper.getSn());
-            reportRequest.setToken(SharedPreferenceHelper.getToken());
+        if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().getToken().isEmpty()) {
+            reportRequest.setSocial(DDScannerApplication.getInstance().getSharedPreferenceHelper().getSn());
+            reportRequest.setToken(DDScannerApplication.getInstance().getSharedPreferenceHelper().getToken());
         }
         return reportRequest;
     }
@@ -530,9 +529,9 @@ public class DDScannerRestClient implements DDScannerRestClientContract {
         reportRequest.setType(reportType);
         reportRequest.setDescription(reportDescription);
         reportRequest.setName(imageName);
-        if (!SharedPreferenceHelper.getToken().isEmpty()) {
-            reportRequest.setSocial(SharedPreferenceHelper.getSn());
-            reportRequest.setToken(SharedPreferenceHelper.getToken());
+        if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().getToken().isEmpty()) {
+            reportRequest.setSocial(DDScannerApplication.getInstance().getSharedPreferenceHelper().getSn());
+            reportRequest.setToken(DDScannerApplication.getInstance().getSharedPreferenceHelper().getToken());
         }
         return reportRequest;
     }
@@ -548,11 +547,11 @@ public class DDScannerRestClient implements DDScannerRestClientContract {
 
     private Map<String, String> getUserQueryMapRequest() {
         Map<String, String> map = new HashMap<>();
-        if (SharedPreferenceHelper.isUserLoggedIn()) {
-            map.put("social", SharedPreferenceHelper.getSn());
-            map.put("token", SharedPreferenceHelper.getToken());
-            if (SharedPreferenceHelper.getSn().equals("tw")) {
-                map.put("secret", SharedPreferenceHelper.getSecret());
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
+            map.put("social", DDScannerApplication.getInstance().getSharedPreferenceHelper().getSn());
+            map.put("token", DDScannerApplication.getInstance().getSharedPreferenceHelper().getToken());
+            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getSn().equals("tw")) {
+                map.put("secret", DDScannerApplication.getInstance().getSharedPreferenceHelper().getSecret());
             }
         } else {
             return new HashMap<>();
@@ -562,16 +561,16 @@ public class DDScannerRestClient implements DDScannerRestClientContract {
 
     private RegisterRequest getRegisterRequest() {
         RegisterRequest registerRequest = new RegisterRequest();
-        if (!SharedPreferenceHelper.isUserLoggedIn()) {
+        if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
             registerRequest.setAppId(FirebaseInstanceId.getInstance().getId());
             registerRequest.setpush(FirebaseInstanceId.getInstance().getToken());
             return registerRequest;
         }
 
-        registerRequest.setSocial(SharedPreferenceHelper.getSn());
-        registerRequest.setToken(SharedPreferenceHelper.getToken());
-        if (SharedPreferenceHelper.getSn().equals("tw")) {
-            registerRequest.setSecret(SharedPreferenceHelper.getSecret());
+        registerRequest.setSocial(DDScannerApplication.getInstance().getSharedPreferenceHelper().getSn());
+        registerRequest.setToken(DDScannerApplication.getInstance().getSharedPreferenceHelper().getToken());
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getSn().equals("tw")) {
+            registerRequest.setSecret(DDScannerApplication.getInstance().getSharedPreferenceHelper().getSecret());
         }
         registerRequest.setAppId(FirebaseInstanceId.getInstance().getId());
         registerRequest.setpush(FirebaseInstanceId.getInstance().getToken());
@@ -581,11 +580,11 @@ public class DDScannerRestClient implements DDScannerRestClientContract {
     private IdentifyRequest getUserIdentifyData(String lat, String lng) {
         IdentifyRequest identifyRequest = new IdentifyRequest();
         identifyRequest.setAppId(FirebaseInstanceId.getInstance().getId());
-        if (SharedPreferenceHelper.isUserLoggedIn()) {
-            identifyRequest.setSocial(SharedPreferenceHelper.getSn());
-            identifyRequest.setToken(SharedPreferenceHelper.getToken());
-            if (SharedPreferenceHelper.getSn().equals("tw")) {
-                identifyRequest.setSecret(SharedPreferenceHelper.getSecret());
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
+            identifyRequest.setSocial(DDScannerApplication.getInstance().getSharedPreferenceHelper().getSn());
+            identifyRequest.setToken(DDScannerApplication.getInstance().getSharedPreferenceHelper().getToken());
+            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getSn().equals("tw")) {
+                identifyRequest.setSecret(DDScannerApplication.getInstance().getSharedPreferenceHelper().getSecret());
             }
         }
         identifyRequest.setpush(FirebaseInstanceId.getInstance().getToken());

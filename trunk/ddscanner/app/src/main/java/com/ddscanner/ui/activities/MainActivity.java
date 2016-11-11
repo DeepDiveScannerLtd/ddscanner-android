@@ -62,7 +62,6 @@ import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
-import com.ddscanner.utils.SharedPreferenceHelper;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -127,8 +126,8 @@ public class MainActivity extends BaseAppCompatActivity
         @Override
         public void onSuccess(SignUpResponseEntity result) {
             materialDialog.dismiss();
-            SharedPreferenceHelper.setToken(result.getToken());
-            SharedPreferenceHelper.setIsUserSignedIn(true, SignInType.EMAIL);
+            DDScannerApplication.getInstance().getSharedPreferenceHelper().setToken(result.getToken());
+            DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsUserSignedIn(true, SignInType.EMAIL);
             DDScannerApplication.bus.post(new LoggedInEvent());
         }
 
@@ -162,7 +161,7 @@ public class MainActivity extends BaseAppCompatActivity
             LogUtils.i(TAG, "internetConnectionClosed 2");
             InternetClosedActivity.show(this);
         }
-        loggedInDuringLastOnStart = SharedPreferenceHelper.isUserLoggedIn();
+        loggedInDuringLastOnStart = DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn();
     }
 
     private void startActivity() {
@@ -479,10 +478,10 @@ public class MainActivity extends BaseAppCompatActivity
         super.onStart();
         LogUtils.i(TAG, "onStart");
         DDScannerApplication.bus.register(this);
-        if (loggedInDuringLastOnStart != SharedPreferenceHelper.isUserLoggedIn()) {
+        if (loggedInDuringLastOnStart != DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
             mainViewPagerAdapter.notifyDataSetChanged();
             setupTabLayout();
-            loggedInDuringLastOnStart = SharedPreferenceHelper.isUserLoggedIn();
+            loggedInDuringLastOnStart = DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn();
         }
     }
 
@@ -510,7 +509,7 @@ public class MainActivity extends BaseAppCompatActivity
         if (!Helpers.hasConnection(this)) {
             DDScannerApplication.showErrorActivity(this);
         }
-        if (SharedPreferenceHelper.isUserLoggedIn()) {
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
             mainViewPagerAdapter.onLoggedIn();
         } else {
             mainViewPagerAdapter.onLoggedOut();
@@ -532,7 +531,7 @@ public class MainActivity extends BaseAppCompatActivity
 
     private void sendLoginRequest(SignInType signInType, String token) {
         materialDialog.show();
-        DDScannerApplication.getDdScannerRestClient().postUserSignIn(null, null, "21", "32", signInType, token, signUpResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient().postUserSignIn(null, null, "21", "32", signInType, token, signUpResultListener);
 //        DDScannerApplication.getDdScannerRestClient().postLogin(FirebaseInstanceId.getInstance().getId(), signInType, token, loginResultListener);
     }
 
@@ -852,7 +851,7 @@ public class MainActivity extends BaseAppCompatActivity
 
     @Subscribe
     public void openAddDiveSpotActivity(OpenAddDiveSpotActivity event) {
-        if (SharedPreferenceHelper.isUserLoggedIn()) {
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
             AddDiveSpotActivity.showForResult(this, Constants.MAIN_ACTIVITY_ACTVITY_REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY, true);
         } else {
             isTryToOpenAddDiveSpotActivity = true;
@@ -862,8 +861,8 @@ public class MainActivity extends BaseAppCompatActivity
     }
 
     private void clearFilterSharedPreferences() {
-        SharedPreferenceHelper.setObject("");
-        SharedPreferenceHelper.setLevel("");
+        DDScannerApplication.getInstance().getSharedPreferenceHelper().setObject("");
+        DDScannerApplication.getInstance().getSharedPreferenceHelper().setLevel("");
     }
 
 
@@ -876,10 +875,10 @@ public class MainActivity extends BaseAppCompatActivity
     public void emailLogin(LoginViaEmailEvent event) {
         //TODO remove hardcoded coordinates
         if (event.isRegister()) {
-            DDScannerApplication.getDdScannerRestClient().postUserSignUp(event.getEmail(), event.getPassword(), event.getUserType(), "23", "22", signUpResultListener);
+            DDScannerApplication.getInstance().getDdScannerRestClient().postUserSignUp(event.getEmail(), event.getPassword(), event.getUserType(), "23", "22", signUpResultListener);
             return;
         }
-        DDScannerApplication.getDdScannerRestClient().postUserSignIn(event.getEmail(), event.getPassword(), "24", "25", null, null, signUpResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient().postUserSignIn(event.getEmail(), event.getPassword(), "24", "25", null, null, signUpResultListener);
     }
 
 }

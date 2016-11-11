@@ -27,7 +27,6 @@ import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
-import com.ddscanner.utils.SharedPreferenceHelper;
 import com.rey.material.widget.ProgressView;
 import com.squareup.otto.Subscribe;
 
@@ -65,7 +64,7 @@ public class SelfCommentsActivity extends AppCompatActivity implements InfoDialo
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             switch (errorType) {
                 case UNAUTHORIZED_401:
-                    SharedPreferenceHelper.logout();
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logout();
                     LoginActivity.showForResult(SelfCommentsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_SELF_REVIEWS_LOGIN_TO_VIEW_COMMENTS);
                     break;
                 default:
@@ -94,7 +93,7 @@ public class SelfCommentsActivity extends AppCompatActivity implements InfoDialo
                     InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_message_comment_not_found, DialogsRequestCodes.DRC_SELF_COMMENTS_ACTIVITY_COMMENT_NOT_FOUND, false);
                     break;
                 case UNAUTHORIZED_401:
-                    SharedPreferenceHelper.logout();
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logout();
                     LoginActivity.showForResult(SelfCommentsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_SELF_REVIEWS_LOGIN_TO_DELETE_COMMENTS);
                     break;
                 default:
@@ -132,7 +131,7 @@ public class SelfCommentsActivity extends AppCompatActivity implements InfoDialo
     private void getComments() {
         commentsRc.setVisibility(View.GONE);
         progressView.setVisibility(View.VISIBLE);
-        DDScannerApplication.getDdScannerRestClient().getUsersComments(userId, commentsResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient().getUsersComments(userId, commentsResultListener);
     }
 
     public static void show(Context context, String userId) {
@@ -164,7 +163,7 @@ public class SelfCommentsActivity extends AppCompatActivity implements InfoDialo
                 if (resultCode == RESULT_OK) {
                     getComments();
                 }
-                if (resultCode == RESULT_CANCELED && !SharedPreferenceHelper.isUserLoggedIn()) {
+                if (resultCode == RESULT_CANCELED && !DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
                     finish();
                 }
 
@@ -183,7 +182,7 @@ public class SelfCommentsActivity extends AppCompatActivity implements InfoDialo
 
     private void deleteUsersComment(String id) {
         commentToDelete = id;
-        DDScannerApplication.getDdScannerRestClient().deleteUserComment(id, deleteCommentResulListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient().deleteUserComment(id, deleteCommentResulListener);
     }
 
     @Subscribe

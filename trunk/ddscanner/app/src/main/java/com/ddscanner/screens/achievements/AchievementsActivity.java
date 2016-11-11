@@ -90,7 +90,7 @@ public class AchievementsActivity extends AppCompatActivity implements InfoDialo
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ahievments);
         findViews();
-        DDScannerApplication.getDdScannerRestClient().getUserAchivements(responseEntityResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient().getUserAchivements(responseEntityResultListener);
     }
 
     private void findViews() {
@@ -137,7 +137,7 @@ public class AchievementsActivity extends AppCompatActivity implements InfoDialo
         switch (requestCode) {
             case ActivitiesRequestCodes.REQUEST_CODE_ACHIEVEMENTS_ACTIVITY_LOGIN_TO_ACHIEVEMNTS:
                 if (resultCode == RESULT_OK) {
-                    DDScannerApplication.getDdScannerRestClient().getUserAchivements(responseEntityResultListener);
+                    DDScannerApplication.getInstance().getDdScannerRestClient().getUserAchivements(responseEntityResultListener);
                 } else {
                     finish();
                 }

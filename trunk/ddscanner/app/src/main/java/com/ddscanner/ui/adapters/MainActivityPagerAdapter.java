@@ -5,14 +5,14 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import com.ddscanner.DDScannerApplication;
+import com.ddscanner.screens.profile.ProfileFragment;
 import com.ddscanner.ui.fragments.ActivityNotificationsFragment;
 import com.ddscanner.ui.fragments.AllNotificationsFragment;
 import com.ddscanner.ui.fragments.MapListFragment;
 import com.ddscanner.ui.fragments.NotificationsFragment;
-import com.ddscanner.screens.profile.ProfileFragment;
 import com.ddscanner.ui.views.LoginView;
 import com.ddscanner.utils.LogUtils;
-import com.ddscanner.utils.SharedPreferenceHelper;
 
 /**
  * Created by lashket on 20.4.16.
@@ -31,7 +31,7 @@ public class MainActivityPagerAdapter extends FragmentStatePagerAdapter implemen
 
     @Override
     public Fragment getItem(int position) {
-        LogUtils.i(TAG, "getItem position = " + position + " SharedPreferenceHelper.isUserLoggedIn() = " + SharedPreferenceHelper.isUserLoggedIn());
+        LogUtils.i(TAG, "getItem position = " + position + " SharedPreferenceHelper.isUserLoggedIn() = " + DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn());
         switch (position) {
             case 0:
                 return mapListFragment;

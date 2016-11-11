@@ -28,7 +28,6 @@ import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
-import com.ddscanner.utils.SharedPreferenceHelper;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -219,7 +218,7 @@ public class LoginActivity extends AppCompatActivity
         loginResultListener.setToken(token);
         loginResultListener.setSocialNetwork(signInType);
         materialDialog.show();
-        DDScannerApplication.getDdScannerRestClient().postLogin(FirebaseInstanceId.getInstance().getId(), signInType, token, loginResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient().postLogin(FirebaseInstanceId.getInstance().getId(), signInType, token, loginResultListener);
     }
 
     @Override
@@ -316,10 +315,10 @@ public class LoginActivity extends AppCompatActivity
         @Override
         public void onSuccess(RegisterResponse result) {
             materialDialog.dismiss();
-            SharedPreferenceHelper.setToken(token);
-            SharedPreferenceHelper.setSn(socialNetwork.getName());
-            SharedPreferenceHelper.setIsUserSignedIn(true, socialNetwork);
-            SharedPreferenceHelper.setUserServerId(result.getUserOld().getId());
+            DDScannerApplication.getInstance().getSharedPreferenceHelper().setToken(token);
+            DDScannerApplication.getInstance().getSharedPreferenceHelper().setSn(socialNetwork.getName());
+            DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsUserSignedIn(true, socialNetwork);
+            DDScannerApplication.getInstance().getSharedPreferenceHelper().setUserServerId(result.getUserOld().getId());
             DDScannerApplication.bus.post(new LoggedInEvent());
             setResult(Activity.RESULT_OK);
             finish();

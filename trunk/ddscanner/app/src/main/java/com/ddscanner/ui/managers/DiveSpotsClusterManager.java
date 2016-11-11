@@ -1,7 +1,6 @@
 package com.ddscanner.ui.managers;
 
 import android.content.Context;
-import android.graphics.BitmapFactory;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -26,7 +25,6 @@ import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.ui.fragments.MapListFragment;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
-import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -470,16 +468,16 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         diveSpotsRequestMap.putSouthWestLng(southwest.longitude - Math.abs(northeast.longitude - southwest.longitude));
         diveSpotsRequestMap.putNorthEastLat(northeast.latitude + Math.abs(northeast.latitude - southwest.latitude));
         diveSpotsRequestMap.putNorthEastLng(northeast.longitude + Math.abs(northeast.longitude - southwest.longitude));
-        if (!TextUtils.isEmpty(SharedPreferenceHelper.getLevel())) {
-            diveSpotsRequestMap.putLevel(SharedPreferenceHelper.getLevel());
+        if (!TextUtils.isEmpty(DDScannerApplication.getInstance().getSharedPreferenceHelper().getLevel())) {
+            diveSpotsRequestMap.putLevel(DDScannerApplication.getInstance().getSharedPreferenceHelper().getLevel());
         }
-        if (!TextUtils.isEmpty(SharedPreferenceHelper.getObject())) {
-            diveSpotsRequestMap.putObject(SharedPreferenceHelper.getObject());
+        if (!TextUtils.isEmpty(DDScannerApplication.getInstance().getSharedPreferenceHelper().getObject())) {
+            diveSpotsRequestMap.putObject(DDScannerApplication.getInstance().getSharedPreferenceHelper().getObject());
         }
         for (Map.Entry<String, Object> entry : diveSpotsRequestMap.entrySet()) {
             LogUtils.i(TAG, "get dive spots request parameter: " + entry.getKey() + " " + entry.getValue());
         }
-        DDScannerApplication.getDdScannerRestClient().getDiveSpotsByArea(diveSpotsRequestMap, getDiveSpotsByAreaResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotsByArea(diveSpotsRequestMap, getDiveSpotsByAreaResultListener);
     }
 
     @Subscribe

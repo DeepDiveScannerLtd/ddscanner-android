@@ -49,7 +49,6 @@ import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogHelpers;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
-import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.android.gms.maps.model.LatLng;
 import com.rey.material.widget.ProgressView;
 import com.rey.material.widget.Spinner;
@@ -139,7 +138,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
             addPhotoToDsListAdapter = new AddPhotoToDsListAdapter(imageUris, EditDiveSpotActivity.this, addPhotoTitle);
             diveSpotLocation = new LatLng(divespotDetails.getDivespot().getLat(),
                     divespotDetails.getDivespot().getLng());
-            DDScannerApplication.getDdScannerRestClient().getFilters(getFiltersResultListener);
+            DDScannerApplication.getInstance().getDdScannerRestClient().getFilters(getFiltersResultListener);
             setUi();
         }
 
@@ -152,7 +151,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             switch (errorType) {
                 case UNAUTHORIZED_401:
-                    SharedPreferenceHelper.logout();
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logout();
                     LoginActivity.showForResult(EditDiveSpotActivity.this, ActivitiesRequestCodes.REQUEST_CODE_EDIT_DIVE_SPOT_ACTIVITY_LOGIN_TO_GET_DATA);
                     break;
                 case DIVE_SPOT_NOT_FOUND_ERROR_C802:
@@ -194,7 +193,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
             progressDialogUpload.dismiss();
             switch (errorType) {
                 case UNAUTHORIZED_401:
-                    SharedPreferenceHelper.logout();
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logout();
                     LoginActivity.showForResult(EditDiveSpotActivity.this, ActivitiesRequestCodes.REQUEST_CODE_EDIT_DIVE_SPOT_ACTIVITY_LOGIN_TO_SEND);
                     break;
                 case DIVE_SPOT_NOT_FOUND_ERROR_C802:
@@ -246,7 +245,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
         diveSpotId = getIntent().getStringExtra(Constants.DIVESPOTID);
         findViews();
         toolbarSettings();
-        DDScannerApplication.getDdScannerRestClient().getDiveSpotForEdit(diveSpotId, getDiveSpotForEditResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotForEdit(diveSpotId, getDiveSpotForEditResultListener);
         makeErrorsMap();
         EventsTracker.trackDiveSpotEdit();
     }
@@ -498,7 +497,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_EDIT_DIVE_SPOT_ACTIVITY_LOGIN_TO_GET_DATA:
                 if (resultCode == RESULT_OK) {
-                    DDScannerApplication.getDdScannerRestClient().getDiveSpotForEdit(diveSpotId, getDiveSpotForEditResultListener);
+                    DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotForEdit(diveSpotId, getDiveSpotForEditResultListener);
                 }
                 if (resultCode == RESULT_CANCELED) {
                     finish();
@@ -540,14 +539,14 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
         requestMinVisibility = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), visibilityMin.getText().toString());
         requestMaxVisibility = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), visibilityMax.getText().toString());
 
-        if (SharedPreferenceHelper.isUserLoggedIn()) {
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
             requestSocial = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
-                    SharedPreferenceHelper.getSn());
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().getSn());
             requestToken = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
-                    SharedPreferenceHelper.getToken());
-            if (SharedPreferenceHelper.getSn().equals("tw")) {
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().getToken());
+            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getSn().equals("tw")) {
                 requestSecret = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
-                        SharedPreferenceHelper.getSecret());
+                        DDScannerApplication.getInstance().getSharedPreferenceHelper().getSecret());
             }
         }
         requestDescription = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
@@ -593,7 +592,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
     }
 
     private void createAddDiveSpotRequest() {
-        DDScannerApplication.getDdScannerRestClient().putUpdateDiveSpot(
+        DDScannerApplication.getInstance().getDdScannerRestClient().putUpdateDiveSpot(
                 diveSpotId,
                 sealifeRequest,
                 newImages,

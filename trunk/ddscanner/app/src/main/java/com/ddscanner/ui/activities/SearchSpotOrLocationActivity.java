@@ -226,7 +226,7 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
     }
 
     private void sendRequest() {
-        DDScannerApplication.getDdScannerRestClient().getDiveSpotsByParameters(name, like, order, sort, limit, select, divespotsWrapperResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotsByParameters(name, like, order, sort, limit, select, divespotsWrapperResultListener);
     }
 
     @Override
