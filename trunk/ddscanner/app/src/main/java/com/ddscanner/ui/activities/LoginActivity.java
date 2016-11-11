@@ -299,7 +299,7 @@ public class LoginActivity extends AppCompatActivity
         }
     }
 
-    private class LoginResultListener implements DDScannerRestClient.ResultListener<RegisterResponse> {
+    private class LoginResultListener extends DDScannerRestClient.ResultListener<RegisterResponse> {
 
         private String token;
         private SignInType socialNetwork;

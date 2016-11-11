@@ -1196,7 +1196,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         finish();
     }
 
-    private class CheckInCheckoutResultListener implements DDScannerRestClient.ResultListener<Void> {
+    private class CheckInCheckoutResultListener extends DDScannerRestClient.ResultListener<Void> {
         private boolean isCheckIn;
 
         CheckInCheckoutResultListener(boolean isCheckIn) {
@@ -1266,7 +1266,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         }
     }
 
-    private class AddRemoveFromFavouritesResultListener implements DDScannerRestClient.ResultListener<Void> {
+    private class AddRemoveFromFavouritesResultListener extends DDScannerRestClient.ResultListener<Void> {
 
         private boolean isAddToFavourites;
 
@@ -1314,7 +1314,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         }
     }
 
-    private class DiveSpotValidationListener implements DDScannerRestClient.ResultListener<Void> {
+    private class DiveSpotValidationListener extends DDScannerRestClient.ResultListener<Void> {
         private boolean isValid;
 
         public void setValid(boolean valid) {

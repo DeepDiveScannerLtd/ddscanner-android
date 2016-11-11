@@ -643,12 +643,22 @@ public class DDScannerRestClient {
         return signInRequest;
     }
 
-    public interface ResultListener<T> {
-        void onSuccess(T result);
+    public static abstract class ResultListener<T> {
+        private boolean isCancelled;
 
-        void onConnectionFailure();
+        public abstract void onSuccess(T result);
 
-        void onError(ErrorType errorType, Object errorData, String url, String errorMessage);
+        public abstract void onConnectionFailure();
+
+        public abstract void onError(ErrorType errorType, Object errorData, String url, String errorMessage);
+
+        public boolean isCancelled() {
+            return isCancelled;
+        }
+
+        public void setCancelled(boolean cancelled) {
+            isCancelled = cancelled;
+        }
     }
 
     public enum ErrorType {

@@ -143,12 +143,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
         }
     };
 
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -189,6 +183,14 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
         if (Build.VERSION.SDK_INT < 23) {
             onAttachToContext(context);
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        userResultListener.setCancelled(true);
+        updateProfileInfoResultListener.setCancelled(true);
     }
 
     protected void onAttachToContext(Context context) {

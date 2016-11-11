@@ -157,7 +157,7 @@ public class ForeignUserDiveSpotList extends AppCompatActivity implements InfoDi
         }
     }
 
-    private class GetListOfDiveSpotsListener implements DDScannerRestClient.ResultListener<DivespotsWrapper> {
+    private class GetListOfDiveSpotsListener extends DDScannerRestClient.ResultListener<DivespotsWrapper> {
 
         private int requestCodeForLogin;
 

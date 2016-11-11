@@ -3,21 +3,16 @@ package com.ddscanner.screens.achievements;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
-import com.ddscanner.R;
 import com.ddscanner.databinding.ItemCompleteAchievementBinding;
 import com.ddscanner.databinding.ItemPendingAchievmentBinding;
 import com.ddscanner.entities.CompleteAchievement;
 import com.ddscanner.entities.Countries;
 import com.ddscanner.entities.PendingAchievement;
-import com.ddscanner.ui.views.AchievementCountryFlagView;
-import com.ddscanner.ui.views.AchievementProgressView;
 import com.ddscanner.utils.Helpers;
 
 import java.util.ArrayList;

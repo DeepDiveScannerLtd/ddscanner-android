@@ -129,6 +129,13 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
         }
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        notificationsResultListener.setCancelled(true);
+    }
+
     protected void onAttachToContext(Context context) {
         try {
             MainActivity mainActivity = (MainActivity) context;

@@ -34,14 +34,14 @@ abstract class BaseCallback<T> implements Callback<ResponseBody> {
 
     @Override
     public final void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-        if (resultListenerWeakReference.get() != null) {
+        if (resultListenerWeakReference.get() != null && !resultListenerWeakReference.get().isCancelled()) {
             onResponse(resultListenerWeakReference.get(), call, response);
         }
     }
 
     @Override
     public final void onFailure(Call<ResponseBody> call, Throwable t) {
-        if (resultListenerWeakReference.get() != null) {
+        if (resultListenerWeakReference.get() != null && !resultListenerWeakReference.get().isCancelled()) {
             if (t instanceof ConnectException) {
                 resultListenerWeakReference.get().onConnectionFailure();
             } else if (t instanceof SocketTimeoutException) {
