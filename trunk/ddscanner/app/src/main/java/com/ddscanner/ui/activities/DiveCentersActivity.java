@@ -125,7 +125,7 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
         diveSpotName = getIntent().getStringExtra("NAME");
         toggleMapListView();
 
-        DDScannerApplication.getDdScannerRestClient().getDiveCenters(diveSpotLatLng, diveCentersResponseEntityResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient().getDiveCenters(diveSpotLatLng, diveCentersResponseEntityResultListener);
     }
 
     private void findViews() {

@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.Activity;
@@ -19,7 +20,6 @@ import com.ddscanner.ui.activities.MainActivity;
 import com.ddscanner.ui.adapters.ActivitiesListAdapter;
 import com.ddscanner.ui.adapters.SectionedRecyclerViewAdapter;
 import com.ddscanner.utils.Helpers;
-import com.ddscanner.utils.SharedPreferenceHelper;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -119,17 +119,17 @@ public class ActivityNotificationsFragment extends Fragment {
 //            }
 //        }
         this.activities = activities;
-        if (Helpers.comparingTimes(SharedPreferenceHelper.getLastShowingActivityTime(), activities.get(activities.size() - 1).getDate())
-                || !Helpers.comparingTimes(SharedPreferenceHelper.getLastShowingActivityTime(), activities.get(0).getDate())) {
+        if (Helpers.comparingTimes(DDScannerApplication.getInstance().getSharedPreferenceHelper().getLastShowingActivityTime(), activities.get(activities.size() - 1).getDate())
+                || !Helpers.comparingTimes(DDScannerApplication.getInstance().getSharedPreferenceHelper().getLastShowingActivityTime(), activities.get(0).getDate())) {
             recyclerView.setAdapter(new ActivitiesListAdapter(
                     getContext(), activities));
             Date date = new Date();
             long currentDateInMillis = date.getTime();
-            SharedPreferenceHelper.setLastShowingActivityTime(currentDateInMillis);
+            DDScannerApplication.getInstance().getSharedPreferenceHelper().setLastShowingActivityTime(currentDateInMillis);
             return;
         }
         int i = 0;
-        while (Helpers.comparingTimes(SharedPreferenceHelper.getLastShowingActivityTime(),
+        while (Helpers.comparingTimes(DDScannerApplication.getInstance().getSharedPreferenceHelper().getLastShowingActivityTime(),
                 activities.get(i).getDate()) && i < activities.size() - 1) {
             i++;
         }
@@ -150,7 +150,7 @@ public class ActivityNotificationsFragment extends Fragment {
         recyclerView.setAdapter(sectionedRecyclerViewAdapter);
         Date date = new Date();
         long currentDateInMillis = date.getTime();
-        SharedPreferenceHelper.setLastShowingActivityTime(currentDateInMillis);
+        DDScannerApplication.getInstance().getSharedPreferenceHelper().setLastShowingActivityTime(currentDateInMillis);
     }
 
     @Override

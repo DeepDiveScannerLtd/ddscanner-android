@@ -26,12 +26,12 @@ android {
     defaultConfig {
         applicationId "com.ddscanner"
         minSdkVersion 16
-        targetSdkVersion 25
+        targetSdkVersion 24
         multiDexEnabled true
         versionCode 23
         versionName "2.0.17"
 
-        testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
+        testInstrumentationRunner 'com.ddscanner.TestRunner'
     }
     buildTypes {
         debug {

@@ -51,7 +51,6 @@ import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogHelpers;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
-import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.android.gms.maps.model.LatLng;
 import com.rey.material.widget.ProgressView;
 import com.rey.material.widget.Spinner;
@@ -165,7 +164,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
             progressDialogUpload.dismiss();
             switch (errorType) {
                 case UNAUTHORIZED_401:
-                    SharedPreferenceHelper.logout();
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logout();
                     LoginActivity.showForResult(AddDiveSpotActivity.this, ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_LOGIN_TO_SEND);
                     break;
                 case UNPROCESSABLE_ENTITY_ERROR_422:
@@ -191,7 +190,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         isFromMap = getIntent().getBooleanExtra(Constants.ADD_DIVE_SPOT_INTENT_IS_FROM_MAP, false);
         findViews();
         setUi();
-        DDScannerApplication.getDdScannerRestClient().getFilters(filtersResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient().getFilters(filtersResultListener);
         makeErrorsMap();
     }
 
@@ -355,7 +354,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_LOGIN_TO_GET_DATA:
                 if (resultCode == RESULT_OK) {
-                    DDScannerApplication.getDdScannerRestClient().getFilters(filtersResultListener);
+                    DDScannerApplication.getInstance().getDdScannerRestClient().getFilters(filtersResultListener);
                 } else {
                     finish();
                 }
@@ -377,7 +376,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
 
     private void makeAddDiveSpotRequest() {
         progressDialogUpload.show();
-        DDScannerApplication.getDdScannerRestClient().postAddDiveSpot(addDiveSpotResultListener, sealife, images, requestName, requestLat, requestLng, requestDepth, requestMinVisibility, requestMaxVisibility, requestCurrents, requestLevel, requestObject, requestDescription, requestToken, requestSocial, requestSecret);
+        DDScannerApplication.getInstance().getDdScannerRestClient().postAddDiveSpot(addDiveSpotResultListener, sealife, images, requestName, requestLat, requestLng, requestDepth, requestMinVisibility, requestMaxVisibility, requestCurrents, requestLevel, requestObject, requestDescription, requestToken, requestSocial, requestSecret);
     }
 
     private void pickPhotoFromGallery() {
@@ -422,7 +421,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                 startActivityForResult(sealifeIntent, ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_SEALIFE);
                 break;
             case R.id.button_create:
-//                if (SharedPreferenceHelper.isUserLoggedIn()) {
+//                if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
                 createRequestBodyies();
 //                } else {
 //                    Intent loginIntent = new Intent(this, SocialNetworks.class);
@@ -439,14 +438,14 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void createSocialDatarequests() {
-        if (SharedPreferenceHelper.isUserLoggedIn()) {
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
             requestSocial = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
-                    SharedPreferenceHelper.getSn());
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().getSn());
             requestToken = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
-                    SharedPreferenceHelper.getToken());
-            if (SharedPreferenceHelper.getSn().equals("tw")) {
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().getToken());
+            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getSn().equals("tw")) {
                 requestSecret = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
-                        SharedPreferenceHelper.getSecret());
+                        DDScannerApplication.getInstance().getSharedPreferenceHelper().getSecret());
             }
         }
     }

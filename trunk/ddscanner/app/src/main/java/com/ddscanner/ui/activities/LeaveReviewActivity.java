@@ -38,7 +38,6 @@ import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogHelpers;
 import com.ddscanner.utils.Helpers;
-import com.ddscanner.utils.SharedPreferenceHelper;
 import com.squareup.otto.Subscribe;
 
 import java.io.File;
@@ -102,7 +101,7 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
             materialDialog.dismiss();
             switch (errorType) {
                 case UNAUTHORIZED_401:
-                    SharedPreferenceHelper.logout();
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logout();
                     LoginActivity.showForResult(LeaveReviewActivity.this, ActivitiesRequestCodes.REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_LOGIN);
                     break;
                 case UNPROCESSABLE_ENTITY_ERROR_422:
@@ -186,7 +185,7 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void sendReview() {
-        if (!SharedPreferenceHelper.isUserLoggedIn()) {
+        if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
             LoginActivity.showForResult(LeaveReviewActivity.this, ActivitiesRequestCodes.REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_LOGIN);
             return;
         }
@@ -215,13 +214,13 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
             requestComment = RequestBody.create(MediaType.parse("multipart/form-data"),
                     text.getText().toString().trim());
         }
-        if (SharedPreferenceHelper.isUserLoggedIn()) {
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
             requestSocial = RequestBody.create(MediaType.parse("multipart/form-data"),
-                    SharedPreferenceHelper.getSn());
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().getSn());
             requessToken = RequestBody.create(MediaType.parse("multipart/form-data"),
-                    SharedPreferenceHelper.getToken());
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().getToken());
         }
-        DDScannerApplication.getDdScannerRestClient().postLeaveReview(requestId, requestComment, requestRating, images, requessToken, requestSocial, commentAddedResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient().postLeaveReview(requestId, requestComment, requestRating, images, requessToken, requestSocial, commentAddedResultListener);
     }
 
 

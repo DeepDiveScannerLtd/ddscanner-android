@@ -24,7 +24,6 @@ import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
-import com.ddscanner.utils.SharedPreferenceHelper;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -71,7 +70,7 @@ public class AddPhotosDoDiveSpotActivity extends AppCompatActivity implements Vi
             materialDialog.dismiss();
             switch (errorType) {
                 case UNAUTHORIZED_401:
-                    SharedPreferenceHelper.logout();
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logout();
                     LoginActivity.showForResult(AddPhotosDoDiveSpotActivity.this, ActivitiesRequestCodes.REQUEST_CODE_ADD_PHOTOS_DO_DIVE_SPOT_ACTIVITY_LOGIN_TO_SEND);
                     break;
                 case DIVE_SPOT_NOT_FOUND_ERROR_C802:
@@ -116,14 +115,14 @@ public class AddPhotosDoDiveSpotActivity extends AppCompatActivity implements Vi
 
     private void sendRequest() {
         materialDialog.show();
-        if (SharedPreferenceHelper.isUserLoggedIn()) {
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
             requestSocial = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
-                    SharedPreferenceHelper.getSn());
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().getSn());
             requestToken = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
-                    SharedPreferenceHelper.getToken());
-            if (SharedPreferenceHelper.getSn().equals("tw")) {
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().getToken());
+            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getSn().equals("tw")) {
                 requestSecret = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
-                        SharedPreferenceHelper.getSecret());
+                        DDScannerApplication.getInstance().getSharedPreferenceHelper().getSecret());
             }
         }
 
@@ -136,7 +135,7 @@ public class AddPhotosDoDiveSpotActivity extends AppCompatActivity implements Vi
                     image.getName(), requestFile);
             imagesToSend.add(part);
         }
-        DDScannerApplication.getDdScannerRestClient().postAddPhotosToDiveSpot(dsId, imagesToSend, addingPhotosToDiveSpotResultListener, requestType, requestToken, requestSocial);
+        DDScannerApplication.getInstance().getDdScannerRestClient().postAddPhotosToDiveSpot(dsId, imagesToSend, addingPhotosToDiveSpotResultListener, requestType, requestToken, requestSocial);
     }
 
     public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {

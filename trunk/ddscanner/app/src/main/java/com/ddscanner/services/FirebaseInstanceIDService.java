@@ -4,7 +4,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import com.ddscanner.utils.SharedPreferenceHelper;
+import com.ddscanner.DDScannerApplication;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 
@@ -27,9 +27,9 @@ public class FirebaseInstanceIDService extends FirebaseInstanceIdService {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         FirebaseInstanceId firebaseInstanceId = FirebaseInstanceId.getInstance();
         Log.i(TAG, "GCM Registration Token: " + refreshedToken);
-        SharedPreferenceHelper.setGcmId(refreshedToken);
-        SharedPreferenceHelper.setUserAppId(firebaseInstanceId.getId());
-        SharedPreferenceHelper.setUserAppIdReceived();
+        DDScannerApplication.getInstance().getSharedPreferenceHelper().setGcmId(refreshedToken);
+        DDScannerApplication.getInstance().getSharedPreferenceHelper().setUserAppId(firebaseInstanceId.getId());
+        DDScannerApplication.getInstance().getSharedPreferenceHelper().setUserAppIdReceived();
 
         // If you want to send messages to this application instance or
         // manage this apps subscriptions on the server side, send the

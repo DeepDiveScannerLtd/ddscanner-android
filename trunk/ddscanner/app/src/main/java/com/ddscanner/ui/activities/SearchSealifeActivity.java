@@ -92,7 +92,7 @@ public class SearchSealifeActivity extends AppCompatActivity implements SearchVi
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);
         getSupportActionBar().setTitle(R.string.search_sealife);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        DDScannerApplication.getDdScannerRestClient().getAllSealifes(sealifeResponseEntityResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient().getAllSealifes(sealifeResponseEntityResultListener);
     }
 
     @Override

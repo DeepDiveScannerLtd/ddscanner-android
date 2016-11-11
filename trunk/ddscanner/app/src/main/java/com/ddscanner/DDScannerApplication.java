@@ -10,6 +10,7 @@ import com.ddscanner.analytics.AnalyticsSystemsManager;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.activities.InternetClosedActivity;
 import com.ddscanner.utils.LogUtils;
+import com.ddscanner.utils.SharedPreferenceHelper;
 import com.facebook.FacebookSdk;
 import com.squareup.otto.Bus;
 
@@ -17,9 +18,6 @@ import java.util.Locale;
 
 import io.fabric.sdk.android.Fabric;
 
-/**
- * Created by Vitaly on 28.11.2015.
- */
 public class DDScannerApplication extends Application {
 
     private static final String TAG = DDScannerApplication.class.getName();
@@ -30,7 +28,10 @@ public class DDScannerApplication extends Application {
     public static Bus bus = new Bus();
     private static boolean activityVisible;
     public static boolean isActivitiesFragmentVisible = false;
-    private static DDScannerRestClient ddScannerRestClient;
+
+    // These are now application member fields, no static methods involved. This is done for mocking them during instrumentation tests
+    private DDScannerRestClient ddScannerRestClient;
+    private SharedPreferenceHelper sharedPreferenceHelper;
 
     private static DDScannerApplication instance;
 
@@ -50,6 +51,7 @@ public class DDScannerApplication extends Application {
         AnalyticsSystemsManager.initAnalyticsSystems(this);
 
         ddScannerRestClient = new DDScannerRestClient();
+        sharedPreferenceHelper = new SharedPreferenceHelper();
     }
 
     protected void attachBaseContext(Context base) {
@@ -76,8 +78,11 @@ public class DDScannerApplication extends Application {
         activityVisible = false;
     }
 
-    public static DDScannerRestClient getDdScannerRestClient() {
+    public DDScannerRestClient getDdScannerRestClient() {
         return ddScannerRestClient;
     }
 
+    public SharedPreferenceHelper getSharedPreferenceHelper() {
+        return sharedPreferenceHelper;
+    }
 }

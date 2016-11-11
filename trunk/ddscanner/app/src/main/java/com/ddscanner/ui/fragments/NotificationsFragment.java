@@ -32,7 +32,6 @@ import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.ui.views.LoginView;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogsRequestCodes;
-import com.ddscanner.utils.SharedPreferenceHelper;
 import com.rey.material.widget.ProgressView;
 import com.squareup.otto.Subscribe;
 
@@ -76,7 +75,7 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             switch (errorType) {
                 case UNAUTHORIZED_401:
-                    SharedPreferenceHelper.logout();
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logout();
                     DDScannerApplication.bus.post(new LoggedOutEvent());
                     break;
                 default:
@@ -98,12 +97,12 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
         View view = inflater.inflate(R.layout.fragment_notifications, container, false);
         findViews(view);
         setupViewPager();
-        if (SharedPreferenceHelper.isUserLoggedIn()) {
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
             progressView.setVisibility(View.VISIBLE);
             notificationsViewPager.setVisibility(View.GONE);
           //  getUserNotifications();
         }
-        if (SharedPreferenceHelper.isUserLoggedIn()) {
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
             onLoggedIn();
         } else {
             onLoggedOut();
@@ -176,9 +175,9 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
         if (DDScannerApplication.isActivitiesFragmentVisible) {
             Date date1 = new Date();
             long currentDateInMillis = date1.getTime();
-            SharedPreferenceHelper.setLastShowingNotificationTime(currentDateInMillis);
+            DDScannerApplication.getInstance().getSharedPreferenceHelper().setLastShowingNotificationTime(currentDateInMillis);
         } else {
-//            if (SharedPreferenceHelper.isUserLoggedIn()) {
+//            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
 //                progressView.setVisibility(View.VISIBLE);
 //                notificationsViewPager.setVisibility(View.GONE);
 //               // getUserNotifications();
@@ -210,9 +209,9 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
                 if (DDScannerApplication.isActivitiesFragmentVisible) {
                     Date date1 = new Date();
                     long currentDateInMillis = date1.getTime();
-                    SharedPreferenceHelper.setLastShowingNotificationTime(currentDateInMillis);
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().setLastShowingNotificationTime(currentDateInMillis);
                 } else {
-                    if (SharedPreferenceHelper.isUserLoggedIn()) {
+                    if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
 //                        progressView.setVisibility(View.VISIBLE);
 //                        notificationsViewPager.setVisibility(View.GONE);
 //                   //     getUserNotifications();
@@ -225,7 +224,7 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
     }
 
     private void getUserNotifications() {
-       DDScannerApplication.getDdScannerRestClient().getUserNotifications(notificationsResultListener);
+       DDScannerApplication.getInstance().getDdScannerRestClient().getUserNotifications(notificationsResultListener);
     }
 
     private void setData() {
@@ -318,7 +317,7 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
 
     @Subscribe
     public void getNotifications(GetNotificationsEvent event) {
-        if (SharedPreferenceHelper.isUserLoggedIn()) {
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
             getUserNotifications();
             return;
         }
@@ -337,7 +336,7 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
 
     @Override
     public void onRefresh() {
-        DDScannerApplication.getDdScannerRestClient().getUserNotifications(notificationsResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient().getUserNotifications(notificationsResultListener);
     }
 
     @Subscribe

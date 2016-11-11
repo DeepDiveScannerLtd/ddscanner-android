@@ -41,7 +41,6 @@ import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogHelpers;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
-import com.ddscanner.utils.SharedPreferenceHelper;
 import com.squareup.otto.Subscribe;
 
 import java.io.File;
@@ -109,7 +108,7 @@ public class EditCommentActivity extends AppCompatActivity implements View.OnCli
             materialDialog.dismiss();
             switch (errorType) {
                 case UNAUTHORIZED_401:
-                    SharedPreferenceHelper.logout();
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logout();
                     LoginActivity.showForResult(EditCommentActivity.this, ActivitiesRequestCodes.REQUEST_CODE_EDIT_COMMENT_ACTIVITY_LOGIN);
                     break;
                 case COMMENT_NOT_FOUND_ERROR_C803:
@@ -359,11 +358,11 @@ public class EditCommentActivity extends AppCompatActivity implements View.OnCli
             Toast.makeText(EditCommentActivity.this, R.string.review_error, Toast.LENGTH_SHORT).show();
             return;
         }
-        if (SharedPreferenceHelper.isUserLoggedIn()) {
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
             requestSocial = RequestBody.create(MediaType.parse("multipart/form-data"),
-                    SharedPreferenceHelper.getSn());
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().getSn());
             requessToken = RequestBody.create(MediaType.parse("multipart/form-data"),
-                    SharedPreferenceHelper.getToken());
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().getToken());
         }
         requestRating = RequestBody.create(MediaType.parse("multipart/form-data"),
                 String.valueOf(Math.round(ratingBar.getRating())));
@@ -398,7 +397,7 @@ public class EditCommentActivity extends AppCompatActivity implements View.OnCli
                 deletedImages.add(MultipartBody.Part.createFormData("images_del[]", deleted.get(i)));
             }
         }
-        DDScannerApplication.getDdScannerRestClient().putEditComment(comment.getId(), _method, requestComment, requestRating, newImages, deletedImages, requessToken, requestSocial, editCommentResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient().putEditComment(comment.getId(), _method, requestComment, requestRating, newImages, deletedImages, requessToken, requestSocial, editCommentResultListener);
     }
 
     private ArrayList<String> removeAdressPart(ArrayList<String> deleted) {

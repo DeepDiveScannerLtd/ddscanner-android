@@ -33,7 +33,6 @@ import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
-import com.ddscanner.utils.SharedPreferenceHelper;
 import com.rey.material.widget.EditText;
 import com.squareup.picasso.Picasso;
 
@@ -111,7 +110,7 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
             progressDialogUpload.dismiss();
             switch (errorType) {
                 case UNAUTHORIZED_401:
-                    SharedPreferenceHelper.logout();
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logout();
                     LoginActivity.showForResult(AddSealifeActivity.this, ActivitiesRequestCodes.REQUEST_CODE_ADD_SEALIFE_ACTIVITY_LOGIN_TO_SEND);
                     break;
                 case UNPROCESSABLE_ENTITY_ERROR_422:
@@ -295,14 +294,14 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
                 distribution.getText().toString());
         requestHabitat = RequestBody.create(MediaType.parse(MULTIPART_TYPE_TEXT),
                 habitat.getText().toString());
-        if (SharedPreferenceHelper.isUserLoggedIn()) {
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
             requestSocial = RequestBody.create(MediaType.parse(MULTIPART_TYPE_TEXT),
-                    SharedPreferenceHelper.getSn());
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().getSn());
             requestToken = RequestBody.create(MediaType.parse(MULTIPART_TYPE_TEXT),
-                    SharedPreferenceHelper.getToken());
-            if (SharedPreferenceHelper.getSn().equals("tw")) {
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().getToken());
+            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getSn().equals("tw")) {
                 requestSecret = RequestBody.create(MediaType.parse(MULTIPART_TYPE_TEXT),
-                        SharedPreferenceHelper.getSecret());
+                        DDScannerApplication.getInstance().getSharedPreferenceHelper().getSecret());
             }
         }
         hideErrorsFields();
@@ -320,7 +319,7 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
             RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), fileToSend);
             body = MultipartBody.Part.createFormData("image", fileToSend.getName(), requestFile);
         }
-        DDScannerApplication.getDdScannerRestClient().postAddSealife(
+        DDScannerApplication.getInstance().getDdScannerRestClient().postAddSealife(
                 sealifeResultListener, body, requestName, requestDistribution, requestHabitat,
                 requestScname, requestLength, requestWeight, requestDepth, requestOrder, requestClass,
                 requestToken, requestSocial);

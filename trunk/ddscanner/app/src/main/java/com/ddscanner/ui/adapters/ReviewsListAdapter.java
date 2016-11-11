@@ -28,7 +28,6 @@ import com.ddscanner.events.LikeCommentEvent;
 import com.ddscanner.events.ReportCommentEvent;
 import com.ddscanner.ui.activities.ForeignProfileActivity;
 import com.ddscanner.utils.Helpers;
-import com.ddscanner.utils.SharedPreferenceHelper;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -91,7 +90,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
             reviewsListViewHolder.photos.setNestedScrollingEnabled(false);
             reviewsListViewHolder.photos.setHasFixedSize(false);
             reviewsListViewHolder.photos.setLayoutManager(layoutManager);
-            if (comments.get(reviewsListViewHolder.getAdapterPosition()).getUserOld().getId().equals(SharedPreferenceHelper.getUserServerId())) {
+            if (comments.get(reviewsListViewHolder.getAdapterPosition()).getUserOld().getId().equals(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId())) {
                 reviewsListViewHolder.photos.setAdapter(new ReviewPhotosAdapter((ArrayList<String>) comments.get(reviewsListViewHolder.getAdapterPosition()).getImages(), context, path, true, reviewsListViewHolder.getAdapterPosition()));
             } else {
                 reviewsListViewHolder.photos.setAdapter(new ReviewPhotosAdapter((ArrayList<String>) comments.get(reviewsListViewHolder.getAdapterPosition()).getImages(), context, path, false, reviewsListViewHolder.getAdapterPosition()));

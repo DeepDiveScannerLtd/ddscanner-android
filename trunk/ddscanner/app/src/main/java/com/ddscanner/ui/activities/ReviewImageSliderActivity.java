@@ -31,7 +31,6 @@ import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
-import com.ddscanner.utils.SharedPreferenceHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -128,7 +127,7 @@ public class ReviewImageSliderActivity extends AppCompatActivity implements View
         viewPager.addOnPageChangeListener(this);
         sliderImagesAdapter = new ReviewImageSLiderAdapter(getFragmentManager(), images);
         viewPager.setAdapter(sliderImagesAdapter);
-        DDScannerApplication.getDdScannerRestClient().getReportTypes(filtersResponseEntityResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient().getReportTypes(filtersResponseEntityResultListener);
         setUi();
 
     }
@@ -255,11 +254,11 @@ public class ReviewImageSliderActivity extends AppCompatActivity implements View
 
     private void reportImage(String imageName, String reportType, String reportDescription) {
         materialDialog.show();
-        if (!SharedPreferenceHelper.isUserLoggedIn() || SharedPreferenceHelper.getToken().isEmpty() || SharedPreferenceHelper.getSn().isEmpty()) {
+        if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn() || DDScannerApplication.getInstance().getSharedPreferenceHelper().getToken().isEmpty() || DDScannerApplication.getInstance().getSharedPreferenceHelper().getSn().isEmpty()) {
             LoginActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_REPORT);
             return;
         }
-        DDScannerApplication.getDdScannerRestClient().postReportImage(imageName, reportType, reportDescription, reportImageResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient().postReportImage(imageName, reportType, reportDescription, reportImageResultListener);
 
     }
 
@@ -417,7 +416,7 @@ public class ReviewImageSliderActivity extends AppCompatActivity implements View
         switch (requestCode) {
             case ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_REPORT:
                 if (resultCode == RESULT_OK) {
-                    DDScannerApplication.getDdScannerRestClient().postReportImage(reportName, reportType, reportDescription,reportImageResultListener);
+                    DDScannerApplication.getInstance().getDdScannerRestClient().postReportImage(reportName, reportType, reportDescription,reportImageResultListener);
                 }
                 break;
         }

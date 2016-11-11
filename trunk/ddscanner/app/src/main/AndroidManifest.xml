@@ -247,6 +247,9 @@
         <activity
             android:name=".ui.activities.ForgotPasswordActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activities.FragmentTestActivity"
+            android:screenOrientation="portrait" />
         <service
             android:name=".services.FirebaseMessagingService">
             <intent-filter>

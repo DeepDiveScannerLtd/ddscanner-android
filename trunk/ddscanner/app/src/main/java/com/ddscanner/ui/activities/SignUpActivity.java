@@ -1,7 +1,6 @@
 package com.ddscanner.ui.activities;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -15,9 +14,7 @@ import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
-import android.transition.Visibility;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -26,23 +23,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.crashlytics.android.Crashlytics;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
-import com.ddscanner.entities.RegisterResponse;
 import com.ddscanner.entities.SignInType;
 import com.ddscanner.entities.SignUpResponseEntity;
-import com.ddscanner.events.LoggedInEvent;
-import com.ddscanner.events.LoginViaFacebookClickEvent;
-import com.ddscanner.events.LoginViaGoogleClickEvent;
 import com.ddscanner.rest.DDScannerRestClient;
-import com.ddscanner.ui.dialogs.InfoDialogFragment;
-import com.ddscanner.ui.views.LoginView;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
-import com.ddscanner.utils.LogUtils;
-import com.ddscanner.utils.SharedPreferenceHelper;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -57,7 +45,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.squareup.otto.Subscribe;
 
 import org.json.JSONObject;
 
@@ -94,8 +81,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         public void onSuccess(SignUpResponseEntity result) {
             materialDialog.dismiss();
             Log.i(TAG, "onSuccess: ");
-            SharedPreferenceHelper.setToken(result.getToken());
-            SharedPreferenceHelper.setIsUserSignedIn(true, SignInType.EMAIL);
+            DDScannerApplication.getInstance().getSharedPreferenceHelper().setToken(result.getToken());
+            DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsUserSignedIn(true, SignInType.EMAIL);
             setResult(RESULT_OK);
             finish();
         }
@@ -239,10 +226,10 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             case R.id.btn_sign_up:
                 materialDialog.show();
                 if (isRegister) {
-                    DDScannerApplication.getDdScannerRestClient().postUserSignUp(email.getText().toString(), password.getText().toString(), userType, null, null, signUpResultListener);
+                    DDScannerApplication.getInstance().getDdScannerRestClient().postUserSignUp(email.getText().toString(), password.getText().toString(), userType, null, null, signUpResultListener);
                     break;
                 }
-                DDScannerApplication.getDdScannerRestClient().postUserSignIn(email.getText().toString(), password.getText().toString(), "28.13123", "21.323232", null, null, signUpResultListener);
+                DDScannerApplication.getInstance().getDdScannerRestClient().postUserSignIn(email.getText().toString(), password.getText().toString(), "28.13123", "21.323232", null, null, signUpResultListener);
                 break;
         }
     }
@@ -332,7 +319,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                         GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
                             @Override
                             public void onCompleted(JSONObject object, GraphResponse response) {
-                                sendLoginRequest(SharedPreferenceHelper.getUserAppId(), SignInType.FACEBOOK, loginResult.getAccessToken().getToken());
+                                sendLoginRequest(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserAppId(), SignInType.FACEBOOK, loginResult.getAccessToken().getToken());
                             }
                         }).executeAsync();
                     }
@@ -352,7 +339,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     private void sendLoginRequest(String appId, SignInType signInType, String token) {
 //        DDScannerApplication.getDdScannerRestClient().postLogin(appId, signInType, token, loginResultListener);
         materialDialog.show();
-        DDScannerApplication.getDdScannerRestClient().postUserSignIn(null, null, null, null, signInType, token, signUpResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient().postUserSignIn(null, null, null, null, signInType, token, signUpResultListener);
     }
 
     @Override
@@ -371,7 +358,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                         Helpers.handleUnexpectedServerError(getSupportFragmentManager(), "google_login", "result.getSignInAccount() returned null");
                     } else {
                         String idToken = acct.getIdToken();
-                        sendLoginRequest(SharedPreferenceHelper.getUserAppId(), SignInType.GOOGLE, idToken);
+                        sendLoginRequest(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserAppId(), SignInType.GOOGLE, idToken);
                     }
                 }
                 break;
