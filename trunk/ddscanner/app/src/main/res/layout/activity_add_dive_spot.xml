@@ -464,7 +464,7 @@
                     android:layout_height="match_parent"
                     android:text="@string/everyone_can_edit"
                     android:paddingRight="20dp"
-                    style="@style/ColorSwitchStyle"
+                    app:theme="@style/ColorSwitchStyle"
                     />
             </LinearLayout>
 
