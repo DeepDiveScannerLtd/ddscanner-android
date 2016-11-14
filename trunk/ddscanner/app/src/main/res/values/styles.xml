@@ -119,7 +119,7 @@
     </style>
 
     <style name="ColorSwitchStyle">
-        <item name="colorControlActivated">@color/primary</item>
+        <item name="colorControlActivated">@color/radio_button_fill</item>
     </style>
 
     <style name="CircularProgress" parent="Material.Drawable.CircularProgress">
