@@ -13,6 +13,7 @@ import android.support.annotation.Nullable;
 import android.support.v13.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -51,7 +52,6 @@ import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
 import com.google.android.gms.maps.model.LatLng;
 import com.rey.material.widget.ProgressView;
-import com.rey.material.widget.Spinner;
 import com.squareup.otto.Subscribe;
 
 import java.io.File;
@@ -84,9 +84,9 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
     private RecyclerView photos_rc;
     private TextView addPhotoTitle;
     private TextView locationTitle;
-    private Spinner levelSpinner;
-    private Spinner currentsSpinner;
-    private Spinner objectSpinner;
+    private AppCompatSpinner levelSpinner;
+    private AppCompatSpinner currentsSpinner;
+    private AppCompatSpinner objectSpinner;
     private EditText name;
     private EditText depth;
     private EditText description;
@@ -262,9 +262,9 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
         photos_rc = (RecyclerView) findViewById(R.id.photos_rc);
         btnAddPhoto = (ImageButton) findViewById(R.id.btn_add_photo);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        levelSpinner = (Spinner) findViewById(R.id.level_spinner);
-        objectSpinner = (Spinner) findViewById(R.id.object_spinner);
-        currentsSpinner = (Spinner) findViewById(R.id.currents_spinner);
+        levelSpinner = (AppCompatSpinner) findViewById(R.id.level_spinner);
+        objectSpinner = (AppCompatSpinner) findViewById(R.id.object_spinner);
+        currentsSpinner = (AppCompatSpinner) findViewById(R.id.currents_spinner);
         pickLocation = (LinearLayout) findViewById(R.id.location_layout);
         locationTitle = (TextView) findViewById(R.id.location);
         btnSave = (Button) findViewById(R.id.button_create);
@@ -611,7 +611,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
         );
     }
 
-    private void setSpinnerValues(Spinner spinner, Map<String, String> values, String tag) {
+    private void setSpinnerValues(AppCompatSpinner spinner, Map<String, String> values, String tag) {
         List<String> objects = new ArrayList<>();
         for (Map.Entry<String, String> entry : values.entrySet()) {
             objects.add(entry.getValue());

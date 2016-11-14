@@ -19,7 +19,6 @@
         app:pv_progressMode="indeterminate"
         android:visibility="gone"
         app:pv_progressStyle="@style/CircularProgress" />
-
     <ScrollView
         android:id="@+id/main_layout"
         android:layout_width="match_parent"
@@ -30,6 +29,31 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    style="@style/CharacteristicsDiveSpotListIcons"
+                    android:src="@drawable/ic_lang" />
+
+                <android.support.v7.widget.AppCompatSpinner
+                    android:id="@+id/language_spinner"
+                    android:layout_width="match_parent"
+                    android:dropDownWidth="200dp"
+                    android:layout_height="match_parent"
+                    android:dropDownVerticalOffset="15dp"
+                    android:dropDownHorizontalOffset="-15dp"/>
+
+            </LinearLayout>
+            <ImageView
+                style="@style/DividerStyleFull" />
+
+            <ImageView
+                android:layout_marginTop="15dp"
+                style="@style/DividerStyleFull" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -234,34 +258,15 @@
                     <ImageView
                         style="@style/CharacteristicsDiveSpotListIcons"
                         android:src="@drawable/ic_addds_currents" />
+                    
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:fontFamily="sans-serif-medium"
-                            android:layout_marginTop="3dp"
-                            android:layout_width="match_parent"
-                            android:layout_height="17dp"
-                            android:text="@string/current"
-                            android:textColor="#B2B2B2"
-                            android:textSize="16sp" />
-
-                        <com.rey.material.widget.Spinner
+                        <android.support.v7.widget.AppCompatSpinner
                             android:id="@+id/currents_spinner"
                             android:layout_width="match_parent"
-                            android:layout_height="36dp"
+                            android:layout_height="match_parent"
                             android:dropDownWidth="150dp"
                             android:gravity="center_vertical"
-                            android:popupBackground="@color/white"
-                            app:popupTheme="@style/AppTheme.PopupOverlay"
-                            app:rd_style="@style/Material.Drawable.Ripple.Wave"
-                            app:spn_arrowColor="@android:color/transparent"
-                            app:spn_dividerColor="@android:color/transparent"
-                            app:spn_popupItemAnimation="@null" />
-                    </LinearLayout>
+                            android:popupBackground="@color/white" />
                 </LinearLayout>
 
                 <ImageView style="@style/DividerStyle" />
@@ -276,33 +281,14 @@
                         style="@style/CharacteristicsDiveSpotListIcons"
                         android:src="@drawable/ic_addds_level" />
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:fontFamily="sans-serif-medium"
-                            android:layout_marginTop="3dp"
-                            android:layout_width="match_parent"
-                            android:layout_height="17dp"
-                            android:text="@string/level"
-                            android:textColor="#B2B2B2"
-                            android:textSize="16sp" />
-
-                        <com.rey.material.widget.Spinner
+                        <android.support.v7.widget.AppCompatSpinner
                             android:id="@+id/level_spinner"
                             android:layout_width="match_parent"
-                            android:layout_height="36dp"
+                            android:layout_height="match_parent"
                             android:dropDownWidth="150dp"
                             android:gravity="center_vertical"
                             android:popupBackground="@color/white"
-                            app:popupTheme="@style/AppTheme.PopupOverlay"
-                            app:rd_style="@style/Material.Drawable.Ripple.Wave"
-                            app:spn_arrowColor="@android:color/transparent"
-                            app:spn_dividerColor="@android:color/transparent"
-                            app:spn_popupItemAnimation="@null" />
-                    </LinearLayout>
+                             />
                 </LinearLayout>
 
                 <ImageView style="@style/DividerStyle" />
@@ -317,33 +303,14 @@
                         style="@style/CharacteristicsDiveSpotListIcons"
                         android:src="@drawable/ic_addds_object" />
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:fontFamily="sans-serif-medium"
-                            android:layout_marginTop="3dp"
-                            android:layout_width="match_parent"
-                            android:layout_height="17dp"
-                            android:text="@string/object"
-                            android:textColor="#B2B2B2"
-                            android:textSize="16sp" />
-
-                        <com.rey.material.widget.Spinner
+                        <android.support.v7.widget.AppCompatSpinner
                             android:id="@+id/object_spinner"
                             android:layout_width="match_parent"
-                            android:layout_height="36dp"
+                            android:layout_height="match_parent"
                             android:dropDownWidth="150dp"
                             android:gravity="center_vertical"
-                            android:popupBackground="@color/white"
-                            app:popupTheme="@style/AppTheme.PopupOverlay"
-                            app:rd_style="@style/Material.Drawable.Ripple.Wave"
-                            app:spn_arrowColor="@android:color/transparent"
-                            app:spn_dividerColor="@android:color/transparent"
-                            app:spn_popupItemAnimation="@null" />
-                    </LinearLayout>
+                            android:popupBackground="@color/white" />
+                    
                 </LinearLayout>
 
                 <ImageView style="@style/DividerStyle" />

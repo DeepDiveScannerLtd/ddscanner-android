@@ -14,6 +14,7 @@ import android.support.annotation.NonNull;
 import android.support.v13.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -43,8 +44,9 @@ import com.ddscanner.events.AddPhotoDoListEvent;
 import com.ddscanner.events.ImageDeletedEvent;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.adapters.AddPhotoToDsListAdapter;
+import com.ddscanner.ui.adapters.CharacteristicSpinnerItemsAdapter;
+import com.ddscanner.ui.adapters.LanguagesSpinnerAdapter;
 import com.ddscanner.ui.adapters.SealifeListAddingDiveSpotAdapter;
-import com.ddscanner.ui.adapters.SpinnerItemsAdapter;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.ui.dialogs.InfoDialogFragment.DialogClosedListener;
 import com.ddscanner.utils.ActivitiesRequestCodes;
@@ -54,7 +56,6 @@ import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
 import com.google.android.gms.maps.model.LatLng;
 import com.rey.material.widget.ProgressView;
-import com.rey.material.widget.Spinner;
 import com.squareup.otto.Subscribe;
 
 import java.io.File;
@@ -82,9 +83,9 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     private RecyclerView photos_rc;
     private TextView addPhotoTitle;
     private TextView locationTitle;
-    private Spinner levelSpinner;
-    private Spinner currentsSpinner;
-    private Spinner objectSpinner;
+    private AppCompatSpinner levelAppCompatSpinner;
+    private AppCompatSpinner currentsAppCompatSpinner;
+    private AppCompatSpinner objectAppCompatSpinner;
     private EditText name;
     private EditText depth;
     private EditText visibilityMin;
@@ -108,6 +109,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     private TextView photos;
     private TextView maps;
     private RecyclerView mapsRecyclerView;
+    private AppCompatSpinner languageAppCompatSpinner;
 
     private List<String> photoUris = new ArrayList<>();
     private List<String> mapsUris = new ArrayList<>();
@@ -129,9 +131,9 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         @Override
         public void onSuccess(FiltersResponseEntity result) {
             filters = result;
-            setSpinnerValues(objectSpinner, filters.getObject(), "");
-            setSpinnerValues(levelSpinner, filters.getLevel(), "");
-            setSpinnerValues(currentsSpinner, filters.getCurrents(), "");
+            setAppCompatSpinnerValues(objectAppCompatSpinner, filters.getObject(), "Object");
+            setAppCompatSpinnerValues(levelAppCompatSpinner, filters.getLevel(), "Level");
+            setAppCompatSpinnerValues(currentsAppCompatSpinner, filters.getCurrents(), "Current");
         }
 
         @Override
@@ -202,9 +204,10 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         btnAddSealife = (LinearLayout) findViewById(R.id.btn_add_sealife);
         photos_rc = (RecyclerView) findViewById(R.id.photos_rc);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        levelSpinner = (Spinner) findViewById(R.id.level_spinner);
-        objectSpinner = (Spinner) findViewById(R.id.object_spinner);
-        currentsSpinner = (Spinner) findViewById(R.id.currents_spinner);
+        levelAppCompatSpinner = (AppCompatSpinner) findViewById(R.id.level_spinner);
+        objectAppCompatSpinner = (AppCompatSpinner) findViewById(R.id.object_spinner);
+        currentsAppCompatSpinner = (AppCompatSpinner) findViewById(R.id.currents_spinner);
+        languageAppCompatSpinner = (AppCompatSpinner) findViewById(R.id.language_spinner);
         pickLocation = (LinearLayout) findViewById(R.id.location_layout);
         locationTitle = (TextView) findViewById(R.id.location);
         btnSave = (Button) findViewById(R.id.button_create);
@@ -227,6 +230,12 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void setUi() {
+        ArrayList<String> data = new ArrayList<>();
+        data.add("Language");
+        data.add("Thai");
+        data.add("English");
+        data.add("Russian");
+        languageAppCompatSpinner.setAdapter(new LanguagesSpinnerAdapter(this, R.layout.item_language_spinner, data));
         progressDialogUpload = Helpers.getMaterialDialog(this);
         ProgressDialog progressDialog = new ProgressDialog(this);
         btnSave.setOnClickListener(this);
@@ -376,15 +385,13 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         }
     }
 
-    private void setSpinnerValues(Spinner spinner, Map<String, String> values, String tag) {
-        List<String> objects = new ArrayList<String>();
+    private void setAppCompatSpinnerValues(AppCompatSpinner spinner, Map<String, String> values, String tag) {
+        ArrayList<String> objects = new ArrayList<String>();
+        objects.add(tag);
         for (Map.Entry<String, String> entry : values.entrySet()) {
             objects.add(entry.getValue());
-            if (entry.getKey().equals(tag)) {
-
-            }
         }
-        ArrayAdapter<String> adapter = new SpinnerItemsAdapter(this, R.layout.spinner_item, objects);
+        ArrayAdapter<String> adapter = new CharacteristicSpinnerItemsAdapter(this, R.layout.spinner_item, objects);
         spinner.setAdapter(adapter);
     }
 
@@ -504,13 +511,13 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         }
         requestObject = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
                 Helpers.getMirrorOfHashMap(filters.getObject())
-                        .get(objectSpinner.getSelectedItem().toString()));
+                        .get(objectAppCompatSpinner.getSelectedItem().toString()));
         requestCurrents = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
                 Helpers.getMirrorOfHashMap(filters.getCurrents())
-                        .get(currentsSpinner.getSelectedItem().toString()));
+                        .get(currentsAppCompatSpinner.getSelectedItem().toString()));
         requestLevel = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
                 Helpers.getMirrorOfHashMap(filters.getLevel())
-                        .get(levelSpinner.getSelectedItem().toString()));
+                        .get(levelAppCompatSpinner.getSelectedItem().toString()));
         requestMinVisibility = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), visibilityMin.getText().toString());
         requestMaxVisibility = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), visibilityMax.getText().toString());
         requestDescription = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
