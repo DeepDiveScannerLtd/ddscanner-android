@@ -126,8 +126,7 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
         toolbarSettings();
         setRcSettings();
         setProgressDialog();
-        addPhotoToDsListAdapter = new AddPhotoToDsListAdapter
-                (imageUris, LeaveReviewActivity.this, addPhotoTitle);
+        addPhotoToDsListAdapter = new AddPhotoToDsListAdapter(imageUris, LeaveReviewActivity.this);
     }
 
     private void findViews() {
@@ -310,7 +309,7 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
                             e.printStackTrace();
                         }
                     }
-                    photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris, LeaveReviewActivity.this, addPhotoTitle));
+                    photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris, LeaveReviewActivity.this));
 
                 }
                 break;
@@ -379,8 +378,7 @@ public class LeaveReviewActivity extends AppCompatActivity implements View.OnCli
     public void deleteImage(ImageDeletedEvent event) {
         maxPhotos++;
         imageUris.remove(event.getImageIndex());
-        photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris,
-                LeaveReviewActivity.this, addPhotoTitle));
+        photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris, LeaveReviewActivity.this));
     }
 
     @Override

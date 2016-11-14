@@ -345,4 +345,8 @@
     <string name="forgot_password_btn">Forgot password?</string>
     <string name="sign_in_with_facebook">Sign in with Facebook</string>
     <string name="sign_in_with_google">Sign in with Google</string>
+    <string name="maps">Maps</string>
+    <string name="add_photo_btn">Add photo</string>
+    <string name="add_sea_life">Add sea life</string>
+    <string name="everyone_can_edit">Everyone can edit</string>
 </resources>

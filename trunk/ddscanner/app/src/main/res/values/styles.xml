@@ -8,8 +8,7 @@
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
         <item name="android:actionMenuTextColor">@color/orange</item>
         <item name="android:popupMenuStyle">@style/popupMenuStyle</item>
-        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:windowContentTransitions">true</item>
+        <item name="colorControlActivated">@color/primary</item>
     </style>
 
     <style name="ToolbarMenuStyle" parent="ThemeOverlay.AppCompat.Light">
@@ -119,8 +118,8 @@
         <item name="android:layout_marginBottom">10dp</item>
     </style>
 
-    <style name="Color1SwitchStyle">
-        <item name="colorControlActivated">@color/orange</item>
+    <style name="ColorSwitchStyle">
+        <item name="colorControlActivated">@color/primary</item>
     </style>
 
     <style name="CircularProgress" parent="Material.Drawable.CircularProgress">
@@ -284,6 +283,26 @@
 
     <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="android:windowBackground">@drawable/splash_bg</item>
+    </style>
+
+    <style name="PhotosTabActive">
+        <item name="android:textColor">@color/black_text</item>
+        <item name="android:background">@drawable/gray_rectangle</item>
+        <item name="android:paddingBottom">7dp</item>
+        <item name="android:paddingTop">7dp</item>
+        <item name="android:paddingLeft">12dp</item>
+        <item name="android:paddingRight">12dp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="PhotosTabDisabled">
+        <item name="android:textColor">#afafaf</item>
+        <item name="android:paddingBottom">7dp</item>
+        <item name="android:paddingTop">7dp</item>
+        <item name="android:paddingLeft">12dp</item>
+        <item name="android:paddingRight">12dp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:background">@null</item>
     </style>
 
 </resources>

@@ -23,12 +23,10 @@ public class SealifeListAddingDiveSpotAdapter extends RecyclerView.Adapter<Seali
 
     private Context context;
     private ArrayList<Sealife> sealifes;
-    private TextView title;
 
-    public SealifeListAddingDiveSpotAdapter(ArrayList<Sealife> sealifes, Context context, TextView title) {
+    public SealifeListAddingDiveSpotAdapter(ArrayList<Sealife> sealifes, Context context) {
         this.sealifes = sealifes;
         this.context = context;
-        this.title = title;
     }
 
     @Override
@@ -54,11 +52,6 @@ public class SealifeListAddingDiveSpotAdapter extends RecyclerView.Adapter<Seali
 
     @Override
     public int getItemCount() {
-        if (sealifes.size() > 0) {
-            title.setVisibility(View.GONE);
-        } else {
-            title.setVisibility(View.VISIBLE);
-        }
         return sealifes.size();
     }
 
