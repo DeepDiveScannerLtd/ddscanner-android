@@ -1,4 +1,4 @@
-package com.ddscanner.ui.activities;
+package com.ddscanner.events;
 
 public class ChangeLoginViewEvent {
 }

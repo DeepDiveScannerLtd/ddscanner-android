@@ -25,7 +25,7 @@ import com.ddscanner.events.ChangePageOfMainViewPagerEvent;
 import com.ddscanner.events.GetNotificationsEvent;
 import com.ddscanner.events.LoggedOutEvent;
 import com.ddscanner.rest.DDScannerRestClient;
-import com.ddscanner.ui.activities.ChangeLoginViewEvent;
+import com.ddscanner.events.ChangeLoginViewEvent;
 import com.ddscanner.ui.activities.MainActivity;
 import com.ddscanner.ui.adapters.NotificationsPagerAdapter;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
