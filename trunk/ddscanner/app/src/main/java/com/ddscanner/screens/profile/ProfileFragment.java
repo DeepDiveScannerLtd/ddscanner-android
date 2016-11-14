@@ -3,6 +3,7 @@ package com.ddscanner.screens.profile;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.net.Uri;
@@ -11,6 +12,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.AppCompatRadioButton;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -78,6 +80,9 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
     private Uri uriFromCamera = null;
 
     private FragmentProfileBinding binding;
+
+    ColorStateList colorStateList;
+
 
     private DDScannerRestClient.ResultListener<UserResponseEntity> updateProfileInfoResultListener = new DDScannerRestClient.ResultListener<UserResponseEntity>() {
         @Override
@@ -149,6 +154,16 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
         Log.i(TAG, "ProfileFragment onCreateView, this = " + this);
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_profile, container, false);
         View v = binding.getRoot();
+        colorStateList = new ColorStateList(
+                new int[][]{
+                        new int[]{-android.R.attr.state_checked},
+                        new int[]{android.R.attr.state_checked}
+                },
+                new int[]{
+                        ContextCompat.getColor(getContext(), R.color.radio_button_empty)
+                        , ContextCompat.getColor(getContext(), R.color.radio_button_fill),
+                }
+        );
         setupUi();
         binding.setHandlers(this);
 
@@ -203,8 +218,17 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
         }
     }
 
-    private void setupUi() {
+    private void setupRadioButtons(String title) {
+        AppCompatRadioButton button = new AppCompatRadioButton(getContext());
+        button.setSupportButtonTintList(colorStateList);
+        button.setText(title);
+        button.setPadding(Math.round(Helpers.convertDpToPixel(15, getContext())), Math.round(Helpers.convertDpToPixel(10, getContext())), Math.round(Helpers.convertDpToPixel(20, getContext())), Math.round(Helpers.convertDpToPixel(10, getContext())));
+        binding.radiogroup.addView(button);
+    }
 
+    private void setupUi() {
+        setupRadioButtons("Diver");
+        setupRadioButtons("Instructor");
         binding.swiperefresh.setOnRefreshListener(this);
         binding.aboutEdit.addTextChangedListener(new TextWatcher() {
             @Override
