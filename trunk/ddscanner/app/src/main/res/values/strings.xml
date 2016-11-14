@@ -349,4 +349,5 @@
     <string name="add_photo_btn">Add photo</string>
     <string name="add_sea_life">Add sea life</string>
     <string name="everyone_can_edit">Everyone can edit</string>
+    <string name="choose_dive_center">Choose dive center</string>
 </resources>
