@@ -134,6 +134,8 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
             setAppCompatSpinnerValues(objectAppCompatSpinner, filters.getObject(), "Object");
             setAppCompatSpinnerValues(levelAppCompatSpinner, filters.getLevel(), "Level");
             setAppCompatSpinnerValues(currentsAppCompatSpinner, filters.getCurrents(), "Current");
+            progressView.setVisibility(View.GONE);
+            mainLayout.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -269,10 +271,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         getSupportActionBar().setTitle(R.string.new_divespot);
 
         progressDialog.setCancelable(false);
-
-        progressView.stop();
-        progressView.setVisibility(View.GONE);
-        mainLayout.setVisibility(View.VISIBLE);
+        
     }
 
     @Override
