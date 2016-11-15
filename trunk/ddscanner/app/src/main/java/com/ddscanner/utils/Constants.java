@@ -88,20 +88,20 @@ public class Constants {
     public static final String USER_TYPE_INSTRUCTOR = "diver";
 
     /*Images path constants*/
-    public static final String IMAGE_PATH_PREVIEW = "images/divespots/preview";
-    public static final String IMAGE_PATH_MEDIUM = "images/divespots/medium";
-    public static final String IMAGE_PATH_ORIGIN = "images/divespots/origin";
+    public static final String IMAGE_PATH_PREVIEW = "/images/divespots/preview/";
+    public static final String IMAGE_PATH_MEDIUM = "/images/divespots/medium/";
+    public static final String IMAGE_PATH_ORIGIN = "/images/divespots/origin/";
 
-    public static final String SEALIFE_IMAGE_PATH_PREVIEW = "images/sealife/preview";
-    public static final String SEALIFE_IMAGE_PATH_MEDIUM = "images/sealife/medium";
-    public static final String SEALIFE_IMAGE_PATH_ORIGIN = "images/sealife/origin";
+    public static final String SEALIFE_IMAGE_PATH_PREVIEW = "/images/sealife/preview/";
+    public static final String SEALIFE_IMAGE_PATH_MEDIUM = "/images/sealife/medium/";
+    public static final String SEALIFE_IMAGE_PATH_ORIGIN = "/images/sealife/origin/";
 
-    public static final String DISTRICT_IMAGE_PATH_PREVIEW = "images/district/preview";
-    public static final String DISTRICT_IMAGE_PATH_MEDIUM = "images/district/medium";
-    public static final String DISTRICT_IMAGE_PATH_ORIGIN = "images/district/origin";
+    public static final String DISTRICT_IMAGE_PATH_PREVIEW = "/images/district/preview/";
+    public static final String DISTRICT_IMAGE_PATH_MEDIUM = "/images/district/medium/";
+    public static final String DISTRICT_IMAGE_PATH_ORIGIN = "/images/district/origin/";
 
-    public static final String USER_IMAGE_PATH_PREVIEW = "images/social/preview";
-    public static final String USER_IMAGE_PATH_MEDIUM = "images/social/medium";
-    public static final String USER_IMAGE_PATH_ORIGIN = "images/social/origin";
+    public static final String USER_IMAGE_PATH_PREVIEW = "/images/social/preview/";
+    public static final String USER_IMAGE_PATH_MEDIUM = "/images/social/medium/";
+    public static final String USER_IMAGE_PATH_ORIGIN = "/images/social/origin/";
 
 }

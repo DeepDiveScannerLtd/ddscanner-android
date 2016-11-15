@@ -12,11 +12,13 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.DiveSpot;
 import com.ddscanner.ui.activities.DiveSpotDetailsActivity;
 import com.ddscanner.ui.views.TransformationRoundImage;
+import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -58,7 +60,8 @@ public class DiveSpotsListAdapter
                 setColorFilter(ContextCompat.getColor(context, R.color.primary),
                         PorterDuff.Mode.MULTIPLY);
         if (divespot.getImage() != null) {
-            Picasso.with(context).load(divespot.getImage()).resize(Math.round(Helpers.convertDpToPixel(130, context)), Math.round(Helpers.convertDpToPixel(130, context))).centerCrop()
+            String imageAddress = DDScannerApplication.getInstance().getString(R.string.server_api_address) + Constants.IMAGE_PATH_PREVIEW + divespot.getImage();
+            Picasso.with(context).load(imageAddress).resize(Math.round(Helpers.convertDpToPixel(130, context)), Math.round(Helpers.convertDpToPixel(130, context))).centerCrop()
                     .transform(new TransformationRoundImage(2, 0))
                     .into(productListViewHolder.imageView,
                             new ImageLoadedCallback(productListViewHolder.progressBar) {

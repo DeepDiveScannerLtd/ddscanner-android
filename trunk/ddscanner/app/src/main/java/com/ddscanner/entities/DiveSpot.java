@@ -24,11 +24,25 @@ public class DiveSpot implements Serializable, ClusterItem {
     private List<String> images;
     private LatLng latLng;
     private String reviews;
+    @SerializedName("photo")
     private String image;
     @SerializedName("type")
     private int object;
     private String path;
     private String status;
+    @SerializedName("is_approved")
+    private int isNew;
+
+    public boolean getIsNew() {
+        if (isNew == 1) {
+            return false;
+        }
+        return true;
+    }
+
+    public void setIsNew(int isNew) {
+        this.isNew = isNew;
+    }
 
     public String getStatus() {
         return status;

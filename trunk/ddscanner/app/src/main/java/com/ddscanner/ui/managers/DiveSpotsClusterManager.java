@@ -165,15 +165,11 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         if (lastClickedMarker != null) {
             // lastClickedMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
             if (diveSpotsMap.get(lastClickedMarker.getPosition()) != null) {
-                if (diveSpotsMap.get(lastClickedMarker.getPosition()).getStatus() != null) {
-                    if (diveSpotsMap.get(lastClickedMarker.getPosition()).getStatus().equals("waiting")) {
+                    if (diveSpotsMap.get(lastClickedMarker.getPosition()).getIsNew()) {
                         DDScannerApplication.bus.post(new OnMapClickEvent(lastClickedMarker, true));
                     } else {
                         DDScannerApplication.bus.post(new OnMapClickEvent(lastClickedMarker, false));
                     }
-                } else {
-                    DDScannerApplication.bus.post(new OnMapClickEvent(lastClickedMarker, false));
-                }
             } else {
                 DDScannerApplication.bus.post(new OnMapClickEvent(lastClickedMarker, false));
             }
@@ -256,7 +252,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         if (lastClickedMarker != null) {
             try {
                 if (diveSpotsMap.get(marker.getPosition()) != null) {
-                    if (diveSpotsMap.get(marker.getPosition()).getStatus().equals("waiting")) {
+                    if (diveSpotsMap.get(marker.getPosition()).getIsNew()) {
                         lastClickedMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds_new));
                     } else {
                         lastClickedMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
@@ -385,7 +381,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         protected void onClusterItemRendered(DiveSpot diveSpot, final Marker marker) {
             super.onClusterItemRendered(diveSpot, marker);
             try {
-                if (diveSpot.getStatus().equals("waiting")) {
+                if (diveSpot.getIsNew()) {
                     if (lastClickedMarker == null || !lastClickedMarker.equals(marker)) {
                         marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds_new));
                     }
@@ -455,7 +451,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
     }
 
     public boolean isLastClickedMarkerNew() {
-        return diveSpotsMap.get(lastClickedMarker.getPosition()).getStatus().equals("waiting");
+        return diveSpotsMap.get(lastClickedMarker.getPosition()).getIsNew();
     }
 
     private void sendRequest(LatLng northeast, LatLng southwest) {
