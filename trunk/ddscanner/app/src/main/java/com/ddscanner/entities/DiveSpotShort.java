@@ -30,7 +30,7 @@ public class DiveSpotShort implements Serializable, ClusterItem {
     private int isNew;
 
     public boolean getIsNew() {
-        if (isNew == 1) {
+        if (1 == isNew) {
             return false;
         }
         return true;
