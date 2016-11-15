@@ -36,6 +36,7 @@ public interface DDScannerRestService {
     @GET("/diving/divespot/{id}")
     Call<ResponseBody> getDiveSpotById(@Path("id") String id, @QueryMap Map<String, String> map);
 
+    @Deprecated
     @Headers("Content-type: application/json")
     @GET("/diving/divespots")
     Call<ResponseBody> getDivespots(@QueryMap Map<String, Object> map);
@@ -283,5 +284,8 @@ public interface DDScannerRestService {
 
     @GET("v2_0/user.getAchievements")
     Call<ResponseBody> getUserAchievements();
+
+    @GET("v2_0/divespots.filter")
+    Call<ResponseBody> getDiveSpotsByFilter(@QueryMap Map<String, Object> map);
 
 }

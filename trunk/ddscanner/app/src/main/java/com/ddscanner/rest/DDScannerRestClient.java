@@ -429,7 +429,7 @@ public class DDScannerRestClient {
     }
 
     public void getDiveSpotsByArea(DiveSpotsRequestMap diveSpotsRequestMap, ResultListener<DivespotsWrapper> resultListener) {
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDivespots(diveSpotsRequestMap);
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveSpotsByFilter(diveSpotsRequestMap);
         call.enqueue(new ResponseEntityCallback<DivespotsWrapper>(gson, resultListener) {
             @Override
             void handleResponseString(ResultListener<DivespotsWrapper> resultListener, String responseString) {
