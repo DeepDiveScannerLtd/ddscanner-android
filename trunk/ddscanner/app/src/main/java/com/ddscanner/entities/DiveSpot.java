@@ -3,6 +3,7 @@ package com.ddscanner.entities;
 import android.text.TextUtils;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.annotations.SerializedName;
 import com.google.maps.android.clustering.ClusterItem;
 
 import java.io.Serializable;
@@ -24,7 +25,8 @@ public class DiveSpot implements Serializable, ClusterItem {
     private LatLng latLng;
     private String reviews;
     private String image;
-    private String object;
+    @SerializedName("type")
+    private int object;
     private String path;
     private String status;
 
@@ -44,11 +46,11 @@ public class DiveSpot implements Serializable, ClusterItem {
         this.path = path;
     }
 
-    public String getObject() {
+    public int getObject() {
         return object;
     }
 
-    public void setObject(String object) {
+    public void setObject(int object) {
         this.object = object;
     }
 

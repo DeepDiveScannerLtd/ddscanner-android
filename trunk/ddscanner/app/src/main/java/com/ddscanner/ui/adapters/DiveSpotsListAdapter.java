@@ -89,7 +89,7 @@ public class DiveSpotsListAdapter
             iv.setPadding(0, 0, 5, 0);
             productListViewHolder.stars.addView(iv);
         }
-        productListViewHolder.object.setText(divespot.getObject());
+        productListViewHolder.object.setText(Helpers.getDiveSpotType(divespot.getObject()));
     }
 
     @Override

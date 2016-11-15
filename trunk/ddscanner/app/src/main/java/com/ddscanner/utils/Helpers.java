@@ -532,4 +532,17 @@ public class Helpers {
         return list.indexOf(userType);
     }
 
+    public static String getDiveSpotType(int position) {
+        List<String> types = new ArrayList<>();
+        types.add("cave");
+        types.add("reef");
+        types.add("wreck");
+        types.add("other");
+        if (types.get(position - 1) == null) {
+            return "";
+        }
+        return types.get(position - 1);
+    }
+
+
 }

@@ -46,6 +46,7 @@ import com.ddscanner.ui.adapters.DiveSpotsListAdapter;
 import com.ddscanner.ui.managers.DiveSpotsClusterManager;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
+import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -375,12 +376,8 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
                     }
                 });
         diveSpotName.setText(event.getDiveSpot().getName());
-        diveSpotType.setText(event.getDiveSpot().getObject());
-        if (infoWindowBackgroundImages.get(event.getDiveSpot().getObject().toLowerCase()) != null) {
-            diveSpotInfo.setBackground(infoWindowBackgroundImages.get(event.getDiveSpot().getObject().toLowerCase()));
-        } else {
-            diveSpotInfo.setBackground(infoWindowBackgroundImages.get(Constants.OBJECT_TYPE_OTHER));
-        }
+        diveSpotType.setText(Helpers.getDiveSpotType(event.getDiveSpot().getObject()));
+        diveSpotInfo.setBackground(infoWindowBackgroundImages.get(Helpers.getDiveSpotType(event.getDiveSpot().getObject())));
         lastDiveSpotId = event.getDiveSpot().getId();
         rating.removeAllViews();
         for (int k = 0; k < Math.round(event.getDiveSpot().getRating()); k++) {
