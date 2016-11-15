@@ -14,7 +14,7 @@ import android.view.View;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
-import com.ddscanner.entities.DiveSpot;
+import com.ddscanner.entities.DiveSpotShort;
 import com.ddscanner.entities.DivespotsWrapper;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.adapters.DiveSpotsListAdapter;
@@ -169,7 +169,7 @@ public class ForeignUserDiveSpotList extends AppCompatActivity implements InfoDi
         public void onSuccess(DivespotsWrapper result) {
             progressBarFull.setVisibility(View.GONE);
             rc.setVisibility(View.VISIBLE);
-            rc.setAdapter(new DiveSpotsListAdapter((ArrayList<DiveSpot>) result.getDiveSpots(), ForeignUserDiveSpotList.this, EventsTracker.SpotViewSource.FROM_PROFILE_CHECKINS));
+            rc.setAdapter(new DiveSpotsListAdapter((ArrayList<DiveSpotShort>) result.getDiveSpots(), ForeignUserDiveSpotList.this, EventsTracker.SpotViewSource.FROM_PROFILE_CHECKINS));
         }
 
         @Override

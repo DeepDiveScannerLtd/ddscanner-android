@@ -28,7 +28,7 @@ public class Activity implements Serializable {
     private ActivityType type;
     private String date;
     private String message;
-    private DiveSpot diveSpot;
+    private DiveSpotShort diveSpotShort;
     private UserOld userOld;
 
     public ActivityType getType() {
@@ -55,12 +55,12 @@ public class Activity implements Serializable {
         this.message = message;
     }
 
-    public DiveSpot getDiveSpot() {
-        return diveSpot;
+    public DiveSpotShort getDiveSpotShort() {
+        return diveSpotShort;
     }
 
-    public void setDiveSpot(DiveSpot diveSpot) {
-        this.diveSpot = diveSpot;
+    public void setDiveSpotShort(DiveSpotShort diveSpotShort) {
+        this.diveSpotShort = diveSpotShort;
     }
 
     public UserOld getUserOld() {

@@ -66,7 +66,7 @@ public class ActivitiesListAdapter
             switch (activity.getType()) {
                 case CHECKIN:
                     name = activity.getUserOld().getName();
-                    divespot = activity.getDiveSpot().getName();
+                    divespot = activity.getDiveSpotShort().getName();
                     text = context.getResources().getString(R.string.user_made_checkin, name, divespot);
                     spannableString = new SpannableString(text);
                     spannableString.setSpan(fcs, 0, name.length(), 0);
@@ -76,21 +76,21 @@ public class ActivitiesListAdapter
                     holder.image.setImageDrawable(AppCompatDrawableManager.get()
                             .getDrawable(context, R.drawable.ic_notif_checkin));
                     Picasso.with(context)
-                            .load(activity.getDiveSpot().getPath() + activity.getDiveSpot().getImage())
+                            .load(activity.getDiveSpotShort().getPath() + activity.getDiveSpotShort().getImage())
                             .resize(Math.round(Helpers.convertDpToPixel(40, context)),Math.round(Helpers.convertDpToPixel(40, context)))
                             .centerCrop()
                             .transform(new TransformationRoundImage(2,0))
                             .into(holder.dsLogo);
                     break;
                 case STORE:
-                    divespot = activity.getDiveSpot().getName();
+                    divespot = activity.getDiveSpotShort().getName();
                     text = context.getResources().getString(R.string.new_dive_spothas_been_added_near, divespot);
                     spannableString = new SpannableString(text);
                     spannableString.setSpan(fcs, text.indexOf(divespot), text.length(), 0);
                     holder.text.setText(spannableString);
                     holder.timeAgo.setText(Helpers.getDate(activity.getDate()));
                     Picasso.with(context)
-                            .load(activity.getDiveSpot().getPath() + activity.getDiveSpot().getImage())
+                            .load(activity.getDiveSpotShort().getPath() + activity.getDiveSpotShort().getImage())
                             .resize(Math.round(Helpers.convertDpToPixel(40, context)),Math.round(Helpers.convertDpToPixel(40, context)))
                             .centerCrop()
                             .transform(new TransformationRoundImage(2,0))
@@ -99,14 +99,14 @@ public class ActivitiesListAdapter
                 case UPDATE:
                     holder.image.setImageDrawable(AppCompatDrawableManager.get()
                             .getDrawable(context, R.drawable.ic_notif_changed));
-                     divespot = activity.getDiveSpot().getName();
+                     divespot = activity.getDiveSpotShort().getName();
                     text = context.getResources().getString(R.string.divespot_was_changed, divespot);
                     spannableString = new SpannableString(text);
                     spannableString.setSpan(fcs, 0, divespot.length(), 0);
                     holder.text.setText(spannableString);
                     holder.timeAgo.setText(Helpers.getDate(activity.getDate()));
                     Picasso.with(context)
-                            .load(activity.getDiveSpot().getPath() + activity.getDiveSpot().getImage())
+                            .load(activity.getDiveSpotShort().getPath() + activity.getDiveSpotShort().getImage())
                             .resize(Math.round(Helpers.convertDpToPixel(40, context)),Math.round(Helpers.convertDpToPixel(40, context)))
                             .centerCrop()
                             .transform(new TransformationRoundImage(2,0))
@@ -172,7 +172,7 @@ public class ActivitiesListAdapter
                     return;
                 }
                 DiveSpotDetailsActivity.show(context,
-                        String.valueOf(activities.get(sectionAdapter.sectionedPositionToPosition(getAdapterPosition())).getDiveSpot().getId()), EventsTracker.SpotViewSource.FROM_ACTIVITIES);
+                        String.valueOf(activities.get(sectionAdapter.sectionedPositionToPosition(getAdapterPosition())).getDiveSpotShort().getId()), EventsTracker.SpotViewSource.FROM_ACTIVITIES);
                 return;
             }
             if (activities.get(getAdapterPosition()).getType().equals(Activity.ActivityType.ACHIEVE)) {
@@ -180,7 +180,7 @@ public class ActivitiesListAdapter
                 return;
             }
             DiveSpotDetailsActivity.show(context,
-                    String.valueOf(activities.get(getAdapterPosition()).getDiveSpot().getId()), EventsTracker.SpotViewSource.FROM_ACTIVITIES);
+                    String.valueOf(activities.get(getAdapterPosition()).getDiveSpotShort().getId()), EventsTracker.SpotViewSource.FROM_ACTIVITIES);
         }
     }
 

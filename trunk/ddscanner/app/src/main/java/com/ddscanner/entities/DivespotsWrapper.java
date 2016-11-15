@@ -10,9 +10,9 @@ import java.util.List;
  */
 public class DivespotsWrapper {
     @SerializedName("dive_spots")
-    private List<DiveSpot> divespots = new ArrayList<>();
+    private List<DiveSpotShort> divespots = new ArrayList<>();
 
-    public List<DiveSpot> getDiveSpots() { return divespots; }
+    public List<DiveSpotShort> getDiveSpots() { return divespots; }
 
-    public void setDiveSpots(List<DiveSpot> diveSpots) { this.divespots = divespots; }
+    public void setDiveSpots(List<DiveSpotShort> diveSpotShorts) { this.divespots = divespots; }
 }

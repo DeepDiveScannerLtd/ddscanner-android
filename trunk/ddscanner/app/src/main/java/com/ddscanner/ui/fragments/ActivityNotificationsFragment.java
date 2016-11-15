@@ -167,7 +167,7 @@ public class ActivityNotificationsFragment extends Fragment {
     private boolean checkIsListDifferent(ArrayList<Activity> newNotifications, ArrayList<Activity> oldNotifications) {
         for (Activity notification : oldNotifications) {
             for (Activity notification1 : newNotifications) {
-                if (!notification.getType().equals(notification1.getType()) || !notification.getUserOld().getId().equals(notification1.getUserOld().getId()) || notification.getDiveSpot().getId() != notification1.getDiveSpot().getId()) {
+                if (!notification.getType().equals(notification1.getType()) || !notification.getUserOld().getId().equals(notification1.getUserOld().getId()) || notification.getDiveSpotShort().getId() != notification1.getDiveSpotShort().getId()) {
                     return true;
                 }
             }

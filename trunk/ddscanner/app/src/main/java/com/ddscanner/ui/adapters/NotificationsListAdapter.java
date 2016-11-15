@@ -59,7 +59,7 @@ public class NotificationsListAdapter
             SpannableString spannableString;
             switch (notification.getType()) {
                 case ACCEPT:
-                    divespot = notification.getDiveSpot().getName();
+                    divespot = notification.getDiveSpotShort().getName();
                     text = context.getResources().getString(R.string.your_changes_accepted,divespot);
                     spannableString = new SpannableString(text);
                     spannableString.setSpan(fcs, text.indexOf(divespot),
@@ -77,7 +77,7 @@ public class NotificationsListAdapter
                             .transform(new CropCircleTransformation())
                             .into(holder.image);
                     String name = notification.getUserOld().getName();
-                    divespot = notification.getDiveSpot().getName();
+                    divespot = notification.getDiveSpotShort().getName();
                     // text = String.format(text, name, divespot);
                     text = context.getResources().getString(R.string.user_liked_your_review, name, divespot);
                     spannableString = new SpannableString(text);
@@ -95,7 +95,7 @@ public class NotificationsListAdapter
                             .transform(new CropCircleTransformation())
                             .into(holder.image);
                     name = notification.getUserOld().getName();
-                    divespot = notification.getDiveSpot().getName();
+                    divespot = notification.getDiveSpotShort().getName();
                     text = context.getResources().getString(R.string.user_dislike_your_review, name, divespot);
                     spannableString = new SpannableString(text);
                     spannableString.setSpan(fcs, 0, name.length(), 0);
@@ -196,7 +196,7 @@ public class NotificationsListAdapter
                     }
 
                     if (!isImage) {
-                        DiveSpotDetailsActivity.show(context, String.valueOf(notification.getDiveSpot().getId()), EventsTracker.SpotViewSource.FROM_NOTIFICATIONS);
+                        DiveSpotDetailsActivity.show(context, String.valueOf(notification.getDiveSpotShort().getId()), EventsTracker.SpotViewSource.FROM_NOTIFICATIONS);
                     }
                     break;
             }

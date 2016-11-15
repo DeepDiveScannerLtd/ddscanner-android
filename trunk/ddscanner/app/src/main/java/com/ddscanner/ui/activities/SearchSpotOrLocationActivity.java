@@ -17,7 +17,7 @@ import android.view.MenuItem;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
-import com.ddscanner.entities.DiveSpot;
+import com.ddscanner.entities.DiveSpotShort;
 import com.ddscanner.entities.DivespotsWrapper;
 import com.ddscanner.events.GoToMyLocationButtonClickedEvent;
 import com.ddscanner.events.LocationChosedEvent;
@@ -76,7 +76,7 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
     private DDScannerRestClient.ResultListener<DivespotsWrapper> divespotsWrapperResultListener = new DDScannerRestClient.ResultListener<DivespotsWrapper>() {
         @Override
         public void onSuccess(DivespotsWrapper result) {
-            searchDiveSpotFragment.setDiveSpots((ArrayList<DiveSpot>) result.getDiveSpots());
+            searchDiveSpotFragment.setDiveSpotShorts((ArrayList<DiveSpotShort>) result.getDiveSpots());
         }
 
         @Override

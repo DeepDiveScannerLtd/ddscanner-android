@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
-import com.ddscanner.entities.DiveSpot;
+import com.ddscanner.entities.DiveSpotShort;
 import com.ddscanner.ui.activities.DiveSpotDetailsActivity;
 
 import java.util.ArrayList;
@@ -19,11 +19,11 @@ import java.util.ArrayList;
  */
 public class SearchDiveSpotListAdapter extends RecyclerView.Adapter<SearchDiveSpotListAdapter.SearchDiveSpotListViewHolder> {
 
-    private ArrayList<DiveSpot> diveSpots;
+    private ArrayList<DiveSpotShort> diveSpotShorts;
     private Context context;
 
-    public SearchDiveSpotListAdapter(ArrayList<DiveSpot> diveSpots, Context context) {
-        this.diveSpots = diveSpots;
+    public SearchDiveSpotListAdapter(ArrayList<DiveSpotShort> diveSpotShorts, Context context) {
+        this.diveSpotShorts = diveSpotShorts;
         this.context = context;
     }
 
@@ -37,13 +37,13 @@ public class SearchDiveSpotListAdapter extends RecyclerView.Adapter<SearchDiveSp
 
     @Override
     public void onBindViewHolder(SearchDiveSpotListViewHolder holder, int position) {
-        holder.diveSpotName.setText(diveSpots.get(position).getName());
+        holder.diveSpotName.setText(diveSpotShorts.get(position).getName());
     }
 
     @Override
     public int getItemCount() {
-        if (diveSpots != null) {
-            return diveSpots.size();
+        if (diveSpotShorts != null) {
+            return diveSpotShorts.size();
         }
         return 0;
     }
@@ -62,7 +62,7 @@ public class SearchDiveSpotListAdapter extends RecyclerView.Adapter<SearchDiveSp
 
         @Override
         public void onClick(View v) {
-            DiveSpotDetailsActivity.show(context, String.valueOf(diveSpots.get(getAdapterPosition()).getId()), EventsTracker.SpotViewSource.FROM_SEARCH);
+            DiveSpotDetailsActivity.show(context, String.valueOf(diveSpotShorts.get(getAdapterPosition()).getId()), EventsTracker.SpotViewSource.FROM_SEARCH);
         }
     }
 }

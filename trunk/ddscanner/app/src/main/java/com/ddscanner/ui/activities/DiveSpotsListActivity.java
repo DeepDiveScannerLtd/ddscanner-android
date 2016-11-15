@@ -14,7 +14,7 @@ import android.view.View;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
-import com.ddscanner.entities.DiveSpot;
+import com.ddscanner.entities.DiveSpotShort;
 import com.ddscanner.entities.DiveSpotListSource;
 import com.ddscanner.entities.DivespotsWrapper;
 import com.ddscanner.rest.DDScannerRestClient;
@@ -34,7 +34,7 @@ public class DiveSpotsListActivity extends AppCompatActivity implements InfoDial
     
     private RecyclerView rc;
     private Toolbar toolbar;
-    private List<DiveSpot> diveSpots = new ArrayList<>();
+    private List<DiveSpotShort> diveSpotShorts = new ArrayList<>();
     private boolean isAdded = false;
     private ProgressView progressBarFull;
     private EventsTracker.SpotViewSource spotViewSource;
@@ -44,7 +44,7 @@ public class DiveSpotsListActivity extends AppCompatActivity implements InfoDial
 
         @Override
         public void onSuccess(DivespotsWrapper result) {
-            DiveSpotsListActivity.this.diveSpots = result.getDiveSpots();
+            DiveSpotsListActivity.this.diveSpotShorts = result.getDiveSpots();
             setUi();
         }
 
@@ -149,7 +149,7 @@ public class DiveSpotsListActivity extends AppCompatActivity implements InfoDial
         rc.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         rc.setLayoutManager(linearLayoutManager);
-        rc.setAdapter(new DiveSpotsListAdapter((ArrayList<DiveSpot>) diveSpots, this, spotViewSource));
+        rc.setAdapter(new DiveSpotsListAdapter((ArrayList<DiveSpotShort>) diveSpotShorts, this, spotViewSource));
         progressBarFull.setVisibility(View.GONE);
         rc.setVisibility(View.VISIBLE);
     }

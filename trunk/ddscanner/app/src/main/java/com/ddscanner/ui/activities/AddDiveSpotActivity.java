@@ -25,7 +25,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -36,7 +35,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
-import com.ddscanner.entities.DiveSpot;
+import com.ddscanner.entities.DiveSpotShort;
 import com.ddscanner.entities.FiltersResponseEntity;
 import com.ddscanner.entities.Sealife;
 import com.ddscanner.entities.errors.ValidationError;
@@ -150,12 +149,12 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         }
     };
 
-    private DDScannerRestClient.ResultListener<DiveSpot> addDiveSpotResultListener = new DDScannerRestClient.ResultListener<DiveSpot>() {
+    private DDScannerRestClient.ResultListener<DiveSpotShort> addDiveSpotResultListener = new DDScannerRestClient.ResultListener<DiveSpotShort>() {
         @Override
-        public void onSuccess(DiveSpot diveSpot) {
+        public void onSuccess(DiveSpotShort diveSpotShort) {
             progressDialogUpload.dismiss();
             EventsTracker.trackDivespotCreated();
-            showSuccessDialog(String.valueOf(diveSpot.getId()));
+            showSuccessDialog(String.valueOf(diveSpotShort.getId()));
         }
 
         @Override

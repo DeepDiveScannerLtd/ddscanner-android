@@ -7,7 +7,7 @@ import com.ddscanner.entities.AchievmentsResponseEntity;
 import com.ddscanner.entities.CheckIns;
 import com.ddscanner.entities.Comments;
 import com.ddscanner.entities.DiveCentersResponseEntity;
-import com.ddscanner.entities.DiveSpot;
+import com.ddscanner.entities.DiveSpotShort;
 import com.ddscanner.entities.DiveSpotDetails;
 import com.ddscanner.entities.DivespotsWrapper;
 import com.ddscanner.entities.EditDiveSpotWrapper;
@@ -359,7 +359,7 @@ public class DDScannerRestClient {
 
     }
 
-    public void postAddDiveSpot(@NonNull final ResultListener<DiveSpot> resultListener, List<MultipartBody.Part> sealife, List<MultipartBody.Part> images, RequestBody... requestBodies) {
+    public void postAddDiveSpot(@NonNull final ResultListener<DiveSpotShort> resultListener, List<MultipartBody.Part> sealife, List<MultipartBody.Part> images, RequestBody... requestBodies) {
         if (requestBodies.length != 13) {
             throw new RuntimeException("RequestBody parameters count must be 13");
         }
@@ -368,13 +368,13 @@ public class DDScannerRestClient {
                 requestBodies[6], requestBodies[7], requestBodies[8], requestBodies[9],
                 sealife, images, requestBodies[10], requestBodies[11], requestBodies[12]
         );
-        call.enqueue(new ResponseEntityCallback<DiveSpot>(gson, resultListener) {
+        call.enqueue(new ResponseEntityCallback<DiveSpotShort>(gson, resultListener) {
             @Override
-            void handleResponseString(ResultListener<DiveSpot> resultListener, String responseString) throws JSONException {
+            void handleResponseString(ResultListener<DiveSpotShort> resultListener, String responseString) throws JSONException {
                 JSONObject jsonObject = new JSONObject(responseString);
                 String diveSpotString = jsonObject.getString(Constants.ADD_DIVE_SPOT_ACTIVITY_DIVESPOT);
-                DiveSpot diveSpot = new Gson().fromJson(diveSpotString, DiveSpot.class);
-                resultListener.onSuccess(diveSpot);
+                DiveSpotShort diveSpotShort = new Gson().fromJson(diveSpotString, DiveSpotShort.class);
+                resultListener.onSuccess(diveSpotShort);
             }
         });
     }

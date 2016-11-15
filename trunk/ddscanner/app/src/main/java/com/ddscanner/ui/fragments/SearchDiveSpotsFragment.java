@@ -13,7 +13,7 @@ import android.widget.ScrollView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
-import com.ddscanner.entities.DiveSpot;
+import com.ddscanner.entities.DiveSpotShort;
 import com.ddscanner.events.OpenAddDsActivityAfterLogin;
 import com.ddscanner.ui.activities.AddDiveSpotActivity;
 import com.ddscanner.ui.adapters.SearchDiveSpotListAdapter;
@@ -29,7 +29,7 @@ public class SearchDiveSpotsFragment extends Fragment implements View.OnClickLis
     private RecyclerView diveSpotsListRc;
     private ScrollView noResultsView;
     private Button addManually;
-    private ArrayList<DiveSpot> diveSpots;
+    private ArrayList<DiveSpotShort> diveSpotShorts;
 
     @Nullable
     @Override
@@ -41,25 +41,25 @@ public class SearchDiveSpotsFragment extends Fragment implements View.OnClickLis
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         diveSpotsListRc.setLayoutManager(linearLayoutManager);
         addManually.setOnClickListener(this);
-        if (diveSpots != null) {
-            setDiveSpots(diveSpots);
+        if (diveSpotShorts != null) {
+            setDiveSpotShorts(diveSpotShorts);
         }
         return view;
     }
 
-    public void setDiveSpots(ArrayList<DiveSpot> diveSpots) {
+    public void setDiveSpotShorts(ArrayList<DiveSpotShort> diveSpotShorts) {
         if (diveSpotsListRc == null) {
-            this.diveSpots = diveSpots;
+            this.diveSpotShorts = diveSpotShorts;
             return;
         }
-        if (diveSpots == null || diveSpots.size() == 0) {
+        if (diveSpotShorts == null || diveSpotShorts.size() == 0) {
             noResultsView.setVisibility(View.VISIBLE);
             diveSpotsListRc.setVisibility(View.GONE);
             Helpers.hideKeyboard(getActivity());
         } else {
             noResultsView.setVisibility(View.GONE);
             diveSpotsListRc.setVisibility(View.VISIBLE);
-            diveSpotsListRc.setAdapter(new SearchDiveSpotListAdapter(diveSpots, getContext()));
+            diveSpotsListRc.setAdapter(new SearchDiveSpotListAdapter(diveSpotShorts, getContext()));
         }
     }
 

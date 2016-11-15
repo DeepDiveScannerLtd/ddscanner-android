@@ -15,7 +15,7 @@ import android.widget.TextView;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
-import com.ddscanner.entities.DiveSpot;
+import com.ddscanner.entities.DiveSpotShort;
 import com.ddscanner.ui.activities.DiveSpotDetailsActivity;
 import com.ddscanner.ui.views.TransformationRoundImage;
 import com.ddscanner.utils.Constants;
@@ -33,11 +33,11 @@ public class DiveSpotsListAdapter
 
     private static final String TAG = DiveSpotsListAdapter.class.getSimpleName();
 
-    public ArrayList<DiveSpot> divespots;
+    public ArrayList<DiveSpotShort> divespots;
     private Context context;
     private EventsTracker.SpotViewSource spotViewSource;
 
-    public DiveSpotsListAdapter(ArrayList<DiveSpot> divespots, Context context, EventsTracker.SpotViewSource spotViewSource) {
+    public DiveSpotsListAdapter(ArrayList<DiveSpotShort> divespots, Context context, EventsTracker.SpotViewSource spotViewSource) {
         this.divespots = divespots;
         this.context = context;
         this.spotViewSource = spotViewSource;
@@ -54,7 +54,7 @@ public class DiveSpotsListAdapter
 
     @Override
     public void onBindViewHolder(ProductListViewHolder productListViewHolder, int i) {
-        DiveSpot divespot = new DiveSpot();
+        DiveSpotShort divespot = new DiveSpotShort();
         divespot = divespots.get(i);
         productListViewHolder.progressBar.getIndeterminateDrawable().
                 setColorFilter(ContextCompat.getColor(context, R.color.primary),
@@ -132,8 +132,8 @@ public class DiveSpotsListAdapter
         }
     }
 
-    public void setDiveSpots(ArrayList<DiveSpot> diveSpots) {
-        this.divespots = diveSpots;
+    public void setDiveSpots(ArrayList<DiveSpotShort> diveSpotShorts) {
+        this.divespots = diveSpotShorts;
         notifyDataSetChanged();
     }
 

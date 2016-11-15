@@ -169,7 +169,7 @@ public class AllNotificationsFragment extends Fragment {
     private boolean checkIsListDifferent( ArrayList<Notification> newNotifications, ArrayList<Notification> oldNotifications) {
         for (Notification notification : oldNotifications) {
             for (Notification notification1 : newNotifications) {
-                if (!notification.getType().equals(notification1.getType()) || !notification.getUserOld().getId().equals(notification1.getUserOld().getId()) || notification.getDiveSpot().getId() != notification1.getDiveSpot().getId()) {
+                if (!notification.getType().equals(notification1.getType()) || !notification.getUserOld().getId().equals(notification1.getUserOld().getId()) || notification.getDiveSpotShort().getId() != notification1.getDiveSpotShort().getId()) {
                     return true;
                 }
             }

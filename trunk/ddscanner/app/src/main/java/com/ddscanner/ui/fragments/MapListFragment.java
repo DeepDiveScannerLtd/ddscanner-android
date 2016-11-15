@@ -3,7 +3,6 @@ package com.ddscanner.ui.fragments;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
@@ -28,7 +27,7 @@ import android.widget.TextView;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
-import com.ddscanner.entities.DiveSpot;
+import com.ddscanner.entities.DiveSpotShort;
 import com.ddscanner.events.CloseInfoWindowEvent;
 import com.ddscanner.events.CloseListEvent;
 import com.ddscanner.events.InfowWindowOpenedEvent;
@@ -38,8 +37,6 @@ import com.ddscanner.events.MapViewInitializedEvent;
 import com.ddscanner.events.MarkerClickEvent;
 import com.ddscanner.events.OnMapClickEvent;
 import com.ddscanner.events.OpenAddDiveSpotActivity;
-import com.ddscanner.events.OpenAddDsActivityAfterLogin;
-import com.ddscanner.ui.activities.AddDiveSpotActivity;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.activities.DiveSpotDetailsActivity;
 import com.ddscanner.ui.adapters.DiveSpotsListAdapter;
@@ -48,7 +45,6 @@ import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
-import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -375,18 +371,18 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
                         diveSpotInfo.setVisibility(View.VISIBLE);
                     }
                 });
-        diveSpotName.setText(event.getDiveSpot().getName());
-        diveSpotType.setText(Helpers.getDiveSpotType(event.getDiveSpot().getObject()));
-        diveSpotInfo.setBackground(infoWindowBackgroundImages.get(Helpers.getDiveSpotType(event.getDiveSpot().getObject())));
-        lastDiveSpotId = event.getDiveSpot().getId();
+        diveSpotName.setText(event.getDiveSpotShort().getName());
+        diveSpotType.setText(Helpers.getDiveSpotType(event.getDiveSpotShort().getObject()));
+        diveSpotInfo.setBackground(infoWindowBackgroundImages.get(Helpers.getDiveSpotType(event.getDiveSpotShort().getObject())));
+        lastDiveSpotId = event.getDiveSpotShort().getId();
         rating.removeAllViews();
-        for (int k = 0; k < Math.round(event.getDiveSpot().getRating()); k++) {
+        for (int k = 0; k < Math.round(event.getDiveSpotShort().getRating()); k++) {
             ImageView iv = new ImageView(getActivity());
             iv.setImageResource(R.drawable.ic_iw_star_full);
             iv.setPadding(0, 0, 5, 0);
             rating.addView(iv);
         }
-        for (int k = 0; k < 5 - Math.round(event.getDiveSpot().getRating()); k++) {
+        for (int k = 0; k < 5 - Math.round(event.getDiveSpotShort().getRating()); k++) {
             ImageView iv = new ImageView(getActivity());
             iv.setImageResource(R.drawable.ic_iw_star_empty);
             iv.setPadding(0, 0, 5, 0);
@@ -457,16 +453,16 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
                 });
     }
 
-    public void fillDiveSpots(ArrayList<DiveSpot> diveSpots) {
+    public void fillDiveSpots(ArrayList<DiveSpotShort> diveSpotShorts) {
         if (productListAdapter == null) {
-            productListAdapter = new DiveSpotsListAdapter(diveSpots, getActivity(), EventsTracker.SpotViewSource.FROM_LIST);
+            productListAdapter = new DiveSpotsListAdapter(diveSpotShorts, getActivity(), EventsTracker.SpotViewSource.FROM_LIST);
             rc.setAdapter(productListAdapter);
         } else {
-            productListAdapter = new DiveSpotsListAdapter(diveSpots, getActivity(), EventsTracker.SpotViewSource.FROM_LIST);
+            productListAdapter = new DiveSpotsListAdapter(diveSpotShorts, getActivity(), EventsTracker.SpotViewSource.FROM_LIST);
             rc.setAdapter(productListAdapter);
         }
 
-        if (diveSpots == null || diveSpots.isEmpty() || diveSpots.size() == 0) {
+        if (diveSpotShorts == null || diveSpotShorts.isEmpty() || diveSpotShorts.size() == 0) {
             rc.setVisibility(View.GONE);
             please.setVisibility(View.VISIBLE);
         } else {
