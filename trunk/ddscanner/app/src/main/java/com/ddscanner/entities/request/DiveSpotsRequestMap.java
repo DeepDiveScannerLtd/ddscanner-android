@@ -63,34 +63,34 @@ visibility (string, optional) - The Visibility filter
     }
 
     public void putSouthWestLat(double lat) {
-        put("latLeft", String.valueOf(lat));
+        put("lat_left", String.valueOf(lat));
     }
 
     public void putSouthWestLng(double lng) {
-        put("lngLeft", String.valueOf(lng));
+        put("lng_left", String.valueOf(lng));
     }
 
     public void putNorthEastLat(double lat) {
-        put("latRight", String.valueOf(lat));
+        put("lat_right", String.valueOf(lat));
     }
 
     public void putNorthEastLng(double lng) {
-        put("lngRight", String.valueOf(lng));
+        put("lng_right", String.valueOf(lng));
     }
 
     public double getSouthWestLat() {
-        return Double.valueOf((String) get("latLeft"));
+        return Double.valueOf((String) get("lat_left"));
     }
 
     public double getSouthWestLng() {
-        return Double.valueOf((String) get("lngLeft"));
+        return Double.valueOf((String) get("lng_left"));
     }
 
     public double getNorthEastLat() {
-        return Double.valueOf((String) get("latRight"));
+        return Double.valueOf((String) get("lat_right"));
     }
 
     public double getNorthEastLng() {
-        return Double.valueOf((String) get("lngRight"));
+        return Double.valueOf((String) get("lng_right"));
     }
 }
