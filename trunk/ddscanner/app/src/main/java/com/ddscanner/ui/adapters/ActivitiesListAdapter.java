@@ -14,12 +14,14 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.Activity;
-import com.ddscanner.ui.activities.DiveSpotDetailsActivity;
+import com.ddscanner.screens.divespot.details.DiveSpotDetailsActivity;
 import com.ddscanner.ui.activities.ForeignProfileActivity;
 import com.ddscanner.ui.views.TransformationRoundImage;
+import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;
 
@@ -76,7 +78,7 @@ public class ActivitiesListAdapter
                     holder.image.setImageDrawable(AppCompatDrawableManager.get()
                             .getDrawable(context, R.drawable.ic_notif_checkin));
                     Picasso.with(context)
-                            .load(activity.getDiveSpotShort().getPath() + activity.getDiveSpotShort().getImage())
+                            .load(DDScannerApplication.getInstance().getString(R.string.server_api_address) + Constants.IMAGE_PATH_PREVIEW + activity.getDiveSpotShort().getImage())
                             .resize(Math.round(Helpers.convertDpToPixel(40, context)),Math.round(Helpers.convertDpToPixel(40, context)))
                             .centerCrop()
                             .transform(new TransformationRoundImage(2,0))
@@ -90,7 +92,7 @@ public class ActivitiesListAdapter
                     holder.text.setText(spannableString);
                     holder.timeAgo.setText(Helpers.getDate(activity.getDate()));
                     Picasso.with(context)
-                            .load(activity.getDiveSpotShort().getPath() + activity.getDiveSpotShort().getImage())
+                            .load(DDScannerApplication.getInstance().getString(R.string.server_api_address) + Constants.IMAGE_PATH_PREVIEW + activity.getDiveSpotShort().getImage())
                             .resize(Math.round(Helpers.convertDpToPixel(40, context)),Math.round(Helpers.convertDpToPixel(40, context)))
                             .centerCrop()
                             .transform(new TransformationRoundImage(2,0))
@@ -106,7 +108,7 @@ public class ActivitiesListAdapter
                     holder.text.setText(spannableString);
                     holder.timeAgo.setText(Helpers.getDate(activity.getDate()));
                     Picasso.with(context)
-                            .load(activity.getDiveSpotShort().getPath() + activity.getDiveSpotShort().getImage())
+                            .load(DDScannerApplication.getInstance().getString(R.string.server_api_address) + Constants.IMAGE_PATH_PREVIEW + activity.getDiveSpotShort().getImage())
                             .resize(Math.round(Helpers.convertDpToPixel(40, context)),Math.round(Helpers.convertDpToPixel(40, context)))
                             .centerCrop()
                             .transform(new TransformationRoundImage(2,0))
