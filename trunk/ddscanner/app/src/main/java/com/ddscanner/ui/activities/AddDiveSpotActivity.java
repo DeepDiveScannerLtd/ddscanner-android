@@ -42,6 +42,7 @@ import com.ddscanner.entities.errors.ValidationError;
 import com.ddscanner.events.AddPhotoDoListEvent;
 import com.ddscanner.events.ImageDeletedEvent;
 import com.ddscanner.rest.DDScannerRestClient;
+import com.ddscanner.screens.divespot.details.DiveSpotDetailsActivity;
 import com.ddscanner.ui.adapters.AddPhotoToDsListAdapter;
 import com.ddscanner.ui.adapters.CharacteristicSpinnerItemsAdapter;
 import com.ddscanner.ui.adapters.LanguagesSpinnerAdapter;
@@ -478,7 +479,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         activeTextView.setBackground(ContextCompat.getDrawable(this, R.drawable.gray_rectangle));
         activeTextView.setOnClickListener(null);
 
-        disableTextView.setTextColor(ContextCompat.getColor(this, R.color.gray_bg));
+        disableTextView.setTextColor(ContextCompat.getColor(this, R.color.diactive_button_photo_color));
         disableTextView.setBackground(null);
         disableTextView.setOnClickListener(this);
     }

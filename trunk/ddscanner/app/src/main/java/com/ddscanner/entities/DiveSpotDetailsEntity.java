@@ -1,5 +1,6 @@
 package com.ddscanner.entities;
 
+import com.ddscanner.utils.Helpers;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
@@ -16,7 +17,6 @@ public class DiveSpotDetailsEntity extends DiveSpotShort {
     private int currents;
     @SerializedName("diving_skill")
     private int diverLevel;
-    private float rating;
     @SerializedName("reviews_count")
     private int reviewsCount;
     @SerializedName("is_verified")
@@ -24,6 +24,39 @@ public class DiveSpotDetailsEntity extends DiveSpotShort {
     private String depth;
     private User author;
     private FlagsEntity flags;
+    @SerializedName("checkins_count")
+    private int checkinCount;
+    @SerializedName("country_name")
+    private String countryName;
+    private List<DiveSpotSealife> sealifes;
+
+    public List<DiveSpotSealife> getSealifes() {
+        return sealifes;
+    }
+
+    public void setSealifes(List<DiveSpotSealife> sealifes) {
+        this.sealifes = sealifes;
+    }
+
+    public String getCountryName() {
+        return countryName;
+    }
+
+    public void setCountryName(String countryName) {
+        this.countryName = countryName;
+    }
+
+    public int getCheckinCount() {
+        return checkinCount;
+    }
+
+    public void setCheckinCount(int checkinCount) {
+        this.checkinCount = checkinCount;
+    }
+
+    public int getVerifiedValue() {
+        return verifiedValue;
+    }
 
     public String getDescription() {
         return description;
@@ -65,30 +98,20 @@ public class DiveSpotDetailsEntity extends DiveSpotShort {
         this.visibilityMax = visibilityMax;
     }
 
-    public int getCurrents() {
-        return currents;
+    public String getCurrents() {
+        return Helpers.getCurrentsValue(currents);
     }
 
     public void setCurrents(int currents) {
         this.currents = currents;
     }
 
-    public int getDiverLevel() {
-        return diverLevel;
+    public String getDiverLevel() {
+        return Helpers.getDiverLevel(diverLevel);
     }
 
     public void setDiverLevel(int diverLevel) {
         this.diverLevel = diverLevel;
-    }
-
-    @Override
-    public float getRating() {
-        return rating;
-    }
-
-    @Override
-    public void setRating(float rating) {
-        this.rating = rating;
     }
 
     public int getReviewsCount() {

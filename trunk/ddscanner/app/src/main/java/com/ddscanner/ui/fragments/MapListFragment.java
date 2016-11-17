@@ -38,7 +38,7 @@ import com.ddscanner.events.MarkerClickEvent;
 import com.ddscanner.events.OnMapClickEvent;
 import com.ddscanner.events.OpenAddDiveSpotActivity;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
-import com.ddscanner.ui.activities.DiveSpotDetailsActivity;
+import com.ddscanner.screens.divespot.details.DiveSpotDetailsActivity;
 import com.ddscanner.ui.adapters.DiveSpotsListAdapter;
 import com.ddscanner.ui.managers.DiveSpotsClusterManager;
 import com.ddscanner.utils.ActivitiesRequestCodes;
@@ -372,8 +372,8 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
                     }
                 });
         diveSpotName.setText(event.getDiveSpotShort().getName());
-        diveSpotType.setText(Helpers.getDiveSpotType(event.getDiveSpotShort().getObject()));
-        diveSpotInfo.setBackground(infoWindowBackgroundImages.get(Helpers.getDiveSpotType(event.getDiveSpotShort().getObject())));
+        diveSpotType.setText(event.getDiveSpotShort().getObject());
+        diveSpotInfo.setBackground(infoWindowBackgroundImages.get(event.getDiveSpotShort().getObject()));
         lastDiveSpotId = event.getDiveSpotShort().getId();
         rating.removeAllViews();
         for (int k = 0; k < Math.round(event.getDiveSpotShort().getRating()); k++) {

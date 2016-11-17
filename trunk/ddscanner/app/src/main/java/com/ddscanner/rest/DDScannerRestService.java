@@ -23,6 +23,7 @@ import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
 
 public interface DDScannerRestService {
@@ -287,5 +288,8 @@ public interface DDScannerRestService {
 
     @GET("v2_0/divespots.filter")
     Call<ResponseBody> getDiveSpotsByFilter(@QueryMap Map<String, Object> map);
+
+    @GET("v2_0/divespot.get")
+    Call<ResponseBody> getDiveSpotDetails(@Query("id") String id);
 
 }

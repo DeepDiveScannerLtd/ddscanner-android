@@ -12,31 +12,26 @@ import android.widget.TextView;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.Image;
+import com.ddscanner.entities.Photo;
 import com.ddscanner.events.OpenPhotosActivityEvent;
 import com.ddscanner.ui.views.TransformationRoundImage;
+import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.ImageLoadedCallback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-/**
- * Created by lashket on 26.4.16.
- */
-public class DiveSpotsPhotosAdapter extends RecyclerView.Adapter<DiveSpotsPhotosAdapter.DiveSpotsPhotosAdapterViewHolder> {
+public class DiveSpotPhotosAdapter extends RecyclerView.Adapter<DiveSpotPhotosAdapter.DiveSpotsPhotosAdapterViewHolder>{
 
-    public ArrayList<Image> photos;
+    public ArrayList<Photo> photos;
     public String path;
     public Context context;
-    public ArrayList<Image> reviewsImages;
     private int photoSize;
 
-    public DiveSpotsPhotosAdapter(ArrayList<Image> photos, String path,
-                                  Context context,ArrayList<Image> reviewsImages) {
+    public DiveSpotPhotosAdapter(ArrayList<Photo> photos, Context context) {
         this.photos = photos;
-        this.path = path;
         this.context = context;
-        this.reviewsImages = reviewsImages;
         photoSize = (int) context.getResources().getDimension(R.dimen.image_in_divespot_small);
     }
 
@@ -52,8 +47,8 @@ public class DiveSpotsPhotosAdapter extends RecyclerView.Adapter<DiveSpotsPhotos
     public void onBindViewHolder(final DiveSpotsPhotosAdapterViewHolder holder, int position) {
         if (photos.size() > 8 && position == 7) {
             Picasso.with(context)
-                    .load(path + photos.get(position).getName())
-                    .transform(new TransformationRoundImage(2,0))
+                    .load(DDScannerApplication.getInstance().getString(R.string.server_api_address) + Constants.IMAGE_PATH_PREVIEW + photos.get(position).getUrl())
+                    .transform(new TransformationRoundImage(Math.round(Helpers.convertDpToPixel(2, context)),0))
                     .resize(Math.round(Helpers.convertDpToPixel(photoSize, context)),Math.round(Helpers.convertDpToPixel(photoSize, context)))
                     .centerCrop()
                     .into(holder.photo);
@@ -61,8 +56,8 @@ public class DiveSpotsPhotosAdapter extends RecyclerView.Adapter<DiveSpotsPhotos
             holder.morePhotos.setVisibility(View.VISIBLE);
         } else {
             Picasso.with(context)
-                    .load(path + photos.get(position).getName())
-                    .transform(new TransformationRoundImage(2,0))
+                    .load(DDScannerApplication.getInstance().getString(R.string.server_api_address) + Constants.IMAGE_PATH_PREVIEW + photos.get(position).getUrl())
+                    .transform(new TransformationRoundImage(Math.round(Helpers.convertDpToPixel(2, context)),0))
                     .resize(Math.round(Helpers.convertDpToPixel(photoSize, context)),Math.round(Helpers.convertDpToPixel(photoSize, context)))
                     .centerCrop()
                     .into(holder.photo, new ImageLoadedCallback(holder.progressBar){

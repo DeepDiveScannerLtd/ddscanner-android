@@ -57,6 +57,8 @@
 
     <color name="gray_bg">#f6f6f6</color>
 
+    <color name="diactive_button_photo_color">#afafaf</color>
+
     <color name="error">#d50001</color>
 
     <color name="defaultGrayTitleColor">#B2B2B2</color>

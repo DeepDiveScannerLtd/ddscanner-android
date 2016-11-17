@@ -534,15 +534,42 @@ public class Helpers {
 
     public static String getDiveSpotType(int position) {
         List<String> types = new ArrayList<>();
-        types.add("cave");
-        types.add("reef");
-        types.add("wreck");
-        types.add("other");
+        types.add("Cave");
+        types.add("Reef");
+        types.add("Wreck");
+        types.add("Other");
         if (types.get(position - 1) == null) {
             return "";
         }
         return types.get(position - 1);
     }
 
+    public static String getDiverLevel(int position) {
+        List<String> levels = new ArrayList<>();
+        levels.add("Beginner");
+        levels.add("Advanced");
+        levels.add("Expert");
+        if (levels.get(position - 1) == null) {
+            return "";
+        }
+        return levels.get(position - 1);
+    }
+
+    public static String getCurrentsValue(int position) {
+        List<String> currents = new ArrayList<>();
+        currents.add("None");
+        currents.add("Variable");
+        currents.add("Low");
+        currents.add("Low - Moderate");
+        currents.add("Mild");
+        currents.add("Mild - Moderate");
+        currents.add("Moderate");
+        currents.add("Moderate - Strong");
+        currents.add("Strong");
+        if (currents.get(position - 1) == null) {
+            return "";
+        }
+        return currents.get(position - 1);
+    }
 
 }

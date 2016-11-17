@@ -22,10 +22,9 @@ public class SealifeDetailsActivity extends AppCompatActivity {
 
     private ActivitySealifeFullBinding binding;
 
-    public static void show(Context context, Sealife sealife, String pathMedium) {
+    public static void show(Context context, String id) {
         Intent intent = new Intent(context, SealifeDetailsActivity.class);
-        intent.putExtra(EXTRA_SEALIFE, sealife);
-        intent.putExtra(EXTRA_PATH, pathMedium);
+        intent.putExtra(EXTRA_SEALIFE, id);
         context.startActivity(intent);
     }
 

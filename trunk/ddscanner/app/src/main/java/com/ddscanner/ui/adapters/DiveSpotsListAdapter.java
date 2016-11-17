@@ -16,7 +16,7 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.DiveSpotShort;
-import com.ddscanner.ui.activities.DiveSpotDetailsActivity;
+import com.ddscanner.screens.divespot.details.DiveSpotDetailsActivity;
 import com.ddscanner.ui.views.TransformationRoundImage;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
@@ -92,7 +92,7 @@ public class DiveSpotsListAdapter
             iv.setPadding(0, 0, 5, 0);
             productListViewHolder.stars.addView(iv);
         }
-        productListViewHolder.object.setText(Helpers.getDiveSpotType(divespot.getObject()));
+        productListViewHolder.object.setText(divespot.getObject());
     }
 
     @Override

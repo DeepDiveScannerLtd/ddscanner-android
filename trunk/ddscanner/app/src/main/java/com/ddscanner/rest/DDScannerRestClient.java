@@ -7,6 +7,7 @@ import com.ddscanner.entities.AchievmentsResponseEntity;
 import com.ddscanner.entities.CheckIns;
 import com.ddscanner.entities.Comments;
 import com.ddscanner.entities.DiveCentersResponseEntity;
+import com.ddscanner.entities.DiveSpotResponseEntity;
 import com.ddscanner.entities.DiveSpotShort;
 import com.ddscanner.entities.DiveSpotDetails;
 import com.ddscanner.entities.DivespotsWrapper;
@@ -51,15 +52,13 @@ public class DDScannerRestClient {
 
     protected Gson gson = new Gson();
 
-    public void getDiveSpotDetails(String diveSpotId, @NonNull final ResultListener<DiveSpotDetails> resultListener) {
-        Map<String, String> map = getUserQueryMapRequest();
-        map.put("isImageAuthor", "true");
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveSpotById(diveSpotId, map);
-        call.enqueue(new ResponseEntityCallback<DiveSpotDetails>(gson, resultListener) {
+    public void getDiveSpotDetails(String diveSpotId, @NonNull final ResultListener<DiveSpotResponseEntity> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveSpotDetails(diveSpotId);
+        call.enqueue(new ResponseEntityCallback<DiveSpotResponseEntity>(gson, resultListener) {
             @Override
-            void handleResponseString(DDScannerRestClient.ResultListener<DiveSpotDetails> resultListener, String responseString) {
-                DiveSpotDetails diveSpotDetails = new Gson().fromJson(responseString, DiveSpotDetails.class);
-                resultListener.onSuccess(diveSpotDetails);
+            void handleResponseString(DDScannerRestClient.ResultListener<DiveSpotResponseEntity> resultListener, String responseString) {
+                DiveSpotResponseEntity diveSpotResponseEntity = gson.fromJson(responseString, DiveSpotResponseEntity.class);
+                resultListener.onSuccess(diveSpotResponseEntity);
             }
         });
     }
