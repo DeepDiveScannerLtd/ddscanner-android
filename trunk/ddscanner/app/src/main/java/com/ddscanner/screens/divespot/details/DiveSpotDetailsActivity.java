@@ -9,6 +9,8 @@ import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.databinding.DataBindingUtil;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -40,12 +42,14 @@ import com.ddscanner.entities.DiveSpotSealife;
 import com.ddscanner.entities.Photo;
 import com.ddscanner.events.OpenPhotosActivityEvent;
 import com.ddscanner.rest.DDScannerRestClient;
+import com.ddscanner.ui.activities.AddDiveSpotActivity;
 import com.ddscanner.ui.activities.AddPhotosDoDiveSpotActivity;
 import com.ddscanner.ui.activities.DiveCentersActivity;
 import com.ddscanner.ui.activities.EditDiveSpotActivity;
 import com.ddscanner.ui.activities.LeaveReviewActivity;
 import com.ddscanner.ui.activities.LoginActivity;
 import com.ddscanner.ui.activities.ShowDsLocationActivity;
+import com.ddscanner.ui.adapters.AddPhotoToDsListAdapter;
 import com.ddscanner.ui.adapters.DiveSpotPhotosAdapter;
 import com.ddscanner.ui.adapters.SealifeListAdapter;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
@@ -63,6 +67,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.squareup.otto.Subscribe;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -362,7 +367,14 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
             LoginActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_PICK_PHOTOS);
         } else {
-            MultiImageSelector.create().showCamera(false).multi().count(3).start(this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_PICK_PHOTOS);
+            Intent intent = new Intent();
+            intent.setType("image/*");
+            if (Build.VERSION.SDK_INT >= 18) {
+                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+            }
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+            startActivityForResult(Intent.createChooser(intent, "Select Picture"), ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_PICK_PHOTOS);
         }
     }
 
@@ -557,9 +569,57 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_PICK_PHOTOS:
                 if (resultCode == RESULT_OK) {
-                    List<String> path = data.getStringArrayListExtra(MultiImageSelectorActivity
-                            .EXTRA_RESULT);
-                    AddPhotosDoDiveSpotActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_ADD_PHOTOS_ACTIVITY, (ArrayList<String>) path, String.valueOf(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getId()));
+                    List<String> urisList = new ArrayList<>();
+                    Uri uri = Uri.parse("");
+                    if (resultCode == RESULT_OK) {
+                        if (data.getClipData() != null) {
+                            for (int i = 0; i < data.getClipData().getItemCount(); i++) {
+                                String filename = "DDScanner" + String.valueOf(System.currentTimeMillis());
+                                try {
+                                    uri = data.getClipData().getItemAt(i).getUri();
+                                    String mimeType = getContentResolver().getType(uri);
+                                    String sourcePath = getExternalFilesDir(null).toString();
+                                    File file = new File(sourcePath + "/" + filename);
+                                    if (Helpers.isFileImage(uri.getPath()) || mimeType.contains("image")) {
+                                        try {
+                                            Helpers.copyFileStream(file, uri, this);
+                                            Log.i(TAG, file.toString());
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                        urisList.add(file.getPath());
+                                    } else {
+                                        Toast.makeText(this, "You can choose only images", Toast.LENGTH_SHORT).show();
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                        if (data.getData() != null) {
+                            String filename = "DDScanner" + String.valueOf(System.currentTimeMillis());
+                            try {
+                                uri = data.getData();
+                                String mimeType = getContentResolver().getType(uri);
+                                String sourcePath = getExternalFilesDir(null).toString();
+                                File file = new File(sourcePath + "/" + filename);
+                                if (Helpers.isFileImage(uri.getPath()) || mimeType.contains("image")) {
+                                    try {
+                                        Helpers.copyFileStream(file, uri, this);
+                                        Log.i(TAG, file.toString());
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                    urisList.add(file.getPath());
+                                } else {
+                                    Toast.makeText(this, "You can choose only images", Toast.LENGTH_SHORT).show();
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        AddPhotosDoDiveSpotActivity.showForAddMaps(DiveSpotDetailsActivity.this,(ArrayList<String>) urisList, String.valueOf(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getId()));
+                    }
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_ADD_PHOTOS_ACTIVITY:
@@ -569,7 +629,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_PICK_PHOTOS:
                 if (resultCode == RESULT_OK) {
-                    MultiImageSelector.create().showCamera(false).multi().count(3).start(this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_ADD_PHOTOS_ACTIVITY);
+
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_VALIDATE_SPOT:
@@ -884,7 +944,11 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     }
 
     public void addPhotoToDiveSpotButtonClicked(View view) {
-
+        if (checkReadStoragePermission(this)) {
+            addPhotosToDiveSpot();
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, Constants.DIVE_SPOT_DETAILS_ACTIVITY_REQUEST_CODE_PERMISSION_READ_STORAGE);
+        }
     }
 
     public void photosButtonClicked(View view) {
