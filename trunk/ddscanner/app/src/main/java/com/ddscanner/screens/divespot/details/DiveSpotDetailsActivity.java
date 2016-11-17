@@ -20,10 +20,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatDrawableManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.RatingBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
@@ -77,6 +79,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private boolean isCheckedIn = false;
     private boolean isFavorite = false;
     private boolean isNewDiveSpot = false;
+    private boolean isMapsShown = false;
 
     /*Ui*/
     private MapFragment mapFragment;
@@ -139,6 +142,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_dive_spot_details);
+        binding.setHandlers(this);
         findViews();
         toolbarSettings();
         isNewDiveSpot = getIntent().getBooleanExtra(Constants.DIVE_SPOT_DETAILS_ACTIVITY_EXTRA_IS_FROM_AD_DIVE_SPOT, false);
@@ -194,16 +198,19 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 //            }
 //        });
 //
-//        if (diveSpot.getImages() != null) {
-//            btnAddPhoto.setVisibility(View.GONE);
-//            photosRecyclerView.setVisibility(View.VISIBLE);
-//        }
-//
         if (binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPhotos() != null) {
+            DiveSpotPhotosAdapter photosAdapter = new DiveSpotPhotosAdapter((ArrayList<Photo>) binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPhotos(), DiveSpotDetailsActivity.this);
             binding.photosRc.setVisibility(View.VISIBLE);
             binding.photosRc.setLayoutManager(new GridLayoutManager(DiveSpotDetailsActivity.this, 4));
-            binding.photosRc.setAdapter(new DiveSpotPhotosAdapter((ArrayList<Photo>) binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPhotos(), DiveSpotDetailsActivity.this));
+            binding.photosRc.setAdapter(photosAdapter);
         }
+
+        if (binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getMaps() != null) {
+            DiveSpotPhotosAdapter mapsAdapter = new DiveSpotPhotosAdapter((ArrayList<Photo>) binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getMaps(), DiveSpotDetailsActivity.this);
+            binding.mapsRc.setLayoutManager(new GridLayoutManager(DiveSpotDetailsActivity.this, 4));
+            binding.mapsRc.setAdapter(mapsAdapter);
+        }
+
         LinearLayoutManager layoutManager = new LinearLayoutManager(DiveSpotDetailsActivity.this);
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         binding.sealifeRc.setNestedScrollingEnabled(false);
@@ -874,6 +881,36 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
     public void showCheckinsActivity(View view) {
 
+    }
+
+    public void addPhotoToDiveSpotButtonClicked(View view) {
+
+    }
+
+    public void photosButtonClicked(View view) {
+        if (isMapsShown) {
+            changeViewState(binding.photosButton, binding.maps);
+            isMapsShown = !isMapsShown;
+            binding.photosRc.setVisibility(View.VISIBLE);
+            binding.mapsRc.setVisibility(View.GONE);
+        }
+    }
+
+    public void mapsButtonClicked(View view) {
+        if (!isMapsShown) {
+            changeViewState(binding.maps, binding.photosButton);
+            isMapsShown = !isMapsShown;
+            binding.photosRc.setVisibility(View.GONE);
+            binding.mapsRc.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void changeViewState(TextView activeTextView, TextView disableTextView) {
+        activeTextView.setTextColor(ContextCompat.getColor(this, R.color.black_text));
+        activeTextView.setBackground(ContextCompat.getDrawable(this, R.drawable.gray_rectangle));
+
+        disableTextView.setTextColor(ContextCompat.getColor(this, R.color.diactive_button_photo_color));
+        disableTextView.setBackground(null);
     }
 
 }
