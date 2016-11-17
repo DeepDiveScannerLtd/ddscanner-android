@@ -15,6 +15,7 @@ import com.ddscanner.entities.EditDiveSpotWrapper;
 import com.ddscanner.entities.FiltersResponseEntity;
 import com.ddscanner.entities.ForeignUserDislikesWrapper;
 import com.ddscanner.entities.ForeignUserLikeWrapper;
+import com.ddscanner.entities.MapsAddedResposeEntity;
 import com.ddscanner.entities.Notifications;
 import com.ddscanner.entities.RegisterResponse;
 import com.ddscanner.entities.Sealife;
@@ -39,10 +40,13 @@ import com.google.gson.Gson;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -510,6 +514,25 @@ public class DDScannerRestClient {
 
     public void getSeaLifeDetails(String seaLifeId, @NonNull ResultListener<Sealife> resultListener) {
         // TODO Implement
+    }
+
+    public void postMapsToDiveSpot(String id, ArrayList<String> images, final ResultListener<MapsAddedResposeEntity> resultListener) {
+        List<MultipartBody.Part> imagesToSend = new ArrayList<>();
+        for (int i = 0; i < images.size(); i++) {
+            File image = new File(images.get(i));
+            RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), image);
+            MultipartBody.Part part = MultipartBody.Part.createFormData(Constants.ADD_DIVE_SPOT_ACTIVITY_IMAGES_ARRAY,
+                    image.getName(), requestFile);
+            imagesToSend.add(part);
+        }
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().addMapsToDiveSpot(RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), id), imagesToSend );
+        call.enqueue(new ResponseEntityCallback<MapsAddedResposeEntity>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<MapsAddedResposeEntity> resultListener, String responseString) throws JSONException {
+                MapsAddedResposeEntity mapsAddedResposeEntity = gson.fromJson(responseString, MapsAddedResposeEntity.class);
+                resultListener.onSuccess(mapsAddedResposeEntity);
+            }
+        });
     }
 
     private ReportRequest getReportRequest(String reportType, String reportDescription) {

@@ -292,4 +292,8 @@ public interface DDScannerRestService {
     @GET("v2_0/divespot.get")
     Call<ResponseBody> getDiveSpotDetails(@Query("id") String id);
 
+    @Multipart
+    @POST("v2_0/map.add")
+    Call<ResponseBody> addMapsToDiveSpot(@Part("dive_spot_id") RequestBody  id, @Part List<MultipartBody.Part> image);
+
 }
