@@ -29,6 +29,15 @@ public class DiveSpotDetailsEntity extends DiveSpotShort {
     @SerializedName("country_name")
     private String countryName;
     private List<DiveSpotSealife> sealifes;
+    private List<Photo> maps;
+
+    public List<Photo> getMaps() {
+        return maps;
+    }
+
+    public void setMaps(List<Photo> maps) {
+        this.maps = maps;
+    }
 
     public List<DiveSpotSealife> getSealifes() {
         return sealifes;

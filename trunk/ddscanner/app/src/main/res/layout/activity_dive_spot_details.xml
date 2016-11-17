@@ -316,7 +316,8 @@
                                     android:layout_marginLeft="20dp"
                                     android:layout_marginTop="15dp"
                                     android:text="@string/photos_title"
-                                    style="@style/PhotosTabActive"/>
+                                    style="@style/PhotosTabActive"
+                                    android:onClick="@{handlers::photosButtonClicked}"/>
                                 <TextView
                                     android:id="@+id/maps"
                                     android:layout_toRightOf="@+id/photos_button"
@@ -324,7 +325,8 @@
                                     android:layout_height="wrap_content"
                                     android:text="@string/maps"
                                     android:layout_marginTop="15dp"
-                                    style="@style/PhotosTabDisabled"/>
+                                    style="@style/PhotosTabDisabled"
+                                    android:onClick="@{handlers::mapsButtonClicked}"/>
 
                                 <ImageView
                                     android:layout_alignParentRight="true"
@@ -332,7 +334,8 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:padding="22dp"
-                                    android:src="@drawable/ic_addds_plus"/>
+                                    android:src="@drawable/ic_addds_plus"
+                                    android:onClick="@{handlers::addPhotoToDiveSpotButtonClicked}"/>
 
                                 <android.support.v7.widget.RecyclerView
                                     android:id="@+id/photos_rc"
