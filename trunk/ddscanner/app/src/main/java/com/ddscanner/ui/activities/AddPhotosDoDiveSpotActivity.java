@@ -57,17 +57,33 @@ public class AddPhotosDoDiveSpotActivity extends AppCompatActivity implements Vi
     private DDScannerRestClient.ResultListener<MapsAddedResposeEntity> mapsAddedResposeEntityResultListener = new DDScannerRestClient.ResultListener<MapsAddedResposeEntity>() {
         @Override
         public void onSuccess(MapsAddedResposeEntity result) {
-            Log.i("TAG", result.toString());
+            materialDialog.dismiss();
+            EventsTracker.trackDiveSpotPhotoAdded();
+            setResult(RESULT_OK);
+            finish();
         }
 
         @Override
         public void onConnectionFailure() {
-
+            materialDialog.dismiss();
+            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-
+            materialDialog.dismiss();
+            switch (errorType) {
+                case UNAUTHORIZED_401:
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logout();
+                    LoginActivity.showForResult(AddPhotosDoDiveSpotActivity.this, ActivitiesRequestCodes.REQUEST_CODE_ADD_PHOTOS_DO_DIVE_SPOT_ACTIVITY_LOGIN_TO_SEND);
+                    break;
+                case DIVE_SPOT_NOT_FOUND_ERROR_C802:
+                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_message_dive_spot_not_found, DialogsRequestCodes.DRC_ADD_PHOTOS_ACTIVITY_DIVE_SPOT_NOT_FOUND, false);
+                    break;
+                default:
+                    Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);
+                    break;
+            }
         }
     };
 
@@ -137,6 +153,7 @@ public class AddPhotosDoDiveSpotActivity extends AppCompatActivity implements Vi
 
     private void sendRequest() {
         if (isMap) {
+            materialDialog.show();
             DDScannerApplication.getInstance().getDdScannerRestClient().postMapsToDiveSpot(dsId, images, mapsAddedResposeEntityResultListener);
             return;
         }
