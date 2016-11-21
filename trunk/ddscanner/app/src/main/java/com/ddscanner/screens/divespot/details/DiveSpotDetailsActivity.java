@@ -22,6 +22,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatDrawableManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -191,18 +192,17 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         binding.ratingBar.setOnRatingBarChangeListener(this);
         isFavorite = binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getFlags().isFavorite();
         updateMenuItems(menu, isFavorite);
-//        diveSpotDescription.post(new Runnable() {
-//            @Override
-//            public void run() {
-//                diveSpotDescription.setText(diveSpot.getDescription());
-//                if (diveSpotDescription.getLineCount() > 3) {
-//                    diveSpotDescription.setMaxLines(3);
-//                    diveSpotDescription.setEllipsize(TextUtils.TruncateAt.END);
-//                    showMore.setVisibility(View.VISIBLE);
-//                }
-//            }
-//        });
-//
+        binding.divePlaceDescription.post(new Runnable() {
+            @Override
+            public void run() {
+                if (binding.divePlaceDescription.getLineCount() > 3) {
+                    binding.divePlaceDescription.setMaxLines(3);
+                    binding.divePlaceDescription.setEllipsize(TextUtils.TruncateAt.END);
+                    binding.showmore.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
         if (binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPhotos() != null) {
             DiveSpotPhotosAdapter photosAdapter = new DiveSpotPhotosAdapter((ArrayList<Photo>) binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPhotos(), DiveSpotDetailsActivity.this);
             binding.photosRc.setVisibility(View.VISIBLE);
@@ -293,11 +293,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             case R.id.check_in_peoples:
                 EventsTracker.trackDiveSpotCheckinsView();
               //  CheckInPeoplesActivity.show(DiveSpotDetailsActivity.this, (ArrayList<UserOld>) usersCheckins);
-                break;
-            case R.id.showmore:
-//                showMore.setVisibility(View.GONE);
-//                diveSpotDescription.setMaxLines(10000);
-//                diveSpotDescription.setEllipsize(null);
                 break;
             case R.id.fab_checkin:
 //                if (isCheckedIn) {
@@ -936,7 +931,9 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     }
 
     public void showMoreDescription(View view) {
-
+        binding.showmore.setVisibility(View.GONE);
+        binding.divePlaceDescription.setMaxLines(10000);
+        binding.divePlaceDescription.setEllipsize(null);
     }
 
     public void showCheckinsActivity(View view) {
