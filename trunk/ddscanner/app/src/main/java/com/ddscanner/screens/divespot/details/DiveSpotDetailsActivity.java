@@ -43,15 +43,12 @@ import com.ddscanner.entities.DiveSpotSealife;
 import com.ddscanner.entities.Photo;
 import com.ddscanner.events.OpenPhotosActivityEvent;
 import com.ddscanner.rest.DDScannerRestClient;
-import com.ddscanner.ui.activities.AddDiveSpotActivity;
 import com.ddscanner.ui.activities.AddPhotosDoDiveSpotActivity;
 import com.ddscanner.ui.activities.DiveCentersActivity;
 import com.ddscanner.ui.activities.EditDiveSpotActivity;
 import com.ddscanner.ui.activities.LeaveReviewActivity;
 import com.ddscanner.ui.activities.LoginActivity;
 import com.ddscanner.ui.activities.ShowDsLocationActivity;
-import com.ddscanner.ui.adapters.AddPhotoToDsListAdapter;
-import com.ddscanner.ui.adapters.DiveSpotPhotosAdapter;
 import com.ddscanner.ui.adapters.SealifeListAdapter;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
@@ -71,9 +68,6 @@ import com.squareup.otto.Subscribe;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
-import me.nereo.multi_image_selector.MultiImageSelector;
-import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 
 public class DiveSpotDetailsActivity extends AppCompatActivity implements View.OnClickListener, RatingBar.OnRatingBarChangeListener, InfoDialogFragment.DialogClosedListener {
 

@@ -1,4 +1,4 @@
-package com.ddscanner.ui.adapters;
+package com.ddscanner.screens.divespot.details;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
-import com.ddscanner.entities.Image;
 import com.ddscanner.entities.Photo;
 import com.ddscanner.events.OpenPhotosActivityEvent;
 import com.ddscanner.ui.views.TransformationRoundImage;
