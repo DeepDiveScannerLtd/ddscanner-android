@@ -197,17 +197,20 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             }
         });
 
+        binding.photosRc.setLayoutManager(new GridLayoutManager(DiveSpotDetailsActivity.this, 4));
+        binding.mapsRc.setLayoutManager(new GridLayoutManager(DiveSpotDetailsActivity.this, 4));
+
         if (binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPhotos() != null) {
             DiveSpotPhotosAdapter photosAdapter = new DiveSpotPhotosAdapter((ArrayList<Photo>) binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPhotos(), DiveSpotDetailsActivity.this);
             binding.photosRc.setVisibility(View.VISIBLE);
-            binding.photosRc.setLayoutManager(new GridLayoutManager(DiveSpotDetailsActivity.this, 4));
+            binding.addPhotosLayout.setVisibility(View.GONE);
             binding.photosRc.setAdapter(photosAdapter);
         }
 
         if (binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getMaps() != null) {
             DiveSpotPhotosAdapter mapsAdapter = new DiveSpotPhotosAdapter((ArrayList<Photo>) binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getMaps(), DiveSpotDetailsActivity.this);
-            binding.mapsRc.setLayoutManager(new GridLayoutManager(DiveSpotDetailsActivity.this, 4));
             binding.mapsRc.setAdapter(mapsAdapter);
+            binding.addPhotosLayout.setVisibility(View.GONE);
         }
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(DiveSpotDetailsActivity.this);
@@ -946,8 +949,14 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         if (isMapsShown) {
             changeViewState(binding.photosButton, binding.maps);
             isMapsShown = !isMapsShown;
-            binding.photosRc.setVisibility(View.VISIBLE);
             binding.mapsRc.setVisibility(View.GONE);
+            if (binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPhotos() != null) {
+                binding.photosRc.setVisibility(View.VISIBLE);
+                binding.addPhotosLayout.setVisibility(View.GONE);
+                return;
+            }
+            binding.photosRc.setVisibility(View.GONE);
+            binding.addPhotosLayout.setVisibility(View.VISIBLE);
         }
     }
 
@@ -956,7 +965,13 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             changeViewState(binding.maps, binding.photosButton);
             isMapsShown = !isMapsShown;
             binding.photosRc.setVisibility(View.GONE);
-            binding.mapsRc.setVisibility(View.VISIBLE);
+            if (binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getMaps() != null) {
+                binding.mapsRc.setVisibility(View.VISIBLE);
+                binding.addPhotosLayout.setVisibility(View.GONE);
+                return;
+            }
+            binding.mapsRc.setVisibility(View.GONE);
+            binding.addPhotosLayout.setVisibility(View.VISIBLE);
         }
     }
 

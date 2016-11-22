@@ -336,9 +336,26 @@
                                     android:padding="22dp"
                                     android:src="@drawable/ic_addds_plus"
                                     android:onClick="@{handlers::addPhotoToDiveSpotButtonClicked}"/>
-
+                                <LinearLayout
+                                    android:layout_marginTop="13dp"
+                                    android:layout_marginLeft="20dp"
+                                    android:layout_marginBottom="20dp"
+                                    android:layout_below="@+id/maps"
+                                    android:id="@+id/add_photos_layout"
+                                    xmlns:android="http://schemas.android.com/apk/res/android"
+                                    android:orientation="vertical" android:layout_width="75dp"
+                                    android:layout_height="75dp"
+                                    android:gravity="center"
+                                    android:background="@drawable/gray_rectangle"
+                                    android:onClick="@{handlers::addPhotoToDiveSpotButtonClicked}">
+                                    <ImageView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:src="@drawable/ic_addds_plus"/>
+                                </LinearLayout>
                                 <android.support.v7.widget.RecyclerView
                                     android:id="@+id/photos_rc"
+                                    android:visibility="gone"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_below="@+id/maps"

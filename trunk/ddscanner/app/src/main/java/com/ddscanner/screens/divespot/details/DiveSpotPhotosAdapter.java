@@ -81,7 +81,7 @@ public class DiveSpotPhotosAdapter extends RecyclerView.Adapter<DiveSpotPhotosAd
         return photos.size();
     }
 
-    public class DiveSpotsPhotosAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class DiveSpotsPhotosAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         protected ImageView photo;
         protected TextView morePhotos;
@@ -99,6 +99,19 @@ public class DiveSpotPhotosAdapter extends RecyclerView.Adapter<DiveSpotPhotosAd
         public void onClick(View v) {
 //            DiveSpotPhotosActivity.showForResult(context, photos, path, reviewsImages);
             DDScannerApplication.bus.post(new OpenPhotosActivityEvent());
+        }
+    }
+
+    class AddPhotoViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
+        public AddPhotoViewHolder(View view) {
+            super(view);
+            view.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+
         }
     }
 
