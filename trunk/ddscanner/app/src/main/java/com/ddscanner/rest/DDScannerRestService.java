@@ -293,7 +293,7 @@ public interface DDScannerRestService {
     Call<ResponseBody> getDiveSpotDetails(@Query("id") String id);
 
     @Multipart
-    @POST("v2_0/map.add")
+    @POST("v2_0/divespot.map.add")
     Call<ResponseBody> addMapsToDiveSpot(@Part("dive_spot_id") RequestBody  id, @Part List<MultipartBody.Part> image);
 
 }
