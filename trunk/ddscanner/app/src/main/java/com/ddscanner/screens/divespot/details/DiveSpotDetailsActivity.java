@@ -953,10 +953,12 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             if (binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPhotos() != null) {
                 binding.photosRc.setVisibility(View.VISIBLE);
                 binding.addPhotosLayout.setVisibility(View.GONE);
+                binding.addPhotosButon.setVisibility(View.VISIBLE);
                 return;
             }
             binding.photosRc.setVisibility(View.GONE);
             binding.addPhotosLayout.setVisibility(View.VISIBLE);
+            binding.addPhotosButon.setVisibility(View.GONE);
         }
     }
 
@@ -968,10 +970,12 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             if (binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getMaps() != null) {
                 binding.mapsRc.setVisibility(View.VISIBLE);
                 binding.addPhotosLayout.setVisibility(View.GONE);
+                binding.addPhotosButon.setVisibility(View.VISIBLE);
                 return;
             }
             binding.mapsRc.setVisibility(View.GONE);
             binding.addPhotosLayout.setVisibility(View.VISIBLE);
+            binding.addPhotosButon.setVisibility(View.GONE);
         }
     }
 
