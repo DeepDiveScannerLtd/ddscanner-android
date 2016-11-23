@@ -123,14 +123,6 @@ public class AllNotificationsFragment extends Fragment {
             recyclerView.setAdapter(new NotificationsListAdapter(activities, getContext(), getFragmentManager()));
             return;
         }
-//        if (!isHasSections) {
-//            if (activities != null && this.activities != null) {
-//                if (checkIsListDifferent(activities, this.activities)) {
-//                    isHasSections = false;
-//                    return;
-//                }
-//            }
-//        }
         this.activities = activities;
         if (Helpers.comparingTimes(DDScannerApplication.getInstance().getSharedPreferenceHelper().getLastShowingNotificationTime(),
                 activities.get(activities.size() -1).getDate()) || !Helpers.comparingTimes(DDScannerApplication.getInstance().getSharedPreferenceHelper().getLastShowingNotificationTime(), activities.get(0).getDate())) {
@@ -146,18 +138,13 @@ public class AllNotificationsFragment extends Fragment {
                 activities.get(i).getDate()) && i < activities.size() - 1) {
             i++;
         }
-        NotificationsListAdapter notificationsListAdapter = new NotificationsListAdapter(
-                activities, getContext(), getFragmentManager());
-        List<SectionedRecyclerViewAdapter.Section> sections =
-                new ArrayList<SectionedRecyclerViewAdapter.Section>();
+        NotificationsListAdapter notificationsListAdapter = new NotificationsListAdapter(activities, getContext(), getFragmentManager());
+        List<SectionedRecyclerViewAdapter.Section> sections = new ArrayList<SectionedRecyclerViewAdapter.Section>();
         sections.add(new SectionedRecyclerViewAdapter.Section(0, "Newest"));
         sections.add(new SectionedRecyclerViewAdapter.Section(i, "Older"));
        // isHasSections = true;
-        SectionedRecyclerViewAdapter.Section[] dummy =
-                new SectionedRecyclerViewAdapter.Section[sections.size()];
-        SectionedRecyclerViewAdapter sectionedRecyclerViewAdapter =
-                new SectionedRecyclerViewAdapter(getContext(), R.layout.section_layout,
-                        R.id.section_title, notificationsListAdapter);
+        SectionedRecyclerViewAdapter.Section[] dummy = new SectionedRecyclerViewAdapter.Section[sections.size()];
+        SectionedRecyclerViewAdapter sectionedRecyclerViewAdapter = new SectionedRecyclerViewAdapter(getContext(), R.layout.section_layout, R.id.section_title, notificationsListAdapter);
         sectionedRecyclerViewAdapter.setSections(sections.toArray(dummy));
         notificationsListAdapter.setSectionAdapter(sectionedRecyclerViewAdapter);
         recyclerView.setAdapter(sectionedRecyclerViewAdapter);

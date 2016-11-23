@@ -195,7 +195,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         isFromMap = getIntent().getBooleanExtra(Constants.ADD_DIVE_SPOT_INTENT_IS_FROM_MAP, false);
         findViews();
         setUi();
-        DDScannerApplication.getInstance().getDdScannerRestClient().getFilters(filtersResultListener);
+      //  DDScannerApplication.getInstance().getDdScannerRestClient().getFilters(filtersResultListener);
         makeErrorsMap();
     }
 
@@ -271,7 +271,8 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         getSupportActionBar().setTitle(R.string.new_divespot);
 
         progressDialog.setCancelable(false);
-        
+        progressView.setVisibility(View.GONE);
+        mainLayout.setVisibility(View.VISIBLE);
     }
 
     @Override
