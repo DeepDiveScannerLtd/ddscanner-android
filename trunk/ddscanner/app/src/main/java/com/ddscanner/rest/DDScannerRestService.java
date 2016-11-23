@@ -280,7 +280,7 @@ public interface DDScannerRestService {
     @POST("v2_0/user.signUp")
     Call<ResponseBody> signUpUser(@Body SignUpRequest signUpRequest);
 
-    @GET("v2_0/user.getProfile")
+    @GET("v2_0/user.profile.get")
     Call<ResponseBody> getSelfProfileInformation();
 
     @GET("v2_0/user.getAchievements")
