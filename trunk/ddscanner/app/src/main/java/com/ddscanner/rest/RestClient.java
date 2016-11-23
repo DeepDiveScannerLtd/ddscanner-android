@@ -28,7 +28,7 @@ public abstract class RestClient {
                     if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
                         Request request = chain.request();
                         request = request.newBuilder()
-                                .addHeader("Accept", "application/vnd.trizeri.v1+json") // dev
+                               // .addHeader("Accept", "application/vnd.trizeri.v1+json") // dev
                                 //   .addHeader("Content-Type", "application/json;charset=utf-8")
                                 .addHeader("Authorization", "Bearer " + DDScannerApplication.getInstance().getSharedPreferenceHelper().getToken())
                                 .build();
