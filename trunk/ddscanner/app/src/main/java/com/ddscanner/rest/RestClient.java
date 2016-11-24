@@ -37,7 +37,7 @@ public abstract class RestClient {
                     }
                     Request request = chain.request();
                     request = request.newBuilder()
-                            .addHeader("Accept", "application/vnd.trizeri.v1+json") // dev
+//                            .addHeader("Accept", "application/vnd.trizeri.v1+json") // dev
                             //   .addHeader("Content-Type", "application/json;charset=utf-8")
                             .build();
                     Response response = chain.proceed(request);

@@ -277,7 +277,7 @@ public interface DDScannerRestService {
     @POST("v2_0/user.login")
     Call<ResponseBody> loginUser(@Body SignInRequest signInRequest);
 
-    @POST("v2_0/user.signUp")
+    @POST("v2_0/user.sign_up")
     Call<ResponseBody> signUpUser(@Body SignUpRequest signUpRequest);
 
     @GET("v2_0/user.profile.get")
