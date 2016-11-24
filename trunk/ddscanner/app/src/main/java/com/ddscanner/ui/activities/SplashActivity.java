@@ -39,33 +39,6 @@ public class SplashActivity extends BaseAppCompatActivity implements InfoDialogF
     private Button signUpButton;
     private Button loginButton;
 
-    private DDScannerRestClient.ResultListener<Void> identifyResultListener = new DDScannerRestClient.ResultListener<Void>() {
-        @Override
-        public void onSuccess(Void result) {
-            progressMessage.setText("");
-            //showMainActivity();
-            DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsFirstLaunch(false);
-        }
-
-        @Override
-        public void onConnectionFailure() {
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_SPLASH_ACTIVITY_FAILED_TO_CONNECT, false);
-        }
-
-        @Override
-        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-            switch (errorType) {
-                case UNAUTHORIZED_401:
-                    // Currently handle it as an unexpected error. Later identify request will be removed
-                    Crashlytics.log("801 error on identify");
-                default:
-                    EventsTracker.trackUnknownServerError(url, errorMessage);
-                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_SPLASH_ACTIVITY_UNEXPECTED_ERROR, false);
-                    break;
-            }
-        }
-    };
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,45 +76,6 @@ public class SplashActivity extends BaseAppCompatActivity implements InfoDialogF
 
         mainLayout.startAnimation(fadeInAnimation);
 
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isFirstLaunch()) {
-       //     registerForGCM();
-            progressMessage.setText(R.string.start_process_register_for_ddscanner);
-            DDScannerApplication.getInstance().getDdScannerRestClient().postIdentifyUser("", "", identifyResultListener);
-        } else {
-      //      showMainActivity();
-        }
-//        Log.i(TAG, FirebaseInstanceId.getInstance().getToken());
- //       RemoteConfigManager.initRemoteConfig();
-    }
-
-//    private void registerForGCM() {
-//        if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserAppIdReceived()) {
-//            if (checkPlayServices()) {
-//                progressMessage.setText(R.string.start_process_register_for_gcm);
-//                Intent intent = new Intent(this, RegistrationIntentService.class);
-//                startService(intent);
-//            } else {
-//                // No need to handle. This case was handled in checkPlayServices()
-//            }
-//        } else {
-//            // This means we've received appId but failed to make identify request.Try again
-//            progressMessage.setText(R.string.start_process_register_for_ddscanner);
-//            DDScannerApplication.getDdScannerRestClient().postIdentifyUser("", "", identifyResultListener);
-//        }
-//    }
-
-    private boolean checkPlayServices() {
-        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
-        int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
-        if (resultCode != ConnectionResult.SUCCESS) {
-            if (apiAvailability.isUserResolvableError(resultCode)) {
-                apiAvailability.getErrorDialog(this, resultCode, ActivitiesRequestCodes.REQUEST_CODE_SPLASH_ACTIVITY_PLAY_SERVICES_RESOLUTION).show();
-            } else {
-                finish();
-            }
-            return false;
-        }
-        return true;
     }
 
     private void showMainActivity() {
@@ -193,7 +127,6 @@ public class SplashActivity extends BaseAppCompatActivity implements InfoDialogF
     @Subscribe
     public void onAppInstanceIdReceived(InstanceIDReceivedEvent event) {
         progressMessage.setText(R.string.start_process_register_for_ddscanner);
-        DDScannerApplication.getInstance().getDdScannerRestClient().postIdentifyUser("", "", identifyResultListener);
     }
 
     @Override
