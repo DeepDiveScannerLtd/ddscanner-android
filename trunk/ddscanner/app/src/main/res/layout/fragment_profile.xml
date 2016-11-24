@@ -43,42 +43,52 @@
                         android:layout_height="wrap_content"
                         android:background="@color/white"
                         android:orientation="vertical">
+                        <LinearLayout
+                            android:paddingTop="15dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <ImageView
+                                android:id="@+id/user_avatar"
+                                android:layout_width="80dp"
+                                android:layout_height="80dp"
+                                android:layout_marginLeft="20dp"
+                                android:layout_marginRight="20dp"
+                                app:loadImageFrom="@{profileFragmentViewModel}" />
+                            <LinearLayout
+                                android:paddingTop="3dp"
+                                android:paddingRight="20dp"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+                                <TextView
+                                    android:id="@+id/user_name"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="7dp"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginRight="10dp"
+                                    android:layout_marginTop="10dp"
+                                    android:text="@{profileFragmentViewModel.user.name != null ? profileFragmentViewModel.user.name : null}"
+                                    android:textColor="@color/black_text"
+                                    android:textSize="18sp"
+                                    android:visibility="@{profileFragmentViewModel.user.name != null ? View.VISIBLE : View.GONE}" />
+                                <TextView
+                                    android:id="@+id/user_about"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="@{profileFragmentViewModel.user.about != null ? profileFragmentViewModel.user.about : null}"
+                                    android:textColor="#616161"
+                                    android:textSize="13sp"
+                                    android:visibility="@{profileFragmentViewModel.user.about != null ? View.VISIBLE : View.GONE}" />
+
+                            </LinearLayout>
+                        </LinearLayout>
 
                         <ImageView
-                            android:id="@+id/user_avatar"
-                            android:layout_width="match_parent"
-                            android:layout_height="80dp"
-                            android:layout_marginTop="32dp"
-                            app:loadImageFrom="@{profileFragmentViewModel}" />
-
-                        <TextView
-                            android:id="@+id/user_name"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="7dp"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginRight="10dp"
-                            android:layout_marginTop="10dp"
-                            android:gravity="center"
-                            android:text="@{profileFragmentViewModel.user.name != null ? profileFragmentViewModel.user.name : null}"
-                            android:textColor="@color/black_text"
-                            android:textSize="18sp"
-                            android:visibility="@{profileFragmentViewModel.user.name != null ? View.VISIBLE : View.GONE}" />
-
-                        <TextView
-                            android:id="@+id/user_about"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="7dp"
-                            android:layout_marginLeft="43dp"
-                            android:layout_marginRight="43dp"
-                            android:gravity="center"
-                            android:text="@{profileFragmentViewModel.user.about != null ? profileFragmentViewModel.user.about : null}"
-                            android:textColor="#616161"
-                            android:textSize="13sp"
-                            android:visibility="@{profileFragmentViewModel.user.about != null ? View.VISIBLE : View.GONE}" />
-
-                        <ImageView style="@style/DividerStyleFull" />
+                            android:layout_marginTop="15dp"
+                            style="@style/DividerStyleFull" />
 
                         <android.support.percent.PercentRelativeLayout
                             android:layout_width="match_parent"
@@ -104,24 +114,11 @@
                                     android:textColor="#a3a3a3"
                                     android:textSize="11sp" />
 
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="4dp"
-                                    android:gravity="center"
-                                    android:orientation="horizontal">
-
-                                    <ImageView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:src="@drawable/ic_comment_profile" />
-
-                                    <TextView
-                                        android:id="@+id/user_comments"
-                                        style="@style/ProfileNumberDivespotsSrtyle"
-                                        android:text="@{String.valueOf(profileFragmentViewModel.user.counters.commentsCount)}"
-                                        tools:text="321" />
-                                </LinearLayout>
+                                <TextView
+                                    android:id="@+id/user_comments"
+                                    style="@style/ProfileNumberDivespotsSrtyle"
+                                    android:text="@{String.valueOf(profileFragmentViewModel.user.counters.commentsCount)}"
+                                    tools:text="321" />
                             </LinearLayout>
 
                             <RelativeLayout
@@ -131,19 +128,6 @@
                                 android:background="?attr/selectableItemBackground"
                                 android:onClick="@{handlers::showLikes}"
                                 app:layout_widthPercent="33%">
-
-                                <View
-                                    android:layout_width="2dp"
-                                    android:layout_height="32dp"
-                                    android:layout_centerVertical="true"
-                                    android:background="#f0f0f0" />
-
-                                <View
-                                    android:layout_width="2dp"
-                                    android:layout_height="32dp"
-                                    android:layout_alignParentRight="true"
-                                    android:layout_centerVertical="true"
-                                    android:background="#f0f0f0" />
 
                                 <LinearLayout
                                     android:layout_width="wrap_content"
@@ -160,24 +144,12 @@
                                         android:textColor="#a3a3a3"
                                         android:textSize="11sp" />
 
-                                    <LinearLayout
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginTop="4dp"
-                                        android:gravity="center"
-                                        android:orientation="horizontal">
 
-                                        <ImageView
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:src="@drawable/ic_like_profile" />
-
-                                        <TextView
-                                            android:id="@+id/user_likes"
-                                            style="@style/ProfileNumberDivespotsSrtyle"
-                                            android:text="@{String.valueOf(profileFragmentViewModel.user.counters.likesCount)}"
-                                            tools:text="321" />
-                                    </LinearLayout>
+                                    <TextView
+                                        android:id="@+id/user_likes"
+                                        style="@style/ProfileNumberDivespotsSrtyle"
+                                        android:text="@{String.valueOf(profileFragmentViewModel.user.counters.likesCount)}"
+                                        tools:text="321" />
                                 </LinearLayout>
                             </RelativeLayout>
 
@@ -199,24 +171,12 @@
                                     android:textColor="#a3a3a3"
                                     android:textSize="11sp" />
 
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="4dp"
-                                    android:gravity="center"
-                                    android:orientation="horizontal">
 
-                                    <ImageView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:src="@drawable/ic_dislike_profile" />
-
-                                    <TextView
-                                        android:id="@+id/user_dislikes"
-                                        style="@style/ProfileNumberDivespotsSrtyle"
-                                        android:text="@{String.valueOf(profileFragmentViewModel.user.counters.dislikesCount)}"
-                                        tools:text="321" />
-                                </LinearLayout>
+                                <TextView
+                                    android:id="@+id/user_dislikes"
+                                    style="@style/ProfileNumberDivespotsSrtyle"
+                                    android:text="@{String.valueOf(profileFragmentViewModel.user.counters.dislikesCount)}"
+                                    tools:text="321" />
                             </LinearLayout>
                         </android.support.percent.PercentRelativeLayout>
                     </LinearLayout>
@@ -232,18 +192,27 @@
                         android:layout_height="wrap_content"
                         android:background="@color/white"
                         android:orientation="vertical">
-
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#afafaf"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginTop="20dp"
+                            android:textSize="15sp"
+                            android:text="@string/acievements_block_title"/>
                         <TextView
                             android:id="@+id/no_achievements_view"
                             android:layout_width="match_parent"
+                            android:gravity="center"
                             android:layout_height="wrap_content"
                             android:paddingBottom="12dp"
                             android:paddingLeft="20dp"
                             android:paddingRight="20dp"
                             android:paddingTop="12dp"
                             android:text="@string/no_title_yet"
-                            android:textColor="#a3a3a3"
-                            android:textSize="15sp" />
+                            android:textColor="#bbbbbb"
+                            android:textSize="13sp"
+                            android:layout_marginBottom="8dp"/>
 
                         <android.support.v7.widget.RecyclerView
                             android:id="@+id/achievment_rv"
@@ -270,7 +239,7 @@
                                 android:id="@+id/icon"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:src="@drawable/path_1" />
+                                android:src="@drawable/ic_profile_details" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -291,6 +260,38 @@
                         </RelativeLayout>
                     </LinearLayout>
 
+                    <ImageView style="@style/DividerStyleFull" />
+
+                    <ImageView
+                        style="@style/DividerStyleFull"
+                        android:layout_marginTop="15dp" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:background="@color/white">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#afafaf"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginTop="20dp"
+                            android:textSize="15sp"
+                            android:text="@string/photos_block_title"/>
+                        <TextView
+                            android:id="@+id/no_photos_view"
+                            android:layout_width="match_parent"
+                            android:gravity="center"
+                            android:layout_height="wrap_content"
+                            android:paddingBottom="12dp"
+                            android:paddingLeft="20dp"
+                            android:paddingRight="20dp"
+                            android:paddingTop="12dp"
+                            android:text="@string/no_photos_yet"
+                            android:textColor="#bbbbbb"
+                            android:textSize="13sp"
+                            android:layout_marginBottom="20dp"/>
+                    </LinearLayout>
                     <ImageView style="@style/DividerStyleFull" />
 
                     <ImageView
@@ -758,12 +759,12 @@
                         android:orientation="vertical">
 
                         <RadioGroup
-                            android:paddingTop="5dp"
-                            android:paddingBottom="5dp"
                             android:id="@+id/radiogroup"
-                            android:paddingLeft="15dp"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
+                            android:layout_height="wrap_content"
+                            android:paddingBottom="5dp"
+                            android:paddingLeft="15dp"
+                            android:paddingTop="5dp">
 
                         </RadioGroup>
 
@@ -771,22 +772,24 @@
 
                         <RelativeLayout
                             android:id="@+id/choose_dive_center_btn"
-                            android:paddingLeft="15dp"
                             android:layout_width="match_parent"
                             android:layout_height="50dp"
+                            android:gravity="center_vertical"
                             android:orientation="horizontal"
-                            android:gravity="center_vertical">
+                            android:paddingLeft="15dp">
+
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/choose_dive_center"
-                                android:textColor="@color/black_text"/>
+                                android:textColor="@color/black_text" />
+
                             <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:src="@drawable/ic_arrow"
                                 android:layout_alignParentRight="true"
-                                android:layout_marginRight="20dp"/>
+                                android:layout_marginRight="20dp"
+                                android:src="@drawable/ic_arrow" />
                         </RelativeLayout>
 
                         <ImageView style="@style/DividerStyleFull" />
@@ -818,7 +821,7 @@
                 android:id="@+id/login_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="visible"
+                android:visibility="gone"
                 app:title="@string/profile_need_to_login" />
         </RelativeLayout>
     </com.ddscanner.ui.views.CustomSwipeRefreshLayout>
