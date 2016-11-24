@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -104,6 +105,7 @@ public class SplashActivity extends BaseAppCompatActivity implements InfoDialogF
     @Override
     protected void onResume() {
         super.onResume();
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         DDScannerApplication.activityResumed();
         if (!Helpers.hasConnection(this)) {
             DDScannerApplication.showErrorActivity(this);
