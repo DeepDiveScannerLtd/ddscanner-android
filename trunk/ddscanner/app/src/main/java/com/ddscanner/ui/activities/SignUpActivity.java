@@ -28,8 +28,11 @@ import com.ddscanner.R;
 import com.ddscanner.entities.SignInType;
 import com.ddscanner.entities.SignUpResponseEntity;
 import com.ddscanner.rest.DDScannerRestClient;
+import com.ddscanner.ui.dialogs.ActionSuccessDialogFragment;
+import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
+import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -90,11 +93,20 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         @Override
         public void onConnectionFailure() {
             materialDialog.dismiss();
+            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             materialDialog.dismiss();
+            switch (errorType) {
+                case ENTITY_NOT_FOUND_404:
+                    ActionSuccessDialogFragment.show(SignUpActivity.this, R.string.title_pass_incorrect, R.string.pass_incorrect);
+                    break;
+                default:
+                    InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_unexpected_error, R.string.error_connection_failed, false);
+                    break;
+            }
         }
     };
 
@@ -128,6 +140,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void setUi() {
+        materialDialog = Helpers.getMaterialDialog(this);
         forgotPasswordView.setOnClickListener(this);
         googleLogin.setOnClickListener(this);
         fbLogin.setOnClickListener(this);
@@ -213,6 +226,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 ForgotPasswordActivity.show(this);
                 break;
             case R.id.fb_custom:
+                materialDialog.show();
                 if (AccessToken.getCurrentAccessToken() == null) {
                     fbLogin();
                 } else {
@@ -221,6 +235,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 }
                 break;
             case R.id.custom_google:
+                materialDialog.show();
                 googleSignIn();
                 break;
             case R.id.btn_sign_up:

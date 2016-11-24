@@ -59,6 +59,7 @@ public class ProfileFragmentViewModel {
                     .resize(Math.round(Helpers.convertDpToPixel(100, view.getContext())),
                             Math.round(Helpers.convertDpToPixel(100, view.getContext()))).centerCrop()
                     .placeholder(R.drawable.avatar_profile_default)
+                    .error(R.drawable.avatar_profile_default)
                     .transform(new CropCircleTransformation()).into(view);
         }
     }

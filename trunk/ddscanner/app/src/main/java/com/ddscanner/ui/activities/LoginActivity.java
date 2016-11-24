@@ -74,60 +74,6 @@ public class LoginActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_to_continue);
         findViews();
-//        TextView privacyPolicy = (TextView) findViewById(R.id.privacy_policy);
-//        ImageView close = (ImageView) findViewById(R.id.close);
-//        materialDialog = Helpers.getMaterialDialog(this);
-//        close.setOnClickListener(this);
-//        final SpannableString spannableString = new SpannableString(privacyPolicy.getText());
-//        privacyPolicy.setHighlightColor(Color.TRANSPARENT);
-//        spannableString.setSpan(new MyClickableSpan(privacyPolicy.getText().toString()) {
-//            @Override
-//            public void onClick(View tv) {
-//                TermsOfServiceActivity.showForResult(LoginActivity.this);
-//            }
-//        }, 32, 48, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-//        spannableString.setSpan(new MyClickableSpan(privacyPolicy.getText().toString()) {
-//            @Override
-//            public void onClick(View tv) {
-//                PrivacyPolicyActivity.showForResult(LoginActivity.this);
-//                tv.invalidate();
-//            }
-//        }, 53, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-//        privacyPolicy.setMovementMethod(LinkMovementMethod.getInstance());
-//        privacyPolicy.setText(spannableString);
-//
-//        callbackManager = CallbackManager.Factory.create();
-//        Button fbCustomLogin = (Button) findViewById(R.id.fb_custom);
-//        fbCustomLogin.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (AccessToken.getCurrentAccessToken() == null) {
-//                    fbLogin();
-//                    Log.i(TAG, "LOGED IN");
-//                } else {
-//                    LoginManager.getInstance().logOut();
-//                    fbLogin();
-//                    Log.i(TAG, "LOGGED OUT");
-//                }
-//            }
-//        });
-//        GoogleSignInOptions gso = new GoogleSignInOptions
-//                .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-//                .requestIdToken("195706914618-ist9f8ins485k2gglbomgdp4l2pn57iq.apps.googleusercontent.com")
-//                .requestEmail()
-//                .build();
-//
-//        mGoogleApiClient = new GoogleApiClient.Builder(this)
-//                .enableAutoManage(this, this)
-//                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-//                .build();
-//        Button googleCustomSignIn = (Button) findViewById(R.id.custom_google);
-//        googleCustomSignIn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                googleLogin();
-//            }
-//        });
     }
 
     private void findViews() {
@@ -148,46 +94,6 @@ public class LoginActivity extends AppCompatActivity
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_close);
     }
 
-    private void fbLogin() {
-        callbackManager = CallbackManager.Factory.create();
-        LoginManager.getInstance().logInWithReadPermissions(LoginActivity.this,
-                Arrays.asList("email", "public_profile"));
-        LoginManager.getInstance().registerCallback(callbackManager,
-                new FacebookCallback<LoginResult>() {
-                    @Override
-                    public void onSuccess(final LoginResult loginResult) {
-                        GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
-                            @Override
-                            public void onCompleted(JSONObject object, GraphResponse response) {
-                                sendLoginRequest(SignInType.FACEBOOK, loginResult.getAccessToken().getToken());
-                            }
-                        }).executeAsync();
-                    }
-
-                    @Override
-                    public void onCancel() {
-                        // TODO Implement
-                    }
-
-                    @Override
-                    public void onError(FacebookException error) {
-                        // TODO Implement
-                    }
-                });
-    }
-
-    private void googleLogin() {
-        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
-                new ResultCallback<Status>() {
-                    @Override
-                    public void onResult(@NonNull Status status) {
-                        // ...
-                    }
-                });
-        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-        startActivityForResult(signInIntent, ActivitiesRequestCodes.REQUEST_CODE_SOCIAL_NETWORKS_SIGN_IN);
-    }
-
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult result) {
 
@@ -196,29 +102,15 @@ public class LoginActivity extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == ActivitiesRequestCodes.REQUEST_CODE_SOCIAL_NETWORKS_SIGN_IN) {
-            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            Log.d(TAG, "onActivityResult:GET_TOKEN:success:" + result.getStatus().isSuccess());
-            if (result.isSuccess()) {
-                GoogleSignInAccount acct = result.getSignInAccount();
-                if (acct == null) {
-                    EventsTracker.trackUnknownServerError("google_login", "result.getSignInAccount() returned null");
-                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_LOGIN_ACTIVITY_GOOGLE_SIGN_IN_FAIL, false);
-                } else {
-                    String idToken = acct.getIdToken();
-                    sendLoginRequest(SignInType.GOOGLE, idToken);
+        switch (requestCode) {
+            case ActivitiesRequestCodes.REQUEST_CODE_SOCIAL_NETWORKS_SIGN_IN:
+            case ActivitiesRequestCodes.REQUEST_CODE_SOCIAL_NETWORKS_SIGN_UP:
+                if (resultCode == RESULT_OK) {
+                    setResult(RESULT_OK);
+                    finish();
                 }
-            }
-        } else {
-            callbackManager.onActivityResult(requestCode, resultCode, data);
+                break;
         }
-    }
-
-    private void sendLoginRequest(SignInType signInType, String token) {
-        loginResultListener.setToken(token);
-        loginResultListener.setSocialNetwork(signInType);
-        materialDialog.show();
-        DDScannerApplication.getInstance().getDdScannerRestClient().postLogin(FirebaseInstanceId.getInstance().getId(), signInType, token, loginResultListener);
     }
 
     @Override
@@ -277,25 +169,6 @@ public class LoginActivity extends AppCompatActivity
                 setResult(Activity.RESULT_CANCELED);
                 finish();
                 break;
-        }
-    }
-
-    class MyClickableSpan extends ClickableSpan {
-
-        String clicked;
-
-        MyClickableSpan(String string) {
-            super();
-            clicked = string;
-        }
-
-        public void onClick(View tv) {
-
-        }
-
-        public void updateDrawState(TextPaint ds) {
-            ds.setColor(ContextCompat.getColor(LoginActivity.this, R.color.primary));
-            ds.setUnderlineText(false);
         }
     }
 

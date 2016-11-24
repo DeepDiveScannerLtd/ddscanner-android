@@ -1,10 +1,12 @@
 package com.ddscanner.ui.dialogs;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.TextView;
 
@@ -20,13 +22,13 @@ public class ActionSuccessDialogFragment extends DialogFragment {
 
     }
 
-    public static ActionSuccessDialogFragment newInstance(int titleResId, int messageResId) {
+    public static void show(FragmentActivity activity, int titleResId, int messageResId) {
         ActionSuccessDialogFragment actionSuccessDialogFragment = new ActionSuccessDialogFragment();
         Bundle args = new Bundle();
         args.putString("title", DDScannerApplication.getInstance().getString(titleResId));
         args.putString("message", DDScannerApplication.getInstance().getString(messageResId));
         actionSuccessDialogFragment.setArguments(args);
-        return actionSuccessDialogFragment;
+        actionSuccessDialogFragment.show(activity.getSupportFragmentManager(), "");
     }
 
     @NonNull
