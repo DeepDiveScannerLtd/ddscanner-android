@@ -54,6 +54,7 @@
                                 android:layout_height="80dp"
                                 android:layout_marginLeft="20dp"
                                 android:layout_marginRight="20dp"
+                                android:src="@drawable/avatar_profile_default"
                                 app:loadImageFrom="@{profileFragmentViewModel}" />
                             <LinearLayout
                                 android:paddingTop="3dp"
