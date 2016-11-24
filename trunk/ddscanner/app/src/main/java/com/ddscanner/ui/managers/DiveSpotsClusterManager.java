@@ -123,6 +123,8 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpotShort> imple
         this.toast = toast;
         this.progressBar = progressBar;
         googleMap.setOnMapClickListener(this);
+        googleMap.getUiSettings().setRotateGesturesEnabled(false);
+        googleMap.getUiSettings().setTiltGesturesEnabled(false);
         setAlgorithm(new GridBasedAlgorithm<DiveSpotShort>());
         setRenderer(new IconRenderer(context, googleMap, this));
         setOnClusterClickListener(this);
