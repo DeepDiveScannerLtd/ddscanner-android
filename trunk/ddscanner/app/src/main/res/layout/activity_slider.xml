@@ -67,5 +67,24 @@
         android:layout_width="match_parent"
         android:layout_height="400dp"
         android:layout_gravity="center" />
-
+    <RelativeLayout
+        android:layout_gravity="bottom"
+        android:layout_margin="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_like_photo_empty"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/icon"
+            android:textColor="#dee9ed"
+            android:text="74"
+            android:textSize="15sp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"/>
+    </RelativeLayout>
 </FrameLayout>
