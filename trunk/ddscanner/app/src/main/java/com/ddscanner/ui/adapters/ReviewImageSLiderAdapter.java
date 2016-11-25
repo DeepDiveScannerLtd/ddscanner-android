@@ -5,7 +5,7 @@ import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v13.app.FragmentStatePagerAdapter;
 
-import com.ddscanner.ui.fragments.SLiderImagesFragment;
+import com.ddscanner.ui.fragments.SliderImagesFragment;
 
 import java.util.ArrayList;
 
@@ -24,9 +24,9 @@ public class ReviewImageSLiderAdapter  extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        Fragment fragment = new SLiderImagesFragment();
+        Fragment fragment = new SliderImagesFragment();
         Bundle args = new Bundle();
-        args.putString(SLiderImagesFragment.IMAGE_URL, productsImages.get(position));
+        args.putString(SliderImagesFragment.IMAGE_URL, productsImages.get(position));
         fragment.setArguments(args);
         return fragment;
     }
