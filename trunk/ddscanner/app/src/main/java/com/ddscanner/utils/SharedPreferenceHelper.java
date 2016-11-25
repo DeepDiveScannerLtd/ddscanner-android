@@ -32,100 +32,100 @@ public class SharedPreferenceHelper {
 
     private static SharedPreferences prefs;
 
-    public static void setUserAppId(String appId) {
+    public void setUserAppId(String appId) {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         Editor editor = prefs.edit();
         editor.putString(USER_APP_ID, appId);
         editor.commit();
     }
 
-    public static String getUserAppId() {
+    public String getUserAppId() {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         return prefs.getString(USER_APP_ID, "");
     }
 
-    public static void setUserAppIdReceived() {
+    public void setUserAppIdReceived() {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         Editor editor = prefs.edit();
         editor.putBoolean(IS_USER_APP_ID_RECEIVED, true);
         editor.commit();
     }
 
-    public static boolean isUserAppIdReceived() {
+    public boolean isUserAppIdReceived() {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         return prefs.getBoolean(IS_USER_APP_ID_RECEIVED, false);
     }
 
-    public static void setPhotolink(String value) {
+    public void setPhotolink(String value) {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         Editor editor = prefs.edit();
         editor.putString(PHOTOLINK, value);
         editor.commit();
     }
 
-    public static String getPhotolink() {
+    public String getPhotolink() {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         return prefs.getString(PHOTOLINK, "");
     }
 
-    public static void setCurrents(String value) {
+    public void setCurrents(String value) {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         Editor editor = prefs.edit();
         editor.putString(CURRENTS, value);
         editor.commit();
     }
 
-    public static String getCurrents() {
+    public String getCurrents() {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         return prefs.getString(CURRENTS, "");
     }
 
-    public static void setLevel(String value) {
+    public void setLevel(String value) {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         Editor editor = prefs.edit();
         editor.putString(LEVEL, value);
         editor.commit();
     }
 
-    public static String getLevel() {
+    public String getLevel() {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         return prefs.getString(LEVEL, "");
     }
 
 
-    public static void setVisibility(String value) {
+    public void setVisibility(String value) {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         Editor editor = prefs.edit();
         editor.putString(VISIBILITY, value);
         editor.commit();
     }
 
-    public static String getVisibility() {
+    public String getVisibility() {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         return prefs.getString(VISIBILITY, "");
     }
 
 
-    public static void setObject(String value) {
+    public void setObject(String value) {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         Editor editor = prefs.edit();
         editor.putString(OBJECT, value);
         editor.commit();
     }
 
-    public static String getObject() {
+    public String getObject() {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         return prefs.getString(OBJECT, "");
     }
 
-    public static void setGcmId(String appInstanceId) {
+    public void setGcmId(String appInstanceId) {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         Editor editor = prefs.edit();
         editor.putString(PREFERENCES_GCM_ID, appInstanceId);
         editor.commit();
     }
 
-    public static void setIsUserSignedIn(Boolean isUserSignedIn, SignInType signInType) {
+    public void setIsUserSignedIn(Boolean isUserSignedIn, SignInType signInType) {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         Editor editor = prefs.edit();
         if (isUserSignedIn) {
@@ -142,7 +142,7 @@ public class SharedPreferenceHelper {
         editor.commit();
     }
 
-    public static boolean isUserLoggedIn() {
+    public boolean isUserLoggedIn() {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         String is = prefs.getString(IS_USER_SIGNED_IN, "");
         if (is.equals("1")) {
@@ -152,100 +152,100 @@ public class SharedPreferenceHelper {
         }
     }
 
-    public static boolean isFirstLaunch() {
+    public boolean isFirstLaunch() {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         return prefs.getBoolean(IS_FIRST_LAUNCH, true);
     }
 
-    public static void setIsFirstLaunch(boolean isFirstLaunch) {
+    public void setIsFirstLaunch(boolean isFirstLaunch) {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         Editor editor = prefs.edit();
         editor.putBoolean(IS_FIRST_LAUNCH, isFirstLaunch);
         editor.commit();
     }
 
-    public static String getGcmId() {
+    public String getGcmId() {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         return prefs.getString(PREFERENCES_GCM_ID, "");
     }
 
-    public static void setToken(String token) {
+    public void setToken(String token) {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         Editor editor = prefs.edit();
         editor.putString(TOKEN, token);
         editor.commit();
     }
 
-    public static String getToken() {
+    public String getToken() {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         return prefs.getString(TOKEN, "");
     }
 
-    public static void setSn(String sn) {
+    public void setSn(String sn) {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         Editor editor = prefs.edit();
         editor.putString(SN, sn);
         editor.commit();
     }
 
-    public static String getSn() {
+    public String getSn() {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         return prefs.getString(SN, "");
     }
 
-    public static void setSecret(String secret) {
+    public void setSecret(String secret) {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         Editor editor = prefs.edit();
         editor.putString(SECRET, secret);
         editor.commit();
     }
 
-    public static String getSecret() {
+    public String getSecret() {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         return prefs.getString(SECRET, "");
     }
 
-    public static void logout() {
+    public void logout() {
       //  SharedPreferenceHelper.setToken("");
-        SharedPreferenceHelper.setUserServerId("");
-        SharedPreferenceHelper.setSecret("");
-        SharedPreferenceHelper.setSn("");
-        SharedPreferenceHelper.setToken("");
-        SharedPreferenceHelper.setIsUserSignedIn(false, null);
+        setUserServerId("");
+        setSecret("");
+        setSn("");
+        setToken("");
+        setIsUserSignedIn(false, null);
     }
 
-    public static void setUserServerId(String id) {
+    public void setUserServerId(String id) {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         Editor editor = prefs.edit();
         editor.putString(USER_SERVER_ID, id);
         editor.commit();
     }
 
-    public static String getUserServerId() {
+    public String getUserServerId() {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         return prefs.getString(USER_SERVER_ID, "");
     }
 
-    public static void setLastShowingNotificationTime(long time) {
+    public void setLastShowingNotificationTime(long time) {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         Editor editor = prefs.edit();
         editor.putLong("LASTNOTIF", time);
         editor.commit();
     }
 
-    public static long getLastShowingNotificationTime() {
+    public long getLastShowingNotificationTime() {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         return prefs.getLong("LASTNOTIF", 0);
     }
 
-    public static void setLastShowingActivityTime(long time) {
+    public void setLastShowingActivityTime(long time) {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         Editor editor = prefs.edit();
         editor.putLong("LASTACTIVITY", time);
         editor.commit();
     }
 
-    public static long getLastShowingActivityTime() {
+    public long getLastShowingActivityTime() {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         return prefs.getLong("LASTACTIVITY", 0);
     }

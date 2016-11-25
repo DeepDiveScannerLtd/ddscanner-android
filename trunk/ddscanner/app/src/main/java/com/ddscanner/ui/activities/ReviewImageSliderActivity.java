@@ -16,8 +16,6 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -25,24 +23,18 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.FiltersResponseEntity;
-import com.ddscanner.entities.Image;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.adapters.ReviewImageSLiderAdapter;
-import com.ddscanner.ui.adapters.SliderImagesAdapter;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.ui.views.SimpleGestureFilter;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
-import com.ddscanner.utils.SharedPreferenceHelper;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 public class ReviewImageSliderActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener, View.OnClickListener , SimpleGestureFilter.SimpleGestureListener, InfoDialogFragment.DialogClosedListener {
 
@@ -89,7 +81,7 @@ public class ReviewImageSliderActivity extends AppCompatActivity implements View
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             switch (errorType) {
-                case USER_NOT_FOUND_ERROR_C801:
+                case UNAUTHORIZED_401:
                     LoginActivity.showForResult(ReviewImageSliderActivity.this, ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_REPORT);
                     break;
                 default:
@@ -135,7 +127,7 @@ public class ReviewImageSliderActivity extends AppCompatActivity implements View
         viewPager.addOnPageChangeListener(this);
         sliderImagesAdapter = new ReviewImageSLiderAdapter(getFragmentManager(), images);
         viewPager.setAdapter(sliderImagesAdapter);
-        DDScannerApplication.getDdScannerRestClient().getReportTypes(filtersResponseEntityResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient().getReportTypes(filtersResponseEntityResultListener);
         setUi();
 
     }
@@ -244,18 +236,19 @@ public class ReviewImageSliderActivity extends AppCompatActivity implements View
 
     private void reportImage(String imageName, String reportType, String reportDescription) {
         materialDialog.show();
-        if (!SharedPreferenceHelper.isUserLoggedIn() || SharedPreferenceHelper.getToken().isEmpty() || SharedPreferenceHelper.getSn().isEmpty()) {
+        if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn() || DDScannerApplication.getInstance().getSharedPreferenceHelper().getToken().isEmpty() || DDScannerApplication.getInstance().getSharedPreferenceHelper().getSn().isEmpty()) {
             LoginActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_REPORT);
             return;
         }
-        DDScannerApplication.getDdScannerRestClient().postReportImage(imageName, reportType, reportDescription, reportImageResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient().postReportImage(imageName, reportType, reportDescription, reportImageResultListener);
 
     }
 
     private void showOtherReportDialog() {
         new MaterialDialog.Builder(this)
                 .title("Other")
-                .widgetColor(ContextCompat.getColor(this, R.color.primary))
+                .positiveColor(ContextCompat.getColor(this, R.color.black_text))
+                .widgetColor(ContextCompat.getColor(this, R.color.accent))
                 .input("Write reason", "", new MaterialDialog.InputCallback() {
                     @Override
                     public void onInput(MaterialDialog dialog, CharSequence input) {
@@ -401,7 +394,7 @@ public class ReviewImageSliderActivity extends AppCompatActivity implements View
         switch (requestCode) {
             case ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_REPORT:
                 if (resultCode == RESULT_OK) {
-                    DDScannerApplication.getDdScannerRestClient().postReportImage(reportName, reportType, reportDescription,reportImageResultListener);
+                    DDScannerApplication.getInstance().getDdScannerRestClient().postReportImage(reportName, reportType, reportDescription,reportImageResultListener);
                 }
                 break;
         }

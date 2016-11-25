@@ -35,7 +35,6 @@ import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
-import com.ddscanner.utils.SharedPreferenceHelper;
 import com.rey.material.widget.ProgressView;
 import com.squareup.otto.Subscribe;
 
@@ -109,8 +108,8 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             switch (errorType) {
-                case USER_NOT_FOUND_ERROR_C801:
-                    SharedPreferenceHelper.logout();
+                case UNAUTHORIZED_401:
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logout();
                     LoginActivity.showForResult(ReviewsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_LIKE_REVIEW);
                     break;
                 case RIGHTS_NOT_FOUND_403:
@@ -150,8 +149,8 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             switch (errorType) {
-                case USER_NOT_FOUND_ERROR_C801:
-                    SharedPreferenceHelper.logout();
+                case UNAUTHORIZED_401:
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logout();
                     LoginActivity.showForResult(ReviewsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_DISLIKE_REVIEW);
                     break;
                 case RIGHTS_NOT_FOUND_403:
@@ -189,8 +188,8 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             switch (errorType) {
-                case USER_NOT_FOUND_ERROR_C801:
-                    SharedPreferenceHelper.logout();
+                case UNAUTHORIZED_401:
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logout();
                     LoginActivity.showForResult(ReviewsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_LEAVE_REPORT);
                     break;
                 case COMMENT_NOT_FOUND_ERROR_C803:
@@ -259,8 +258,8 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             switch (errorType) {
-                case USER_NOT_FOUND_ERROR_C801:
-                    SharedPreferenceHelper.logout();
+                case UNAUTHORIZED_401:
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logout();
                     LoginActivity.showForResult(ReviewsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_DELETE_COMMENT);
                     break;
                 case COMMENT_NOT_FOUND_ERROR_C803:
@@ -281,7 +280,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
        // comments = (ArrayList<Comment>) bundle.getSerializable("COMMENTS");
         diveSpotId = bundle.getString(Constants.DIVESPOTID);
         path = bundle.getString("PATH");
-        DDScannerApplication.getDdScannerRestClient().getReportTypes(filtersResponseEntityResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient().getReportTypes(filtersResponseEntityResultListener);
         findViews();
         toolbarSettings();
         setContent();
@@ -382,7 +381,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
         commentsRc.setVisibility(View.GONE);
         progressView.setVisibility(View.VISIBLE);
         isHasNewComment = true;
-        DDScannerApplication.getDdScannerRestClient().getComments(diveSpotId, commentsResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient().getComments(diveSpotId, commentsResultListener);
     }
 
     @Override
@@ -454,7 +453,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
 
     private void deleteUsersComment(String id) {
         commentToDelete = id;
-        DDScannerApplication.getDdScannerRestClient().deleteUserComment(id, deleteCommentResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient().deleteUserComment(id, deleteCommentResultListener);
     }
 
     @Subscribe
@@ -500,27 +499,27 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void sendReportRequest(String type, String description) {
-        if (!SharedPreferenceHelper.isUserLoggedIn()) {
+        if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
             LoginActivity.showForResult(ReviewsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_LEAVE_REPORT);
             return;
         }
-        DDScannerApplication.getDdScannerRestClient().postSendReportToComment(type, description, reportCommentId, reportCommentResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient().postSendReportToComment(type, description, reportCommentId, reportCommentResultListener);
     }
 
     private void likeComment(String id, final int position) {
-        if (!SharedPreferenceHelper.isUserLoggedIn()) {
+        if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
             LoginActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_LIKE_REVIEW);
             return;
         }
-        DDScannerApplication.getDdScannerRestClient().postLikeReview(id, likeCommentResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient().postLikeReview(id, likeCommentResultListener);
     }
 
     private void dislikeComment(String id, final int position) {
-        if (!SharedPreferenceHelper.isUserLoggedIn()) {
+        if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
             LoginActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_DISLIKE_REVIEW);
             return;
         }
-        DDScannerApplication.getDdScannerRestClient().postDislikeReview(id, dislikeCommentResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient().postDislikeReview(id, dislikeCommentResultListener);
     }
 
     @Subscribe

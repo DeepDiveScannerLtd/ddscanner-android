@@ -2,7 +2,7 @@ package com.ddscanner.entities;
 
 public enum SignInType {
 
-    GOOGLE("go"), FACEBOOK("fb");
+    GOOGLE("go"), FACEBOOK("fb"), EMAIL("email");
 
     private String name;
 

@@ -225,27 +225,18 @@
 
             <ImageView style="@style/DividerStyleFull" />
 
-            <ImageView
-                style="@style/DividerStyleFull"
-                android:layout_marginTop="15dp" />
         <LinearLayout
+            android:id="@+id/achievements_layout"
+            android:visibility="gone"
+            android:layout_marginTop="15dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
             android:orientation="vertical">
-            <TextView
-                android:id="@+id/no_achievements_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/no_title_yet"
-                android:paddingBottom="12dp"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp"
-                android:paddingTop="12dp"
-                android:textColor="#a3a3a3"
-                android:textSize="15sp"/>
+            <ImageView
+                style="@style/DividerStyleFull" />
             <android.support.v7.widget.RecyclerView
-                android:visibility="gone"
+                android:visibility="visible"
                 android:id="@+id/achievment_rv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -254,42 +245,10 @@
                 android:paddingRight="20dp"
                 android:paddingTop="12dp" />
 
-            <ImageView style="@style/DividerStyleFull" />
-
-            <RelativeLayout
-                android:id="@+id/show_achievments_details"
-                android:layout_width="match_parent"
-                android:layout_height="55dp"
-                android:background="?attr/selectableItemBackground"
-                android:gravity="center_vertical"
-                android:paddingLeft="20dp">
-
-                <ImageView
-                    android:id="@+id/icon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/path_1" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="25dp"
-                    android:layout_toRightOf="@+id/icon"
-                    android:fontFamily="sans-serif-medium"
-                    android:text="Show details"
-                    android:textColor="@color/black_text"
-                    android:textSize="14sp" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="20dp"
-                    android:src="@drawable/ic_arrow" />
-            </RelativeLayout>
-            </LinearLayout>
             <ImageView
                 style="@style/DividerStyleFull" />
+
+            </LinearLayout>
 
             <ImageView
                 android:layout_marginTop="15dp"

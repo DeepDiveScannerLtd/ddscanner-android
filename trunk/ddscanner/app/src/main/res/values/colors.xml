@@ -3,11 +3,13 @@
 <resources>
 
     <!--Green-->
-    <color name="primary">#095370</color>
+    <color name="primary">#115b97</color>
     <color name="secondary">#1565C0</color>
-    <color name="primary_dark">#074E69</color>
+    <color name="primary_dark">#07518e</color>
     <color name="primary_light">#C8E6C9</color>
     <color name="empty_buttons">#2e80a0</color>
+    <color name="radio_button_fill">#2d80a1</color>
+    <color name="radio_button_empty">#7b797a</color>
 
     <color name="green_100">#C8E6C9</color>
     <color name="green_600">#43A047</color>
@@ -54,6 +56,8 @@
     <color name="white">#FFFFFF</color>
 
     <color name="gray_bg">#f6f6f6</color>
+
+    <color name="diactive_button_photo_color">#afafaf</color>
 
     <color name="error">#d50001</color>
 

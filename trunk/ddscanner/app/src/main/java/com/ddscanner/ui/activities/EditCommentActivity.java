@@ -5,6 +5,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,6 +18,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,9 +38,9 @@ import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.adapters.AddPhotoToDsListAdapter;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
+import com.ddscanner.utils.DialogHelpers;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
-import com.ddscanner.utils.SharedPreferenceHelper;
 import com.squareup.otto.Subscribe;
 
 import java.io.File;
@@ -46,8 +49,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import me.nereo.multi_image_selector.MultiImageSelector;
-import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -106,8 +107,8 @@ public class EditCommentActivity extends AppCompatActivity implements View.OnCli
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             materialDialog.dismiss();
             switch (errorType) {
-                case USER_NOT_FOUND_ERROR_C801:
-                    SharedPreferenceHelper.logout();
+                case UNAUTHORIZED_401:
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logout();
                     LoginActivity.showForResult(EditCommentActivity.this, ActivitiesRequestCodes.REQUEST_CODE_EDIT_COMMENT_ACTIVITY_LOGIN);
                     break;
                 case COMMENT_NOT_FOUND_ERROR_C803:
@@ -138,7 +139,7 @@ public class EditCommentActivity extends AppCompatActivity implements View.OnCli
         if (comment.getImages() != null) {
             maxPhotos = maxPhotos - comment.getImages().size();
             imageUris = comment.getImages();
-            addPhotoToDsListAdapter = new AddPhotoToDsListAdapter(comment.getImages(), this, addPhotoTitle);
+            addPhotoToDsListAdapter = new AddPhotoToDsListAdapter(comment.getImages(), this);
             photos_rc.setAdapter(addPhotoToDsListAdapter);
            // setRcSettings();
         }
@@ -225,9 +226,14 @@ public class EditCommentActivity extends AppCompatActivity implements View.OnCli
 
     private void pickPhotoFromGallery() {
         if (checkReadStoragePermission()) {
-            MultiImageSelector.create().showCamera(false).multi()
-                    .count(maxPhotos)
-                    .start(this, ActivitiesRequestCodes.REQUEST_CODE_EDIT_COMMENT_ACTIVITY_PICK_PHOTOS);
+            Intent intent = new Intent();
+            intent.setType("image/*");
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            if (Build.VERSION.SDK_INT >= 18) {
+                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+            }
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+            startActivityForResult(Intent.createChooser(intent, "Select Picture"), ActivitiesRequestCodes.REQUEST_CODE_EDIT_COMMENT_ACTIVITY_PICK_PHOTOS);
         } else {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, ActivitiesRequestCodes.REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_PERMISSION_READ_STORAGE);
         }
@@ -257,7 +263,8 @@ public class EditCommentActivity extends AppCompatActivity implements View.OnCli
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                onBackPressed();
+                DialogHelpers.showDialogAfterChanging(R.string.dialog_leave_title, R.string.dialog_leave_review_message, this, this);
+//                onBackPressed();
                 return true;
             case R.id.send_review:
                 updateReview();
@@ -272,13 +279,57 @@ public class EditCommentActivity extends AppCompatActivity implements View.OnCli
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case ActivitiesRequestCodes.REQUEST_CODE_EDIT_COMMENT_ACTIVITY_PICK_PHOTOS:
+                Uri uri = Uri.parse("");
                 if (resultCode == RESULT_OK) {
-                    maxPhotos = maxPhotos - data.getStringArrayListExtra(MultiImageSelectorActivity
-                            .EXTRA_RESULT).size();
-                    imageUris.addAll(data.getStringArrayListExtra(MultiImageSelectorActivity
-                            .EXTRA_RESULT));
-                    addPhotoToDsListAdapter = new AddPhotoToDsListAdapter(imageUris,
-                            EditCommentActivity.this, addPhotoTitle);
+                    if (data.getClipData() != null) {
+                        for (int i = 0; i < data.getClipData().getItemCount(); i++) {
+                            String filename = "DDScanner" + String.valueOf(System.currentTimeMillis());
+                            try {
+                                uri = data.getClipData().getItemAt(i).getUri();
+                                String mimeType = getContentResolver().getType(uri);
+                                String sourcePath = getExternalFilesDir(null).toString();
+                                File file = new File(sourcePath + "/" + filename);
+                                if (Helpers.isFileImage(uri.getPath()) || mimeType.contains("image")) {
+                                    try {
+                                        Helpers.copyFileStream(file, uri, this);
+                                        Log.i(TAG, file.toString());
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+
+                                    imageUris.add(file.getPath());
+                                } else {
+                                    Toast.makeText(this, "You can choose only images", Toast.LENGTH_SHORT).show();
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                    if (data.getData() != null) {
+                        String filename = "DDScanner" + String.valueOf(System.currentTimeMillis());
+                        try {
+                            uri = data.getData();
+                            String mimeType = getContentResolver().getType(uri);
+                            String sourcePath = getExternalFilesDir(null).toString();
+                            File file = new File(sourcePath + "/" + filename);
+                            if (Helpers.isFileImage(uri.getPath()) || mimeType.contains("image")) {
+                                try {
+                                    Helpers.copyFileStream(file, uri, this);
+                                    Log.i(TAG, file.toString());
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+
+                                imageUris.add(file.getPath());
+                            } else {
+                                Toast.makeText(this, "You can choose only images", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    addPhotoToDsListAdapter = new AddPhotoToDsListAdapter(imageUris, EditCommentActivity.this);
                     addPhotoTitle.setVisibility(View.GONE);
                     photos_rc.setVisibility(View.VISIBLE);
                     photos_rc.setAdapter(addPhotoToDsListAdapter);
@@ -307,11 +358,11 @@ public class EditCommentActivity extends AppCompatActivity implements View.OnCli
             Toast.makeText(EditCommentActivity.this, R.string.review_error, Toast.LENGTH_SHORT).show();
             return;
         }
-        if (SharedPreferenceHelper.isUserLoggedIn()) {
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
             requestSocial = RequestBody.create(MediaType.parse("multipart/form-data"),
-                    SharedPreferenceHelper.getSn());
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().getSn());
             requessToken = RequestBody.create(MediaType.parse("multipart/form-data"),
-                    SharedPreferenceHelper.getToken());
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().getToken());
         }
         requestRating = RequestBody.create(MediaType.parse("multipart/form-data"),
                 String.valueOf(Math.round(ratingBar.getRating())));
@@ -346,7 +397,7 @@ public class EditCommentActivity extends AppCompatActivity implements View.OnCli
                 deletedImages.add(MultipartBody.Part.createFormData("images_del[]", deleted.get(i)));
             }
         }
-        DDScannerApplication.getDdScannerRestClient().putEditComment(comment.getId(), _method, requestComment, requestRating, newImages, deletedImages, requessToken, requestSocial, editCommentResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient().putEditComment(comment.getId(), _method, requestComment, requestRating, newImages, deletedImages, requessToken, requestSocial, editCommentResultListener);
     }
 
     private ArrayList<String> removeAdressPart(ArrayList<String> deleted) {
@@ -365,8 +416,7 @@ public class EditCommentActivity extends AppCompatActivity implements View.OnCli
         if (addPhotoToDsListAdapter.getListOfDeletedImages() != null) {
             deleted.addAll((ArrayList<String>) addPhotoToDsListAdapter.getListOfDeletedImages());
         }
-        addPhotoToDsListAdapter = new AddPhotoToDsListAdapter(imageUris,
-                EditCommentActivity.this, addPhotoTitle);
+        addPhotoToDsListAdapter = new AddPhotoToDsListAdapter(imageUris, EditCommentActivity.this);
         photos_rc.setAdapter(addPhotoToDsListAdapter);
         if (addPhotoToDsListAdapter.getNewFilesUrisList() != null) {
             maxPhotos = 3 - addPhotoToDsListAdapter.getNewFilesUrisList().size();

@@ -2,7 +2,7 @@ package com.ddscanner.entities.errors;
 
 public class GeneralError {
 //    {
-//        "message": "User not found",
+//        "message": "UserOld not found",
 //            "status_code": 404
 //    }
     private String message;

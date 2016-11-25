@@ -8,10 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
-import com.ddscanner.entities.User;
-import com.ddscanner.events.ShowUserDialogEvent;
+import com.ddscanner.entities.UserOld;
 import com.ddscanner.ui.activities.ForeignProfileActivity;
 import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;
@@ -26,10 +24,10 @@ import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 public class EditorsUsersListAdapter extends RecyclerView.Adapter<EditorsUsersListAdapter.EditorsUsersListViewHolder> {
 
     private Context context;
-    private ArrayList<User> userArrayList;
+    private ArrayList<UserOld> userOldArrayList;
 
-    public EditorsUsersListAdapter(Context context, ArrayList<User> users) {
-        userArrayList = users;
+    public EditorsUsersListAdapter(Context context, ArrayList<UserOld> userOlds) {
+        userOldArrayList = userOlds;
         this.context = context;
     }
 
@@ -43,7 +41,7 @@ public class EditorsUsersListAdapter extends RecyclerView.Adapter<EditorsUsersLi
 
     @Override
     public void onBindViewHolder(EditorsUsersListViewHolder holder, final int position) {
-        if (!userArrayList.get(position).getPicture().contains("http")) {
+        if (!userOldArrayList.get(position).getPicture().contains("http")) {
             Picasso.with(context)
                     .load(R.drawable.avatar_profile_dds)
                     .resize(Math.round(Helpers.convertDpToPixel(58, context)), Math.round(Helpers.convertDpToPixel(58, context)))
@@ -52,23 +50,23 @@ public class EditorsUsersListAdapter extends RecyclerView.Adapter<EditorsUsersLi
                     .into(holder.userAvatar);
         } else {
             Picasso.with(context)
-                    .load(userArrayList.get(position).getPicture())
+                    .load(userOldArrayList.get(position).getPicture())
                     .resize(Math.round(Helpers.convertDpToPixel(58, context)), Math.round(Helpers.convertDpToPixel(58, context)))
                     .centerCrop()
                     .transform(new CropCircleTransformation())
                     .into(holder.userAvatar);
         }
-        holder.userName.setText(userArrayList.get(position).getName());
+        holder.userName.setText(userOldArrayList.get(position).getName());
         if (position == 0) {
             holder.info.setText(R.string.creator);
         } else {
             holder.info.setText(R.string.editor);
         }
-        if (userArrayList.get(position).getAuthor() != null && userArrayList.get(position).getAuthor().equals("social")) {
+        if (userOldArrayList.get(position).getAuthor() != null && userOldArrayList.get(position).getAuthor().equals("social")) {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ForeignProfileActivity.show(context, userArrayList.get(position).getId());
+                    ForeignProfileActivity.show(context, userOldArrayList.get(position).getId());
                 }
             });
         }
@@ -76,7 +74,7 @@ public class EditorsUsersListAdapter extends RecyclerView.Adapter<EditorsUsersLi
 
     @Override
     public int getItemCount() {
-        return userArrayList.size();
+        return userOldArrayList.size();
     }
 
     public class EditorsUsersListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -95,8 +93,8 @@ public class EditorsUsersListAdapter extends RecyclerView.Adapter<EditorsUsersLi
 
         @Override
         public void onClick(View v) {
-//            if (userArrayList.get(getAdapterPosition()).getAuthor() != null && userArrayList.get(getAdapterPosition()).getAuthor().equals("social")) {
-//                ForeignProfileActivity.show(context, userArrayList.get(getAdapterPosition()).getId());
+//            if (userOldArrayList.get(getAdapterPosition()).getAuthor() != null && userOldArrayList.get(getAdapterPosition()).getAuthor().equals("social")) {
+//                ForeignProfileActivity.showForResult(context, userOldArrayList.get(getAdapterPosition()).getId());
 //            }
         }
     }

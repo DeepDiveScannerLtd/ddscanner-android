@@ -14,7 +14,7 @@ import android.view.View;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
-import com.ddscanner.entities.DiveSpot;
+import com.ddscanner.entities.DiveSpotShort;
 import com.ddscanner.entities.DiveSpotListSource;
 import com.ddscanner.entities.DivespotsWrapper;
 import com.ddscanner.rest.DDScannerRestClient;
@@ -23,7 +23,6 @@ import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
-import com.ddscanner.utils.SharedPreferenceHelper;
 import com.rey.material.widget.ProgressView;
 
 import java.util.ArrayList;
@@ -35,7 +34,7 @@ public class DiveSpotsListActivity extends AppCompatActivity implements InfoDial
     
     private RecyclerView rc;
     private Toolbar toolbar;
-    private List<DiveSpot> diveSpots = new ArrayList<>();
+    private List<DiveSpotShort> diveSpotShorts = new ArrayList<>();
     private boolean isAdded = false;
     private ProgressView progressBarFull;
     private EventsTracker.SpotViewSource spotViewSource;
@@ -45,7 +44,7 @@ public class DiveSpotsListActivity extends AppCompatActivity implements InfoDial
 
         @Override
         public void onSuccess(DivespotsWrapper result) {
-            DiveSpotsListActivity.this.diveSpots = result.getDiveSpots();
+            DiveSpotsListActivity.this.diveSpotShorts = result.getDiveSpots();
             setUi();
         }
 
@@ -57,8 +56,8 @@ public class DiveSpotsListActivity extends AppCompatActivity implements InfoDial
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             switch (errorType) {
-                case USER_NOT_FOUND_ERROR_C801:
-                    SharedPreferenceHelper.logout();
+                case UNAUTHORIZED_401:
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logout();
                     LoginActivity.showForResult(DiveSpotsListActivity.this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOTS_LIST_ACTIVITY_LOGIN);
                     break;
                 default:
@@ -78,16 +77,16 @@ public class DiveSpotsListActivity extends AppCompatActivity implements InfoDial
         spotViewSource = EventsTracker.SpotViewSource.getByName(getIntent().getStringExtra(BUNDLE_KEY_SPOT_VIEW_SOURCE));
         switch (diveSpotListSource) {
             case ADDED:
-                DDScannerApplication.getDdScannerRestClient().getAddedDiveSpots(SharedPreferenceHelper.getUserServerId(), divespotsWrapperResultListener);
+                DDScannerApplication.getInstance().getDdScannerRestClient().getAddedDiveSpots(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId(), divespotsWrapperResultListener);
                 break;
             case EDITED:
-                DDScannerApplication.getDdScannerRestClient().getEditedDiveSpots(SharedPreferenceHelper.getUserServerId(), divespotsWrapperResultListener);
+                DDScannerApplication.getInstance().getDdScannerRestClient().getEditedDiveSpots(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId(), divespotsWrapperResultListener);
                 break;
             case FAVORITES:
-                DDScannerApplication.getDdScannerRestClient().getUsersFavourites(SharedPreferenceHelper.getUserServerId(), divespotsWrapperResultListener);
+                DDScannerApplication.getInstance().getDdScannerRestClient().getUsersFavourites(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId(), divespotsWrapperResultListener);
                 break;
             case CHECKINS:
-                DDScannerApplication.getDdScannerRestClient().getUsersCheckins(SharedPreferenceHelper.getUserServerId(), divespotsWrapperResultListener);
+                DDScannerApplication.getInstance().getDdScannerRestClient().getUsersCheckins(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId(), divespotsWrapperResultListener);
                 break;
         }
         findViews();
@@ -101,16 +100,16 @@ public class DiveSpotsListActivity extends AppCompatActivity implements InfoDial
                 if (resultCode == RESULT_OK) {
                     switch (diveSpotListSource) {
                         case ADDED:
-                            DDScannerApplication.getDdScannerRestClient().getAddedDiveSpots(SharedPreferenceHelper.getUserServerId(), divespotsWrapperResultListener);
+                            DDScannerApplication.getInstance().getDdScannerRestClient().getAddedDiveSpots(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId(), divespotsWrapperResultListener);
                             break;
                         case EDITED:
-                            DDScannerApplication.getDdScannerRestClient().getEditedDiveSpots(SharedPreferenceHelper.getUserServerId(), divespotsWrapperResultListener);
+                            DDScannerApplication.getInstance().getDdScannerRestClient().getEditedDiveSpots(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId(), divespotsWrapperResultListener);
                             break;
                         case FAVORITES:
-                            DDScannerApplication.getDdScannerRestClient().getUsersFavourites(SharedPreferenceHelper.getUserServerId(), divespotsWrapperResultListener);
+                            DDScannerApplication.getInstance().getDdScannerRestClient().getUsersFavourites(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId(), divespotsWrapperResultListener);
                             break;
                         case CHECKINS:
-                            DDScannerApplication.getDdScannerRestClient().getUsersCheckins(SharedPreferenceHelper.getUserServerId(), divespotsWrapperResultListener);
+                            DDScannerApplication.getInstance().getDdScannerRestClient().getUsersCheckins(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId(), divespotsWrapperResultListener);
                             break;
                     }
                     if (resultCode == RESULT_CANCELED) {
@@ -150,7 +149,7 @@ public class DiveSpotsListActivity extends AppCompatActivity implements InfoDial
         rc.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         rc.setLayoutManager(linearLayoutManager);
-        rc.setAdapter(new DiveSpotsListAdapter((ArrayList<DiveSpot>) diveSpots, this, spotViewSource));
+        rc.setAdapter(new DiveSpotsListAdapter((ArrayList<DiveSpotShort>) diveSpotShorts, this, spotViewSource));
         progressBarFull.setVisibility(View.GONE);
         rc.setVisibility(View.VISIBLE);
     }

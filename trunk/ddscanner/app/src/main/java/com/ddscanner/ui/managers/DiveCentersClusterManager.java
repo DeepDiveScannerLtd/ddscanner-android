@@ -1,33 +1,18 @@
 package com.ddscanner.ui.managers;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
-import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.DiveCenter;
-import com.ddscanner.entities.DiveCentersResponseEntity;
-import com.ddscanner.events.DiveCenterMarkerClickEvent;
-import com.ddscanner.events.OnMapClickEvent;
-import com.ddscanner.events.PutDiveCentersToListEvent;
-import com.ddscanner.rest.DDScannerRestClient;
-import com.ddscanner.ui.activities.DiveCenterDetailsActivity;
-import com.ddscanner.ui.dialogs.InfoDialogFragment;
-import com.ddscanner.utils.DialogsRequestCodes;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -38,64 +23,25 @@ import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
 import com.google.maps.android.ui.SquareTextView;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-public class DiveCentersClusterManager extends ClusterManager<DiveCenter> implements ClusterManager.OnClusterClickListener<DiveCenter>, GoogleMap.OnMapClickListener, GoogleMap.OnCameraChangeListener {
+public class DiveCentersClusterManager extends ClusterManager<DiveCenter> implements ClusterManager.OnClusterClickListener<DiveCenter> {
 
     private static final String TAG = DiveCentersClusterManager.class.getName();
     private static final int CAMERA_ANIMATION_DURATION = 300;
 
-    private FragmentActivity context;
     private GoogleMap googleMap;
-    private Marker lastClickedMarker;
-    private Marker diveSpotMarker;
-    private HashMap<LatLng, DiveCenter> diveCentersMap = new HashMap<>();
-    private Drawable clusterBackgroundDrawable;
-    private final IconGenerator clusterIconGenerator;
-    private HashMap<Marker, Bitmap> markerBitmapCache = new HashMap<>();
-    private List<DiveCenter> diveCenters = new ArrayList<>();
-    private String logoPath;
-    private DiveCentersResponseEntity diveCentersResponseEntity;
-
-    private Marker userCurrentLocationMarker;
 
     private final IconGenerator clusterIconGenerator1Symbol;
     private final IconGenerator clusterIconGenerator2Symbols;
     private final IconGenerator clusterIconGenerator3Symbols;
 
-    private DDScannerRestClient.ResultListener<DiveCentersResponseEntity> diveCentersResponseEntityResultListener = new DDScannerRestClient.ResultListener<DiveCentersResponseEntity>() {
-        @Override
-        public void onSuccess(DiveCentersResponseEntity result) {
-            diveCentersResponseEntity = result;
-            logoPath = diveCentersResponseEntity.getLogoPath();
-            diveCenters = diveCentersResponseEntity.getDivecenters();
-            DDScannerApplication.bus.post(new PutDiveCentersToListEvent(changeListToListFragment((ArrayList<DiveCenter>)diveCenters), logoPath));
-            showingMarkers(diveCenters);
-        }
-
-        @Override
-        public void onConnectionFailure() {
-            InfoDialogFragment.showForActivityResult(context.getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_DIVE_CENTERS_CLUSTER_MANAGER_FAILED_TO_CONNECT, false);
-        }
-
-        @Override
-        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-            EventsTracker.trackUnknownServerError(url, errorMessage);
-            InfoDialogFragment.showForActivityResult(context.getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_DIVE_CENTERS_CLUSTER_MANAGER_UNEXPECTED_ERROR, false);
-        }
-    };
-
-    public DiveCentersClusterManager(FragmentActivity context, GoogleMap googleMap, LatLng diveSpotLatLng, String diveSpotName) {
+    public DiveCentersClusterManager(FragmentActivity context, GoogleMap googleMap) {
         super(context, googleMap);
-        this.context = context;
         this.googleMap = googleMap;
-     //   this.clusterBackgroundDrawable = ContextCompat.getDrawable(context, R.drawable.ic_number);
-        this.clusterIconGenerator = new IconGenerator(context);
-        this.clusterIconGenerator.setContentView(this.makeSquareTextView(context));
-        this.clusterIconGenerator.setTextAppearance(com.google.maps.android.R.style.ClusterIcon_TextAppearance);
-        this.clusterIconGenerator.setBackground(clusterBackgroundDrawable);
+        //   this.clusterBackgroundDrawable = ContextCompat.getDrawable(context, R.drawable.ic_number);
+        IconGenerator clusterIconGenerator = new IconGenerator(context);
+        clusterIconGenerator.setContentView(this.makeSquareTextView(context));
+        clusterIconGenerator.setTextAppearance(com.google.maps.android.R.style.ClusterIcon_TextAppearance);
+        clusterIconGenerator.setBackground(null);
 
         View clusterView;
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -118,68 +64,6 @@ public class DiveCentersClusterManager extends ClusterManager<DiveCenter> implem
         setAlgorithm(new GridBasedAlgorithm<DiveCenter>());
         setRenderer(new IconRenderer(context, googleMap, this));
         setOnClusterClickListener(this);
-        this.googleMap.setOnMapClickListener(this);
-        DDScannerApplication.getDdScannerRestClient().getDiveCenters(diveSpotLatLng, diveCentersResponseEntityResultListener);
-
-        for (DiveCenter diveCenter : diveCenters) {
-            addItem(diveCenter);
-            diveCentersMap.put(diveCenter.getPosition(), diveCenter);
-        }
-        diveSpotMarker = googleMap.addMarker(new MarkerOptions().position(diveSpotLatLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds)).title(diveSpotName));
-    }
-
-    @Override
-    public void onInfoWindowClick(final Marker marker) {
-        if (!marker.getPosition().equals(diveSpotMarker.getPosition())) {
-            DiveCenterDetailsActivity.show(context, diveCentersMap.get(marker.getPosition()), logoPath, EventsTracker.SpotViewSource.FROM_MAP);
-        }
-    }
-
-//    @Override
-//    public void onCameraIdle() {
-//        DDScannerApplication.bus.post(new PutDiveCentersToListEvent(changeListToListFragment((ArrayList<DiveCenter>)diveCenters), logoPath));
-//    }
-
-
-    @Override
-    public void onCameraChange(CameraPosition cameraPosition) {
-        super.onCameraChange(cameraPosition);
-        DDScannerApplication.bus.post(new PutDiveCentersToListEvent(changeListToListFragment((ArrayList<DiveCenter>)diveCenters), logoPath));
-    }
-
-    @Override
-    public boolean onMarkerClick(final Marker marker) {
-        if (super.onMarkerClick(marker) || marker.equals(diveSpotMarker) || marker.equals(userCurrentLocationMarker)) {
-            return true;
-        }
-        if (lastClickedMarker != null) {
-            try {
-                lastClickedMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.pin_dc));
-            } catch (IllegalStateException e) {
-
-            } catch (IllegalArgumentException e) {
-
-            }
-        }
-        lastClickedMarker = marker;
-        // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
-//                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds_selected));
-        marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_dc_selected));
-        if (diveCentersMap.get(marker.getPosition())!= null) {
-            DDScannerApplication.bus.post(new DiveCenterMarkerClickEvent(diveCentersMap.get(marker.getPosition()), logoPath));
-        }
-        return true;
-    }
-
-    @Override
-    public void onMapClick(LatLng latLng) {
-        if (lastClickedMarker != null) {
-            // lastClickedMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
-            DDScannerApplication.bus.post(new OnMapClickEvent(lastClickedMarker, false));
-            lastClickedMarker = null;
-        } else {
-            DDScannerApplication.bus.post(new OnMapClickEvent(lastClickedMarker, false));
-        }
     }
 
     @Override
@@ -204,13 +88,13 @@ public class DiveCentersClusterManager extends ClusterManager<DiveCenter> implem
 
     private class IconRenderer extends DefaultClusterRenderer<DiveCenter> {
 
-        public IconRenderer(Context context, GoogleMap map, ClusterManager<DiveCenter> clusterManager) {
+        IconRenderer(Context context, GoogleMap map, ClusterManager<DiveCenter> clusterManager) {
             super(context, map, clusterManager);
         }
 
         @Override
         protected void onBeforeClusterRendered(Cluster<DiveCenter> cluster, MarkerOptions markerOptions) {
-            BitmapDescriptor descriptor = null;
+            BitmapDescriptor descriptor;
 
             int bucket = this.getBucket(cluster);
             String clusterLabel = getClusterText(bucket);
@@ -242,46 +126,13 @@ public class DiveCentersClusterManager extends ClusterManager<DiveCenter> implem
                 // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
 //                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
                 marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.pin_dc));
-                if (lastClickedMarker != null && lastClickedMarker.getPosition().equals(marker.getPosition()) && lastClickedMarker.isInfoWindowShown()) {
+//                if (lastClickedMarker != null && lastClickedMarker.getPosition().equals(marker.getPosition()) && lastClickedMarker.isInfoWindowShown()) {
                     //      marker.showInfoWindow();
-                }
+//                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-    }
-
-    private void showingMarkers(List<DiveCenter> diveCenters) {
-        for (DiveCenter diveCenter : diveCenters) {
-            addItem(diveCenter);
-            diveCentersMap.put(diveCenter.getPosition(), diveCenter);
-        }
-        cluster();
-    }
-
-    private ArrayList<DiveCenter> changeListToListFragment(ArrayList<DiveCenter> oldList) {
-        ArrayList<DiveCenter> newList = new ArrayList<>();
-        for (DiveCenter diveCenter : oldList) {
-            if (isSpotVisibleOnScreen(Float.valueOf(diveCenter.getLat()), Float.valueOf(diveCenter.getLng()))) {
-                Log.i(TAG, "DiveSpotInVisibleRegion");
-                newList.add(diveCenter);
-            }
-        }
-        return newList;
-    }
-
-    private boolean isSpotVisibleOnScreen(float lat, float lng) {
-        LatLng southwest = googleMap.getProjection().getVisibleRegion().latLngBounds.southwest;
-        LatLng northeast = googleMap.getProjection().getVisibleRegion().latLngBounds.northeast;
-        if (lat < northeast.latitude && lat > southwest.latitude && lng < northeast.longitude && lng > southwest.longitude) {
-            Log.i(TAG, "Coordinates in visible region");
-            return true;
-        }
-        return false;
-    }
-
-    public void setUserCurrentLocationMarker(Marker userCurrentLocationMarker) {
-        this.userCurrentLocationMarker = userCurrentLocationMarker;
     }
 
 }

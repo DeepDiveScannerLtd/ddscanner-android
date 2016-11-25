@@ -1,5 +1,7 @@
 package com.ddscanner.entities;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,9 +9,10 @@ import java.util.List;
  * Created by lashket on 21.1.16.
  */
 public class DivespotsWrapper {
-    private List<DiveSpot> divespots = new ArrayList<>();
+    @SerializedName("dive_spots")
+    private List<DiveSpotShort> divespots = new ArrayList<>();
 
-    public List<DiveSpot> getDiveSpots() { return divespots; }
+    public List<DiveSpotShort> getDiveSpots() { return divespots; }
 
-    public void setDiveSpots(List<DiveSpot> diveSpots) { this.divespots = divespots; }
+    public void setDiveSpots(List<DiveSpotShort> diveSpotShorts) { this.divespots = divespots; }
 }

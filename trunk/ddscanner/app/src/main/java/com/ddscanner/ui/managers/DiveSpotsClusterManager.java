@@ -1,7 +1,6 @@
 package com.ddscanner.ui.managers;
 
 import android.content.Context;
-import android.graphics.BitmapFactory;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -12,7 +11,7 @@ import android.widget.RelativeLayout;
 import com.crashlytics.android.Crashlytics;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
-import com.ddscanner.entities.DiveSpot;
+import com.ddscanner.entities.DiveSpotShort;
 import com.ddscanner.entities.DivespotsWrapper;
 import com.ddscanner.entities.request.DiveSpotsRequestMap;
 import com.ddscanner.events.CloseInfoWindowEvent;
@@ -26,7 +25,6 @@ import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.ui.fragments.MapListFragment;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LogUtils;
-import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -48,7 +46,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements ClusterManager.OnClusterClickListener<DiveSpot>, GoogleMap.OnMapClickListener, GoogleMap.OnCameraChangeListener{
+public class DiveSpotsClusterManager extends ClusterManager<DiveSpotShort> implements ClusterManager.OnClusterClickListener<DiveSpotShort>, GoogleMap.OnMapClickListener, GoogleMap.OnCameraChangeListener{
 
     private static final String TAG = DiveSpotsClusterManager.class.getName();
     private static final int CAMERA_ANIMATION_DURATION = 300;
@@ -59,8 +57,8 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
     private GoogleMap googleMap;
     private MapListFragment parentFragment;
     private DiveSpotsRequestMap diveSpotsRequestMap = new DiveSpotsRequestMap();
-    private ArrayList<DiveSpot> diveSpots = new ArrayList<>();
-    private HashMap<LatLng, DiveSpot> diveSpotsMap = new HashMap<>();
+    private ArrayList<DiveSpotShort> diveSpotShorts = new ArrayList<>();
+    private HashMap<LatLng, DiveSpotShort> diveSpotsMap = new HashMap<>();
     private float lastZoom;
 
     private boolean isCanMakeRequest = false;
@@ -81,8 +79,8 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         @Override
         public void onSuccess(DivespotsWrapper divespotsWrapper) {
             hideProgressBar();
-            updateDiveSpots((ArrayList<DiveSpot>) divespotsWrapper.getDiveSpots());
-            parentFragment.fillDiveSpots(getVisibleMarkersList(diveSpots));
+            updateDiveSpots((ArrayList<DiveSpotShort>) divespotsWrapper.getDiveSpots());
+            parentFragment.fillDiveSpots(getVisibleMarkersList(diveSpotShorts));
         }
 
         @Override
@@ -125,7 +123,9 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         this.toast = toast;
         this.progressBar = progressBar;
         googleMap.setOnMapClickListener(this);
-        setAlgorithm(new GridBasedAlgorithm<DiveSpot>());
+        googleMap.getUiSettings().setRotateGesturesEnabled(false);
+        googleMap.getUiSettings().setTiltGesturesEnabled(false);
+        setAlgorithm(new GridBasedAlgorithm<DiveSpotShort>());
         setRenderer(new IconRenderer(context, googleMap, this));
         setOnClusterClickListener(this);
         if (checkArea(googleMap.getProjection().getVisibleRegion().latLngBounds.southwest, googleMap.getProjection().getVisibleRegion().latLngBounds.northeast)) {
@@ -167,15 +167,11 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         if (lastClickedMarker != null) {
             // lastClickedMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
             if (diveSpotsMap.get(lastClickedMarker.getPosition()) != null) {
-                if (diveSpotsMap.get(lastClickedMarker.getPosition()).getStatus() != null) {
-                    if (diveSpotsMap.get(lastClickedMarker.getPosition()).getStatus().equals("waiting")) {
+                    if (diveSpotsMap.get(lastClickedMarker.getPosition()).getIsNew()) {
                         DDScannerApplication.bus.post(new OnMapClickEvent(lastClickedMarker, true));
                     } else {
                         DDScannerApplication.bus.post(new OnMapClickEvent(lastClickedMarker, false));
                     }
-                } else {
-                    DDScannerApplication.bus.post(new OnMapClickEvent(lastClickedMarker, false));
-                }
             } else {
                 DDScannerApplication.bus.post(new OnMapClickEvent(lastClickedMarker, false));
             }
@@ -193,7 +189,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
 //        }
 //        LatLng southwest = googleMap.getProjection().getVisibleRegion().latLngBounds.southwest;
 //        LatLng northeast = googleMap.getProjection().getVisibleRegion().latLngBounds.northeast;
-//        parentFragment.fillDiveSpots(getVisibleMarkersList(diveSpots));
+//        parentFragment.fillDiveSpots(getVisibleMarkersList(diveSpotShorts));
 //        if (diveSpotsRequestMap.size() == 0) {
 //            diveSpotsRequestMap.putSouthWestLat(southwest.latitude - Math.abs(northeast.latitude - southwest.latitude));
 //            diveSpotsRequestMap.putSouthWestLng(southwest.longitude - Math.abs(northeast.longitude - southwest.longitude));
@@ -226,7 +222,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         }
         LatLng southwest = googleMap.getProjection().getVisibleRegion().latLngBounds.southwest;
         LatLng northeast = googleMap.getProjection().getVisibleRegion().latLngBounds.northeast;
-        parentFragment.fillDiveSpots(getVisibleMarkersList(diveSpots));
+        parentFragment.fillDiveSpots(getVisibleMarkersList(diveSpotShorts));
         if (diveSpotsRequestMap.size() == 0) {
             diveSpotsRequestMap.putSouthWestLat(southwest.latitude - Math.abs(northeast.latitude - southwest.latitude));
             diveSpotsRequestMap.putSouthWestLng(southwest.longitude - Math.abs(northeast.longitude - southwest.longitude));
@@ -258,7 +254,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         if (lastClickedMarker != null) {
             try {
                 if (diveSpotsMap.get(marker.getPosition()) != null) {
-                    if (diveSpotsMap.get(marker.getPosition()).getStatus().equals("waiting")) {
+                    if (diveSpotsMap.get(marker.getPosition()).getIsNew()) {
                         lastClickedMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds_new));
                     } else {
                         lastClickedMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
@@ -267,7 +263,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
                     if (diveSpotsMap != null) {
                         String loggedString = "Marker position - " + marker.getPosition().toString() + "\n";
                         int i = 1;
-                        for (Map.Entry<LatLng, DiveSpot> entry : diveSpotsMap.entrySet()) {
+                        for (Map.Entry<LatLng, DiveSpotShort> entry : diveSpotsMap.entrySet()) {
                             loggedString += String.valueOf(i) + ": " + entry.getValue().getLat() + ", " + entry.getValue().getLat() + "\n";
                             i++;
                         }
@@ -287,10 +283,10 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
     }
 
     @Override
-    public boolean onClusterClick(Cluster<DiveSpot> cluster) {
+    public boolean onClusterClick(Cluster<DiveSpotShort> cluster) {
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
-        for (DiveSpot diveSpot : cluster.getItems()) {
-            builder.include(diveSpot.getPosition());
+        for (DiveSpotShort diveSpotShort : cluster.getItems()) {
+            builder.include(diveSpotShort.getPosition());
         }
         LatLngBounds bounds = builder.build();
         CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 0);
@@ -298,39 +294,39 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         return true;
     }
 
-    private void updateDiveSpots(ArrayList<DiveSpot> diveSpots) {
-        LogUtils.i(TAG, "incoming dive spots size = " + diveSpots.size());
-        final ArrayList<DiveSpot> newDiveSpots = new ArrayList<>();
-        newDiveSpots.addAll(diveSpots);
-        newDiveSpots.removeAll(this.diveSpots);
-        final ArrayList<DiveSpot> deletedDiveSpots = new ArrayList<>();
-        deletedDiveSpots.addAll(this.diveSpots);
-        deletedDiveSpots.removeAll(diveSpots);
-        LogUtils.i(TAG, "removing " + deletedDiveSpots.size() + " dive spots");
-        for (DiveSpot diveSpot : deletedDiveSpots) {
-            removeDiveSpot(diveSpot);
+    private void updateDiveSpots(ArrayList<DiveSpotShort> diveSpotShorts) {
+        LogUtils.i(TAG, "incoming dive spots size = " + diveSpotShorts.size());
+        final ArrayList<DiveSpotShort> newDiveSpotShorts = new ArrayList<>();
+        newDiveSpotShorts.addAll(diveSpotShorts);
+        newDiveSpotShorts.removeAll(this.diveSpotShorts);
+        final ArrayList<DiveSpotShort> deletedDiveSpotShorts = new ArrayList<>();
+        deletedDiveSpotShorts.addAll(this.diveSpotShorts);
+        deletedDiveSpotShorts.removeAll(diveSpotShorts);
+        LogUtils.i(TAG, "removing " + deletedDiveSpotShorts.size() + " dive spots");
+        for (DiveSpotShort diveSpotShort : deletedDiveSpotShorts) {
+            removeDiveSpot(diveSpotShort);
         }
-        LogUtils.i(TAG, "adding " + newDiveSpots.size() + " dive spots");
-        for (DiveSpot diveSpot : newDiveSpots) {
-            addNewDiveSpot(diveSpot);
+        LogUtils.i(TAG, "adding " + newDiveSpotShorts.size() + " dive spots");
+        for (DiveSpotShort diveSpotShort : newDiveSpotShorts) {
+            addNewDiveSpot(diveSpotShort);
         }
         cluster();
     }
 
-    private void addNewDiveSpot(DiveSpot diveSpot) {
-        if (diveSpot.getPosition() == null) {
-            LogUtils.i(TAG, "addNewDiveSpot diveSpot.getPosition() == null");
+    private void addNewDiveSpot(DiveSpotShort diveSpotShort) {
+        if (diveSpotShort.getPosition() == null) {
+            LogUtils.i(TAG, "addNewDiveSpot diveSpotShort.getPosition() == null");
         } else {
-            addItem(diveSpot);
-            diveSpotsMap.put(diveSpot.getPosition(), diveSpot);
-            diveSpots.add(diveSpot);
+            addItem(diveSpotShort);
+            diveSpotsMap.put(diveSpotShort.getPosition(), diveSpotShort);
+            diveSpotShorts.add(diveSpotShort);
         }
     }
 
-    private void removeDiveSpot(DiveSpot diveSpot) {
-        removeItem(diveSpot);
-        diveSpotsMap.remove(new LatLng(Double.valueOf(diveSpot.getLat()), Double.valueOf(diveSpot.getLng())));
-        diveSpots.remove(diveSpot);
+    private void removeDiveSpot(DiveSpotShort diveSpotShort) {
+        removeItem(diveSpotShort);
+        diveSpotsMap.remove(new LatLng(Double.valueOf(diveSpotShort.getLat()), Double.valueOf(diveSpotShort.getLng())));
+        diveSpotShorts.remove(diveSpotShort);
     }
 
     private boolean checkArea(LatLng southWest, LatLng northEast) {
@@ -350,14 +346,14 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         }
     }
 
-    private class IconRenderer extends DefaultClusterRenderer<DiveSpot> {
+    private class IconRenderer extends DefaultClusterRenderer<DiveSpotShort> {
 
-        IconRenderer(Context context, GoogleMap map, ClusterManager<DiveSpot> clusterManager) {
+        IconRenderer(Context context, GoogleMap map, ClusterManager<DiveSpotShort> clusterManager) {
             super(context, map, clusterManager);
         }
 
         @Override
-        protected void onBeforeClusterRendered(Cluster<DiveSpot> cluster, MarkerOptions markerOptions) {
+        protected void onBeforeClusterRendered(Cluster<DiveSpotShort> cluster, MarkerOptions markerOptions) {
             BitmapDescriptor descriptor;
 
             int bucket = this.getBucket(cluster);
@@ -384,10 +380,10 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         }
 
         @Override
-        protected void onClusterItemRendered(DiveSpot diveSpot, final Marker marker) {
-            super.onClusterItemRendered(diveSpot, marker);
+        protected void onClusterItemRendered(DiveSpotShort diveSpotShort, final Marker marker) {
+            super.onClusterItemRendered(diveSpotShort, marker);
             try {
-                if (diveSpot.getStatus().equals("waiting")) {
+                if (diveSpotShort.getIsNew()) {
                     if (lastClickedMarker == null || !lastClickedMarker.equals(marker)) {
                         marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds_new));
                     }
@@ -396,7 +392,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
                 }
 
                 if (newDiveSpotId != -1) {
-                    if (diveSpot.getId() == newDiveSpotId) {
+                    if (diveSpotShort.getId() == newDiveSpotId) {
                         onMarkerClick(marker);
                         newDiveSpotId = -1;
                     }
@@ -410,11 +406,11 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         }
     }
 
-    private ArrayList<DiveSpot> getVisibleMarkersList(ArrayList<DiveSpot> oldList) {
-        ArrayList<DiveSpot> newList = new ArrayList<>();
-        for (DiveSpot diveSpot : oldList) {
-            if (isSpotVisibleOnScreen(Float.valueOf(diveSpot.getLat()), Float.valueOf(diveSpot.getLng()))) {
-                newList.add(diveSpot);
+    private ArrayList<DiveSpotShort> getVisibleMarkersList(ArrayList<DiveSpotShort> oldList) {
+        ArrayList<DiveSpotShort> newList = new ArrayList<>();
+        for (DiveSpotShort diveSpotShort : oldList) {
+            if (isSpotVisibleOnScreen(Float.valueOf(diveSpotShort.getLat()), Float.valueOf(diveSpotShort.getLng()))) {
+                newList.add(diveSpotShort);
             }
         }
         return newList;
@@ -457,7 +453,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
     }
 
     public boolean isLastClickedMarkerNew() {
-        return diveSpotsMap.get(lastClickedMarker.getPosition()).getStatus().equals("waiting");
+        return diveSpotsMap.get(lastClickedMarker.getPosition()).getIsNew();
     }
 
     private void sendRequest(LatLng northeast, LatLng southwest) {
@@ -470,16 +466,16 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpot> implements
         diveSpotsRequestMap.putSouthWestLng(southwest.longitude - Math.abs(northeast.longitude - southwest.longitude));
         diveSpotsRequestMap.putNorthEastLat(northeast.latitude + Math.abs(northeast.latitude - southwest.latitude));
         diveSpotsRequestMap.putNorthEastLng(northeast.longitude + Math.abs(northeast.longitude - southwest.longitude));
-        if (!TextUtils.isEmpty(SharedPreferenceHelper.getLevel())) {
-            diveSpotsRequestMap.putLevel(SharedPreferenceHelper.getLevel());
+        if (!TextUtils.isEmpty(DDScannerApplication.getInstance().getSharedPreferenceHelper().getLevel())) {
+            diveSpotsRequestMap.putLevel(DDScannerApplication.getInstance().getSharedPreferenceHelper().getLevel());
         }
-        if (!TextUtils.isEmpty(SharedPreferenceHelper.getObject())) {
-            diveSpotsRequestMap.putObject(SharedPreferenceHelper.getObject());
+        if (!TextUtils.isEmpty(DDScannerApplication.getInstance().getSharedPreferenceHelper().getObject())) {
+            diveSpotsRequestMap.putObject(DDScannerApplication.getInstance().getSharedPreferenceHelper().getObject());
         }
         for (Map.Entry<String, Object> entry : diveSpotsRequestMap.entrySet()) {
             LogUtils.i(TAG, "get dive spots request parameter: " + entry.getKey() + " " + entry.getValue());
         }
-        DDScannerApplication.getDdScannerRestClient().getDiveSpotsByArea(diveSpotsRequestMap, getDiveSpotsByAreaResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotsByArea(diveSpotsRequestMap, getDiveSpotsByAreaResultListener);
     }
 
     @Subscribe

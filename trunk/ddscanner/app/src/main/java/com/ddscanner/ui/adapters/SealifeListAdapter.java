@@ -8,10 +8,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
+import com.ddscanner.entities.DiveSpotSealife;
 import com.ddscanner.entities.Sealife;
-import com.ddscanner.ui.activities.SealifeDetails;
+import com.ddscanner.screens.sealife.details.SealifeDetailsActivity;
+import com.ddscanner.utils.Constants;
+import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -21,16 +25,12 @@ import java.util.ArrayList;
  */
 public class SealifeListAdapter extends RecyclerView.Adapter<SealifeListAdapter.SealifeListViewHolder>{
 
-    public ArrayList<Sealife> sealifes;
+    public ArrayList<DiveSpotSealife> sealifes;
     private Context context;
-    private String pathSmall;
-    private String pathMedium;
 
-    public SealifeListAdapter(ArrayList<Sealife> sealifes, Context context, String pathSmall, String pathMedium) {
+    public SealifeListAdapter(ArrayList<DiveSpotSealife> sealifes, Context context) {
         this.sealifes = sealifes;
         this.context = context;
-        this.pathMedium = pathMedium;
-        this.pathSmall = pathSmall;
     }
 
     @Override
@@ -44,8 +44,8 @@ public class SealifeListAdapter extends RecyclerView.Adapter<SealifeListAdapter.
 
     @Override
     public void onBindViewHolder(SealifeListViewHolder sealifeListViewHolder, int i) {
-        Sealife sealife = sealifes.get(i);
-        Picasso.with(context).load(pathSmall + sealife.getImage()).into(sealifeListViewHolder.sealifeLogo);
+        DiveSpotSealife sealife = sealifes.get(i);
+        Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.server_api_address) + Constants.SEALIFE_IMAGE_PATH_PREVIEW + sealife.getPhoto()).resize(Math.round(Helpers.convertDpToPixel(125, context)), Math.round(Helpers.convertDpToPixel(70, context))).centerCrop().into(sealifeListViewHolder.sealifeLogo);
         sealifeListViewHolder.sealifeName.setText(sealife.getName());
     }
 
@@ -71,7 +71,7 @@ public class SealifeListAdapter extends RecyclerView.Adapter<SealifeListAdapter.
 
         @Override
         public void onClick(View v) {
-            SealifeDetails.show(context, sealifes.get(getAdapterPosition()), pathMedium);
+            SealifeDetailsActivity.show(context, sealifes.get(getAdapterPosition()).getId());
             EventsTracker.trackDiveSpotSealifeView();
         }
     }

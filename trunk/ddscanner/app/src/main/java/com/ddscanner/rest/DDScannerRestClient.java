@@ -2,43 +2,51 @@ package com.ddscanner.rest;
 
 import android.support.annotation.NonNull;
 
-import com.ddscanner.analytics.EventsTracker;
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.entities.AchievmentsResponseEntity;
 import com.ddscanner.entities.CheckIns;
 import com.ddscanner.entities.Comments;
 import com.ddscanner.entities.DiveCentersResponseEntity;
-import com.ddscanner.entities.DiveSpot;
+import com.ddscanner.entities.DiveSpotResponseEntity;
+import com.ddscanner.entities.DiveSpotShort;
 import com.ddscanner.entities.DiveSpotDetails;
 import com.ddscanner.entities.DivespotsWrapper;
 import com.ddscanner.entities.EditDiveSpotWrapper;
 import com.ddscanner.entities.FiltersResponseEntity;
 import com.ddscanner.entities.ForeignUserDislikesWrapper;
 import com.ddscanner.entities.ForeignUserLikeWrapper;
+import com.ddscanner.entities.MapsAddedResposeEntity;
 import com.ddscanner.entities.Notifications;
 import com.ddscanner.entities.RegisterResponse;
 import com.ddscanner.entities.Sealife;
 import com.ddscanner.entities.SealifeResponseEntity;
 import com.ddscanner.entities.SignInType;
+import com.ddscanner.entities.SignUpResponseEntity;
 import com.ddscanner.entities.User;
 import com.ddscanner.entities.UserResponseEntity;
 import com.ddscanner.entities.request.DiveSpotsRequestMap;
 import com.ddscanner.entities.request.IdentifyRequest;
 import com.ddscanner.entities.request.RegisterRequest;
 import com.ddscanner.entities.request.ReportRequest;
+import com.ddscanner.entities.request.SignInRequest;
+import com.ddscanner.entities.request.SignUpRequest;
 import com.ddscanner.entities.request.ValidationRequest;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
-import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -46,17 +54,15 @@ import retrofit2.Call;
 
 public class DDScannerRestClient {
 
-    private Gson gson = new Gson();
+    protected Gson gson = new Gson();
 
-    public void getDiveSpotDetails(String diveSpotId, @NonNull final ResultListener<DiveSpotDetails> resultListener) {
-        Map<String, String> map = getUserQueryMapRequest();
-        map.put("isImageAuthor", "true");
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveSpotById(diveSpotId, map);
-        call.enqueue(new ResponseEntityCallback<DiveSpotDetails>(gson, resultListener) {
+    public void getDiveSpotDetails(String diveSpotId, @NonNull final ResultListener<DiveSpotResponseEntity> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveSpotDetails(diveSpotId);
+        call.enqueue(new ResponseEntityCallback<DiveSpotResponseEntity>(gson, resultListener) {
             @Override
-            void handleResponseString(DDScannerRestClient.ResultListener<DiveSpotDetails> resultListener, String responseString) {
-                DiveSpotDetails diveSpotDetails = new Gson().fromJson(responseString, DiveSpotDetails.class);
-                resultListener.onSuccess(diveSpotDetails);
+            void handleResponseString(DDScannerRestClient.ResultListener<DiveSpotResponseEntity> resultListener, String responseString) {
+                DiveSpotResponseEntity diveSpotResponseEntity = gson.fromJson(responseString, DiveSpotResponseEntity.class);
+                resultListener.onSuccess(diveSpotResponseEntity);
             }
         });
     }
@@ -263,10 +269,10 @@ public class DDScannerRestClient {
 
     public void postValidateDiveSpot(String diveSpotId, boolean isValid, @NonNull final ResultListener<Void> resultListener) {
         ValidationRequest validationRequest = new ValidationRequest();
-        validationRequest.setSocial(SharedPreferenceHelper.getSn());
-        validationRequest.setToken(SharedPreferenceHelper.getToken());
-        validationRequest.setAppId(SharedPreferenceHelper.getUserAppId());
-        validationRequest.setpush(SharedPreferenceHelper.getGcmId());
+        validationRequest.setSocial(DDScannerApplication.getInstance().getSharedPreferenceHelper().getSn());
+        validationRequest.setToken(DDScannerApplication.getInstance().getSharedPreferenceHelper().getToken());
+        validationRequest.setAppId(FirebaseInstanceId.getInstance().getId());
+        validationRequest.setpush(FirebaseInstanceId.getInstance().getToken());
         validationRequest.setValid(isValid);
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().divespotValidation(diveSpotId, validationRequest);
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
@@ -345,7 +351,7 @@ public class DDScannerRestClient {
     }
 
     public void getUserNotifications(@NonNull final ResultListener<Notifications> resultListener) {
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getNotifications(SharedPreferenceHelper.getUserServerId(), getUserQueryMapRequest());
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getNotifications(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId(), getUserQueryMapRequest());
         call.enqueue(new ResponseEntityCallback<Notifications>(gson, resultListener) {
             @Override
             void handleResponseString(ResultListener<Notifications> resultListener, String responseString) throws JSONException {
@@ -356,7 +362,7 @@ public class DDScannerRestClient {
 
     }
 
-    public void postAddDiveSpot(@NonNull final ResultListener<DiveSpot> resultListener, List<MultipartBody.Part> sealife, List<MultipartBody.Part> images, RequestBody... requestBodies) {
+    public void postAddDiveSpot(@NonNull final ResultListener<DiveSpotShort> resultListener, List<MultipartBody.Part> sealife, List<MultipartBody.Part> images, RequestBody... requestBodies) {
         if (requestBodies.length != 13) {
             throw new RuntimeException("RequestBody parameters count must be 13");
         }
@@ -365,13 +371,13 @@ public class DDScannerRestClient {
                 requestBodies[6], requestBodies[7], requestBodies[8], requestBodies[9],
                 sealife, images, requestBodies[10], requestBodies[11], requestBodies[12]
         );
-        call.enqueue(new ResponseEntityCallback<DiveSpot>(gson, resultListener) {
+        call.enqueue(new ResponseEntityCallback<DiveSpotShort>(gson, resultListener) {
             @Override
-            void handleResponseString(ResultListener<DiveSpot> resultListener, String responseString) throws JSONException {
+            void handleResponseString(ResultListener<DiveSpotShort> resultListener, String responseString) throws JSONException {
                 JSONObject jsonObject = new JSONObject(responseString);
                 String diveSpotString = jsonObject.getString(Constants.ADD_DIVE_SPOT_ACTIVITY_DIVESPOT);
-                DiveSpot diveSpot = new Gson().fromJson(diveSpotString, DiveSpot.class);
-                resultListener.onSuccess(diveSpot);
+                DiveSpotShort diveSpotShort = new Gson().fromJson(diveSpotString, DiveSpotShort.class);
+                resultListener.onSuccess(diveSpotShort);
             }
         });
     }
@@ -426,7 +432,7 @@ public class DDScannerRestClient {
     }
 
     public void getDiveSpotsByArea(DiveSpotsRequestMap diveSpotsRequestMap, ResultListener<DivespotsWrapper> resultListener) {
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDivespots(diveSpotsRequestMap);
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveSpotsByFilter(diveSpotsRequestMap);
         call.enqueue(new ResponseEntityCallback<DivespotsWrapper>(gson, resultListener) {
             @Override
             void handleResponseString(ResultListener<DivespotsWrapper> resultListener, String responseString) {
@@ -447,8 +453,9 @@ public class DDScannerRestClient {
         });
     }
 
-    public void getUserAchievements(String userId, final ResultListener<AchievmentsResponseEntity> resultListener) {
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserAchievements(userId, getUserQueryMapRequest());
+    @Deprecated
+    public void getUserAchievementsOld(String userId, final ResultListener<AchievmentsResponseEntity> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserAchievementsOld(userId, getUserQueryMapRequest());
         call.enqueue(new ResponseEntityCallback<AchievmentsResponseEntity>(gson, resultListener) {
             @Override
             void handleResponseString(ResultListener<AchievmentsResponseEntity> resultListener, String responseString) throws JSONException {
@@ -458,13 +465,83 @@ public class DDScannerRestClient {
         });
     }
 
+    /*Methods using in API v2_0*/
+
+    public void postUserSignUp(String email, String password, String userType, String lat, String lng, ResultListener<SignUpResponseEntity> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().signUpUser(getSignUpRequest(email, password, userType, lat, lng));
+        call.enqueue(new ResponseEntityCallback<SignUpResponseEntity>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<SignUpResponseEntity> resultListener, String responseString) throws JSONException {
+                SignUpResponseEntity signUpResponseEntity = new Gson().fromJson(responseString, SignUpResponseEntity.class);
+                resultListener.onSuccess(signUpResponseEntity);
+            }
+        });
+    }
+
+    public void postUserSignIn(String email, String password, String lat, String lng, SignInType signInType, String token, ResultListener<SignUpResponseEntity> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().loginUser(getSignInRequest(email, password, lat, lng, signInType, token));
+        call.enqueue(new ResponseEntityCallback<SignUpResponseEntity>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<SignUpResponseEntity> resultListener, String responseString) throws JSONException {
+                SignUpResponseEntity signUpResponseEntity = new Gson().fromJson(responseString, SignUpResponseEntity.class);
+                resultListener.onSuccess(signUpResponseEntity);
+            }
+        });
+    }
+
+    public void getUserSelfInformation(final ResultListener<User> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getSelfProfileInformation();
+        call.enqueue(new ResponseEntityCallback<User>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<User> resultListener, String responseString) throws JSONException {
+                User user = new Gson().fromJson(responseString, User.class);
+                resultListener.onSuccess(user);
+            }
+        });
+    }
+
+    public void getUserAchivements(final ResultListener<AchievmentsResponseEntity> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserAchievements();
+        call.enqueue(new ResponseEntityCallback<AchievmentsResponseEntity>(gson, resultListener) {
+
+            @Override
+            void handleResponseString(ResultListener<AchievmentsResponseEntity> resultListener, String responseString) throws JSONException {
+                AchievmentsResponseEntity achievmentsResponseEntity = new Gson().fromJson(responseString, AchievmentsResponseEntity.class);
+                resultListener.onSuccess(achievmentsResponseEntity);
+            }
+        });
+    }
+
+    public void getSeaLifeDetails(String seaLifeId, @NonNull ResultListener<Sealife> resultListener) {
+        // TODO Implement
+    }
+
+    public void postMapsToDiveSpot(String id, ArrayList<String> images, final ResultListener<MapsAddedResposeEntity> resultListener) {
+        List<MultipartBody.Part> imagesToSend = new ArrayList<>();
+        for (int i = 0; i < images.size(); i++) {
+            File image = new File(images.get(i));
+            RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), image);
+            MultipartBody.Part part = MultipartBody.Part.createFormData(Constants.ADD_DIVE_SPOT_ACTIVITY_IMAGES_ARRAY,
+                    image.getName(), requestFile);
+            imagesToSend.add(part);
+        }
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().addMapsToDiveSpot(RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), id), imagesToSend );
+        call.enqueue(new ResponseEntityCallback<MapsAddedResposeEntity>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<MapsAddedResposeEntity> resultListener, String responseString) throws JSONException {
+                MapsAddedResposeEntity mapsAddedResposeEntity = gson.fromJson(responseString, MapsAddedResposeEntity.class);
+                resultListener.onSuccess(mapsAddedResposeEntity);
+            }
+        });
+    }
+
     private ReportRequest getReportRequest(String reportType, String reportDescription) {
         ReportRequest reportRequest = new ReportRequest();
         reportRequest.setType(reportType);
         reportRequest.setDescription(reportDescription);
-        if (!SharedPreferenceHelper.getToken().isEmpty()) {
-            reportRequest.setSocial(SharedPreferenceHelper.getSn());
-            reportRequest.setToken(SharedPreferenceHelper.getToken());
+        if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().getToken().isEmpty()) {
+            reportRequest.setSocial(DDScannerApplication.getInstance().getSharedPreferenceHelper().getSn());
+            reportRequest.setToken(DDScannerApplication.getInstance().getSharedPreferenceHelper().getToken());
         }
         return reportRequest;
     }
@@ -474,9 +551,9 @@ public class DDScannerRestClient {
         reportRequest.setType(reportType);
         reportRequest.setDescription(reportDescription);
         reportRequest.setName(imageName);
-        if (!SharedPreferenceHelper.getToken().isEmpty()) {
-            reportRequest.setSocial(SharedPreferenceHelper.getSn());
-            reportRequest.setToken(SharedPreferenceHelper.getToken());
+        if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().getToken().isEmpty()) {
+            reportRequest.setSocial(DDScannerApplication.getInstance().getSharedPreferenceHelper().getSn());
+            reportRequest.setToken(DDScannerApplication.getInstance().getSharedPreferenceHelper().getToken());
         }
         return reportRequest;
     }
@@ -492,11 +569,11 @@ public class DDScannerRestClient {
 
     private Map<String, String> getUserQueryMapRequest() {
         Map<String, String> map = new HashMap<>();
-        if (SharedPreferenceHelper.isUserLoggedIn()) {
-            map.put("social", SharedPreferenceHelper.getSn());
-            map.put("token", SharedPreferenceHelper.getToken());
-            if (SharedPreferenceHelper.getSn().equals("tw")) {
-                map.put("secret", SharedPreferenceHelper.getSecret());
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
+            map.put("social", DDScannerApplication.getInstance().getSharedPreferenceHelper().getSn());
+            map.put("token", DDScannerApplication.getInstance().getSharedPreferenceHelper().getToken());
+            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getSn().equals("tw")) {
+                map.put("secret", DDScannerApplication.getInstance().getSharedPreferenceHelper().getSecret());
             }
         } else {
             return new HashMap<>();
@@ -506,33 +583,33 @@ public class DDScannerRestClient {
 
     private RegisterRequest getRegisterRequest() {
         RegisterRequest registerRequest = new RegisterRequest();
-        if (!SharedPreferenceHelper.isUserLoggedIn()) {
-            registerRequest.setAppId(SharedPreferenceHelper.getUserAppId());
-            registerRequest.setpush(SharedPreferenceHelper.getGcmId());
+        if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
+            registerRequest.setAppId(FirebaseInstanceId.getInstance().getId());
+            registerRequest.setpush(FirebaseInstanceId.getInstance().getToken());
             return registerRequest;
         }
 
-        registerRequest.setSocial(SharedPreferenceHelper.getSn());
-        registerRequest.setToken(SharedPreferenceHelper.getToken());
-        if (SharedPreferenceHelper.getSn().equals("tw")) {
-            registerRequest.setSecret(SharedPreferenceHelper.getSecret());
+        registerRequest.setSocial(DDScannerApplication.getInstance().getSharedPreferenceHelper().getSn());
+        registerRequest.setToken(DDScannerApplication.getInstance().getSharedPreferenceHelper().getToken());
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getSn().equals("tw")) {
+            registerRequest.setSecret(DDScannerApplication.getInstance().getSharedPreferenceHelper().getSecret());
         }
-        registerRequest.setAppId(SharedPreferenceHelper.getUserAppId());
-        registerRequest.setpush(SharedPreferenceHelper.getGcmId());
+        registerRequest.setAppId(FirebaseInstanceId.getInstance().getId());
+        registerRequest.setpush(FirebaseInstanceId.getInstance().getToken());
         return registerRequest;
     }
 
     private IdentifyRequest getUserIdentifyData(String lat, String lng) {
         IdentifyRequest identifyRequest = new IdentifyRequest();
-        identifyRequest.setAppId(SharedPreferenceHelper.getUserAppId());
-        if (SharedPreferenceHelper.isUserLoggedIn()) {
-            identifyRequest.setSocial(SharedPreferenceHelper.getSn());
-            identifyRequest.setToken(SharedPreferenceHelper.getToken());
-            if (SharedPreferenceHelper.getSn().equals("tw")) {
-                identifyRequest.setSecret(SharedPreferenceHelper.getSecret());
+        identifyRequest.setAppId(FirebaseInstanceId.getInstance().getId());
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
+            identifyRequest.setSocial(DDScannerApplication.getInstance().getSharedPreferenceHelper().getSn());
+            identifyRequest.setToken(DDScannerApplication.getInstance().getSharedPreferenceHelper().getToken());
+            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getSn().equals("tw")) {
+                identifyRequest.setSecret(DDScannerApplication.getInstance().getSharedPreferenceHelper().getSecret());
             }
         }
-        identifyRequest.setpush(SharedPreferenceHelper.getGcmId());
+        identifyRequest.setpush(FirebaseInstanceId.getInstance().getToken());
         if (lat != null && lng != null) {
             identifyRequest.setLat(lat);
             identifyRequest.setLng(lng);
@@ -549,15 +626,64 @@ public class DDScannerRestClient {
         return registerRequest;
     }
 
-    public interface ResultListener<T> {
-        void onSuccess(T result);
+    private SignUpRequest getSignUpRequest(String email, String password, String userType, String lat, String lng) {
+        SignUpRequest signUpRequest = new SignUpRequest();
+        signUpRequest.setEmail(email);
+        signUpRequest.setPassword(password);
+        signUpRequest.setUserType(Helpers.getUserType(userType));
+        signUpRequest.setPush(FirebaseInstanceId.getInstance().getToken());
+        signUpRequest.setApp_id(FirebaseInstanceId.getInstance().getId());
+        signUpRequest.setLat(lat);
+        signUpRequest.setLng(lng);
+        signUpRequest.setDeviceType(2);
+        return signUpRequest;
+    }
 
-        void onConnectionFailure();
+    private SignInRequest getSignInRequest(String email, String password, String lat, String lng, SignInType signInType, String token) {
+        SignInRequest signInRequest = new SignInRequest();
+        signInRequest.setDeviceType(2);
+        signInRequest.setEmail(email);
+        signInRequest.setPassword(password);
+        if (signInType != null) {
+            switch (signInType) {
+                case GOOGLE:
+                    signInRequest.setProviderType(2);
+                    break;
+                case FACEBOOK:
+                    signInRequest.setProviderType(1);
+                    break;
+                default:
+                    signInRequest.setProviderType(null);
+                    break;
+            }
+        }
+        signInRequest.setToken(token);
+        signInRequest.setPush(FirebaseInstanceId.getInstance().getToken());
+        signInRequest.setApp_id(FirebaseInstanceId.getInstance().getId());
+        signInRequest.setLat(lat);
+        signInRequest.setLng(lng);
+        return signInRequest;
+    }
 
-        void onError(ErrorType errorType, Object errorData, String url, String errorMessage);
+    public static abstract class ResultListener<T> {
+        private boolean isCancelled;
+
+        public abstract void onSuccess(T result);
+
+        public abstract void onConnectionFailure();
+
+        public abstract void onError(ErrorType errorType, Object errorData, String url, String errorMessage);
+
+        public boolean isCancelled() {
+            return isCancelled;
+        }
+
+        public void setCancelled(boolean cancelled) {
+            isCancelled = cancelled;
+        }
     }
 
     public enum ErrorType {
-        BAD_REQUEST_ERROR_400, RIGHTS_NOT_FOUND_403, USER_NOT_FOUND_ERROR_C801, DIVE_SPOT_NOT_FOUND_ERROR_C802, COMMENT_NOT_FOUND_ERROR_C803, UNPROCESSABLE_ENTITY_ERROR_422, SERVER_INTERNAL_ERROR_500, IO_ERROR, JSON_SYNTAX_EXCEPTION, UNKNOWN_ERROR
+        BAD_REQUEST_ERROR_400, ENTITY_NOT_FOUND_404, RIGHTS_NOT_FOUND_403, UNAUTHORIZED_401, DIVE_SPOT_NOT_FOUND_ERROR_C802, COMMENT_NOT_FOUND_ERROR_C803, UNPROCESSABLE_ENTITY_ERROR_422, SERVER_INTERNAL_ERROR_500, IO_ERROR, JSON_SYNTAX_EXCEPTION, UNKNOWN_ERROR
     }
 }

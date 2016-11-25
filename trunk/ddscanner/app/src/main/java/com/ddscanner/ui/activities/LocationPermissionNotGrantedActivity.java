@@ -45,7 +45,7 @@ public class LocationPermissionNotGrantedActivity extends AppCompatActivity impl
 
     @Override
     public void onClick(View v) {
-        // Should we show an explanation?
+        // Should we showForResult an explanation?
 //            if (ActivityCompat.shouldShowRequestPermissionRationale(context, Manifest.permission.ACCESS_FINE_LOCATION) || ActivityCompat.shouldShowRequestPermissionRationale(context, Manifest.permission.ACCESS_COARSE_LOCATION)) {
 
         // Show an expanation to the user *asynchronously* -- don't block

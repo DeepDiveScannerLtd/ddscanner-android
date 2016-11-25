@@ -23,7 +23,6 @@ import com.ddscanner.ui.adapters.SpinnerItemsAdapter;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
-import com.ddscanner.utils.SharedPreferenceHelper;
 import com.rey.material.widget.Button;
 import com.rey.material.widget.ProgressView;
 import com.rey.material.widget.Spinner;
@@ -59,11 +58,11 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
 
             if (filters.getObject() != null) {
                 objectsMap = filters.getObject();
-                setFilerGroup(objectSpinner, filters.getObject(), SharedPreferenceHelper.getCurrents());
+                setFilerGroup(objectSpinner, filters.getObject(), DDScannerApplication.getInstance().getSharedPreferenceHelper().getCurrents());
             }
             if (filters.getLevel() != null) {
                 levelsMap = filters.getLevel();
-                setFilerGroup(levelSpinner, filters.getLevel(), SharedPreferenceHelper.getCurrents());
+                setFilerGroup(levelSpinner, filters.getLevel(), DDScannerApplication.getInstance().getSharedPreferenceHelper().getCurrents());
             }
 
             if (filters.getObject() == null || filters.getLevel() == null) {
@@ -95,7 +94,7 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_close);
         getSupportActionBar().setTitle("Filter");
-        DDScannerApplication.getDdScannerRestClient().getFilters(getFiltersResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient().getFilters(getFiltersResultListener);
     }
 
     private void findViews() {
@@ -117,7 +116,7 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
         int selectedIndex = 0;
         for (Map.Entry<String, String> entry : values.entrySet()) {
             objects.add(entry.getValue());
-            if (entry.getKey().equals(SharedPreferenceHelper.getObject()) || entry.getKey().equals(SharedPreferenceHelper.getLevel())) {
+            if (entry.getKey().equals(DDScannerApplication.getInstance().getSharedPreferenceHelper().getObject()) || entry.getKey().equals(DDScannerApplication.getInstance().getSharedPreferenceHelper().getLevel())) {
                 selectedIndex = objects.size() - 1;
             }
         }
@@ -131,20 +130,20 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
     public void onClick(View v) {
         if (objectSpinner.getSelectedItem().toString().equals("All")) {
             filterChosedEvent.setObject(null);
-            SharedPreferenceHelper.setObject("");
+            DDScannerApplication.getInstance().getSharedPreferenceHelper().setObject("");
         } else {
             filterChosedEvent.setObject(Helpers.getMirrorOfHashMap(objectsMap)
                     .get(objectSpinner.getSelectedItem().toString()));
-            SharedPreferenceHelper.setObject(Helpers.getMirrorOfHashMap(objectsMap)
+            DDScannerApplication.getInstance().getSharedPreferenceHelper().setObject(Helpers.getMirrorOfHashMap(objectsMap)
                     .get(objectSpinner.getSelectedItem().toString()));
         }
         if (levelSpinner.getSelectedItem().toString().equals("All")) {
             filterChosedEvent.setLevel(null);
-            SharedPreferenceHelper.setLevel("");
+            DDScannerApplication.getInstance().getSharedPreferenceHelper().setLevel("");
         } else {
             filterChosedEvent.setLevel(Helpers.getMirrorOfHashMap(levelsMap)
                     .get(levelSpinner.getSelectedItem().toString()));
-            SharedPreferenceHelper.setLevel(Helpers.getMirrorOfHashMap(levelsMap)
+            DDScannerApplication.getInstance().getSharedPreferenceHelper().setLevel(Helpers.getMirrorOfHashMap(levelsMap)
                     .get(levelSpinner.getSelectedItem().toString()));
         }
         DDScannerApplication.bus.post(filterChosedEvent);
@@ -182,8 +181,8 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void clearFilterSharedPrefences() {
-        SharedPreferenceHelper.setObject("");
-        SharedPreferenceHelper.setLevel("");
+        DDScannerApplication.getInstance().getSharedPreferenceHelper().setObject("");
+        DDScannerApplication.getInstance().getSharedPreferenceHelper().setLevel("");
     }
 
     @Override

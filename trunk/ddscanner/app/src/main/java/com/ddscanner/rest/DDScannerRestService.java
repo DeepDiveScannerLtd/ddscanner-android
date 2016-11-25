@@ -4,6 +4,8 @@ package com.ddscanner.rest;
 import com.ddscanner.entities.request.IdentifyRequest;
 import com.ddscanner.entities.request.RegisterRequest;
 import com.ddscanner.entities.request.ReportRequest;
+import com.ddscanner.entities.request.SignInRequest;
+import com.ddscanner.entities.request.SignUpRequest;
 import com.ddscanner.entities.request.ValidationRequest;
 
 import java.util.List;
@@ -21,6 +23,7 @@ import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
 
 public interface DDScannerRestService {
@@ -34,6 +37,7 @@ public interface DDScannerRestService {
     @GET("/diving/divespot/{id}")
     Call<ResponseBody> getDiveSpotById(@Path("id") String id, @QueryMap Map<String, String> map);
 
+    @Deprecated
     @Headers("Content-type: application/json")
     @GET("/diving/divespots")
     Call<ResponseBody> getDivespots(@QueryMap Map<String, Object> map);
@@ -166,6 +170,7 @@ public interface DDScannerRestService {
     @GET("diving/divespot/{id}/comments")
     Call<ResponseBody> getComments(@Path("id") String id, @QueryMap Map<String, String> map);
 
+    @Deprecated
     @GET("diving/user/{id}")
     Call<ResponseBody> getUserInfo(@Path("id") String id, @QueryMap Map<String, String> map);
 
@@ -265,6 +270,30 @@ public interface DDScannerRestService {
     @GET("diving/user/{id}/comments")
     Call<ResponseBody> getUserComments(@Path("id") String id, @QueryMap Map<String, String> map);
 
+    @Deprecated
     @GET("diving/user/{id}/achievements")
-    Call<ResponseBody> getUserAchievements(@Path("id") String id, @QueryMap Map<String, String> map);
+    Call<ResponseBody> getUserAchievementsOld(@Path("id") String id, @QueryMap Map<String, String> map);
+
+    @POST("v2_0/user.login")
+    Call<ResponseBody> loginUser(@Body SignInRequest signInRequest);
+
+    @POST("v2_0/user.sign_up")
+    Call<ResponseBody> signUpUser(@Body SignUpRequest signUpRequest);
+
+    @GET("v2_0/user.profile.get")
+    Call<ResponseBody> getSelfProfileInformation();
+
+    @GET("v2_0/user.getAchievements")
+    Call<ResponseBody> getUserAchievements();
+
+    @GET("v2_0/divespots.filter")
+    Call<ResponseBody> getDiveSpotsByFilter(@QueryMap Map<String, Object> map);
+
+    @GET("v2_0/divespot.get")
+    Call<ResponseBody> getDiveSpotDetails(@Query("id") String id);
+
+    @Multipart
+    @POST("v2_0/divespot.map.add")
+    Call<ResponseBody> addMapsToDiveSpot(@Part("dive_spot_id") RequestBody  id, @Part List<MultipartBody.Part> image);
+
 }

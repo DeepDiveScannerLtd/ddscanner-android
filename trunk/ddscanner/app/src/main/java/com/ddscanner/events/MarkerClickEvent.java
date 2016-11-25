@@ -1,20 +1,20 @@
 package com.ddscanner.events;
 
-import com.ddscanner.entities.DiveSpot;
+import com.ddscanner.entities.DiveSpotShort;
 
 /**
  * Created by lashket on 21.4.16.
  */
 public class MarkerClickEvent {
 
-    private DiveSpot diveSpot;
+    private DiveSpotShort diveSpotShort;
 
-    public MarkerClickEvent(DiveSpot diveSpot) {
-        this.diveSpot = diveSpot;
+    public MarkerClickEvent(DiveSpotShort diveSpotShort) {
+        this.diveSpotShort = diveSpotShort;
     }
 
-    public DiveSpot getDiveSpot() {
-        return this.diveSpot;
+    public DiveSpotShort getDiveSpotShort() {
+        return this.diveSpotShort;
     }
 
 }

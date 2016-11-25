@@ -1,7 +1,6 @@
 package com.ddscanner.ui.adapters;
 
 import android.content.Context;
-import android.support.percent.PercentRelativeLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatDrawableManager;
@@ -20,7 +19,7 @@ import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.Notification;
 import com.ddscanner.events.ChangePageOfMainViewPagerEvent;
-import com.ddscanner.ui.activities.DiveSpotDetailsActivity;
+import com.ddscanner.screens.divespot.details.DiveSpotDetailsActivity;
 import com.ddscanner.ui.activities.ForeignProfileActivity;
 import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;
@@ -60,7 +59,7 @@ public class NotificationsListAdapter
             SpannableString spannableString;
             switch (notification.getType()) {
                 case ACCEPT:
-                    divespot = notification.getDiveSpot().getName();
+                    divespot = notification.getDiveSpotShort().getName();
                     text = context.getResources().getString(R.string.your_changes_accepted,divespot);
                     spannableString = new SpannableString(text);
                     spannableString.setSpan(fcs, text.indexOf(divespot),
@@ -72,13 +71,13 @@ public class NotificationsListAdapter
                     holder.likeDislikeImage.setImageDrawable(AppCompatDrawableManager.get()
                             .getDrawable(context, R.drawable.icon_like));
                     Picasso.with(context)
-                            .load(notification.getUser().getPicture())
+                            .load(notification.getUserOld().getPicture())
                             .resize(Math.round(Helpers.convertDpToPixel(64, context)),Math.round(Helpers.convertDpToPixel(64, context)))
                             .centerCrop()
                             .transform(new CropCircleTransformation())
                             .into(holder.image);
-                    String name = notification.getUser().getName();
-                    divespot = notification.getDiveSpot().getName();
+                    String name = notification.getUserOld().getName();
+                    divespot = notification.getDiveSpotShort().getName();
                     // text = String.format(text, name, divespot);
                     text = context.getResources().getString(R.string.user_liked_your_review, name, divespot);
                     spannableString = new SpannableString(text);
@@ -91,12 +90,12 @@ public class NotificationsListAdapter
                     holder.likeDislikeImage.setImageDrawable(AppCompatDrawableManager.get()
                             .getDrawable(context, R.drawable.icon_dislike));
                     Picasso.with(context)
-                            .load(notification.getUser().getPicture())
+                            .load(notification.getUserOld().getPicture())
                             .resize(Math.round(Helpers.convertDpToPixel(64, context)),Math.round(Helpers.convertDpToPixel(64, context)))
                             .transform(new CropCircleTransformation())
                             .into(holder.image);
-                    name = notification.getUser().getName();
-                    divespot = notification.getDiveSpot().getName();
+                    name = notification.getUserOld().getName();
+                    divespot = notification.getDiveSpotShort().getName();
                     text = context.getResources().getString(R.string.user_dislike_your_review, name, divespot);
                     spannableString = new SpannableString(text);
                     spannableString.setSpan(fcs, 0, name.length(), 0);
@@ -193,11 +192,11 @@ public class NotificationsListAdapter
                 default:
                     if (isImage && (notification.getType().name().equalsIgnoreCase("like")
                             || notification.getType().name().equalsIgnoreCase("dislike"))) {
-                        ForeignProfileActivity.show(context, notification.getUser().getId());
+                        ForeignProfileActivity.show(context, notification.getUserOld().getId());
                     }
 
                     if (!isImage) {
-                        DiveSpotDetailsActivity.show(context, String.valueOf(notification.getDiveSpot().getId()), EventsTracker.SpotViewSource.FROM_NOTIFICATIONS);
+                        DiveSpotDetailsActivity.show(context, String.valueOf(notification.getDiveSpotShort().getId()), EventsTracker.SpotViewSource.FROM_NOTIFICATIONS);
                     }
                     break;
             }

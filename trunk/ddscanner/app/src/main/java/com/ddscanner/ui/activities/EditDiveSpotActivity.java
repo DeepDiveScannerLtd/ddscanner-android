@@ -5,12 +5,15 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v13.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -44,12 +47,11 @@ import com.ddscanner.ui.adapters.SpinnerItemsAdapter;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
+import com.ddscanner.utils.DialogHelpers;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
-import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.android.gms.maps.model.LatLng;
 import com.rey.material.widget.ProgressView;
-import com.rey.material.widget.Spinner;
 import com.squareup.otto.Subscribe;
 
 import java.io.File;
@@ -58,8 +60,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import me.nereo.multi_image_selector.MultiImageSelector;
-import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -75,7 +75,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
     private String diveSpotId;
 
     private ImageButton btnAddPhoto;
-    private ImageView btnAddSealife;
+    private LinearLayout btnAddSealife;
 
     private Toolbar toolbar;
     private LatLng diveSpotLocation;
@@ -84,10 +84,9 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
     private RecyclerView photos_rc;
     private TextView addPhotoTitle;
     private TextView locationTitle;
-    private TextView addSealifeTitle;
-    private Spinner levelSpinner;
-    private Spinner currentsSpinner;
-    private Spinner objectSpinner;
+    private AppCompatSpinner levelSpinner;
+    private AppCompatSpinner currentsSpinner;
+    private AppCompatSpinner objectSpinner;
     private EditText name;
     private EditText depth;
     private EditText description;
@@ -135,10 +134,10 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
             if (diveSpot.getImages() != null) {
                 imageUris = changeImageAddresses(diveSpot.getImages());
             }
-            addPhotoToDsListAdapter = new AddPhotoToDsListAdapter(imageUris, EditDiveSpotActivity.this, addPhotoTitle);
+            addPhotoToDsListAdapter = new AddPhotoToDsListAdapter(imageUris, EditDiveSpotActivity.this);
             diveSpotLocation = new LatLng(divespotDetails.getDivespot().getLat(),
                     divespotDetails.getDivespot().getLng());
-            DDScannerApplication.getDdScannerRestClient().getFilters(getFiltersResultListener);
+            DDScannerApplication.getInstance().getDdScannerRestClient().getFilters(getFiltersResultListener);
             setUi();
         }
 
@@ -150,8 +149,8 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             switch (errorType) {
-                case USER_NOT_FOUND_ERROR_C801:
-                    SharedPreferenceHelper.logout();
+                case UNAUTHORIZED_401:
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logout();
                     LoginActivity.showForResult(EditDiveSpotActivity.this, ActivitiesRequestCodes.REQUEST_CODE_EDIT_DIVE_SPOT_ACTIVITY_LOGIN_TO_GET_DATA);
                     break;
                 case DIVE_SPOT_NOT_FOUND_ERROR_C802:
@@ -192,8 +191,8 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             progressDialogUpload.dismiss();
             switch (errorType) {
-                case USER_NOT_FOUND_ERROR_C801:
-                    SharedPreferenceHelper.logout();
+                case UNAUTHORIZED_401:
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logout();
                     LoginActivity.showForResult(EditDiveSpotActivity.this, ActivitiesRequestCodes.REQUEST_CODE_EDIT_DIVE_SPOT_ACTIVITY_LOGIN_TO_SEND);
                     break;
                 case DIVE_SPOT_NOT_FOUND_ERROR_C802:
@@ -245,7 +244,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
         diveSpotId = getIntent().getStringExtra(Constants.DIVESPOTID);
         findViews();
         toolbarSettings();
-        DDScannerApplication.getDdScannerRestClient().getDiveSpotForEdit(diveSpotId, getDiveSpotForEditResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotForEdit(diveSpotId, getDiveSpotForEditResultListener);
         makeErrorsMap();
         EventsTracker.trackDiveSpotEdit();
     }
@@ -259,19 +258,17 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
         name = (EditText) findViewById(R.id.name);
         depth = (EditText) findViewById(R.id.depth);
         description = (EditText) findViewById(R.id.description);
-        btnAddSealife = (ImageView) findViewById(R.id.btn_add_sealife);
-        addPhotoTitle = (TextView) findViewById(R.id.add_photo_title);
+        btnAddSealife = (LinearLayout) findViewById(R.id.btn_add_sealife);
         photos_rc = (RecyclerView) findViewById(R.id.photos_rc);
         btnAddPhoto = (ImageButton) findViewById(R.id.btn_add_photo);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        levelSpinner = (Spinner) findViewById(R.id.level_spinner);
-        objectSpinner = (Spinner) findViewById(R.id.object_spinner);
-        currentsSpinner = (Spinner) findViewById(R.id.currents_spinner);
+        levelSpinner = (AppCompatSpinner) findViewById(R.id.level_spinner);
+        objectSpinner = (AppCompatSpinner) findViewById(R.id.object_spinner);
+        currentsSpinner = (AppCompatSpinner) findViewById(R.id.currents_spinner);
         pickLocation = (LinearLayout) findViewById(R.id.location_layout);
         locationTitle = (TextView) findViewById(R.id.location);
         btnSave = (Button) findViewById(R.id.button_create);
         sealifesRc = (RecyclerView) findViewById(R.id.sealifes_rc);
-        addSealifeTitle = (TextView) findViewById(R.id.add_sealife_text);
         mainLayout = (ScrollView) findViewById(R.id.main_layout);
         progressView = (ProgressView) findViewById(R.id.progressBarFull);
         error_depth = (TextView) findViewById(R.id.error_depth);
@@ -320,8 +317,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
         sealifesRc.setNestedScrollingEnabled(false);
         sealifesRc.setHasFixedSize(false);
         sealifesRc.setLayoutManager(sealifeLayoutManager);
-        sealifeListAddingDiveSpotAdapter = new SealifeListAddingDiveSpotAdapter((ArrayList<Sealife>) sealifes,
-                EditDiveSpotActivity.this, addSealifeTitle);
+        sealifeListAddingDiveSpotAdapter = new SealifeListAddingDiveSpotAdapter((ArrayList<Sealife>) sealifes, EditDiveSpotActivity.this);
         sealifesRc.setAdapter(sealifeListAddingDiveSpotAdapter);
         progressView.stop();
         progressView.setVisibility(View.GONE);
@@ -359,9 +355,14 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
 
     private void pickPhotoFromGallery() {
         if (checkReadStoragePermission()) {
-            MultiImageSelector.create().showCamera(false).multi()
-                    .count(maxPhotosCount)
-                    .start(this, ActivitiesRequestCodes.REQUEST_CODE_EDIT_DIVE_SPOT_ACTIVITY_PICK_PHOTO);
+            Intent intent = new Intent();
+            intent.setType("image/*");
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            if (Build.VERSION.SDK_INT >= 18) {
+                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+            }
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+            startActivityForResult(Intent.createChooser(intent, "Select Picture"), ActivitiesRequestCodes.REQUEST_CODE_EDIT_DIVE_SPOT_ACTIVITY_PICK_PHOTO);
         } else {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PERMISSION_READ_STORAGE);
         }
@@ -406,7 +407,8 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                onBackPressed();
+                DialogHelpers.showDialogAfterChanging(R.string.dialog_leave_title, R.string.dialog_leave_spot_message, this, this);
+//                onBackPressed();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -422,14 +424,58 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_EDIT_DIVE_SPOT_ACTIVITY_PICK_PHOTO:
+                Uri uri = Uri.parse("");
                 if (resultCode == RESULT_OK) {
-                    ArrayList<String> addedImages = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
-                    if (addedImages != null) {
-                        maxPhotosCount = maxPhotosCount - addedImages.size();
-                        imageUris.addAll(addedImages);
+                    if (data.getClipData() != null) {
+                        for (int i = 0; i < data.getClipData().getItemCount(); i++) {
+                            String filename = "DDScanner" + String.valueOf(System.currentTimeMillis());
+                            try {
+                                uri = data.getClipData().getItemAt(i).getUri();
+                                String mimeType = getContentResolver().getType(uri);
+                                String sourcePath = getExternalFilesDir(null).toString();
+                                File file = new File(sourcePath + "/" + filename);
+                                if (Helpers.isFileImage(uri.getPath()) || mimeType.contains("image")) {
+                                    try {
+                                        Helpers.copyFileStream(file, uri, this);
+                                        Log.i(TAG, file.toString());
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+
+                                    imageUris.add(file.getPath());
+                                } else {
+                                    Toast.makeText(this, "You can choose only images", Toast.LENGTH_SHORT).show();
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
                     }
-                    addPhotoToDsListAdapter = new AddPhotoToDsListAdapter(imageUris, EditDiveSpotActivity.this, addPhotoTitle);
-                    photos_rc.setAdapter(addPhotoToDsListAdapter);
+                    if (data.getData() != null) {
+                        String filename = "DDScanner" + String.valueOf(System.currentTimeMillis());
+                        try {
+                            uri = data.getData();
+                            String mimeType = getContentResolver().getType(uri);
+                            String sourcePath = getExternalFilesDir(null).toString();
+                            File file = new File(sourcePath + "/" + filename);
+                            if (Helpers.isFileImage(uri.getPath()) || mimeType.contains("image")) {
+                                try {
+                                    Helpers.copyFileStream(file, uri, this);
+                                    Log.i(TAG, file.toString());
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+
+                                imageUris.add(file.getPath());
+                            } else {
+                                Toast.makeText(this, "You can choose only images", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    photos_rc.setAdapter(new AddPhotoToDsListAdapter(imageUris, EditDiveSpotActivity.this));
+
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_EDIT_DIVE_SPOT_ACTIVITY_PICK_SEALIFE:
@@ -447,7 +493,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_EDIT_DIVE_SPOT_ACTIVITY_LOGIN_TO_GET_DATA:
                 if (resultCode == RESULT_OK) {
-                    DDScannerApplication.getDdScannerRestClient().getDiveSpotForEdit(diveSpotId, getDiveSpotForEditResultListener);
+                    DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotForEdit(diveSpotId, getDiveSpotForEditResultListener);
                 }
                 if (resultCode == RESULT_CANCELED) {
                     finish();
@@ -489,14 +535,14 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
         requestMinVisibility = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), visibilityMin.getText().toString());
         requestMaxVisibility = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), visibilityMax.getText().toString());
 
-        if (SharedPreferenceHelper.isUserLoggedIn()) {
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
             requestSocial = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
-                    SharedPreferenceHelper.getSn());
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().getSn());
             requestToken = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
-                    SharedPreferenceHelper.getToken());
-            if (SharedPreferenceHelper.getSn().equals("tw")) {
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().getToken());
+            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getSn().equals("tw")) {
                 requestSecret = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
-                        SharedPreferenceHelper.getSecret());
+                        DDScannerApplication.getInstance().getSharedPreferenceHelper().getSecret());
             }
         }
         requestDescription = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
@@ -542,7 +588,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
     }
 
     private void createAddDiveSpotRequest() {
-        DDScannerApplication.getDdScannerRestClient().putUpdateDiveSpot(
+        DDScannerApplication.getInstance().getDdScannerRestClient().putUpdateDiveSpot(
                 diveSpotId,
                 sealifeRequest,
                 newImages,
@@ -565,7 +611,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
         );
     }
 
-    private void setSpinnerValues(Spinner spinner, Map<String, String> values, String tag) {
+    private void setSpinnerValues(AppCompatSpinner spinner, Map<String, String> values, String tag) {
         List<String> objects = new ArrayList<>();
         for (Map.Entry<String, String> entry : values.entrySet()) {
             objects.add(entry.getValue());
@@ -620,8 +666,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
         if (addPhotoToDsListAdapter.getListOfDeletedImages() != null) {
             deleted.addAll(addPhotoToDsListAdapter.getListOfDeletedImages());
         }
-        addPhotoToDsListAdapter = new AddPhotoToDsListAdapter(imageUris,
-                EditDiveSpotActivity.this, addPhotoTitle);
+        addPhotoToDsListAdapter = new AddPhotoToDsListAdapter(imageUris, EditDiveSpotActivity.this);
         photos_rc.setAdapter(addPhotoToDsListAdapter);
         if (addPhotoToDsListAdapter.getNewFilesUrisList() != null) {
             maxPhotosCount = 3 - addPhotoToDsListAdapter.getNewFilesUrisList().size();

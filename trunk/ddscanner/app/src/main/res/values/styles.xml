@@ -8,8 +8,7 @@
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
         <item name="android:actionMenuTextColor">@color/orange</item>
         <item name="android:popupMenuStyle">@style/popupMenuStyle</item>
-        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:windowContentTransitions">true</item>
+        <item name="colorControlActivated">@color/primary</item>
     </style>
 
     <style name="ToolbarMenuStyle" parent="ThemeOverlay.AppCompat.Light">
@@ -119,8 +118,8 @@
         <item name="android:layout_marginBottom">10dp</item>
     </style>
 
-    <style name="Color1SwitchStyle">
-        <item name="colorControlActivated">@color/orange</item>
+    <style name="ColorSwitchStyle">
+        <item name="colorControlActivated">@color/radio_button_fill</item>
     </style>
 
     <style name="CircularProgress" parent="Material.Drawable.CircularProgress">
@@ -193,7 +192,7 @@
     </style>
     <style name="OrangeButtons">
         <item name="android:fontFamily">sans-serif-medium</item>
-        <item name="android:layout_height">42dp</item>
+        <item name="android:layout_height">50dp</item>
         <item name="android:textSize">15sp</item>
         <item name="android:textColor">@color/black_text</item>
         <item name="android:background">@drawable/border_button_orange_2px</item>
@@ -284,6 +283,47 @@
 
     <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="android:windowBackground">@drawable/splash_bg</item>
+    </style>
+
+    <style name="PhotosTabActive">
+        <item name="android:textColor">@color/black_text</item>
+        <item name="android:background">@drawable/gray_rectangle</item>
+        <item name="android:paddingBottom">7dp</item>
+        <item name="android:paddingTop">7dp</item>
+        <item name="android:paddingLeft">12dp</item>
+        <item name="android:paddingRight">12dp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="PhotosTabDisabled">
+        <item name="android:textColor">#afafaf</item>
+        <item name="android:paddingBottom">7dp</item>
+        <item name="android:paddingTop">7dp</item>
+        <item name="android:paddingLeft">12dp</item>
+        <item name="android:paddingRight">12dp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:background">@null</item>
+    </style>
+
+    <style name="DiveCenterProfileCharacteristicIcon">
+        <item name="android:layout_width">63dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">18dp</item>
+    </style>
+
+    <style name="DiveCenterProfileCharacteristicName">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/black_text</item>
+    </style>
+
+    <style name="DiveCenterProfileCharacteristicDesciption">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">#8b8b8b</item>
+        <item name="android:layout_marginTop">3dp</item>
     </style>
 
 </resources>

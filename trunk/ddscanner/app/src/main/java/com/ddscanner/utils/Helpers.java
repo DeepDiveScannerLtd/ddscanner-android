@@ -36,11 +36,17 @@ import com.google.gson.JsonSyntaxException;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
@@ -485,6 +491,85 @@ public class Helpers {
             e.printStackTrace();
             return -1;
         }
+    }
+
+    public static boolean isFileImage(String file) {
+        final String[] okFileExtensions =  new String[] {"jpg", "png", "gif","jpeg"};
+        for (String extension : okFileExtensions) {
+            if (file.toLowerCase().endsWith(extension)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static void copyFileStream(File dest, Uri uri, Context context) throws IOException {
+        InputStream is = null;
+        OutputStream os = null;
+        try {
+            is = context.getContentResolver().openInputStream(uri);
+            os = new FileOutputStream(dest);
+            byte[] buffer = new byte[1024];
+            int length;
+
+            while ((length = is.read(buffer)) > 0) {
+                os.write(buffer, 0, length);
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            is.close();
+            os.close();
+        }
+    }
+
+    public static int getUserType(String userType) {
+        List<String> list = new ArrayList<>();
+        list.add(Constants.USER_TYPE_DIVE_CENTER);
+        list.add(Constants.USER_TYPE_DIVER);
+        list.add(Constants.USER_TYPE_INSTRUCTOR);
+        return list.indexOf(userType);
+    }
+
+    public static String getDiveSpotType(int position) {
+        List<String> types = new ArrayList<>();
+        types.add("Cave");
+        types.add("Reef");
+        types.add("Wreck");
+        types.add("Other");
+        if (types.get(position - 1) == null) {
+            return "";
+        }
+        return types.get(position - 1);
+    }
+
+    public static String getDiverLevel(int position) {
+        List<String> levels = new ArrayList<>();
+        levels.add("Beginner");
+        levels.add("Advanced");
+        levels.add("Expert");
+        if (levels.get(position - 1) == null) {
+            return "";
+        }
+        return levels.get(position - 1);
+    }
+
+    public static String getCurrentsValue(int position) {
+        List<String> currents = new ArrayList<>();
+        currents.add("None");
+        currents.add("Variable");
+        currents.add("Low");
+        currents.add("Low - Moderate");
+        currents.add("Mild");
+        currents.add("Mild - Moderate");
+        currents.add("Moderate");
+        currents.add("Moderate - Strong");
+        currents.add("Strong");
+        if (currents.get(position - 1) == null) {
+            return "";
+        }
+        return currents.get(position - 1);
     }
 
 }

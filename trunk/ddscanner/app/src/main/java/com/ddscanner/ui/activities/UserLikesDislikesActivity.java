@@ -52,7 +52,7 @@ public class UserLikesDislikesActivity extends AppCompatActivity implements Info
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             switch (errorType) {
-                case USER_NOT_FOUND_ERROR_C801:
+                case UNAUTHORIZED_401:
                     LoginActivity.showForResult(UserLikesDislikesActivity.this, ActivitiesRequestCodes.REQUEST_CODE_USER_LIKES_DISLIKES_ACTIVITY_LOGIN);
                     break;
                 default:
@@ -79,7 +79,7 @@ public class UserLikesDislikesActivity extends AppCompatActivity implements Info
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             switch (errorType) {
-                case USER_NOT_FOUND_ERROR_C801:
+                case UNAUTHORIZED_401:
                     LoginActivity.showForResult(UserLikesDislikesActivity.this, ActivitiesRequestCodes.REQUEST_CODE_USER_LIKES_DISLIKES_ACTIVITY_LOGIN);
                     break;
                 default:
@@ -98,9 +98,9 @@ public class UserLikesDislikesActivity extends AppCompatActivity implements Info
         userId = getIntent().getStringExtra(Constants.USER_LIKES_ACTIVITY_INTENT_USER_ID);
         findViews();
         if (isLikes) {
-            DDScannerApplication.getDdScannerRestClient().getUserLikes(userId, foreignUserLikeWrapperResultListener);
+            DDScannerApplication.getInstance().getDdScannerRestClient().getUserLikes(userId, foreignUserLikeWrapperResultListener);
         } else {
-            DDScannerApplication.getDdScannerRestClient().getUserDislikes(userId, foreignUserDislikesWrapperResultListener);
+            DDScannerApplication.getInstance().getDdScannerRestClient().getUserDislikes(userId, foreignUserDislikesWrapperResultListener);
         }
     }
 
@@ -156,9 +156,9 @@ public class UserLikesDislikesActivity extends AppCompatActivity implements Info
             case ActivitiesRequestCodes.REQUEST_CODE_USER_LIKES_DISLIKES_ACTIVITY_LOGIN:
                 if (resultCode == RESULT_OK) {
                     if (isLikes) {
-                        DDScannerApplication.getDdScannerRestClient().getUserLikes(userId, foreignUserLikeWrapperResultListener);
+                        DDScannerApplication.getInstance().getDdScannerRestClient().getUserLikes(userId, foreignUserLikeWrapperResultListener);
                     } else {
-                        DDScannerApplication.getDdScannerRestClient().getUserDislikes(userId, foreignUserDislikesWrapperResultListener);
+                        DDScannerApplication.getInstance().getDdScannerRestClient().getUserDislikes(userId, foreignUserDislikesWrapperResultListener);
                     }
                 } else {
                     setResult(RESULT_CANCELED);

@@ -22,16 +22,16 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.ProfileAchievement;
-import com.ddscanner.entities.User;
+import com.ddscanner.entities.UserOld;
 import com.ddscanner.entities.UserResponseEntity;
 import com.ddscanner.rest.DDScannerRestClient;
+import com.ddscanner.screens.achievements.AchievementsActivity;
 import com.ddscanner.ui.adapters.AchievmentProfileListAdapter;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
-import com.ddscanner.utils.SharedPreferenceHelper;
 import com.rey.material.widget.ProgressView;
 import com.squareup.picasso.Picasso;
 
@@ -60,21 +60,22 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
     private LinearLayout openInSocialNetwork;
     private ScrollView aboutLayout;
     private String userId;
-    private User user;
+    private UserOld userOld;
     private ProgressView progressView;
     private RelativeLayout likeLayout;
     private LinearLayout dislikeLayout;
     private LinearLayout openOnSocialLayout;
     private RecyclerView achievmentRecyclerView;
     private RelativeLayout showAchivementDetails;
+    private LinearLayout achievementsLayout;
     private TextView noAchievements;
 
     private DDScannerRestClient.ResultListener<UserResponseEntity> userResultListener = new DDScannerRestClient.ResultListener<UserResponseEntity>() {
         @Override
         public void onSuccess(UserResponseEntity result) {
-            user = result.getUser();
-            FACEBOOK_URL = Constants.PROFILE_DIALOG_FACEBOOK_URL + user.getSocialId();
-            FACEBOOK_PAGE_ID = user.getSocialId();
+            userOld = result.getUserOld();
+            FACEBOOK_URL = Constants.PROFILE_DIALOG_FACEBOOK_URL + userOld.getSocialId();
+            FACEBOOK_PAGE_ID = userOld.getSocialId();
             setUi(result);
         }
 
@@ -86,8 +87,8 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             switch (errorType) {
-                case USER_NOT_FOUND_ERROR_C801:
-                    SharedPreferenceHelper.logout();
+                case UNAUTHORIZED_401:
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logout();
                     LoginActivity.showForResult(ForeignProfileActivity.this, ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_LOGIN);
                     break;
                 default:
@@ -105,12 +106,10 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
         userId = getIntent().getStringExtra("USERID");
         findViews();
         toolbarSettings();
-        DDScannerApplication.getDdScannerRestClient().getUserInformation(userId, userResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient().getUserInformation(userId, userResultListener);
     }
 
     private void findViews() {
-        noAchievements = (TextView) findViewById(R.id.no_achievements_view);
-        showAchivementDetails = (RelativeLayout) findViewById(R.id.show_achievments_details);
         achievmentRecyclerView = (RecyclerView) findViewById(R.id.achievment_rv);
         checkInCount = (TextView) findViewById(R.id.checkin_count);
         addedCount = (TextView) findViewById(R.id.added_count);
@@ -129,6 +128,7 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
         likeLayout = (RelativeLayout) findViewById(R.id.likeLayout);
         dislikeLayout = (LinearLayout) findViewById(R.id.dislikeLayout);
         openOnSocialLayout = (LinearLayout) findViewById(R.id.openSocialNetwork);
+        achievementsLayout = (LinearLayout) findViewById(R.id.achievements_layout);
         openOn = (TextView) findViewById(R.id.openOn);
     }
 
@@ -144,41 +144,40 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         achievmentRecyclerView.setLayoutManager(linearLayoutManager);
         if (userResponseEntity.getAchievements() != null && userResponseEntity.getAchievements().size() > 0) {
-            noAchievements.setVisibility(View.GONE);
+            achievementsLayout.setVisibility(View.VISIBLE);
             achievmentRecyclerView.setVisibility(View.VISIBLE);
             achievmentRecyclerView.setAdapter(new AchievmentProfileListAdapter((ArrayList<ProfileAchievement>) userResponseEntity.getAchievements(), this));
         }
         openOnSocialLayout.setOnClickListener(this);
         userAbout.setVisibility(View.GONE);
-        addedCount.setText(user.getCountAdd() + getDiveSpotString(Integer.parseInt(user.getCountAdd())));
-        editedCount.setText(user.getCountEdit() + getDiveSpotString(Integer.parseInt(user.getCountEdit())));
-        checkInCount.setText(user.getCountCheckin() + getDiveSpotString(Integer.parseInt(user.getCountFavorite())));
-        if (!user.getCountCheckin().equals("0")) {
+        addedCount.setText(userOld.getCountAdd() + getDiveSpotString(Integer.parseInt(userOld.getCountAdd())));
+        editedCount.setText(userOld.getCountEdit() + getDiveSpotString(Integer.parseInt(userOld.getCountEdit())));
+        checkInCount.setText(userOld.getCountCheckin() + getDiveSpotString(Integer.parseInt(userOld.getCountFavorite())));
+        if (!userOld.getCountCheckin().equals("0")) {
             showAllCheckins.setOnClickListener(this);
         }
-        if (!user.getCountEdit().equals("0")) {
+        if (!userOld.getCountEdit().equals("0")) {
             showAllEdited.setOnClickListener(this);
         }
-        if (!user.getCountAdd().equals("0")) {
+        if (!userOld.getCountAdd().equals("0")) {
             showAllAdded.setOnClickListener(this);
         }
 
-        if (user.getAbout() != null && !user.getAbout().isEmpty()) {
+        if (userOld.getAbout() != null && !userOld.getAbout().isEmpty()) {
             userAbout.setVisibility(View.VISIBLE);
-            userAbout.setText(user.getAbout());
+            userAbout.setText(userOld.getAbout());
         }
-        userCommentsCount.setText(Helpers.formatLikesCommentsCountNumber(user.getCountComment()));
-        userDislikesCount.setText(Helpers.formatLikesCommentsCountNumber(user.getCountDislike()));
-        userLikesCount.setText(Helpers.formatLikesCommentsCountNumber(user.getCountLike()));
-        Picasso.with(this).load(user.getPicture())
+        userCommentsCount.setText(Helpers.formatLikesCommentsCountNumber(userOld.getCountComment()));
+        userDislikesCount.setText(Helpers.formatLikesCommentsCountNumber(userOld.getCountDislike()));
+        userLikesCount.setText(Helpers.formatLikesCommentsCountNumber(userOld.getCountLike()));
+        Picasso.with(this).load(userOld.getPicture())
                 .resize(Math.round(Helpers.convertDpToPixel(100, this)),
                         Math.round(Helpers.convertDpToPixel(100, this))).centerCrop()
                 .transform(new CropCircleTransformation()).into(avatar);
-        userFullName.setText(user.getName());
-        showAchivementDetails.setOnClickListener(this);
+        userFullName.setText(userOld.getName());
         progressView.setVisibility(View.GONE);
         aboutLayout.setVisibility(View.VISIBLE);
-        switch (user.getType()) {
+        switch (userOld.getType()) {
             case "fb":
                 openOn.setText(R.string.open_on_facebook);
                 break;
@@ -223,7 +222,7 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
         switch (requestCode) {
             case ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_LOGIN:
                 if (resultCode == RESULT_OK) {
-                    DDScannerApplication.getDdScannerRestClient().getUserInformation(userId, userResultListener);
+                    DDScannerApplication.getInstance().getDdScannerRestClient().getUserInformation(userId, userResultListener);
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_LOGIN_TO_SEE_CHECKINS:
@@ -251,7 +250,7 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.checkins_activity:
-                if (SharedPreferenceHelper.isUserLoggedIn()) {
+                if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
                     EventsTracker.trackReviewerCheckInsView();
                     ForeignUserDiveSpotList.show(this, false, false, true, userId);
                 } else {
@@ -260,7 +259,7 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
                 }
                 break;
             case R.id.created_activity:
-                if (SharedPreferenceHelper.isUserLoggedIn()) {
+                if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
                     EventsTracker.trackUserCreatedView();
                     ForeignUserDiveSpotList.show(this, false, true, false, userId);
                 } else {
@@ -269,7 +268,7 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
                 }
                 break;
             case R.id.edited_activity:
-                if (SharedPreferenceHelper.isUserLoggedIn()) {
+                if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
                     EventsTracker.trackReviewerEditedView();
                     ForeignUserDiveSpotList.show(this, true, false, false, userId);
                 } else {
@@ -278,10 +277,10 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
                 }
                 break;
             case R.id.openSocialNetwork:
-                openLink(user.getSocialId(), user.getType());
+                openLink(userOld.getSocialId(), userOld.getType());
                 break;
             case R.id.show_achievments_details:
-                AchievementsActivity.show(this, userId);
+                AchievementsActivity.show(this);
                 break;
         }
     }

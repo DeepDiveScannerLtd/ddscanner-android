@@ -4,7 +4,6 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,16 +14,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
-import com.ddscanner.entities.Activity;
 import com.ddscanner.entities.Notification;
 import com.ddscanner.ui.activities.MainActivity;
-import com.ddscanner.ui.adapters.ActivitiesListAdapter;
 import com.ddscanner.ui.adapters.NotificationsListAdapter;
 import com.ddscanner.ui.adapters.SectionedRecyclerViewAdapter;
 import com.ddscanner.utils.Helpers;
-import com.ddscanner.utils.SharedPreferenceHelper;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -99,7 +96,7 @@ public class AllNotificationsFragment extends Fragment {
             if (recyclerView != null) {
                 Date date1 = new Date();
                 long currentDateInMillis = date1.getTime();
-                SharedPreferenceHelper.setLastShowingNotificationTime(currentDateInMillis);
+                DDScannerApplication.getInstance().getSharedPreferenceHelper().setLastShowingNotificationTime(currentDateInMillis);
             }
         }
     }
@@ -126,53 +123,40 @@ public class AllNotificationsFragment extends Fragment {
             recyclerView.setAdapter(new NotificationsListAdapter(activities, getContext(), getFragmentManager()));
             return;
         }
-//        if (!isHasSections) {
-//            if (activities != null && this.activities != null) {
-//                if (checkIsListDifferent(activities, this.activities)) {
-//                    isHasSections = false;
-//                    return;
-//                }
-//            }
-//        }
         this.activities = activities;
-        if (Helpers.comparingTimes(SharedPreferenceHelper.getLastShowingNotificationTime(),
-                activities.get(activities.size() -1).getDate()) || !Helpers.comparingTimes(SharedPreferenceHelper.getLastShowingNotificationTime(), activities.get(0).getDate())) {
+        if (Helpers.comparingTimes(DDScannerApplication.getInstance().getSharedPreferenceHelper().getLastShowingNotificationTime(),
+                activities.get(activities.size() -1).getDate()) || !Helpers.comparingTimes(DDScannerApplication.getInstance().getSharedPreferenceHelper().getLastShowingNotificationTime(), activities.get(0).getDate())) {
             recyclerView.setAdapter(new NotificationsListAdapter(
                     activities, getContext(), getFragmentManager()));
             Date date = new Date();
             long currentDateInMillis = date.getTime();
-            SharedPreferenceHelper.setLastShowingNotificationTime(currentDateInMillis);
+            DDScannerApplication.getInstance().getSharedPreferenceHelper().setLastShowingNotificationTime(currentDateInMillis);
             return;
         }
         int i = 0;
-        while (Helpers.comparingTimes(SharedPreferenceHelper.getLastShowingNotificationTime(),
+        while (Helpers.comparingTimes(DDScannerApplication.getInstance().getSharedPreferenceHelper().getLastShowingNotificationTime(),
                 activities.get(i).getDate()) && i < activities.size() - 1) {
             i++;
         }
-        NotificationsListAdapter notificationsListAdapter = new NotificationsListAdapter(
-                activities, getContext(), getFragmentManager());
-        List<SectionedRecyclerViewAdapter.Section> sections =
-                new ArrayList<SectionedRecyclerViewAdapter.Section>();
+        NotificationsListAdapter notificationsListAdapter = new NotificationsListAdapter(activities, getContext(), getFragmentManager());
+        List<SectionedRecyclerViewAdapter.Section> sections = new ArrayList<SectionedRecyclerViewAdapter.Section>();
         sections.add(new SectionedRecyclerViewAdapter.Section(0, "Newest"));
         sections.add(new SectionedRecyclerViewAdapter.Section(i, "Older"));
        // isHasSections = true;
-        SectionedRecyclerViewAdapter.Section[] dummy =
-                new SectionedRecyclerViewAdapter.Section[sections.size()];
-        SectionedRecyclerViewAdapter sectionedRecyclerViewAdapter =
-                new SectionedRecyclerViewAdapter(getContext(), R.layout.section_layout,
-                        R.id.section_title, notificationsListAdapter);
+        SectionedRecyclerViewAdapter.Section[] dummy = new SectionedRecyclerViewAdapter.Section[sections.size()];
+        SectionedRecyclerViewAdapter sectionedRecyclerViewAdapter = new SectionedRecyclerViewAdapter(getContext(), R.layout.section_layout, R.id.section_title, notificationsListAdapter);
         sectionedRecyclerViewAdapter.setSections(sections.toArray(dummy));
         notificationsListAdapter.setSectionAdapter(sectionedRecyclerViewAdapter);
         recyclerView.setAdapter(sectionedRecyclerViewAdapter);
         Date date = new Date();
         long currentDateInMillis = date.getTime();
-        SharedPreferenceHelper.setLastShowingNotificationTime(currentDateInMillis);
+        DDScannerApplication.getInstance().getSharedPreferenceHelper().setLastShowingNotificationTime(currentDateInMillis);
     }
 
     private boolean checkIsListDifferent( ArrayList<Notification> newNotifications, ArrayList<Notification> oldNotifications) {
         for (Notification notification : oldNotifications) {
             for (Notification notification1 : newNotifications) {
-                if (!notification.getType().equals(notification1.getType()) || !notification.getUser().getId().equals(notification1.getUser().getId()) || notification.getDiveSpot().getId() != notification1.getDiveSpot().getId()) {
+                if (!notification.getType().equals(notification1.getType()) || !notification.getUserOld().getId().equals(notification1.getUserOld().getId()) || notification.getDiveSpotShort().getId() != notification1.getDiveSpotShort().getId()) {
                     return true;
                 }
             }

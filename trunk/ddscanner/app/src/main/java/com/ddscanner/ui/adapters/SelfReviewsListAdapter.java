@@ -9,7 +9,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -19,16 +18,13 @@ import com.ddscanner.R;
 import com.ddscanner.entities.Comment;
 import com.ddscanner.events.DeleteCommentEvent;
 import com.ddscanner.events.EditCommentEvent;
-import com.ddscanner.events.ReportCommentEvent;
-import com.ddscanner.ui.activities.DiveSpotDetailsActivity;
+import com.ddscanner.screens.divespot.details.DiveSpotDetailsActivity;
 import com.ddscanner.ui.views.TransformationRoundImage;
 import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-import at.blogc.android.views.ExpandableTextView;
-import jp.wasabeef.picasso.transformations.CropSquareTransformation;
 
 /**
  * Created by Lenovo on 26.08.2016.
@@ -150,7 +146,7 @@ public class SelfReviewsListAdapter extends RecyclerView.Adapter<SelfReviewsList
         private ImageView user_avatar;
         private LinearLayout rating;
         private TextView user_name;
-        private ExpandableTextView user_review;
+        private TextView user_review;
         private RecyclerView photos;
         private LinearLayout like;
         private LinearLayout dislike;
@@ -171,7 +167,7 @@ public class SelfReviewsListAdapter extends RecyclerView.Adapter<SelfReviewsList
             user_avatar = (ImageView) v.findViewById(R.id.user_avatar);
             rating = (LinearLayout) v.findViewById(R.id.stars);
             user_name = (TextView) v.findViewById(R.id.user_name);
-            user_review = (ExpandableTextView) v.findViewById(R.id.review);
+            user_review = (TextView) v.findViewById(R.id.review);
             photos = (RecyclerView) v.findViewById(R.id.review_photos_rc);
             like = (LinearLayout) v.findViewById(R.id.like_layout);
             dislike = (LinearLayout) v.findViewById(R.id.dislike_layout);

@@ -7,7 +7,7 @@ import java.io.Serializable;
  */
 public class RegisterResponse implements Serializable {
     private String message;
-    private User user;
+    private UserOld userOld;
 
     public String getMessage() {
         return message;
@@ -17,11 +17,11 @@ public class RegisterResponse implements Serializable {
         this.message = message;
     }
 
-    public User getUser() {
-        return user;
+    public UserOld getUserOld() {
+        return userOld;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserOld(UserOld userOld) {
+        this.userOld = userOld;
     }
 }

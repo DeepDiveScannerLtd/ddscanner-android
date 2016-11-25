@@ -26,8 +26,8 @@ public class Notification implements Serializable {
     private Type type;
     private String date;
     private String message;
-    private DiveSpot diveSpot;
-    private User user;
+    private DiveSpotShort diveSpotShort;
+    private UserOld userOld;
     private Comment comment;
 
     public Type getType() {
@@ -54,20 +54,20 @@ public class Notification implements Serializable {
         this.message = message;
     }
 
-    public DiveSpot getDiveSpot() {
-        return diveSpot;
+    public DiveSpotShort getDiveSpotShort() {
+        return diveSpotShort;
     }
 
-    public void setDiveSpot(DiveSpot diveSpot) {
-        this.diveSpot = diveSpot;
+    public void setDiveSpotShort(DiveSpotShort diveSpotShort) {
+        this.diveSpotShort = diveSpotShort;
     }
 
-    public User getUser() {
-        return user;
+    public UserOld getUserOld() {
+        return userOld;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserOld(UserOld userOld) {
+        this.userOld = userOld;
     }
 
     public Comment getComment() {

@@ -12,11 +12,13 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
-import com.ddscanner.entities.DiveSpot;
-import com.ddscanner.ui.activities.DiveSpotDetailsActivity;
+import com.ddscanner.entities.DiveSpotShort;
+import com.ddscanner.screens.divespot.details.DiveSpotDetailsActivity;
 import com.ddscanner.ui.views.TransformationRoundImage;
+import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -31,11 +33,11 @@ public class DiveSpotsListAdapter
 
     private static final String TAG = DiveSpotsListAdapter.class.getSimpleName();
 
-    public ArrayList<DiveSpot> divespots;
+    public ArrayList<DiveSpotShort> divespots;
     private Context context;
     private EventsTracker.SpotViewSource spotViewSource;
 
-    public DiveSpotsListAdapter(ArrayList<DiveSpot> divespots, Context context, EventsTracker.SpotViewSource spotViewSource) {
+    public DiveSpotsListAdapter(ArrayList<DiveSpotShort> divespots, Context context, EventsTracker.SpotViewSource spotViewSource) {
         this.divespots = divespots;
         this.context = context;
         this.spotViewSource = spotViewSource;
@@ -52,13 +54,14 @@ public class DiveSpotsListAdapter
 
     @Override
     public void onBindViewHolder(ProductListViewHolder productListViewHolder, int i) {
-        DiveSpot divespot = new DiveSpot();
+        DiveSpotShort divespot = new DiveSpotShort();
         divespot = divespots.get(i);
         productListViewHolder.progressBar.getIndeterminateDrawable().
                 setColorFilter(ContextCompat.getColor(context, R.color.primary),
                         PorterDuff.Mode.MULTIPLY);
         if (divespot.getImage() != null) {
-            Picasso.with(context).load(divespot.getImage()).resize(Math.round(Helpers.convertDpToPixel(130, context)), Math.round(Helpers.convertDpToPixel(130, context))).centerCrop()
+            String imageAddress = DDScannerApplication.getInstance().getString(R.string.server_api_address) + Constants.IMAGE_PATH_PREVIEW + divespot.getImage();
+            Picasso.with(context).load(imageAddress).resize(Math.round(Helpers.convertDpToPixel(130, context)), Math.round(Helpers.convertDpToPixel(130, context))).centerCrop()
                     .transform(new TransformationRoundImage(2, 0))
                     .into(productListViewHolder.imageView,
                             new ImageLoadedCallback(productListViewHolder.progressBar) {
@@ -129,8 +132,8 @@ public class DiveSpotsListAdapter
         }
     }
 
-    public void setDiveSpots(ArrayList<DiveSpot> diveSpots) {
-        this.divespots = diveSpots;
+    public void setDiveSpots(ArrayList<DiveSpotShort> diveSpotShorts) {
+        this.divespots = diveSpotShorts;
         notifyDataSetChanged();
     }
 

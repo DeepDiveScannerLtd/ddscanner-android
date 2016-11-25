@@ -8,12 +8,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
-import com.ddscanner.entities.User;
-import com.ddscanner.events.ShowUserDialogEvent;
+import com.ddscanner.entities.UserOld;
 import com.ddscanner.ui.activities.ForeignProfileActivity;
-import com.ddscanner.ui.views.TransformationRoundImage;
 import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;
 
@@ -27,10 +24,10 @@ import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserListViewHolder> {
 
     private Context context;
-    private ArrayList<User> userArrayList;
+    private ArrayList<UserOld> userOldArrayList;
 
-    public UserListAdapter(Context context, ArrayList<User> users) {
-        userArrayList = users;
+    public UserListAdapter(Context context, ArrayList<UserOld> userOlds) {
+        userOldArrayList = userOlds;
         this.context = context;
     }
 
@@ -45,19 +42,19 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserLi
     @Override
     public void onBindViewHolder(UserListViewHolder holder, int position) {
         Picasso.with(context)
-                .load(userArrayList.get(position).getPicture())
+                .load(userOldArrayList.get(position).getPicture())
                 .resize(Math.round(Helpers.convertDpToPixel(58, context)), Math.round(Helpers.convertDpToPixel(58, context)))
                 .centerCrop()
                 .transform(new CropCircleTransformation())
                 .into(holder.userAvatar);
-        holder.userName.setText(userArrayList.get(position).getName());
-        holder.info.setText(userArrayList.get(position).getCountComment() + " reviews, " +
-                userArrayList.get(position).getCountLike() + " likes");
+        holder.userName.setText(userOldArrayList.get(position).getName());
+        holder.info.setText(userOldArrayList.get(position).getCountComment() + " reviews, " +
+                userOldArrayList.get(position).getCountLike() + " likes");
     }
 
     @Override
     public int getItemCount() {
-        return userArrayList.size();
+        return userOldArrayList.size();
     }
 
     public class UserListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -78,7 +75,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserLi
 
         @Override
         public void onClick(View v) {
-           ForeignProfileActivity.show(context, userArrayList.get(getAdapterPosition()).getId());
+           ForeignProfileActivity.show(context, userOldArrayList.get(getAdapterPosition()).getId());
         }
     }
 

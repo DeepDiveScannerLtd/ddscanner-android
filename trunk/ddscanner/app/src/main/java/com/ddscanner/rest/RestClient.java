@@ -1,8 +1,6 @@
 package com.ddscanner.rest;
 
 
-import android.support.v4.content.ContextCompat;
-
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 
@@ -27,10 +25,20 @@ public abstract class RestClient {
             Interceptor interceptor = new Interceptor() {
                 @Override
                 public Response intercept(Chain chain) throws IOException {
+                    if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
+                        Request request = chain.request();
+                        request = request.newBuilder()
+                               // .addHeader("Accept", "application/vnd.trizeri.v1+json") // dev
+                                //   .addHeader("Content-Type", "application/json;charset=utf-8")
+                                .addHeader("Authorization", "Bearer " + DDScannerApplication.getInstance().getSharedPreferenceHelper().getToken())
+                                .build();
+                        Response response = chain.proceed(request);
+                        return response;
+                    }
                     Request request = chain.request();
                     request = request.newBuilder()
-                            .addHeader("Accept", "application/vnd.trizeri.v1+json") // dev
-                         //   .addHeader("Content-Type", "application/json;charset=utf-8")
+//                            .addHeader("Accept", "application/vnd.trizeri.v1+json") // dev
+                            //   .addHeader("Content-Type", "application/json;charset=utf-8")
                             .build();
                     Response response = chain.proceed(request);
                     return response;

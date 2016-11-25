@@ -28,12 +28,10 @@ import com.ddscanner.events.LikeCommentEvent;
 import com.ddscanner.events.ReportCommentEvent;
 import com.ddscanner.ui.activities.ForeignProfileActivity;
 import com.ddscanner.utils.Helpers;
-import com.ddscanner.utils.SharedPreferenceHelper;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-import at.blogc.android.views.ExpandableTextView;
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 /**
@@ -92,7 +90,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
             reviewsListViewHolder.photos.setNestedScrollingEnabled(false);
             reviewsListViewHolder.photos.setHasFixedSize(false);
             reviewsListViewHolder.photos.setLayoutManager(layoutManager);
-            if (comments.get(reviewsListViewHolder.getAdapterPosition()).getUser().getId().equals(SharedPreferenceHelper.getUserServerId())) {
+            if (comments.get(reviewsListViewHolder.getAdapterPosition()).getUserOld().getId().equals(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId())) {
                 reviewsListViewHolder.photos.setAdapter(new ReviewPhotosAdapter((ArrayList<String>) comments.get(reviewsListViewHolder.getAdapterPosition()).getImages(), context, path, true, reviewsListViewHolder.getAdapterPosition()));
             } else {
                 reviewsListViewHolder.photos.setAdapter(new ReviewPhotosAdapter((ArrayList<String>) comments.get(reviewsListViewHolder.getAdapterPosition()).getImages(), context, path, false, reviewsListViewHolder.getAdapterPosition()));
@@ -132,15 +130,15 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
             });
         }
 
-        reviewsListViewHolder.user_name.setText(comments.get(reviewsListViewHolder.getAdapterPosition()).getUser().getName());
+        reviewsListViewHolder.user_name.setText(comments.get(reviewsListViewHolder.getAdapterPosition()).getUserOld().getName());
         reviewsListViewHolder.user_review.setText(comments.get(reviewsListViewHolder.getAdapterPosition()).getComment());
         reviewsListViewHolder.likesCount.setText(Helpers.formatLikesCommentsCountNumber(comments.get(reviewsListViewHolder.getAdapterPosition()).getLikes()));
         reviewsListViewHolder.dislikesCount.setText(Helpers.formatLikesCommentsCountNumber(comments.get(reviewsListViewHolder.getAdapterPosition()).getDislikes()));
         isAdapterSet = true;
 
-        if (comments.get(reviewsListViewHolder.getAdapterPosition()).getUser().getPicture() != null) {
+        if (comments.get(reviewsListViewHolder.getAdapterPosition()).getUserOld().getPicture() != null) {
             Picasso.with(context)
-                    .load(comments.get(reviewsListViewHolder.getAdapterPosition()).getUser().getPicture()).resize(Math.round(Helpers.convertDpToPixel(40, context)), Math.round(Helpers.convertDpToPixel(40, context)))
+                    .load(comments.get(reviewsListViewHolder.getAdapterPosition()).getUserOld().getPicture()).resize(Math.round(Helpers.convertDpToPixel(40, context)), Math.round(Helpers.convertDpToPixel(40, context)))
                     .transform(new CropCircleTransformation())
                     .centerCrop()
                     .placeholder(R.drawable.avatar_profile_default)
@@ -257,7 +255,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         private ImageView user_avatar;
         private LinearLayout rating;
         private TextView user_name;
-        private ExpandableTextView user_review;
+        private TextView user_review;
         private RecyclerView photos;
         private LinearLayout like;
         private LinearLayout dislike;
@@ -281,7 +279,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
             user_avatar = (ImageView) v.findViewById(R.id.user_avatar);
             rating = (LinearLayout) v.findViewById(R.id.stars);
             user_name = (TextView) v.findViewById(R.id.user_name);
-            user_review = (ExpandableTextView) v.findViewById(R.id.review);
+            user_review = (TextView) v.findViewById(R.id.review);
             photos = (RecyclerView) v.findViewById(R.id.review_photos_rc);
             like = (LinearLayout) v.findViewById(R.id.like_layout);
             dislike = (LinearLayout) v.findViewById(R.id.dislike_layout);
@@ -298,7 +296,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
             switch (v.getId()) {
                 case R.id.user_avatar:
                     EventsTracker.trackReviewerProfileView();
-                    ForeignProfileActivity.show(context, comments.get(getAdapterPosition()).getUser().getId());
+                    ForeignProfileActivity.show(context, comments.get(getAdapterPosition()).getUserOld().getId());
                     break;
                 case R.id.like_layout:
                     if (!isLiked) {

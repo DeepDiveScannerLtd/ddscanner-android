@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -23,6 +24,9 @@ import com.ddscanner.entities.SealifeResponseEntity;
 import com.ddscanner.events.SealifeChoosedEvent;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.adapters.SealifeSearchAdapter;
+import com.ddscanner.ui.adapters.SealifeSectionedRecyclerViewAdapter;
+import com.ddscanner.ui.adapters.SearchSealifeListAdapter;
+import com.ddscanner.ui.adapters.SectionedRecyclerViewAdapter;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
@@ -91,8 +95,28 @@ public class SearchSealifeActivity extends AppCompatActivity implements SearchVi
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);
         getSupportActionBar().setTitle(R.string.search_sealife);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        DDScannerApplication.getDdScannerRestClient().getAllSealifes(sealifeResponseEntityResultListener);
+        //DDScannerApplication.getInstance().getDdScannerRestClient().getAllSealifes(sealifeResponseEntityResultListener);
+        setupList();
+    }
+
+    private void setupList() {
+        mRecyclerView.setVisibility(View.VISIBLE);
+        progressView.setVisibility(View.GONE);
+        contentLayout.setVisibility(View.VISIBLE);
+
+
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
+        mRecyclerView.setLayoutManager(gridLayoutManager);
+        SearchSealifeListAdapter searchSealifeListAdapter = new SearchSealifeListAdapter();
+        List<SealifeSectionedRecyclerViewAdapter.Section> sections = new ArrayList<SealifeSectionedRecyclerViewAdapter.Section>();
+        sections.add(new SealifeSectionedRecyclerViewAdapter.Section(0, "Newest"));
+        sections.add(new SealifeSectionedRecyclerViewAdapter.Section(5, "Older"));
+
+        SealifeSectionedRecyclerViewAdapter.Section[] dummy = new SealifeSectionedRecyclerViewAdapter.Section[sections.size()];
+        SealifeSectionedRecyclerViewAdapter sectionedRecyclerViewAdapter = new SealifeSectionedRecyclerViewAdapter(this, R.layout.section_layout, R.id.section_title, mRecyclerView, searchSealifeListAdapter);
+        sectionedRecyclerViewAdapter.setSections(sections.toArray(dummy));
+        searchSealifeListAdapter.setSectionAdapter(sectionedRecyclerViewAdapter);
+        mRecyclerView.setAdapter(sectionedRecyclerViewAdapter);
     }
 
     @Override

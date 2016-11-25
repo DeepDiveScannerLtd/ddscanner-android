@@ -10,8 +10,10 @@ import android.widget.TextView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.events.AddPhotoDoListEvent;
 import com.ddscanner.events.ImageDeletedEvent;
 import com.ddscanner.utils.Constants;
+import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -20,19 +22,20 @@ import java.util.List;
 /**
  * Created by SuzukPc on 06.04.2016.
  */
-public class AddPhotoToDsListAdapter extends RecyclerView.Adapter<AddPhotoToDsListAdapter.PhotoListViewHolder> {
+public class AddPhotoToDsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+    private static final int VIEW_TYPE_ADD_PHOTO = 1;
+    private static final int VIEW_TYPE_PHOTO = 2;
 
     private static final String TAG = AddPhotoToDsListAdapter.class.getSimpleName();
     private Context context;
     private List<String> uris;
     private List<String> newImagesUriList = new ArrayList<>();
     private List<String> deletedImages = new ArrayList<>();
-    private TextView textView;
 
-    public AddPhotoToDsListAdapter(List<String> uris, Context context, TextView textView) {
+    public AddPhotoToDsListAdapter(List<String> uris, Context context) {
         this.context = context;
         this.uris = uris;
-        this.textView = textView;
         this.deletedImages = new ArrayList<>();
         for (String uri : uris) {
             if (!uri.contains(Constants.images)) {
@@ -42,32 +45,52 @@ public class AddPhotoToDsListAdapter extends RecyclerView.Adapter<AddPhotoToDsLi
     }
 
     @Override
-    public PhotoListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.
-                from(parent.getContext()).
-                inflate(R.layout.list_images_item, parent, false);
-        return new PhotoListViewHolder(itemView);
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View itemView;
+        switch (viewType) {
+            case VIEW_TYPE_PHOTO:
+                itemView = LayoutInflater.
+                        from(parent.getContext()).
+                        inflate(R.layout.list_images_item, parent, false);
+                return new PhotoListViewHolder(itemView);
+
+            case VIEW_TYPE_ADD_PHOTO:
+                itemView = LayoutInflater.
+                        from(parent.getContext()).
+                        inflate(R.layout.item_add_photo_to_dive_spot, parent, false);
+                return new AddPhotoButtonViewHolder(itemView);
+            default:
+                return null;
+        }
     }
 
     @Override
-    public void onBindViewHolder(final PhotoListViewHolder holder, final int position) {
-        String path = uris.get(holder.getAdapterPosition());
-        if (!path.contains(Constants.images)) {
-            path = "file://" + path;
-        }
-        Picasso.with(context).load(path).resize(110, 80).centerCrop().into(holder.photo);
-        holder.icDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (uris.get(holder.getAdapterPosition()).contains(Constants.images)) {
-                   deletedImages.add(uris.get(holder.getAdapterPosition()));
-                }
-                DDScannerApplication.bus.post(new ImageDeletedEvent(position));
-//                uris.remove(holder.getAdapterPosition());
-//                notifyItemRemoved(holder.getAdapterPosition());
-//                notifyItemRangeChanged(holder.getAdapterPosition(), uris.size());
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
+        if (getItemViewType(position) == VIEW_TYPE_PHOTO) {
+            PhotoListViewHolder photoListViewHolder = (PhotoListViewHolder) holder;
+            String path = uris.get(holder.getAdapterPosition());
+            if (!path.contains(Constants.images) && !path.contains("file:")) {
+                path = "file://" + path;
             }
-        });
+            Picasso.with(context).load(path).resize(Math.round(Helpers.convertDpToPixel(110, context)),Math.round(Helpers.convertDpToPixel(80, context))).centerCrop().into(photoListViewHolder.photo);
+            photoListViewHolder.icDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (uris.get(holder.getAdapterPosition()).contains(Constants.images)) {
+                        deletedImages.add(uris.get(holder.getAdapterPosition()));
+                    }
+                    DDScannerApplication.bus.post(new ImageDeletedEvent(position));
+                }
+            });
+        }
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (uris.size() == position) {
+            return VIEW_TYPE_ADD_PHOTO;
+        }
+        return VIEW_TYPE_PHOTO;
     }
 
     public List<String> getListOfDeletedImages() {
@@ -86,15 +109,13 @@ public class AddPhotoToDsListAdapter extends RecyclerView.Adapter<AddPhotoToDsLi
 
     @Override
     public int getItemCount() {
-        if (uris.size() > 0) {
-            textView.setVisibility(View.GONE);
-        } else {
-            textView.setVisibility(View.VISIBLE);
+        if (uris == null) {
+            return 1;
         }
-        return uris.size();
+        return uris.size() + 1;
     }
 
-    public class PhotoListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+     class PhotoListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         protected ImageView photo;
         protected ImageView icDelete;
@@ -111,6 +132,17 @@ public class AddPhotoToDsListAdapter extends RecyclerView.Adapter<AddPhotoToDsLi
         }
     }
 
+    class AddPhotoButtonViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
+        public AddPhotoButtonViewHolder(View view) {
+            super(view);
+            view.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            DDScannerApplication.bus.post(new AddPhotoDoListEvent());
+        }
+    }
 
 }

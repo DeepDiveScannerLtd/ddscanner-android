@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
+    android:layout_marginBottom="10dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/white_background_rectangle"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:elevation="2dp">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:src="@drawable/ic_ds" />
+
+            <TextView
+                android:text="Ryba"
+                android:gravity="center_vertical"
+                android:paddingLeft="15dp"
+                android:fontFamily="sans-serif-medium"
+                android:textColor="@color/black_text"
+                android:layout_width="match_parent"
+                android:layout_height="34dp"
+                android:background="@drawable/bottom_orange_button" />
+        </LinearLayout>
