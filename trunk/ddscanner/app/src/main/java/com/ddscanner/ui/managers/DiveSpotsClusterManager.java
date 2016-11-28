@@ -44,6 +44,7 @@ import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class DiveSpotsClusterManager extends ClusterManager<DiveSpotShort> implements ClusterManager.OnClusterClickListener<DiveSpotShort>, GoogleMap.OnMapClickListener, GoogleMap.OnCameraChangeListener{
@@ -75,12 +76,12 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpotShort> imple
 
     private int newDiveSpotId = -1;
 
-    private DDScannerRestClient.ResultListener<DivespotsWrapper> getDiveSpotsByAreaResultListener = new DDScannerRestClient.ResultListener<DivespotsWrapper>() {
+    private DDScannerRestClient.ResultListener<List<DiveSpotShort>> getDiveSpotsByAreaResultListener = new DDScannerRestClient.ResultListener<List<DiveSpotShort>>() {
         @Override
-        public void onSuccess(DivespotsWrapper divespotsWrapper) {
+        public void onSuccess(List<DiveSpotShort> diveSpotShorts) {
             hideProgressBar();
-            updateDiveSpots((ArrayList<DiveSpotShort>) divespotsWrapper.getDiveSpots());
-            parentFragment.fillDiveSpots(getVisibleMarkersList(diveSpotShorts));
+            updateDiveSpots((ArrayList<DiveSpotShort>) diveSpotShorts);
+            parentFragment.fillDiveSpots(getVisibleMarkersList((ArrayList<DiveSpotShort>) diveSpotShorts));
         }
 
         @Override
