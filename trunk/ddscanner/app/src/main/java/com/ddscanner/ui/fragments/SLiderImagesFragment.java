@@ -1,7 +1,6 @@
 package com.ddscanner.ui.fragments;
 
 import android.app.Fragment;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -13,16 +12,15 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.ddscanner.R;
-import com.ddscanner.ui.views.TransformationRoundImage;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 /**
  * Created by lashket on 4.3.16.
  */
-public class SLiderImagesFragment extends Fragment {
+public class SliderImagesFragment extends Fragment {
 
-    private static final String TAG = SLiderImagesFragment.class.getName();
+    private static final String TAG = SliderImagesFragment.class.getName();
     public static final String IMAGE_URL = "IMAGE_URL";
 
     @Override

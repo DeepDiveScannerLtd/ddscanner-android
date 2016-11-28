@@ -36,11 +36,13 @@ import com.ddscanner.utils.Helpers;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -431,13 +433,14 @@ public class DDScannerRestClient {
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 
-    public void getDiveSpotsByArea(DiveSpotsRequestMap diveSpotsRequestMap, ResultListener<DivespotsWrapper> resultListener) {
+    public void getDiveSpotsByArea(DiveSpotsRequestMap diveSpotsRequestMap, ResultListener<List<DiveSpotShort>> resultListener) {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveSpotsByFilter(diveSpotsRequestMap);
-        call.enqueue(new ResponseEntityCallback<DivespotsWrapper>(gson, resultListener) {
+        call.enqueue(new ResponseEntityCallback<List<DiveSpotShort>>(gson, resultListener) {
             @Override
-            void handleResponseString(ResultListener<DivespotsWrapper> resultListener, String responseString) {
-                DivespotsWrapper divespotsWrapper = new Gson().fromJson(responseString, DivespotsWrapper.class);
-                resultListener.onSuccess(divespotsWrapper);
+            void handleResponseString(ResultListener<List<DiveSpotShort>> resultListener, String responseString) {
+                Type listType = new TypeToken<List<DiveSpotShort>>(){}.getType();
+                List<DiveSpotShort> diveSpots = (List<DiveSpotShort>) gson.fromJson(responseString, listType);
+                resultListener.onSuccess(diveSpots);
             }
         });
     }

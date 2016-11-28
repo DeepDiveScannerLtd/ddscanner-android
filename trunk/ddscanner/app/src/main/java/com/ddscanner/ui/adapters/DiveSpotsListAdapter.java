@@ -25,6 +25,9 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import jp.wasabeef.picasso.transformations.CropSquareTransformation;
+import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
+
 /**
  * Created by lashket on 23.12.15.
  */
@@ -60,9 +63,9 @@ public class DiveSpotsListAdapter
                 setColorFilter(ContextCompat.getColor(context, R.color.primary),
                         PorterDuff.Mode.MULTIPLY);
         if (divespot.getImage() != null) {
-            String imageAddress = DDScannerApplication.getInstance().getString(R.string.server_api_address) + Constants.IMAGE_PATH_PREVIEW + divespot.getImage();
+            String imageAddress = DDScannerApplication.getInstance().getString(R.string.base_photo_url, divespot.getImage(), "1");
             Picasso.with(context).load(imageAddress).resize(Math.round(Helpers.convertDpToPixel(130, context)), Math.round(Helpers.convertDpToPixel(130, context))).centerCrop()
-                    .transform(new TransformationRoundImage(2, 0))
+                    .transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2, context)),0))
                     .into(productListViewHolder.imageView,
                             new ImageLoadedCallback(productListViewHolder.progressBar) {
                                 @Override
