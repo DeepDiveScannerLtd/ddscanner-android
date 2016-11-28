@@ -8,7 +8,7 @@ import java.util.List;
 public class DiveSpotDetailsEntity extends DiveSpotShort {
 
     private String description;
-    private List<Photo> photos;
+    private List<String> photos;
     private int visibility;
     @SerializedName("visibility_min")
     private String visibilityMin;
@@ -29,13 +29,13 @@ public class DiveSpotDetailsEntity extends DiveSpotShort {
     @SerializedName("country_name")
     private String countryName;
     private List<DiveSpotSealife> sealifes;
-    private List<Photo> maps;
+    private List<String> maps;
 
-    public List<Photo> getMaps() {
+    public List<String> getMaps() {
         return maps;
     }
 
-    public void setMaps(List<Photo> maps) {
+    public void setMaps(List<String> maps) {
         this.maps = maps;
     }
 
@@ -75,11 +75,11 @@ public class DiveSpotDetailsEntity extends DiveSpotShort {
         this.description = description;
     }
 
-    public List<Photo> getPhotos() {
+    public List<String> getPhotos() {
         return photos;
     }
 
-    public void setPhotos(List<Photo> photos) {
+    public void setPhotos(List<String> photos) {
         this.photos = photos;
     }
 

@@ -51,6 +51,9 @@ public class SealifeListAdapter extends RecyclerView.Adapter<SealifeListAdapter.
 
     @Override
     public int getItemCount() {
+        if (sealifes == null) {
+            return 0;
+        }
         return sealifes.size();
     }
 

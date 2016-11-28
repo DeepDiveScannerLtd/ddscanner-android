@@ -91,10 +91,10 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
     private ActivityDiveSpotDetailsBinding binding;
 
-    private DDScannerRestClient.ResultListener<DiveSpotResponseEntity> diveSpotDetailsResultListener = new DDScannerRestClient.ResultListener<DiveSpotResponseEntity>() {
+    private DDScannerRestClient.ResultListener<DiveSpotDetailsEntity> diveSpotDetailsResultListener = new DDScannerRestClient.ResultListener<DiveSpotDetailsEntity>() {
         @Override
-        public void onSuccess(DiveSpotResponseEntity result) {
-            diveSpotDetailsEntity = result.getDiveSpot();
+        public void onSuccess(DiveSpotDetailsEntity result) {
+            diveSpotDetailsEntity = result;
             binding.setDiveSpotViewModel(new DiveSpotDetailsActivityViewModel(diveSpotDetailsEntity, binding.progressBar));
             setUi();
         }
@@ -201,14 +201,14 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         binding.mapsRc.setLayoutManager(new GridLayoutManager(DiveSpotDetailsActivity.this, 4));
 
         if (binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPhotos() != null) {
-            DiveSpotPhotosAdapter photosAdapter = new DiveSpotPhotosAdapter((ArrayList<Photo>) binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPhotos(), DiveSpotDetailsActivity.this);
+            DiveSpotPhotosAdapter photosAdapter = new DiveSpotPhotosAdapter((ArrayList<String>) binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPhotos(), DiveSpotDetailsActivity.this);
             binding.photosRc.setVisibility(View.VISIBLE);
             binding.addPhotosLayout.setVisibility(View.GONE);
             binding.photosRc.setAdapter(photosAdapter);
         }
 
         if (binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getMaps() != null) {
-            DiveSpotPhotosAdapter mapsAdapter = new DiveSpotPhotosAdapter((ArrayList<Photo>) binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getMaps(), DiveSpotDetailsActivity.this);
+            DiveSpotPhotosAdapter mapsAdapter = new DiveSpotPhotosAdapter((ArrayList<String>) binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getMaps(), DiveSpotDetailsActivity.this);
             binding.mapsRc.setAdapter(mapsAdapter);
             binding.addPhotosLayout.setVisibility(View.GONE);
         }
