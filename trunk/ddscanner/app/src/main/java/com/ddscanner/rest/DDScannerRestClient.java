@@ -471,6 +471,18 @@ public class DDScannerRestClient {
 
     /*Methods using in API v2_0*/
 
+    public void getDivespotsByName(String query, ResultListener<ArrayList<DiveSpotShort>> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDivespotsByName(query);
+        call.enqueue(new ResponseEntityCallback<ArrayList<DiveSpotShort>>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<ArrayList<DiveSpotShort>> resultListener, String responseString) throws JSONException {
+                Type listType = new TypeToken<List<DiveSpotShort>>(){}.getType();
+                ArrayList<DiveSpotShort> diveSpots = gson.fromJson(responseString, listType);
+                resultListener.onSuccess(diveSpots);
+            }
+        });
+    }
+
     public void postUserSignUp(String email, String password, String userType, String lat, String lng, ResultListener<SignUpResponseEntity> resultListener) {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().signUpUser(getSignUpRequest(email, password, userType, lat, lng));
         call.enqueue(new ResponseEntityCallback<SignUpResponseEntity>(gson, resultListener) {
