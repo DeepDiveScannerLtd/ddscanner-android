@@ -326,4 +326,10 @@
         <item name="android:layout_marginTop">3dp</item>
     </style>
 
+    <style name="FullWidthDivider">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">#f6f6f6</item>
+    </style>
+
 </resources>
