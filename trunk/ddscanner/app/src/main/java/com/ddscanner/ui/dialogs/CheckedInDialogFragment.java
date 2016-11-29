@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -24,12 +25,12 @@ public class CheckedInDialogFragment extends DialogFragment implements View.OnCl
 
     }
 
-    public static CheckedInDialogFragment newInstance(String diveSpotId) {
+    public static void showCheckedInDialog(String diveSpotId, FragmentActivity activity) {
         CheckedInDialogFragment checkedInDialogFragment = new CheckedInDialogFragment();
         Bundle args = new Bundle();
         args.putString("divespotid", diveSpotId);
         checkedInDialogFragment.setArguments(args);
-        return checkedInDialogFragment;
+        checkedInDialogFragment.show(activity.getSupportFragmentManager(), "");
     }
 
     @NonNull

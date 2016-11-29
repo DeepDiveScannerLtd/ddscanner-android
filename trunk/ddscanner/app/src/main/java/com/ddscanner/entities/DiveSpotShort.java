@@ -27,17 +27,14 @@ public class DiveSpotShort implements Serializable, ClusterItem {
     private String image;
     @SerializedName("type")
     private int object;
-    @SerializedName("is_approved")
-    private int isNew;
+    @SerializedName("is_new")
+    private boolean isNew;
 
     public boolean getIsNew() {
-        if (1 == isNew) {
-            return false;
-        }
-        return true;
+        return isNew;
     }
 
-    public void setIsNew(int isNew) {
+    public void setIsNew(boolean isNew) {
         this.isNew = isNew;
     }
 

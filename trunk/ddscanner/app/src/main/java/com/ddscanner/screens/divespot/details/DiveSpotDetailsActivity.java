@@ -37,6 +37,7 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.databinding.ActivityDiveSpotDetailsBinding;
+import com.ddscanner.entities.DiveSpotDetails;
 import com.ddscanner.entities.DiveSpotDetailsEntity;
 import com.ddscanner.entities.DiveSpotResponseEntity;
 import com.ddscanner.entities.DiveSpotSealife;
@@ -50,11 +51,13 @@ import com.ddscanner.ui.activities.LeaveReviewActivity;
 import com.ddscanner.ui.activities.LoginActivity;
 import com.ddscanner.ui.activities.ShowDsLocationActivity;
 import com.ddscanner.ui.adapters.SealifeListAdapter;
+import com.ddscanner.ui.dialogs.CheckedInDialogFragment;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
+import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -95,7 +98,9 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         @Override
         public void onSuccess(DiveSpotDetailsEntity result) {
             diveSpotDetailsEntity = result;
-            isCheckedIn = result.getFlags().isCheckedIn();
+            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
+                isCheckedIn = result.getFlags().isCheckedIn();
+            }
             binding.setDiveSpotViewModel(new DiveSpotDetailsActivityViewModel(diveSpotDetailsEntity, binding.progressBar));
             setUi();
         }
@@ -185,7 +190,9 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         });
         materialDialog = Helpers.getMaterialDialog(this);
         binding.ratingBar.setOnRatingBarChangeListener(this);
-        isFavorite = binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getFlags().isFavorite();
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
+            isFavorite = binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getFlags().isFavorite();
+        }
         updateMenuItems(menu, isFavorite);
         binding.divePlaceDescription.post(new Runnable() {
             @Override
@@ -684,7 +691,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             if (isCheckIn) {
                 DiveSpotDetailsActivity.this.isCheckedIn = true;
                 EventsTracker.trackCheckIn(EventsTracker.CheckInStatus.SUCCESS);
-
+                CheckedInDialogFragment.showCheckedInDialog(diveSpotId, DiveSpotDetailsActivity.this);
             } else {
                 DiveSpotDetailsActivity.this.isCheckedIn = false;
                 EventsTracker.trackCheckOut();

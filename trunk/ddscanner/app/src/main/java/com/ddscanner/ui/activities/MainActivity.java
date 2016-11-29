@@ -54,6 +54,7 @@ import com.ddscanner.events.SignupLoginButtonClicked;
 import com.ddscanner.events.TakePhotoFromCameraEvent;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.adapters.MainActivityPagerAdapter;
+import com.ddscanner.ui.dialogs.ActionSuccessDialogFragment;
 import com.ddscanner.ui.dialogs.CheckedInDialogFragment;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.ui.fragments.ActivityNotificationsFragment;
@@ -145,6 +146,10 @@ public class MainActivity extends BaseAppCompatActivity
             switch (errorType) {
                 case UNAUTHORIZED_401:
                     Crashlytics.log("801 error on identify");
+                    break;
+                case ENTITY_NOT_FOUND_404:
+                    ActionSuccessDialogFragment.show(MainActivity.this, R.string.title_pass_incorrect, R.string.pass_incorrect);
+                    break;
                 default:
                     Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);
             }
