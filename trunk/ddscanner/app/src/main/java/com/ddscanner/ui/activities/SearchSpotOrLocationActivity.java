@@ -73,10 +73,10 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
     private boolean isTryToOpenAddDiveSpotActivity = false;
     private Runnable sendingSearchRequestRunnable;
 
-    private DDScannerRestClient.ResultListener<DivespotsWrapper> divespotsWrapperResultListener = new DDScannerRestClient.ResultListener<DivespotsWrapper>() {
+    private DDScannerRestClient.ResultListener<ArrayList<DiveSpotShort>> divespotsWrapperResultListener = new DDScannerRestClient.ResultListener<ArrayList<DiveSpotShort>>() {
         @Override
-        public void onSuccess(DivespotsWrapper result) {
-            searchDiveSpotFragment.setDiveSpotShorts((ArrayList<DiveSpotShort>) result.getDiveSpots());
+        public void onSuccess(ArrayList<DiveSpotShort> result) {
+            searchDiveSpotFragment.setDiveSpotShorts(result);
         }
 
         @Override
@@ -172,7 +172,7 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
             @Override
             public void run() {
                 if (!newText.isEmpty()) {
-                    name = RequestBody.create(MediaType.parse("multipart/form-data"), newText);
+                    DDScannerApplication.getInstance().getDdScannerRestClient().getDivespotsByName(newText, divespotsWrapperResultListener);
                     createRequestBodyies();
                     placeList = new ArrayList<String>();
                     Places.GeoDataApi.getAutocompletePredictions(googleApiClient, newText, new LatLngBounds(new LatLng(-180, -180), new LatLng(180, 180)), null).setResultCallback(
@@ -226,7 +226,7 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
     }
 
     private void sendRequest() {
-        DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotsByParameters(name, like, order, sort, limit, select, divespotsWrapperResultListener);
+//        DDScannerApplication.getInstance().getDdScannerRestClient().getDivespotsByName(name, divespotsWrapperResultListener);
     }
 
     @Override
