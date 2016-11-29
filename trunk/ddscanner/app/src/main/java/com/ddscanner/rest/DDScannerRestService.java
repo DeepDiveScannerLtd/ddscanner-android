@@ -299,6 +299,6 @@ public interface DDScannerRestService {
     @GET("v2_0/sealife.get")
     Call<ResponseBody> getSealifeDetails(@Query("id") String id);
 
-    @GET("v2_0/dvespots.search")
+    @GET("v2_0/divespots.search")
     Call<ResponseBody> getDivespotsByName(@Query("query") String query);
 }
