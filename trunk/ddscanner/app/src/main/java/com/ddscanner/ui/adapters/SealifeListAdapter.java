@@ -45,7 +45,7 @@ public class SealifeListAdapter extends RecyclerView.Adapter<SealifeListAdapter.
     @Override
     public void onBindViewHolder(SealifeListViewHolder sealifeListViewHolder, int i) {
         DiveSpotSealife sealife = sealifes.get(i);
-        Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.server_api_address) + Constants.SEALIFE_IMAGE_PATH_PREVIEW + sealife.getPhoto()).resize(Math.round(Helpers.convertDpToPixel(125, context)), Math.round(Helpers.convertDpToPixel(70, context))).centerCrop().into(sealifeListViewHolder.sealifeLogo);
+        Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, sealife.getPhoto(), "1")).resize(Math.round(Helpers.convertDpToPixel(125, context)), Math.round(Helpers.convertDpToPixel(70, context))).centerCrop().into(sealifeListViewHolder.sealifeLogo);
         sealifeListViewHolder.sealifeName.setText(sealife.getName());
     }
 
