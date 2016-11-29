@@ -15,9 +15,6 @@
             name="userProfileViewModel"
             type="com.ddscanner.screens.profile.ProfileFragmentViewModel" />
 
-        <variable
-            name="handlers"
-            type="com.ddscanner.screens.user.profile.UserProfileActivity" />
     </data>
 
     <LinearLayout
@@ -138,8 +135,7 @@
                             app:layout_widthPercent="33%"
                             android:layout_height="64dp"
                             android:layout_centerHorizontal="true"
-                            android:background="?attr/selectableItemBackground"
-                            android:onClick="@{handlers::showLikes}">
+                            android:background="?attr/selectableItemBackground">
 
                             <LinearLayout
                                 android:layout_width="wrap_content"
@@ -276,7 +272,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="66dp"
                         android:background="?attr/selectableItemBackground"
-                        android:onClick="@{handlers::showCheckinns}"
                         android:orientation="horizontal"
                         android:paddingTop="10dp">
 
@@ -316,7 +311,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="66dp"
                         android:background="?attr/selectableItemBackground"
-                        android:onClick="@{handlers::showAdded}"
                         android:orientation="horizontal"
                         android:paddingTop="10dp">
 
@@ -356,7 +350,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="66dp"
                         android:background="?attr/selectableItemBackground"
-                        android:onClick="@{handlers::showEdited}"
                         android:orientation="horizontal"
                         android:paddingTop="10dp">
 
@@ -396,7 +389,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="66dp"
                         android:background="?attr/selectableItemBackground"
-                        android:onClick="@{handlers::showFavorites}"
                         android:orientation="horizontal"
                         android:paddingTop="10dp">
 
