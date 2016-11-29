@@ -1,5 +1,7 @@
 package com.ddscanner.entities;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 /**
@@ -14,8 +16,10 @@ public class Sealife implements Serializable {
     private String scName;
     private String order;
     private String distribution;
+    @SerializedName("class")
     private String scClass;
     private String habitat;
+    @SerializedName("photo")
     private String image;
 
     public String getId() {
