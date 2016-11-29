@@ -301,4 +301,7 @@ public interface DDScannerRestService {
 
     @GET("v2_0/divespots.search")
     Call<ResponseBody> getDivespotsByName(@Query("query") String query);
+
+    @POST("v2_0/divespot.check_in")
+    Call<ResponseBody> postCheckin(@Query("id") String diveSpotId);
 }

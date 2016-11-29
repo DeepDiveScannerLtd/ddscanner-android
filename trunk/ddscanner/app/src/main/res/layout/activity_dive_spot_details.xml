@@ -802,7 +802,8 @@
                 app:backgroundTint="@color/orange"
                 app:layout_anchor="@id/app_bar_layout"
                 app:layout_anchorGravity="bottom|right|end"
-                app:layout_collapseMode="pin" />
+                app:layout_collapseMode="pin"
+                android:onClick="@{handlers::checkInClicked}"/>
 
         </android.support.design.widget.CoordinatorLayout>
     </RelativeLayout>

@@ -70,11 +70,6 @@ public class DDScannerRestClient {
         });
     }
 
-    public void postCheckIn(String diveSpotId, @NonNull final ResultListener<Void> resultListener) {
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().checkIn(diveSpotId, getRegisterRequest());
-        call.enqueue(new NoResponseEntityCallback(gson, resultListener));
-    }
-
     public void postCheckOut(String diveSpotId, @NonNull final ResultListener<Void> resultListener) {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().checkOut(diveSpotId, getUserQueryMapRequest());
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
@@ -526,6 +521,11 @@ public class DDScannerRestClient {
                 resultListener.onSuccess(achievmentsResponseEntity);
             }
         });
+    }
+
+    public void postCheckIn(String diveSpotId, @NonNull final ResultListener<Void> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postCheckin(diveSpotId);
+        call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 
     public void getSeaLifeDetails(String seaLifeId, @NonNull ResultListener<Sealife> resultListener) {

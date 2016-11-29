@@ -64,12 +64,6 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
 
     private GoogleApiClient googleApiClient;
 
-    private RequestBody name; // query
-    private RequestBody order; // sort by (name)
-    private RequestBody sort; // asc - alphabet desc - nealphabet
-    private RequestBody limit; // limit size
-    private List<MultipartBody.Part> like = new ArrayList<>(); // name - оп имени
-    private List<MultipartBody.Part> select = new ArrayList<>();// fields (id,name)
     private boolean isTryToOpenAddDiveSpotActivity = false;
     private Runnable sendingSearchRequestRunnable;
 
@@ -173,7 +167,6 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
             public void run() {
                 if (!newText.isEmpty()) {
                     DDScannerApplication.getInstance().getDdScannerRestClient().getDivespotsByName(newText, divespotsWrapperResultListener);
-                    createRequestBodyies();
                     placeList = new ArrayList<String>();
                     Places.GeoDataApi.getAutocompletePredictions(googleApiClient, newText, new LatLngBounds(new LatLng(-180, -180), new LatLng(180, 180)), null).setResultCallback(
                             new ResultCallback<AutocompletePredictionBuffer>() {
@@ -212,21 +205,6 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
     @Override
     public boolean onQueryTextSubmit(String query) {
         return false;
-    }
-
-
-    private void createRequestBodyies() {
-        order = RequestBody.create(MediaType.parse("multipart/form-data"), "name");
-        sort = RequestBody.create(MediaType.parse("multipart/form-data"), "asc");
-        limit = RequestBody.create(MediaType.parse("multipart/form-data"), "5");
-        like.add(MultipartBody.Part.createFormData("like[]", "name"));
-        select.add(MultipartBody.Part.createFormData("select[]", "id"));
-        select.add(MultipartBody.Part.createFormData("select[]", "name"));
-        sendRequest();
-    }
-
-    private void sendRequest() {
-//        DDScannerApplication.getInstance().getDdScannerRestClient().getDivespotsByName(name, divespotsWrapperResultListener);
     }
 
     @Override

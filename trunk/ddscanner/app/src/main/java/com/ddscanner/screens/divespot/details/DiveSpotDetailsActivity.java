@@ -95,6 +95,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         @Override
         public void onSuccess(DiveSpotDetailsEntity result) {
             diveSpotDetailsEntity = result;
+            isCheckedIn = result.getFlags().isCheckedIn();
             binding.setDiveSpotViewModel(new DiveSpotDetailsActivityViewModel(diveSpotDetailsEntity, binding.progressBar));
             setUi();
         }
@@ -225,12 +226,12 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 workWithMap(googleMap);
             }
         });
-//
-//        if (diveSpot.getCheckin()) {
-//            checkInUi();
-//        } else {
-//            checkOutUi();
-//        }
+
+        if (isCheckedIn) {
+            checkInUi();
+        } else {
+            checkOutUi();
+        }
 //        if (diveSpot.getValidation() != null) {
 //            if (!diveSpot.getValidation()) {
 //                isInfoValidLayout.post(new Runnable() {
@@ -290,33 +291,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             case R.id.check_in_peoples:
                 EventsTracker.trackDiveSpotCheckinsView();
               //  CheckInPeoplesActivity.show(DiveSpotDetailsActivity.this, (ArrayList<UserOld>) usersCheckins);
-                break;
-            case R.id.fab_checkin:
-//                if (isCheckedIn) {
-//                    checkOut();
-//                } else {
-//                    showCheckInDialog();
-//                }
-                break;
-            case R.id.btn_show_all_reviews:
-//                if (diveSpotDetails.getComments() != null || usersComments != null) {
-//                    EventsTracker.trackDeviSpotReviewsView();
-//                    Intent reviewsIntent = new Intent(DiveSpotDetailsActivity.this, ReviewsActivity.class);
-//                    Bundle bundle = new Bundle();
-//                    bundle.putSerializable("COMMENTS", (ArrayList<Comment>) usersComments);
-//                    bundle.putString(Constants.DIVESPOTID, String.valueOf(diveSpotDetails.getDivespot().getId()));
-//                    bundle.putString("PATH", diveSpotDetails.getDivespot().getDiveSpotPathMedium());
-//                    reviewsIntent.putExtras(bundle);
-//                    startActivityForResult(reviewsIntent, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_REVIEWS);
-//                } else {
-//                    LeaveReviewActivity.showForResult(this, String.valueOf(diveSpot.getId()), 0f, EventsTracker.SendReviewSource.FROM_EMPTY_REVIEWS_LIST, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LEAVE_REVIEW);
-//                }
-                break;
-            case R.id.yes_button:
-//                validateDiveSpot(true);
-                break;
-            case R.id.no_button:
-//                showEditDiveSpotDialog();
                 break;
             case R.id.creator:
 //                EditorsListActivity.show(DiveSpotDetailsActivity.this, (ArrayList<UserOld>) creatorsEditorsList);
@@ -380,63 +354,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         }
     }
 
-    private void showEditDiveSpotDialog() {
-        MaterialDialog.Builder dialog = new MaterialDialog.Builder(this)
-                .title(R.string.edit)
-                .content(R.string.question_edit_dive_spot)
-                .positiveText(R.string.btn_yes)
-                .positiveColor(ContextCompat.getColor(this, R.color.primary))
-                .negativeColor(ContextCompat.getColor(this, R.color.primary))
-                .negativeText(R.string.no_just_vote_answer)
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog,
-                                        @NonNull DialogAction which) {
-                        tryToCallEditDiveSpotActivity();
-                    }
-                })
-                .onNegative(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog,
-                                        @NonNull DialogAction which) {
-                        validateDiveSpot(false);
-                        dialog.dismiss();
-                    }
-                });
-        dialog.show();
-    }
-
-    private void showCheckInDialog() {
-        MaterialDialog.Builder dialog = new MaterialDialog.Builder(this)
-                .title(R.string.dialog_title_check_in)
-                .content(R.string.dialog_check_in_content)
-                .positiveText(R.string.ok)
-                .positiveColor(ContextCompat.getColor(this, R.color.primary))
-                .negativeColor(ContextCompat.getColor(this, R.color.primary))
-                .negativeText(R.string.dialog_cancel)
-                .dismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialogInterface) {
-                        EventsTracker.trackCheckIn(EventsTracker.CheckInStatus.CANCELLED);
-                    }
-                })
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog,
-                                        @NonNull DialogAction which) {
-                        checkIn();
-                    }
-                })
-                .onNegative(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog,
-                                        @NonNull DialogAction which) {
-                        dialog.dismiss();
-                        EventsTracker.trackCheckIn(EventsTracker.CheckInStatus.CANCELLED);
-                    }
-                });
-        dialog.show();
-    }
 
     private void checkIn() {
         checkInUi();
@@ -767,6 +684,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             if (isCheckIn) {
                 DiveSpotDetailsActivity.this.isCheckedIn = true;
                 EventsTracker.trackCheckIn(EventsTracker.CheckInStatus.SUCCESS);
+
             } else {
                 DiveSpotDetailsActivity.this.isCheckedIn = false;
                 EventsTracker.trackCheckOut();
@@ -977,6 +895,14 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             binding.addPhotosLayout.setVisibility(View.VISIBLE);
             binding.addPhotosButon.setVisibility(View.GONE);
         }
+    }
+
+    public void checkInClicked(View view) {
+        if (isCheckedIn) {
+            checkOut();
+            return;
+        }
+        checkIn();
     }
 
     private void changeViewState(TextView activeTextView, TextView disableTextView) {
