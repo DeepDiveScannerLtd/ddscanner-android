@@ -511,6 +511,17 @@ public class DDScannerRestClient {
         });
     }
 
+    public void getUserProfileInformation(String id, final ResultListener<User> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserInformation(id);
+        call.enqueue(new ResponseEntityCallback<User>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<User> resultListener, String responseString) throws JSONException {
+                User user = new Gson().fromJson(responseString, User.class);
+                resultListener.onSuccess(user);
+            }
+        });
+    }
+
     public void getUserAchivements(final ResultListener<AchievmentsResponseEntity> resultListener) {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserAchievements();
         call.enqueue(new ResponseEntityCallback<AchievmentsResponseEntity>(gson, resultListener) {

@@ -283,6 +283,9 @@ public interface DDScannerRestService {
     @GET("v2_0/user.profile.get")
     Call<ResponseBody> getSelfProfileInformation();
 
+    @GET("v2_0/user.profile.get")
+    Call<ResponseBody> getUserInformation(@Query("id") String id);
+
     @GET("v2_0/user.getAchievements")
     Call<ResponseBody> getUserAchievements();
 

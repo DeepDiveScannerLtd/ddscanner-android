@@ -9,7 +9,16 @@ public class User {
     private String name;
     private String photo;
     private ProfileCounters counters;
-//    private List<ProfileAchievement> achievements;
+    private List<ProfileAchievement> achievements;
+    private List<String> photos;
+
+    public List<String> getPhotos() {
+        return photos;
+    }
+
+    public void setPhotos(List<String> photos) {
+        this.photos = photos;
+    }
 
     @SerializedName("about_me")
     private String about;
@@ -46,11 +55,11 @@ public class User {
         this.counters = counters;
     }
 
-//    public List<ProfileAchievement> getAchievements() {
-//        return achievements;
-//    }
-//
-//    public void setAchievements(List<ProfileAchievement> achievements) {
-//        this.achievements = achievements;
-//    }
+    public List<ProfileAchievement> getAchievements() {
+        return achievements;
+    }
+
+    public void setAchievements(List<ProfileAchievement> achievements) {
+        this.achievements = achievements;
+    }
 }
