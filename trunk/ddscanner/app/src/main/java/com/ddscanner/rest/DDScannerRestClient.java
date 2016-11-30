@@ -539,10 +539,6 @@ public class DDScannerRestClient {
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 
-    public void getSeaLifeDetails(String seaLifeId, @NonNull ResultListener<Sealife> resultListener) {
-        // TODO Implement
-    }
-
     public void postMapsToDiveSpot(String id, ArrayList<String> images, final ResultListener<MapsAddedResposeEntity> resultListener) {
         List<MultipartBody.Part> imagesToSend = new ArrayList<>();
         for (int i = 0; i < images.size(); i++) {
@@ -558,6 +554,17 @@ public class DDScannerRestClient {
             void handleResponseString(ResultListener<MapsAddedResposeEntity> resultListener, String responseString) throws JSONException {
                 MapsAddedResposeEntity mapsAddedResposeEntity = gson.fromJson(responseString, MapsAddedResposeEntity.class);
                 resultListener.onSuccess(mapsAddedResposeEntity);
+            }
+        });
+    }
+
+    public void getSealifeDetails(String id, ResultListener<Sealife> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getSealifeDetails(id);
+        call.enqueue(new ResponseEntityCallback<Sealife>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<Sealife> resultListener, String responseString) throws JSONException {
+                Sealife sealife = gson.fromJson(responseString, Sealife.class);
+                resultListener.onSuccess(sealife);
             }
         });
     }

@@ -14,13 +14,33 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.databinding.ActivitySealifeFullBinding;
 import com.ddscanner.entities.Sealife;
+import com.ddscanner.rest.DDScannerRestClient;
 
 public class SealifeDetailsActivity extends AppCompatActivity {
 
     public static final String EXTRA_SEALIFE = "SEALIFE";
     public static final String EXTRA_PATH = "PATH";
+    private float dpWidth;
+    private String id;
 
     private ActivitySealifeFullBinding binding;
+
+    private DDScannerRestClient.ResultListener<Sealife> resultListener = new DDScannerRestClient.ResultListener<Sealife>() {
+        @Override
+        public void onSuccess(Sealife result) {
+            binding.setSealifeViewModel(new SealifeViewModel(result, dpWidth, binding.progressBar));
+        }
+
+        @Override
+        public void onConnectionFailure() {
+
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+
+        }
+    };
 
     public static void show(Context context, String id) {
         Intent intent = new Intent(context, SealifeDetailsActivity.class);
@@ -32,15 +52,12 @@ public class SealifeDetailsActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_sealife_full);
-
-        Sealife sealife = (Sealife) getIntent().getSerializableExtra(EXTRA_SEALIFE);
-        String pathMedium = getIntent().getStringExtra(EXTRA_PATH);
         DisplayMetrics outMetrics = new DisplayMetrics();
+        id = getIntent().getStringExtra(EXTRA_SEALIFE);
         Display display = getWindowManager().getDefaultDisplay();
         display.getMetrics(outMetrics);
         float density = getResources().getDisplayMetrics().density;
-        float dpWidth = outMetrics.widthPixels / density;
-        binding.setSealifeViewModel(new SealifeViewModel(sealife, pathMedium, dpWidth, binding.progressBar));
+        dpWidth = outMetrics.widthPixels / density;
         binding.appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             boolean isShow = false;
             int scrollRange = -1;
@@ -65,6 +82,7 @@ public class SealifeDetailsActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);
+        DDScannerApplication.getInstance().getDdScannerRestClient().getSealifeDetails(id, resultListener);
     }
 
     @Override
