@@ -14,9 +14,11 @@ import com.ddscanner.databinding.ActivityUserProfileBinding;
 import com.ddscanner.entities.User;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.profile.ProfileFragmentViewModel;
+import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.utils.Constants;
+import com.ddscanner.utils.DialogsRequestCodes;
 
-public class UserProfileActivity extends AppCompatActivity {
+public class UserProfileActivity extends AppCompatActivity implements InfoDialogFragment.DialogClosedListener{
 
     private DDScannerRestClient.ResultListener<User> resultListener = new DDScannerRestClient.ResultListener<User>() {
         @Override
@@ -28,12 +30,12 @@ public class UserProfileActivity extends AppCompatActivity {
 
         @Override
         public void onConnectionFailure() {
-
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_USER_PROFILE_ACTIVITY_FAILED_TO_CONNECT, false);
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_USER_PROFILE_ACTIVITY_FAILED_TO_CONNECT, false);
         }
     };
 
@@ -53,4 +55,8 @@ public class UserProfileActivity extends AppCompatActivity {
         context.startActivity(intent);
     }
 
+    @Override
+    public void onDialogClosed(int requestCode) {
+        finish();
+    }
 }

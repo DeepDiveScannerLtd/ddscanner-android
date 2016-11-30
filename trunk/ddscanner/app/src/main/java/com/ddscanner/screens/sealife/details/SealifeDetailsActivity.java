@@ -9,14 +9,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.databinding.ActivitySealifeFullBinding;
 import com.ddscanner.entities.Sealife;
 import com.ddscanner.rest.DDScannerRestClient;
+import com.ddscanner.ui.dialogs.InfoDialogFragment;
+import com.ddscanner.utils.DialogsRequestCodes;
 
-public class SealifeDetailsActivity extends AppCompatActivity {
+public class SealifeDetailsActivity extends AppCompatActivity implements InfoDialogFragment.DialogClosedListener{
 
     public static final String EXTRA_SEALIFE = "SEALIFE";
     public static final String EXTRA_PATH = "PATH";
@@ -29,16 +32,18 @@ public class SealifeDetailsActivity extends AppCompatActivity {
         @Override
         public void onSuccess(Sealife result) {
             binding.setSealifeViewModel(new SealifeViewModel(result, dpWidth, binding.progressBar));
+            binding.progressView.setVisibility(View.GONE);
+            binding.mainLayout.setVisibility(View.VISIBLE);
         }
 
         @Override
         public void onConnectionFailure() {
-
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_SEALIFE_ACTIVITY_FAILEED_TO_CONNECT, false);
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_SEALIFE_ACTIVITY_FAILEED_TO_CONNECT, false);
         }
     };
 
@@ -106,5 +111,10 @@ public class SealifeDetailsActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         DDScannerApplication.activityResumed();
+    }
+
+    @Override
+    public void onDialogClosed(int requestCode) {
+        finish();
     }
 }

@@ -111,4 +111,10 @@ public class DialogsRequestCodes {
     public static final int DRC_ACHIEVEMENTS_ACTIVITY_FAILED_TO_CONNECT = 3701;
     public static final int DRC_ACHIEVEMENTS_ACTIVITY_UNEXPECTED_ERROR = 3702;
 
+    //SealifeDetailsActivity
+    public static final int DRC_SEALIFE_ACTIVITY_FAILEED_TO_CONNECT = 3801;
+
+    //UserProfileActivity
+    public static final int DRC_USER_PROFILE_ACTIVITY_FAILED_TO_CONNECT = 3901;
+
 }
