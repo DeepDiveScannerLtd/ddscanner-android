@@ -250,6 +250,9 @@
         <activity
             android:name=".ui.activities.FragmentTestActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".screens.user.profile.UserProfileActivity"
+            android:screenOrientation="portrait" />
         <service
             android:name=".services.FirebaseMessagingService">
             <intent-filter>

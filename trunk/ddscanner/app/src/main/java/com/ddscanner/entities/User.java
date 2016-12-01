@@ -2,15 +2,25 @@ package com.ddscanner.entities;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class User {
+public class User implements Serializable {
 
     private String name;
     private String photo;
     private ProfileCounters counters;
     private List<ProfileAchievement> achievements;
     private List<String> photos;
+    private int type;
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
 
     public List<String> getPhotos() {
         return photos;
