@@ -199,12 +199,14 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
     public void onStart() {
         super.onStart();
         DDScannerApplication.bus.register(this);
+        notificationsResultListener.setCancelled(false);
     }
 
     @Override
     public void onStop() {
         super.onStop();
         DDScannerApplication.bus.unregister(this);
+        notificationsResultListener.setCancelled(true);
     }
 
     @Override

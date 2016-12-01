@@ -19,6 +19,7 @@
             android:textSize="18sp" />
 
         <ImageView
+            android:id="@+id/close_dialog_button"
             android:layout_width="49dp"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
