@@ -140,6 +140,9 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void setUi() {
+        if (!isRegister) {
+            tabLayout.setVisibility(View.GONE);
+        }
         materialDialog = Helpers.getMaterialDialog(this);
         forgotPasswordView.setOnClickListener(this);
         googleLogin.setOnClickListener(this);

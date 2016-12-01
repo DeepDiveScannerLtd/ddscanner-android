@@ -158,6 +158,7 @@ public class LoginView extends RelativeLayout implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.sign_up:
+                tabLayout.setVisibility(VISIBLE);
                 signView.setVisibility(VISIBLE);
                 loginView.setVisibility(GONE);
                 buttonSubmitData.setText(R.string.sign_up);
@@ -165,6 +166,7 @@ public class LoginView extends RelativeLayout implements View.OnClickListener {
                 isRegister = true;
                 break;
             case R.id.login:
+                tabLayout.setVisibility(GONE);
                 loginView.setVisibility(GONE);
                 signView.setVisibility(VISIBLE);
                 buttonSubmitData.setText(R.string.login);
