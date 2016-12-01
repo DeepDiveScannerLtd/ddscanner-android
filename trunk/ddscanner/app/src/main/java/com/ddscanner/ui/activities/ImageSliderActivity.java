@@ -23,6 +23,8 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.DiveSpotDetails;
+import com.ddscanner.entities.DiveSpotPhoto;
+import com.ddscanner.entities.DiveSpotPhotosResponseEntity;
 import com.ddscanner.entities.FiltersResponseEntity;
 import com.ddscanner.entities.Image;
 import com.ddscanner.entities.PhotoOpenedSource;
@@ -43,14 +45,11 @@ import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 public class ImageSliderActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener, View.OnClickListener, SimpleGestureFilter.SimpleGestureListener, InfoDialogFragment.DialogClosedListener {
 
-    private LinearLayout pager_indicator;
-    private int dotsCount = 0;
     private SliderImagesAdapter sliderImagesAdapter;
-    private ImageView[] dots;
     private FrameLayout baseLayout;
     private ViewPager viewPager;
     private ImageView close;
-    private ArrayList<Image> images;
+    private ArrayList<DiveSpotPhoto> images;
     private Drawable drawable;
     private int position;
     private ImageView avatar;
@@ -61,29 +60,27 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     private FiltersResponseEntity filters = new FiltersResponseEntity();
     private String imageNameForDeletion;
     private String reportName;
-    private String path;
     private String reportType;
     private String reportDescription;
     private String deleteImageName;
     private MaterialDialog materialDialog;
     private SimpleGestureFilter detector;
-    private String diveSpotId;
     float x1, x2;
     float y1, y2;
     PhotoOpenedSource photoOpenedSource;
 
-    private DDScannerRestClient.ResultListener<DiveSpotDetails> imagesResulListener = new DDScannerRestClient.ResultListener<DiveSpotDetails>() {
+    private DDScannerRestClient.ResultListener<DiveSpotPhotosResponseEntity> imagesResulListener = new DDScannerRestClient.ResultListener<DiveSpotPhotosResponseEntity>() {
         @Override
-        public void onSuccess(DiveSpotDetails result) {
+        public void onSuccess(DiveSpotPhotosResponseEntity result) {
             switch (photoOpenedSource) {
                 case ALL:
-//                    images =Helpers.compareObjectsArray((ArrayList<Image>) result.getDivespot().getImages(), (ArrayList<Image>) result.getDivespot().getCommentImages());
+                    images =Helpers.compareObjectsArray(result.getDiveSpotPhotos(), result.getCommentPhotos());
                     break;
                 case DIVESPOT:
-//                    images = (ArrayList<Image>) result.getDivespot().getImages();
+                    images = result.getDiveSpotPhotos();
                     break;
                 case REVIEWS:
-//                    images = (ArrayList<Image>) result.getDivespot().getCommentImages();
+                    images = result.getCommentPhotos();
                     break;
             }
             changeUiAccrodingPosition(position);
@@ -192,12 +189,10 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         findViews();
         detector = new SimpleGestureFilter(this, this);
         materialDialog = Helpers.getMaterialDialog(this);
-        DDScannerApplication.getInstance().getDdScannerRestClient().getReportTypes(filtersResponseEntityResultListener);
+//        DDScannerApplication.getInstance().getDdScannerRestClient().getReportTypes(filtersResponseEntityResultListener);
         Bundle bundle = getIntent().getExtras();
         images = bundle.getParcelableArrayList("IMAGES");
         position = getIntent().getIntExtra("position", 0);
-        path = getIntent().getStringExtra("path");
-        diveSpotId = getIntent().getStringExtra("divespotid");
         photoOpenedSource = (PhotoOpenedSource) getIntent().getSerializableExtra("source");
         viewPager.addOnPageChangeListener(this);
         sliderImagesAdapter = new SliderImagesAdapter(getFragmentManager(), images);
@@ -212,34 +207,34 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     private void changeUiAccrodingPosition(final int position) {
         this.position = position;
         userName.setText(images.get(position).getAuthor().getName());
-        date.setText(Helpers.convertDateToImageSliderActivity(images.get(position).getAuthor().getDate()));
+        date.setText(Helpers.convertDateToImageSliderActivity(images.get(position).getDate()));
         Picasso.with(this)
-                .load(images.get(position).getAuthor().getPhoto())
+                .load(getString(R.string.base_photo_url, images.get(position).getAuthor().getPhoto(), "1"))
                 .resize(Math.round(Helpers.convertDpToPixel(35, this)), Math.round(Helpers.convertDpToPixel(35, this)))
                 .centerCrop()
                 .placeholder(R.drawable.avatar_profile_default)
+                .error(R.drawable.avatar_profile_default)
                 .transform(new CropCircleTransformation())
                 .into(avatar);
-        if (images.get(position).isReport()) {
-            options.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    showReportMenu(options, position);
-                }
-            });
-        } else {
-            options.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    showDeleteMenu(options);
-                }
-            });
-        }
+//        if (images.get(position).isReport()) {
+//            options.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    showReportMenu(options, position);
+//                }
+//            });
+//        } else {
+//            options.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    showDeleteMenu(options);
+//                }
+//            });
+//        }
     }
 
     private void findViews() {
         viewPager = (ViewPager) findViewById(R.id.image_slider);
-        pager_indicator = (LinearLayout) findViewById(R.id.viewPagerCountDots);
         close = (ImageView) findViewById(R.id.close_btn);
         baseLayout = (FrameLayout) findViewById(R.id.swipe_layout);
         avatar = (ImageView) findViewById(R.id.user_avatar);
@@ -249,23 +244,6 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     }
 
     private void setUi() {
-        dotsCount = sliderImagesAdapter.getCount();
-        dots = new ImageView[dotsCount];
-        pager_indicator.removeAllViews();
-        for (int i = 0; i < dotsCount; i++) {
-            dots[i] = new ImageView(this);
-            dots[i].setImageDrawable(ContextCompat.getDrawable(this, R.drawable.nonselecteditem_dot));
-
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-            );
-
-            params.setMargins(4, 0, 4, 0);
-
-            pager_indicator.addView(dots[i], params);
-        }
-        dots[position].setImageDrawable(ContextCompat.getDrawable(this, R.drawable.selecteditem_dot));
         viewPager.setCurrentItem(position);
     }
 
@@ -304,15 +282,11 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
 
     @Override
     public void onPageSelected(int position) {
-        for (int i = 0; i < dotsCount; i++) {
-            dots[i].setImageDrawable(ContextCompat.getDrawable(this, R.drawable.nonselecteditem_dot));
-        }
-        dots[position].setImageDrawable(ContextCompat.getDrawable(this, R.drawable.selecteditem_dot));
         changeUiAccrodingPosition(position);
     }
 
     private void showDeleteMenu(View view) {
-        deleteImageName = images.get(position).getName();
+//        deleteImageName = images.get(position).getName();
         PopupMenu popup = new PopupMenu(this, view);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.menu_photo_delete, popup.getMenu());
@@ -325,7 +299,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
             position = 0;
             this.position = 0;
         }
-        reportName = images.get(position).getName();
+//        reportName = images.get(position).getName();
         PopupMenu popup = new PopupMenu(this, view);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.menu_photo_report, popup.getMenu());
@@ -333,12 +307,10 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         popup.show();
     }
 
-    public static void showForResult(Activity context, ArrayList<Image> images, int position, String path, int requestCode, String diveSpotId, PhotoOpenedSource photoOpenedSource) {
+    public static void showForResult(Activity context, ArrayList<DiveSpotPhoto> images, int position, int requestCode, PhotoOpenedSource photoOpenedSource) {
         Intent intent = new Intent(context, ImageSliderActivity.class);
         intent.putParcelableArrayListExtra("IMAGES", images);
         intent.putExtra("position", position);
-        intent.putExtra("path", path);
-        intent.putExtra("divespotid", diveSpotId);
         intent.putExtra("source", photoOpenedSource);
         context.startActivityForResult(intent, requestCode);
     }
@@ -376,11 +348,11 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
             switch (item.getItemId()) {
                 case R.id.photo_report:
                     EventsTracker.trackPhotoReport();
-                    reportName = imageName.replace(path, "");
+                    reportName = imageName;
                     showReportDialog();
                     break;
                 case R.id.photo_delete:
-                    deleteImageName = imageName.replace(path, "");
+                    deleteImageName = imageName;
                     deleteImage(deleteImageName);
                     break;
             }

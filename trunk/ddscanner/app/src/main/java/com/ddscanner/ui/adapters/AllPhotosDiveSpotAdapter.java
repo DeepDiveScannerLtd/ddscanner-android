@@ -41,7 +41,7 @@ public class AllPhotosDiveSpotAdapter extends RecyclerView.Adapter<AllPhotosDive
     @Override
     public void onBindViewHolder(AllPhotosDIveSpotViewHolder holder, int position) {
         Picasso.with(context)
-                .load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, images.get(position).getId(), "1"))
+                .load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, images.get(position).getId(), "2"))
              //   .placeholder(R.drawable.list_photo_default)
                 .resize(Math.round(Helpers.convertDpToPixel(115, context)), Math.round(Helpers.convertDpToPixel(115, context)))
                 .centerCrop()
@@ -77,7 +77,7 @@ public class AllPhotosDiveSpotAdapter extends RecyclerView.Adapter<AllPhotosDive
         @Override
         public void onClick(View v) {
             EventsTracker.trackDiveSpotPhotosView();
-          //  ImageSliderActivity.showForResult(context, images, getAdapterPosition(), path, ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_ACTIVITY_SLIDER, diveSpotId, photoOpenedSource);
+            ImageSliderActivity.showForResult(context, images, getAdapterPosition(), ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_ACTIVITY_SLIDER, photoOpenedSource);
         }
     }
 
