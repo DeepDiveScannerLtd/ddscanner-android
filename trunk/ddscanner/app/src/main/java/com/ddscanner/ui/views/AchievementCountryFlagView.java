@@ -59,6 +59,7 @@ public class AchievementCountryFlagView extends View {
     public void setFlagBitmap(int resourceId) {
         flagBitmap = BitmapFactory.decodeResource(getResources(), resourceId);
         flagBitmap = Bitmap.createScaledBitmap(flagBitmap, flagWidthPx, flagHeightPx, false);
+        invalidate();
     }
 
     public void setFlagBitmap(Bitmap bitmap) {

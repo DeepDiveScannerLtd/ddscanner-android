@@ -5,8 +5,10 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 
+import com.ddscanner.R;
 import com.ddscanner.entities.CompleteAchievement;
 import com.ddscanner.ui.views.AchievementCountryFlagView;
+import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -24,24 +26,9 @@ public class CompletedAchievementItemViewModel {
 
     @BindingAdapter("loadCountryFlagFrom")
     public static void loadCountryFlag(final AchievementCountryFlagView view, CompletedAchievementItemViewModel viewModel) {
-        Target target = new Target() {
-            @Override
-            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                view.setFlagBitmap(bitmap);
-            }
-
-            @Override
-            public void onBitmapFailed(Drawable errorDrawable) {
-
-            }
-
-            @Override
-            public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-            }
-        };
-        //TODO change to image address
-        Picasso.with(view.getContext()).load(viewModel.getCompleteAchievement().getCountry()).into(target);
+        if (viewModel != null) {
+            view.setFlagBitmap(Helpers.getResId(viewModel.getCompleteAchievement().getCountry().toLowerCase(), R.drawable.class));
+        }
     }
 
 }

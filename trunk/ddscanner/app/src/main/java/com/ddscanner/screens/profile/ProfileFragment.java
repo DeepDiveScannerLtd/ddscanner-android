@@ -13,6 +13,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatRadioButton;
+import android.support.v7.widget.LinearLayoutManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -27,6 +28,7 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.databinding.FragmentProfileBinding;
+import com.ddscanner.entities.ProfileAchievement;
 import com.ddscanner.entities.User;
 import com.ddscanner.entities.UserOld;
 import com.ddscanner.entities.UserResponseEntity;
@@ -39,6 +41,7 @@ import com.ddscanner.screens.achievements.AchievementsActivity;
 import com.ddscanner.ui.activities.AboutActivity;
 import com.ddscanner.events.ChangeLoginViewEvent;
 import com.ddscanner.ui.activities.MainActivity;
+import com.ddscanner.ui.adapters.AchievmentProfileListAdapter;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.ui.views.LoginView;
 import com.ddscanner.utils.DialogsRequestCodes;
@@ -46,6 +49,7 @@ import com.ddscanner.utils.Helpers;
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -126,6 +130,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
             }
             binding.setProfileFragmentViewModel(new ProfileFragmentViewModel(result));
             binding.swiperefresh.setRefreshing(false);
+            changeUi();
         }
 
         @Override
@@ -360,23 +365,22 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
         DDScannerApplication.getInstance().getDdScannerRestClient().getUserSelfInformation(userResultListener);
     }
 
-    private void changeUi(UserResponseEntity userResponseEntity) {
+    private void changeUi() {
         if (getContext() == null) {
             return;
         }
-//        showAchivementDetails.setOnClickListener(this);
-//        ArrayList<ProfileAchievement> achievmentProfiles = new ArrayList<>();
-//        if (userResponseEntity.getAchievements() != null && userResponseEntity.getAchievements().size() > 0) {
-//            achievmentProfiles = (ArrayList<ProfileAchievement>) userResponseEntity.getAchievements();
-//            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-//            achievmentRecyclerView.setLayoutManager(linearLayoutManager);
-//            achievmentRecyclerView.setAdapter(new AchievmentProfileListAdapter(achievmentProfiles, getContext()));
-//            noAchievements.setVisibility(View.GONE);
-//            achievmentRecyclerView.setVisibility(View.VISIBLE);
-//        } else {
-//            noAchievements.setVisibility(View.VISIBLE);
-//            achievmentRecyclerView.setVisibility(View.GONE);
-//        }
+        ArrayList<ProfileAchievement> achievmentProfiles = new ArrayList<>();
+        if (binding.getProfileFragmentViewModel().getUser().getAchievements() != null && binding.getProfileFragmentViewModel().getUser().getAchievements().size() > 0) {
+            achievmentProfiles = (ArrayList<ProfileAchievement>) binding.getProfileFragmentViewModel().getUser().getAchievements();
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+            binding.achievmentRv.setLayoutManager(linearLayoutManager);
+            binding.achievmentRv.setAdapter(new AchievmentProfileListAdapter(achievmentProfiles, getContext()));
+            binding.noAchievementsView.setVisibility(View.GONE);
+            binding.achievmentRv.setVisibility(View.VISIBLE);
+        } else {
+            binding.noAchievementsView.setVisibility(View.VISIBLE);
+            binding.achievmentRv.setVisibility(View.GONE);
+        }
     }
 
     @Override
