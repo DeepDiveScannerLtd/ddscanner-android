@@ -539,7 +539,7 @@ public class DDScannerRestClient {
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 
-    public void postMapsToDiveSpot(String id, ArrayList<String> images, final ResultListener<MapsAddedResposeEntity> resultListener) {
+    public void postMapsToDiveSpot(String id, ArrayList<String> images, final ResultListener<List<String>> resultListener) {
         List<MultipartBody.Part> imagesToSend = new ArrayList<>();
         for (int i = 0; i < images.size(); i++) {
             File image = new File(images.get(i));
@@ -549,11 +549,32 @@ public class DDScannerRestClient {
             imagesToSend.add(part);
         }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().addMapsToDiveSpot(RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), id), imagesToSend );
-        call.enqueue(new ResponseEntityCallback<MapsAddedResposeEntity>(gson, resultListener) {
+        call.enqueue(new ResponseEntityCallback<List<String>>(gson, resultListener) {
             @Override
-            void handleResponseString(ResultListener<MapsAddedResposeEntity> resultListener, String responseString) throws JSONException {
-                MapsAddedResposeEntity mapsAddedResposeEntity = gson.fromJson(responseString, MapsAddedResposeEntity.class);
-                resultListener.onSuccess(mapsAddedResposeEntity);
+            void handleResponseString(ResultListener<List<String>> resultListener, String responseString) throws JSONException {
+                Type listType = new TypeToken<List<String>>(){}.getType();
+                ArrayList<String> photos = gson.fromJson(responseString, listType);
+                resultListener.onSuccess(photos);
+            }
+        });
+    }
+
+    public void postPhotosToDiveSpot(String id, ArrayList<String> images, final ResultListener<List<String>> resultListener) {
+        List<MultipartBody.Part> imagesToSend = new ArrayList<>();
+        for (int i = 0; i < images.size(); i++) {
+            File image = new File(images.get(i));
+            RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), image);
+            MultipartBody.Part part = MultipartBody.Part.createFormData(Constants.ADD_DIVE_SPOT_ACTIVITY_IMAGES_ARRAY,
+                    image.getName(), requestFile);
+            imagesToSend.add(part);
+        }
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().addPhotosToDiveSpot(RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), id), imagesToSend );
+        call.enqueue(new ResponseEntityCallback<List<String>>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<List<String>> resultListener, String responseString) throws JSONException {
+                Type listType = new TypeToken<List<String>>(){}.getType();
+                ArrayList<String> photos = gson.fromJson(responseString, listType);
+                resultListener.onSuccess(photos);
             }
         });
     }
