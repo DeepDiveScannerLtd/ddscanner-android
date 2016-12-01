@@ -77,6 +77,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private boolean isFavorite = false;
     private boolean isNewDiveSpot = false;
     private boolean isMapsShown = false;
+    private DiveSpotPhotosAdapter mapsAdapter, photosAdapter;
 
     /*Ui*/
     private MapFragment mapFragment;
@@ -203,14 +204,14 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         binding.mapsRc.setLayoutManager(new GridLayoutManager(DiveSpotDetailsActivity.this, 4));
 
         if (binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPhotos() != null) {
-            DiveSpotPhotosAdapter photosAdapter = new DiveSpotPhotosAdapter((ArrayList<String>) binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPhotos(), DiveSpotDetailsActivity.this);
+            photosAdapter = new DiveSpotPhotosAdapter((ArrayList<String>) binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPhotos(), DiveSpotDetailsActivity.this);
             binding.photosRc.setVisibility(View.VISIBLE);
             binding.addPhotosLayout.setVisibility(View.GONE);
             binding.photosRc.setAdapter(photosAdapter);
         }
 
         if (binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getMaps() != null) {
-            DiveSpotPhotosAdapter mapsAdapter = new DiveSpotPhotosAdapter((ArrayList<String>) binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getMaps(), DiveSpotDetailsActivity.this);
+            mapsAdapter = new DiveSpotPhotosAdapter((ArrayList<String>) binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getMaps(), DiveSpotDetailsActivity.this);
             binding.mapsRc.setAdapter(mapsAdapter);
             binding.addPhotosLayout.setVisibility(View.GONE);
         }
@@ -597,6 +598,16 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                     updateMenuItems(menu, true);
                 }
                 break;
+            case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_SHOW_FOR_ADD_MAPS:
+                if (resultCode == RESULT_OK) {
+                    mapsAdapter.addPhotos(data.getStringArrayListExtra("images"));
+                }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_SHOW_FOR_ADD_PHOTOS:
+                if (resultCode == RESULT_OK) {
+                    photosAdapter.addPhotos(data.getStringArrayListExtra("images"));
+                }
+                break;
         }
     }
 
@@ -653,7 +664,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
     @Subscribe
     public void openImagesActivity(OpenPhotosActivityEvent event) {
-        //TODO implement new architecture for photos activity
+        
     }
 
     @Override
