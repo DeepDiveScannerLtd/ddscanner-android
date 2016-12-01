@@ -135,6 +135,8 @@ public class AchievementProgressView extends View {
 
     public void setPercent(float percents) {
         this.percents = percents;
+        initAfterFindingKoefs();
+        invalidate();
     }
 
     @Override
@@ -142,5 +144,13 @@ public class AchievementProgressView extends View {
         koefX = (float) w / 660;
         koefY = (float) h / 56;
         initAfterFindingKoefs();
+        invalidate();
+    }
+
+    @Override
+    public void invalidate() {
+        if (percents != 0f && koefX != 0f && koefY != 0) {
+            super.invalidate();
+        }
     }
 }
