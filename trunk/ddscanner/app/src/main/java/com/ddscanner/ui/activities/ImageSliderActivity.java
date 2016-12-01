@@ -77,13 +77,13 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         public void onSuccess(DiveSpotDetails result) {
             switch (photoOpenedSource) {
                 case ALL:
-                    images =Helpers.compareObjectsArray((ArrayList<Image>) result.getDivespot().getImages(), (ArrayList<Image>) result.getDivespot().getCommentImages());
+//                    images =Helpers.compareObjectsArray((ArrayList<Image>) result.getDivespot().getImages(), (ArrayList<Image>) result.getDivespot().getCommentImages());
                     break;
                 case DIVESPOT:
-                    images = (ArrayList<Image>) result.getDivespot().getImages();
+//                    images = (ArrayList<Image>) result.getDivespot().getImages();
                     break;
                 case REVIEWS:
-                    images = (ArrayList<Image>) result.getDivespot().getCommentImages();
+//                    images = (ArrayList<Image>) result.getDivespot().getCommentImages();
                     break;
             }
             changeUiAccrodingPosition(position);
@@ -415,14 +415,14 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
                 if (resultCode == RESULT_OK) {
                     setResult(RESULT_OK);
                     reportImage(reportName, reportType, reportDescription);
-                    DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotPhotos(diveSpotId, imagesResulListener);
+//                    DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotPhotos(diveSpotId, imagesResulListener);
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_DELETE:
                 if (resultCode == RESULT_OK) {
                     setResult(RESULT_OK);
                     deleteImage(deleteImageName);
-                    DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotPhotos(diveSpotId, imagesResulListener);
+//                    DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotPhotos(diveSpotId, imagesResulListener);
                 }
                 break;
         }

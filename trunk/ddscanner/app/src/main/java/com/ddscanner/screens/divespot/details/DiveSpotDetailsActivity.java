@@ -41,6 +41,7 @@ import com.ddscanner.events.OpenPhotosActivityEvent;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.activities.AddPhotosDoDiveSpotActivity;
 import com.ddscanner.ui.activities.DiveCentersActivity;
+import com.ddscanner.ui.activities.DiveSpotPhotosActivity;
 import com.ddscanner.ui.activities.EditDiveSpotActivity;
 import com.ddscanner.ui.activities.LeaveReviewActivity;
 import com.ddscanner.ui.activities.LoginActivity;
@@ -664,7 +665,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
     @Subscribe
     public void openImagesActivity(OpenPhotosActivityEvent event) {
-        
+        DiveSpotPhotosActivity.show(this, diveSpotId);
     }
 
     @Override

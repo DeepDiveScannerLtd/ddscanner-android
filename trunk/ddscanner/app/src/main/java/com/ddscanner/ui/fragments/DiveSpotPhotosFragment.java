@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ddscanner.R;
+import com.ddscanner.entities.DiveSpotPhoto;
 import com.ddscanner.entities.Image;
 import com.ddscanner.entities.PhotoOpenedSource;
 import com.ddscanner.ui.adapters.AllPhotosDiveSpotAdapter;
@@ -26,7 +27,7 @@ public class DiveSpotPhotosFragment extends Fragment {
 
     private static final String TAG = DiveSpotPhotosFragment.class.getSimpleName();
 
-    private ArrayList<Image> images;
+    private ArrayList<DiveSpotPhoto> images;
 
     private RecyclerView recyclerView;
 
@@ -49,7 +50,7 @@ public class DiveSpotPhotosFragment extends Fragment {
         Log.i(TAG, this.toString());
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(),3));
         //recyclerView.addItemDecoration(new GridSpacingItemDecoration(3));
-        recyclerView.setAdapter(new AllPhotosDiveSpotAdapter(images, getActivity(), path, diveSpotId, PhotoOpenedSource.DIVESPOT));
+        recyclerView.setAdapter(new AllPhotosDiveSpotAdapter(images, getActivity(), diveSpotId, PhotoOpenedSource.DIVESPOT));
         return view;
     }
 
@@ -70,13 +71,13 @@ public class DiveSpotPhotosFragment extends Fragment {
         }
     }
 
-    public void setList(ArrayList<Image> images, String path, String diveSpotId) {
+    public void setList(ArrayList<DiveSpotPhoto> images, String path, String diveSpotId) {
         this.path = path;
         this.diveSpotId = diveSpotId;
         if (recyclerView == null) {
             this.images = images;
             return;
         }
-        recyclerView.setAdapter(new AllPhotosDiveSpotAdapter(images, getActivity(), path, this.diveSpotId, PhotoOpenedSource.DIVESPOT));
+        recyclerView.setAdapter(new AllPhotosDiveSpotAdapter(images, getActivity(), this.diveSpotId, PhotoOpenedSource.DIVESPOT));
     }
 }

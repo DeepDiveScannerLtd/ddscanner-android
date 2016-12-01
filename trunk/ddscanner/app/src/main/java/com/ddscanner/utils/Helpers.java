@@ -22,7 +22,9 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.Countries;
+import com.ddscanner.entities.DiveSpotPhoto;
 import com.ddscanner.entities.Image;
+import com.ddscanner.entities.Photo;
 import com.ddscanner.entities.Sealife;
 import com.ddscanner.entities.errors.Field;
 import com.ddscanner.entities.errors.ValidationError;
@@ -150,13 +152,13 @@ public class Helpers {
         return allPhotos;
     }
 
-    public static ArrayList<Image> compareObjectsArray(ArrayList<Image> first, ArrayList<Image> second) {
-        ArrayList<Image> allPhotos = new ArrayList<>();
+    public static ArrayList<DiveSpotPhoto> compareObjectsArray(ArrayList<DiveSpotPhoto> first, ArrayList<DiveSpotPhoto> second) {
+        ArrayList<DiveSpotPhoto> allPhotos = new ArrayList<>();
         if (first == null && second == null) {
             return allPhotos;
         }
         if (first != null) {
-            allPhotos = (ArrayList<Image>) first.clone();
+            allPhotos = (ArrayList<DiveSpotPhoto>) first.clone();
             if (second != null) {
                 for (int i = 0; i < second.size(); i++) {
                     allPhotos.add(second.get(i));
@@ -165,7 +167,7 @@ public class Helpers {
             return allPhotos;
         }
         if (second != null) {
-            allPhotos = (ArrayList<Image>) second.clone();
+            allPhotos = (ArrayList<DiveSpotPhoto>) second.clone();
         }
         return allPhotos;
     }
