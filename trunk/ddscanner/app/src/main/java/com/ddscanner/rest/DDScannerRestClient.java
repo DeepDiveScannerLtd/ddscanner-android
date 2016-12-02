@@ -79,7 +79,7 @@ public class DDScannerRestClient {
     }
 
     public void postAddDiveSpotToFavourites(String diveSpotId, @NonNull final ResultListener<Void> resultListener) {
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().addDiveSpotToFavourites(diveSpotId, getRegisterRequest());
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postAddToFavorites(diveSpotId);
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 

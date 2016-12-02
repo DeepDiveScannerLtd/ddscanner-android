@@ -329,4 +329,7 @@ public interface DDScannerRestService {
     @POST("v2_0/images.remove")
     Call<ResponseBody> postDeleteImage(@Body DeleteImageRequest images);
 
+    @POST("v2_0/user.favorites.add")
+    Call<ResponseBody> postAddToFavorites(@Query("id") String divespotId);
+
 }
