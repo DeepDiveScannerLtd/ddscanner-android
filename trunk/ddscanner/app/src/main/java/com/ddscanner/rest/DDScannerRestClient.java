@@ -8,6 +8,7 @@ import com.ddscanner.entities.CheckIns;
 import com.ddscanner.entities.Comments;
 import com.ddscanner.entities.DiveCentersResponseEntity;
 import com.ddscanner.entities.DiveSpotDetailsEntity;
+import com.ddscanner.entities.DiveSpotPhoto;
 import com.ddscanner.entities.DiveSpotPhotosResponseEntity;
 import com.ddscanner.entities.DiveSpotResponseEntity;
 import com.ddscanner.entities.DiveSpotShort;
@@ -597,6 +598,18 @@ public class DDScannerRestClient {
     public void postDislikePhoto(String id, ResultListener<Void> resultListener) {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postDislikePhoto(id);
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
+    }
+
+    public void getDiveSpotMaps(String id, ResultListener<ArrayList<DiveSpotPhoto>> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveSpotMaps(id);
+        call.enqueue(new ResponseEntityCallback<ArrayList<DiveSpotPhoto>>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<ArrayList<DiveSpotPhoto>> resultListener, String responseString) throws JSONException {
+                Type listType = new TypeToken<ArrayList<DiveSpotPhoto>>(){}.getType();
+                ArrayList<DiveSpotPhoto> photos = gson.fromJson(responseString, listType);
+                resultListener.onSuccess(photos);
+            }
+        });
     }
 
     private ReportRequest getReportRequest(String reportType, String reportDescription) {

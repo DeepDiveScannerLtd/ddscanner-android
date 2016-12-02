@@ -562,6 +562,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
 
         @Override
         public void onConnectionFailure() {
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_IMAGE_SLIDER_ACTIVITY_FAILED_TO_CONNECT, false);
             if (isLike) {
                 dislikeUi();
                 return;
@@ -576,6 +577,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
             } else {
                 likeUi();
             }
+            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, false);
         }
     }
 

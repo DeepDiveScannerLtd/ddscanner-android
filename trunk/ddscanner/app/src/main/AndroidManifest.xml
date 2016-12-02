@@ -253,6 +253,9 @@
         <activity
             android:name=".screens.user.profile.UserProfileActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".screens.divespot.photos.DiveSpotMapsActivity"
+            android:screenOrientation="portrait" />
         <service
             android:name=".services.FirebaseMessagingService">
             <intent-filter>

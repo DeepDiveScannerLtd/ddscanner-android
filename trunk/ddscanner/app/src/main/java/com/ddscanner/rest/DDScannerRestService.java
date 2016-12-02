@@ -321,4 +321,7 @@ public interface DDScannerRestService {
     @POST("v2_0/photo.dislike")
     Call<ResponseBody> postDislikePhoto(@Query("id") String id);
 
+    @GET("v2_0/divespot.maps.get")
+    Call<ResponseBody> getDiveSpotMaps(@Query("id") String diveSpotId);
+
 }

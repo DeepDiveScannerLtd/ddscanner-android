@@ -367,4 +367,5 @@
     <string name="dc_languages">Languages</string>
     <string name="dive_spots_profile_dc">Dive spots</string>
     <string name="base_photo_url">https://ddsapi.ilave.pro/v2_0/image/%1$s?size=%2$s</string>
+    <string name="maps_toolbar_title">Maps</string>
 </resources>
