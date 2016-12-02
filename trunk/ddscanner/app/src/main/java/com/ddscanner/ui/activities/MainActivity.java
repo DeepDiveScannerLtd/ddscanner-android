@@ -132,6 +132,7 @@ public class MainActivity extends BaseAppCompatActivity
             materialDialog.dismiss();
             DDScannerApplication.getInstance().getSharedPreferenceHelper().setToken(result.getToken());
             DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsUserSignedIn(true, SignInType.EMAIL);
+            DDScannerApplication.getInstance().getSharedPreferenceHelper().setUserServerId(result.getId());
             DDScannerApplication.bus.post(new LoggedInEvent());
         }
 

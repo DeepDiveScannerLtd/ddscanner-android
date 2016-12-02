@@ -86,6 +86,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             Log.i(TAG, "onSuccess: ");
             DDScannerApplication.getInstance().getSharedPreferenceHelper().setToken(result.getToken());
             DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsUserSignedIn(true, SignInType.EMAIL);
+            DDScannerApplication.getInstance().getSharedPreferenceHelper().setUserServerId(result.getId());
             setResult(RESULT_OK);
             finish();
         }
