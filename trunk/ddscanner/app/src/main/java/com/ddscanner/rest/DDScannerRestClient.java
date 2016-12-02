@@ -589,6 +589,16 @@ public class DDScannerRestClient {
         });
     }
 
+    public void postLikePhoto(String id, ResultListener<Void> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postLikePhoto(id);
+        call.enqueue(new NoResponseEntityCallback(gson, resultListener));
+    }
+
+    public void postDislikePhoto(String id, ResultListener<Void> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postDislikePhoto(id);
+        call.enqueue(new NoResponseEntityCallback(gson, resultListener));
+    }
+
     private ReportRequest getReportRequest(String reportType, String reportDescription) {
         ReportRequest reportRequest = new ReportRequest();
         reportRequest.setType(reportType);

@@ -314,4 +314,11 @@ public interface DDScannerRestService {
 
     @GET("v2_0/divespot.photos.get")
     Call<ResponseBody> getDiveSpotPhotos(@Query("id") String diveSpotId);
+
+    @POST("v2_0/photo.like")
+    Call<ResponseBody> postLikePhoto(@Query("id") String id);
+
+    @POST("v2_0/photo.dislike")
+    Call<ResponseBody> postDislikePhoto(@Query("id") String id);
+
 }

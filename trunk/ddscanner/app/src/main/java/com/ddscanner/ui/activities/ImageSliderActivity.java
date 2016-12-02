@@ -3,6 +3,7 @@ package com.ddscanner.ui.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -65,6 +67,11 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     private String deleteImageName;
     private MaterialDialog materialDialog;
     private SimpleGestureFilter detector;
+    private RelativeLayout likesLayout;
+    private ImageView likeIcon;
+    private TextView likesCount;
+    private LikeDislikeResultListener likeResultListener = new LikeDislikeResultListener(true);
+    private LikeDislikeResultListener dislikeResultListener = new LikeDislikeResultListener(false);
     float x1, x2;
     float y1, y2;
     PhotoOpenedSource photoOpenedSource;
@@ -187,6 +194,9 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_slider);
         findViews();
+        if (Build.VERSION.SDK_INT >= 21) {
+            getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.black_text));
+        }
         detector = new SimpleGestureFilter(this, this);
         materialDialog = Helpers.getMaterialDialog(this);
 //        DDScannerApplication.getInstance().getDdScannerRestClient().getReportTypes(filtersResponseEntityResultListener);
@@ -206,6 +216,10 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
 
     private void changeUiAccrodingPosition(final int position) {
         this.position = position;
+        likesCount.setText(images.get(position).getLikesCount());
+        if (images.get(position).isLiked()) {
+            likeIcon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_like_photo_full));
+        }
         userName.setText(images.get(position).getAuthor().getName());
         date.setText(Helpers.convertDateToImageSliderActivity(images.get(position).getDate()));
         Picasso.with(this)
@@ -234,6 +248,9 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     }
 
     private void findViews() {
+        likesLayout = (RelativeLayout) findViewById(R.id.likes_layout);
+        likeIcon = (ImageView) findViewById(R.id.icon);
+        likesCount = (TextView) findViewById(R.id.likes_count);
         viewPager = (ViewPager) findViewById(R.id.image_slider);
         close = (ImageView) findViewById(R.id.close_btn);
         baseLayout = (FrameLayout) findViewById(R.id.swipe_layout);
@@ -245,6 +262,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
 
     private void setUi() {
         viewPager.setCurrentItem(position);
+        likesLayout.setOnClickListener(this);
     }
 
     @Override
@@ -252,6 +270,15 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         switch (view.getId()) {
             case R.id.close_btn:
                 onBackPressed();
+                break;
+            case R.id.likes_layout:
+                if (!images.get(position).isLiked()) {
+                    likeUi();
+                    DDScannerApplication.getInstance().getDdScannerRestClient().postLikePhoto(images.get(position).getId(), likeResultListener);
+                    break;
+                }
+                dislikeUi();
+                DDScannerApplication.getInstance().getDdScannerRestClient().postDislikePhoto(images.get(position).getId(), dislikeResultListener);
                 break;
         }
     }
@@ -508,4 +535,52 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
                 break;
         }
     }
+
+    private void likeUi() {
+        likeIcon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_like_photo_full));
+        images.get(position).setLiked(true);
+        images.get(position).setLikesCount(String.valueOf(Integer.parseInt(likesCount.getText().toString()) + 1));
+        likesCount.setText(images.get(position).getLikesCount());
+    }
+
+    private void dislikeUi() {
+        likeIcon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_like_photo_empty));
+        images.get(position).setLiked(false);
+        images.get(position).setLikesCount(String.valueOf(Integer.parseInt(likesCount.getText().toString()) - 1));
+        likesCount.setText(images.get(position).getLikesCount());
+    }
+
+    private class LikeDislikeResultListener extends DDScannerRestClient.ResultListener<Void> {
+
+        private boolean isLike;
+
+        LikeDislikeResultListener(boolean isLike) {
+            this.isLike = isLike;
+        }
+
+        @Override
+        public void onSuccess(Void result) {
+
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            if (isLike) {
+                dislikeUi();
+                return;
+            }
+            likeUi();
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            if (isLike) {
+                dislikeUi();
+            } else {
+                likeUi();
+            }
+        }
+    }
+
+
 }
