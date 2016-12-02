@@ -16,11 +16,13 @@ import com.ddscanner.R;
 import com.ddscanner.entities.DiveSpotPhoto;
 import com.ddscanner.entities.PhotoOpenedSource;
 import com.ddscanner.rest.DDScannerRestClient;
+import com.ddscanner.ui.dialogs.InfoDialogFragment;
+import com.ddscanner.utils.DialogsRequestCodes;
 import com.rey.material.widget.ProgressView;
 
 import java.util.ArrayList;
 
-public class DiveSpotMapsActivity extends AppCompatActivity {
+public class DiveSpotMapsActivity extends AppCompatActivity implements InfoDialogFragment.DialogClosedListener {
 
     private RecyclerView mapsRecyclerView;
     private Toolbar toolbar;
@@ -37,12 +39,12 @@ public class DiveSpotMapsActivity extends AppCompatActivity {
 
         @Override
         public void onConnectionFailure() {
-
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_MAPS_ACTIVITY_FAILED, false);
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_MAPS_ACTIVITY_FAILED, false);
         }
     };
 
@@ -85,5 +87,10 @@ public class DiveSpotMapsActivity extends AppCompatActivity {
                 return true;
         }
         return true;
+    }
+
+    @Override
+    public void onDialogClosed(int requestCode) {
+        finish();
     }
 }
