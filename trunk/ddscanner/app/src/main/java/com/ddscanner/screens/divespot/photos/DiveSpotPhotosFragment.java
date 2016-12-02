@@ -1,4 +1,4 @@
-package com.ddscanner.ui.fragments;
+package com.ddscanner.screens.divespot.photos;
 
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -6,29 +6,32 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.ddscanner.R;
-import com.ddscanner.entities.Image;
+import com.ddscanner.entities.DiveSpotPhoto;
 import com.ddscanner.entities.PhotoOpenedSource;
-import com.ddscanner.ui.adapters.AllPhotosDiveSpotAdapter;
 import com.ddscanner.utils.Helpers;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by lashket on 11.5.16.
  */
-public class DiveSpotAllPhotosFragment extends Fragment {
+public class DiveSpotPhotosFragment extends Fragment {
 
-    private ArrayList<Image> images;
+    private static final String TAG = DiveSpotPhotosFragment.class.getSimpleName();
+
+    private ArrayList<DiveSpotPhoto> images;
 
     private RecyclerView recyclerView;
 
     private String path;
+
+    private boolean isHasNewImages = false;
 
     private String diveSpotId;
 
@@ -40,11 +43,12 @@ public class DiveSpotAllPhotosFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_all_photos, container, false);
+        View view = inflater.inflate(R.layout.fragment_divespot_photo, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.photos);
+        Log.i(TAG, this.toString());
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(),3));
-       // recyclerView.addItemDecoration(new GridSpacingItemDecoration(3));
-        recyclerView.setAdapter(new AllPhotosDiveSpotAdapter(images, getActivity(), path, diveSpotId, PhotoOpenedSource.ALL));
+        //recyclerView.addItemDecoration(new GridSpacingItemDecoration(3));
+        recyclerView.setAdapter(new AllPhotosDiveSpotAdapter(images, getActivity(), diveSpotId, PhotoOpenedSource.DIVESPOT));
         return view;
     }
 
@@ -65,13 +69,13 @@ public class DiveSpotAllPhotosFragment extends Fragment {
         }
     }
 
-    public void setList(ArrayList<Image> images, String path, String diveSpotId) {
+    public void setList(ArrayList<DiveSpotPhoto> images, String path, String diveSpotId) {
         this.path = path;
         this.diveSpotId = diveSpotId;
         if (recyclerView == null) {
             this.images = images;
             return;
         }
-        recyclerView.setAdapter(new AllPhotosDiveSpotAdapter(images, getActivity(), path, this.diveSpotId, PhotoOpenedSource.ALL));
+        recyclerView.setAdapter(new AllPhotosDiveSpotAdapter(images, getActivity(), this.diveSpotId, PhotoOpenedSource.DIVESPOT));
     }
 }

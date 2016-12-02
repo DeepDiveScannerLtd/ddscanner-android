@@ -1,8 +1,9 @@
-package com.ddscanner.ui.activities;
+package com.ddscanner.screens.photo.slider;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
@@ -14,7 +15,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,12 +23,12 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
-import com.ddscanner.entities.DiveSpotDetails;
+import com.ddscanner.entities.DiveSpotPhoto;
+import com.ddscanner.entities.DiveSpotPhotosResponseEntity;
 import com.ddscanner.entities.FiltersResponseEntity;
-import com.ddscanner.entities.Image;
 import com.ddscanner.entities.PhotoOpenedSource;
 import com.ddscanner.rest.DDScannerRestClient;
-import com.ddscanner.ui.adapters.SliderImagesAdapter;
+import com.ddscanner.ui.activities.LoginActivity;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.ui.views.SimpleGestureFilter;
 import com.ddscanner.utils.ActivitiesRequestCodes;
@@ -43,14 +44,11 @@ import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 public class ImageSliderActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener, View.OnClickListener, SimpleGestureFilter.SimpleGestureListener, InfoDialogFragment.DialogClosedListener {
 
-    private LinearLayout pager_indicator;
-    private int dotsCount = 0;
     private SliderImagesAdapter sliderImagesAdapter;
-    private ImageView[] dots;
     private FrameLayout baseLayout;
     private ViewPager viewPager;
     private ImageView close;
-    private ArrayList<Image> images;
+    private ArrayList<DiveSpotPhoto> images;
     private Drawable drawable;
     private int position;
     private ImageView avatar;
@@ -61,29 +59,32 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     private FiltersResponseEntity filters = new FiltersResponseEntity();
     private String imageNameForDeletion;
     private String reportName;
-    private String path;
     private String reportType;
     private String reportDescription;
     private String deleteImageName;
     private MaterialDialog materialDialog;
     private SimpleGestureFilter detector;
-    private String diveSpotId;
+    private RelativeLayout likesLayout;
+    private ImageView likeIcon;
+    private TextView likesCount;
+    private LikeDislikeResultListener likeResultListener = new LikeDislikeResultListener(true);
+    private LikeDislikeResultListener dislikeResultListener = new LikeDislikeResultListener(false);
     float x1, x2;
     float y1, y2;
     PhotoOpenedSource photoOpenedSource;
 
-    private DDScannerRestClient.ResultListener<DiveSpotDetails> imagesResulListener = new DDScannerRestClient.ResultListener<DiveSpotDetails>() {
+    private DDScannerRestClient.ResultListener<DiveSpotPhotosResponseEntity> imagesResulListener = new DDScannerRestClient.ResultListener<DiveSpotPhotosResponseEntity>() {
         @Override
-        public void onSuccess(DiveSpotDetails result) {
+        public void onSuccess(DiveSpotPhotosResponseEntity result) {
             switch (photoOpenedSource) {
                 case ALL:
-                    images =Helpers.compareObjectsArray((ArrayList<Image>) result.getDivespot().getImages(), (ArrayList<Image>) result.getDivespot().getCommentImages());
+                    images =Helpers.compareObjectsArray(result.getDiveSpotPhotos(), result.getCommentPhotos());
                     break;
                 case DIVESPOT:
-                    images = (ArrayList<Image>) result.getDivespot().getImages();
+                    images = result.getDiveSpotPhotos();
                     break;
                 case REVIEWS:
-                    images = (ArrayList<Image>) result.getDivespot().getCommentImages();
+                    images = result.getCommentPhotos();
                     break;
             }
             changeUiAccrodingPosition(position);
@@ -190,14 +191,15 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_slider);
         findViews();
+        if (Build.VERSION.SDK_INT >= 21) {
+            getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.black_text));
+        }
         detector = new SimpleGestureFilter(this, this);
         materialDialog = Helpers.getMaterialDialog(this);
-        DDScannerApplication.getInstance().getDdScannerRestClient().getReportTypes(filtersResponseEntityResultListener);
+//        DDScannerApplication.getInstance().getDdScannerRestClient().getReportTypes(filtersResponseEntityResultListener);
         Bundle bundle = getIntent().getExtras();
         images = bundle.getParcelableArrayList("IMAGES");
         position = getIntent().getIntExtra("position", 0);
-        path = getIntent().getStringExtra("path");
-        diveSpotId = getIntent().getStringExtra("divespotid");
         photoOpenedSource = (PhotoOpenedSource) getIntent().getSerializableExtra("source");
         viewPager.addOnPageChangeListener(this);
         sliderImagesAdapter = new SliderImagesAdapter(getFragmentManager(), images);
@@ -211,16 +213,21 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
 
     private void changeUiAccrodingPosition(final int position) {
         this.position = position;
+        likesCount.setText(images.get(position).getLikesCount());
+        if (images.get(position).isLiked()) {
+            likeIcon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_like_photo_full));
+        }
         userName.setText(images.get(position).getAuthor().getName());
-        date.setText(Helpers.convertDateToImageSliderActivity(images.get(position).getAuthor().getDate()));
+        date.setText(Helpers.convertDateToImageSliderActivity(images.get(position).getDate()));
         Picasso.with(this)
-                .load(images.get(position).getAuthor().getPhoto())
+                .load(getString(R.string.base_photo_url, images.get(position).getAuthor().getPhoto(), "1"))
                 .resize(Math.round(Helpers.convertDpToPixel(35, this)), Math.round(Helpers.convertDpToPixel(35, this)))
                 .centerCrop()
                 .placeholder(R.drawable.avatar_profile_default)
+                .error(R.drawable.avatar_profile_default)
                 .transform(new CropCircleTransformation())
                 .into(avatar);
-        if (images.get(position).isReport()) {
+        if (!images.get(position).getAuthor().getId().equals(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId())) {
             options.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -238,8 +245,10 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     }
 
     private void findViews() {
+        likesLayout = (RelativeLayout) findViewById(R.id.likes_layout);
+        likeIcon = (ImageView) findViewById(R.id.icon);
+        likesCount = (TextView) findViewById(R.id.likes_count);
         viewPager = (ViewPager) findViewById(R.id.image_slider);
-        pager_indicator = (LinearLayout) findViewById(R.id.viewPagerCountDots);
         close = (ImageView) findViewById(R.id.close_btn);
         baseLayout = (FrameLayout) findViewById(R.id.swipe_layout);
         avatar = (ImageView) findViewById(R.id.user_avatar);
@@ -249,24 +258,9 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     }
 
     private void setUi() {
-        dotsCount = sliderImagesAdapter.getCount();
-        dots = new ImageView[dotsCount];
-        pager_indicator.removeAllViews();
-        for (int i = 0; i < dotsCount; i++) {
-            dots[i] = new ImageView(this);
-            dots[i].setImageDrawable(ContextCompat.getDrawable(this, R.drawable.nonselecteditem_dot));
-
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-            );
-
-            params.setMargins(4, 0, 4, 0);
-
-            pager_indicator.addView(dots[i], params);
-        }
-        dots[position].setImageDrawable(ContextCompat.getDrawable(this, R.drawable.selecteditem_dot));
+        options.setVisibility(View.VISIBLE);
         viewPager.setCurrentItem(position);
+        likesLayout.setOnClickListener(this);
     }
 
     @Override
@@ -274,6 +268,15 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         switch (view.getId()) {
             case R.id.close_btn:
                 onBackPressed();
+                break;
+            case R.id.likes_layout:
+                if (!images.get(position).isLiked()) {
+                    likeUi();
+                    DDScannerApplication.getInstance().getDdScannerRestClient().postLikePhoto(images.get(position).getId(), likeResultListener);
+                    break;
+                }
+                dislikeUi();
+                DDScannerApplication.getInstance().getDdScannerRestClient().postDislikePhoto(images.get(position).getId(), dislikeResultListener);
                 break;
         }
     }
@@ -304,15 +307,11 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
 
     @Override
     public void onPageSelected(int position) {
-        for (int i = 0; i < dotsCount; i++) {
-            dots[i].setImageDrawable(ContextCompat.getDrawable(this, R.drawable.nonselecteditem_dot));
-        }
-        dots[position].setImageDrawable(ContextCompat.getDrawable(this, R.drawable.selecteditem_dot));
         changeUiAccrodingPosition(position);
     }
 
     private void showDeleteMenu(View view) {
-        deleteImageName = images.get(position).getName();
+//        deleteImageName = images.get(position).getName();
         PopupMenu popup = new PopupMenu(this, view);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.menu_photo_delete, popup.getMenu());
@@ -325,7 +324,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
             position = 0;
             this.position = 0;
         }
-        reportName = images.get(position).getName();
+//        reportName = images.get(position).getName();
         PopupMenu popup = new PopupMenu(this, view);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.menu_photo_report, popup.getMenu());
@@ -333,12 +332,10 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         popup.show();
     }
 
-    public static void showForResult(Activity context, ArrayList<Image> images, int position, String path, int requestCode, String diveSpotId, PhotoOpenedSource photoOpenedSource) {
+    public static void showForResult(Activity context, ArrayList<DiveSpotPhoto> images, int position, int requestCode, PhotoOpenedSource photoOpenedSource) {
         Intent intent = new Intent(context, ImageSliderActivity.class);
         intent.putParcelableArrayListExtra("IMAGES", images);
         intent.putExtra("position", position);
-        intent.putExtra("path", path);
-        intent.putExtra("divespotid", diveSpotId);
         intent.putExtra("source", photoOpenedSource);
         context.startActivityForResult(intent, requestCode);
     }
@@ -376,11 +373,11 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
             switch (item.getItemId()) {
                 case R.id.photo_report:
                     EventsTracker.trackPhotoReport();
-                    reportName = imageName.replace(path, "");
+                    reportName = imageName;
                     showReportDialog();
                     break;
                 case R.id.photo_delete:
-                    deleteImageName = imageName.replace(path, "");
+                    deleteImageName = imageName;
                     deleteImage(deleteImageName);
                     break;
             }
@@ -391,7 +388,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     private void deleteImage(String name) {
         isChanged = true;
         materialDialog.show();
-        DDScannerApplication.getInstance().getDdScannerRestClient().deleteImage(name, deleteImageRequestistener);
+        DDScannerApplication.getInstance().getDdScannerRestClient().postDeleteImage(images.get(position).getId(), deleteImageRequestistener);
 
     }
 
@@ -415,14 +412,14 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
                 if (resultCode == RESULT_OK) {
                     setResult(RESULT_OK);
                     reportImage(reportName, reportType, reportDescription);
-                    DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotPhotos(diveSpotId, imagesResulListener);
+//                    DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotPhotos(diveSpotId, imagesResulListener);
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_DELETE:
                 if (resultCode == RESULT_OK) {
                     setResult(RESULT_OK);
                     deleteImage(deleteImageName);
-                    DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotPhotos(diveSpotId, imagesResulListener);
+//                    DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotPhotos(diveSpotId, imagesResulListener);
                 }
                 break;
         }
@@ -536,4 +533,54 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
                 break;
         }
     }
+
+    private void likeUi() {
+        likeIcon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_like_photo_full));
+        images.get(position).setLiked(true);
+        images.get(position).setLikesCount(String.valueOf(Integer.parseInt(likesCount.getText().toString()) + 1));
+        likesCount.setText(images.get(position).getLikesCount());
+    }
+
+    private void dislikeUi() {
+        likeIcon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_like_photo_empty));
+        images.get(position).setLiked(false);
+        images.get(position).setLikesCount(String.valueOf(Integer.parseInt(likesCount.getText().toString()) - 1));
+        likesCount.setText(images.get(position).getLikesCount());
+    }
+
+    private class LikeDislikeResultListener extends DDScannerRestClient.ResultListener<Void> {
+
+        private boolean isLike;
+
+        LikeDislikeResultListener(boolean isLike) {
+            this.isLike = isLike;
+        }
+
+        @Override
+        public void onSuccess(Void result) {
+
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_IMAGE_SLIDER_ACTIVITY_FAILED_TO_CONNECT, false);
+            if (isLike) {
+                dislikeUi();
+                return;
+            }
+            likeUi();
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            if (isLike) {
+                dislikeUi();
+            } else {
+                likeUi();
+            }
+            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, false);
+        }
+    }
+
+
 }

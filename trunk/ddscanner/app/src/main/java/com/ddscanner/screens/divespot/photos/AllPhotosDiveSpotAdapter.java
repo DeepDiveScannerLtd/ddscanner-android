@@ -1,4 +1,4 @@
-package com.ddscanner.ui.adapters;
+package com.ddscanner.screens.divespot.photos;
 
 import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
@@ -7,11 +7,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
-import com.ddscanner.entities.Image;
+import com.ddscanner.entities.DiveSpotPhoto;
 import com.ddscanner.entities.PhotoOpenedSource;
-import com.ddscanner.ui.activities.ImageSliderActivity;
+import com.ddscanner.screens.photo.slider.ImageSliderActivity;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;
@@ -24,15 +25,14 @@ import java.util.ArrayList;
 public class AllPhotosDiveSpotAdapter extends RecyclerView.Adapter<AllPhotosDiveSpotAdapter.AllPhotosDIveSpotViewHolder> {
 
     private String path;
-    private ArrayList<Image> images;
+    private ArrayList<DiveSpotPhoto> images;
     private Activity context;
     private String diveSpotId;
     private PhotoOpenedSource photoOpenedSource;
 
-    public AllPhotosDiveSpotAdapter(ArrayList<Image> photos, Activity context, String path, String diveSpotId, PhotoOpenedSource photoOpenedSource) {
+    public AllPhotosDiveSpotAdapter(ArrayList<DiveSpotPhoto> photos, Activity context, String diveSpotId, PhotoOpenedSource photoOpenedSource) {
         images = photos;
         this.context = context;
-        this.path = path;
         this.diveSpotId = diveSpotId;
         this.photoOpenedSource = photoOpenedSource;
     }
@@ -40,7 +40,7 @@ public class AllPhotosDiveSpotAdapter extends RecyclerView.Adapter<AllPhotosDive
     @Override
     public void onBindViewHolder(AllPhotosDIveSpotViewHolder holder, int position) {
         Picasso.with(context)
-                .load(images.get(position).getName())
+                .load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, images.get(position).getId(), "2"))
              //   .placeholder(R.drawable.list_photo_default)
                 .resize(Math.round(Helpers.convertDpToPixel(115, context)), Math.round(Helpers.convertDpToPixel(115, context)))
                 .centerCrop()
@@ -76,7 +76,7 @@ public class AllPhotosDiveSpotAdapter extends RecyclerView.Adapter<AllPhotosDive
         @Override
         public void onClick(View v) {
             EventsTracker.trackDiveSpotPhotosView();
-            ImageSliderActivity.showForResult(context, images, getAdapterPosition(), path, ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_ACTIVITY_SLIDER, diveSpotId, photoOpenedSource);
+            ImageSliderActivity.showForResult(context, images, getAdapterPosition(), ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_ACTIVITY_SLIDER, photoOpenedSource);
         }
     }
 

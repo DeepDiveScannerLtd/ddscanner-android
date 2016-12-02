@@ -1,4 +1,4 @@
-package com.ddscanner.ui.activities;
+package com.ddscanner.screens.divespot.photos;
 
 import android.Manifest;
 import android.app.Activity;
@@ -23,14 +23,13 @@ import android.widget.Toast;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
-import com.ddscanner.entities.DiveSpotDetails;
-import com.ddscanner.entities.Image;
+import com.ddscanner.entities.DiveSpotPhoto;
+import com.ddscanner.entities.DiveSpotPhotosResponseEntity;
 import com.ddscanner.rest.DDScannerRestClient;
+import com.ddscanner.ui.activities.AddPhotosDoDiveSpotActivity;
+import com.ddscanner.ui.activities.LoginActivity;
 import com.ddscanner.ui.adapters.PhotosActivityPagerAdapter;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
-import com.ddscanner.ui.fragments.DiveSpotAllPhotosFragment;
-import com.ddscanner.ui.fragments.DiveSpotPhotosFragment;
-import com.ddscanner.ui.fragments.DiveSpotReviewsPhoto;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogsRequestCodes;
@@ -50,27 +49,29 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
     private TabLayout tabLayout;
     private ViewPager photosViewPager;
     private Toolbar toolbar;
-    private ArrayList<Image> diveSpotImages;
+    private ArrayList<DiveSpotPhoto> diveSpotImages;
     private String path;
-    private ArrayList<Image> reviewsImages;
-    private ArrayList<Image> allPhotos;
+    private ArrayList<DiveSpotPhoto> reviewsImages;
+    private ArrayList<DiveSpotPhoto> allPhotos;
     private FloatingActionButton fabAddPhoto;
     private String dsId;
     private PhotosActivityPagerAdapter photosActivityPagerAdapter;
-    private DiveSpotDetails diveSpotDetails;
+    private DiveSpotPhotosResponseEntity diveSpotDetails;
     private boolean isDataChanged = false;
 
     private DiveSpotAllPhotosFragment diveSpotAllPhotosFragment = new DiveSpotAllPhotosFragment();
     private DiveSpotPhotosFragment diveSpotPhotosFragment = new DiveSpotPhotosFragment();
-    private DiveSpotReviewsPhoto diveSpotReviewsPhoto = new DiveSpotReviewsPhoto();
+    private DiveSpotReviewsPhotoFragment diveSpotReviewsPhotoFragment = new DiveSpotReviewsPhotoFragment();
 
     private ProgressView progressView;
 
-    private DDScannerRestClient.ResultListener<DiveSpotDetails> diveSpotDetailsResultListener = new DDScannerRestClient.ResultListener<DiveSpotDetails>() {
+    private DDScannerRestClient.ResultListener<DiveSpotPhotosResponseEntity> diveSpotPhotosResultListener = new DDScannerRestClient.ResultListener<DiveSpotPhotosResponseEntity>() {
         @Override
-        public void onSuccess(DiveSpotDetails result) {
+        public void onSuccess(DiveSpotPhotosResponseEntity result) {
             diveSpotDetails = result;
             updateFragments(diveSpotDetails);
+            progressView.setVisibility(View.GONE);
+            photosViewPager.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -102,28 +103,12 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
         findViews();
         photosActivityPagerAdapter = new PhotosActivityPagerAdapter(getSupportFragmentManager());
         Bundle bundle = getIntent().getExtras();
-        diveSpotImages = bundle.getParcelableArrayList("images");
-        reviewsImages =  bundle.getParcelableArrayList("reviewsImages");
-
-        path = getIntent().getStringExtra("path");
         dsId = getIntent().getStringExtra("id");
-        if (diveSpotImages != null) {
-            diveSpotImages = Helpers.appendFullImagesWithPath(diveSpotImages, path);
-        }
-        diveSpotPhotosFragment.setList(diveSpotImages, path, dsId);
-
-        if (reviewsImages != null) {
-            reviewsImages = Helpers.appendFullImagesWithPath(reviewsImages, path);
-        }
-        diveSpotReviewsPhoto.setList(reviewsImages, path, dsId);
-
-        allPhotos = Helpers.compareObjectsArray(reviewsImages, diveSpotImages);
-
-        diveSpotAllPhotosFragment.setList(allPhotos, path, dsId);
 
         setupViewPager();
         setUi();
         setUpTabLayout();
+        getDiveSpotPhotos();
     }
 
     private void setUpTabLayout() {
@@ -140,7 +125,7 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
     private void setupViewPager() {
         photosActivityPagerAdapter.addFragment(diveSpotAllPhotosFragment, "all");
         photosActivityPagerAdapter.addFragment(diveSpotPhotosFragment, "divespot");
-        photosActivityPagerAdapter.addFragment(diveSpotReviewsPhoto, "reviews");
+        photosActivityPagerAdapter.addFragment(diveSpotReviewsPhotoFragment, "reviews");
         photosViewPager.setAdapter(photosActivityPagerAdapter);
     }
 
@@ -157,13 +142,9 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
         getSupportActionBar().setTitle(R.string.photos);
     }
 
-    public static void show(Context context, ArrayList<String> images, String path,
-                            ArrayList<String> reviewsImages, String id) {
+    public static void show(Context context, String id) {
         Intent intent = new Intent(context, DiveSpotPhotosActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putSerializable("images", images);
-        bundle.putString("path", path);
-        bundle.putSerializable("reviewsImages", reviewsImages);
         bundle.putString("id", id);
         intent.putExtras(bundle);
         context.startActivity(intent);
@@ -306,24 +287,18 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
     private void getDiveSpotPhotos() {
         progressView.setVisibility(View.VISIBLE);
         photosViewPager.setVisibility(View.GONE);
-        DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotPhotos(dsId, diveSpotDetailsResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotPhotos(dsId, diveSpotPhotosResultListener);
     }
 
-    private void updateFragments(DiveSpotDetails diveSpotDetails) {
+    private void updateFragments(DiveSpotPhotosResponseEntity diveSpotPhotosResponseEntity) {
         isDataChanged = true;
 
-        reviewsImages = (ArrayList<Image>) diveSpotDetails.getDivespot().getCommentImages();
-        diveSpotImages = (ArrayList<Image>) diveSpotDetails.getDivespot().getImages();
-        if (diveSpotImages != null) {
-            diveSpotImages = Helpers.appendFullImagesWithPath(diveSpotImages, path);
-        }
-        if (reviewsImages != null) {
-            reviewsImages = Helpers.appendFullImagesWithPath(reviewsImages, path);
-        }
+        reviewsImages = diveSpotPhotosResponseEntity.getCommentPhotos();
+        diveSpotImages = diveSpotPhotosResponseEntity.getDiveSpotPhotos();
 
-        diveSpotReviewsPhoto.setList(reviewsImages, path, dsId);
         allPhotos = new ArrayList<>();
         allPhotos = Helpers.compareObjectsArray(reviewsImages, diveSpotImages);
+        diveSpotReviewsPhotoFragment.setList(reviewsImages, path, dsId);
         diveSpotAllPhotosFragment.setList(allPhotos, path, dsId);
         diveSpotPhotosFragment.setList(diveSpotImages, path, dsId);
 

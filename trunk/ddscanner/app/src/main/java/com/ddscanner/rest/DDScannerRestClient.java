@@ -8,6 +8,8 @@ import com.ddscanner.entities.CheckIns;
 import com.ddscanner.entities.Comments;
 import com.ddscanner.entities.DiveCentersResponseEntity;
 import com.ddscanner.entities.DiveSpotDetailsEntity;
+import com.ddscanner.entities.DiveSpotPhoto;
+import com.ddscanner.entities.DiveSpotPhotosResponseEntity;
 import com.ddscanner.entities.DiveSpotResponseEntity;
 import com.ddscanner.entities.DiveSpotShort;
 import com.ddscanner.entities.DiveSpotDetails;
@@ -25,6 +27,7 @@ import com.ddscanner.entities.SignInType;
 import com.ddscanner.entities.SignUpResponseEntity;
 import com.ddscanner.entities.User;
 import com.ddscanner.entities.UserResponseEntity;
+import com.ddscanner.entities.request.DeleteImageRequest;
 import com.ddscanner.entities.request.DiveSpotsRequestMap;
 import com.ddscanner.entities.request.IdentifyRequest;
 import com.ddscanner.entities.request.RegisterRequest;
@@ -274,19 +277,6 @@ public class DDScannerRestClient {
         validationRequest.setValid(isValid);
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().divespotValidation(diveSpotId, validationRequest);
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
-    }
-
-    public void getDiveSpotPhotos(String diveSpotId, @NonNull final ResultListener<DiveSpotDetails> resultListener) {
-        Map<String, String> map = getUserQueryMapRequest();
-        map.put("isImageAuthor", "true");
-        final Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveSpotImages(diveSpotId, map);
-        call.enqueue(new ResponseEntityCallback<DiveSpotDetails>(gson, resultListener) {
-            @Override
-            void handleResponseString(ResultListener<DiveSpotDetails> resultListener, String responseString) {
-                DiveSpotDetails diveSpotDetails = new Gson().fromJson(responseString, DiveSpotDetails.class);
-                resultListener.onSuccess(diveSpotDetails);
-            }
-        });
     }
 
     public void getReportTypes(@NonNull final ResultListener<FiltersResponseEntity> resultListener) {
@@ -586,6 +576,45 @@ public class DDScannerRestClient {
             void handleResponseString(ResultListener<Sealife> resultListener, String responseString) throws JSONException {
                 Sealife sealife = gson.fromJson(responseString, Sealife.class);
                 resultListener.onSuccess(sealife);
+            }
+        });
+    }
+
+    public void getDiveSpotPhotos(String id, ResultListener<DiveSpotPhotosResponseEntity> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveSpotPhotos(id);
+        call.enqueue(new ResponseEntityCallback<DiveSpotPhotosResponseEntity>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<DiveSpotPhotosResponseEntity> resultListener, String responseString) throws JSONException {
+                DiveSpotPhotosResponseEntity diveSpotPhotosResponseEntity = gson.fromJson(responseString, DiveSpotPhotosResponseEntity.class);
+                resultListener.onSuccess(diveSpotPhotosResponseEntity);
+            }
+        });
+    }
+
+    public void postDeleteImage(String id, ResultListener<Void> resultListener) {
+        DeleteImageRequest deleteImageRequest = new DeleteImageRequest(id);
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postDeleteImage(deleteImageRequest);
+        call.enqueue(new NoResponseEntityCallback(gson, resultListener));
+    }
+
+    public void postLikePhoto(String id, ResultListener<Void> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postLikePhoto(id);
+        call.enqueue(new NoResponseEntityCallback(gson, resultListener));
+    }
+
+    public void postDislikePhoto(String id, ResultListener<Void> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postDislikePhoto(id);
+        call.enqueue(new NoResponseEntityCallback(gson, resultListener));
+    }
+
+    public void getDiveSpotMaps(String id, ResultListener<ArrayList<DiveSpotPhoto>> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveSpotMaps(id);
+        call.enqueue(new ResponseEntityCallback<ArrayList<DiveSpotPhoto>>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<ArrayList<DiveSpotPhoto>> resultListener, String responseString) throws JSONException {
+                Type listType = new TypeToken<ArrayList<DiveSpotPhoto>>(){}.getType();
+                ArrayList<DiveSpotPhoto> photos = gson.fromJson(responseString, listType);
+                resultListener.onSuccess(photos);
             }
         });
     }

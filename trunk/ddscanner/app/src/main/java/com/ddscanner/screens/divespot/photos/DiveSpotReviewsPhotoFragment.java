@@ -1,6 +1,5 @@
-package com.ddscanner.ui.fragments;
+package com.ddscanner.screens.divespot.photos;
 
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,19 +10,18 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ddscanner.R;
-import com.ddscanner.entities.Image;
+import com.ddscanner.entities.DiveSpotPhoto;
 import com.ddscanner.entities.PhotoOpenedSource;
-import com.ddscanner.ui.adapters.AllPhotosDiveSpotAdapter;
-import com.ddscanner.utils.Helpers;
+import com.ddscanner.screens.divespot.photos.AllPhotosDiveSpotAdapter;
 
 import java.util.ArrayList;
 
 /**
  * Created by lashket on 11.5.16.
  */
-public class DiveSpotReviewsPhoto extends Fragment {
+public class DiveSpotReviewsPhotoFragment extends Fragment {
 
-    private ArrayList<Image> images;
+    private ArrayList<DiveSpotPhoto> images;
 
     private RecyclerView recyclerView;
 
@@ -43,34 +41,17 @@ public class DiveSpotReviewsPhoto extends Fragment {
         recyclerView = (RecyclerView) view.findViewById(R.id.photos);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
         //recyclerView.addItemDecoration(new GridSpacingItemDecoration(3));
-        recyclerView.setAdapter(new AllPhotosDiveSpotAdapter(images, getActivity(), path, diveSpotId, PhotoOpenedSource.REVIEWS));
+        recyclerView.setAdapter(new AllPhotosDiveSpotAdapter(images, getActivity(), diveSpotId, PhotoOpenedSource.REVIEWS));
         return view;
     }
 
-    public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
-
-        private int spanCount;
-
-        public GridSpacingItemDecoration(int spanCount) {
-            this.spanCount = spanCount;
-        }
-
-        @Override
-        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-            int position = parent.getChildAdapterPosition(view);
-            if (position >= spanCount) {
-                outRect.top = Math.round(Helpers.convertDpToPixel(Float.valueOf(4), getContext()));
-            }
-        }
-    }
-
-    public void setList(ArrayList<Image> images, String path, String diveSpotId) {
+    public void setList(ArrayList<DiveSpotPhoto> images, String path, String diveSpotId) {
         this.path = path;
         this.diveSpotId = diveSpotId;
         if (recyclerView == null) {
             this.images = images;
             return;
         }
-        recyclerView.setAdapter(new AllPhotosDiveSpotAdapter(images, getActivity(), path, this.diveSpotId, PhotoOpenedSource.REVIEWS));
+        recyclerView.setAdapter(new AllPhotosDiveSpotAdapter(images, getActivity(), this.diveSpotId, PhotoOpenedSource.REVIEWS));
     }
 }

@@ -39,8 +39,10 @@ import com.ddscanner.entities.DiveSpotDetailsEntity;
 import com.ddscanner.entities.DiveSpotSealife;
 import com.ddscanner.events.OpenPhotosActivityEvent;
 import com.ddscanner.rest.DDScannerRestClient;
+import com.ddscanner.screens.divespot.photos.DiveSpotMapsActivity;
 import com.ddscanner.ui.activities.AddPhotosDoDiveSpotActivity;
 import com.ddscanner.ui.activities.DiveCentersActivity;
+import com.ddscanner.screens.divespot.photos.DiveSpotPhotosActivity;
 import com.ddscanner.ui.activities.EditDiveSpotActivity;
 import com.ddscanner.ui.activities.LeaveReviewActivity;
 import com.ddscanner.ui.activities.LoginActivity;
@@ -600,6 +602,14 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_SHOW_FOR_ADD_MAPS:
                 if (resultCode == RESULT_OK) {
+                    if (mapsAdapter == null) {
+                        mapsAdapter = new DiveSpotPhotosAdapter(data.getStringArrayListExtra("images"), DiveSpotDetailsActivity.this);
+                        binding.addPhotosLayout.setVisibility(View.GONE);
+                        binding.mapsRc.setVisibility(View.VISIBLE);
+                        binding.mapsRc.setLayoutManager(new GridLayoutManager(DiveSpotDetailsActivity.this, 4));
+                        binding.mapsRc.setAdapter(mapsAdapter);
+                        return;
+                    }
                     mapsAdapter.addPhotos(data.getStringArrayListExtra("images"));
                 }
                 break;
@@ -664,7 +674,11 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
     @Subscribe
     public void openImagesActivity(OpenPhotosActivityEvent event) {
-        
+        if (!isMapsShown) {
+            DiveSpotPhotosActivity.show(this, diveSpotId);
+            return;
+        }
+        DiveSpotMapsActivity.show(diveSpotId, this);
     }
 
     @Override

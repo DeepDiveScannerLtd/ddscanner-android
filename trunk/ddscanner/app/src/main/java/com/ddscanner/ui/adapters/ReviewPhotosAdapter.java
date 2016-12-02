@@ -1,9 +1,7 @@
 package com.ddscanner.ui.adapters;
 
 import android.content.Context;
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,10 +12,7 @@ import android.widget.TextView;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.events.ShowSliderForReviewImagesEvent;
-import com.ddscanner.ui.activities.ImageSliderActivity;
-import com.ddscanner.ui.activities.ReviewImageSliderActivity;
 import com.ddscanner.ui.views.TransformationRoundImage;
-import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.ImageLoadedCallback;
 import com.squareup.picasso.Picasso;
 

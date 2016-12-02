@@ -1,4 +1,4 @@
-package com.ddscanner.ui.fragments;
+package com.ddscanner.screens.photo.slider;
 
 import android.app.Fragment;
 import android.os.Bundle;
