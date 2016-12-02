@@ -227,21 +227,21 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
                 .error(R.drawable.avatar_profile_default)
                 .transform(new CropCircleTransformation())
                 .into(avatar);
-//        if (images.get(position).isReport()) {
-//            options.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    showReportMenu(options, position);
-//                }
-//            });
-//        } else {
-//            options.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    showDeleteMenu(options);
-//                }
-//            });
-//        }
+        if (!images.get(position).getAuthor().getId().equals(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId())) {
+            options.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    showReportMenu(options, position);
+                }
+            });
+        } else {
+            options.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    showDeleteMenu(options);
+                }
+            });
+        }
     }
 
     private void findViews() {
@@ -258,6 +258,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     }
 
     private void setUi() {
+        options.setVisibility(View.VISIBLE);
         viewPager.setCurrentItem(position);
         likesLayout.setOnClickListener(this);
     }
@@ -387,7 +388,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     private void deleteImage(String name) {
         isChanged = true;
         materialDialog.show();
-        DDScannerApplication.getInstance().getDdScannerRestClient().deleteImage(name, deleteImageRequestistener);
+        DDScannerApplication.getInstance().getDdScannerRestClient().postDeleteImage(images.get(position).getId(), deleteImageRequestistener);
 
     }
 

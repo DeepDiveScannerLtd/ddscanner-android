@@ -1,6 +1,7 @@
 package com.ddscanner.rest;
 
 
+import com.ddscanner.entities.request.DeleteImageRequest;
 import com.ddscanner.entities.request.IdentifyRequest;
 import com.ddscanner.entities.request.RegisterRequest;
 import com.ddscanner.entities.request.ReportRequest;
@@ -8,6 +9,7 @@ import com.ddscanner.entities.request.SignInRequest;
 import com.ddscanner.entities.request.SignUpRequest;
 import com.ddscanner.entities.request.ValidationRequest;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -323,5 +325,8 @@ public interface DDScannerRestService {
 
     @GET("v2_0/divespot.maps.get")
     Call<ResponseBody> getDiveSpotMaps(@Query("id") String diveSpotId);
+
+    @POST("v2_0/images.remove")
+    Call<ResponseBody> postDeleteImage(@Body DeleteImageRequest images);
 
 }

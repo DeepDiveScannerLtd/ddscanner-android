@@ -27,6 +27,7 @@ import com.ddscanner.entities.SignInType;
 import com.ddscanner.entities.SignUpResponseEntity;
 import com.ddscanner.entities.User;
 import com.ddscanner.entities.UserResponseEntity;
+import com.ddscanner.entities.request.DeleteImageRequest;
 import com.ddscanner.entities.request.DiveSpotsRequestMap;
 import com.ddscanner.entities.request.IdentifyRequest;
 import com.ddscanner.entities.request.RegisterRequest;
@@ -588,6 +589,12 @@ public class DDScannerRestClient {
                 resultListener.onSuccess(diveSpotPhotosResponseEntity);
             }
         });
+    }
+
+    public void postDeleteImage(String id, ResultListener<Void> resultListener) {
+        DeleteImageRequest deleteImageRequest = new DeleteImageRequest(id);
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postDeleteImage(deleteImageRequest);
+        call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 
     public void postLikePhoto(String id, ResultListener<Void> resultListener) {
