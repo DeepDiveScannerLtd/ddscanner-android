@@ -1,4 +1,4 @@
-package com.ddscanner.ui.activities;
+package com.ddscanner.screens.divespot.photos;
 
 import android.Manifest;
 import android.app.Activity;
@@ -26,11 +26,10 @@ import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.DiveSpotPhoto;
 import com.ddscanner.entities.DiveSpotPhotosResponseEntity;
 import com.ddscanner.rest.DDScannerRestClient;
+import com.ddscanner.ui.activities.AddPhotosDoDiveSpotActivity;
+import com.ddscanner.ui.activities.LoginActivity;
 import com.ddscanner.ui.adapters.PhotosActivityPagerAdapter;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
-import com.ddscanner.ui.fragments.DiveSpotAllPhotosFragment;
-import com.ddscanner.ui.fragments.DiveSpotPhotosFragment;
-import com.ddscanner.ui.fragments.DiveSpotReviewsPhotoFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogsRequestCodes;

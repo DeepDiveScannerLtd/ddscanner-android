@@ -9,7 +9,6 @@ import android.widget.ImageView;
 
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
-import com.ddscanner.ui.activities.ImageSliderActivity;
 import com.ddscanner.ui.activities.ReviewImageSliderActivity;
 import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;

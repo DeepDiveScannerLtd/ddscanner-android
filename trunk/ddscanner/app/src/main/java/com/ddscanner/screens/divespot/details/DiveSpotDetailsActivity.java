@@ -41,7 +41,7 @@ import com.ddscanner.events.OpenPhotosActivityEvent;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.activities.AddPhotosDoDiveSpotActivity;
 import com.ddscanner.ui.activities.DiveCentersActivity;
-import com.ddscanner.ui.activities.DiveSpotPhotosActivity;
+import com.ddscanner.screens.divespot.photos.DiveSpotPhotosActivity;
 import com.ddscanner.ui.activities.EditDiveSpotActivity;
 import com.ddscanner.ui.activities.LeaveReviewActivity;
 import com.ddscanner.ui.activities.LoginActivity;

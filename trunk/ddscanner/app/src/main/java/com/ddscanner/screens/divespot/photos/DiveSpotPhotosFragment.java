@@ -1,4 +1,4 @@
-package com.ddscanner.ui.fragments;
+package com.ddscanner.screens.divespot.photos;
 
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -13,9 +13,7 @@ import android.view.ViewGroup;
 
 import com.ddscanner.R;
 import com.ddscanner.entities.DiveSpotPhoto;
-import com.ddscanner.entities.Image;
 import com.ddscanner.entities.PhotoOpenedSource;
-import com.ddscanner.ui.adapters.AllPhotosDiveSpotAdapter;
 import com.ddscanner.utils.Helpers;
 
 import java.util.ArrayList;

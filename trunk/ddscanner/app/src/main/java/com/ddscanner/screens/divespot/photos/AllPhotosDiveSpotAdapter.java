@@ -1,4 +1,4 @@
-package com.ddscanner.ui.adapters;
+package com.ddscanner.screens.divespot.photos;
 
 import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
@@ -11,9 +11,8 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.DiveSpotPhoto;
-import com.ddscanner.entities.Image;
 import com.ddscanner.entities.PhotoOpenedSource;
-import com.ddscanner.ui.activities.ImageSliderActivity;
+import com.ddscanner.screens.photo.slider.ImageSliderActivity;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;

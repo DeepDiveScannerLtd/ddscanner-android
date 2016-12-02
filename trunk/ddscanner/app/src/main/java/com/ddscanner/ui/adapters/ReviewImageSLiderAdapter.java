@@ -7,7 +7,7 @@ import android.support.v13.app.FragmentStatePagerAdapter;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
-import com.ddscanner.ui.fragments.SliderImagesFragment;
+import com.ddscanner.screens.photo.slider.SliderImagesFragment;
 
 import java.util.ArrayList;
 
