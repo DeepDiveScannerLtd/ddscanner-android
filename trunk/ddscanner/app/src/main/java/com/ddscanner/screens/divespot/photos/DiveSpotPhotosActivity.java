@@ -42,7 +42,7 @@ import java.util.List;
 
 import me.nereo.multi_image_selector.MultiImageSelector;
 
-public class DiveSpotPhotosActivity extends AppCompatActivity implements View.OnClickListener, InfoDialogFragment.DialogClosedListener {
+public class DiveSpotPhotosActivity extends AppCompatActivity implements View.OnClickListener, InfoDialogFragment.DialogClosedListener, ViewPager.OnPageChangeListener {
 
     private static final String TAG = DiveSpotPhotosActivity.class.getSimpleName();
 
@@ -133,6 +133,7 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
         progressView = (ProgressView) findViewById(R.id.progressBar);
         tabLayout = (TabLayout) findViewById(R.id.photos_tab_layout);
         photosViewPager = (ViewPager) findViewById(R.id.photos_view_pager);
+        photosViewPager.setOnPageChangeListener(this);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         fabAddPhoto = (FloatingActionButton) findViewById(R.id.fab_add_photo);
         fabAddPhoto.setOnClickListener(this);
@@ -350,5 +351,28 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
                 finish();
                 break;
         }
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        switch (position) {
+            case 0:
+                fabAddPhoto.show();
+                break;
+            case 1:
+            case 2:
+                fabAddPhoto.hide();
+                break;
+        }
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
     }
 }
