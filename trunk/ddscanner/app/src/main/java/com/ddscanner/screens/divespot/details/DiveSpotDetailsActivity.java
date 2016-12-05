@@ -650,12 +650,12 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
     private void updateMenuItems(Menu menu, boolean isFavorite) {
         if (isFavorite) {
-            menu.findItem(R.id.favorite).setTitle("Remove from favorites");
+            menu.findItem(R.id.favorite).setTitle(R.string.reove_from_facorites);
             return;
         }
         if (menu != null) {
             if (menu.findItem(R.id.favorite) != null) {
-                menu.findItem(R.id.favorite).setTitle("Add to favorites");
+                menu.findItem(R.id.favorite).setTitle(R.string.add_to_favorites);
             }
         }
     }

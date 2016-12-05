@@ -368,4 +368,6 @@
     <string name="dive_spots_profile_dc">Dive spots</string>
     <string name="base_photo_url">https://ddsapi.ilave.pro/v2_0/image/%1$s?size=%2$s</string>
     <string name="maps_toolbar_title">Maps</string>
+    <string name="reove_from_facorites">Remove from favorites</string>
+    <string name="add_to_favorites">Add to favorites</string>
 </resources>
