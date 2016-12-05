@@ -188,63 +188,11 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_SELECT_PHOTOS:
-                List<String> path= new ArrayList<>();
-                Uri uri = Uri.parse("");
-                if (resultCode == RESULT_OK) {
-                    if (data.getClipData() != null) {
-                        for (int i = 0; i < data.getClipData().getItemCount(); i++) {
-                            String filename = "DDScanner" + String.valueOf(System.currentTimeMillis());
-                            try {
-                                uri = data.getClipData().getItemAt(i).getUri();
-                                String mimeType = getContentResolver().getType(uri);
-                                String sourcePath = getExternalFilesDir(null).toString();
-                                File file = new File(sourcePath + "/" + filename);
-                                if (Helpers.isFileImage(uri.getPath()) || mimeType.contains("image")) {
-                                    try {
-                                        Helpers.copyFileStream(file, uri, this);
-                                        Log.i(TAG, file.toString());
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
-
-                                    path.add(file.getPath());
-                                } else {
-                                    Toast.makeText(this, "You can choose only images", Toast.LENGTH_SHORT).show();
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                    if (data.getData() != null) {
-                        String filename = "DDScanner" + String.valueOf(System.currentTimeMillis());
-                        try {
-                            uri = data.getData();
-                            String mimeType = getContentResolver().getType(uri);
-                            String sourcePath = getExternalFilesDir(null).toString();
-                            File file = new File(sourcePath + "/" + filename);
-                            if (Helpers.isFileImage(uri.getPath()) || mimeType.contains("image")) {
-                                try {
-                                    Helpers.copyFileStream(file, uri, this);
-                                    Log.i(TAG, file.toString());
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-
-                                path.add(file.getPath());
-                            } else {
-                                Toast.makeText(this, "You can choose only images", Toast.LENGTH_SHORT).show();
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    AddPhotosDoDiveSpotActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_ADD_PHOTOS, (ArrayList<String>)path, dsId);
-                }
+                photosPicked(data, resultCode);
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_LOGIN:
                 if (resultCode == RESULT_OK) {
-                    MultiImageSelector.create().showCamera(false).multi().count(3).start(this, ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_SELECT_PHOTOS);
+                    photosPicked(data, resultCode);
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_ACTIVITY_SLIDER:
@@ -252,6 +200,62 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
                     getDiveSpotPhotos();
                 }
                 break;
+        }
+    }
+
+    private void photosPicked(Intent data, int resultCode) {
+        List<String> path= new ArrayList<>();
+        Uri uri = Uri.parse("");
+        if (resultCode == RESULT_OK) {
+            if (data.getClipData() != null) {
+                for (int i = 0; i < data.getClipData().getItemCount(); i++) {
+                    String filename = "DDScanner" + String.valueOf(System.currentTimeMillis());
+                    try {
+                        uri = data.getClipData().getItemAt(i).getUri();
+                        String mimeType = getContentResolver().getType(uri);
+                        String sourcePath = getExternalFilesDir(null).toString();
+                        File file = new File(sourcePath + "/" + filename);
+                        if (Helpers.isFileImage(uri.getPath()) || mimeType.contains("image")) {
+                            try {
+                                Helpers.copyFileStream(file, uri, this);
+                                Log.i(TAG, file.toString());
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                            path.add(file.getPath());
+                        } else {
+                            Toast.makeText(this, "You can choose only images", Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            if (data.getData() != null) {
+                String filename = "DDScanner" + String.valueOf(System.currentTimeMillis());
+                try {
+                    uri = data.getData();
+                    String mimeType = getContentResolver().getType(uri);
+                    String sourcePath = getExternalFilesDir(null).toString();
+                    File file = new File(sourcePath + "/" + filename);
+                    if (Helpers.isFileImage(uri.getPath()) || mimeType.contains("image")) {
+                        try {
+                            Helpers.copyFileStream(file, uri, this);
+                            Log.i(TAG, file.toString());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                        path.add(file.getPath());
+                    } else {
+                        Toast.makeText(this, "You can choose only images", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            AddPhotosDoDiveSpotActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_ADD_PHOTOS, (ArrayList<String>)path, dsId);
         }
     }
 

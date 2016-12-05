@@ -63,6 +63,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.squareup.otto.Subscribe;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -618,6 +619,17 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_SHOW_FOR_ADD_PHOTOS:
                 if (resultCode == RESULT_OK) {
+                    if (photosAdapter == null) {
+                        photosAdapter = new DiveSpotPhotosAdapter(data.getStringArrayListExtra("images"), DiveSpotDetailsActivity.this);
+                        binding.addPhotosLayout.setVisibility(View.GONE);
+                        binding.photosRc.setVisibility(View.VISIBLE);
+                        binding.photosRc.setLayoutManager(new GridLayoutManager(DiveSpotDetailsActivity.this, 4));
+                        binding.photosRc.setAdapter(photosAdapter);
+                        binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().setPhotos(data.getStringArrayListExtra("images"));
+                        binding.progressBar.setVisibility(View.VISIBLE);
+                        binding.getDiveSpotViewModel().loadMainImage(binding.mainPhoto, binding.getDiveSpotViewModel());
+                        return;
+                    }
                     photosAdapter.addPhotos(data.getStringArrayListExtra("images"));
                 }
                 break;
