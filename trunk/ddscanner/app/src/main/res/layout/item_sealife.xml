@@ -26,5 +26,5 @@
                 android:textColor="@color/black_text"
                 android:layout_width="match_parent"
                 android:layout_height="34dp"
-                android:background="@drawable/bottom_orange_button" />
+                android:background="@drawable/bottom_white_button" />
         </LinearLayout>
