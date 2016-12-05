@@ -210,14 +210,14 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         binding.mapsRc.setLayoutManager(new GridLayoutManager(DiveSpotDetailsActivity.this, 4));
 
         if (binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPhotos() != null) {
-            photosAdapter = new DiveSpotPhotosAdapter((ArrayList<String>) binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPhotos(), DiveSpotDetailsActivity.this);
+            photosAdapter = new DiveSpotPhotosAdapter((ArrayList<String>) binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPhotos(), DiveSpotDetailsActivity.this, binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPhotosCount());
             binding.photosRc.setVisibility(View.VISIBLE);
             binding.addPhotosLayout.setVisibility(View.GONE);
             binding.photosRc.setAdapter(photosAdapter);
         }
 
         if (binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getMaps() != null) {
-            mapsAdapter = new DiveSpotPhotosAdapter((ArrayList<String>) binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getMaps(), DiveSpotDetailsActivity.this);
+            mapsAdapter = new DiveSpotPhotosAdapter((ArrayList<String>) binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getMaps(), DiveSpotDetailsActivity.this, binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getMapsPhotosCount());
             binding.mapsRc.setAdapter(mapsAdapter);
             binding.addPhotosLayout.setVisibility(View.GONE);
         }
@@ -607,7 +607,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_SHOW_FOR_ADD_MAPS:
                 if (resultCode == RESULT_OK) {
                     if (mapsAdapter == null) {
-                        mapsAdapter = new DiveSpotPhotosAdapter(data.getStringArrayListExtra("images"), DiveSpotDetailsActivity.this);
+                        mapsAdapter = new DiveSpotPhotosAdapter(data.getStringArrayListExtra("images"), DiveSpotDetailsActivity.this, binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getMapsPhotosCount());
                         binding.addPhotosLayout.setVisibility(View.GONE);
                         binding.mapsRc.setVisibility(View.VISIBLE);
                         binding.mapsRc.setLayoutManager(new GridLayoutManager(DiveSpotDetailsActivity.this, 4));
@@ -620,7 +620,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_SHOW_FOR_ADD_PHOTOS:
                 if (resultCode == RESULT_OK) {
                     if (photosAdapter == null) {
-                        photosAdapter = new DiveSpotPhotosAdapter(data.getStringArrayListExtra("images"), DiveSpotDetailsActivity.this);
+                        photosAdapter = new DiveSpotPhotosAdapter(data.getStringArrayListExtra("images"), DiveSpotDetailsActivity.this, binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPhotosCount());
                         binding.addPhotosLayout.setVisibility(View.GONE);
                         binding.photosRc.setVisibility(View.VISIBLE);
                         binding.photosRc.setLayoutManager(new GridLayoutManager(DiveSpotDetailsActivity.this, 4));

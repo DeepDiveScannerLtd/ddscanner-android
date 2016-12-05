@@ -27,11 +27,13 @@ public class DiveSpotPhotosAdapter extends RecyclerView.Adapter<DiveSpotPhotosAd
     public String path;
     public Context context;
     private int photoSize;
+    private int photosCount;
 
-    public DiveSpotPhotosAdapter(ArrayList<String> photos, Context context) {
+    public DiveSpotPhotosAdapter(ArrayList<String> photos, Context context, int photosCount) {
         this.photos = photos;
         this.context = context;
         photoSize = (int) context.getResources().getDimension(R.dimen.image_in_divespot_small);
+        this.photosCount = photosCount;
     }
 
     @Override
@@ -44,14 +46,14 @@ public class DiveSpotPhotosAdapter extends RecyclerView.Adapter<DiveSpotPhotosAd
 
     @Override
     public void onBindViewHolder(final DiveSpotsPhotosAdapterViewHolder holder, int position) {
-        if (photos.size() > 8 && position == 7) {
+        if (photosCount > 8 && position == 7) {
             Picasso.with(context)
                     .load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, photos.get(position), "1"))
                     .transform(new TransformationRoundImage(Math.round(Helpers.convertDpToPixel(2, context)),0))
                     .resize(Math.round(Helpers.convertDpToPixel(photoSize, context)),Math.round(Helpers.convertDpToPixel(photoSize, context)))
                     .centerCrop()
                     .into(holder.photo);
-            holder.morePhotos.setText("+" + String.valueOf(photos.size() - 8));
+            holder.morePhotos.setText("+" + String.valueOf(photosCount - 7));
             holder.morePhotos.setVisibility(View.VISIBLE);
         } else {
             Picasso.with(context)

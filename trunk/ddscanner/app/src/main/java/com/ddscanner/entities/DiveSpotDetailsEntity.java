@@ -30,6 +30,26 @@ public class DiveSpotDetailsEntity extends DiveSpotShort {
     private String countryName;
     private List<DiveSpotSealife> sealifes;
     private List<String> maps;
+    @SerializedName("photos_count")
+    private int photosCount;
+    @SerializedName("maps_count")
+    private int mapsPhotosCount;
+
+    public int getMapsPhotosCount() {
+        return mapsPhotosCount;
+    }
+
+    public void setMapsPhotosCount(int mapsPhotosCount) {
+        this.mapsPhotosCount = mapsPhotosCount;
+    }
+
+    public int getPhotosCount() {
+        return photosCount;
+    }
+
+    public void setPhotosCount(int photosCount) {
+        this.photosCount = photosCount;
+    }
 
     public List<String> getMaps() {
         return maps;
