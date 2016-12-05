@@ -187,6 +187,9 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         });
         materialDialog = Helpers.getMaterialDialog(this);
         binding.ratingBar.setOnRatingBarChangeListener(this);
+        if (binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getFlags() != null) {
+            isFavorite = binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getFlags().isFavorite();
+        }
         if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
             isFavorite = binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getFlags().isFavorite();
         }

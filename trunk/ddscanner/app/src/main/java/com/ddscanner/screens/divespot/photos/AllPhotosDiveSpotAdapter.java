@@ -1,6 +1,10 @@
 package com.ddscanner.screens.divespot.photos;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,7 +45,7 @@ public class AllPhotosDiveSpotAdapter extends RecyclerView.Adapter<AllPhotosDive
     public void onBindViewHolder(AllPhotosDIveSpotViewHolder holder, int position) {
         Picasso.with(context)
                 .load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, images.get(position).getId(), "2"))
-             //   .placeholder(R.drawable.list_photo_default)
+                .placeholder(R.drawable.placeholder_photos_activity)
                 .resize(Math.round(Helpers.convertDpToPixel(115, context)), Math.round(Helpers.convertDpToPixel(115, context)))
                 .centerCrop()
                 .into(holder.image);
