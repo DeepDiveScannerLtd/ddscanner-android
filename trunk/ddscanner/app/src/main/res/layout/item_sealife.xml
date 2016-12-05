@@ -12,11 +12,13 @@
     android:elevation="2dp">
 
             <ImageView
+                android:id="@+id/image"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:src="@drawable/ic_ds" />
 
             <TextView
+                android:id="@+id/name"
                 android:text="Ryba"
                 android:gravity="center_vertical"
                 android:paddingLeft="15dp"

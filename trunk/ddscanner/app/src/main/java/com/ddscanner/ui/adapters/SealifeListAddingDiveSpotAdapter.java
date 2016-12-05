@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.ddscanner.R;
 import com.ddscanner.entities.Sealife;
+import com.ddscanner.entities.SealifeShort;
 import com.ddscanner.utils.Helpers;
 
 import java.util.ArrayList;
@@ -22,9 +23,9 @@ import java.util.List;
 public class SealifeListAddingDiveSpotAdapter extends RecyclerView.Adapter<SealifeListAddingDiveSpotAdapter.SealifeListAddingDivespotViewHolder>{
 
     private Context context;
-    private ArrayList<Sealife> sealifes;
+    private ArrayList<SealifeShort> sealifes;
 
-    public SealifeListAddingDiveSpotAdapter(ArrayList<Sealife> sealifes, Context context) {
+    public SealifeListAddingDiveSpotAdapter(ArrayList<SealifeShort> sealifes, Context context) {
         this.sealifes = sealifes;
         this.context = context;
     }
@@ -64,7 +65,7 @@ public class SealifeListAddingDiveSpotAdapter extends RecyclerView.Adapter<Seali
         notifyDataSetChanged();
     }
 
-    public List<Sealife> getSealifes() {
+    public List<SealifeShort> getSealifes() {
         return this.sealifes;
     }
 

@@ -8,7 +8,7 @@ import java.util.List;
 public class EditDiveSpotWrapper {
 
     private EditDiveSpotEntity divespot;
-    private List<Sealife> sealifes;
+    private List<SealifeShort> sealifes;
 
     public EditDiveSpotEntity getDivespot() {
         return divespot;
@@ -18,11 +18,11 @@ public class EditDiveSpotWrapper {
         this.divespot = divespot;
     }
 
-    public List<Sealife> getSealifes() {
+    public List<SealifeShort> getSealifes() {
         return sealifes;
     }
 
-    public void setSealifes(List<Sealife> sealifes) {
+    public void setSealifes(List<SealifeShort> sealifes) {
         this.sealifes = sealifes;
     }
 }

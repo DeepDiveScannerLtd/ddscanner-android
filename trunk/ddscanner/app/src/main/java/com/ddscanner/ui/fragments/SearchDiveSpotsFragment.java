@@ -15,7 +15,7 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.DiveSpotShort;
 import com.ddscanner.events.OpenAddDsActivityAfterLogin;
-import com.ddscanner.ui.activities.AddDiveSpotActivity;
+import com.ddscanner.screens.divespot.add.AddDiveSpotActivity;
 import com.ddscanner.ui.adapters.SearchDiveSpotListAdapter;
 import com.ddscanner.utils.Helpers;
 

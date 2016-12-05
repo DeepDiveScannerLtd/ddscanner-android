@@ -38,6 +38,7 @@ import com.ddscanner.entities.EditDiveSpotEntity;
 import com.ddscanner.entities.EditDiveSpotWrapper;
 import com.ddscanner.entities.FiltersResponseEntity;
 import com.ddscanner.entities.Sealife;
+import com.ddscanner.entities.SealifeShort;
 import com.ddscanner.entities.errors.ValidationError;
 import com.ddscanner.events.ImageDeletedEvent;
 import com.ddscanner.rest.DDScannerRestClient;
@@ -109,7 +110,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
     private EditText visibilityMax;
 
     private List<String> imageUris = new ArrayList<>();
-    private List<Sealife> sealifes = new ArrayList<>();
+    private List<SealifeShort> sealifes = new ArrayList<>();
     private List<MultipartBody.Part> sealifeRequest = new ArrayList<>();
     private List<MultipartBody.Part> deletedImages = new ArrayList<>();
     private List<MultipartBody.Part> newImages = new ArrayList<>();
@@ -317,7 +318,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
         sealifesRc.setNestedScrollingEnabled(false);
         sealifesRc.setHasFixedSize(false);
         sealifesRc.setLayoutManager(sealifeLayoutManager);
-        sealifeListAddingDiveSpotAdapter = new SealifeListAddingDiveSpotAdapter((ArrayList<Sealife>) sealifes, EditDiveSpotActivity.this);
+        sealifeListAddingDiveSpotAdapter = new SealifeListAddingDiveSpotAdapter((ArrayList<SealifeShort>) sealifes, EditDiveSpotActivity.this);
         sealifesRc.setAdapter(sealifeListAddingDiveSpotAdapter);
         progressView.stop();
         progressView.setVisibility(View.GONE);

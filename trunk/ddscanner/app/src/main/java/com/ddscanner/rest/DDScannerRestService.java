@@ -332,4 +332,7 @@ public interface DDScannerRestService {
     @POST("v2_0/user.favorites.add")
     Call<ResponseBody> postAddToFavorites(@Query("id") String divespotId);
 
+    @GET("v2_0/sealifes.search")
+    Call<ResponseBody> getSealifesByQuery(@Query("query") String query, @Query("limit") int limit);
+
 }

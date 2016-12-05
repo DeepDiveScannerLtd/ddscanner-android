@@ -23,6 +23,7 @@ import com.ddscanner.entities.Notifications;
 import com.ddscanner.entities.RegisterResponse;
 import com.ddscanner.entities.Sealife;
 import com.ddscanner.entities.SealifeResponseEntity;
+import com.ddscanner.entities.SealifeShort;
 import com.ddscanner.entities.SignInType;
 import com.ddscanner.entities.SignUpResponseEntity;
 import com.ddscanner.entities.User;
@@ -466,6 +467,19 @@ public class DDScannerRestClient {
                 resultListener.onSuccess(diveSpots);
             }
         });
+    }
+
+    public void getSealifesByQuery(ResultListener<ArrayList<SealifeShort>> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getSealifesByQuery("%", 100000);
+        call.enqueue(new ResponseEntityCallback<ArrayList<SealifeShort>>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<ArrayList<SealifeShort>> resultListener, String responseString) throws JSONException {
+                Type listType = new TypeToken<ArrayList<SealifeShort>>(){}.getType();
+                ArrayList<SealifeShort> sealifeShorts = gson.fromJson(responseString, listType);
+                resultListener.onSuccess(sealifeShorts);
+            }
+        });
+
     }
 
     public void postUserSignUp(String email, String password, String userType, String lat, String lng, ResultListener<SignUpResponseEntity> resultListener) {

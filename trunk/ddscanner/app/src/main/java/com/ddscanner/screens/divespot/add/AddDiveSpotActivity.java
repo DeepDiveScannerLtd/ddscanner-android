@@ -1,4 +1,4 @@
-package com.ddscanner.ui.activities;
+package com.ddscanner.screens.divespot.add;
 
 import android.Manifest;
 import android.app.Activity;
@@ -38,11 +38,15 @@ import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.DiveSpotShort;
 import com.ddscanner.entities.FiltersResponseEntity;
 import com.ddscanner.entities.Sealife;
+import com.ddscanner.entities.SealifeShort;
 import com.ddscanner.entities.errors.ValidationError;
 import com.ddscanner.events.AddPhotoDoListEvent;
 import com.ddscanner.events.ImageDeletedEvent;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.divespot.details.DiveSpotDetailsActivity;
+import com.ddscanner.ui.activities.LoginActivity;
+import com.ddscanner.ui.activities.PickLocationActivity;
+import com.ddscanner.ui.activities.SearchSealifeActivity;
 import com.ddscanner.ui.adapters.AddPhotoToDsListAdapter;
 import com.ddscanner.ui.adapters.CharacteristicSpinnerItemsAdapter;
 import com.ddscanner.ui.adapters.LanguagesSpinnerAdapter;
@@ -113,7 +117,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
 
     private List<String> photoUris = new ArrayList<>();
     private List<String> mapsUris = new ArrayList<>();
-    private List<Sealife> sealifes = new ArrayList<>();
+    private List<SealifeShort> sealifes = new ArrayList<>();
     private Map<String, TextView> errorsMap = new HashMap<>();
     private FiltersResponseEntity filters;
     private boolean isShownMapsPhotos = false;
@@ -359,14 +363,14 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
             case ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_SEALIFE:
                 Helpers.hideKeyboard(this);
                 if (resultCode == RESULT_OK) {
-                    Sealife sealife = (Sealife) data.getSerializableExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_SEALIFE);
+                    SealifeShort sealifeShort = (SealifeShort) data.getSerializableExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_SEALIFE);
 
-                    if (Helpers.checkIsSealifeAlsoInList((ArrayList<Sealife>) sealifes, sealife.getId())) {
+                    if (Helpers.checkIsSealifeAlsoInList((ArrayList<SealifeShort>) sealifes, sealifeShort.getId())) {
                         Helpers.showToast(AddDiveSpotActivity.this, R.string.sealife_already_added);
                         return;
                     }
-                    sealifes.add(sealife);
-                    sealifeListAddingDiveSpotAdapter = new SealifeListAddingDiveSpotAdapter((ArrayList<Sealife>) sealifes, this);
+                    sealifes.add(sealifeShort);
+                    sealifeListAddingDiveSpotAdapter = new SealifeListAddingDiveSpotAdapter((ArrayList<SealifeShort>) sealifes, this);
                     sealifesRc.setAdapter(sealifeListAddingDiveSpotAdapter);
                 }
                 break;

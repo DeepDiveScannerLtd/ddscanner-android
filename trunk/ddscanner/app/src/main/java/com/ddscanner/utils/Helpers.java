@@ -26,6 +26,7 @@ import com.ddscanner.entities.DiveSpotPhoto;
 import com.ddscanner.entities.Image;
 import com.ddscanner.entities.Photo;
 import com.ddscanner.entities.Sealife;
+import com.ddscanner.entities.SealifeShort;
 import com.ddscanner.entities.errors.Field;
 import com.ddscanner.entities.errors.ValidationError;
 import com.ddscanner.entities.request.RegisterRequest;
@@ -412,8 +413,8 @@ public class Helpers {
         return returningString;
     }
 
-    public static boolean checkIsSealifeAlsoInList(ArrayList<Sealife> sealifes, String id) {
-        for (Sealife sealife : sealifes) {
+    public static boolean checkIsSealifeAlsoInList(ArrayList<SealifeShort> sealifes, String id) {
+        for (SealifeShort sealife : sealifes) {
             if (sealife.getId().equals(id)) {
                 return true;
             }

@@ -5,13 +5,16 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
-import com.ddscanner.entities.Sealife;
+import com.ddscanner.entities.SealifeShort;
 import com.ddscanner.events.SealifeChoosedEvent;
+import com.ddscanner.utils.Helpers;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,105 +24,108 @@ import java.util.List;
  */
 public class SealifeSearchAdapter extends RecyclerView.Adapter<SealifeSearchAdapter.SearchListViewHolder> {
 
-    private final LayoutInflater mInflater;
-    private List<Sealife> mModels;
+    private final LayoutInflater layoutInflater;
+    private List<SealifeShort> sealifes;
     private TextView results;
     private RelativeLayout notFounLayout;
     private RecyclerView rcList;
     private static Context context;
 
-    public SealifeSearchAdapter(Context context, List<Sealife> models) {
-        mInflater = LayoutInflater.from(context);
-        mModels = new ArrayList<>(models);
+    public SealifeSearchAdapter(Context context, List<SealifeShort> models) {
+        layoutInflater = LayoutInflater.from(context);
+        sealifes = new ArrayList<>(models);
         this.context = context;
     }
 
     @Override
     public SearchListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        final View itemView = mInflater.inflate(R.layout.list_sealife_search_item, parent, false);
+        final View itemView = layoutInflater.inflate(R.layout.item_sealife, parent, false);
         return new SearchListViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(SearchListViewHolder holder, int position) {
-        final Sealife model = mModels.get(position);
+        final SealifeShort model = sealifes.get(position);
         holder.bind(model);
     }
 
     @Override
     public int getItemCount() {
-        return mModels.size();
+        return sealifes.size();
     }
 
-    public void animateTo(List<Sealife> models) {
+    public void animateTo(List<SealifeShort> models) {
         applyAndAnimateRemovals(models);
         applyAndAnimateAdditions(models);
         applyAndAnimateMovedItems(models);
     }
 
-    private void applyAndAnimateRemovals(List<Sealife> newModels) {
-        for (int i = mModels.size() - 1; i >= 0; i--) {
-            final Sealife model = mModels.get(i);
+    private void applyAndAnimateRemovals(List<SealifeShort> newModels) {
+        for (int i = sealifes.size() - 1; i >= 0; i--) {
+            final SealifeShort model = sealifes.get(i);
             if (!newModels.contains(model)) {
                 removeItem(i);
             }
         }
     }
 
-    private void applyAndAnimateAdditions(List<Sealife> newModels) {
+    private void applyAndAnimateAdditions(List<SealifeShort> newModels) {
         for (int i = 0, count = newModels.size(); i < count; i++) {
-            final Sealife model = newModels.get(i);
-            if (!mModels.contains(model)) {
+            final SealifeShort model = newModels.get(i);
+            if (!sealifes.contains(model)) {
                 addItem(i, model);
             }
         }
     }
 
-    private void applyAndAnimateMovedItems(List<Sealife> newModels) {
+    private void applyAndAnimateMovedItems(List<SealifeShort> newModels) {
         for (int toPosition = newModels.size() - 1; toPosition >= 0; toPosition--) {
-            final Sealife model = newModels.get(toPosition);
-            final int fromPosition = mModels.indexOf(model);
+            final SealifeShort model = newModels.get(toPosition);
+            final int fromPosition = sealifes.indexOf(model);
             if (fromPosition >= 0 && fromPosition != toPosition) {
                 moveItem(fromPosition, toPosition);
             }
         }
     }
 
-    public Sealife removeItem(int position) {
-        final Sealife model = mModels.remove(position);
+    public SealifeShort removeItem(int position) {
+        final SealifeShort model = sealifes.remove(position);
         notifyItemRemoved(position);
         return model;
     }
 
-    public void addItem(int position, Sealife model) {
-        mModels.add(position, model);
+    public void addItem(int position, SealifeShort model) {
+        sealifes.add(position, model);
         notifyItemInserted(position);
     }
 
     public void moveItem(int fromPosition, int toPosition) {
-        final Sealife model = mModels.remove(fromPosition);
-        mModels.add(toPosition, model);
+        final SealifeShort model = sealifes.remove(fromPosition);
+        sealifes.add(toPosition, model);
         notifyItemMoved(fromPosition, toPosition);
     }
 
     public class SearchListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-        private final TextView tvText;
+        private final TextView name;
+        private ImageView photo;
 
         public SearchListViewHolder(View itemView) {
             super(itemView);
 
-            tvText = (TextView) itemView.findViewById(R.id.tvText);
-            tvText.setOnClickListener(this);
+            name = (TextView) itemView.findViewById(R.id.name);
+            photo = (ImageView) itemView.findViewById(R.id.image);
+            itemView.setOnClickListener(this);
         }
 
-        public void bind(Sealife model) {
-            tvText.setText(model.getName());
+        public void bind(SealifeShort model) {
+            name.setText(model.getName());
+            Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, model.getImage(), "2")).resize(photo.getWidth(), Math.round(Helpers.convertDpToPixel(100, context))).centerCrop().into(photo);
         }
 
         @Override
         public void onClick(View v) {
-            DDScannerApplication.bus.post(new SealifeChoosedEvent(mModels.get(getAdapterPosition())));
+            DDScannerApplication.bus.post(new SealifeChoosedEvent(sealifes.get(getAdapterPosition())));
         }
     }
     
