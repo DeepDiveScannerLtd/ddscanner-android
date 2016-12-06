@@ -163,4 +163,6 @@ public class ActivitiesRequestCodes {
     //AchievementsActivity
     public static final int REQUEST_CODE_ACHIEVEMENTS_ACTIVITY_LOGIN_TO_ACHIEVEMNTS = 3901;
 
+    //FilterActivity
+    public static final int FILTER_ACTIVITY_PICK_SEALIFE = 4001;
 }

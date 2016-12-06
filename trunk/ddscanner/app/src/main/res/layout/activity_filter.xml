@@ -18,40 +18,6 @@
         app:pv_progressMode="indeterminate"
         app:pv_progressStyle="@style/CircularProgress" />
 
-    <!--<RelativeLayout-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="70dp"-->
-        <!--android:background="@color/white"-->
-        <!--android:gravity="center_vertical">-->
-
-        <!--<ImageView-->
-            <!--android:id="@+id/toprate_icon"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_marginLeft="18dp"-->
-            <!--android:src="@drawable/ic_toprate_filter" />-->
-
-        <!--<TextView-->
-            <!--android:id="@+id/toprate_text"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_marginLeft="26dp"-->
-            <!--android:layout_toRightOf="@+id/toprate_icon"-->
-            <!--android:gravity="center"-->
-            <!--android:text="@string/filter_only_best_rated"-->
-            <!--android:textColor="@color/black_text"-->
-            <!--android:textSize="16sp" />-->
-
-        <!--<android.support.v7.widget.SwitchCompat-->
-            <!--android:id="@+id/only_rated_switch"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_alignParentRight="true"-->
-            <!--android:layout_marginRight="18dp"-->
-            <!--android:layout_toRightOf="@+id/toprate_text"-->
-            <!--android:checked="true"-->
-            <!--android:theme="@style/Color1SwitchStyle" />-->
-    <!--</RelativeLayout>-->
     <LinearLayout
         android:id="@+id/main_layout"
         android:visibility="gone"
@@ -110,6 +76,41 @@
             app:spn_labelTextColor="@color/defaultGrayTitleColor"
             app:spn_labelTextSize="16sp"
             app:spn_popupItemAnimation="@null" />
+        <TextView
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@color/black_text"
+            android:text="@string/sealfe_low"/>
+        <android.support.v7.widget.RecyclerView
+            android:layout_marginLeft="20dp"
+            android:id="@+id/sealife_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <LinearLayout
+            android:id="@+id/btn_add_sealife"
+            android:layout_marginTop="11dp"
+            android:layout_marginBottom="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/gray_rectangle"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:orientation="horizontal"
+            android:gravity="center">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_addds_plus"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/add_sea_life"
+                android:textColor="#a9a9a9"
+                android:layout_marginLeft="7dp"/>
+        </LinearLayout>
     </LinearLayout>
 
     <ImageView

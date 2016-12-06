@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,10 +19,15 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.FiltersResponseEntity;
+import com.ddscanner.entities.SealifeShort;
 import com.ddscanner.events.FilterChosenEvent;
 import com.ddscanner.rest.DDScannerRestClient;
+import com.ddscanner.screens.divespot.add.AddDiveSpotActivity;
+import com.ddscanner.ui.adapters.SealifeListAddingDiveSpotAdapter;
 import com.ddscanner.ui.adapters.SpinnerItemsAdapter;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
+import com.ddscanner.utils.ActivitiesRequestCodes;
+import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
 import com.rey.material.widget.Button;
@@ -47,6 +54,10 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
     private MaterialDialog materialDialog;
     private ProgressView progressView;
     private LinearLayout mainLayout;
+    private LinearLayout addSealifeButton;
+    private RecyclerView sealifesRecyclerView;
+    private ArrayList<SealifeShort> sealifes = new ArrayList<>();
+    private SealifeListAddingDiveSpotAdapter sealifeListAddingDiveSpotAdapter;
 
     private DDScannerRestClient.ResultListener<FiltersResponseEntity> getFiltersResultListener = new DDScannerRestClient.ResultListener<FiltersResponseEntity>() {
         @Override
@@ -94,7 +105,7 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_close);
         getSupportActionBar().setTitle("Filter");
-        DDScannerApplication.getInstance().getDdScannerRestClient().getFilters(getFiltersResultListener);
+     //   DDScannerApplication.getInstance().getDdScannerRestClient().getFilters(getFiltersResultListener);
     }
 
     private void findViews() {
@@ -105,8 +116,15 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
         objectSpinner = (Spinner) findViewById(R.id.object_spinner);
         levelSpinner = (Spinner) findViewById(R.id.level_spinner);
         save = (Button) findViewById(R.id.applyFilters);
+        addSealifeButton = (LinearLayout) findViewById(R.id.btn_add_sealife);
+        sealifesRecyclerView = (RecyclerView) findViewById(R.id.sealifes_rc);
+        sealifesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         save.setOnClickListener(this);
+        addSealifeButton.setOnClickListener(this);
         save.setVisibility(View.GONE);
+        progressView.setVisibility(View.GONE);
+        mainLayout.setVisibility(View.VISIBLE);
+        save.setVisibility(View.VISIBLE);
     }
 
 
@@ -125,30 +143,57 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
         spinner.setSelection(selectedIndex);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case ActivitiesRequestCodes.FILTER_ACTIVITY_PICK_SEALIFE:
+                Helpers.hideKeyboard(this);
+                if (resultCode == RESULT_OK) {
+                    SealifeShort sealifeShort = (SealifeShort) data.getSerializableExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_SEALIFE);
+
+                    if (Helpers.checkIsSealifeAlsoInList(sealifes, sealifeShort.getId())) {
+                        Helpers.showToast(FilterActivity.this, R.string.sealife_already_added);
+                        return;
+                    }
+                    sealifes.add(sealifeShort);
+                    sealifeListAddingDiveSpotAdapter = new SealifeListAddingDiveSpotAdapter(sealifes, this);
+                    sealifesRecyclerView.setAdapter(sealifeListAddingDiveSpotAdapter);
+                }
+                break;
+        }
+    }
 
     @Override
     public void onClick(View v) {
-        if (objectSpinner.getSelectedItem().toString().equals("All")) {
-            filterChosedEvent.setObject(null);
-            DDScannerApplication.getInstance().getSharedPreferenceHelper().setObject("");
-        } else {
-            filterChosedEvent.setObject(Helpers.getMirrorOfHashMap(objectsMap)
-                    .get(objectSpinner.getSelectedItem().toString()));
-            DDScannerApplication.getInstance().getSharedPreferenceHelper().setObject(Helpers.getMirrorOfHashMap(objectsMap)
-                    .get(objectSpinner.getSelectedItem().toString()));
+        switch (v.getId()) {
+            case R.id.btn_add_sealife:
+                Intent sealifeIntent = new Intent(FilterActivity.this, SearchSealifeActivity.class);
+                startActivityForResult(sealifeIntent, ActivitiesRequestCodes.FILTER_ACTIVITY_PICK_SEALIFE);
+                break;
+            case R.id.applyFilters:
+                if (objectSpinner.getSelectedItem().toString().equals("All")) {
+                    filterChosedEvent.setObject(null);
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().setObject("");
+                } else {
+                    filterChosedEvent.setObject(Helpers.getMirrorOfHashMap(objectsMap)
+                            .get(objectSpinner.getSelectedItem().toString()));
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().setObject(Helpers.getMirrorOfHashMap(objectsMap)
+                            .get(objectSpinner.getSelectedItem().toString()));
+                }
+                if (levelSpinner.getSelectedItem().toString().equals("All")) {
+                    filterChosedEvent.setLevel(null);
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().setLevel("");
+                } else {
+                    filterChosedEvent.setLevel(Helpers.getMirrorOfHashMap(levelsMap)
+                            .get(levelSpinner.getSelectedItem().toString()));
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().setLevel(Helpers.getMirrorOfHashMap(levelsMap)
+                            .get(levelSpinner.getSelectedItem().toString()));
+                }
+                DDScannerApplication.bus.post(filterChosedEvent);
+                //   EventsTracker.trackFilterApplyied(Helpers.getMirrorOfHashMap(levelsMap).get(levelSpinner.getSelectedItem().toString()), Helpers.getMirrorOfHashMap(objectsMap).get(objectSpinner.getSelectedItem().toString()));
+                finish();
+                break;
         }
-        if (levelSpinner.getSelectedItem().toString().equals("All")) {
-            filterChosedEvent.setLevel(null);
-            DDScannerApplication.getInstance().getSharedPreferenceHelper().setLevel("");
-        } else {
-            filterChosedEvent.setLevel(Helpers.getMirrorOfHashMap(levelsMap)
-                    .get(levelSpinner.getSelectedItem().toString()));
-            DDScannerApplication.getInstance().getSharedPreferenceHelper().setLevel(Helpers.getMirrorOfHashMap(levelsMap)
-                    .get(levelSpinner.getSelectedItem().toString()));
-        }
-        DDScannerApplication.bus.post(filterChosedEvent);
-     //   EventsTracker.trackFilterApplyied(Helpers.getMirrorOfHashMap(levelsMap).get(levelSpinner.getSelectedItem().toString()), Helpers.getMirrorOfHashMap(objectsMap).get(objectSpinner.getSelectedItem().toString()));
-        finish();
     }
 
     public static void show(Context context) {
