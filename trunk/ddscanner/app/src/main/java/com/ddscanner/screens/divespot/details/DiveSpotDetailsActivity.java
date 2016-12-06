@@ -69,7 +69,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DiveSpotDetailsActivity extends AppCompatActivity implements View.OnClickListener, RatingBar.OnRatingBarChangeListener, InfoDialogFragment.DialogClosedListener {
+public class DiveSpotDetailsActivity extends AppCompatActivity implements RatingBar.OnRatingBarChangeListener, InfoDialogFragment.DialogClosedListener {
 
     private static final String TAG = DiveSpotDetailsActivity.class.getName();
 
@@ -291,37 +291,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         });
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.map_layout:
-                Intent intent = new Intent(DiveSpotDetailsActivity.this, ShowDsLocationActivity.class);
-                intent.putExtra("LATLNG", binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPosition());
-                startActivity(intent);
-                break;
-            case R.id.check_in_peoples:
-                EventsTracker.trackDiveSpotCheckinsView();
-              //  CheckInPeoplesActivity.show(DiveSpotDetailsActivity.this, (ArrayList<UserOld>) usersCheckins);
-                break;
-            case R.id.creator:
-//                EditorsListActivity.show(DiveSpotDetailsActivity.this, (ArrayList<UserOld>) creatorsEditorsList);
-                break;
-            case R.id.button_show_divecenters:
-                DiveCentersActivity.show(this, binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPosition(), binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getName());
-                break;
-            case R.id.photos:
-//                DDScannerApplication.bus.post(new OpenPhotosActivityEvent());
-                break;
-            case R.id.btn_add_photo:
-                if (checkReadStoragePermission(this)) {
-                    openImagePickerActivity(ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_PICK_PHOTOS);
-                } else {
-                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, Constants.DIVE_SPOT_DETAILS_ACTIVITY_REQUEST_CODE_PERMISSION_READ_STORAGE);
-                }
-                break;
-        }
-    }
-
     public boolean checkReadStoragePermission(Activity context) {
         return ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
     }
@@ -465,16 +434,12 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         switch (requestCode) {
             case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LEAVE_REVIEW:
                 if (resultCode == RESULT_OK) {
-//                    if (diveSpot != null) {
-//                        //TODO send count changed reviews
-//                    }
+
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_REVIEWS:
                 if (resultCode == RESULT_OK) {
-//                    if (diveSpot != null) {
-//                        //TODO send count changed reviews
-//                    }
+
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_PHOTOS:
@@ -489,7 +454,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_PICK_PHOTOS:
                 if (resultCode == RESULT_OK) {
-                    List<String> urisList = new ArrayList<>();
+                    List<String> urisList;
                     urisList = Helpers.getPhotosFromIntent(data, this);
                     if (isMapsShown) {
                         AddPhotosDoDiveSpotActivity.showForAddPhotos(true, DiveSpotDetailsActivity.this, (ArrayList<String>) urisList, String.valueOf(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getId()), ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_SHOW_FOR_ADD_MAPS);
@@ -910,6 +875,16 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             return;
         }
         checkIn();
+    }
+
+    public void openMapActivityClicked(View view) {
+        Intent intent = new Intent(DiveSpotDetailsActivity.this, ShowDsLocationActivity.class);
+        intent.putExtra("LATLNG", binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPosition());
+        startActivity(intent);
+    }
+
+    public void showDiveCentersButtonClicked(View view) {
+        DiveCentersActivity.show(this, binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPosition(), binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getName());
     }
 
     private void changeViewState(TextView activeTextView, TextView disableTextView) {

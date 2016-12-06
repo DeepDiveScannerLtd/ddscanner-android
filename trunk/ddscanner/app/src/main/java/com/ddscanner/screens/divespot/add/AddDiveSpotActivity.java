@@ -406,9 +406,6 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
 
     private void pickPhotoFromGallery() {
         if (checkReadStoragePermission()) {
-//            MultiImageSelector.create(this)
-//                    .count(maxPhotos)
-//                    .start(this, ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_PHOTO);
             Intent intent = new Intent();
             intent.setType("image/*");
             if (Build.VERSION.SDK_INT >= 18) {

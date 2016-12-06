@@ -764,7 +764,8 @@
                             <ImageView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:src="@drawable/divider" />
+                                android:src="@drawable/divider"
+                                android:onClick="@{handlers::openMapActivityClicked}"/>
 
                             <LinearLayout
                                 android:id="@+id/map_layout"
@@ -787,7 +788,8 @@
                                 android:layout_alignParentBottom="true"
                                 android:background="@color/orange"
                                 android:text="@string/contact_dive_centers"
-                                android:visibility="visible" />
+                                android:visibility="visible"
+                                android:onClick="@{handlers::showDiveCentersButtonClicked}"/>
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
