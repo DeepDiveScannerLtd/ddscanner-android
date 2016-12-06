@@ -214,6 +214,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             binding.photosRc.setVisibility(View.VISIBLE);
             binding.addPhotosLayout.setVisibility(View.GONE);
             binding.photosRc.setAdapter(photosAdapter);
+            binding.addPhotosButon.setVisibility(View.VISIBLE);
         }
 
         if (binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getMaps() != null) {
