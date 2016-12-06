@@ -19,6 +19,8 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
+import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
+
 /**
  * Created by SuzukPc on 06.04.2016.
  */
@@ -72,7 +74,7 @@ public class AddPhotoToDsListAdapter extends RecyclerView.Adapter<RecyclerView.V
             if (!path.contains(Constants.images) && !path.contains("file:")) {
                 path = "file://" + path;
             }
-            Picasso.with(context).load(path).resize(Math.round(Helpers.convertDpToPixel(110, context)),Math.round(Helpers.convertDpToPixel(80, context))).centerCrop().into(photoListViewHolder.photo);
+            Picasso.with(context).load(path).resize(Math.round(Helpers.convertDpToPixel(70, context)),Math.round(Helpers.convertDpToPixel(70, context))).centerCrop().transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2, context)), 0, RoundedCornersTransformation.CornerType.ALL)).into(photoListViewHolder.photo);
             photoListViewHolder.icDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

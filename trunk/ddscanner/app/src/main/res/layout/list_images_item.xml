@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="110dp"
+    android:orientation="vertical" android:layout_width="80dp"
     android:layout_height="80dp"
+    android:layout_marginRight="8dp"
     >
     <ImageView
         android:id="@+id/add_ds_photo"
-        android:layout_width="110dp"
-        android:layout_height="80dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="12dp"/>
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="5dp"/>
     <ImageView
         android:id="@+id/add_ds_photo_delete"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:scaleType="centerCrop"
         android:src="@drawable/ic_del_circle"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="5dp"
         />
 </RelativeLayout>

@@ -117,7 +117,7 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
         levelSpinner = (Spinner) findViewById(R.id.level_spinner);
         save = (Button) findViewById(R.id.applyFilters);
         addSealifeButton = (LinearLayout) findViewById(R.id.btn_add_sealife);
-        sealifesRecyclerView = (RecyclerView) findViewById(R.id.sealifes_rc);
+        sealifesRecyclerView = (RecyclerView) findViewById(R.id.sealife_recycler_view);
         sealifesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         save.setOnClickListener(this);
         addSealifeButton.setOnClickListener(this);
