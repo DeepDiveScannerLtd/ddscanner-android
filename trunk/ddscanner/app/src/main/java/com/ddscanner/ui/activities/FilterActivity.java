@@ -69,11 +69,11 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
 
             if (filters.getObject() != null) {
                 objectsMap = filters.getObject();
-                setFilerGroup(objectSpinner, filters.getObject(), DDScannerApplication.getInstance().getSharedPreferenceHelper().getCurrents());
+                setFilerGroup(objectSpinner, filters.getObject());
             }
             if (filters.getLevel() != null) {
                 levelsMap = filters.getLevel();
-                setFilerGroup(levelSpinner, filters.getLevel(), DDScannerApplication.getInstance().getSharedPreferenceHelper().getCurrents());
+                setFilerGroup(levelSpinner, filters.getLevel());
             }
 
             if (filters.getObject() == null || filters.getLevel() == null) {
@@ -128,7 +128,7 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
     }
 
 
-    private void setFilerGroup(Spinner spinner, Map<String, String> values, String tag) {
+    private void setFilerGroup(Spinner spinner, Map<String, String> values) {
         List<String> objects = new ArrayList<String>();
         objects.add("All");
         int selectedIndex = 0;
