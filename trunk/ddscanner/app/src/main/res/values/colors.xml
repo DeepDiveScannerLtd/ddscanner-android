@@ -3,9 +3,9 @@
 <resources>
 
     <!--Green-->
-    <color name="primary">#115b97</color>
+    <color name="primary">#1b284b</color>
     <color name="secondary">#1565C0</color>
-    <color name="primary_dark">#07518e</color>
+    <color name="primary_dark">#172342</color>
     <color name="primary_light">#C8E6C9</color>
     <color name="empty_buttons">#2e80a0</color>
     <color name="radio_button_fill">#2d80a1</color>
