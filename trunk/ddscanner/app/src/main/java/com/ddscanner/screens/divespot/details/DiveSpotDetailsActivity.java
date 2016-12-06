@@ -38,6 +38,7 @@ import com.ddscanner.databinding.ActivityDiveSpotDetailsBinding;
 import com.ddscanner.entities.DiveSpotDetailsEntity;
 import com.ddscanner.entities.DiveSpotSealife;
 import com.ddscanner.events.OpenPhotosActivityEvent;
+import com.ddscanner.events.PickPhotoForCheckedInDialogEvent;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.divespot.photos.DiveSpotMapsActivity;
 import com.ddscanner.ui.activities.AddPhotosDoDiveSpotActivity;
@@ -63,7 +64,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.squareup.otto.Subscribe;
-import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -81,6 +81,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private boolean isNewDiveSpot = false;
     private boolean isMapsShown = false;
     private DiveSpotPhotosAdapter mapsAdapter, photosAdapter;
+    private CheckedInDialogFragment checkedInDialogFragment;
 
     /*Ui*/
     private MapFragment mapFragment;
@@ -91,6 +92,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
     private DiveSpotDetailsEntity diveSpotDetailsEntity;
 
     private ActivityDiveSpotDetailsBinding binding;
+    private ArrayList<String> photosForReiew = new ArrayList<>();
 
     private DDScannerRestClient.ResultListener<DiveSpotDetailsEntity> diveSpotDetailsResultListener = new DDScannerRestClient.ResultListener<DiveSpotDetailsEntity>() {
         @Override
@@ -312,7 +314,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
                 break;
             case R.id.btn_add_photo:
                 if (checkReadStoragePermission(this)) {
-                    addPhotosToDiveSpot();
+                    openImagePickerActivity(ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_PICK_PHOTOS);
                 } else {
                     ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, Constants.DIVE_SPOT_DETAILS_ACTIVITY_REQUEST_CODE_PERMISSION_READ_STORAGE);
                 }
@@ -329,7 +331,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         switch (requestCode) {
             case Constants.DIVE_SPOT_DETAILS_ACTIVITY_REQUEST_CODE_PERMISSION_READ_STORAGE: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    addPhotosToDiveSpot();
+                    openImagePickerActivity(ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_PICK_PHOTOS);
                 } else {
                     Toast.makeText(DiveSpotDetailsActivity.this, "Grand permission to pick photo from gallery!", Toast.LENGTH_SHORT).show();
                 }
@@ -338,7 +340,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
         }
     }
 
-    private void addPhotosToDiveSpot() {
+    private void openImagePickerActivity(int requestCode) {
         if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
             LoginActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_PICK_PHOTOS);
         } else {
@@ -349,7 +351,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             }
             intent.setAction(Intent.ACTION_GET_CONTENT);
             intent.addCategory(Intent.CATEGORY_OPENABLE);
-            startActivityForResult(Intent.createChooser(intent, "Select Picture"), ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_PICK_PHOTOS);
+            startActivityForResult(Intent.createChooser(intent, "Select Picture"), requestCode);
         }
     }
 
@@ -488,60 +490,18 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_PICK_PHOTOS:
                 if (resultCode == RESULT_OK) {
                     List<String> urisList = new ArrayList<>();
-                    Uri uri = Uri.parse("");
-                    if (resultCode == RESULT_OK) {
-                        if (data.getClipData() != null) {
-                            for (int i = 0; i < data.getClipData().getItemCount(); i++) {
-                                String filename = "DDScanner" + String.valueOf(System.currentTimeMillis());
-                                try {
-                                    uri = data.getClipData().getItemAt(i).getUri();
-                                    String mimeType = getContentResolver().getType(uri);
-                                    String sourcePath = getExternalFilesDir(null).toString();
-                                    File file = new File(sourcePath + "/" + filename);
-                                    if (Helpers.isFileImage(uri.getPath()) || mimeType.contains("image")) {
-                                        try {
-                                            Helpers.copyFileStream(file, uri, this);
-                                            Log.i(TAG, file.toString());
-                                        } catch (Exception e) {
-                                            e.printStackTrace();
-                                        }
-                                        urisList.add(file.getPath());
-                                    } else {
-                                        Toast.makeText(this, "You can choose only images", Toast.LENGTH_SHORT).show();
-                                    }
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }
-                        if (data.getData() != null) {
-                            String filename = "DDScanner" + String.valueOf(System.currentTimeMillis());
-                            try {
-                                uri = data.getData();
-                                String mimeType = getContentResolver().getType(uri);
-                                String sourcePath = getExternalFilesDir(null).toString();
-                                File file = new File(sourcePath + "/" + filename);
-                                if (Helpers.isFileImage(uri.getPath()) || mimeType.contains("image")) {
-                                    try {
-                                        Helpers.copyFileStream(file, uri, this);
-                                        Log.i(TAG, file.toString());
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
-                                    urisList.add(file.getPath());
-                                } else {
-                                    Toast.makeText(this, "You can choose only images", Toast.LENGTH_SHORT).show();
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                        if (isMapsShown) {
-                            AddPhotosDoDiveSpotActivity.showForAddPhotos(true, DiveSpotDetailsActivity.this, (ArrayList<String>) urisList, String.valueOf(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getId()), ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_SHOW_FOR_ADD_MAPS);
-                            return;
-                        }
-                        AddPhotosDoDiveSpotActivity.showForAddPhotos(false, DiveSpotDetailsActivity.this, (ArrayList<String>) urisList, String.valueOf(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getId()), ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_SHOW_FOR_ADD_PHOTOS);
+                    urisList = Helpers.getPhotosFromIntent(data, this);
+                    if (isMapsShown) {
+                        AddPhotosDoDiveSpotActivity.showForAddPhotos(true, DiveSpotDetailsActivity.this, (ArrayList<String>) urisList, String.valueOf(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getId()), ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_SHOW_FOR_ADD_MAPS);
+                        return;
                     }
+                    AddPhotosDoDiveSpotActivity.showForAddPhotos(false, DiveSpotDetailsActivity.this, (ArrayList<String>) urisList, String.valueOf(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getId()), ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_SHOW_FOR_ADD_PHOTOS);
+                }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_PICK_PHOTO_FOR_DIALOG:
+                if (resultCode == RESULT_OK) {
+                    photosForReiew.addAll(Helpers.getPhotosFromIntent(data, this));
+                    checkedInDialogFragment.addPhotoToList(Helpers.getPhotosFromIntent(data, this), photosForReiew.size());
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_ADD_PHOTOS_ACTIVITY:
@@ -730,7 +690,8 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
             if (isCheckIn) {
                 DiveSpotDetailsActivity.this.isCheckedIn = true;
                 EventsTracker.trackCheckIn(EventsTracker.CheckInStatus.SUCCESS);
-                CheckedInDialogFragment.showCheckedInDialog(diveSpotId, DiveSpotDetailsActivity.this);
+                checkedInDialogFragment = CheckedInDialogFragment.getCheckedInDialog(diveSpotId, DiveSpotDetailsActivity.this);
+                checkedInDialogFragment.show(getSupportFragmentManager(), "");
             } else {
                 DiveSpotDetailsActivity.this.isCheckedIn = false;
                 EventsTracker.trackCheckOut();
@@ -903,7 +864,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
     public void addPhotoToDiveSpotButtonClicked(View view) {
         if (checkReadStoragePermission(this)) {
-            addPhotosToDiveSpot();
+            openImagePickerActivity(ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_PICK_PHOTOS);
         } else {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, Constants.DIVE_SPOT_DETAILS_ACTIVITY_REQUEST_CODE_PERMISSION_READ_STORAGE);
         }
@@ -957,6 +918,15 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements View.O
 
         disableTextView.setTextColor(ContextCompat.getColor(this, R.color.diactive_button_photo_color));
         disableTextView.setBackground(null);
+    }
+
+    @Subscribe
+    public void addPhotoToCheckedInDialogFragment(PickPhotoForCheckedInDialogEvent event) {
+        if (checkReadStoragePermission(this)) {
+            openImagePickerActivity(ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_PICK_PHOTO_FOR_DIALOG);
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, Constants.DIVE_SPOT_DETAILS_ACTIVITY_REQUEST_CODE_PERMISSION_READ_STORAGE);
+        }
     }
 
 }

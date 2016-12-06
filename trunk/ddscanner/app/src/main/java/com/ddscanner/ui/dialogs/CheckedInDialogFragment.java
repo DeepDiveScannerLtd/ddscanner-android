@@ -15,6 +15,8 @@ import android.widget.TextView;
 import com.ddscanner.R;
 import com.ddscanner.ui.adapters.CheckedInDialogPhotosAdapter;
 
+import java.util.ArrayList;
+
 public class CheckedInDialogFragment extends DialogFragment implements View.OnClickListener {
 
     private CheckedInDialogPhotosAdapter checkedInDialogPhotosAdapter;
@@ -25,12 +27,12 @@ public class CheckedInDialogFragment extends DialogFragment implements View.OnCl
 
     }
 
-    public static void showCheckedInDialog(String diveSpotId, FragmentActivity activity) {
+    public static CheckedInDialogFragment getCheckedInDialog(String diveSpotId, FragmentActivity activity) {
         CheckedInDialogFragment checkedInDialogFragment = new CheckedInDialogFragment();
         Bundle args = new Bundle();
         args.putString("divespotid", diveSpotId);
         checkedInDialogFragment.setArguments(args);
-        checkedInDialogFragment.show(activity.getSupportFragmentManager(), "");
+        return checkedInDialogFragment;
     }
 
     @NonNull
@@ -40,8 +42,6 @@ public class CheckedInDialogFragment extends DialogFragment implements View.OnCl
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         View view = getActivity().getLayoutInflater().inflate(R.layout.dialog_checked_in, null);
         checkedInDialogPhotosAdapter = new CheckedInDialogPhotosAdapter(getContext());
-     //   pickPhoto = (LinearLayout) view.findViewById(R.id.pick_photo);
-//        pickPhoto.setOnClickListener(this);
         recyclerView = (RecyclerView) view.findViewById(R.id.photos);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -59,4 +59,10 @@ public class CheckedInDialogFragment extends DialogFragment implements View.OnCl
 
         }
     }
+
+    public void addPhotoToList(ArrayList<String> photos, int photosCount) {
+        checkedInDialogPhotosAdapter.addPhotos(photos);
+        recyclerView.scrollToPosition(photosCount);
+    }
+
 }

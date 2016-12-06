@@ -87,6 +87,7 @@ public class ActivitiesRequestCodes {
     public static final int REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_REMOVE_FROM_FAVOURITES = 2215;
     public static final int REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_SHOW_FOR_ADD_PHOTOS = 2216;
     public static final int REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_SHOW_FOR_ADD_MAPS = 2217;
+    public static final int REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_PICK_PHOTO_FOR_DIALOG = 2218;
 
     //    SelfCommentsActivity
     public static final int REQUEST_CODE_SELF_REVIEWS_LOGIN_TO_VIEW_COMMENTS = 2301;

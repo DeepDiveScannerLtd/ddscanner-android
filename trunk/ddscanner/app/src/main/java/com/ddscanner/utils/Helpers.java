@@ -2,6 +2,7 @@ package com.ddscanner.utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
@@ -12,6 +13,7 @@ import android.provider.MediaStore;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
@@ -573,6 +575,69 @@ public class Helpers {
             return "";
         }
         return currents.get(position - 1);
+    }
+
+    public static ArrayList<String> getPhotosFromIntent(Intent data, Activity activity) {
+        if (data.getClipData() != null) {
+            return getPhotosList(data, activity);
+        }
+        return getOnePhoto(data, activity);
+    }
+
+    private static ArrayList<String> getPhotosList(Intent data, Activity activity) {
+        Uri uri = Uri.parse("");
+        ArrayList<String> urisList = new ArrayList<>();
+        for (int i = 0; i < data.getClipData().getItemCount(); i++) {
+            String filename = "DDScanner" + String.valueOf(System.currentTimeMillis());
+            try {
+                uri = data.getClipData().getItemAt(i).getUri();
+                String mimeType = activity.getContentResolver().getType(uri);
+                String sourcePath = activity.getExternalFilesDir(null).toString();
+                File file = new File(sourcePath + "/" + filename);
+                if (Helpers.isFileImage(uri.getPath()) || mimeType.contains("image")) {
+                    try {
+                        Helpers.copyFileStream(file, uri, activity);
+                        Log.i(TAG, file.toString());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    urisList.add(file.getPath());
+                } else {
+                    Toast.makeText(activity, "You can choose only images", Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                return urisList;
+            }
+        }
+        return urisList;
+    }
+
+    private static ArrayList<String> getOnePhoto(Intent data, Activity activity) {
+        String filename = "DDScanner" + String.valueOf(System.currentTimeMillis());
+        Uri uri = Uri.parse("");
+        ArrayList<String> urisList = new ArrayList<>();
+        try {
+            uri = data.getData();
+            String mimeType = activity.getContentResolver().getType(uri);
+            String sourcePath = activity.getExternalFilesDir(null).toString();
+            File file = new File(sourcePath + "/" + filename);
+            if (Helpers.isFileImage(uri.getPath()) || mimeType.contains("image")) {
+                try {
+                    Helpers.copyFileStream(file, uri, activity);
+                    Log.i(TAG, file.toString());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                urisList.add(file.getPath());
+            } else {
+                Toast.makeText(activity, "You can choose only images", Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return urisList;
+        }
+        return urisList;
     }
 
 }

@@ -8,8 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.events.PickPhotoForCheckedInDialogEvent;
 import com.ddscanner.ui.views.TransformationRoundImage;
+import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;
 
@@ -53,9 +56,13 @@ public class CheckedInDialogPhotosAdapter extends RecyclerView.Adapter<RecyclerV
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         Log.i(TAG, "View type - " + String.valueOf(getItemViewType(position)));
         if (getItemViewType(position) == ViEW_TYPE_PHOTO) {
+            String path = uris.get(holder.getAdapterPosition());
+            if (!path.contains(Constants.images) && !path.contains("file:")) {
+                path = "file://" + path;
+            }
             CheckedInDialogPhotosViewHolder checkedInDialogPhotosViewHolder = (CheckedInDialogPhotosViewHolder) holder;
             Picasso.with(context)
-                    .load(uris.get(position))
+                    .load(path)
                     .resize(Math.round(Helpers.convertDpToPixel(50, context)), Math.round(Helpers.convertDpToPixel(50, context)))
                     .centerCrop()
                     .transform(new TransformationRoundImage(2, 0))
@@ -64,7 +71,10 @@ public class CheckedInDialogPhotosAdapter extends RecyclerView.Adapter<RecyclerV
 
     }
 
-
+    public void addPhotos(ArrayList<String> images) {
+        uris.addAll(images);
+        notifyDataSetChanged();
+    }
 
     @Override
     public int getItemCount() {
@@ -72,11 +82,6 @@ public class CheckedInDialogPhotosAdapter extends RecyclerView.Adapter<RecyclerV
             return 1;
         }
         return uris.size() + 1;
-    }
-
-    public void addPhoto() {
-        uris.add("https://pp.vk.me/c626824/v626824069/26b62/ybudsPZQNmc.jpg");
-        notifyItemInserted(uris.size());
     }
 
     @Override
@@ -105,7 +110,7 @@ public class CheckedInDialogPhotosAdapter extends RecyclerView.Adapter<RecyclerV
 
         @Override
         public void onClick(View view) {
-            addPhoto();
+            DDScannerApplication.bus.post(new PickPhotoForCheckedInDialogEvent());
         }
     }
 
