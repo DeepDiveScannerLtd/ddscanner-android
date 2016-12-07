@@ -9,6 +9,8 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -21,7 +23,8 @@ public class CheckedInDialogFragment extends DialogFragment implements View.OnCl
 
     private CheckedInDialogPhotosAdapter checkedInDialogPhotosAdapter;
     private RecyclerView recyclerView;
-    private LinearLayout pickPhoto;
+    private ImageView closeImage;
+    private Button closeButton;
 
     public CheckedInDialogFragment() {
 
@@ -41,22 +44,41 @@ public class CheckedInDialogFragment extends DialogFragment implements View.OnCl
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         View view = getActivity().getLayoutInflater().inflate(R.layout.dialog_checked_in, null);
+        builder.setView(view);
+        builder.setTitle(null);
         checkedInDialogPhotosAdapter = new CheckedInDialogPhotosAdapter(getContext());
+        findViews(view);
+        return builder.create();
+    }
+
+    private void findViews(View view) {
         recyclerView = (RecyclerView) view.findViewById(R.id.photos);
+        closeButton = (Button) view.findViewById(R.id.button_close);
+        closeImage = (ImageView) view.findViewById(R.id.image_close);
+        setupRecyclerView();
+        setupUi();
+
+    }
+
+    private void setupUi() {
+        closeButton.setOnClickListener(this);
+        closeImage.setOnClickListener(this);
+    }
+
+    private void setupRecyclerView() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(checkedInDialogPhotosAdapter);
-        builder.setView(view);
-        builder.setTitle(null);
-
-        return builder.create();
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-
+            case R.id.image_close:
+            case R.id.button_close:
+                this.dismiss();
+                break;
         }
     }
 

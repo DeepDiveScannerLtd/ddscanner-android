@@ -320,6 +320,7 @@
     <string name="lienes">Licenses</string>
     <string name="dialog_leave_spot_message">If you leave the page your dive spot will be lost</string>
     <string name="close">close</string>
+    <string name="post">POST</string>
     <string name="gongrats">Gongrats!</string>
     <string name="dialog_leave_review_message">If you leave the page your review will be lost</string>
     <string name="cencel_dialog">cancel</string>

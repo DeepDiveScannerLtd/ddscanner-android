@@ -19,7 +19,7 @@
             android:textSize="18sp" />
 
         <ImageView
-            android:id="@+id/close_dialog_button"
+            android:id="@+id/image_close"
             android:layout_width="49dp"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
@@ -65,13 +65,14 @@
         android:layout_marginLeft="17dp"
         android:layout_marginTop="10dp"
         android:numStars="5"
-        android:rating="3"
+        android:rating="1"
         android:stepSize="1.0" />
 
     <Button
+        android:id="@+id/button_close"
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:layout_marginTop="12dp"
         android:background="@drawable/dialog_achievement_button_background"
-        android:text="@string/close" />
+        android:text="@string/post" />
 </LinearLayout>
