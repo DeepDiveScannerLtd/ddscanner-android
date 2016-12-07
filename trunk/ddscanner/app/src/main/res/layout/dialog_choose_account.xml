@@ -19,4 +19,11 @@
         android:id="@+id/users_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
+    <TextView
+        android:id="@+id/add_account_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#3b528b"
+        android:text="@string/add_account"
+        android:paddingBottom="20dp"/>
 </LinearLayout>
