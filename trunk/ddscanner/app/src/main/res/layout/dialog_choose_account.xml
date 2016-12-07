@@ -3,7 +3,8 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white"
-    android:paddingLeft="20dp">
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp">
     <TextView
         android:layout_marginTop="24dp"
         android:layout_marginBottom="20dp"
@@ -14,4 +15,8 @@
         android:text="@string/change_account"
         android:fontFamily="sans-serif-medium"
         />
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/users_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 </LinearLayout>
