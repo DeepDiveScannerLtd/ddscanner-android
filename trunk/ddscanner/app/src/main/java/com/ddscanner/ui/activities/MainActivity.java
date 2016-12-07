@@ -55,6 +55,7 @@ import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.divespot.add.AddDiveSpotActivity;
 import com.ddscanner.ui.adapters.MainActivityPagerAdapter;
 import com.ddscanner.ui.dialogs.ActionSuccessDialogFragment;
+import com.ddscanner.ui.dialogs.ChangeAccountBottomDialog;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.ui.fragments.ActivityNotificationsFragment;
 import com.ddscanner.ui.fragments.AllNotificationsFragment;
@@ -103,6 +104,7 @@ public class MainActivity extends BaseAppCompatActivity
     private PercentRelativeLayout menuItemsLayout;
     private ImageView searchLocationBtn;
     private ImageView btnFilter;
+    private ImageView changeAccountButton;
     private MainActivityPagerAdapter mainViewPagerAdapter;
     private ProfileFragment profileFragment;
     private NotificationsFragment notificationsFragment;
@@ -117,6 +119,7 @@ public class MainActivity extends BaseAppCompatActivity
     private boolean isDiveSpotListIsShown = false;
     private boolean isSignupClicked = false;
     private int positionToScroll;
+    private PercentRelativeLayout acountChangeLayout;
 
     private CallbackManager facebookCallbackManager;
     private GoogleApiClient mGoogleApiClient;
@@ -282,6 +285,9 @@ public class MainActivity extends BaseAppCompatActivity
         menuItemsLayout = (PercentRelativeLayout) findViewById(R.id.menu_items_layout);
         searchLocationBtn = (ImageView) findViewById(R.id.search_location_menu_button);
         btnFilter = (ImageView) findViewById(R.id.filter_menu_button);
+        acountChangeLayout = (PercentRelativeLayout) findViewById(R.id.account_change_layout);
+        changeAccountButton = (ImageView) findViewById(R.id.change_account);
+        changeAccountButton.setOnClickListener(this);
     }
 
     private void setupTabLayout() {
@@ -307,11 +313,13 @@ public class MainActivity extends BaseAppCompatActivity
         switch (position) {
             case 0:
                 showSearchFilterMenuItems();
+                changeVisibilityChangeAccountLayout(View.GONE);
                 Helpers.hideKeyboard(this);
                 break;
             case 1:
                 DDScannerApplication.bus.post(new GetNotificationsEvent());
                 hideSearchFilterMenuItems();
+                changeVisibilityChangeAccountLayout(View.GONE);
                 Helpers.hideKeyboard(this);
                 break;
             case 2:
@@ -346,8 +354,15 @@ public class MainActivity extends BaseAppCompatActivity
                     public void onAnimationEnd(Animator animation) {
                         super.onAnimationEnd(animation);
                         menuItemsLayout.setVisibility(View.GONE);
+                        if (mainViewPager.getCurrentItem() == 2 && DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
+                            changeVisibilityChangeAccountLayout(View.VISIBLE);
+                        }
                     }
                 });
+    }
+
+    private void changeVisibilityChangeAccountLayout(int visibility) {
+        acountChangeLayout.setVisibility(visibility);
     }
 
     @Override
@@ -364,6 +379,10 @@ public class MainActivity extends BaseAppCompatActivity
                 Intent intent = new Intent(MainActivity.this, FilterActivity.class);
                 startActivity(intent);
                 //        EventsTracker.trackFiltersActivityOpened();
+                break;
+            case R.id.change_account:
+                ChangeAccountBottomDialog changeAccountBottomDialog = new ChangeAccountBottomDialog();
+                changeAccountBottomDialog.show(getSupportFragmentManager(), "");
                 break;
         }
     }
