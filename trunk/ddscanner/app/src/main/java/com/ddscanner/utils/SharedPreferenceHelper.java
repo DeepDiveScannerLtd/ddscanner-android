@@ -7,6 +7,8 @@ import android.preference.PreferenceManager;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.entities.SignInType;
+import com.ddscanner.entities.User;
+import com.google.gson.Gson;
 
 public class SharedPreferenceHelper {
 
@@ -28,6 +30,9 @@ public class SharedPreferenceHelper {
     private static final String USER_SERVER_ID = "USER_SERVER_ID";
     private static final String USER_APP_ID = "USER_APP_ID";
     private static final String IS_USER_APP_ID_RECEIVED = "IS_USER_APP_ID_RECEIVED";
+    private static final String LOGGED_USER = "LOGGED_USER";
+    private static final String LOGGED_DIVE_CENTER = "LOGGED_DIVE_CENTER";
+    private static final String LOGGED_TYPE = "LOGGED_TYPE";
 
 
     private static SharedPreferences prefs;
@@ -248,6 +253,57 @@ public class SharedPreferenceHelper {
     public long getLastShowingActivityTime() {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         return prefs.getLong("LASTACTIVITY", 0);
+    }
+
+    public void saveUser(User account) {
+        String resultString = new Gson().toJson(account);
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        Editor editor = prefs.edit();
+        editor.putString(LOGGED_USER, resultString);
+        editor.commit();
+    }
+
+    public User getUser() {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        User account = new Gson().fromJson(prefs.getString(LOGGED_USER, ""), User.class);
+        return account;
+    }
+
+    public void saveDiveCenter(User account) {
+        String resultString = new Gson().toJson(account);
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        Editor editor = prefs.edit();
+        editor.putString(LOGGED_DIVE_CENTER, resultString);
+        editor.commit();
+    }
+
+    public User getLoggedDiveCenter() {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        User account = new Gson().fromJson(prefs.getString(LOGGED_DIVE_CENTER, ""), User.class);
+        return account;
+    }
+
+    public void setActiveUserType(int type) {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        Editor editor = prefs.edit();
+        editor.putInt(LOGGED_TYPE, type);
+        editor.commit();
+    }
+
+    public int getActiveUserType() {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        return prefs.getInt(LOGGED_TYPE, 0);
+    }
+
+    public String getLoggedUserToken() {
+        switch (getActiveUserType()) {
+            case 0:
+                return getLoggedDiveCenter().getToken();
+            case 1:
+                return getUser().getToken();
+            default:
+                return "";
+        }
     }
 
 }
