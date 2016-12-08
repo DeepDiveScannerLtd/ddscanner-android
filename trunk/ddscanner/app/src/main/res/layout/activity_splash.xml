@@ -9,7 +9,7 @@
         android:padding="20dp"
         android:layout_height="wrap_content"
         android:text="@string/skip"
-        android:textColor="#dee9ed"
+        android:textColor="#c4ceee"
         android:fontFamily="sans-serif-medium"/>
     <LinearLayout
         android:id="@+id/main"
@@ -56,7 +56,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             style="@style/OrangeButtons"
-            android:text="@string/sign_up"/>
+            android:text="@string/register"/>
 
         <Button
             android:id="@+id/login"
@@ -65,7 +65,7 @@
             android:layout_height="50dp"
             style="@style/OrangeButtons"
             android:background="@drawable/splash_activity_login"
-            android:textColor="@color/orange"
+            android:textColor="#c4ceee"
             android:text="@string/login"/>
     </LinearLayout>
     <TextView
