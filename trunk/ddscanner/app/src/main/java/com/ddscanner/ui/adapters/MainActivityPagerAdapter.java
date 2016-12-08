@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.ddscanner.DDScannerApplication;
+import com.ddscanner.screens.profile.DiveCenterProfileFragment;
 import com.ddscanner.screens.profile.ProfileFragment;
 import com.ddscanner.ui.fragments.ActivityNotificationsFragment;
 import com.ddscanner.ui.fragments.AllNotificationsFragment;

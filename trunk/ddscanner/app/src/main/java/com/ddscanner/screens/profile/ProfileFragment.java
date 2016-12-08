@@ -69,14 +69,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
     private boolean isAboutChanged = false;
     private boolean isNamChanged = false;
 
-    private RequestBody requestSecret = null;
-    private RequestBody requestSocial = null;
-    private RequestBody requestToken = null;
-    private RequestBody about = null;
-    private RequestBody username = null;
-    private RequestBody name = null;
-    private RequestBody requestType = null;
-    private MultipartBody.Part image = null;
     private MaterialDialog materialDialog;
     private Map<String, TextView> errorsMap = new HashMap<>();
 
@@ -128,6 +120,16 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
             if (binding != null && binding.editProfileLayout.getVisibility() != View.VISIBLE) {
                 binding.about.setVisibility(View.VISIBLE);
             }
+            switch (result.getType()) {
+                case 2:
+                case 1:
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().setActiveUser(result);
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().setActiveUserType(1);
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsUserLoggedIn(true);
+                    break;
+                case 0:
+                    break;
+            }
             binding.setProfileFragmentViewModel(new ProfileFragmentViewModel(result));
             binding.swiperefresh.setRefreshing(false);
             changeUi();
@@ -175,7 +177,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
         if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
             getUserDataRequest(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId());
         }
-//        materialDialog = Helpers.getMaterialDialog(getContext());
+        
         createErrorsMap();
         if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
             onLoggedIn();

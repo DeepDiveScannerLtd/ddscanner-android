@@ -53,6 +53,7 @@ import com.ddscanner.events.SignupLoginButtonClicked;
 import com.ddscanner.events.TakePhotoFromCameraEvent;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.divespot.add.AddDiveSpotActivity;
+import com.ddscanner.screens.profile.DiveCenterProfileFragment;
 import com.ddscanner.ui.adapters.MainActivityPagerAdapter;
 import com.ddscanner.ui.dialogs.ActionSuccessDialogFragment;
 import com.ddscanner.ui.dialogs.ChangeAccountBottomDialog;
@@ -110,6 +111,7 @@ public class MainActivity extends BaseAppCompatActivity
     private NotificationsFragment notificationsFragment;
     private ActivityNotificationsFragment activityNotificationsFragment;
     private AllNotificationsFragment allNotificationsFragment;
+    private DiveCenterProfileFragment diveCenterProfileFragment;
     private ImageView imageView;
     private boolean isHasInternetConnection;
     private boolean isHasLocation;

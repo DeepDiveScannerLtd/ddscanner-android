@@ -33,6 +33,8 @@ public class SharedPreferenceHelper {
     private static final String LOGGED_USER = "LOGGED_USER";
     private static final String LOGGED_DIVE_CENTER = "LOGGED_DIVE_CENTER";
     private static final String LOGGED_TYPE = "LOGGED_TYPE";
+    private static final String IS_DC_LOGGED_IN = "IS_DC_LOGGED_IN";
+    private static final String IS_USER_LOGGED_IN = "IS_USER_LOGGED_IN";
 
 
     private static SharedPreferences prefs;
@@ -255,16 +257,24 @@ public class SharedPreferenceHelper {
         return prefs.getLong("LASTACTIVITY", 0);
     }
 
-    public void saveUser(User account) {
-        String resultString = new Gson().toJson(account);
+    public void setActiveUser(User account) {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         Editor editor = prefs.edit();
+        if (account == null) {
+            editor.putString(LOGGED_USER, "");
+            editor.commit();
+            return;
+        }
+        String resultString = new Gson().toJson(account);
         editor.putString(LOGGED_USER, resultString);
         editor.commit();
     }
 
     public User getUser() {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        if (prefs.getString(LOGGED_USER, "").isEmpty()) {
+            return null;
+        }
         User account = new Gson().fromJson(prefs.getString(LOGGED_USER, ""), User.class);
         return account;
     }
@@ -304,6 +314,30 @@ public class SharedPreferenceHelper {
             default:
                 return "";
         }
+    }
+
+    public void setIsDiveCenterLoggedIn(boolean isLogged) {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        Editor editor = prefs.edit();
+        editor.putBoolean(IS_DC_LOGGED_IN, isLogged);
+        editor.commit();
+    }
+
+    public void setIsUserLoggedIn(boolean isLogged) {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        Editor editor = prefs.edit();
+        editor.putBoolean(IS_USER_LOGGED_IN, isLogged);
+        editor.commit();
+    }
+
+    public boolean getIsDcLoggedIn() {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        return prefs.getBoolean(IS_DC_LOGGED_IN, false);
+    }
+
+    public boolean getIsUserLoggedIn() {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        return prefs.getBoolean(IS_USER_LOGGED_IN, false);
     }
 
 }

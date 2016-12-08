@@ -10,8 +10,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.entities.User;
 import com.ddscanner.ui.adapters.AccountsListAdapter;
+
+import java.util.ArrayList;
 
 public class ChangeAccountBottomDialog extends BottomSheetDialogFragment implements View.OnClickListener {
 
@@ -51,9 +55,13 @@ public class ChangeAccountBottomDialog extends BottomSheetDialogFragment impleme
     }
 
     private void setupRecyclerView() {
+        ArrayList<User> users = new ArrayList<>();
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserLoggedIn()) {
+            users.add(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUser());
+        }
         LinearLayoutManager linearLayoutManager= new LinearLayoutManager(getContext());
         accountsList.setLayoutManager(linearLayoutManager);
-        accountsList.setAdapter(new AccountsListAdapter());
+        accountsList.setAdapter(new AccountsListAdapter(users));
     }
 
     @Override

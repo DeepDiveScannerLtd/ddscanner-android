@@ -577,6 +577,17 @@ public class Helpers {
         return currents.get(position - 1);
     }
 
+    public static String getUserType(int position) {
+        List<String> userType = new ArrayList<>();
+        userType.add("Dive center");
+        userType.add("Diver");
+        userType.add("Instructor");
+        if (userType.get(position) == null) {
+            return "";
+        }
+        return userType.get(position);
+    }
+
     public static ArrayList<String> getPhotosFromIntent(Intent data, Activity activity) {
         if (data.getClipData() != null) {
             return getPhotosList(data, activity);
