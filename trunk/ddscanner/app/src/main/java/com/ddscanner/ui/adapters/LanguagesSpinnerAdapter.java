@@ -12,7 +12,9 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.events.AddTranslationClickedEvent;
 import com.ddscanner.utils.Helpers;
 
 import java.util.ArrayList;
@@ -62,7 +64,7 @@ public class LanguagesSpinnerAdapter extends ArrayAdapter<String> {
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(getContext(), "Add item", Toast.LENGTH_LONG).show();
+                    DDScannerApplication.bus.post(new AddTranslationClickedEvent());
                 }
             });
             return view;

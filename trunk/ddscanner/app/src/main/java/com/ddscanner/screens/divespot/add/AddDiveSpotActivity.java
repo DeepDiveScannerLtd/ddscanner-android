@@ -41,6 +41,7 @@ import com.ddscanner.entities.Sealife;
 import com.ddscanner.entities.SealifeShort;
 import com.ddscanner.entities.errors.ValidationError;
 import com.ddscanner.events.AddPhotoDoListEvent;
+import com.ddscanner.events.AddTranslationClickedEvent;
 import com.ddscanner.events.ImageDeletedEvent;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.divespot.details.DiveSpotDetailsActivity;
@@ -130,29 +131,6 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     private List<MultipartBody.Part> sealife = new ArrayList<>();
     private List<MultipartBody.Part> images = new ArrayList<>();
     private boolean isFromMap;
-
-    private DDScannerRestClient.ResultListener<FiltersResponseEntity> filtersResultListener = new DDScannerRestClient.ResultListener<FiltersResponseEntity>() {
-        @Override
-        public void onSuccess(FiltersResponseEntity result) {
-            filters = result;
-            setAppCompatSpinnerValues(objectAppCompatSpinner, filters.getObject(), "Object");
-            setAppCompatSpinnerValues(levelAppCompatSpinner, filters.getLevel(), "Level");
-            setAppCompatSpinnerValues(currentsAppCompatSpinner, filters.getCurrents(), "Current");
-            progressView.setVisibility(View.GONE);
-            mainLayout.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        public void onConnectionFailure() {
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_ADD_DIVE_SPOT_ACTIVITY_CONNECTION_ERROR, false);
-        }
-
-        @Override
-        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-            EventsTracker.trackUnknownServerError(url, errorMessage);
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_unexpected_error, R.string.error_connection_failed, DialogsRequestCodes.DRC_ADD_DIVE_SPOT_ACTIVITY_UNEXPECTED_ERROR, false);
-        }
-    };
 
     private DDScannerRestClient.ResultListener<DiveSpotShort> addDiveSpotResultListener = new DDScannerRestClient.ResultListener<DiveSpotShort>() {
         @Override
@@ -244,6 +222,9 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         languageAppCompatSpinner.setAdapter(new LanguagesSpinnerAdapter(this, R.layout.item_language_spinner, data));
         progressDialogUpload = Helpers.getMaterialDialog(this);
         ProgressDialog progressDialog = new ProgressDialog(this);
+        setAppCompatSpinnerValues(currentsAppCompatSpinner, Helpers.getListOfCurrentsTypes(), "Current");
+        setAppCompatSpinnerValues(levelAppCompatSpinner, Helpers.getDiveLevelTypes(), "Diver level");
+        setAppCompatSpinnerValues(objectAppCompatSpinner, Helpers.getDiveSpotTypes(), "Object");
         btnSave.setOnClickListener(this);
         pickLocation.setOnClickListener(this);
         btnAddSealife.setOnClickListener(this);
@@ -328,22 +309,13 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                     makeAddDiveSpotRequest();
                 }
                 break;
-            case ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_LOGIN_TO_GET_DATA:
-                if (resultCode == RESULT_OK) {
-                    DDScannerApplication.getInstance().getDdScannerRestClient().getFilters(filtersResultListener);
-                } else {
-                    finish();
-                }
-                break;
         }
     }
 
-    private void setAppCompatSpinnerValues(AppCompatSpinner spinner, Map<String, String> values, String tag) {
+    private void setAppCompatSpinnerValues(AppCompatSpinner spinner, List<String> values, String tag) {
         ArrayList<String> objects = new ArrayList<String>();
         objects.add(tag);
-        for (Map.Entry<String, String> entry : values.entrySet()) {
-            objects.add(entry.getValue());
-        }
+        objects.addAll(values);
         ArrayAdapter<String> adapter = new CharacteristicSpinnerItemsAdapter(this, R.layout.spinner_item, objects);
         spinner.setAdapter(adapter);
     }
@@ -618,6 +590,11 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     @Subscribe
     public void pickPhotoFrom(AddPhotoDoListEvent event) {
         pickPhotoFromGallery();
+    }
+
+    @Subscribe
+    public void addLanguageToList(AddTranslationClickedEvent event) {
+
     }
 
 }
