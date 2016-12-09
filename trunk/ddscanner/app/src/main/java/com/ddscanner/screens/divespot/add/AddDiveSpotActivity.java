@@ -463,19 +463,6 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         }
     }
 
-    private void createSocialDatarequests() {
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
-            requestSocial = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
-                    DDScannerApplication.getInstance().getSharedPreferenceHelper().getSn());
-            requestToken = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
-                    DDScannerApplication.getInstance().getSharedPreferenceHelper().getToken());
-            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getSn().equals("tw")) {
-                requestSecret = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
-                        DDScannerApplication.getInstance().getSharedPreferenceHelper().getSecret());
-            }
-        }
-    }
-
     private void changeViewState(TextView activeTextView, TextView disableTextView) {
         activeTextView.setTextColor(ContextCompat.getColor(this, R.color.black_text));
         activeTextView.setBackground(ContextCompat.getDrawable(this, R.drawable.gray_rectangle));
@@ -499,7 +486,6 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
 //            return;
 //        }
         error_name.setVisibility(View.GONE);
-        createSocialDatarequests();
         requestName = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
                 name.getText().toString().trim());
         requestDepth = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),

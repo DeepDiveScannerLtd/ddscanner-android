@@ -1,6 +1,7 @@
 package com.ddscanner.rest;
 
 
+import com.ddscanner.entities.Translation;
 import com.ddscanner.entities.request.DeleteImageRequest;
 import com.ddscanner.entities.request.IdentifyRequest;
 import com.ddscanner.entities.request.RegisterRequest;
@@ -270,5 +271,23 @@ public interface DDScannerRestService {
 
     @GET("v2_0/sealifes.search")
     Call<ResponseBody> getSealifesByQuery(@Query("query") String query, @Query("limit") int limit);
+
+    @Multipart
+    @POST("v2_0/divespot.add")
+    Call<ResponseBody> postAddDiveSpot(
+            @Part("translations") List<Translation> translations,
+            @Part("lat") double lat,
+            @Part("lng") double lng,
+            @Part("country_code") String countryCode,
+            @Part("depth") String depth,
+            @Part("diving_skill") int skill,
+            @Part("currents") int currents,
+            @Part("visibility_min") int visibility_min,
+            @Part("visibility_max") int visibility_max,
+            @Part("cover_number") int cover_number,
+            @Part List<MultipartBody.Part> photos,
+            @Part List<MultipartBody.Part> maps
+
+    );
 
 }
