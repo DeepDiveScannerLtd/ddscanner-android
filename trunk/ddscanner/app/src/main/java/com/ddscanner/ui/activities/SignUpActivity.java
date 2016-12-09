@@ -87,6 +87,18 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             DDScannerApplication.getInstance().getSharedPreferenceHelper().setToken(result.getToken());
             DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsUserSignedIn(true, SignInType.EMAIL);
             DDScannerApplication.getInstance().getSharedPreferenceHelper().setUserServerId(result.getId());
+            switch (result.getType()) {
+                case 0:
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().setActiveUserType(result.getType());
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsDiveCenterLoggedIn(true);
+                    break;
+                case 1:
+                case 2:
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().setActiveUserType(result.getType());
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsUserLoggedIn(true);
+                    break;
+            }
+
             setResult(RESULT_OK);
             finish();
         }

@@ -1,9 +1,21 @@
 package com.ddscanner.entities;
 
+import com.google.gson.annotations.SerializedName;
+
 public class SignUpResponseEntity {
 
     private String token;
     private String id;
+    @SerializedName("user_type")
+    private int type;
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
 
     public String getId() {
         return id;

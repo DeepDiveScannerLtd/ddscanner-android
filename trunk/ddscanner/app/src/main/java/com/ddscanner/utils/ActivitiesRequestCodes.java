@@ -30,6 +30,7 @@ public class ActivitiesRequestCodes {
     public static final int REQUEST_CODE_MAIN_ACTIVITY_PERMISSION_WRITE_STORAGE = 1308;
     public static final int REQUEST_CODE_MAIN_ACTIVITY_PERMISSION_CAMERA_AND_WRITE_STORAGE = 1309;
     public static final int REQUEST_CODE_MAIN_ACTIVITY_CHOSE_GOOGLE_ACCOUNT = 1310;
+    public static final int REQUEST_CODE_MAIN_ACTIVITY_LOGIN_TO_ADD_ACCOUNT = 1311;
 
     //    SearchActivity
     public static final int REQUEST_CODE_SEARCH_ACTIVITY_LOGIN = 1401;

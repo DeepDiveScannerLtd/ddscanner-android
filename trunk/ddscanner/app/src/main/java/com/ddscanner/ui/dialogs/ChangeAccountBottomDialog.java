@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.User;
+import com.ddscanner.events.ShowLoginActivityForAddAccount;
 import com.ddscanner.ui.adapters.AccountsListAdapter;
 
 import java.util.ArrayList;
@@ -59,6 +60,9 @@ public class ChangeAccountBottomDialog extends BottomSheetDialogFragment impleme
         if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserLoggedIn()) {
             users.add(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUser());
         }
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsDcLoggedIn()) {
+            users.add(DDScannerApplication.getInstance().getSharedPreferenceHelper().getLoggedDiveCenter());
+        }
         LinearLayoutManager linearLayoutManager= new LinearLayoutManager(getContext());
         accountsList.setLayoutManager(linearLayoutManager);
         accountsList.setAdapter(new AccountsListAdapter(users));
@@ -68,7 +72,7 @@ public class ChangeAccountBottomDialog extends BottomSheetDialogFragment impleme
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.add_account_button:
-
+                DDScannerApplication.bus.post(new ShowLoginActivityForAddAccount());
                 break;
         }
     }

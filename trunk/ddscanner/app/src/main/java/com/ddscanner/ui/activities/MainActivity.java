@@ -48,6 +48,7 @@ import com.ddscanner.events.OpenAddDiveSpotActivity;
 import com.ddscanner.events.OpenAddDsActivityAfterLogin;
 import com.ddscanner.events.PickPhotoFromGallery;
 import com.ddscanner.events.PlaceChoosedEvent;
+import com.ddscanner.events.ShowLoginActivityForAddAccount;
 import com.ddscanner.events.ShowLoginActivityIntent;
 import com.ddscanner.events.SignupLoginButtonClicked;
 import com.ddscanner.events.TakePhotoFromCameraEvent;
@@ -136,6 +137,7 @@ public class MainActivity extends BaseAppCompatActivity
             DDScannerApplication.getInstance().getSharedPreferenceHelper().setToken(result.getToken());
             DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsUserSignedIn(true, SignInType.EMAIL);
             DDScannerApplication.getInstance().getSharedPreferenceHelper().setUserServerId(result.getId());
+            DDScannerApplication.getInstance().getSharedPreferenceHelper().setActiveUserType(result.getType());
             DDScannerApplication.bus.post(new LoggedInEvent());
         }
 
@@ -168,6 +170,7 @@ public class MainActivity extends BaseAppCompatActivity
         clearFilterSharedPreferences();
         startActivity();
         Log.i(TAG, FirebaseInstanceId.getInstance().getToken());
+        DDScannerApplication.getInstance().getSharedPreferenceHelper().clear();
         if (!isHasInternetConnection) {
             LogUtils.i(TAG, "internetConnectionClosed 2");
             InternetClosedActivity.show(this);
@@ -492,6 +495,14 @@ public class MainActivity extends BaseAppCompatActivity
                     }
                 }
                 break;
+            case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_LOGIN_TO_ADD_ACCOUNT:
+                if (resultCode == RESULT_OK) {
+                    mainViewPagerAdapter.notifyDataSetChanged();
+                    mainViewPager.destroyDrawingCache();
+                    setupTabLayout();
+                    DDScannerApplication.bus.post(new LoadUserProfileInfoEvent());
+                }
+                break;
             default:
                 if (facebookCallbackManager != null) {
                     facebookCallbackManager.onActivityResult(requestCode, resultCode, data);
@@ -745,6 +756,14 @@ public class MainActivity extends BaseAppCompatActivity
         }
     }
 
+    public void setDiveCenterProfileFragment(DiveCenterProfileFragment diveCenterProfileFragment) {
+        if (mainViewPagerAdapter != null) {
+            mainViewPagerAdapter.setDiveCenterProfileFragment(diveCenterProfileFragment);
+        } else {
+            this.diveCenterProfileFragment = diveCenterProfileFragment;
+        }
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
@@ -832,6 +851,12 @@ public class MainActivity extends BaseAppCompatActivity
     @Subscribe
     public void chengeLoginView(SignupLoginButtonClicked event) {
         isSignupClicked = event.isShowing();
+    }
+
+    @Subscribe
+    public void showLoginActivtyToAddUser(ShowLoginActivityForAddAccount event) {
+        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+        startActivityForResult(intent, ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_LOGIN_TO_ADD_ACCOUNT);
     }
 
     @Subscribe

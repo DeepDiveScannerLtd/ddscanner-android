@@ -43,6 +43,7 @@ import com.ddscanner.events.ChangeLoginViewEvent;
 import com.ddscanner.ui.activities.MainActivity;
 import com.ddscanner.ui.adapters.AchievmentProfileListAdapter;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
+import com.ddscanner.ui.fragments.BaseFragment;
 import com.ddscanner.ui.views.LoginView;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
@@ -57,7 +58,7 @@ import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
-public class ProfileFragment extends Fragment implements View.OnClickListener, LoginView.LoginStateChangeListener, InfoDialogFragment.DialogClosedListener, SwipeRefreshLayout.OnRefreshListener {
+public class ProfileFragment extends BaseFragment implements View.OnClickListener, LoginView.LoginStateChangeListener, InfoDialogFragment.DialogClosedListener, SwipeRefreshLayout.OnRefreshListener {
 
     private static final String TAG = ProfileFragment.class.getName();
 
@@ -123,8 +124,9 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
             switch (result.getType()) {
                 case 2:
                 case 1:
+                    result.setToken(DDScannerApplication.getInstance().getSharedPreferenceHelper().getToken());
                     DDScannerApplication.getInstance().getSharedPreferenceHelper().setActiveUser(result);
-                    DDScannerApplication.getInstance().getSharedPreferenceHelper().setActiveUserType(1);
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().setActiveUserType(result.getType());
                     DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsUserLoggedIn(true);
                     break;
                 case 0:
@@ -174,7 +176,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
         setupUi();
         binding.setHandlers(this);
 
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn() && DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == 1) {
             getUserDataRequest(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId());
         }
         

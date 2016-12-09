@@ -270,6 +270,13 @@ public class SharedPreferenceHelper {
         editor.commit();
     }
 
+    public void clear() {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        Editor editor = prefs.edit();
+        editor.clear();
+        editor.commit();
+    }
+
     public User getUser() {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         if (prefs.getString(LOGGED_USER, "").isEmpty()) {
@@ -302,7 +309,7 @@ public class SharedPreferenceHelper {
 
     public int getActiveUserType() {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
-        return prefs.getInt(LOGGED_TYPE, 0);
+        return prefs.getInt(LOGGED_TYPE, -1);
     }
 
     public String getLoggedUserToken() {
@@ -310,6 +317,7 @@ public class SharedPreferenceHelper {
             case 0:
                 return getLoggedDiveCenter().getToken();
             case 1:
+            case 2:
                 return getUser().getToken();
             default:
                 return "";
