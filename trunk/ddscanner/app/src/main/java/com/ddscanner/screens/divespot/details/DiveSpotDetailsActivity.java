@@ -775,8 +775,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
             if (menu != null && menu.findItem(R.id.edit_dive_spot) != null) {
                 menu.findItem(R.id.edit_dive_spot).setVisible(false);
             }
-//            isInfoValidLayout.setVisibility(View.GONE);
-//            thanksLayout.setVisibility(View.VISIBLE);
             hideThanksLayout();
             if (isValid) {
                 EventsTracker.trackDiveSpotValid();

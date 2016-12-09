@@ -233,7 +233,7 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
     }
 
     private void getUserNotifications() {
-       DDScannerApplication.getInstance().getDdScannerRestClient().getUserNotifications(notificationsResultListener);
+       //DDScannerApplication.getInstance().getDdScannerRestClient().getUserNotifications(notificationsResultListener);
     }
 
     private void setData() {
@@ -345,7 +345,7 @@ public class NotificationsFragment extends Fragment implements ViewPager.OnPageC
 
     @Override
     public void onRefresh() {
-        DDScannerApplication.getInstance().getDdScannerRestClient().getUserNotifications(notificationsResultListener);
+       // DDScannerApplication.getInstance().getDdScannerRestClient().getUserNotifications(notificationsResultListener);
     }
 
     @Subscribe
