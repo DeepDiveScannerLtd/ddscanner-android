@@ -5,9 +5,11 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,12 +17,15 @@ import android.widget.Toast;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.events.AddTranslationClickedEvent;
+import com.ddscanner.events.LanguageChangedEvent;
 import com.ddscanner.utils.Helpers;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class LanguagesSpinnerAdapter extends ArrayAdapter<String> {
+
+    private static final String TAG = LanguagesSpinnerAdapter.class.getSimpleName();
 
     private Context context;
     private List<String> values;
@@ -48,6 +53,7 @@ public class LanguagesSpinnerAdapter extends ArrayAdapter<String> {
         if (position == 0) {
             textView.setTextColor(Color.GRAY);
         }
+
         return row;
     }
 
@@ -74,6 +80,7 @@ public class LanguagesSpinnerAdapter extends ArrayAdapter<String> {
         textView.setText(data.get(position));
         if (position == 0) {
             textView.setTextColor(Color.GRAY);
+            row.setOnClickListener(null);
         }
         row.setPadding(Math.round(Helpers.convertDpToPixel(25, getContext())),Math.round(Helpers.convertDpToPixel(15, getContext())),0,Math.round(Helpers.convertDpToPixel(15, getContext())));
         return row;

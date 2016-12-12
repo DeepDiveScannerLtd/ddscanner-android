@@ -4,30 +4,24 @@ import android.support.annotation.NonNull;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.entities.AchievmentsResponseEntity;
-import com.ddscanner.entities.CheckIns;
+import com.ddscanner.entities.AddDiveSpotResponseEntity;
 import com.ddscanner.entities.Comments;
 import com.ddscanner.entities.DiveCentersResponseEntity;
 import com.ddscanner.entities.DiveSpotDetailsEntity;
 import com.ddscanner.entities.DiveSpotPhoto;
 import com.ddscanner.entities.DiveSpotPhotosResponseEntity;
-import com.ddscanner.entities.DiveSpotResponseEntity;
 import com.ddscanner.entities.DiveSpotShort;
-import com.ddscanner.entities.DiveSpotDetails;
 import com.ddscanner.entities.DivespotsWrapper;
 import com.ddscanner.entities.EditDiveSpotWrapper;
 import com.ddscanner.entities.FiltersResponseEntity;
 import com.ddscanner.entities.ForeignUserDislikesWrapper;
 import com.ddscanner.entities.ForeignUserLikeWrapper;
-import com.ddscanner.entities.MapsAddedResposeEntity;
-import com.ddscanner.entities.Notifications;
 import com.ddscanner.entities.RegisterResponse;
 import com.ddscanner.entities.Sealife;
-import com.ddscanner.entities.SealifeResponseEntity;
 import com.ddscanner.entities.SealifeShort;
 import com.ddscanner.entities.SignInType;
 import com.ddscanner.entities.SignUpResponseEntity;
 import com.ddscanner.entities.User;
-import com.ddscanner.entities.UserResponseEntity;
 import com.ddscanner.entities.request.DeleteImageRequest;
 import com.ddscanner.entities.request.DiveSpotsRequestMap;
 import com.ddscanner.entities.request.IdentifyRequest;
@@ -262,6 +256,7 @@ public class DDScannerRestClient {
         });
     }
 
+    @Deprecated
     public void postAddDiveSpot(@NonNull final ResultListener<DiveSpotShort> resultListener, List<MultipartBody.Part> sealife, List<MultipartBody.Part> images, RequestBody... requestBodies) {
         if (requestBodies.length != 13) {
             throw new RuntimeException("RequestBody parameters count must be 13");
@@ -278,6 +273,17 @@ public class DDScannerRestClient {
                 String diveSpotString = jsonObject.getString(Constants.ADD_DIVE_SPOT_ACTIVITY_DIVESPOT);
                 DiveSpotShort diveSpotShort = new Gson().fromJson(diveSpotString, DiveSpotShort.class);
                 resultListener.onSuccess(diveSpotShort);
+            }
+        });
+    }
+
+    public void postAddDiveSpot(ResultListener<AddDiveSpotResponseEntity> resultListener, List<MultipartBody.Part> sealifes, List<MultipartBody.Part> iamges,List<MultipartBody.Part> maps, RequestBody... requestBodies ) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postAddDiveSpot(requestBodies[0], requestBodies[1], requestBodies[2], requestBodies[3], requestBodies[4], requestBodies[5], requestBodies[6], requestBodies[7], requestBodies[8], requestBodies[9], iamges, maps, sealifes);
+        call.enqueue(new ResponseEntityCallback<AddDiveSpotResponseEntity>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<AddDiveSpotResponseEntity> resultListener, String responseString) throws JSONException {
+                AddDiveSpotResponseEntity addDiveSpotResponseEntity = gson.fromJson(responseString, AddDiveSpotResponseEntity.class);
+                resultListener.onSuccess(addDiveSpotResponseEntity);
             }
         });
     }
@@ -369,7 +375,7 @@ public class DDScannerRestClient {
     }
 
     public void getSealifesByQuery(ResultListener<ArrayList<SealifeShort>> resultListener) {
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getSealifesByQuery("%", 100000);
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getSealifesByLimit(100000);
         call.enqueue(new ResponseEntityCallback<ArrayList<SealifeShort>>(gson, resultListener) {
             @Override
             void handleResponseString(ResultListener<ArrayList<SealifeShort>> resultListener, String responseString) throws JSONException {

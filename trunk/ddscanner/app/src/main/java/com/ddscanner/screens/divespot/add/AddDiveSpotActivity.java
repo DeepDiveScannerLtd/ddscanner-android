@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -18,15 +17,16 @@ import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,10 +35,11 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
+import com.ddscanner.entities.AddDiveSpotResponseEntity;
 import com.ddscanner.entities.DiveSpotShort;
 import com.ddscanner.entities.FiltersResponseEntity;
-import com.ddscanner.entities.Sealife;
 import com.ddscanner.entities.SealifeShort;
+import com.ddscanner.entities.Translation;
 import com.ddscanner.entities.errors.ValidationError;
 import com.ddscanner.events.AddPhotoDoListEvent;
 import com.ddscanner.events.AddTranslationClickedEvent;
@@ -60,20 +61,23 @@ import com.ddscanner.utils.DialogHelpers;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.Gson;
 import com.rey.material.widget.ProgressView;
 import com.squareup.otto.Subscribe;
 
 import java.io.File;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
-public class AddDiveSpotActivity extends AppCompatActivity implements View.OnClickListener, DialogClosedListener {
+public class AddDiveSpotActivity extends AppCompatActivity implements View.OnClickListener, DialogClosedListener, AdapterView.OnItemSelectedListener {
 
     private static final String TAG = AddDiveSpotActivity.class.getSimpleName();
     private static final String DIVE_SPOT_NAME_PATTERN = "^[a-zA-Z0-9 ]*$";
@@ -122,15 +126,36 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     private Map<String, TextView> errorsMap = new HashMap<>();
     private FiltersResponseEntity filters;
     private boolean isShownMapsPhotos = false;
+    private int previousPosition = -1;
 
-    private RequestBody requestName, requestLat, requestLng,
-            requestDepth, requestCurrents,
-            requestLevel, requestObject,
-            requestDescription, requestSocial, requestToken,
-            requestSecret, requestMinVisibility, requestMaxVisibility;
+    private RequestBody translations, requestCoverNumber, requestLat, requestLng, requestDepth, requestCurrents, requestLevel, requestObject, requestMinVisibility, requestMaxVisibility, requsetCountryCode;
     private List<MultipartBody.Part> sealife = new ArrayList<>();
     private List<MultipartBody.Part> images = new ArrayList<>();
+    private List<MultipartBody.Part> mapsList = new ArrayList<>();
+    private List<MultipartBody.Part> translationsList = new ArrayList<>();
     private boolean isFromMap;
+    private ArrayList<String> languages = new ArrayList<>();
+    private Translation currentTranslation;
+    private Map<String, Translation> languagesMap = new HashMap<>();
+
+    private DDScannerRestClient.ResultListener<AddDiveSpotResponseEntity> resultListener = new DDScannerRestClient.ResultListener<AddDiveSpotResponseEntity>() {
+        @Override
+        public void onSuccess(AddDiveSpotResponseEntity result) {
+            progressDialogUpload.dismiss();
+            EventsTracker.trackDivespotCreated();
+            showSuccessDialog(String.valueOf(result.getId()));
+        }
+
+        @Override
+        public void onConnectionFailure() {
+
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+
+        }
+    };
 
     private DDScannerRestClient.ResultListener<DiveSpotShort> addDiveSpotResultListener = new DDScannerRestClient.ResultListener<DiveSpotShort>() {
         @Override
@@ -214,14 +239,13 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void setUi() {
-        ArrayList<String> data = new ArrayList<>();
-        data.add("Language");
-        data.add("Thai");
-        data.add("English");
-        data.add("Russian");
-        languageAppCompatSpinner.setAdapter(new LanguagesSpinnerAdapter(this, R.layout.item_language_spinner, data));
+        languages.add("Language");
+        languageAppCompatSpinner.setAdapter(new LanguagesSpinnerAdapter(this, R.layout.item_language_spinner, languages));
+        languageAppCompatSpinner.setOnItemSelectedListener(this);
         progressDialogUpload = Helpers.getMaterialDialog(this);
         ProgressDialog progressDialog = new ProgressDialog(this);
+        name.setEnabled(false);
+        description.setEnabled(false);
         setAppCompatSpinnerValues(currentsAppCompatSpinner, Helpers.getListOfCurrentsTypes(), "Current");
         setAppCompatSpinnerValues(levelAppCompatSpinner, Helpers.getDiveLevelTypes(), "Diver level");
         setAppCompatSpinnerValues(objectAppCompatSpinner, Helpers.getDiveSpotTypes(), "Object");
@@ -322,7 +346,8 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
 
     private void makeAddDiveSpotRequest() {
         progressDialogUpload.show();
-        DDScannerApplication.getInstance().getDdScannerRestClient().postAddDiveSpot(addDiveSpotResultListener, sealife, images, requestName, requestLat, requestLng, requestDepth, requestMinVisibility, requestMaxVisibility, requestCurrents, requestLevel, requestObject, requestDescription, requestToken, requestSocial, requestSecret);
+     //   DDScannerApplication.getInstance().getDdScannerRestClient().postAddDiveSpot(addDiveSpotResultListener, sealife, images, requestName, requestLat, requestLng, requestDepth, requestMinVisibility, requestMaxVisibility, requestCurrents, requestLevel, requestObject, requestDescription, requestToken, requestSocial, requestSecret);
+        DDScannerApplication.getInstance().getDdScannerRestClient().postAddDiveSpot(resultListener, sealife, images, mapsList, requestLat, requestLng, requsetCountryCode, requestDepth, requestLevel, requestCurrents, requestMinVisibility, requestMaxVisibility, requestCoverNumber, translations);
     }
 
     private void pickPhotoFromGallery() {
@@ -401,14 +426,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
             error_name.setText(R.string.errr);
             return;
         }
-//        if (description.getText().toString().length() < 150) {
-//            error_description.setVisibility(View.VISIBLE);
-//            error_description.setText(R.string.description_length_error);
-//            return;
-//        }
         error_name.setVisibility(View.GONE);
-        requestName = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
-                name.getText().toString().trim());
         requestDepth = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
                 depth.getText().toString().trim());
         if (diveSpotLocation != null) {
@@ -417,19 +435,14 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
             requestLng = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
                     String.valueOf(diveSpotLocation.longitude));
         }
-        requestObject = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
-                Helpers.getMirrorOfHashMap(filters.getObject())
-                        .get(objectAppCompatSpinner.getSelectedItem().toString()));
-        requestCurrents = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
-                Helpers.getMirrorOfHashMap(filters.getCurrents())
-                        .get(currentsAppCompatSpinner.getSelectedItem().toString()));
-        requestLevel = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
-                Helpers.getMirrorOfHashMap(filters.getLevel())
-                        .get(levelAppCompatSpinner.getSelectedItem().toString()));
+        translations = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), new Gson().toJson(languagesMap.values()));
+        requestCoverNumber = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), String.valueOf(0));
+        requestObject = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), String.valueOf(Helpers.getDiveLevelTypes().indexOf(objectAppCompatSpinner.getSelectedItem().toString())));
+        requsetCountryCode = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), "ru_RU");
+        requestCurrents = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), String.valueOf(Helpers.getListOfCurrentsTypes().indexOf(currentsAppCompatSpinner.getSelectedItem().toString())));
+        requestLevel = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), String.valueOf(Helpers.getDiveLevelTypes().indexOf(levelAppCompatSpinner.getSelectedItem().toString())));
         requestMinVisibility = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), visibilityMin.getText().toString());
         requestMaxVisibility = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), visibilityMax.getText().toString());
-        requestDescription = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
-                description.getText().toString().trim());
         sealife = new ArrayList<>();
         if (sealifeListAddingDiveSpotAdapter != null && sealifeListAddingDiveSpotAdapter.getSealifes() != null) {
             sealifes = sealifeListAddingDiveSpotAdapter.getSealifes();
@@ -446,12 +459,22 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
             for (int i = 0; i < photoUris.size(); i++) {
                 File image = new File(photoUris.get(i));
                 RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), image);
-                MultipartBody.Part part = MultipartBody.Part.createFormData(Constants.ADD_DIVE_SPOT_ACTIVITY_IMAGES_ARRAY,
-                        image.getName(), requestFile);
+                MultipartBody.Part part = MultipartBody.Part.createFormData(Constants.ADD_DIVE_SPOT_ACTIVITY_IMAGES_ARRAY, image.getName(), requestFile);
                 images.add(part);
             }
         } else {
             images = null;
+        }
+        if (mapsUris.size() > 0) {
+            mapsList = new ArrayList<>();
+            for (int i = 0; i < mapsUris.size(); i++) {
+                File image = new File(mapsUris.get(i));
+                RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), image);
+                MultipartBody.Part part = MultipartBody.Part.createFormData(Constants.ADD_DIVE_SPOT_ACTIVITY_MAPS_ARRAY, image.getName(), requestFile);
+                mapsList.add(part);
+            }
+        } else {
+            mapsList = null;
         }
         makeAddDiveSpotRequest();
     }
@@ -594,6 +617,47 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
 
     @Subscribe
     public void addLanguageToList(AddTranslationClickedEvent event) {
+        Random random = new Random();
+        String randon = String.valueOf(random.nextInt(9000));
+        languages.add(randon);
+        languagesMap.put(randon, new Translation());
+        languageAppCompatSpinner.setAdapter(new LanguagesSpinnerAdapter(this, R.layout.item_language_spinner, languages));
+        languageAppCompatSpinner.setSelection(languages.size() - 1);
+        try {
+            Method method = Spinner.class.getDeclaredMethod("onDetachedFromWindow");
+            method.setAccessible(true);
+            method.invoke(languageAppCompatSpinner);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        name.setEnabled(true);
+        description.setEnabled(true);
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+        if (i != 0) {
+            if (previousPosition != -1) {
+                Translation translation =  languagesMap.get(languages.get(previousPosition));
+                translation.setName(name.getText().toString());
+                translation.setDescription(description.getText().toString());
+                languagesMap.put(languages.get(previousPosition), translation);
+            }
+            description.setText("");
+            name.setText("");
+            if (languagesMap.get(languages.get(i)).getName() != null) {
+                name.setText(languagesMap.get(languages.get(i)).getName());
+            }
+            if (languagesMap.get(languages.get(i)).getDescription() != null) {
+                description.setText(languagesMap.get(languages.get(i)).getDescription());
+            }
+            previousPosition = i;
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
 
     }
 

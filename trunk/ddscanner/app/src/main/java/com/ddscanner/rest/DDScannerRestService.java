@@ -269,24 +269,25 @@ public interface DDScannerRestService {
     @POST("v2_0/user.favorites.remove")
     Call<ResponseBody> postRemoveFromFavorites(@Query("id") String divespotId);
 
-    @GET("v2_0/sealifes.search")
-    Call<ResponseBody> getSealifesByQuery(@Query("query") String query, @Query("limit") int limit);
+    @GET("v2_0/sealifes.get")
+    Call<ResponseBody> getSealifesByLimit(@Query("limit") int limit);
 
     @Multipart
     @POST("v2_0/divespot.add")
     Call<ResponseBody> postAddDiveSpot(
-            @Part("translations") List<Translation> translations,
-            @Part("lat") double lat,
-            @Part("lng") double lng,
-            @Part("country_code") String countryCode,
-            @Part("depth") String depth,
-            @Part("diving_skill") int skill,
-            @Part("currents") int currents,
-            @Part("visibility_min") int visibility_min,
-            @Part("visibility_max") int visibility_max,
-            @Part("cover_number") int cover_number,
+            @Part("lat") RequestBody lat,
+            @Part("lng") RequestBody lng,
+            @Part("country_code") RequestBody countryCode,
+            @Part("depth") RequestBody depth,
+            @Part("diving_skill") RequestBody skill,
+            @Part("currents") RequestBody currents,
+            @Part("visibility_min") RequestBody visibility_min,
+            @Part("visibility_max") RequestBody visibility_max,
+            @Part("cover_number") RequestBody cover_number,
+            @Part("translations") RequestBody translations,
             @Part List<MultipartBody.Part> photos,
-            @Part List<MultipartBody.Part> maps
+            @Part List<MultipartBody.Part> maps,
+            @Part List<MultipartBody.Part> sealife
 
     );
 

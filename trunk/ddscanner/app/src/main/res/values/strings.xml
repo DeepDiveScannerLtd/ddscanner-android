@@ -375,4 +375,5 @@
     <string name="change_account">Change account</string>
     <string name="add_account">+ Add account</string>
     <string name="new_language">New language</string>
+    <string name="register">Register</string>
 </resources>
