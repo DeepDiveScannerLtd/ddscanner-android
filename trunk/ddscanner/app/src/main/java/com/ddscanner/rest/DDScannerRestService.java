@@ -271,4 +271,6 @@ public interface DDScannerRestService {
     @GET("v2_0/sealifes.search")
     Call<ResponseBody> getSealifesByQuery(@Query("query") String query, @Query("limit") int limit);
 
+    @POST("v2_0/user.password.forgot")
+    Call<ResponseBody> postForgotPassword(@Query("email") String email);
 }

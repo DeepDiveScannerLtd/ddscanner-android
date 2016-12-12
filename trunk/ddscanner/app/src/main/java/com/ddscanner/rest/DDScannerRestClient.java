@@ -504,6 +504,11 @@ public class DDScannerRestClient {
         });
     }
 
+    public void postForgotPassword(String email, ResultListener<Void> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postForgotPassword(email);
+        call.enqueue(new NoResponseEntityCallback(gson, resultListener));
+    }
+
     public void postDeleteImage(String id, ResultListener<Void> resultListener) {
         DeleteImageRequest deleteImageRequest = new DeleteImageRequest(id);
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postDeleteImage(deleteImageRequest);
