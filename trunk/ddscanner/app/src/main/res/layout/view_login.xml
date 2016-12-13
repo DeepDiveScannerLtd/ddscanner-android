@@ -7,57 +7,60 @@
     android:layout_gravity="center"
     android:background="@color/white"
     android:gravity="center">
+
     <RelativeLayout
         android:id="@+id/login_view_first"
-        android:gravity="center"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    <ImageView
-        android:id="@+id/icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:src="@drawable/ic_nologin" />
+        android:layout_height="match_parent"
+        android:gravity="center">
 
-    <TextView
-        android:id="@+id/need_to_login_message"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/icon"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="14dp"
-        android:fontFamily="sans-serif"
-        android:gravity="center"
-        android:text="Login to view profile"
-        android:textColor="@color/black_text"
-        android:textSize="20sp" />
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/ic_nologin" />
 
-    <Button
-        android:layout_marginLeft="25dp"
-        android:layout_marginRight="25dp"
-        android:text="@string/sign_up"
-        android:id="@+id/sign_up"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_below="@+id/need_to_login_message"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="133dp"
-        style="@style/OrangeButtons" />
+        <TextView
+            android:id="@+id/need_to_login_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/icon"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="14dp"
+            android:fontFamily="sans-serif"
+            android:gravity="center"
+            android:text="Login to view profile"
+            android:textColor="@color/black_text"
+            android:textSize="20sp" />
 
-    <Button
-        android:layout_marginLeft="25dp"
-        android:layout_marginRight="25dp"
-        android:id="@+id/login"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_below="@+id/sign_up"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="13dp"
-        android:text="@string/login"
-        android:textColor="@color/white"
-        android:background="@drawable/primary_button" />
+        <Button
+            android:id="@+id/sign_up"
+            style="@style/OrangeButtons"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_below="@+id/need_to_login_message"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginTop="133dp"
+            android:text="@string/sign_up" />
+
+        <Button
+            android:id="@+id/login"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_below="@+id/sign_up"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginTop="13dp"
+            android:background="@drawable/primary_button"
+            android:text="@string/login"
+            android:textColor="@color/white" />
     </RelativeLayout>
+
     <include
-        android:visibility="gone"
-        layout="@layout/view_diver_sign_up" />
+        layout="@layout/view_diver_sign_up"
+        android:visibility="gone" />
 </RelativeLayout>

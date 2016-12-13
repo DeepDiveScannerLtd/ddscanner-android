@@ -4,6 +4,7 @@ package com.ddscanner.utils;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.entities.SignInType;
@@ -11,6 +12,8 @@ import com.ddscanner.entities.User;
 import com.google.gson.Gson;
 
 public class SharedPreferenceHelper {
+
+    private static final String TAG = SharedPreferenceHelper.class.getName();
 
     private static final String PREFERENCES_GCM_ID = "PREFERENCES_GCM_ID";
     private static final String TOKEN = "TOKEN";
@@ -132,31 +135,21 @@ public class SharedPreferenceHelper {
         editor.commit();
     }
 
-    public void setIsUserSignedIn(Boolean isUserSignedIn, SignInType signInType) {
+    public void setIsUserSignedIn(boolean isUserSignedIn, SignInType signInType) {
+        Log.i(TAG, "setIsUserSignedIn " + isUserSignedIn);
+        if (isUserSignedIn && signInType == null) {
+            throw new RuntimeException("signInType must not be null when isUserSignedIn = true");
+        }
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         Editor editor = prefs.edit();
-        if (isUserSignedIn) {
-            if (signInType == null) {
-                throw new RuntimeException("signInType must not be null when isUserSignedIn = true");
-            }
-            editor.putString(IS_USER_SIGNED_IN, "1");
-            editor.putString(SIGN_IN_TYPE, signInType.getName());
-        } else {
-            editor.putString(IS_USER_SIGNED_IN, "0");
-            editor.remove(SIGN_IN_TYPE);
-        }
-        System.out.println("LOGINED");
+        editor.putBoolean(IS_USER_SIGNED_IN, isUserSignedIn);
         editor.commit();
     }
 
     public boolean isUserLoggedIn() {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
-        String is = prefs.getString(IS_USER_SIGNED_IN, "");
-        if (is.equals("1")) {
-            return true;
-        } else {
-            return false;
-        }
+        Log.i(TAG, "isUserLoggedIn " + prefs.getBoolean(IS_USER_SIGNED_IN, false));
+        return prefs.getBoolean(IS_USER_SIGNED_IN, false);
     }
 
     public boolean isFirstLaunch() {

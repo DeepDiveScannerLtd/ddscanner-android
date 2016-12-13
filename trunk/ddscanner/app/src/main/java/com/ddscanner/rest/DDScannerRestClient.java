@@ -483,7 +483,8 @@ public class DDScannerRestClient {
     }
 
     public void postUserSignUp(String email, String password, String userType, String lat, String lng, ResultListener<SignUpResponseEntity> resultListener) {
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().signUpUser(getSignUpRequest(email, password, userType, lat, lng));
+        // TODO Implement name setting and remove hardcode
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().signUpUser(getSignUpRequest(email, password, "asdf", userType, lat, lng));
         call.enqueue(new ResponseEntityCallback<SignUpResponseEntity>(gson, resultListener) {
             @Override
             void handleResponseString(ResultListener<SignUpResponseEntity> resultListener, String responseString) throws JSONException {
@@ -493,7 +494,7 @@ public class DDScannerRestClient {
         });
     }
 
-    public void postUserSignIn(String email, String password, String lat, String lng, SignInType signInType, String token, ResultListener<SignUpResponseEntity> resultListener) {
+    public void postUserLogin(String email, String password, String lat, String lng, SignInType signInType, String token, ResultListener<SignUpResponseEntity> resultListener) {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().loginUser(getSignInRequest(email, password, lat, lng, signInType, token));
         call.enqueue(new ResponseEntityCallback<SignUpResponseEntity>(gson, resultListener) {
             @Override
@@ -724,10 +725,11 @@ public class DDScannerRestClient {
         return registerRequest;
     }
 
-    private SignUpRequest getSignUpRequest(String email, String password, String userType, String lat, String lng) {
+    private SignUpRequest getSignUpRequest(String email, String password, String name, String userType, String lat, String lng) {
         SignUpRequest signUpRequest = new SignUpRequest();
         signUpRequest.setEmail(email);
         signUpRequest.setPassword(password);
+        signUpRequest.setName(name);
         signUpRequest.setUserType(Helpers.getUserType(userType));
         signUpRequest.setPush(FirebaseInstanceId.getInstance().getToken());
         signUpRequest.setApp_id(FirebaseInstanceId.getInstance().getId());

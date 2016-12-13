@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.util.Log;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.screens.profile.DiveCenterProfileFragment;
@@ -73,6 +74,22 @@ public class MainActivityPagerAdapter extends FragmentStatePagerAdapter implemen
     }
 
     @Override
+    public int getItemPosition(Object object) {
+        Log.i(TAG, "getItemPosition");
+//        BaseFragment fragment = (BaseFragment) object;
+//        String title = fragment.getTitle();
+//        int position = titles.indexOf(title);
+//        Log.i(TAG, "getItemPosition position = " + position);
+//        if (position == 3) {
+//            return 2;
+//        }
+//        if (position >= 0) {
+//            return position;
+//        }
+        return POSITION_NONE;
+    }
+
+    @Override
     public CharSequence getPageTitle(int position) {
         return null;
     }
@@ -115,19 +132,5 @@ public class MainActivityPagerAdapter extends FragmentStatePagerAdapter implemen
 
     public void setDiveCenterProfileFragment(DiveCenterProfileFragment diveCenterProfileFragment) {
         this.diveCenterProfileFragment = diveCenterProfileFragment;
-    }
-
-    @Override
-    public int getItemPosition(Object object) {
-        BaseFragment fragment = (BaseFragment) object;
-        String title = fragment.getTitle();
-        int position = titles.indexOf(title);
-        if (position == 3) {
-            return 2;
-        }
-        if (position >= 0) {
-            return position;
-        }
-        return POSITION_NONE;
     }
 }

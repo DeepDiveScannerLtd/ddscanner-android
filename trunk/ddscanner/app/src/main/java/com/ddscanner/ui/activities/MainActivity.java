@@ -40,7 +40,7 @@ import com.ddscanner.events.LoadUserProfileInfoEvent;
 import com.ddscanner.events.LocationReadyEvent;
 import com.ddscanner.events.LoggedInEvent;
 import com.ddscanner.events.LoggedOutEvent;
-import com.ddscanner.events.LoginViaEmailEvent;
+import com.ddscanner.events.LoginSignUpViaEmailEvent;
 import com.ddscanner.events.LoginViaFacebookClickEvent;
 import com.ddscanner.events.LoginViaGoogleClickEvent;
 import com.ddscanner.events.NewDiveSpotAddedEvent;
@@ -130,7 +130,7 @@ public class MainActivity extends BaseAppCompatActivity
     private boolean loggedInDuringLastOnStart;
     private boolean needToClearDefaultAccount;
 
-    private DDScannerRestClient.ResultListener<SignUpResponseEntity> signUpResultListener = new DDScannerRestClient.ResultListener<SignUpResponseEntity>() {
+    private DDScannerRestClient.ResultListener<SignUpResponseEntity> signUpLoginResultListener = new DDScannerRestClient.ResultListener<SignUpResponseEntity>() {
         @Override
         public void onSuccess(SignUpResponseEntity result) {
             materialDialog.dismiss();
@@ -186,6 +186,7 @@ public class MainActivity extends BaseAppCompatActivity
         searchLocationBtn.setOnClickListener(this);
         btnFilter.setOnClickListener(this);
         setupTabLayout();
+        mainViewPager.setCurrentItem(0);
         DDScannerApplication.bus.post(new LoadUserProfileInfoEvent());
         EventsTracker.trackDiveSpotMapView();
     }
@@ -299,8 +300,6 @@ public class MainActivity extends BaseAppCompatActivity
         toolbarTabLayout.getTabAt(2).setCustomView(R.layout.tab_profile_item);
         toolbarTabLayout.getTabAt(1).setCustomView(R.layout.tab_notification_item);
         toolbarTabLayout.getTabAt(0).setCustomView(R.layout.tab_map_item);
-        toolbarTabLayout.getTabAt(0).getCustomView().setSelected(true);
-        mainViewPager.setCurrentItem(0);
     }
 
     public static void show(Context context, boolean isHasInternet) {
@@ -569,7 +568,8 @@ public class MainActivity extends BaseAppCompatActivity
 
     private void sendLoginRequest(SignInType signInType, String token) {
         materialDialog.show();
-        DDScannerApplication.getInstance().getDdScannerRestClient().postUserSignIn(null, null, "21", "32", signInType, token, signUpResultListener);
+        // TODO Debug: switch calls after tests
+        DDScannerApplication.getInstance().getDdScannerRestClient().postUserLogin(null, null, "21", "32", signInType, token, signUpLoginResultListener);
 //        DDScannerApplication.getDdScannerRestClient().postLogin(FirebaseInstanceId.getInstance().getId(), signInType, token, loginResultListener);
     }
 
@@ -599,6 +599,17 @@ public class MainActivity extends BaseAppCompatActivity
                     DDScannerApplication.bus.post(new PlaceChoosedEvent(new LatLngBounds(new LatLng(event.getLocation().getLatitude() - 1, event.getLocation().getLongitude() - 1), new LatLng(event.getLocation().getLatitude() + 1, event.getLocation().getLongitude() + 1))));
                     break;
             }
+        }
+    }
+
+    @Subscribe
+    public void onLoginViaEmail(LoginSignUpViaEmailEvent event) {
+        //TODO remove hardcoded coordinates
+        materialDialog.show();
+        if (event.isSignUp()) {
+            DDScannerApplication.getInstance().getDdScannerRestClient().postUserSignUp(event.getEmail(), event.getPassword(), event.getUserType(), "23", "22", signUpLoginResultListener);
+        } else {
+            DDScannerApplication.getInstance().getDdScannerRestClient().postUserLogin(event.getEmail(), event.getPassword(), "24", "25", null, null, signUpLoginResultListener);
         }
     }
 
@@ -857,18 +868,6 @@ public class MainActivity extends BaseAppCompatActivity
     public void showLoginActivtyToAddUser(ShowLoginActivityForAddAccount event) {
         Intent intent = new Intent(MainActivity.this, LoginActivity.class);
         startActivityForResult(intent, ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_LOGIN_TO_ADD_ACCOUNT);
-    }
-
-    @Subscribe
-    public void emailLogin(LoginViaEmailEvent event) {
-        //TODO remove hardcoded coordinates
-        if (event.isRegister()) {
-            materialDialog.show();
-            DDScannerApplication.getInstance().getDdScannerRestClient().postUserSignUp(event.getEmail(), event.getPassword(), event.getUserType(), "23", "22", signUpResultListener);
-            return;
-        }
-        materialDialog.show();
-        DDScannerApplication.getInstance().getDdScannerRestClient().postUserSignIn(event.getEmail(), event.getPassword(), "24", "25", null, null, signUpResultListener);
     }
 
 }

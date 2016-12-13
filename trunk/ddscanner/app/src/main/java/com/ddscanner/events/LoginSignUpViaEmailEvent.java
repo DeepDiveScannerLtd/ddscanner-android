@@ -1,17 +1,17 @@
 package com.ddscanner.events;
 
-public class LoginViaEmailEvent {
+public class LoginSignUpViaEmailEvent {
 
     private String email;
     private String password;
     private String userType;
-    private boolean isRegister;
+    private boolean isSignUp;
 
-    public LoginViaEmailEvent(String email, String password, String userType, boolean isRegister) {
+    public LoginSignUpViaEmailEvent(String email, String password, String userType, boolean isSignUp) {
         this.email = email;
         this.password = password;
         this.userType = userType;
-        this.isRegister = isRegister;
+        this.isSignUp = isSignUp;
     }
 
     public String getEmail() {
@@ -22,8 +22,8 @@ public class LoginViaEmailEvent {
         return password;
     }
 
-    public boolean isRegister() {
-        return isRegister;
+    public boolean isSignUp() {
+        return isSignUp;
     }
 
     public String getUserType() {

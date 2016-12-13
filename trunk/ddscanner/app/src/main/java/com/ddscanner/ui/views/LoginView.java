@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.support.design.widget.TabLayout;
-import android.support.v4.content.ContextCompat;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
@@ -20,7 +19,7 @@ import android.widget.TextView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
-import com.ddscanner.events.LoginViaEmailEvent;
+import com.ddscanner.events.LoginSignUpViaEmailEvent;
 import com.ddscanner.events.LoginViaFacebookClickEvent;
 import com.ddscanner.events.LoginViaGoogleClickEvent;
 import com.ddscanner.events.SignupLoginButtonClicked;
@@ -44,7 +43,7 @@ public class LoginView extends RelativeLayout implements View.OnClickListener {
     private TextView forgotPasswordView;
     private EditText email;
     private EditText password;
-    private boolean isRegister;
+    private boolean isSignUp;
     private String userType;
 
     public LoginView(Context context) {
@@ -77,7 +76,7 @@ public class LoginView extends RelativeLayout implements View.OnClickListener {
         signView = (RelativeLayout) findViewById(R.id.sign_up_view);
         loginView = (RelativeLayout) findViewById(R.id.login_view_first);
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        buttonSubmitData = (Button) findViewById(R.id.btn_sign_up);
+        buttonSubmitData = (Button) findViewById(R.id.btn_login_or_sign_up_via_email);
         loginWithFacebook = (LinearLayout) findViewById(R.id.fb_custom);
         loginWithGoogle = (LinearLayout) findViewById(R.id.custom_google);
         forgotPasswordView = (TextView) findViewById(R.id.forgot_password);
@@ -163,7 +162,7 @@ public class LoginView extends RelativeLayout implements View.OnClickListener {
                 loginView.setVisibility(GONE);
                 buttonSubmitData.setText(R.string.sign_up);
                 DDScannerApplication.bus.post(new SignupLoginButtonClicked(true));
-                isRegister = true;
+                isSignUp = true;
                 break;
             case R.id.login:
                 tabLayout.setVisibility(GONE);
@@ -171,7 +170,7 @@ public class LoginView extends RelativeLayout implements View.OnClickListener {
                 signView.setVisibility(VISIBLE);
                 buttonSubmitData.setText(R.string.login);
                 DDScannerApplication.bus.post(new SignupLoginButtonClicked(true));
-                isRegister = false;
+                isSignUp = false;
                 break;
             case R.id.privacy_policy:
                 PrivacyPolicyActivity.show(getContext());
@@ -185,8 +184,8 @@ public class LoginView extends RelativeLayout implements View.OnClickListener {
             case R.id.custom_google:
                 DDScannerApplication.bus.post(new LoginViaGoogleClickEvent());
                 break;
-            case R.id.btn_sign_up:
-                DDScannerApplication.bus.post(new LoginViaEmailEvent(email.getText().toString(), password.getText().toString(), userType, isRegister));
+            case R.id.btn_login_or_sign_up_via_email:
+                DDScannerApplication.bus.post(new LoginSignUpViaEmailEvent(email.getText().toString(), password.getText().toString(), userType, isSignUp));
                 break;
         }
     }

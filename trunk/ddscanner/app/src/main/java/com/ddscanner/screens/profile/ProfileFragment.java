@@ -177,7 +177,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         binding.setHandlers(this);
 
         if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn() && DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == 1) {
-            getUserDataRequest(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId());
+            getUserDataRequest();
         }
         
         createErrorsMap();
@@ -325,7 +325,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     public void getUserProfileInfo(LoadUserProfileInfoEvent event) {
         if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
             if (!isClickedChosingPhotoButton) {
-                getUserDataRequest(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId());
+                getUserDataRequest();
             }
         } else {
             onLoggedOut();
@@ -364,7 +364,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         this.uri = null;
     }
 
-    private void getUserDataRequest(String id) {
+    private void getUserDataRequest() {
      //   DDScannerApplication.getDdScannerRestClient().getUserInformation(id, getUserInformationResultListener);
         DDScannerApplication.getInstance().getDdScannerRestClient().getUserSelfInformation(userResultListener);
     }

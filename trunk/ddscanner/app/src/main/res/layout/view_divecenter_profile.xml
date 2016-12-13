@@ -377,13 +377,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <fragment
-                android:id="@+id/google_map_fragment"
-                class="com.google.android.gms.maps.MapFragment"
-                android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:clickable="false"
-                tools:clickable="false" />
+            <!--See http://stackoverflow.com/questions/14083950/duplicate-id-tag-null-or-parent-id-with-another-fragment-for-com-google-androi-->
+            <!--<fragment-->
+                <!--android:id="@+id/dc_google_map_fragment"-->
+                <!--class="com.google.android.gms.maps.MapFragment"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="150dp"-->
+                <!--android:clickable="false"-->
+                <!--tools:clickable="false" />-->
         </LinearLayout>
     </LinearLayout>
     </LinearLayout>
