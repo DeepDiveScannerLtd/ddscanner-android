@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_marginBottom="13dp"
+            android:layout_marginLeft="13dp"
+            android:layout_marginTop="13dp"
+            android:src="@drawable/avatar_dc_profile" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="17dp"
+            android:layout_marginRight="20dp"
+            android:text="Aquacenter (Thailand)"
+            android:textColor="@color/black_text"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <ImageView style="@style/DividerStyleFull" />
+
+    <ImageView
+        style="@style/DividerStyleFull"
+        android:layout_marginTop="15dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="15dp"
+            android:text="@string/offer"
+            android:textColor="#afafaf"
+            android:textSize="15sp" />
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="18dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="14dp" />
+    </LinearLayout>
+
+    <ImageView style="@style/DividerStyleFull" />
+
+    <ImageView
+        style="@style/DividerStyleFull"
+        android:layout_marginTop="15dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                style="@style/DiveCenterProfileCharacteristicIcon"
+                android:src="@drawable/ic_dc_location" />
+
+            <LinearLayout
+                android:layout_marginTop="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/DiveCenterProfileCharacteristicName"
+                    android:text="@string/dc_address" />
+
+                <TextView
+                    style="@style/DiveCenterProfileCharacteristicDesciption"
+                    android:text="43/66 M.5 T. Rawai, A. Muang, Phuket, Mueang Phuket District, Phuket 83130" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                style="@style/DiveCenterProfileCharacteristicIcon"
+                android:src="@drawable/ic_dc_mail" />
+
+            <LinearLayout
+                android:layout_marginTop="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/DiveCenterProfileCharacteristicName"
+                    android:text="@string/dc_email" />
+
+                <TextView
+                    style="@style/DiveCenterProfileCharacteristicDesciption"
+                    android:text="mail@aquacenter.com" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                style="@style/DiveCenterProfileCharacteristicIcon"
+                android:src="@drawable/ic_dc_phone" />
+
+            <LinearLayout
+                android:layout_marginTop="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/DiveCenterProfileCharacteristicName"
+                    android:text="@string/dc_phone" />
+
+                <TextView
+                    style="@style/DiveCenterProfileCharacteristicDesciption"
+                    android:text="+66 946 049 03 89 \n+66 946 049 03 89 \n+66 946 049 03 89" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                style="@style/DiveCenterProfileCharacteristicIcon"
+                android:src="@drawable/ic_dc_instructors" />
+
+            <RelativeLayout
+                android:layout_marginTop="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/DiveCenterProfileCharacteristicName"
+                        android:text="@string/dc_instructors" />
+
+                    <TextView
+                        style="@style/DiveCenterProfileCharacteristicDesciption"
+                        android:text="3" />
+                </LinearLayout>
+                <View
+                    android:layout_width="6dp"
+                    android:layout_height="6dp"
+                    android:background="@drawable/red_oval"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@+id/instructors_arrow"
+                    android:layout_marginRight="11dp"/>
+                <ImageView
+                    android:id="@+id/instructors_arrow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_arrow"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"/>
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginBottom="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                style="@style/DiveCenterProfileCharacteristicIcon"
+                android:src="@drawable/ic_dc_language" />
+
+            <RelativeLayout
+                android:layout_marginTop="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/DiveCenterProfileCharacteristicName"
+                        android:text="@string/dc_languages" />
+
+                    <TextView
+                        style="@style/DiveCenterProfileCharacteristicDesciption"
+                        android:text="Emglish, Russian" />
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_arrow"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"/>
+            </RelativeLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <ImageView style="@style/DividerStyleFull" />
+
+    <ImageView
+        style="@style/DividerStyleFull"
+        android:layout_marginTop="15dp" />
+    <LinearLayout
+        android:visibility="visible"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="15dp"
+            android:text="@string/photos"
+            android:textColor="#afafaf"
+            android:textSize="15sp" />
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="18dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="14dp" />
+    </LinearLayout>
+
+    <ImageView style="@style/DividerStyleFull" />
+
+    <ImageView
+        style="@style/DividerStyleFull"
+        android:layout_marginTop="15dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_marginBottom="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                style="@style/DiveCenterProfileCharacteristicIcon"
+                android:src="@drawable/ic_profile_added" />
+
+            <RelativeLayout
+                android:layout_marginTop="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/DiveCenterProfileCharacteristicName"
+                        android:text="@string/added_ds" />
+
+                    <TextView
+                        style="@style/DiveCenterProfileCharacteristicDesciption"
+                        android:text="234 dive spots" />
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_arrow"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"/>
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginBottom="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                style="@style/DiveCenterProfileCharacteristicIcon"
+                android:src="@drawable/ic_profile_edited" />
+
+            <RelativeLayout
+                android:layout_marginTop="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/DiveCenterProfileCharacteristicName"
+                        android:text="@string/edited_ds" />
+
+                    <TextView
+                        style="@style/DiveCenterProfileCharacteristicDesciption"
+                        android:text="234 dive spots" />
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_arrow"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"/>
+            </RelativeLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <ImageView style="@style/DividerStyleFull" />
+
+    <ImageView
+        style="@style/DividerStyleFull"
+        android:layout_marginTop="15dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="15dp"
+            android:text="@string/dive_spots_profile_dc"
+            android:textColor="#afafaf"
+            android:textSize="15sp" />
+
+        <LinearLayout
+            android:layout_marginTop="18dp"
+            android:id="@+id/map_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <fragment
+                android:id="@+id/google_map_fragment"
+                class="com.google.android.gms.maps.MapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:clickable="false"
+                tools:clickable="false" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
