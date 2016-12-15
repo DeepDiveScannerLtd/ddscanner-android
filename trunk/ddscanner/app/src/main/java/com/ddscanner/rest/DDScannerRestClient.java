@@ -362,6 +362,18 @@ public class DDScannerRestClient {
 
     /*Methods using in API v2_0*/
 
+    public void getDiveSpotLanguages(ResultListener<Map<String, String>> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDivespotLanguages();
+        call.enqueue(new ResponseEntityCallback<Map<String, String>>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<Map<String, String>> resultListener, String responseString) throws JSONException {
+                Map<String, String> result = new HashMap<String, String>();
+                result = gson.fromJson(responseString, result.getClass());
+                resultListener.onSuccess(result);
+            }
+        });
+    }
+
     public void getDivespotsByName(String query, ResultListener<ArrayList<DiveSpotShort>> resultListener) {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDivespotsByName(query);
         call.enqueue(new ResponseEntityCallback<ArrayList<DiveSpotShort>>(gson, resultListener) {

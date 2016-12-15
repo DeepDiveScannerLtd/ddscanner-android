@@ -47,6 +47,7 @@ import com.ddscanner.events.ImageDeletedEvent;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.divespot.details.DiveSpotDetailsActivity;
 import com.ddscanner.ui.activities.LoginActivity;
+import com.ddscanner.ui.activities.PickLanguageActivity;
 import com.ddscanner.ui.activities.PickLocationActivity;
 import com.ddscanner.ui.activities.SearchSealifeActivity;
 import com.ddscanner.ui.adapters.AddPhotoToDsListAdapter;
@@ -67,6 +68,7 @@ import com.squareup.otto.Subscribe;
 
 import java.io.File;
 import java.lang.reflect.Method;
+import java.security.KeyPair;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -617,21 +619,22 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
 
     @Subscribe
     public void addLanguageToList(AddTranslationClickedEvent event) {
-        Random random = new Random();
-        String randon = String.valueOf(random.nextInt(9000));
-        languages.add(randon);
-        languagesMap.put(randon, new Translation());
-        languageAppCompatSpinner.setAdapter(new LanguagesSpinnerAdapter(this, R.layout.item_language_spinner, languages));
-        languageAppCompatSpinner.setSelection(languages.size() - 1);
-        try {
-            Method method = Spinner.class.getDeclaredMethod("onDetachedFromWindow");
-            method.setAccessible(true);
-            method.invoke(languageAppCompatSpinner);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        name.setEnabled(true);
-        description.setEnabled(true);
+//        PickLanguageActivity.showForResult(this, 10);
+//        Random random = new Random();
+//        String randon = String.valueOf(random.nextInt(9000));
+//        languages.add(randon);
+//        languagesMap.put(randon, new Translation());
+//        languageAppCompatSpinner.setAdapter(new LanguagesSpinnerAdapter(this, R.layout.item_language_spinner, languages));
+//        languageAppCompatSpinner.setSelection(languages.size() - 1);
+//        try {
+//            Method method = Spinner.class.getDeclaredMethod("onDetachedFromWindow");
+//            method.setAccessible(true);
+//            method.invoke(languageAppCompatSpinner);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        name.setEnabled(true);
+//        description.setEnabled(true);
     }
 
     @Override

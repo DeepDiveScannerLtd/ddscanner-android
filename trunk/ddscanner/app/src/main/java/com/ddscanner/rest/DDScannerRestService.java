@@ -291,4 +291,7 @@ public interface DDScannerRestService {
 
     );
 
+    @GET("v2_0/divespot.languages.get")
+    Call<ResponseBody> getDivespotLanguages();
+
 }
