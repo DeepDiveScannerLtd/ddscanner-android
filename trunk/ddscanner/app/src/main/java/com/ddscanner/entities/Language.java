@@ -1,6 +1,8 @@
 package com.ddscanner.entities;
 
-public class Language {
+import java.io.Serializable;
+
+public class Language implements Serializable{
 
     private String code;
     private String name;

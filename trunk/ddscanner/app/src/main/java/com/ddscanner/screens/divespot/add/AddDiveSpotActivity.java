@@ -38,6 +38,7 @@ import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.AddDiveSpotResponseEntity;
 import com.ddscanner.entities.DiveSpotShort;
 import com.ddscanner.entities.FiltersResponseEntity;
+import com.ddscanner.entities.Language;
 import com.ddscanner.entities.SealifeShort;
 import com.ddscanner.entities.Translation;
 import com.ddscanner.entities.errors.ValidationError;
@@ -124,6 +125,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
 
     private List<String> photoUris = new ArrayList<>();
     private List<String> mapsUris = new ArrayList<>();
+    private ArrayList<Language> languagesList = new ArrayList<>();
     private List<SealifeShort> sealifes = new ArrayList<>();
     private Map<String, TextView> errorsMap = new HashMap<>();
     private FiltersResponseEntity filters;
@@ -140,12 +142,12 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     private Translation currentTranslation;
     private Map<String, Translation> languagesMap = new HashMap<>();
 
-    private DDScannerRestClient.ResultListener<AddDiveSpotResponseEntity> resultListener = new DDScannerRestClient.ResultListener<AddDiveSpotResponseEntity>() {
+    private DDScannerRestClient.ResultListener<String> resultListener = new DDScannerRestClient.ResultListener<String>() {
         @Override
-        public void onSuccess(AddDiveSpotResponseEntity result) {
+        public void onSuccess(String result) {
             progressDialogUpload.dismiss();
             EventsTracker.trackDivespotCreated();
-            showSuccessDialog(String.valueOf(result.getId()));
+            showSuccessDialog(result);
         }
 
         @Override
@@ -155,7 +157,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-
+            progressDialogUpload.dismiss();
         }
     };
 
@@ -335,6 +337,12 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                     makeAddDiveSpotRequest();
                 }
                 break;
+            case ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_LANGUAGE:
+                if (resultCode == RESULT_OK) {
+                    Language language = (Language) data.getSerializableExtra("language");
+                    addLanguageToList(language);
+                }
+                break;
         }
     }
 
@@ -349,7 +357,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     private void makeAddDiveSpotRequest() {
         progressDialogUpload.show();
      //   DDScannerApplication.getInstance().getDdScannerRestClient().postAddDiveSpot(addDiveSpotResultListener, sealife, images, requestName, requestLat, requestLng, requestDepth, requestMinVisibility, requestMaxVisibility, requestCurrents, requestLevel, requestObject, requestDescription, requestToken, requestSocial, requestSecret);
-        DDScannerApplication.getInstance().getDdScannerRestClient().postAddDiveSpot(resultListener, sealife, images, mapsList, requestLat, requestLng, requsetCountryCode, requestDepth, requestLevel, requestCurrents, requestMinVisibility, requestMaxVisibility, requestCoverNumber, translations);
+        DDScannerApplication.getInstance().getDdScannerRestClient().postAddDiveSpot(resultListener, sealife, images, mapsList, requestLat, requestLng, requsetCountryCode, requestDepth, requestLevel, requestCurrents, requestMinVisibility, requestMaxVisibility, requestCoverNumber, translations, requestObject);
     }
 
     private void pickPhotoFromGallery() {
@@ -438,11 +446,11 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                     String.valueOf(diveSpotLocation.longitude));
         }
         translations = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), new Gson().toJson(languagesMap.values()));
-        requestCoverNumber = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), String.valueOf(0));
-        requestObject = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), String.valueOf(Helpers.getDiveLevelTypes().indexOf(objectAppCompatSpinner.getSelectedItem().toString())));
-        requsetCountryCode = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), "ru_RU");
-        requestCurrents = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), String.valueOf(Helpers.getListOfCurrentsTypes().indexOf(currentsAppCompatSpinner.getSelectedItem().toString())));
-        requestLevel = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), String.valueOf(Helpers.getDiveLevelTypes().indexOf(levelAppCompatSpinner.getSelectedItem().toString())));
+        requestCoverNumber = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), String.valueOf(1));
+        requestObject = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), String.valueOf(Helpers.getDiveSpotTypes().indexOf(objectAppCompatSpinner.getSelectedItem().toString()) + 1));
+        requsetCountryCode = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), "RU");
+        requestCurrents = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), String.valueOf(Helpers.getListOfCurrentsTypes().indexOf(currentsAppCompatSpinner.getSelectedItem().toString()) + 1));
+        requestLevel = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), String.valueOf(Helpers.getDiveLevelTypes().indexOf(levelAppCompatSpinner.getSelectedItem().toString()) + 1));
         requestMinVisibility = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), visibilityMin.getText().toString());
         requestMaxVisibility = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), visibilityMax.getText().toString());
         sealife = new ArrayList<>();
@@ -619,7 +627,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
 
     @Subscribe
     public void addLanguageToList(AddTranslationClickedEvent event) {
-//        PickLanguageActivity.showForResult(this, 10);
+        PickLanguageActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_LANGUAGE);
 //        Random random = new Random();
 //        String randon = String.valueOf(random.nextInt(9000));
 //        languages.add(randon);
@@ -637,25 +645,43 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
 //        description.setEnabled(true);
     }
 
+    private void addLanguageToList(Language language) {
+        languagesList.add(language);
+        languages.add(language.getName());
+        languagesMap.put(language.getCode(), new Translation());
+        languageAppCompatSpinner.setAdapter(new LanguagesSpinnerAdapter(this, R.layout.item_language_spinner, languages));
+        languageAppCompatSpinner.setSelection(languages.size() - 1);
+        try {
+            Method method = Spinner.class.getDeclaredMethod("onDetachedFromWindow");
+            method.setAccessible(true);
+            method.invoke(languageAppCompatSpinner);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        name.setEnabled(true);
+        description.setEnabled(true);
+    }
+
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
         if (i != 0) {
             if (previousPosition != -1) {
-                Translation translation =  languagesMap.get(languages.get(previousPosition));
+                Translation translation =  languagesMap.get(languagesList.get(previousPosition).getCode());
                 translation.setName(name.getText().toString());
                 translation.setDescription(description.getText().toString());
-                languagesMap.put(languages.get(previousPosition), translation);
+                translation.setLanguage(languagesList.get(previousPosition).getCode());
+                languagesMap.put(languagesList.get(previousPosition).getCode(), translation);
             }
             description.setText("");
             name.setText("");
-            if (languagesMap.get(languages.get(i)).getName() != null) {
-                name.setText(languagesMap.get(languages.get(i)).getName());
+            if (languagesMap.get(languagesList.get(i-1).getCode()).getName() != null) {
+                name.setText(languagesMap.get(languagesList.get(i-1).getCode()).getName());
             }
-            if (languagesMap.get(languages.get(i)).getDescription() != null) {
-                description.setText(languagesMap.get(languages.get(i)).getDescription());
+            if (languagesMap.get(languagesList.get(i-1).getCode()).getDescription() != null) {
+                description.setText(languagesMap.get(languagesList.get(i-1).getCode()).getDescription());
             }
-            previousPosition = i;
+            previousPosition = i-1;
         }
     }
 

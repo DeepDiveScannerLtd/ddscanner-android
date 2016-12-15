@@ -151,6 +151,10 @@ public class PickLanguageActivity extends AppCompatActivity implements SearchVie
                 language = new Language(entry.getKey(), entry.getValue());
                 Log.i(TAG, language.getName());
                 Log.i(TAG, language.getCode());
+                Intent intent = new Intent();
+                intent.putExtra("language", language);
+                setResult(RESULT_OK, intent);
+                finish();
                 return;
             }
         }

@@ -277,13 +277,12 @@ public class DDScannerRestClient {
         });
     }
 
-    public void postAddDiveSpot(ResultListener<AddDiveSpotResponseEntity> resultListener, List<MultipartBody.Part> sealifes, List<MultipartBody.Part> iamges,List<MultipartBody.Part> maps, RequestBody... requestBodies ) {
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postAddDiveSpot(requestBodies[0], requestBodies[1], requestBodies[2], requestBodies[3], requestBodies[4], requestBodies[5], requestBodies[6], requestBodies[7], requestBodies[8], requestBodies[9], iamges, maps, sealifes);
-        call.enqueue(new ResponseEntityCallback<AddDiveSpotResponseEntity>(gson, resultListener) {
+    public void postAddDiveSpot(ResultListener<String> resultListener, List<MultipartBody.Part> sealifes, List<MultipartBody.Part> iamges,List<MultipartBody.Part> maps, RequestBody... requestBodies ) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postAddDiveSpot(requestBodies[0], requestBodies[1], requestBodies[2], requestBodies[3], requestBodies[4], requestBodies[5], requestBodies[6], requestBodies[7], requestBodies[8], requestBodies[9], requestBodies[10], iamges, maps, sealifes);
+        call.enqueue(new ResponseEntityCallback<String>(gson, resultListener) {
             @Override
-            void handleResponseString(ResultListener<AddDiveSpotResponseEntity> resultListener, String responseString) throws JSONException {
-                AddDiveSpotResponseEntity addDiveSpotResponseEntity = gson.fromJson(responseString, AddDiveSpotResponseEntity.class);
-                resultListener.onSuccess(addDiveSpotResponseEntity);
+            void handleResponseString(ResultListener<String> resultListener, String responseString) throws JSONException {
+                resultListener.onSuccess(responseString);
             }
         });
     }

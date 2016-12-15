@@ -285,6 +285,7 @@ public interface DDScannerRestService {
             @Part("visibility_max") RequestBody visibility_max,
             @Part("cover_number") RequestBody cover_number,
             @Part("translations") RequestBody translations,
+            @Part("dive_spot_type") RequestBody type,
             @Part List<MultipartBody.Part> photos,
             @Part List<MultipartBody.Part> maps,
             @Part List<MultipartBody.Part> sealife
