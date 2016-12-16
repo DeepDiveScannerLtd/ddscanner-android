@@ -17,6 +17,7 @@ import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -142,6 +143,23 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     private Translation currentTranslation;
     private Map<String, Translation> languagesMap = new HashMap<>();
 
+    private DDScannerRestClient.ResultListener<String> countryResultListener = new DDScannerRestClient.ResultListener<String>() {
+        @Override
+        public void onSuccess(String result) {
+            requsetCountryCode = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), result);
+        }
+
+        @Override
+        public void onConnectionFailure() {
+
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+
+        }
+    };
+
     private DDScannerRestClient.ResultListener<String> resultListener = new DDScannerRestClient.ResultListener<String>() {
         @Override
         public void onSuccess(String result) {
@@ -206,6 +224,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         isFromMap = getIntent().getBooleanExtra(Constants.ADD_DIVE_SPOT_INTENT_IS_FROM_MAP, false);
         findViews();
         setUi();
+        requsetCountryCode = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), "RU");
       //  DDScannerApplication.getInstance().getDdScannerRestClient().getFilters(filtersResultListener);
         makeErrorsMap();
     }
@@ -295,6 +314,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
             case ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_LOCATION:
                 if (resultCode == RESULT_OK) {
                     this.diveSpotLocation = data.getParcelableExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_LATLNG);
+                    DDScannerApplication.getInstance().getDdScannerRestClient().getCountryCode(String.valueOf(diveSpotLocation.latitude), String.valueOf(diveSpotLocation.longitude), countryResultListener);
                     if (data.getStringExtra(Constants.ADD_DIVE_SPOT_INTENT_LOCATION_NAME) != null) {
                         locationTitle.setText(data.getStringExtra(Constants.ADD_DIVE_SPOT_INTENT_LOCATION_NAME));
                     } else {
@@ -448,7 +468,6 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         translations = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), new Gson().toJson(languagesMap.values()));
         requestCoverNumber = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), String.valueOf(1));
         requestObject = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), String.valueOf(Helpers.getDiveSpotTypes().indexOf(objectAppCompatSpinner.getSelectedItem().toString()) + 1));
-        requsetCountryCode = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), "RU");
         requestCurrents = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), String.valueOf(Helpers.getListOfCurrentsTypes().indexOf(currentsAppCompatSpinner.getSelectedItem().toString()) + 1));
         requestLevel = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), String.valueOf(Helpers.getDiveLevelTypes().indexOf(levelAppCompatSpinner.getSelectedItem().toString()) + 1));
         requestMinVisibility = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), visibilityMin.getText().toString());

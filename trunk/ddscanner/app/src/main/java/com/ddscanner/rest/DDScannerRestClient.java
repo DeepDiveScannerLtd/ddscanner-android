@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.entities.AchievmentsResponseEntity;
 import com.ddscanner.entities.AddDiveSpotResponseEntity;
+import com.ddscanner.entities.AddressComponent;
 import com.ddscanner.entities.Comments;
 import com.ddscanner.entities.DiveCentersResponseEntity;
 import com.ddscanner.entities.DiveSpotDetailsEntity;
@@ -16,6 +17,7 @@ import com.ddscanner.entities.EditDiveSpotWrapper;
 import com.ddscanner.entities.FiltersResponseEntity;
 import com.ddscanner.entities.ForeignUserDislikesWrapper;
 import com.ddscanner.entities.ForeignUserLikeWrapper;
+import com.ddscanner.entities.GoogleMapsGeocodeResponseEntity;
 import com.ddscanner.entities.RegisterResponse;
 import com.ddscanner.entities.Sealife;
 import com.ddscanner.entities.SealifeShort;
@@ -56,6 +58,24 @@ import retrofit2.Call;
 public class DDScannerRestClient {
 
     protected Gson gson = new Gson();
+
+    public void getCountryCode(String lat, String lng, final ResultListener<String> resultListener) {
+        Call<ResponseBody> call = RestClient.getGoogleMapsApiService().getCountryName(lat + "," + lng);
+        call.enqueue(new ResponseEntityCallback<String>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<String> resultListener, String responseString) throws JSONException {
+                GoogleMapsGeocodeResponseEntity responseEntity = gson.fromJson(responseString, GoogleMapsGeocodeResponseEntity.class);
+                if (responseEntity.getResults().size() > 0 && responseEntity.getResults().get(0).getAddressComponents() != null) {
+                    for (AddressComponent addressComponent : responseEntity.getResults().get(0).getAddressComponents()) {
+                        if (addressComponent != null && addressComponent.getShortName() != null && addressComponent.getShortName().length() == 2) {
+                            resultListener.onSuccess(addressComponent.getShortName());
+                            return;
+                        }
+                    }
+                }
+            }
+        });
+    }
 
     public void getDiveSpotDetails(String diveSpotId, @NonNull final ResultListener<DiveSpotDetailsEntity> resultListener) {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveSpotDetails(diveSpotId);

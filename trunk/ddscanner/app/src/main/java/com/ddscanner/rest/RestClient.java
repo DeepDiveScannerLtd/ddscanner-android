@@ -19,6 +19,7 @@ public abstract class RestClient {
 
     private static DDScannerRestService ddscannerServiceInstance;
     private static GoogleApisRestService googleApisServiceInstance;
+    private static GoogleMapsApiRestService googleMapsApiServiceInstance;
 
     public static DDScannerRestService getDdscannerServiceInstance() {
         if (ddscannerServiceInstance == null) {
@@ -88,4 +89,25 @@ public abstract class RestClient {
         }
         return googleApisServiceInstance;
     }
+
+    public static GoogleMapsApiRestService getGoogleMapsApiService() {
+        if (googleMapsApiServiceInstance == null) {
+            OkHttpClient.Builder builder = new OkHttpClient.Builder();
+            HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+            logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+            builder.interceptors().add(logging);
+
+            OkHttpClient client = builder.build();
+
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl("http://maps.googleapis.com/")
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .client(client)
+                    .build();
+            googleMapsApiServiceInstance = retrofit.create(GoogleMapsApiRestService.class);
+        }
+        return googleMapsApiServiceInstance;
+    }
+
 }
