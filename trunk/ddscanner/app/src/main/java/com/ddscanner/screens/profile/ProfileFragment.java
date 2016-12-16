@@ -314,6 +314,9 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 //        if (!getUserVisibleHint()) {
 //            return;
 //        }
+
+        userResultListener.setCancelled(false);
+        updateProfileInfoResultListener.setCancelled(false);
     }
 
     @Subscribe

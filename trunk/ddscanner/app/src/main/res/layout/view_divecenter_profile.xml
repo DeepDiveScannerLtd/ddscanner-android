@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:tools="http://schemas.android.com/tools">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical">
 
     <LinearLayout
@@ -348,43 +352,41 @@
                     android:layout_marginRight="15dp"/>
             </RelativeLayout>
         </LinearLayout>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/dive_center_profile_dive_spots"
+            android:text="My dive spots(7)"
+            android:textAllCaps="false"
+            android:fontFamily="sans-serif-medium"
+            android:textColor="#e3e9fb"
+            android:textSize="15sp"
+            android:layout_marginBottom="20dp"
+            />
     </LinearLayout>
 
     <ImageView style="@style/DividerStyleFull" />
 
     <ImageView
-        style="@style/DividerStyleFull"
-        android:layout_marginTop="15dp" />
+        android:layout_marginTop="15dp"
+        style="@style/DividerStyleFull" />
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:orientation="vertical">
-
+        android:layout_height="50dp"
+        android:background="@color/white">
+        <ImageView
+            android:id="@+id/ic_edit"
+            android:src="@drawable/ic_profile_edit"
+            style="@style/DiveCenterProfileCharacteristicIcon"/>
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="15dp"
-            android:text="@string/dive_spots_profile_dc"
-            android:textColor="#afafaf"
-            android:textSize="15sp" />
+            android:layout_toRightOf="@id/ic_edit"
+            style="@style/DiveCenterProfileCharacteristicName"
+            android:text="@string/edit_profile"
+            android:layout_centerVertical="true"/>
+    </RelativeLayout>
 
-        <LinearLayout
-            android:layout_marginTop="18dp"
-            android:id="@+id/map_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <!--See http://stackoverflow.com/questions/14083950/duplicate-id-tag-null-or-parent-id-with-another-fragment-for-com-google-androi-->
-            <!--<fragment-->
-                <!--android:id="@+id/dc_google_map_fragment"-->
-                <!--class="com.google.android.gms.maps.MapFragment"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="150dp"-->
-                <!--android:clickable="false"-->
-                <!--tools:clickable="false" />-->
-        </LinearLayout>
     </LinearLayout>
-    </LinearLayout>
+</ScrollView>

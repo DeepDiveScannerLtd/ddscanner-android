@@ -28,6 +28,7 @@ import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.SignInType;
 import com.ddscanner.entities.SignUpResponseEntity;
+import com.ddscanner.events.ChangeAccountEvent;
 import com.ddscanner.events.ChangeLoginViewEvent;
 import com.ddscanner.events.ChangePageOfMainViewPagerEvent;
 import com.ddscanner.events.CloseInfoWindowEvent;
@@ -123,6 +124,7 @@ public class MainActivity extends BaseAppCompatActivity
     private boolean isSignupClicked = false;
     private int positionToScroll;
     private PercentRelativeLayout acountChangeLayout;
+    private ChangeAccountBottomDialog changeAccountBottomDialog;
 
     private CallbackManager facebookCallbackManager;
     private GoogleApiClient mGoogleApiClient;
@@ -170,7 +172,7 @@ public class MainActivity extends BaseAppCompatActivity
         clearFilterSharedPreferences();
         startActivity();
         Log.i(TAG, FirebaseInstanceId.getInstance().getToken());
-        DDScannerApplication.getInstance().getSharedPreferenceHelper().clear();
+       // DDScannerApplication.getInstance().getSharedPreferenceHelper().clear();
         if (!isHasInternetConnection) {
             LogUtils.i(TAG, "internetConnectionClosed 2");
             InternetClosedActivity.show(this);
@@ -385,7 +387,7 @@ public class MainActivity extends BaseAppCompatActivity
                 //        EventsTracker.trackFiltersActivityOpened();
                 break;
             case R.id.change_account:
-                ChangeAccountBottomDialog changeAccountBottomDialog = new ChangeAccountBottomDialog();
+                changeAccountBottomDialog = new ChangeAccountBottomDialog();
                 changeAccountBottomDialog.show(getSupportFragmentManager(), "");
                 break;
         }
@@ -500,6 +502,7 @@ public class MainActivity extends BaseAppCompatActivity
                     mainViewPager.destroyDrawingCache();
                     setupTabLayout();
                     DDScannerApplication.bus.post(new LoadUserProfileInfoEvent());
+                    changeAccountBottomDialog.dismiss();
                 }
                 break;
             default:
@@ -868,6 +871,22 @@ public class MainActivity extends BaseAppCompatActivity
     public void showLoginActivtyToAddUser(ShowLoginActivityForAddAccount event) {
         Intent intent = new Intent(MainActivity.this, LoginActivity.class);
         startActivityForResult(intent, ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_LOGIN_TO_ADD_ACCOUNT);
+    }
+
+    @Subscribe
+    public void changeActiveAccount(ChangeAccountEvent event) {
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == 0) {
+            DDScannerApplication.getInstance().getSharedPreferenceHelper().setActiveUserType(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUser().getType());
+            DDScannerApplication.getInstance().getSharedPreferenceHelper().setToken(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUser().getToken());
+        } else {
+            DDScannerApplication.getInstance().getSharedPreferenceHelper().setActiveUserType(0);
+            DDScannerApplication.getInstance().getSharedPreferenceHelper().setToken(DDScannerApplication.getInstance().getSharedPreferenceHelper().getLoggedDiveCenter().getToken());
+        }
+        mainViewPagerAdapter.notifyDataSetChanged();
+        mainViewPager.destroyDrawingCache();
+        setupTabLayout();
+        DDScannerApplication.bus.post(new LoadUserProfileInfoEvent());
+        changeAccountBottomDialog.dismiss();
     }
 
 }
