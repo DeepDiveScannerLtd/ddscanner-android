@@ -1,9 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="android.view.View" />
+        <import type="android.text.TextUtils" />
+        <import type="java.lang.String" />
+
+        <variable
+            name="diveCenterViewModel"
+            type="com.ddscanner.screens.profile.DiveCenterProfileFragmentViewModel" />
+
+        <variable
+            name="handlers"
+            type="com.ddscanner.screens.profile.DiveCenterProfileFragment" />
+    </data>
 <ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:layout_height="match_parent">
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -29,7 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="17dp"
             android:layout_marginRight="20dp"
-            android:text="Aquacenter (Thailand)"
+            android:text="@{diveCenterViewModel.diveCenterProfile.name}"
             android:textColor="@color/black_text"
             android:textSize="18sp" />
     </LinearLayout>
@@ -38,7 +53,7 @@
 
     <ImageView
         style="@style/DividerStyleFull"
-        android:layout_marginTop="15dp" />
+        android:layout_marginBottom="@dimen/base_block_margin_top" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -67,7 +82,7 @@
 
     <ImageView
         style="@style/DividerStyleFull"
-        android:layout_marginTop="15dp" />
+        android:layout_marginBottom="@dimen/base_block_margin_top" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -96,7 +111,7 @@
 
                 <TextView
                     style="@style/DiveCenterProfileCharacteristicDesciption"
-                    android:text="43/66 M.5 T. Rawai, A. Muang, Phuket, Mueang Phuket District, Phuket 83130" />
+                    android:text="@{diveCenterViewModel.diveCenterProfile.addresses.get(0)}" />
             </LinearLayout>
         </LinearLayout>
 
@@ -121,7 +136,7 @@
 
                 <TextView
                     style="@style/DiveCenterProfileCharacteristicDesciption"
-                    android:text="mail@aquacenter.com" />
+                    android:text="@{diveCenterViewModel.diveCenterProfile.emails.get(0)}" />
             </LinearLayout>
         </LinearLayout>
 
@@ -146,7 +161,7 @@
 
                 <TextView
                     style="@style/DiveCenterProfileCharacteristicDesciption"
-                    android:text="+66 946 049 03 89 \n+66 946 049 03 89 \n+66 946 049 03 89" />
+                    android:text="@{diveCenterViewModel.diveCenterProfile.phones.get(0)}" />
             </LinearLayout>
         </LinearLayout>
 
@@ -175,7 +190,7 @@
 
                     <TextView
                         style="@style/DiveCenterProfileCharacteristicDesciption"
-                        android:text="3" />
+                        android:text="@{diveCenterViewModel.diveCenterProfile.instructorsCount}" />
                 </LinearLayout>
                 <View
                     android:layout_width="6dp"
@@ -221,7 +236,7 @@
 
                     <TextView
                         style="@style/DiveCenterProfileCharacteristicDesciption"
-                        android:text="Emglish, Russian" />
+                        android:text="@{diveCenterViewModel.diveCenterProfile.languages.get(0)}" />
                 </LinearLayout>
 
                 <ImageView
@@ -239,7 +254,7 @@
 
     <ImageView
         style="@style/DividerStyleFull"
-        android:layout_marginTop="15dp" />
+        android:layout_marginBottom="@dimen/base_block_margin_top" />
     <LinearLayout
         android:visibility="visible"
         android:layout_width="match_parent"
@@ -268,7 +283,7 @@
 
     <ImageView
         style="@style/DividerStyleFull"
-        android:layout_marginTop="15dp" />
+        android:layout_marginBottom="@dimen/base_block_margin_top" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -301,7 +316,7 @@
 
                     <TextView
                         style="@style/DiveCenterProfileCharacteristicDesciption"
-                        android:text="234 dive spots" />
+                        app:countAddedFrom="@{diveCenterViewModel}" />
                 </LinearLayout>
 
                 <ImageView
@@ -340,7 +355,7 @@
 
                     <TextView
                         style="@style/DiveCenterProfileCharacteristicDesciption"
-                        android:text="234 dive spots" />
+                        app:countEditedFrom="@{diveCenterViewModel}" />
                 </LinearLayout>
 
                 <ImageView
@@ -353,12 +368,12 @@
             </RelativeLayout>
         </LinearLayout>
         <Button
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:background="@drawable/dive_center_profile_dive_spots"
-            android:text="My dive spots(7)"
             android:textAllCaps="false"
             android:fontFamily="sans-serif-medium"
             android:textColor="#e3e9fb"
@@ -370,7 +385,7 @@
     <ImageView style="@style/DividerStyleFull" />
 
     <ImageView
-        android:layout_marginTop="15dp"
+        android:layout_marginBottom="@dimen/base_block_margin_top"
         style="@style/DividerStyleFull" />
 
     <RelativeLayout
@@ -387,6 +402,10 @@
             android:text="@string/edit_profile"
             android:layout_centerVertical="true"/>
     </RelativeLayout>
+    <ImageView
+        android:layout_marginBottom="@dimen/base_block_margin_top"
+        style="@style/DividerStyleFull" />
 
     </LinearLayout>
 </ScrollView>
+    </layout>

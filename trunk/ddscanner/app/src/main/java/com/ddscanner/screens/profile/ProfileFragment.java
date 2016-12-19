@@ -29,6 +29,7 @@ import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.databinding.FragmentProfileBinding;
 import com.ddscanner.entities.ProfileAchievement;
+import com.ddscanner.entities.ProfileResponseEntity;
 import com.ddscanner.entities.User;
 import com.ddscanner.entities.UserOld;
 import com.ddscanner.entities.UserResponseEntity;
@@ -75,6 +76,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
     private String uri = null;
     private Uri uriFromCamera = null;
+    private User user;
 
     private FragmentProfileBinding binding;
 
@@ -115,24 +117,26 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         }
     };
 
-    private DDScannerRestClient.ResultListener<User> userResultListener = new DDScannerRestClient.ResultListener<User>() {
+    private DDScannerRestClient.ResultListener<ProfileResponseEntity> userResultListener = new DDScannerRestClient.ResultListener<ProfileResponseEntity>() {
         @Override
-        public void onSuccess(User result) {
+        public void onSuccess(ProfileResponseEntity result) {
             if (binding != null && binding.editProfileLayout.getVisibility() != View.VISIBLE) {
                 binding.about.setVisibility(View.VISIBLE);
             }
             switch (result.getType()) {
                 case 2:
                 case 1:
-                    result.setToken(DDScannerApplication.getInstance().getSharedPreferenceHelper().getToken());
-                    DDScannerApplication.getInstance().getSharedPreferenceHelper().setActiveUser(result);
+                    user = result.getDiver();
+                    user.setToken(DDScannerApplication.getInstance().getSharedPreferenceHelper().getToken());
+                    user.setType(result.getType());
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().setActiveUser(user);
                     DDScannerApplication.getInstance().getSharedPreferenceHelper().setActiveUserType(result.getType());
                     DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsUserLoggedIn(true);
                     break;
                 case 0:
                     break;
             }
-            binding.setProfileFragmentViewModel(new ProfileFragmentViewModel(result));
+            binding.setProfileFragmentViewModel(new ProfileFragmentViewModel(result.getDiver()));
             binding.swiperefresh.setRefreshing(false);
             changeUi();
         }

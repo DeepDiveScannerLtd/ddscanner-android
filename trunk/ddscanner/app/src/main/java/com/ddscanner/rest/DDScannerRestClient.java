@@ -6,6 +6,7 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.entities.AchievmentsResponseEntity;
 import com.ddscanner.entities.CheckIns;
 import com.ddscanner.entities.Comments;
+import com.ddscanner.entities.DiveCenterProfile;
 import com.ddscanner.entities.DiveCentersResponseEntity;
 import com.ddscanner.entities.DiveSpotDetailsEntity;
 import com.ddscanner.entities.DiveSpotPhoto;
@@ -20,6 +21,7 @@ import com.ddscanner.entities.ForeignUserDislikesWrapper;
 import com.ddscanner.entities.ForeignUserLikeWrapper;
 import com.ddscanner.entities.MapsAddedResposeEntity;
 import com.ddscanner.entities.Notifications;
+import com.ddscanner.entities.ProfileResponseEntity;
 import com.ddscanner.entities.RegisterResponse;
 import com.ddscanner.entities.Sealife;
 import com.ddscanner.entities.SealifeResponseEntity;
@@ -505,12 +507,12 @@ public class DDScannerRestClient {
         });
     }
 
-    public void getUserSelfInformation(final ResultListener<User> resultListener) {
+    public void getUserSelfInformation(final ResultListener<ProfileResponseEntity> resultListener) {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getSelfProfileInformation();
-        call.enqueue(new ResponseEntityCallback<User>(gson, resultListener) {
+        call.enqueue(new ResponseEntityCallback<ProfileResponseEntity>(gson, resultListener) {
             @Override
-            void handleResponseString(ResultListener<User> resultListener, String responseString) throws JSONException {
-                User user = new Gson().fromJson(responseString, User.class);
+            void handleResponseString(ResultListener<ProfileResponseEntity> resultListener, String responseString) throws JSONException {
+                ProfileResponseEntity user = new Gson().fromJson(responseString, ProfileResponseEntity.class);
                 resultListener.onSuccess(user);
             }
         });

@@ -3,6 +3,7 @@ package com.ddscanner.screens.profile;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,6 +16,9 @@ import android.view.ViewGroup;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
+import com.ddscanner.databinding.ViewDivecenterProfileBinding;
+import com.ddscanner.entities.DiveCenterProfile;
+import com.ddscanner.entities.ProfileResponseEntity;
 import com.ddscanner.entities.User;
 import com.ddscanner.events.LoadUserProfileInfoEvent;
 import com.ddscanner.events.LoggedOutEvent;
@@ -28,18 +32,23 @@ import com.squareup.otto.Subscribe;
 
 public class DiveCenterProfileFragment extends BaseFragment implements LoginView.LoginStateChangeListener{
 
-    private DDScannerRestClient.ResultListener<User> userResultListener = new DDScannerRestClient.ResultListener<User>() {
+    private DiveCenterProfile diveCenterProfile;
+    private ViewDivecenterProfileBinding binding;
+    private DDScannerRestClient.ResultListener<ProfileResponseEntity> userResultListener = new DDScannerRestClient.ResultListener<ProfileResponseEntity>() {
         @Override
-        public void onSuccess(User result) {
+        public void onSuccess(ProfileResponseEntity result) {
             switch (result.getType()) {
                 case 2:
                 case 1:
                     break;
                 case 0:
-                    result.setToken(DDScannerApplication.getInstance().getSharedPreferenceHelper().getToken());
-                    DDScannerApplication.getInstance().getSharedPreferenceHelper().saveDiveCenter(result);
+                    diveCenterProfile = result.getDiveCenter();
+                    diveCenterProfile.setType(0);
+                    diveCenterProfile.setToken(DDScannerApplication.getInstance().getSharedPreferenceHelper().getToken());
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().saveDiveCenter(diveCenterProfile);
                     DDScannerApplication.getInstance().getSharedPreferenceHelper().setActiveUserType(result.getType());
                     DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsDiveCenterLoggedIn(true);
+                    binding.setDiveCenterViewModel(new DiveCenterProfileFragmentViewModel(diveCenterProfile));
                     break;
             }
         }
@@ -67,7 +76,8 @@ public class DiveCenterProfileFragment extends BaseFragment implements LoginView
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.view_divecenter_profile, container, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.view_divecenter_profile, container, false);
+        View view = binding.getRoot();
         if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == 0) {
             DDScannerApplication.getInstance().getDdScannerRestClient().getUserSelfInformation(userResultListener);
         }

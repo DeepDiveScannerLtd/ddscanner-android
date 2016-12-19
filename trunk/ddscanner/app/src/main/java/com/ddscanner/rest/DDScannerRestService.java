@@ -335,4 +335,7 @@ public interface DDScannerRestService {
     @GET("v2_0/sealifes.search")
     Call<ResponseBody> getSealifesByQuery(@Query("query") String query, @Query("limit") int limit);
 
+    @GET("v2_0/divecenter/profile.get")
+    Call<ResponseBody> getDiveCenterProfile();
+
 }

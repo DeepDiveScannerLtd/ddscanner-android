@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.entities.DiveCenterProfile;
 import com.ddscanner.entities.User;
 import com.ddscanner.events.ChangeAccountEvent;
 import com.ddscanner.utils.Helpers;
@@ -18,18 +19,32 @@ import java.util.ArrayList;
 
 public class AccountsListAdapter extends RecyclerView.Adapter<AccountsListAdapter.AccountsListViewHolder> {
 
-    private ArrayList<User> users = new ArrayList<>();
+    private ArrayList<Object> users = new ArrayList<>();
+    private ArrayList<Integer> types = new ArrayList<>();
+    private int activeUserType;
 
-    public AccountsListAdapter(ArrayList<User> users) {
+    public AccountsListAdapter(ArrayList<Object> users) {
         this.users = users;
     }
 
     @Override
     public void onBindViewHolder(AccountsListViewHolder holder, int position) {
-        holder.userType.setText(Helpers.getUserType(users.get(position).getType()));
-        holder.userName.setText(users.get(position).getName());
-        if (users.get(position).getType() == DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType()) {
-            holder.icCheck.setVisibility(View.VISIBLE);
+        if (users.get(position) instanceof User) {
+            User user = (User) users.get(position);
+            types.add(user.getType());
+            holder.userType.setText(Helpers.getUserType(user.getType()));
+            holder.userName.setText(user.getName());
+            if (user.getType() == DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType()) {
+                holder.icCheck.setVisibility(View.VISIBLE);
+            }
+        } else {
+            DiveCenterProfile user = (DiveCenterProfile) users.get(position);
+            holder.userType.setText(Helpers.getUserType(user.getType()));
+            holder.userName.setText(user.getName());
+            types.add(user.getType());
+            if (user.getType() == DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType()) {
+                holder.icCheck.setVisibility(View.VISIBLE);
+            }
         }
     }
 
@@ -60,7 +75,7 @@ public class AccountsListAdapter extends RecyclerView.Adapter<AccountsListAdapte
 
         @Override
         public void onClick(View view) {
-            if (users.get(getAdapterPosition()).getType() != DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType()) {
+            if (types.get(getAdapterPosition()) != DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType()) {
                 DDScannerApplication.bus.post(new ChangeAccountEvent());
             }
         }

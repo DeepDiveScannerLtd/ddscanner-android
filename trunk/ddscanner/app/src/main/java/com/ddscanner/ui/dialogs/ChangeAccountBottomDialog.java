@@ -56,7 +56,7 @@ public class ChangeAccountBottomDialog extends BottomSheetDialogFragment impleme
     }
 
     private void setupRecyclerView() {
-        ArrayList<User> users = new ArrayList<>();
+        ArrayList<Object> users = new ArrayList<>();
         if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserLoggedIn()) {
             users.add(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUser());
         }

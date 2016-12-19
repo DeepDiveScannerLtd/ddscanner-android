@@ -10,6 +10,7 @@ public class DiveCenterProfile {
     private String name;
     private String photo;
     private String about;
+    private int type;
     @SerializedName("country_name")
     private String contryName;
     private ArrayList<String> addresses;
@@ -25,6 +26,33 @@ public class DiveCenterProfile {
     private int createdSpotsCount;
     @SerializedName("edited_spots_count")
     private int editedSpotsCount;
+    private String token;
+    @SerializedName("where_working_count")
+    private int workingCount;
+
+    public int getWorkingCount() {
+        return workingCount;
+    }
+
+    public void setWorkingCount(int workingCount) {
+        this.workingCount = workingCount;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
 
     public int getId() {
         return id;

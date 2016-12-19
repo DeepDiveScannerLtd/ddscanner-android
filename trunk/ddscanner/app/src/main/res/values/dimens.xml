@@ -26,4 +26,5 @@
     <dimen name="editor_avatar_radius">20dp</dimen>
 
     <dimen name="image_in_divespot_small">75dp</dimen>
+    <dimen name="base_block_margin_top">10dp</dimen>
 </resources>

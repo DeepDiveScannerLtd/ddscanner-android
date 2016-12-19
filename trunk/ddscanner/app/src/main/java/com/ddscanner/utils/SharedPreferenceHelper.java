@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.ddscanner.DDScannerApplication;
+import com.ddscanner.entities.DiveCenterProfile;
 import com.ddscanner.entities.SignInType;
 import com.ddscanner.entities.User;
 import com.google.gson.Gson;
@@ -279,7 +280,7 @@ public class SharedPreferenceHelper {
         return account;
     }
 
-    public void saveDiveCenter(User account) {
+    public void saveDiveCenter(DiveCenterProfile account) {
         String resultString = new Gson().toJson(account);
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         Editor editor = prefs.edit();
@@ -287,9 +288,9 @@ public class SharedPreferenceHelper {
         editor.commit();
     }
 
-    public User getLoggedDiveCenter() {
+    public DiveCenterProfile getLoggedDiveCenter() {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
-        User account = new Gson().fromJson(prefs.getString(LOGGED_DIVE_CENTER, ""), User.class);
+        DiveCenterProfile account = new Gson().fromJson(prefs.getString(LOGGED_DIVE_CENTER, ""), DiveCenterProfile.class);
         return account;
     }
 

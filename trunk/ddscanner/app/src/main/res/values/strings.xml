@@ -374,4 +374,5 @@
     <string name="sealfe_low">Sea life</string>
     <string name="change_account">Change account</string>
     <string name="add_account">+ Add account</string>
+    <string name="dive_center_spots_count">My dive spots (%1$s)</string>
 </resources>
