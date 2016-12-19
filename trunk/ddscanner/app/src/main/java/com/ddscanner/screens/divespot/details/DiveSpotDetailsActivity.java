@@ -170,6 +170,9 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
     }
 
     private void setUi() {
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() != 0) {
+            binding.fabCheckin.setVisibility(View.VISIBLE);
+        }
         binding.appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             boolean isShow = false;
             int scrollRange = -1;
