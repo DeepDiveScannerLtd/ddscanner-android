@@ -39,6 +39,10 @@
 
     </style>
 
+    <style name="ModalRatingBar" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/modal_rating_bar</item>
+    </style>
+
     <style name="CollapseTextSize">
         <item name="android:textSize">20sp</item>
         <item name="android:shadowRadius">3</item>

@@ -486,8 +486,9 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpotShort> imple
         lastClickedMarker = null;
         isNewDiveSpotMarkerClicked = true;
         googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(new LatLngBounds(new LatLng(event.getLatLng().latitude - 0.05, event.getLatLng().longitude - 0.05), new LatLng(event.getLatLng().latitude + 0.05, event.getLatLng().longitude + 0.05)),0));
-        sendRequest(new LatLng(event.getLatLng().latitude - 0.05, event.getLatLng().longitude - 0.05), new LatLng(event.getLatLng().latitude + 0.05, event.getLatLng().longitude + 0.05));
+        //sendRequest(new LatLng(event.getLatLng().latitude - 0.05, event.getLatLng().longitude - 0.05), new LatLng(event.getLatLng().latitude + 0.05, event.getLatLng().longitude + 0.05));
         googleMap.setOnCameraChangeListener(this);
+        requestDiveSpots(true);
     }
 
 }

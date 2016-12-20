@@ -1,6 +1,7 @@
 package com.ddscanner.rest;
 
 
+import com.ddscanner.entities.Translation;
 import com.ddscanner.entities.request.DeleteImageRequest;
 import com.ddscanner.entities.request.IdentifyRequest;
 import com.ddscanner.entities.request.RegisterRequest;
@@ -36,14 +37,6 @@ public interface DDScannerRestService {
     @GET("/diving/divecenters")
     Call<ResponseBody> getDiveCenters(@QueryMap Map<String, String> map);
 
-    @GET("/diving/divespot/{id}")
-    Call<ResponseBody> getDiveSpotById(@Path("id") String id, @QueryMap Map<String, String> map);
-
-    @Deprecated
-    @Headers("Content-type: application/json")
-    @GET("/diving/divespots")
-    Call<ResponseBody> getDivespots(@QueryMap Map<String, Object> map);
-
     @POST("/diving/login")
     Call<ResponseBody> login(@Body RegisterRequest registerRequest);
 
@@ -51,18 +44,6 @@ public interface DDScannerRestService {
     Call<ResponseBody> divespotValidation(
             @Path("id") String id,
             @Body ValidationRequest validationReguest
-            );
-
-    @POST("/diving/divespot/{id}/favorite")
-    Call<ResponseBody> addDiveSpotToFavourites(
-            @Path("id") String id,
-            @Body RegisterRequest registerRequest
-            );
-
-    @DELETE("/diving/divespot/{id}/favorite")
-    Call<ResponseBody> deleteDiveSpotFromFavourites(
-            @Path("id") String id,
-            @Body RegisterRequest registerRequest
             );
 
     @POST("/diving/divespot/comment")
@@ -75,9 +56,6 @@ public interface DDScannerRestService {
             @Part("token") RequestBody token,
             @Part("social") RequestBody sn
     );
-
-    @POST("/diving/identify")
-    Call<ResponseBody> identify(@Body IdentifyRequest identifyRequest);
 
     @POST("/diving/sealife")
     @Multipart
@@ -114,19 +92,6 @@ public interface DDScannerRestService {
             @Part("social") RequestBody sn,
             @Part("secret") RequestBody secret
             );
-
-    @GET("diving/sealife")
-    Call<ResponseBody> getSealifes();
-
-    @POST("diving/divespot/{id}/checkin")
-    Call<ResponseBody> checkIn(
-      @Path("id") String id,
-      @Body RegisterRequest registerRequest
-      );
-
-    @DELETE("diving/divespot/{id}/checkin")
-    Call<ResponseBody> checkOut(@Path("id") String id,
-                                @QueryMap Map<String, String> map);
 
     @POST("diving/divespot/{id}")
     @Multipart
@@ -172,10 +137,6 @@ public interface DDScannerRestService {
     @GET("diving/divespot/{id}/comments")
     Call<ResponseBody> getComments(@Path("id") String id, @QueryMap Map<String, String> map);
 
-    @Deprecated
-    @GET("diving/user/{id}")
-    Call<ResponseBody> getUserInfo(@Path("id") String id, @QueryMap Map<String, String> map);
-
     @POST("diving/user/{id}")
     @Multipart
     Call<ResponseBody> updateUserById(
@@ -195,31 +156,11 @@ public interface DDScannerRestService {
     @GET("diving/user/{id}/divespot/favorites")
     Call<ResponseBody> getUsersFavorites(@Path("id") String id, @QueryMap Map<String, String> map);
 
-    @DELETE("diving/divespot/{id}/favorite")
-    Call<ResponseBody> removeSpotFromFavorites( @Path("id") String id,
-                                     @QueryMap Map<String, String> map);
-
     @GET("diving/user/{id}/divespot/added")
     Call<ResponseBody> getUsersAdded(@Path("id") String id, @QueryMap Map<String, String> map);
 
     @GET("diving/user/{id}/divespot/edited")
     Call<ResponseBody> getUsersEdited(@Path("id") String id, @QueryMap Map<String, String> map);
-
-    @POST("diving/logout")
-    Call<ResponseBody> logout(@Body RegisterRequest registerRequest);
-
-    @GET("diving/user/{id}/notifications")
-    Call<ResponseBody> getNotifications(@Path("id") String id, @QueryMap Map<String, String> map);
-
-    @POST("diving/divespot/{id}/images")
-    @Multipart
-    Call<ResponseBody> addImagesToDiveSpot(
-            @Path("id") String id,
-            @Part List<MultipartBody.Part> images,
-            @Part("_method") RequestBody _method,
-            @Part("token") RequestBody token,
-            @Part("social") RequestBody sn
-    );
 
     @GET("/diving/divespot/{id}/editors")
     Call<ResponseBody> getDiveSpotEditors(@Path("id") String id, @QueryMap Map<String, String> map);
@@ -263,18 +204,8 @@ public interface DDScannerRestService {
     @POST("diving/image/report")
     Call<ResponseBody> reportImage(@Body ReportRequest reportRequest);
 
-    @DELETE("diving/image/{name}")
-    Call<ResponseBody> deleteImage(@Path("name") String imageName, @QueryMap Map<String, String> map);
-
-    @GET("diving/divespot/{id}/images")
-    Call<ResponseBody> getDiveSpotImages(@Path("id") String id, @QueryMap Map<String, String> map);
-
     @GET("diving/user/{id}/comments")
     Call<ResponseBody> getUserComments(@Path("id") String id, @QueryMap Map<String, String> map);
-
-    @Deprecated
-    @GET("diving/user/{id}/achievements")
-    Call<ResponseBody> getUserAchievementsOld(@Path("id") String id, @QueryMap Map<String, String> map);
 
     @POST("v2_0/user.login")
     Call<ResponseBody> loginUser(@Body SignInRequest signInRequest);
@@ -314,6 +245,9 @@ public interface DDScannerRestService {
     @POST("v2_0/divespot.check_in")
     Call<ResponseBody> postCheckin(@Query("id") String diveSpotId);
 
+    @POST("v2_0/divespot.check_out")
+    Call<ResponseBody> postCheckout(@Query("id") String diveSpotId);
+
     @GET("v2_0/divespot.photos.get")
     Call<ResponseBody> getDiveSpotPhotos(@Query("id") String diveSpotId);
 
@@ -332,8 +266,34 @@ public interface DDScannerRestService {
     @POST("v2_0/user.favorites.add")
     Call<ResponseBody> postAddToFavorites(@Query("id") String divespotId);
 
-    @GET("v2_0/sealifes.search")
-    Call<ResponseBody> getSealifesByQuery(@Query("query") String query, @Query("limit") int limit);
+    @POST("v2_0/user.favorites.remove")
+    Call<ResponseBody> postRemoveFromFavorites(@Query("id") String divespotId);
+
+    @GET("v2_0/sealifes.get")
+    Call<ResponseBody> getSealifesByLimit(@Query("limit") int limit);
+
+    @Multipart
+    @POST("v2_0/divespot.add")
+    Call<ResponseBody> postAddDiveSpot(
+            @Part("lat") RequestBody lat,
+            @Part("lng") RequestBody lng,
+            @Part("country_code") RequestBody countryCode,
+            @Part("depth") RequestBody depth,
+            @Part("diving_skill") RequestBody skill,
+            @Part("currents") RequestBody currents,
+            @Part("visibility_min") RequestBody visibility_min,
+            @Part("visibility_max") RequestBody visibility_max,
+            @Part("cover_number") RequestBody cover_number,
+            @Part("translations") RequestBody translations,
+            @Part("dive_spot_type") RequestBody type,
+            @Part List<MultipartBody.Part> photos,
+            @Part List<MultipartBody.Part> maps,
+            @Part List<MultipartBody.Part> sealife
+
+    );
+
+    @GET("v2_0/divespot.languages.get")
+    Call<ResponseBody> getDivespotLanguages();
 
     @GET("v2_0/divecenter/profile.get")
     Call<ResponseBody> getDiveCenterProfile();

@@ -106,7 +106,7 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
         userId = getIntent().getStringExtra("USERID");
         findViews();
         toolbarSettings();
-        DDScannerApplication.getInstance().getDdScannerRestClient().getUserInformation(userId, userResultListener);
+       // DDScannerApplication.getInstance().getDdScannerRestClient().getUserInformation(userId, userResultListener);
     }
 
     private void findViews() {
@@ -222,7 +222,7 @@ public class ForeignProfileActivity extends AppCompatActivity implements View.On
         switch (requestCode) {
             case ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_LOGIN:
                 if (resultCode == RESULT_OK) {
-                    DDScannerApplication.getInstance().getDdScannerRestClient().getUserInformation(userId, userResultListener);
+                  //  DDScannerApplication.getInstance().getDdScannerRestClient().getUserInformation(userId, userResultListener);
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_LOGIN_TO_SEE_CHECKINS:
