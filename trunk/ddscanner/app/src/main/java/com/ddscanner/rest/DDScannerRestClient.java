@@ -518,6 +518,16 @@ public class DDScannerRestClient {
         });
     }
 
+    public void postAddDiveSpotToDiveCenter(String diveSpotId, ResultListener<Void> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postAddDiveSpotToDiveCenter(diveSpotId);
+        call.enqueue(new NoResponseEntityCallback(gson, resultListener));
+    }
+
+    public void postRemoveDiveSpotToDiveCenter(String diveSpotId, ResultListener<Void> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postRemoveDiveSpotToDiveCenter(diveSpotId);
+        call.enqueue(new NoResponseEntityCallback(gson, resultListener));
+    }
+
     public void getUserProfileInformation(String id, final ResultListener<User> resultListener) {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserInformation(id);
         call.enqueue(new ResponseEntityCallback<User>(gson, resultListener) {
@@ -539,6 +549,11 @@ public class DDScannerRestClient {
                 resultListener.onSuccess(achievmentsResponseEntity);
             }
         });
+    }
+
+    public void postApproveDiveSpot(String diveSpotId, boolean value, ResultListener<Void> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postApproveDiveSpot(diveSpotId, value);
+        call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 
     public void postCheckIn(String diveSpotId, @NonNull final ResultListener<Void> resultListener) {

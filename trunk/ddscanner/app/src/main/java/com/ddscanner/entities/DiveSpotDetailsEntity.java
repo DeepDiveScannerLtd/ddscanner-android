@@ -35,6 +35,7 @@ public class DiveSpotDetailsEntity extends DiveSpotShort {
     @SerializedName("maps_count")
     private int mapsPhotosCount;
 
+
     public int getMapsPhotosCount() {
         return mapsPhotosCount;
     }

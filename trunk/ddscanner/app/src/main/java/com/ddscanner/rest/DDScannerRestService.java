@@ -338,4 +338,13 @@ public interface DDScannerRestService {
     @GET("v2_0/divecenter/profile.get")
     Call<ResponseBody> getDiveCenterProfile();
 
+    @POST("v2_0/divecenter.divespot.add")
+    Call<ResponseBody> postAddDiveSpotToDiveCenter(@Query("id") String divespotId);
+
+    @POST("v2_0/divecenter.divespot.remove")
+    Call<ResponseBody> postRemoveDiveSpotToDiveCenter(@Query("id") String divespotId);
+
+    @POST("v2_0/divespot.approve")
+    Call<ResponseBody> postApproveDiveSpot(@Query("id") String id, @Query("value") boolean value);
+
 }

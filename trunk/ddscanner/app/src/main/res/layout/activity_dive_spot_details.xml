@@ -122,7 +122,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical"
-                        android:visibility="gone">
+                        android:visibility="visible">
 
                         <RelativeLayout
                             android:layout_width="match_parent"
@@ -200,7 +200,7 @@
                                 android:src="@drawable/ic_ds_divecenter" />
                             <android.support.v7.widget.SwitchCompat
                                 android:layout_toRightOf="@+id/ic_layout_working"
-                                android:id="@+id/switchButton"
+                                android:id="@+id/switch_working_button"
                                 android:layout_width="match_parent"
                                 android:textSize="15sp"
                                 android:layout_height="match_parent"
@@ -208,6 +208,7 @@
                                 android:fontFamily="sans-serif-medium"
                                 android:paddingRight="13dp"
                                 app:theme="@style/ColorSwitchStyle"
+                                android:checked="@{diveSpotViewModel.diveSpotDetailsEntity.flags.workingHere}"
                                 />
                         </RelativeLayout>
                         <RelativeLayout
@@ -323,11 +324,8 @@
                             android:orientation="vertical">
 
                             <ImageView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="10dp"
-                                android:scaleType="centerCrop"
-                                android:src="@drawable/divider" />
+                                style="@style/DividerStyleFull"
+                                android:layout_marginTop="10dp" />
 
                             <RelativeLayout
                                 android:layout_width="match_parent"
@@ -649,97 +647,6 @@
                             android:layout_height="wrap_content"
                             android:src="@drawable/divider" />
 
-                        <LinearLayout
-                            android:id="@+id/is_info_valid_layout"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:visibility="gone">
-
-                            <ImageView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="10dp"
-                                android:src="@drawable/divider" />
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="55dp"
-                                android:background="@color/white"
-                                android:gravity="center_vertical"
-                                android:orientation="horizontal">
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="match_parent"
-                                    android:layout_marginLeft="20dp"
-                                    android:layout_marginRight="24dp"
-                                    android:layout_weight="2"
-                                    android:gravity="center"
-                                    android:text="@string/the_information_is_valid"
-                                    android:textColor="@color/black_text"
-                                    android:textSize="15sp" />
-
-                                <Button
-                                    android:id="@+id/yes_button"
-                                    android:layout_width="59dp"
-                                    android:layout_height="34dp"
-                                    android:layout_marginRight="8dp"
-                                    android:layout_weight="1"
-                                    android:background="@drawable/border_button_orange_2px"
-                                    android:text="@string/btn_yes" />
-
-                                <Button
-                                    android:id="@+id/no_button"
-                                    android:layout_width="59dp"
-                                    android:layout_height="34dp"
-                                    android:layout_marginRight="16dp"
-                                    android:layout_weight="1"
-                                    android:background="@drawable/border_button_gray_2px"
-                                    android:text="@string/btn_no" />
-                            </LinearLayout>
-
-                            <ImageView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:src="@drawable/divider" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:id="@+id/thanks_layout"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:visibility="gone">
-
-                            <ImageView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="10dp"
-                                android:src="@drawable/divider" />
-
-                            <RelativeLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="55dp"
-                                android:background="@color/orange"
-                                android:gravity="center_vertical"
-                                android:orientation="horizontal">
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_centerInParent="true"
-                                    android:text="@string/thanks_for_your_answer"
-                                    android:textColor="@color/black_text"
-                                    android:textSize="15sp" />
-                            </RelativeLayout>
-
-                            <ImageView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:src="@drawable/divider" />
-                        </LinearLayout>
-
                         <ImageView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -810,11 +717,46 @@
                                 android:id="@+id/button_show_divecenters"
                                 android:layout_width="match_parent"
                                 android:layout_height="45dp"
-                                android:layout_alignParentBottom="true"
                                 android:background="@color/orange"
                                 android:text="@string/contact_dive_centers"
                                 android:visibility="visible"
+                                app:visibilityForBookButtonFrom="@{diveSpotViewModel}"
                                 android:onClick="@{handlers::showDiveCentersButtonClicked}"/>
+                            <RelativeLayout
+                                android:id="@+id/approve_layout"
+                                android:layout_width="match_parent"
+                                android:layout_height="55dp"
+                                android:paddingLeft="20dp"
+                                android:paddingRight="20dp">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:gravity="center_vertical"
+                                    android:textSize="15sp"
+                                    android:textColor="@color/black_text"
+                                    android:text="@string/approve_the_information"
+                                    />
+                                <Button
+                                    android:layout_centerVertical="true"
+                                    android:id="@+id/yes_button"
+                                    android:layout_width="59dp"
+                                    android:layout_height="34dp"
+                                    android:layout_marginRight="8dp"
+                                    android:background="@drawable/border_button_orange_2px"
+                                    android:text="@string/btn_yes"
+                                    android:layout_toLeftOf="@+id/no_button"
+                                    android:onClick="@{handlers::trueApproveDiveSpot}"/>
+
+                                <Button
+                                    android:layout_centerVertical="true"
+                                    android:id="@+id/no_button"
+                                    android:layout_width="59dp"
+                                    android:layout_height="34dp"
+                                    android:background="@drawable/border_button_gray_2px"
+                                    android:text="@string/btn_no"
+                                    android:layout_alignParentRight="true"
+                                    android:onClick="@{handlers::falseApproveDiveSpot}"/>
+                            </RelativeLayout>
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
@@ -832,7 +774,7 @@
                 app:layout_anchorGravity="bottom|right|end"
                 app:layout_collapseMode="pin"
                 android:onClick="@{handlers::checkInClicked}"
-                android:visibility="gone" />
+                android:visibility="gone"/>
 
         </android.support.design.widget.CoordinatorLayout>
     </RelativeLayout>

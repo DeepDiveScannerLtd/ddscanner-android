@@ -2,6 +2,7 @@ package com.ddscanner.screens.divespot.details;
 
 import android.databinding.BindingAdapter;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -126,6 +127,13 @@ public class DiveSpotDetailsActivityViewModel {
                 return;
             }
             view.setText(DDScannerApplication.getInstance().getString(R.string.show_all, String.valueOf(viewModel.getDiveSpotDetailsEntity().getReviewsCount())));
+        }
+    }
+
+    @BindingAdapter("visibilityForBookButtonFrom")
+    public static void setBookButtonVisibility(Button view, DiveSpotDetailsActivityViewModel viewModel) {
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == 0) {
+            view.setVisibility(View.GONE);
         }
     }
 

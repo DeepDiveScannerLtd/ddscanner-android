@@ -379,6 +379,7 @@
             android:textColor="#e3e9fb"
             android:textSize="15sp"
             android:layout_marginBottom="20dp"
+            app:myDiveSpotsCount="@{diveCenterViewModel}"
             />
     </LinearLayout>
 

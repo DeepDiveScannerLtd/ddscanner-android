@@ -8,10 +8,8 @@ import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.databinding.DataBindingUtil;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -22,14 +20,15 @@ import android.support.v7.widget.AppCompatDrawableManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
@@ -63,13 +62,13 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
 import com.squareup.otto.Subscribe;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DiveSpotDetailsActivity extends AppCompatActivity implements RatingBar.OnRatingBarChangeListener, InfoDialogFragment.DialogClosedListener {
+public class DiveSpotDetailsActivity extends AppCompatActivity implements RatingBar.OnRatingBarChangeListener, InfoDialogFragment.DialogClosedListener, CompoundButton.OnCheckedChangeListener {
 
     private static final String TAG = DiveSpotDetailsActivity.class.getName();
 
@@ -80,6 +79,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
     private boolean isFavorite = false;
     private boolean isNewDiveSpot = false;
     private boolean isMapsShown = false;
+    private boolean isWorkingHere = false;
     private DiveSpotPhotosAdapter mapsAdapter, photosAdapter;
     private CheckedInDialogFragment checkedInDialogFragment;
 
@@ -93,6 +93,10 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
 
     private ActivityDiveSpotDetailsBinding binding;
     private ArrayList<String> photosForReiew = new ArrayList<>();
+    private WorkingHereResultListener addWorkingResultListener = new WorkingHereResultListener(true);
+    private WorkingHereResultListener removeWorkngResultListener = new WorkingHereResultListener(false);
+    private ApproveResultListener trueApproveResultListener = new ApproveResultListener(true);
+    private ApproveResultListener falseApproveResultListener = new ApproveResultListener(false);
 
     private DDScannerRestClient.ResultListener<DiveSpotDetailsEntity> diveSpotDetailsResultListener = new DDScannerRestClient.ResultListener<DiveSpotDetailsEntity>() {
         @Override
@@ -100,6 +104,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
             diveSpotDetailsEntity = result;
             if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
                 isCheckedIn = result.getFlags().isCheckedIn();
+                isWorkingHere = result.getFlags().isWorkingHere();
             }
             binding.setDiveSpotViewModel(new DiveSpotDetailsActivityViewModel(diveSpotDetailsEntity, binding.progressBar));
             setUi();
@@ -173,6 +178,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
         if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() != 0) {
             binding.fabCheckin.setVisibility(View.VISIBLE);
         }
+        binding.switchWorkingButton.setOnCheckedChangeListener(this);
         binding.appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             boolean isShow = false;
             int scrollRange = -1;
@@ -329,9 +335,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
 
     private void tryToCallEditDiveSpotActivity() {
         if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
-            Intent editDiveSpotIntent = new Intent(DiveSpotDetailsActivity.this, EditDiveSpotActivity.class);
-            editDiveSpotIntent.putExtra(Constants.DIVESPOTID, String.valueOf(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getId()));
-            startActivityForResult(editDiveSpotIntent, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_EDIT_DIVE_SPOT);
+            EditDiveSpotActivity.showForResult(new Gson().toJson(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity()), this,  ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_EDIT_DIVE_SPOT);
         } else {
             LoginActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_EDIT_SPOT);
         }
@@ -404,16 +408,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
         materialDialog.show();
         diveSpotValidationResultListener.setValid(isValid);
         DDScannerApplication.getInstance().getDdScannerRestClient().postValidateDiveSpot(diveSpotId, isValid, diveSpotValidationResultListener);
-    }
-
-    private void hideThanksLayout() {
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                binding.thanksLayout.setVisibility(View.GONE);
-            }
-        }, 3000);
     }
 
     private void addDiveSpotToFavorites() {
@@ -636,6 +630,15 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
     }
 
     @Override
+    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+        if (!isWorkingHere) {
+            DDScannerApplication.getInstance().getDdScannerRestClient().postAddDiveSpotToDiveCenter(diveSpotId, addWorkingResultListener);
+            return;
+        }
+        DDScannerApplication.getInstance().getDdScannerRestClient().postRemoveDiveSpotToDiveCenter(diveSpotId, removeWorkngResultListener);
+    }
+
+    @Override
     public void onBackPressed() {
         finish();
     }
@@ -644,6 +647,187 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
         Intent intent = getIntent();
         startActivity(intent);
         finish();
+    }
+
+    public void showMoreDescription(View view) {
+        binding.showmore.setVisibility(View.GONE);
+        binding.divePlaceDescription.setMaxLines(10000);
+        binding.divePlaceDescription.setEllipsize(null);
+    }
+
+    public void showCheckinsActivity(View view) {
+
+    }
+
+    public void addPhotoToDiveSpotButtonClicked(View view) {
+        if (checkReadStoragePermission(this)) {
+            openImagePickerActivity(ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_PICK_PHOTOS);
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, Constants.DIVE_SPOT_DETAILS_ACTIVITY_REQUEST_CODE_PERMISSION_READ_STORAGE);
+        }
+    }
+
+    public void photosButtonClicked(View view) {
+        if (isMapsShown) {
+            changeViewState(binding.photosButton, binding.maps);
+            isMapsShown = !isMapsShown;
+            binding.mapsRc.setVisibility(View.GONE);
+            if (binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPhotos() != null) {
+                binding.photosRc.setVisibility(View.VISIBLE);
+                binding.addPhotosLayout.setVisibility(View.GONE);
+                binding.addPhotosButon.setVisibility(View.VISIBLE);
+                return;
+            }
+            binding.photosRc.setVisibility(View.GONE);
+            binding.addPhotosLayout.setVisibility(View.VISIBLE);
+            binding.addPhotosButon.setVisibility(View.GONE);
+        }
+    }
+
+    public void mapsButtonClicked(View view) {
+        if (!isMapsShown) {
+            changeViewState(binding.maps, binding.photosButton);
+            isMapsShown = !isMapsShown;
+            binding.photosRc.setVisibility(View.GONE);
+            if (binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getMaps() != null) {
+                binding.mapsRc.setVisibility(View.VISIBLE);
+                binding.addPhotosLayout.setVisibility(View.GONE);
+                binding.addPhotosButon.setVisibility(View.VISIBLE);
+                return;
+            }
+            binding.mapsRc.setVisibility(View.GONE);
+            binding.addPhotosLayout.setVisibility(View.VISIBLE);
+            binding.addPhotosButon.setVisibility(View.GONE);
+        }
+    }
+
+    public void checkInClicked(View view) {
+        if (isCheckedIn) {
+            checkOut();
+            return;
+        }
+        checkIn();
+    }
+
+    public void openMapActivityClicked(View view) {
+        Intent intent = new Intent(DiveSpotDetailsActivity.this, ShowDsLocationActivity.class);
+        intent.putExtra("LATLNG", binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPosition());
+        startActivity(intent);
+    }
+
+    public void showDiveCentersButtonClicked(View view) {
+        DiveCentersActivity.show(this, binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPosition(), binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getName());
+    }
+
+    private void changeViewState(TextView activeTextView, TextView disableTextView) {
+        activeTextView.setTextColor(ContextCompat.getColor(this, R.color.black_text));
+        activeTextView.setBackground(ContextCompat.getDrawable(this, R.drawable.gray_rectangle));
+
+        disableTextView.setTextColor(ContextCompat.getColor(this, R.color.diactive_button_photo_color));
+        disableTextView.setBackground(null);
+    }
+
+    @Subscribe
+    public void addPhotoToCheckedInDialogFragment(PickPhotoForCheckedInDialogEvent event) {
+        if (checkReadStoragePermission(this)) {
+            openImagePickerActivity(ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_PICK_PHOTO_FOR_DIALOG);
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, Constants.DIVE_SPOT_DETAILS_ACTIVITY_REQUEST_CODE_PERMISSION_READ_STORAGE);
+        }
+    }
+
+    public void trueApproveDiveSpot(View view) {
+        DDScannerApplication.getInstance().getDdScannerRestClient().postApproveDiveSpot(diveSpotId, true, trueApproveResultListener);
+    }
+
+    public void falseApproveDiveSpot(View view) {
+        MaterialDialog.Builder dialog =new MaterialDialog.Builder(this);
+        dialog.title("What do you want")
+                .content("bla bla bla")
+                .positiveText("edit")
+                .positiveColor(ContextCompat.getColor(this, R.color.primary))
+                .negativeColor(ContextCompat.getColor(this, R.color.primary))
+                .negativeText("remove")
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        tryToCallEditDiveSpotActivity();
+                    }
+                })
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        DDScannerApplication.getInstance().getDdScannerRestClient().postApproveDiveSpot(diveSpotId, false, falseApproveResultListener);
+                    }
+                });
+        dialog.show();
+    }
+
+    private class ApproveResultListener extends DDScannerRestClient.ResultListener<Void> {
+
+        private boolean isTrue;
+
+        ApproveResultListener(boolean isTrue) {
+            this.isTrue = isTrue;
+        }
+
+        @Override
+        public void onSuccess(Void result) {
+            if (!isTrue) {
+                finish();
+                return;
+            }
+            binding.approveLayout.setVisibility(View.GONE);
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_DIVE_SPOT_DETAILS_ACTIVITY_FAILED_TO_CONNECT, false);
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            EventsTracker.trackUnknownServerError(url, errorMessage);
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_DIVE_SPOT_DETAILS_ACTIVITY_DIVE_SPOT_NOT_FOUND, false);
+
+        }
+    }
+
+    private class WorkingHereResultListener extends DDScannerRestClient.ResultListener<Void> {
+
+        private boolean isAddToWorking;
+
+        WorkingHereResultListener(boolean isAddToWorking) {
+            this.isAddToWorking = isAddToWorking;
+        }
+
+        @Override
+        public void onSuccess(Void result) {
+            if (isAddToWorking) {
+                DiveSpotDetailsActivity.this.isWorkingHere = true;
+                return;
+            }
+            DiveSpotDetailsActivity.this.isWorkingHere = false;
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            if (isAddToWorking) {
+                binding.switchWorkingButton.setChecked(false);
+                return;
+            }
+            binding.switchWorkingButton.setChecked(true);
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            if (isAddToWorking) {
+                binding.switchWorkingButton.setChecked(false);
+                return;
+            }
+            binding.switchWorkingButton.setChecked(true);
+        }
+
     }
 
     private class CheckInCheckoutResultListener extends DDScannerRestClient.ResultListener<Void> {
@@ -780,7 +964,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
             }
 //            isInfoValidLayout.setVisibility(View.GONE);
 //            thanksLayout.setVisibility(View.VISIBLE);
-            hideThanksLayout();
             if (isValid) {
                 EventsTracker.trackDiveSpotValid();
             } else {
@@ -820,91 +1003,5 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
         }
     }
 
-    public void showMoreDescription(View view) {
-        binding.showmore.setVisibility(View.GONE);
-        binding.divePlaceDescription.setMaxLines(10000);
-        binding.divePlaceDescription.setEllipsize(null);
-    }
-
-    public void showCheckinsActivity(View view) {
-
-    }
-
-    public void addPhotoToDiveSpotButtonClicked(View view) {
-        if (checkReadStoragePermission(this)) {
-            openImagePickerActivity(ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_PICK_PHOTOS);
-        } else {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, Constants.DIVE_SPOT_DETAILS_ACTIVITY_REQUEST_CODE_PERMISSION_READ_STORAGE);
-        }
-    }
-
-    public void photosButtonClicked(View view) {
-        if (isMapsShown) {
-            changeViewState(binding.photosButton, binding.maps);
-            isMapsShown = !isMapsShown;
-            binding.mapsRc.setVisibility(View.GONE);
-            if (binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPhotos() != null) {
-                binding.photosRc.setVisibility(View.VISIBLE);
-                binding.addPhotosLayout.setVisibility(View.GONE);
-                binding.addPhotosButon.setVisibility(View.VISIBLE);
-                return;
-            }
-            binding.photosRc.setVisibility(View.GONE);
-            binding.addPhotosLayout.setVisibility(View.VISIBLE);
-            binding.addPhotosButon.setVisibility(View.GONE);
-        }
-    }
-
-    public void mapsButtonClicked(View view) {
-        if (!isMapsShown) {
-            changeViewState(binding.maps, binding.photosButton);
-            isMapsShown = !isMapsShown;
-            binding.photosRc.setVisibility(View.GONE);
-            if (binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getMaps() != null) {
-                binding.mapsRc.setVisibility(View.VISIBLE);
-                binding.addPhotosLayout.setVisibility(View.GONE);
-                binding.addPhotosButon.setVisibility(View.VISIBLE);
-                return;
-            }
-            binding.mapsRc.setVisibility(View.GONE);
-            binding.addPhotosLayout.setVisibility(View.VISIBLE);
-            binding.addPhotosButon.setVisibility(View.GONE);
-        }
-    }
-
-    public void checkInClicked(View view) {
-        if (isCheckedIn) {
-            checkOut();
-            return;
-        }
-        checkIn();
-    }
-
-    public void openMapActivityClicked(View view) {
-        Intent intent = new Intent(DiveSpotDetailsActivity.this, ShowDsLocationActivity.class);
-        intent.putExtra("LATLNG", binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPosition());
-        startActivity(intent);
-    }
-
-    public void showDiveCentersButtonClicked(View view) {
-        DiveCentersActivity.show(this, binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPosition(), binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getName());
-    }
-
-    private void changeViewState(TextView activeTextView, TextView disableTextView) {
-        activeTextView.setTextColor(ContextCompat.getColor(this, R.color.black_text));
-        activeTextView.setBackground(ContextCompat.getDrawable(this, R.drawable.gray_rectangle));
-
-        disableTextView.setTextColor(ContextCompat.getColor(this, R.color.diactive_button_photo_color));
-        disableTextView.setBackground(null);
-    }
-
-    @Subscribe
-    public void addPhotoToCheckedInDialogFragment(PickPhotoForCheckedInDialogEvent event) {
-        if (checkReadStoragePermission(this)) {
-            openImagePickerActivity(ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_PICK_PHOTO_FOR_DIALOG);
-        } else {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, Constants.DIVE_SPOT_DETAILS_ACTIVITY_REQUEST_CODE_PERMISSION_READ_STORAGE);
-        }
-    }
 
 }

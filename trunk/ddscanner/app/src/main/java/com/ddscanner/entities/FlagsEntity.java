@@ -10,6 +10,16 @@ public class FlagsEntity {
     private boolean isFavorite;
     @SerializedName("is_verified")
     private boolean isVerified;
+    @SerializedName("is_working_here")
+    private boolean isWorkingHere;
+
+    public boolean isWorkingHere() {
+        return isWorkingHere;
+    }
+
+    public void setWorkingHere(boolean workingHere) {
+        isWorkingHere = workingHere;
+    }
 
     public boolean isCheckedIn() {
         return isCheckedIn;
