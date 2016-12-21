@@ -4,15 +4,20 @@ import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.util.Log;
 
 import com.ddscanner.DDScannerApplication;
+import com.ddscanner.screens.profile.DiveCenterProfileFragment;
 import com.ddscanner.screens.profile.ProfileFragment;
 import com.ddscanner.ui.fragments.ActivityNotificationsFragment;
 import com.ddscanner.ui.fragments.AllNotificationsFragment;
+import com.ddscanner.ui.fragments.BaseFragment;
 import com.ddscanner.ui.fragments.MapListFragment;
 import com.ddscanner.ui.fragments.NotificationsFragment;
 import com.ddscanner.ui.views.LoginView;
 import com.ddscanner.utils.LogUtils;
+
+import java.util.ArrayList;
 
 /**
  * Created by lashket on 20.4.16.
@@ -23,10 +28,22 @@ public class MainActivityPagerAdapter extends FragmentStatePagerAdapter implemen
 
     private MapListFragment mapListFragment = new MapListFragment();
     private ProfileFragment profileFragment = new ProfileFragment();
+    private DiveCenterProfileFragment diveCenterProfileFragment = new DiveCenterProfileFragment();
     private NotificationsFragment notificationsFragment = new NotificationsFragment();
+
+    private ArrayList<String> titles = new ArrayList<>();
 
     public MainActivityPagerAdapter(FragmentManager manager) {
         super(manager);
+        titles.add("1");
+        titles.add("2");
+        titles.add("3");
+        titles.add("4");
+        profileFragment.setTitle("3");
+        diveCenterProfileFragment.setTitle("4");
+        mapListFragment.setTitle("1");
+        notificationsFragment.setTitle("2");
+
     }
 
     @Override
@@ -38,7 +55,14 @@ public class MainActivityPagerAdapter extends FragmentStatePagerAdapter implemen
             case 1:
                 return notificationsFragment;
             case 2:
-                return profileFragment;
+                switch (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType()) {
+                    case 0:
+                        return diveCenterProfileFragment;
+                    case 1:
+                        return profileFragment;
+                    case -1:
+                        return profileFragment;
+                }
             default:
                 return null;
         }
@@ -47,6 +71,22 @@ public class MainActivityPagerAdapter extends FragmentStatePagerAdapter implemen
     @Override
     public int getCount() {
         return 3;
+    }
+
+    @Override
+    public int getItemPosition(Object object) {
+        Log.i(TAG, "getItemPosition");
+//        BaseFragment fragment = (BaseFragment) object;
+//        String title = fragment.getTitle();
+//        int position = titles.indexOf(title);
+//        Log.i(TAG, "getItemPosition position = " + position);
+//        if (position == 3) {
+//            return 2;
+//        }
+//        if (position >= 0) {
+//            return position;
+//        }
+        return POSITION_NONE;
     }
 
     @Override
@@ -88,5 +128,9 @@ public class MainActivityPagerAdapter extends FragmentStatePagerAdapter implemen
 
     public void setAllNotificationsFragment(AllNotificationsFragment allNotificationsFragment) {
         this.notificationsFragment.setAllNotificationsFragment(allNotificationsFragment);
+    }
+
+    public void setDiveCenterProfileFragment(DiveCenterProfileFragment diveCenterProfileFragment) {
+        this.diveCenterProfileFragment = diveCenterProfileFragment;
     }
 }

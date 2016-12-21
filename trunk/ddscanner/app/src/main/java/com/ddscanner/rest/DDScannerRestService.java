@@ -1,6 +1,7 @@
 package com.ddscanner.rest;
 
 
+import com.ddscanner.entities.Translation;
 import com.ddscanner.entities.request.DeleteImageRequest;
 import com.ddscanner.entities.request.IdentifyRequest;
 import com.ddscanner.entities.request.RegisterRequest;
@@ -268,8 +269,65 @@ public interface DDScannerRestService {
     @POST("v2_0/user.favorites.remove")
     Call<ResponseBody> postRemoveFromFavorites(@Query("id") String divespotId);
 
-    @GET("v2_0/sealifes.search")
-    Call<ResponseBody> getSealifesByQuery(@Query("query") String query, @Query("limit") int limit);
+    @GET("v2_0/sealifes.get")
+    Call<ResponseBody> getSealifesByLimit(@Query("limit") int limit);
+
+    @Multipart
+    @POST("v2_0/divespot.add")
+    Call<ResponseBody> postAddDiveSpot(
+            @Part("lat") RequestBody lat,
+            @Part("lng") RequestBody lng,
+            @Part("country_code") RequestBody countryCode,
+            @Part("depth") RequestBody depth,
+            @Part("diving_skill") RequestBody skill,
+            @Part("currents") RequestBody currents,
+            @Part("visibility_min") RequestBody visibility_min,
+            @Part("visibility_max") RequestBody visibility_max,
+            @Part("cover_number") RequestBody cover_number,
+            @Part("translations") RequestBody translations,
+            @Part("dive_spot_type") RequestBody type,
+            @Part List<MultipartBody.Part> photos,
+            @Part List<MultipartBody.Part> maps,
+            @Part List<MultipartBody.Part> sealife
+
+    );
+
+    @Multipart
+    @POST("v2_0/divespot.update")
+    Call<ResponseBody> postUpdateDiveSpot(
+            @Part("id") RequestBody id,
+            @Part("lat") RequestBody lat,
+            @Part("lng") RequestBody lng,
+            @Part("country_code") RequestBody countryCode,
+            @Part("depth") RequestBody depth,
+            @Part("diving_skill") RequestBody skill,
+            @Part("currents") RequestBody currents,
+            @Part("visibility_min") RequestBody visibility_min,
+            @Part("visibility_max") RequestBody visibility_max,
+            @Part("cover_number") RequestBody cover_number,
+            @Part("translations") RequestBody translations,
+            @Part("dive_spot_type") RequestBody type,
+            @Part List<MultipartBody.Part> new_photos,
+            @Part List<MultipartBody.Part> deleted_photos,
+            @Part List<MultipartBody.Part> new_maps,
+            @Part List<MultipartBody.Part> deleted_maps,
+            @Part List<MultipartBody.Part> sealife
+    );
+
+    @GET("v2_0/divespot.languages.get")
+    Call<ResponseBody> getDivespotLanguages();
+
+    @POST("v2_0/divecenter.divespot.add")
+    Call<ResponseBody> postAddDiveSpotToDiveCenter(@Query("id") String divespotId);
+
+    @POST("v2_0/divecenter.divespot.remove")
+    Call<ResponseBody> postRemoveDiveSpotToDiveCenter(@Query("id") String divespotId);
+
+    @POST("v2_0/divespot.approve")
+    Call<ResponseBody> postApproveDiveSpot(@Query("id") String id, @Query("value") boolean value);
+
+    @GET("v2_0/divespot.translations.get")
+    Call<ResponseBody> getDiveSpotsTranslations(@Query("id") String id);
 
     @POST("v2_0/user.password.forgot")
     Call<ResponseBody> postForgotPassword(@Query("email") String email);

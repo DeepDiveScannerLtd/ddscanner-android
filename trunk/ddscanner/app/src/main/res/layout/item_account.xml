@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="36dp"
+    android:layout_marginBottom="20dp">
+    <ImageView
+        android:id="@+id/avatar"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:src="@drawable/avatar_changeacc"/>
+    <LinearLayout
+        android:gravity="center"
+        android:layout_marginLeft="20dp"
+        android:layout_toRightOf="@+id/avatar"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/user_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@color/black_text"
+            tools:text="Francis warner"/>
+        <TextView
+            android:id="@+id/user_type"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="#a3a3a3"
+            tools:text="Diver"/>
+    </LinearLayout>
+    <ImageView
+        android:visibility="gone"
+        android:id="@+id/active_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:src="@drawable/ic_check_changeacc"
+        android:layout_alignParentRight="true"/>
+</RelativeLayout>

@@ -28,6 +28,7 @@ import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.SignInType;
 import com.ddscanner.entities.SignUpResponseEntity;
+import com.ddscanner.events.ChangeAccountEvent;
 import com.ddscanner.events.ChangeLoginViewEvent;
 import com.ddscanner.events.ChangePageOfMainViewPagerEvent;
 import com.ddscanner.events.CloseInfoWindowEvent;
@@ -40,7 +41,7 @@ import com.ddscanner.events.LoadUserProfileInfoEvent;
 import com.ddscanner.events.LocationReadyEvent;
 import com.ddscanner.events.LoggedInEvent;
 import com.ddscanner.events.LoggedOutEvent;
-import com.ddscanner.events.LoginViaEmailEvent;
+import com.ddscanner.events.LoginSignUpViaEmailEvent;
 import com.ddscanner.events.LoginViaFacebookClickEvent;
 import com.ddscanner.events.LoginViaGoogleClickEvent;
 import com.ddscanner.events.NewDiveSpotAddedEvent;
@@ -48,13 +49,16 @@ import com.ddscanner.events.OpenAddDiveSpotActivity;
 import com.ddscanner.events.OpenAddDsActivityAfterLogin;
 import com.ddscanner.events.PickPhotoFromGallery;
 import com.ddscanner.events.PlaceChoosedEvent;
+import com.ddscanner.events.ShowLoginActivityForAddAccount;
 import com.ddscanner.events.ShowLoginActivityIntent;
 import com.ddscanner.events.SignupLoginButtonClicked;
 import com.ddscanner.events.TakePhotoFromCameraEvent;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.divespot.add.AddDiveSpotActivity;
+import com.ddscanner.screens.profile.DiveCenterProfileFragment;
 import com.ddscanner.ui.adapters.MainActivityPagerAdapter;
 import com.ddscanner.ui.dialogs.ActionSuccessDialogFragment;
+import com.ddscanner.ui.dialogs.ChangeAccountBottomDialog;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.ui.fragments.ActivityNotificationsFragment;
 import com.ddscanner.ui.fragments.AllNotificationsFragment;
@@ -103,11 +107,13 @@ public class MainActivity extends BaseAppCompatActivity
     private PercentRelativeLayout menuItemsLayout;
     private ImageView searchLocationBtn;
     private ImageView btnFilter;
+    private ImageView changeAccountButton;
     private MainActivityPagerAdapter mainViewPagerAdapter;
     private ProfileFragment profileFragment;
     private NotificationsFragment notificationsFragment;
     private ActivityNotificationsFragment activityNotificationsFragment;
     private AllNotificationsFragment allNotificationsFragment;
+    private DiveCenterProfileFragment diveCenterProfileFragment;
     private ImageView imageView;
     private boolean isHasInternetConnection;
     private boolean isHasLocation;
@@ -117,6 +123,8 @@ public class MainActivity extends BaseAppCompatActivity
     private boolean isDiveSpotListIsShown = false;
     private boolean isSignupClicked = false;
     private int positionToScroll;
+    private PercentRelativeLayout acountChangeLayout;
+    private ChangeAccountBottomDialog changeAccountBottomDialog;
 
     private CallbackManager facebookCallbackManager;
     private GoogleApiClient mGoogleApiClient;
@@ -124,13 +132,14 @@ public class MainActivity extends BaseAppCompatActivity
     private boolean loggedInDuringLastOnStart;
     private boolean needToClearDefaultAccount;
 
-    private DDScannerRestClient.ResultListener<SignUpResponseEntity> signUpResultListener = new DDScannerRestClient.ResultListener<SignUpResponseEntity>() {
+    private DDScannerRestClient.ResultListener<SignUpResponseEntity> signUpLoginResultListener = new DDScannerRestClient.ResultListener<SignUpResponseEntity>() {
         @Override
         public void onSuccess(SignUpResponseEntity result) {
             materialDialog.dismiss();
             DDScannerApplication.getInstance().getSharedPreferenceHelper().setToken(result.getToken());
             DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsUserSignedIn(true, SignInType.EMAIL);
             DDScannerApplication.getInstance().getSharedPreferenceHelper().setUserServerId(result.getId());
+            DDScannerApplication.getInstance().getSharedPreferenceHelper().setActiveUserType(result.getType());
             DDScannerApplication.bus.post(new LoggedInEvent());
         }
 
@@ -163,6 +172,7 @@ public class MainActivity extends BaseAppCompatActivity
         clearFilterSharedPreferences();
         startActivity();
         Log.i(TAG, FirebaseInstanceId.getInstance().getToken());
+       // DDScannerApplication.getInstance().getSharedPreferenceHelper().clear();
         if (!isHasInternetConnection) {
             LogUtils.i(TAG, "internetConnectionClosed 2");
             InternetClosedActivity.show(this);
@@ -178,6 +188,7 @@ public class MainActivity extends BaseAppCompatActivity
         searchLocationBtn.setOnClickListener(this);
         btnFilter.setOnClickListener(this);
         setupTabLayout();
+        mainViewPager.setCurrentItem(0);
         DDScannerApplication.bus.post(new LoadUserProfileInfoEvent());
         EventsTracker.trackDiveSpotMapView();
     }
@@ -282,14 +293,15 @@ public class MainActivity extends BaseAppCompatActivity
         menuItemsLayout = (PercentRelativeLayout) findViewById(R.id.menu_items_layout);
         searchLocationBtn = (ImageView) findViewById(R.id.search_location_menu_button);
         btnFilter = (ImageView) findViewById(R.id.filter_menu_button);
+        acountChangeLayout = (PercentRelativeLayout) findViewById(R.id.account_change_layout);
+        changeAccountButton = (ImageView) findViewById(R.id.change_account);
+        changeAccountButton.setOnClickListener(this);
     }
 
     private void setupTabLayout() {
         toolbarTabLayout.getTabAt(2).setCustomView(R.layout.tab_profile_item);
         toolbarTabLayout.getTabAt(1).setCustomView(R.layout.tab_notification_item);
         toolbarTabLayout.getTabAt(0).setCustomView(R.layout.tab_map_item);
-        toolbarTabLayout.getTabAt(0).getCustomView().setSelected(true);
-        mainViewPager.setCurrentItem(0);
     }
 
     public static void show(Context context, boolean isHasInternet) {
@@ -307,11 +319,13 @@ public class MainActivity extends BaseAppCompatActivity
         switch (position) {
             case 0:
                 showSearchFilterMenuItems();
+                changeVisibilityChangeAccountLayout(View.GONE);
                 Helpers.hideKeyboard(this);
                 break;
             case 1:
                 DDScannerApplication.bus.post(new GetNotificationsEvent());
                 hideSearchFilterMenuItems();
+                changeVisibilityChangeAccountLayout(View.GONE);
                 Helpers.hideKeyboard(this);
                 break;
             case 2:
@@ -346,8 +360,15 @@ public class MainActivity extends BaseAppCompatActivity
                     public void onAnimationEnd(Animator animation) {
                         super.onAnimationEnd(animation);
                         menuItemsLayout.setVisibility(View.GONE);
+                        if (mainViewPager.getCurrentItem() == 2 && DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
+                            changeVisibilityChangeAccountLayout(View.VISIBLE);
+                        }
                     }
                 });
+    }
+
+    private void changeVisibilityChangeAccountLayout(int visibility) {
+        acountChangeLayout.setVisibility(visibility);
     }
 
     @Override
@@ -364,6 +385,10 @@ public class MainActivity extends BaseAppCompatActivity
                 Intent intent = new Intent(MainActivity.this, FilterActivity.class);
                 startActivity(intent);
                 //        EventsTracker.trackFiltersActivityOpened();
+                break;
+            case R.id.change_account:
+                changeAccountBottomDialog = new ChangeAccountBottomDialog();
+                changeAccountBottomDialog.show(getSupportFragmentManager(), "");
                 break;
         }
     }
@@ -471,6 +496,15 @@ public class MainActivity extends BaseAppCompatActivity
                     }
                 }
                 break;
+            case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_LOGIN_TO_ADD_ACCOUNT:
+                if (resultCode == RESULT_OK) {
+                    mainViewPagerAdapter.notifyDataSetChanged();
+                    mainViewPager.destroyDrawingCache();
+                    setupTabLayout();
+                    DDScannerApplication.bus.post(new LoadUserProfileInfoEvent());
+                    changeAccountBottomDialog.dismiss();
+                }
+                break;
             default:
                 if (facebookCallbackManager != null) {
                     facebookCallbackManager.onActivityResult(requestCode, resultCode, data);
@@ -537,7 +571,8 @@ public class MainActivity extends BaseAppCompatActivity
 
     private void sendLoginRequest(SignInType signInType, String token) {
         materialDialog.show();
-        DDScannerApplication.getInstance().getDdScannerRestClient().postUserSignIn(null, null, "21", "32", signInType, token, signUpResultListener);
+        // TODO Debug: switch calls after tests
+        DDScannerApplication.getInstance().getDdScannerRestClient().postUserLogin(null, null, "21", "32", signInType, token, signUpLoginResultListener);
 //        DDScannerApplication.getDdScannerRestClient().postLogin(FirebaseInstanceId.getInstance().getId(), signInType, token, loginResultListener);
     }
 
@@ -567,6 +602,17 @@ public class MainActivity extends BaseAppCompatActivity
                     DDScannerApplication.bus.post(new PlaceChoosedEvent(new LatLngBounds(new LatLng(event.getLocation().getLatitude() - 1, event.getLocation().getLongitude() - 1), new LatLng(event.getLocation().getLatitude() + 1, event.getLocation().getLongitude() + 1))));
                     break;
             }
+        }
+    }
+
+    @Subscribe
+    public void onLoginViaEmail(LoginSignUpViaEmailEvent event) {
+        //TODO remove hardcoded coordinates
+        materialDialog.show();
+        if (event.isSignUp()) {
+            DDScannerApplication.getInstance().getDdScannerRestClient().postUserSignUp(event.getEmail(), event.getPassword(), event.getUserType(), "23", "22", signUpLoginResultListener);
+        } else {
+            DDScannerApplication.getInstance().getDdScannerRestClient().postUserLogin(event.getEmail(), event.getPassword(), "24", "25", null, null, signUpLoginResultListener);
         }
     }
 
@@ -724,6 +770,14 @@ public class MainActivity extends BaseAppCompatActivity
         }
     }
 
+    public void setDiveCenterProfileFragment(DiveCenterProfileFragment diveCenterProfileFragment) {
+        if (mainViewPagerAdapter != null) {
+            mainViewPagerAdapter.setDiveCenterProfileFragment(diveCenterProfileFragment);
+        } else {
+            this.diveCenterProfileFragment = diveCenterProfileFragment;
+        }
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
@@ -814,15 +868,25 @@ public class MainActivity extends BaseAppCompatActivity
     }
 
     @Subscribe
-    public void emailLogin(LoginViaEmailEvent event) {
-        //TODO remove hardcoded coordinates
-        if (event.isRegister()) {
-            materialDialog.show();
-            DDScannerApplication.getInstance().getDdScannerRestClient().postUserSignUp(event.getEmail(), event.getPassword(), event.getUserType(), "23", "22", signUpResultListener);
-            return;
+    public void showLoginActivtyToAddUser(ShowLoginActivityForAddAccount event) {
+        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+        startActivityForResult(intent, ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_LOGIN_TO_ADD_ACCOUNT);
+    }
+
+    @Subscribe
+    public void changeActiveAccount(ChangeAccountEvent event) {
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == 0) {
+            DDScannerApplication.getInstance().getSharedPreferenceHelper().setActiveUserType(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUser().getType());
+            DDScannerApplication.getInstance().getSharedPreferenceHelper().setToken(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUser().getToken());
+        } else {
+            DDScannerApplication.getInstance().getSharedPreferenceHelper().setActiveUserType(0);
+            DDScannerApplication.getInstance().getSharedPreferenceHelper().setToken(DDScannerApplication.getInstance().getSharedPreferenceHelper().getLoggedDiveCenter().getToken());
         }
-        materialDialog.show();
-        DDScannerApplication.getInstance().getDdScannerRestClient().postUserSignIn(event.getEmail(), event.getPassword(), "24", "25", null, null, signUpResultListener);
+        mainViewPagerAdapter.notifyDataSetChanged();
+        mainViewPager.destroyDrawingCache();
+        setupTabLayout();
+        DDScannerApplication.bus.post(new LoadUserProfileInfoEvent());
+        changeAccountBottomDialog.dismiss();
     }
 
 }

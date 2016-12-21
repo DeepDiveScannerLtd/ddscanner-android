@@ -372,5 +372,11 @@
     <string name="reove_from_facorites">Remove from favorites</string>
     <string name="add_to_favorites">Add to favorites</string>
     <string name="sealfe_low">Sea life</string>
+    <string name="change_account">Change account</string>
+    <string name="add_account">+ Add account</string>
+    <string name="dive_center_spots_count">My dive spots (%1$s)</string>
+    <string name="i_am_working_here">I am working here</string>
+    <string name="new_language">New language</string>
     <string name="register">Register</string>
+    <string name="approve_the_information">Approve the information?</string>
 </resources>

@@ -32,16 +32,16 @@ public class ProfileTestRestClient extends DDScannerRestClient {
         isConnectionError = true;
     }
 
-    @Override
-    public void getUserSelfInformation(final ResultListener<User> resultListener) {
-        if (isConnectionError) {
-            resultListener.onConnectionFailure();
-        } else if (isError) {
-            resultListener.onError(errorType, errorData, url, errorMessage);
-        } else {
-            resultListener.onSuccess(userEntity);
-        }
-    }
+//    @Override
+//    public void getUserSelfInformation(final ResultListener<User> resultListener) {
+//        if (isConnectionError) {
+//            resultListener.onConnectionFailure();
+//        } else if (isError) {
+//            resultListener.onError(errorType, errorData, url, errorMessage);
+//        } else {
+//            resultListener.onSuccess(userEntity);
+//        }
+//    }
 
     public User getUserResponseEntity() {
         return userEntity;

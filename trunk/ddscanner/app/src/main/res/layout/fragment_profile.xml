@@ -4,9 +4,7 @@
     <data>
 
         <import type="android.view.View" />
-
         <import type="android.text.TextUtils" />
-
         <import type="java.lang.String" />
 
         <variable
@@ -43,11 +41,13 @@
                         android:layout_height="wrap_content"
                         android:background="@color/white"
                         android:orientation="vertical">
+
                         <LinearLayout
-                            android:paddingTop="15dp"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal">
+                            android:orientation="horizontal"
+                            android:paddingTop="15dp">
+
                             <ImageView
                                 android:id="@+id/user_avatar"
                                 android:layout_width="80dp"
@@ -56,12 +56,14 @@
                                 android:layout_marginRight="20dp"
                                 android:src="@drawable/avatar_profile_default"
                                 app:loadImageFrom="@{profileFragmentViewModel}" />
+
                             <LinearLayout
-                                android:paddingTop="3dp"
-                                android:paddingRight="20dp"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:orientation="vertical">
+                                android:orientation="vertical"
+                                android:paddingRight="20dp"
+                                android:paddingTop="3dp">
+
                                 <TextView
                                     android:id="@+id/user_name"
                                     android:layout_width="match_parent"
@@ -74,6 +76,7 @@
                                     android:textColor="@color/black_text"
                                     android:textSize="18sp"
                                     android:visibility="@{profileFragmentViewModel.user.name != null ? View.VISIBLE : View.GONE}" />
+
                                 <TextView
                                     android:id="@+id/user_about"
                                     android:layout_width="match_parent"
@@ -88,8 +91,8 @@
                         </LinearLayout>
 
                         <ImageView
-                            android:layout_marginTop="15dp"
-                            style="@style/DividerStyleFull" />
+                            style="@style/DividerStyleFull"
+                            android:layout_marginTop="15dp" />
 
                         <android.support.percent.PercentRelativeLayout
                             android:layout_width="match_parent"
@@ -193,27 +196,29 @@
                         android:layout_height="wrap_content"
                         android:background="@color/white"
                         android:orientation="vertical">
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="#afafaf"
                             android:layout_marginLeft="20dp"
                             android:layout_marginTop="20dp"
-                            android:textSize="15sp"
-                            android:text="@string/acievements_block_title"/>
+                            android:text="@string/acievements_block_title"
+                            android:textColor="#afafaf"
+                            android:textSize="15sp" />
+
                         <TextView
                             android:id="@+id/no_achievements_view"
                             android:layout_width="match_parent"
-                            android:gravity="center"
                             android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:gravity="center"
                             android:paddingBottom="12dp"
                             android:paddingLeft="20dp"
                             android:paddingRight="20dp"
                             android:paddingTop="12dp"
                             android:text="@string/no_title_yet"
                             android:textColor="#bbbbbb"
-                            android:textSize="13sp"
-                            android:layout_marginBottom="8dp"/>
+                            android:textSize="13sp" />
 
                         <android.support.v7.widget.RecyclerView
                             android:id="@+id/achievment_rv"
@@ -266,33 +271,37 @@
                     <ImageView
                         style="@style/DividerStyleFull"
                         android:layout_marginTop="15dp" />
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:background="@color/white">
+                        android:background="@color/white"
+                        android:orientation="vertical">
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="#afafaf"
                             android:layout_marginLeft="20dp"
                             android:layout_marginTop="20dp"
-                            android:textSize="15sp"
-                            android:text="@string/photos_block_title"/>
+                            android:text="@string/photos_block_title"
+                            android:textColor="#afafaf"
+                            android:textSize="15sp" />
+
                         <TextView
                             android:id="@+id/no_photos_view"
                             android:layout_width="match_parent"
-                            android:gravity="center"
                             android:layout_height="wrap_content"
+                            android:layout_marginBottom="20dp"
+                            android:gravity="center"
                             android:paddingBottom="12dp"
                             android:paddingLeft="20dp"
                             android:paddingRight="20dp"
                             android:paddingTop="12dp"
                             android:text="@string/no_photos_yet"
                             android:textColor="#bbbbbb"
-                            android:textSize="13sp"
-                            android:layout_marginBottom="20dp"/>
+                            android:textSize="13sp" />
                     </LinearLayout>
+
                     <ImageView style="@style/DividerStyleFull" />
 
                     <ImageView

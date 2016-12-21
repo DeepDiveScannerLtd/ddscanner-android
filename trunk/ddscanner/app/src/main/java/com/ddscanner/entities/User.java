@@ -13,6 +13,15 @@ public class User implements Serializable {
     private List<ProfileAchievement> achievements;
     private List<String> photos;
     private int type;
+    private String token;
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
 
     public int getType() {
         return type;

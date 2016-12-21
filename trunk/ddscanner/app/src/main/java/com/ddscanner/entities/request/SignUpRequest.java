@@ -8,6 +8,7 @@ public class SignUpRequest {
     private String password;
     @SerializedName("user_type")
     private int userType;
+    private String name;
     private String app_id;
     private String push;
     private String lat;
@@ -37,6 +38,14 @@ public class SignUpRequest {
 
     public void setUserType(int userType) {
         this.userType = userType;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getApp_id() {

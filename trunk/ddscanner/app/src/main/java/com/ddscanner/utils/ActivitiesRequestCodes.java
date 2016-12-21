@@ -30,6 +30,7 @@ public class ActivitiesRequestCodes {
     public static final int REQUEST_CODE_MAIN_ACTIVITY_PERMISSION_WRITE_STORAGE = 1308;
     public static final int REQUEST_CODE_MAIN_ACTIVITY_PERMISSION_CAMERA_AND_WRITE_STORAGE = 1309;
     public static final int REQUEST_CODE_MAIN_ACTIVITY_CHOSE_GOOGLE_ACCOUNT = 1310;
+    public static final int REQUEST_CODE_MAIN_ACTIVITY_LOGIN_TO_ADD_ACCOUNT = 1311;
 
     //    SearchActivity
     public static final int REQUEST_CODE_SEARCH_ACTIVITY_LOGIN = 1401;
@@ -43,6 +44,7 @@ public class ActivitiesRequestCodes {
     public static final int REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_LOGIN_TO_SEND = 1505;
     public static final int REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_LOGIN_TO_GET_DATA = 1506;
     public static final int REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PERMISSION_READ_STORAGE = 1507;
+    public static final int REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_LANGUAGE = 1508;
 
     //    MapListFragment
     public static final int REQUEST_CODE_MAP_LIST_FRAGMENT_GET_LOCATION_ON_FRAGMENT_START = 1601;

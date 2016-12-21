@@ -2,8 +2,10 @@ package com.ddscanner.screens.divespot.details;
 
 import android.databinding.BindingAdapter;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ddscanner.DDScannerApplication;
@@ -11,6 +13,7 @@ import com.ddscanner.R;
 import com.ddscanner.entities.DiveSpotDetailsEntity;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
+import com.rey.material.widget.FloatingActionButton;
 import com.rey.material.widget.ProgressView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -44,6 +47,22 @@ public class DiveSpotDetailsActivityViewModel {
             }
             viewModel.getProgressView().setVisibility(View.GONE);
             view.setImageResource(R.drawable.ds_head_photo_default);
+        }
+    }
+
+    @BindingAdapter("changeCheckinButtonVisibilityFrom")
+    public static void changeVisibilityCheckinButton(FloatingActionButton button, DiveSpotDetailsActivityViewModel viewModel) {
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() != 0) {
+            button.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @BindingAdapter("showWorkingLayoutFrom")
+    public static void showLayout(RelativeLayout view, DiveSpotDetailsActivityViewModel viewModel) {
+        if (viewModel != null) {
+            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == 0) {
+                view.setVisibility(View.VISIBLE);
+            }
         }
     }
 
@@ -108,6 +127,13 @@ public class DiveSpotDetailsActivityViewModel {
                 return;
             }
             view.setText(DDScannerApplication.getInstance().getString(R.string.show_all, String.valueOf(viewModel.getDiveSpotDetailsEntity().getReviewsCount())));
+        }
+    }
+
+    @BindingAdapter("visibilityForBookButtonFrom")
+    public static void setBookButtonVisibility(Button view, DiveSpotDetailsActivityViewModel viewModel) {
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == 0) {
+            view.setVisibility(View.GONE);
         }
     }
 

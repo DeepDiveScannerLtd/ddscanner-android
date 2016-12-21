@@ -39,7 +39,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class NotificationsFragment extends Fragment implements ViewPager.OnPageChangeListener, LoginView.LoginStateChangeListener, InfoDialogFragment.DialogClosedListener, SwipeRefreshLayout.OnRefreshListener {
+public class NotificationsFragment extends BaseFragment implements ViewPager.OnPageChangeListener, LoginView.LoginStateChangeListener, InfoDialogFragment.DialogClosedListener, SwipeRefreshLayout.OnRefreshListener {
 
     private static final String TAG = NotificationsFragment.class.getName();
 

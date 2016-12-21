@@ -32,7 +32,6 @@ import com.ddscanner.ui.dialogs.ActionSuccessDialogFragment;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
-import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -87,6 +86,18 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             DDScannerApplication.getInstance().getSharedPreferenceHelper().setToken(result.getToken());
             DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsUserSignedIn(true, SignInType.EMAIL);
             DDScannerApplication.getInstance().getSharedPreferenceHelper().setUserServerId(result.getId());
+            switch (result.getType()) {
+                case 0:
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().setActiveUserType(result.getType());
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsDiveCenterLoggedIn(true);
+                    break;
+                case 1:
+                case 2:
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().setActiveUserType(result.getType());
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsUserLoggedIn(true);
+                    break;
+            }
+
             setResult(RESULT_OK);
             finish();
         }
@@ -132,7 +143,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         fbLogin = (LinearLayout) findViewById(R.id.fb_custom);
         googleLogin = (LinearLayout) findViewById(R.id.custom_google);
-        buttonSignUp = (Button) findViewById(R.id.btn_sign_up);
+        buttonSignUp = (Button) findViewById(R.id.btn_login_or_sign_up_via_email);
         privacyPolicy = (TextView) findViewById(R.id.privacy_policy);
         forgotPasswordView = (TextView) findViewById(R.id.forgot_password);
         email = (EditText) findViewById(R.id.email);
@@ -242,13 +253,13 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 materialDialog.show();
                 googleSignIn();
                 break;
-            case R.id.btn_sign_up:
+            case R.id.btn_login_or_sign_up_via_email:
                 materialDialog.show();
                 if (isRegister) {
                     DDScannerApplication.getInstance().getDdScannerRestClient().postUserSignUp(email.getText().toString(), password.getText().toString(), userType, null, null, signUpResultListener);
                     break;
                 }
-                DDScannerApplication.getInstance().getDdScannerRestClient().postUserSignIn(email.getText().toString(), password.getText().toString(), "28.13123", "21.323232", null, null, signUpResultListener);
+                DDScannerApplication.getInstance().getDdScannerRestClient().postUserLogin(email.getText().toString(), password.getText().toString(), "28.13123", "21.323232", null, null, signUpResultListener);
                 break;
         }
     }
@@ -358,7 +369,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     private void sendLoginRequest(String appId, SignInType signInType, String token) {
 //        DDScannerApplication.getDdScannerRestClient().postLogin(appId, signInType, token, loginResultListener);
         materialDialog.show();
-        DDScannerApplication.getInstance().getDdScannerRestClient().postUserSignIn(null, null, null, null, signInType, token, signUpResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient().postUserLogin(null, null, null, null, signInType, token, signUpResultListener);
     }
 
     @Override

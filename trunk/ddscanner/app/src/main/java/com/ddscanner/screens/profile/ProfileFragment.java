@@ -29,6 +29,7 @@ import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.databinding.FragmentProfileBinding;
 import com.ddscanner.entities.ProfileAchievement;
+import com.ddscanner.entities.ProfileResponseEntity;
 import com.ddscanner.entities.User;
 import com.ddscanner.entities.UserOld;
 import com.ddscanner.entities.UserResponseEntity;
@@ -43,6 +44,7 @@ import com.ddscanner.events.ChangeLoginViewEvent;
 import com.ddscanner.ui.activities.MainActivity;
 import com.ddscanner.ui.adapters.AchievmentProfileListAdapter;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
+import com.ddscanner.ui.fragments.BaseFragment;
 import com.ddscanner.ui.views.LoginView;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
@@ -57,7 +59,7 @@ import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
-public class ProfileFragment extends Fragment implements View.OnClickListener, LoginView.LoginStateChangeListener, InfoDialogFragment.DialogClosedListener, SwipeRefreshLayout.OnRefreshListener {
+public class ProfileFragment extends BaseFragment implements View.OnClickListener, LoginView.LoginStateChangeListener, InfoDialogFragment.DialogClosedListener, SwipeRefreshLayout.OnRefreshListener {
 
     private static final String TAG = ProfileFragment.class.getName();
 
@@ -69,19 +71,12 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
     private boolean isAboutChanged = false;
     private boolean isNamChanged = false;
 
-    private RequestBody requestSecret = null;
-    private RequestBody requestSocial = null;
-    private RequestBody requestToken = null;
-    private RequestBody about = null;
-    private RequestBody username = null;
-    private RequestBody name = null;
-    private RequestBody requestType = null;
-    private MultipartBody.Part image = null;
     private MaterialDialog materialDialog;
     private Map<String, TextView> errorsMap = new HashMap<>();
 
     private String uri = null;
     private Uri uriFromCamera = null;
+    private User user;
 
     private FragmentProfileBinding binding;
 
@@ -122,13 +117,26 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
         }
     };
 
-    private DDScannerRestClient.ResultListener<User> userResultListener = new DDScannerRestClient.ResultListener<User>() {
+    private DDScannerRestClient.ResultListener<ProfileResponseEntity> userResultListener = new DDScannerRestClient.ResultListener<ProfileResponseEntity>() {
         @Override
-        public void onSuccess(User result) {
+        public void onSuccess(ProfileResponseEntity result) {
             if (binding != null && binding.editProfileLayout.getVisibility() != View.VISIBLE) {
                 binding.about.setVisibility(View.VISIBLE);
             }
-            binding.setProfileFragmentViewModel(new ProfileFragmentViewModel(result));
+            switch (result.getType()) {
+                case 2:
+                case 1:
+                    user = result.getDiver();
+                    user.setToken(DDScannerApplication.getInstance().getSharedPreferenceHelper().getToken());
+                    user.setType(result.getType());
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().setActiveUser(user);
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().setActiveUserType(result.getType());
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsUserLoggedIn(true);
+                    break;
+                case 0:
+                    break;
+            }
+            binding.setProfileFragmentViewModel(new ProfileFragmentViewModel(result.getDiver()));
             binding.swiperefresh.setRefreshing(false);
             changeUi();
         }
@@ -172,10 +180,10 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
         setupUi();
         binding.setHandlers(this);
 
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
-            getUserDataRequest(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId());
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn() && DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == 1) {
+            getUserDataRequest();
         }
-//        materialDialog = Helpers.getMaterialDialog(getContext());
+        
         createErrorsMap();
         if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
             onLoggedIn();
@@ -310,6 +318,9 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
 //        if (!getUserVisibleHint()) {
 //            return;
 //        }
+
+        userResultListener.setCancelled(false);
+        updateProfileInfoResultListener.setCancelled(false);
     }
 
     @Subscribe
@@ -321,7 +332,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
     public void getUserProfileInfo(LoadUserProfileInfoEvent event) {
         if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
             if (!isClickedChosingPhotoButton) {
-                getUserDataRequest(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId());
+                getUserDataRequest();
             }
         } else {
             onLoggedOut();
@@ -360,7 +371,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, L
         this.uri = null;
     }
 
-    private void getUserDataRequest(String id) {
+    private void getUserDataRequest() {
      //   DDScannerApplication.getDdScannerRestClient().getUserInformation(id, getUserInformationResultListener);
         DDScannerApplication.getInstance().getDdScannerRestClient().getUserSelfInformation(userResultListener);
     }
