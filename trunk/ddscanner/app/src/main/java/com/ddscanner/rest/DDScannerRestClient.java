@@ -502,7 +502,7 @@ public class DDScannerRestClient {
         for (int i = 0; i < images.size(); i++) {
             File image = new File(images.get(i));
             RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), image);
-            MultipartBody.Part part = MultipartBody.Part.createFormData(Constants.ADD_DIVE_SPOT_ACTIVITY_IMAGES_ARRAY,
+            MultipartBody.Part part = MultipartBody.Part.createFormData("images[]",
                     image.getName(), requestFile);
             imagesToSend.add(part);
         }

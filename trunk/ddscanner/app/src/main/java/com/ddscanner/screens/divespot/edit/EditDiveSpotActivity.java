@@ -34,6 +34,8 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.DiveSpotDetailsEntity;
+import com.ddscanner.entities.DiveSpotPhoto;
+import com.ddscanner.entities.DiveSpotPhotosResponseEntity;
 import com.ddscanner.entities.FiltersResponseEntity;
 import com.ddscanner.entities.Language;
 import com.ddscanner.entities.SealifeShort;
@@ -141,7 +143,62 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
     private boolean isFromMap;
     private ArrayList<String> languages = new ArrayList<>();
     private Map<String, Translation> languagesMap = new HashMap<>();
+    private ArrayList<String> userPhotosIds = new ArrayList<>();
+    private ArrayList<String> userMapsIds = new ArrayList<>();
     private DiveSpotDetailsEntity diveSpotDetailsEntity;
+    private boolean isPhotosRequestEnd = false;
+    private boolean isTranslationsRequestEnd = false;
+    private boolean isMapsRequestEnd = false;
+
+    private DDScannerRestClient.ResultListener<ArrayList<DiveSpotPhoto>> mapsResultListener = new DDScannerRestClient.ResultListener<ArrayList<DiveSpotPhoto>>() {
+        @Override
+        public void onSuccess(ArrayList<DiveSpotPhoto> result) {
+            isMapsRequestEnd = true;
+            if (result != null) {
+                for (DiveSpotPhoto diveSpotPhoto : result) {
+                    if (diveSpotPhoto.getAuthor().getId().equals(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId())) {
+                        userMapsIds.add(diveSpotPhoto.getId());
+                    }
+                }
+            }
+            setupUiAfterRequests();
+        }
+
+        @Override
+        public void onConnectionFailure() {
+
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+
+        }
+    };
+
+    private DDScannerRestClient.ResultListener<DiveSpotPhotosResponseEntity> photosResultListener = new DDScannerRestClient.ResultListener<DiveSpotPhotosResponseEntity>() {
+        @Override
+        public void onSuccess(DiveSpotPhotosResponseEntity result) {
+            isPhotosRequestEnd = true;
+            if (result.getDiveSpotPhotos() != null) {
+                for (DiveSpotPhoto diveSpotPhoto : result.getDiveSpotPhotos()) {
+                    if (diveSpotPhoto.getAuthor().getId().equals(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId())) {
+                        userPhotosIds.add(diveSpotPhoto.getId());
+                    }
+                }
+            }
+            setupUiAfterRequests();
+        }
+
+        @Override
+        public void onConnectionFailure() {
+
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+
+        }
+    };
 
     private DDScannerRestClient.ResultListener<String> countryResultListener = new DDScannerRestClient.ResultListener<String>() {
         @Override
@@ -210,7 +267,8 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
                 languagesMap.put(translation.getCode(), translation);
                 languagesList.add(translation.getLanguageEntity());
             }
-            setUi();
+            isTranslationsRequestEnd = true;
+            setupUiAfterRequests();
         }
 
         @Override
@@ -237,11 +295,19 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
         EventsTracker.trackDiveSpotCreation();
         diveSpotDetailsEntity = new Gson().fromJson(getIntent().getStringExtra("divespot"), DiveSpotDetailsEntity.class);
         DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotsTranslations(String.valueOf(diveSpotDetailsEntity.getId()), translationsResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotPhotos(String.valueOf(diveSpotDetailsEntity.getId()), photosResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotMaps(String.valueOf(diveSpotDetailsEntity.getId()), mapsResultListener);
         isFromMap = getIntent().getBooleanExtra(Constants.ADD_DIVE_SPOT_INTENT_IS_FROM_MAP, false);
         languages.add("Language");
         findViewsAndSetupCurrentData(diveSpotDetailsEntity);
         makeErrorsMap();
         init();
+    }
+
+    private void setupUiAfterRequests() {
+        if (isTranslationsRequestEnd && isPhotosRequestEnd && isMapsRequestEnd) {
+            setUi();
+        }
     }
 
     private void init() {
@@ -287,6 +353,8 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
     }
 
     private void setUi() {
+        diveSpotDetailsEntity.setPhotos(userPhotosIds);
+        diveSpotDetailsEntity.setMaps(userMapsIds);
         if (diveSpotDetailsEntity.getPhotos() != null) {
             photosListAdapter.addServerPhoto((ArrayList<String>) diveSpotDetailsEntity.getPhotos());
         }
