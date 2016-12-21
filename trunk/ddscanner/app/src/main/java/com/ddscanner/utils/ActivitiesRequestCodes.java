@@ -132,10 +132,8 @@ public class ActivitiesRequestCodes {
     //    UserLikesDislikesActivity
     public static final int REQUEST_CODE_USER_LIKES_DISLIKES_ACTIVITY_LOGIN = 3101;
 
-    //    LocationPermissionNotGrantedActivity
     public static final int REQUEST_CODE_LOCATION_PERMISSION_NOT_GRANTED_ACTIVITY_LOCATION_PERMISSION = 3201;
 
-    //    LocationProvidersNotAvailableActivity
     public static final int REQUEST_CODE_LOCATION_PROVIDERS_NOT_AVAILABLE_ACTIVITY_TURN_ON_LOCATION_SETTINGS = 3301;
 
     //    PickLocationActivity

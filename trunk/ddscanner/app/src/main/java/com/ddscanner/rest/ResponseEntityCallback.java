@@ -29,7 +29,6 @@ abstract class ResponseEntityCallback<T> extends BaseCallback<T> {
                 resultListener.onError(DDScannerRestClient.ErrorType.IO_ERROR, null, call.request().url().toString(), e.getMessage());
                 return;
             }
-            Log.i("response body is " + responseString);
             try {
                 handleResponseString(resultListener, responseString);
             } catch (JsonSyntaxException | JSONException e) {
