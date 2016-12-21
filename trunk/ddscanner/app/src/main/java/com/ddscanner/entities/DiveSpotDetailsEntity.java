@@ -28,7 +28,7 @@ public class DiveSpotDetailsEntity extends DiveSpotShort {
     private int checkinCount;
     @SerializedName("country_name")
     private String countryName;
-    private List<DiveSpotSealife> sealifes;
+    private List<SealifeShort> sealifes;
     private List<String> maps;
     @SerializedName("photos_count")
     private int photosCount;
@@ -60,11 +60,11 @@ public class DiveSpotDetailsEntity extends DiveSpotShort {
         this.maps = maps;
     }
 
-    public List<DiveSpotSealife> getSealifes() {
+    public List<SealifeShort> getSealifes() {
         return sealifes;
     }
 
-    public void setSealifes(List<DiveSpotSealife> sealifes) {
+    public void setSealifes(List<SealifeShort> sealifes) {
         this.sealifes = sealifes;
     }
 

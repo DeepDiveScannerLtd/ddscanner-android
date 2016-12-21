@@ -36,6 +36,7 @@ import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.databinding.ActivityDiveSpotDetailsBinding;
 import com.ddscanner.entities.DiveSpotDetailsEntity;
 import com.ddscanner.entities.DiveSpotSealife;
+import com.ddscanner.entities.SealifeShort;
 import com.ddscanner.events.OpenPhotosActivityEvent;
 import com.ddscanner.events.PickPhotoForCheckedInDialogEvent;
 import com.ddscanner.rest.DDScannerRestClient;
@@ -43,7 +44,7 @@ import com.ddscanner.screens.divespot.photos.DiveSpotMapsActivity;
 import com.ddscanner.ui.activities.AddPhotosDoDiveSpotActivity;
 import com.ddscanner.ui.activities.DiveCentersActivity;
 import com.ddscanner.screens.divespot.photos.DiveSpotPhotosActivity;
-import com.ddscanner.ui.activities.EditDiveSpotActivity;
+import com.ddscanner.screens.divespot.edit.EditDiveSpotActivity;
 import com.ddscanner.ui.activities.LeaveReviewActivity;
 import com.ddscanner.ui.activities.LoginActivity;
 import com.ddscanner.ui.activities.ShowDsLocationActivity;
@@ -239,7 +240,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
         binding.sealifeRc.setNestedScrollingEnabled(false);
         binding.sealifeRc.setHasFixedSize(false);
         binding.sealifeRc.setLayoutManager(layoutManager);
-        binding.sealifeRc.setAdapter(new SealifeListAdapter((ArrayList<DiveSpotSealife>) binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getSealifes(), this));
+        binding.sealifeRc.setAdapter(new SealifeListAdapter((ArrayList<SealifeShort>) binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getSealifes(), this));
         mapFragment.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap googleMap) {

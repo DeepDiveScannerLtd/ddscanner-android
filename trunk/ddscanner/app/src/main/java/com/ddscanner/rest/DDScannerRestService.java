@@ -292,11 +292,30 @@ public interface DDScannerRestService {
 
     );
 
+    @Multipart
+    @POST("v2_0/divespot.update")
+    Call<ResponseBody> postUpdateDiveSpot(
+            @Part("id") RequestBody id,
+            @Part("lat") RequestBody lat,
+            @Part("lng") RequestBody lng,
+            @Part("country_code") RequestBody countryCode,
+            @Part("depth") RequestBody depth,
+            @Part("diving_skill") RequestBody skill,
+            @Part("currents") RequestBody currents,
+            @Part("visibility_min") RequestBody visibility_min,
+            @Part("visibility_max") RequestBody visibility_max,
+            @Part("cover_number") RequestBody cover_number,
+            @Part("translations") RequestBody translations,
+            @Part("dive_spot_type") RequestBody type,
+            @Part List<MultipartBody.Part> new_photos,
+            @Part List<MultipartBody.Part> deleted_photos,
+            @Part List<MultipartBody.Part> new_maps,
+            @Part List<MultipartBody.Part> deleted_maps,
+            @Part List<MultipartBody.Part> sealife
+    );
+
     @GET("v2_0/divespot.languages.get")
     Call<ResponseBody> getDivespotLanguages();
-
-    @GET("v2_0/divecenter/profile.get")
-    Call<ResponseBody> getDiveCenterProfile();
 
     @POST("v2_0/divecenter.divespot.add")
     Call<ResponseBody> postAddDiveSpotToDiveCenter(@Query("id") String divespotId);
@@ -306,5 +325,8 @@ public interface DDScannerRestService {
 
     @POST("v2_0/divespot.approve")
     Call<ResponseBody> postApproveDiveSpot(@Query("id") String id, @Query("value") boolean value);
+
+    @GET("v2_0/divespot.translations.get")
+    Call<ResponseBody> getDiveSpotsTranslations(@Query("id") String id);
 
 }

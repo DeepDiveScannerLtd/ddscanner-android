@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
-import com.ddscanner.entities.DiveSpotSealife;
+import com.ddscanner.entities.SealifeShort;
 import com.ddscanner.entities.Sealife;
 import com.ddscanner.screens.sealife.details.SealifeDetailsActivity;
 import com.ddscanner.utils.Constants;
@@ -25,10 +25,10 @@ import java.util.ArrayList;
  */
 public class SealifeListAdapter extends RecyclerView.Adapter<SealifeListAdapter.SealifeListViewHolder>{
 
-    public ArrayList<DiveSpotSealife> sealifes;
+    public ArrayList<SealifeShort> sealifes;
     private Context context;
 
-    public SealifeListAdapter(ArrayList<DiveSpotSealife> sealifes, Context context) {
+    public SealifeListAdapter(ArrayList<SealifeShort> sealifes, Context context) {
         this.sealifes = sealifes;
         this.context = context;
     }
@@ -44,8 +44,8 @@ public class SealifeListAdapter extends RecyclerView.Adapter<SealifeListAdapter.
 
     @Override
     public void onBindViewHolder(SealifeListViewHolder sealifeListViewHolder, int i) {
-        DiveSpotSealife sealife = sealifes.get(i);
-        Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, sealife.getPhoto(), "1")).resize(Math.round(Helpers.convertDpToPixel(125, context)), Math.round(Helpers.convertDpToPixel(70, context))).centerCrop().into(sealifeListViewHolder.sealifeLogo);
+        SealifeShort sealife = sealifes.get(i);
+        Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, sealife.getImage(), "1")).resize(Math.round(Helpers.convertDpToPixel(125, context)), Math.round(Helpers.convertDpToPixel(70, context))).centerCrop().into(sealifeListViewHolder.sealifeLogo);
         sealifeListViewHolder.sealifeName.setText(sealife.getName());
     }
 
@@ -75,7 +75,6 @@ public class SealifeListAdapter extends RecyclerView.Adapter<SealifeListAdapter.
         @Override
         public void onClick(View v) {
             SealifeDetailsActivity.show(context, sealifes.get(getAdapterPosition()).getId());
-            EventsTracker.trackDiveSpotSealifeView();
         }
     }
 }

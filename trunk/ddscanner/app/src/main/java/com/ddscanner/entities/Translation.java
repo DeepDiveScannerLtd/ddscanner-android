@@ -1,7 +1,12 @@
 package com.ddscanner.entities;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Translation {
 
+    @SerializedName("lang_code")
+    private String code;
+    @SerializedName("lang_name")
     private String language;
     private String name;
     private String description;
@@ -29,4 +34,18 @@ public class Translation {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public Language getLanguageEntity() {
+        Language language =  new Language(code, name);
+        return language;
+    }
+
 }
