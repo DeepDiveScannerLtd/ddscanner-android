@@ -15,7 +15,6 @@ import android.view.WindowManager;
 import com.ddscanner.R;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.LocationHelper;
-import com.ddscanner.utils.LogUtils;
 
 /**
  * Created by lashket on 19.5.16.
@@ -27,7 +26,7 @@ public class LocationProvidersNotAvailableActivity extends AppCompatActivity imp
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        LogUtils.i(TAG, "LocationProvidersNotAvailableActivity onCreate " + this);
+        Log.i(TAG, "LocationProvidersNotAvailableActivity onCreate " + this);
         setContentView(R.layout.activity_no_location_providers);
 
         findViewById(R.id.btn_open_settings).setOnClickListener(this);
@@ -64,7 +63,7 @@ public class LocationProvidersNotAvailableActivity extends AppCompatActivity imp
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        LogUtils.i(TAG, "onActivityResult requestCode = " + requestCode + " resultCode = " + resultCode + " " + this);
+        Log.i(TAG, "onActivityResult requestCode = " + requestCode + " resultCode = " + resultCode + " " + this);
         switch (requestCode) {
             case ActivitiesRequestCodes.REQUEST_CODE_LOCATION_PROVIDERS_NOT_AVAILABLE_ACTIVITY_TURN_ON_LOCATION_SETTINGS:
                 if (LocationHelper.isLocationProvidersAvailable(this)) {

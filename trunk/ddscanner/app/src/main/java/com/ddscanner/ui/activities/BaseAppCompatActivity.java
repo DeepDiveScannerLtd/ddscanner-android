@@ -6,7 +6,6 @@ import android.util.Log;
 
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.LocationHelper;
-import com.ddscanner.utils.LogUtils;
 
 import java.util.HashSet;
 
@@ -21,7 +20,7 @@ public class BaseAppCompatActivity extends AppCompatActivity {
      * Call this method to get user location. Subscribe to LocationReadyEvent for result
      */
     public void getLocation(int requestCode) {
-        LogUtils.i(TAG, "location check: getLocation request code = " + requestCode + " request codes = " + requestCodes);
+        Log.i(TAG, "location check: getLocation request code = " + requestCode + " request codes = " + requestCodes);
         if (requestCode != -1) {
             requestCodes.add(requestCode);
         }
@@ -33,10 +32,10 @@ public class BaseAppCompatActivity extends AppCompatActivity {
             locationHelper.requestLocation(requestCodes);
             requestCodes.clear();
         } catch (LocationHelper.LocationProvidersNotAvailableException e) {
-            LogUtils.i(TAG, "location providers not available. starting LocationProvidersNotAvailableActivity");
+            Log.i(TAG, "location providers not available. starting LocationProvidersNotAvailableActivity");
             LocationProvidersNotAvailableActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_LOCATION_PROVIDERS);
         } catch (LocationHelper.LocationPPermissionsNotGrantedException e) {
-            LogUtils.i(TAG, "location permission not granted. starting LocationPermissionNotGrantedActivity");
+            Log.i(TAG, "location permission not granted. starting LocationPermissionNotGrantedActivity");
             LocationPermissionNotGrantedActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_LOCATION_PERMISSION);
         }
     }
@@ -44,7 +43,7 @@ public class BaseAppCompatActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        LogUtils.i(TAG, "onActivityResult requestCode = " + requestCode + " resultCode = " + resultCode);
+        Log.i(TAG, "onActivityResult requestCode = " + requestCode + " resultCode = " + resultCode);
         switch (requestCode) {
             case ActivitiesRequestCodes.REQUEST_CODE_LOCATION_PROVIDERS:
             case ActivitiesRequestCodes.REQUEST_CODE_LOCATION_PERMISSION:

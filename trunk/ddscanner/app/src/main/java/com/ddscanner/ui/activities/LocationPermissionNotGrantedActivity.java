@@ -10,13 +10,13 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
 import com.ddscanner.R;
 import com.ddscanner.utils.ActivitiesRequestCodes;
-import com.ddscanner.utils.LogUtils;
 
 public class LocationPermissionNotGrantedActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -25,7 +25,7 @@ public class LocationPermissionNotGrantedActivity extends AppCompatActivity impl
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        LogUtils.i(TAG, "onCreate " + this);
+        Log.i(TAG, "onCreate " + this);
         setContentView(R.layout.activity_no_location_permission);
 
         findViewById(R.id.btn_grant_permission).setOnClickListener(this);
@@ -74,7 +74,7 @@ public class LocationPermissionNotGrantedActivity extends AppCompatActivity impl
 
         switch (requestCode) {
             case ActivitiesRequestCodes.REQUEST_CODE_LOCATION_PERMISSION_NOT_GRANTED_ACTIVITY_LOCATION_PERMISSION:
-                LogUtils.i(TAG, "onRequestPermissionsResult grantResults = " + grantResults[0] + " " + grantResults[1]);
+                Log.i(TAG, "onRequestPermissionsResult grantResults = " + grantResults[0] + " " + grantResults[1]);
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED || grantResults[1] == PackageManager.PERMISSION_GRANTED) {
                     setResult(RESULT_OK);
                     finish();

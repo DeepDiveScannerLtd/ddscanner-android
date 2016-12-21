@@ -67,7 +67,6 @@ import com.ddscanner.screens.profile.ProfileFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
-import com.ddscanner.utils.LogUtils;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -167,14 +166,14 @@ public class MainActivity extends BaseAppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        LogUtils.i(TAG, "onCreate");
+        Log.i(TAG, "onCreate");
         isHasInternetConnection = getIntent().getBooleanExtra(Constants.IS_HAS_INTERNET, false);
         clearFilterSharedPreferences();
         startActivity();
         Log.i(TAG, FirebaseInstanceId.getInstance().getToken());
        // DDScannerApplication.getInstance().getSharedPreferenceHelper().clear();
         if (!isHasInternetConnection) {
-            LogUtils.i(TAG, "internetConnectionClosed 2");
+            Log.i(TAG, "internetConnectionClosed 2");
             InternetClosedActivity.show(this);
         }
         loggedInDuringLastOnStart = DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn();
@@ -516,7 +515,7 @@ public class MainActivity extends BaseAppCompatActivity
     @Override
     public void onStart() {
         super.onStart();
-        LogUtils.i(TAG, "onStart");
+        Log.i(TAG, "onStart");
         DDScannerApplication.bus.register(this);
         if (loggedInDuringLastOnStart != DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
             mainViewPagerAdapter.notifyDataSetChanged();
@@ -528,14 +527,14 @@ public class MainActivity extends BaseAppCompatActivity
     @Override
     public void onStop() {
         super.onStop();
-        LogUtils.i(TAG, "onStop");
+        Log.i(TAG, "onStop");
         DDScannerApplication.bus.unregister(this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        LogUtils.i(TAG, "onPause");
+        Log.i(TAG, "onPause");
         AppEventsLogger.deactivateApp(this);
         DDScannerApplication.activityPaused();
     }
@@ -543,7 +542,7 @@ public class MainActivity extends BaseAppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        LogUtils.i(TAG, "onResume");
+        Log.i(TAG, "onResume");
         AppEventsLogger.activateApp(this);
         DDScannerApplication.activityResumed();
         if (!Helpers.hasConnection(this)) {
@@ -595,7 +594,7 @@ public class MainActivity extends BaseAppCompatActivity
 
     @Subscribe
     public void onLocationReady(LocationReadyEvent event) {
-        LogUtils.i(TAG, "location check: onLocationReady request codes = " + event.getRequestCodes());
+        Log.i(TAG, "location check: onLocationReady request codes = " + event.getRequestCodes());
         for (Integer code : event.getRequestCodes()) {
             switch (code) {
                 case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_GO_TO_MY_LOCATION:
@@ -658,7 +657,7 @@ public class MainActivity extends BaseAppCompatActivity
 
     @Subscribe
     public void internetConnectionClosed(InternetConnectionClosedEvent event) {
-        LogUtils.i(TAG, "internetConnectionClosed 1");
+        Log.i(TAG, "internetConnectionClosed 1");
         InternetClosedActivity.show(this);
     }
 

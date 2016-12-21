@@ -44,7 +44,6 @@ import com.ddscanner.ui.managers.DiveSpotsClusterManager;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
-import com.ddscanner.utils.LogUtils;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -228,17 +227,17 @@ public class MapListFragment extends BaseFragment implements View.OnClickListene
         addDsFab.setOnClickListener(this);
         mapListFAB.setOnClickListener(this);
         mMapView = (MapView) view.findViewById(R.id.mapView);
-        LogUtils.i(TAG, "mMapView inited");
+        Log.i(TAG, "mMapView inited");
         mMapView.onCreate(new Bundle());
         mMapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap googleMap) {
-                LogUtils.i(TAG, "onMapReady, googleMap = " + googleMap);
+                Log.i(TAG, "onMapReady, googleMap = " + googleMap);
                 mGoogleMap = googleMap;
                 mGoogleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
                     @Override
                     public void onMapLoaded() {
-                        LogUtils.i(TAG, "location check: onMapLoaded, userLocationOnFragmentStart = " + userLocationOnFragmentStart);
+                        Log.i(TAG, "location check: onMapLoaded, userLocationOnFragmentStart = " + userLocationOnFragmentStart);
                         diveSpotsClusterManager = new DiveSpotsClusterManager(getActivity(), mGoogleMap, toast, progressBar, MapListFragment.this);
                         mGoogleMap.setOnMarkerClickListener(diveSpotsClusterManager);
                         mGoogleMap.setOnCameraChangeListener(diveSpotsClusterManager);
@@ -474,7 +473,7 @@ public class MapListFragment extends BaseFragment implements View.OnClickListene
 
     @Subscribe
     public void onLocationReady(LocationReadyEvent event) {
-        LogUtils.i(TAG, "location check: onLocationReady, request codes = " + event.getRequestCodes());
+        Log.i(TAG, "location check: onLocationReady, request codes = " + event.getRequestCodes());
         for (Integer code : event.getRequestCodes()) {
             switch (code) {
                 case ActivitiesRequestCodes.REQUEST_CODE_MAP_LIST_FRAGMENT_GO_TO_CURRENT_LOCATION:
@@ -506,7 +505,7 @@ public class MapListFragment extends BaseFragment implements View.OnClickListene
                     break;
 
                 case ActivitiesRequestCodes.REQUEST_CODE_MAP_LIST_FRAGMENT_GET_LOCATION_ON_FRAGMENT_START:
-                    LogUtils.i(TAG, "location check: GET_LOCATION_ON_FRAGMENT_START: event.getLocation() = " + event.getLocation() + " diveSpotsClusterManager = " + diveSpotsClusterManager);
+                    Log.i(TAG, "location check: GET_LOCATION_ON_FRAGMENT_START: event.getLocation() = " + event.getLocation() + " diveSpotsClusterManager = " + diveSpotsClusterManager);
                     if (diveSpotsClusterManager == null) {
                         // this means map has not yet been initialized. we need to remember location.
                         userLocationOnFragmentStart = event.getLocation();

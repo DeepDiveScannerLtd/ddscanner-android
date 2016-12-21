@@ -3,6 +3,7 @@ package com.ddscanner.ui.managers;
 import android.content.Context;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -24,7 +25,6 @@ import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.ui.fragments.MapListFragment;
 import com.ddscanner.utils.Helpers;
-import com.ddscanner.utils.LogUtils;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -296,18 +296,18 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpotShort> imple
     }
 
     private void updateDiveSpots(ArrayList<DiveSpotShort> diveSpotShorts) {
-        LogUtils.i(TAG, "incoming dive spots size = " + diveSpotShorts.size());
+        Log.i(TAG, "incoming dive spots size = " + diveSpotShorts.size());
         final ArrayList<DiveSpotShort> newDiveSpotShorts = new ArrayList<>();
         newDiveSpotShorts.addAll(diveSpotShorts);
         newDiveSpotShorts.removeAll(this.diveSpotShorts);
         final ArrayList<DiveSpotShort> deletedDiveSpotShorts = new ArrayList<>();
         deletedDiveSpotShorts.addAll(this.diveSpotShorts);
         deletedDiveSpotShorts.removeAll(diveSpotShorts);
-        LogUtils.i(TAG, "removing " + deletedDiveSpotShorts.size() + " dive spots");
+        Log.i(TAG, "removing " + deletedDiveSpotShorts.size() + " dive spots");
         for (DiveSpotShort diveSpotShort : deletedDiveSpotShorts) {
             removeDiveSpot(diveSpotShort);
         }
-        LogUtils.i(TAG, "adding " + newDiveSpotShorts.size() + " dive spots");
+        Log.i(TAG, "adding " + newDiveSpotShorts.size() + " dive spots");
         for (DiveSpotShort diveSpotShort : newDiveSpotShorts) {
             addNewDiveSpot(diveSpotShort);
         }
@@ -316,7 +316,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpotShort> imple
 
     private void addNewDiveSpot(DiveSpotShort diveSpotShort) {
         if (diveSpotShort.getPosition() == null) {
-            LogUtils.i(TAG, "addNewDiveSpot diveSpotShort.getPosition() == null");
+            Log.i(TAG, "addNewDiveSpot diveSpotShort.getPosition() == null");
         } else {
             addItem(diveSpotShort);
             diveSpotsMap.put(diveSpotShort.getPosition(), diveSpotShort);
@@ -474,7 +474,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpotShort> imple
             diveSpotsRequestMap.putObject(DDScannerApplication.getInstance().getSharedPreferenceHelper().getObject());
         }
         for (Map.Entry<String, Object> entry : diveSpotsRequestMap.entrySet()) {
-            LogUtils.i(TAG, "get dive spots request parameter: " + entry.getKey() + " " + entry.getValue());
+            Log.i(TAG, "get dive spots request parameter: " + entry.getKey() + " " + entry.getValue());
         }
         DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotsByArea(diveSpotsRequestMap, getDiveSpotsByAreaResultListener);
     }

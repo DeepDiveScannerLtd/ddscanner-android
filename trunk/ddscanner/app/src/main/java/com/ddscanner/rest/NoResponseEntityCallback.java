@@ -1,6 +1,5 @@
 package com.ddscanner.rest;
 
-import com.ddscanner.utils.LogUtils;
 import com.google.gson.Gson;
 
 import java.io.IOException;

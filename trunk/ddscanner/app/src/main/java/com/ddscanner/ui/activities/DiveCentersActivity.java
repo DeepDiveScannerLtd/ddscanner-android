@@ -35,7 +35,6 @@ import com.ddscanner.ui.managers.DiveCentersClusterManager;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
-import com.ddscanner.utils.LogUtils;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -323,17 +322,17 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
 
     private void setMapView() {
         mMapView = (MapView) findViewById(R.id.mapView);
-        LogUtils.i(TAG, "mMapView inited");
+        Log.i(TAG, "mMapView inited");
         mMapView.onCreate(null);
         mMapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(final GoogleMap googleMap) {
-                LogUtils.i(TAG, "onMapReady, googleMap = " + googleMap);
+                Log.i(TAG, "onMapReady, googleMap = " + googleMap);
                 mGoogleMap = googleMap;
                 mGoogleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
                     @Override
                     public void onMapLoaded() {
-                        LogUtils.i(TAG, "onMapLoaded");
+                        Log.i(TAG, "onMapLoaded");
                         CameraPosition cameraPosition = new CameraPosition.Builder()
                                 .target(diveSpotLatLng)
                                 .zoom(8)
@@ -456,7 +455,7 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
 
     @Subscribe
     public void onLocationReady(LocationReadyEvent event) {
-        LogUtils.i(TAG, "location check: onLocationReady, request codes = " + event.getRequestCodes());
+        Log.i(TAG, "location check: onLocationReady, request codes = " + event.getRequestCodes());
         for (Integer code : event.getRequestCodes()) {
             switch (code) {
                 case ActivitiesRequestCodes.REQUEST_CODE_DIVE_CENTERS_MAP_GO_TO_CURRENT_LOCATION:
@@ -491,7 +490,7 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
                     break;
 
                 case ActivitiesRequestCodes.REQUEST_CODE_MAP_LIST_FRAGMENT_GET_LOCATION_ON_FRAGMENT_START:
-                    LogUtils.i(TAG, "location check: GET_LOCATION_ON_FRAGMENT_START: event.getLocation() = " + event.getLocation() + " diveSpotsClusterManager = " + diveCentersClusterManager);
+                    Log.i(TAG, "location check: GET_LOCATION_ON_FRAGMENT_START: event.getLocation() = " + event.getLocation() + " diveSpotsClusterManager = " + diveCentersClusterManager);
                     if (diveCentersClusterManager == null) {
                         // this means map has not yet been initialized. we need to remember location.
                         //   userLocationOnFragmentStart = event.getLocation();

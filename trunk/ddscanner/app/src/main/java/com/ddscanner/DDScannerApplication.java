@@ -4,12 +4,12 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.support.multidex.MultiDex;
+import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 import com.ddscanner.analytics.AnalyticsSystemsManager;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.activities.InternetClosedActivity;
-import com.ddscanner.utils.LogUtils;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.facebook.FacebookSdk;
 import com.squareup.otto.Bus;
@@ -60,7 +60,7 @@ public class DDScannerApplication extends Application {
     }
 
     public static void showErrorActivity(Context context) {
-        LogUtils.i(TAG, "showErrorActivity");
+        Log.i(TAG, "showErrorActivity");
         Intent error = new Intent(context, InternetClosedActivity.class);
         error.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(error);
