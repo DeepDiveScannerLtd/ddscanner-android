@@ -137,19 +137,6 @@ public interface DDScannerRestService {
     @GET("diving/divespot/{id}/comments")
     Call<ResponseBody> getComments(@Path("id") String id, @QueryMap Map<String, String> map);
 
-    @POST("diving/user/{id}")
-    @Multipart
-    Call<ResponseBody> updateUserById(
-            @Path("id") String id,
-            @Part MultipartBody.Part image,
-            @Part("_method") RequestBody _method,
-            @Part("name") RequestBody name,
-            @Part("username") RequestBody username,
-            @Part("about") RequestBody about,
-            @Part("token") RequestBody token,
-            @Part("social") RequestBody sn
-    );
-
     @GET("diving/user/{id}/divespot/checkins")
     Call<ResponseBody> getUsersCheckins(@Path("id") String id, @QueryMap Map<String, String> map);
 
@@ -331,4 +318,13 @@ public interface DDScannerRestService {
 
     @POST("v2_0/user.password.forgot")
     Call<ResponseBody> postForgotPassword(@Query("email") String email);
+
+    @Multipart
+    @POST("v2_0/user.profile.update")
+    Call<ResponseBody> postUpdateUserProfile(
+            @Part MultipartBody.Part image,
+            @Part("name") RequestBody name,
+            @Part("about") RequestBody about,
+            @Part("diving_skill") RequestBody skill
+    );
 }

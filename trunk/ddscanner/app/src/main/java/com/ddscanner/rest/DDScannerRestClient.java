@@ -257,28 +257,6 @@ public class DDScannerRestClient {
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 
-    public void postLogin(String appId, SignInType signInType, String token, @NonNull final ResultListener<RegisterResponse> resultListener) {
-        final Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().login(generateRegisterRequest(appId, signInType.getName(), token));
-        call.enqueue(new ResponseEntityCallback<RegisterResponse>(gson, resultListener) {
-            @Override
-            void handleResponseString(ResultListener<RegisterResponse> resultListener, String responseString) {
-                RegisterResponse registerResponse = new Gson().fromJson(responseString, RegisterResponse.class);
-                resultListener.onSuccess(registerResponse);
-            }
-        });
-    }
-
-    public void getFilters(@NonNull final ResultListener<FiltersResponseEntity> resultListener) {
-        final Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getFilters();
-        call.enqueue(new ResponseEntityCallback<FiltersResponseEntity>(gson, resultListener) {
-            @Override
-            void handleResponseString(ResultListener<FiltersResponseEntity> resultListener, String responseString) {
-                FiltersResponseEntity filtersResponseEntity = new Gson().fromJson(responseString, FiltersResponseEntity.class);
-                resultListener.onSuccess(filtersResponseEntity);
-            }
-        });
-    }
-
     @Deprecated
     public void postAddDiveSpot(@NonNull final ResultListener<DiveSpotShort> resultListener, List<MultipartBody.Part> sealife, List<MultipartBody.Part> images, RequestBody... requestBodies) {
         if (requestBodies.length != 13) {
@@ -312,6 +290,11 @@ public class DDScannerRestClient {
 
     public void postUpdateDiveSpot(ResultListener<Void> resultListener, List<MultipartBody.Part> sealifes, List<MultipartBody.Part> newPhotos, List<MultipartBody.Part> deletedPhotos, List<MultipartBody.Part> new_maps, List<MultipartBody.Part> deleted_maps, RequestBody... requestBodies) {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postUpdateDiveSpot(requestBodies[0], requestBodies[1], requestBodies[2], requestBodies[3], requestBodies[4], requestBodies[5], requestBodies[6], requestBodies[7], requestBodies[8], requestBodies[9], requestBodies[10], requestBodies[11], newPhotos, deletedPhotos, new_maps, deleted_maps, sealifes);
+        call.enqueue(new NoResponseEntityCallback(gson, resultListener));
+    }
+
+    public void potUpdateUserProfile(ResultListener<Void> resultListener, MultipartBody.Part image, RequestBody userName, RequestBody userAbout, RequestBody skill) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postUpdateUserProfile(image, userName, userAbout, skill);
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 

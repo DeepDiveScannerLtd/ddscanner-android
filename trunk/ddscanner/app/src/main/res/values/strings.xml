@@ -380,4 +380,5 @@
     <string name="register">Register</string>
     <string name="approve_the_information">Approve the information?</string>
     <string name="turn_on_gps">Please, turn on GPS to allow Deep Dive Scanner to show the spots nearby</string>
+    <string name="diver_level">Diver level</string>
 </resources>

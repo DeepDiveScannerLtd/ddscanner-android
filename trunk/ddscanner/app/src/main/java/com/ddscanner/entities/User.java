@@ -14,6 +14,18 @@ public class User implements Serializable {
     private List<String> photos;
     private int type;
     private String token;
+    @SerializedName("diving_skill")
+    private Integer diverLevel;
+    @SerializedName("about")
+    private String about;
+
+    public Integer getDiverLevel() {
+        return diverLevel;
+    }
+
+    public void setDiverLevel(Integer diverLevel) {
+        this.diverLevel = diverLevel;
+    }
 
     public String getToken() {
         return token;
@@ -38,9 +50,6 @@ public class User implements Serializable {
     public void setPhotos(List<String> photos) {
         this.photos = photos;
     }
-
-    @SerializedName("about_me")
-    private String about;
 
     public String getAbout() {
         return about;

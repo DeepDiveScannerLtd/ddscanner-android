@@ -69,7 +69,6 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_marginBottom="7dp"
-                                    android:layout_marginLeft="10dp"
                                     android:layout_marginRight="10dp"
                                     android:layout_marginTop="10dp"
                                     android:text="@{profileFragmentViewModel.user.name != null ? profileFragmentViewModel.user.name : null}"
@@ -81,7 +80,6 @@
                                     android:id="@+id/user_about"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:gravity="center"
                                     android:text="@{profileFragmentViewModel.user.about != null ? profileFragmentViewModel.user.about : null}"
                                     android:textColor="#616161"
                                     android:textSize="13sp"
@@ -747,7 +745,28 @@
                                     android:text="@{profileFragmentViewModel.user.about != null ? null : profileFragmentViewModel.user.about}"
                                     android:textSize="16sp" />
                             </LinearLayout>
-
+                            
+                        </LinearLayout>
+                        <ImageView
+                            android:layout_marginLeft="65dp"
+                            style="@style/DividerStyle" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <ImageView
+                                style="@style/CharacteristicsDiveSpotListIcons"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="3dp"
+                                android:src="@drawable/ic_profile_level" />
+                            <android.support.v7.widget.AppCompatSpinner
+                                android:id="@+id/level_spinner"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:dropDownWidth="150dp"
+                                android:gravity="center_vertical"
+                                android:popupBackground="@color/white"
+                                />
                         </LinearLayout>
                     </LinearLayout>
 
@@ -812,7 +831,8 @@
                         android:layout_height="45dp"
                         android:layout_margin="20dp"
                         android:background="@drawable/border_button_orange_2px"
-                        android:text="@string/save_changes" />
+                        android:text="@string/save_changes"
+                        android:onClick="@{handlers::saveChanges}"/>
 
                     <Button
                         android:id="@+id/cancel_button"

@@ -43,19 +43,24 @@ import com.ddscanner.ui.activities.AboutActivity;
 import com.ddscanner.events.ChangeLoginViewEvent;
 import com.ddscanner.ui.activities.MainActivity;
 import com.ddscanner.ui.adapters.AchievmentProfileListAdapter;
+import com.ddscanner.ui.adapters.CharacteristicSpinnerItemsAdapter;
+import com.ddscanner.ui.adapters.DiverLevelSpinnerAdapter;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.ui.fragments.BaseFragment;
 import com.ddscanner.ui.views.LoginView;
+import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
+import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
@@ -77,21 +82,27 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     private String uri = null;
     private Uri uriFromCamera = null;
     private User user;
+    private RequestBody name, about, divingSkill;
+    private MultipartBody.Part image;
 
     private FragmentProfileBinding binding;
+    private ArrayList<String> levels = new ArrayList<>();
 
     ColorStateList colorStateList;
 
 
-    private DDScannerRestClient.ResultListener<UserResponseEntity> updateProfileInfoResultListener = new DDScannerRestClient.ResultListener<UserResponseEntity>() {
+    private DDScannerRestClient.ResultListener<Void> updateProfileInfoResultListener = new DDScannerRestClient.ResultListener<Void>() {
         @Override
-        public void onSuccess(UserResponseEntity result) {
-//            materialDialog.dismiss();
+        public void onSuccess(Void v) {
+            binding.userName.setText(binding.fullName.getText());
+            binding.userAbout.setText(binding.aboutEdit.getText());
+            materialDialog.dismiss();
 //            uri = null;
 //            changeUi(result);
-//            aboutLayout.setVisibility(View.VISIBLE);
-//            aboutLayout.scrollTo(0,0);
-//            editLayout.setVisibility(View.GONE);
+            binding.about.setVisibility(View.VISIBLE);
+            binding.about.scrollTo(0,0);
+            binding.editProfileLayout.setVisibility(View.GONE);
+            getUserDataRequest();
 //            getUserDataRequest(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId());
 //            swipeRefreshLayout.setEnabled(true);
         }
@@ -126,6 +137,11 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             switch (result.getType()) {
                 case 2:
                 case 1:
+                    if (result.getDiver().getDiverLevel() == null) {
+                        binding.levelSpinner.setSelection(1);
+                    } else {
+                        binding.levelSpinner.setSelection(result.getDiver().getDiverLevel());
+                    }
                     user = result.getDiver();
                     user.setToken(DDScannerApplication.getInstance().getSharedPreferenceHelper().getToken());
                     user.setType(result.getType());
@@ -190,6 +206,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         } else {
             onLoggedOut();
         }
+        materialDialog = Helpers.getMaterialDialog(getContext());
         return v;
     }
 
@@ -242,6 +259,9 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     private void setupUi() {
         setupRadioButtons("Diver");
         setupRadioButtons("Instructor");
+        levels.add("Diver level");
+        levels.addAll(Helpers.getDiveLevelTypes());
+        binding.levelSpinner.setAdapter(new DiverLevelSpinnerAdapter(getActivity(), R.layout.spinner_item, levels));
         binding.swiperefresh.setOnRefreshListener(this);
         binding.aboutEdit.addTextChangedListener(new TextWatcher() {
             @Override
@@ -301,7 +321,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.button_save:
-             //   createUpdateRequest();
+                createUpdateRequest();
                 break;
         }
     }
@@ -405,51 +425,41 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 //        }
     }
 
-//    private void createUpdateRequest() {
-//        isClickedChosingPhotoButton = false;
-//        materialDialog.show();
-//        if (!aboutEdit.equals(userOld.getAbout())) {
-//            about = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
-//                    aboutEdit.getText().toString());
-//        }
-//        if (!fullNameEdit.equals(userOld.getName()) && !fullNameEdit.getText().toString().equals("")) {
-//            name = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
-//                    fullNameEdit.getText().toString());
-//        }
-//
-//        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
-//            requestSocial = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
-//                    DDScannerApplication.getInstance().getSharedPreferenceHelper().getSn());
-//            requestToken = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
-//                    DDScannerApplication.getInstance().getSharedPreferenceHelper().getToken());
-//        }
-//
-//        if (uri != null) {
-//            File file;
-//            if (!uri.toString().contains("file:")) {
-//                file = new File(uri);
-//            } else {
-//                file = new File(uri);
-//            }
-//            RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
-//            image = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
-//        }
-//
-//        if (uriFromCamera != null) {
-//            File file;
-//            if (!uriFromCamera.toString().contains("file:")) {
-//                file = new File(Helpers.getRealPathFromURI(getContext(), uriFromCamera));
-//            } else {
-//                file = new File(uriFromCamera.getPath());
-//            }
-//            RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
-//            image = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
-//        }
-//
-//        requestType = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), "PUT");
-//
-//        DDScannerApplication.getDdScannerRestClient().putUpdateUserProfileInfo(updateProfileInfoResultListener, DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId(), image, requestType,  name, username, about, requestToken, requestSocial);
-//    }
+    private void createUpdateRequest() {
+        isClickedChosingPhotoButton = false;
+        materialDialog.show();
+        if (!binding.aboutEdit.equals(binding.getProfileFragmentViewModel().getUser().getAbout())) {
+            about = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), binding.aboutEdit.getText().toString());
+        }
+        if (!binding.fullName.equals(binding.getProfileFragmentViewModel().getUser().getName()) && !binding.fullName.getText().toString().equals("")) {
+            name = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), binding.fullName.getText().toString());
+        }
+        if (uri != null) {
+            File file;
+            if (!uri.toString().contains("file:")) {
+                file = new File(uri);
+            } else {
+                file = new File(uri);
+            }
+            RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
+            image = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
+        }
+
+        if (uriFromCamera != null) {
+            File file;
+            if (!uriFromCamera.toString().contains("file:")) {
+                file = new File(Helpers.getRealPathFromURI(getContext(), uriFromCamera));
+            } else {
+                file = new File(uriFromCamera.getPath());
+            }
+            RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
+            image = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
+        }
+
+        divingSkill = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), String.valueOf(levels.indexOf(binding.levelSpinner.getSelectedItem()) + 1));
+
+        DDScannerApplication.getInstance().getDdScannerRestClient().potUpdateUserProfile(updateProfileInfoResultListener, image,  name, about, divingSkill);
+    }
 
 
     private void createErrorsMap() {
@@ -463,7 +473,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         if (binding != null && binding.loginView != null && binding.about != null) {
             binding.loginView.setVisibility(View.GONE);
             binding.swiperefresh.setEnabled(true);
-            DDScannerApplication.getInstance().getDdScannerRestClient().getUserSelfInformation(userResultListener);
+          //  DDScannerApplication.getInstance().getDdScannerRestClient().getUserSelfInformation(userResultListener);
           //  DDScannerApplication.getDdScannerRestClient().getUserInformation(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId(), getUserInformationResultListener);
             if (binding.editProfileLayout.getVisibility() != View.VISIBLE) {
                 binding.about.setVisibility(View.VISIBLE);
@@ -539,6 +549,10 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         if (binding.getProfileFragmentViewModel().getUser().getCounters().getFavoritesCount() > 0) {
             //TODO show comments activity
         }
+    }
+
+    public void saveChanges(View view) {
+        createUpdateRequest();
     }
 
     public void cancelButtonClicked(View view) {

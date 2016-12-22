@@ -433,29 +433,7 @@ public class MainActivity extends BaseAppCompatActivity
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_PICK_PHOTO:
                 if (resultCode == RESULT_OK) {
-                    String filename = "DDScanner" + String.valueOf(System.currentTimeMillis() / 1232);
-                    Uri uri = Uri.parse("");
-                    try {
-                        uri = data.getData();
-                        String mimeType = getContentResolver().getType(uri);
-                        String sourcePath = getExternalFilesDir(null).toString();
-                        File fileToSend = new File(sourcePath + "/" + filename);
-                        if (Helpers.isFileImage(uri.getPath()) || mimeType.contains("image")) {
-                            try {
-                                Helpers.copyFileStream(fileToSend, uri, this);
-                                Log.i(TAG, fileToSend.toString());
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-
-                            mainViewPagerAdapter.setProfileImage(fileToSend.getPath());
-
-                        } else {
-                            Toast.makeText(this, "You can choose only images", Toast.LENGTH_SHORT).show();
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    mainViewPagerAdapter.setProfileImage(Helpers.getPhotosFromIntent(data, this).get(0));
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_LOGIN:
