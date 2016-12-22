@@ -576,12 +576,15 @@ public class Helpers {
         return types.get(position - 1);
     }
 
-    public static String getDiverLevel(int position) {
-        List<String> levels = getDiveLevelTypes();
-        if (levels.get(position - 1) == null) {
-            return "";
+    public static String getDiverLevel(Integer position) {
+        if (position != null) {
+            List<String> levels = getDiveLevelTypes();
+            if (levels.get(position - 1) == null) {
+                return "";
+            }
+            return levels.get(position - 1);
         }
-        return levels.get(position - 1);
+        return "";
     }
 
     public static String getCurrentsValue(int position) {

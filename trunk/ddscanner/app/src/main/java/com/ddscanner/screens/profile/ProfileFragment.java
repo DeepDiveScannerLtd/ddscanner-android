@@ -428,12 +428,8 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     private void createUpdateRequest() {
         isClickedChosingPhotoButton = false;
         materialDialog.show();
-        if (!binding.aboutEdit.equals(binding.getProfileFragmentViewModel().getUser().getAbout())) {
-            about = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), binding.aboutEdit.getText().toString());
-        }
-        if (!binding.fullName.equals(binding.getProfileFragmentViewModel().getUser().getName()) && !binding.fullName.getText().toString().equals("")) {
-            name = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), binding.fullName.getText().toString());
-        }
+        about = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), binding.aboutEdit.getText().toString());
+        name = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), binding.fullName.getText().toString());
         if (uri != null) {
             File file;
             if (!uri.toString().contains("file:")) {
@@ -442,7 +438,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 file = new File(uri);
             }
             RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
-            image = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
+            image = MultipartBody.Part.createFormData("photo", file.getName(), requestFile);
         }
 
         if (uriFromCamera != null) {
@@ -456,7 +452,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             image = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
         }
 
-        divingSkill = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), String.valueOf(levels.indexOf(binding.levelSpinner.getSelectedItem()) + 1));
+        divingSkill = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), String.valueOf(levels.indexOf(binding.levelSpinner.getSelectedItem())));
 
         DDScannerApplication.getInstance().getDdScannerRestClient().potUpdateUserProfile(updateProfileInfoResultListener, image,  name, about, divingSkill);
     }

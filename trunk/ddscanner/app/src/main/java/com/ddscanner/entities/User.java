@@ -1,5 +1,6 @@
 package com.ddscanner.entities;
 
+import com.ddscanner.utils.Helpers;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
@@ -25,6 +26,10 @@ public class User implements Serializable {
 
     public void setDiverLevel(Integer diverLevel) {
         this.diverLevel = diverLevel;
+    }
+
+    public String getDiverLevelString() {
+        return Helpers.getDiverLevel(diverLevel);
     }
 
     public String getToken() {

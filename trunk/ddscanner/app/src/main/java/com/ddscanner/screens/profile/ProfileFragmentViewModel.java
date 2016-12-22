@@ -6,6 +6,7 @@ import android.widget.TextView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.entities.ProfileResponseEntity;
 import com.ddscanner.entities.User;
 import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;
@@ -49,6 +50,13 @@ public class ProfileFragmentViewModel {
     public static void addedCount (TextView view, ProfileFragmentViewModel profileFragmentViewModel) {
         if (profileFragmentViewModel != null) {
             view.setText(getDiveSpotString(profileFragmentViewModel.getUser().getCounters().getAddedCount()));
+        }
+    }
+
+    @BindingAdapter({"diverLevelFrom"})
+    public static void diverLevelLabel(TextView view, ProfileFragmentViewModel profileFragmentViewModel) {
+        if (profileFragmentViewModel != null && profileFragmentViewModel.getUser().getDiverLevel() != null) {
+            view.setText(profileFragmentViewModel.getUser().getDiverLevelString().toUpperCase());
         }
     }
 
