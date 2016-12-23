@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
@@ -334,6 +334,23 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1dp</item>
         <item name="android:background">#f6f6f6</item>
+        <item name="et_dividerColor">#dedede</item>
+        <item name="et_dividerHeight">1dp</item>
+        <item name="et_dividerPadding">2dp</item>
+        <item name="et_labelEnable">true</item>
+        <item name="et_labelTextColor">#bbbbbb</item>
+        <item name="et_labelTextSize">12sp</item>
     </style>
-
+    
+    <style name="DiveCenterProfileEditText">
+        <item name="android:textColor">@color/black_text</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColorHint">#bbbbbb</item>
+        <item name="et_dividerColor">#dedede</item>
+        <item name="et_dividerHeight">1dp</item>
+        <item name="et_dividerPadding">2dp</item>
+        <item name="et_labelEnable">true</item>
+        <item name="et_labelTextColor">#bbbbbb</item>
+        <item name="et_labelTextSize">12sp</item>
+    </style>
 </resources>
