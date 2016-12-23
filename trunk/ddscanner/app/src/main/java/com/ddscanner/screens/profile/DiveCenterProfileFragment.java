@@ -78,6 +78,7 @@ public class DiveCenterProfileFragment extends BaseFragment implements LoginView
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.view_divecenter_profile, container, false);
+        binding.setHandlers(this);
         View view = binding.getRoot();
         if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == 0) {
             DDScannerApplication.getInstance().getDdScannerRestClient().getUserSelfInformation(userResultListener);
@@ -142,4 +143,9 @@ public class DiveCenterProfileFragment extends BaseFragment implements LoginView
     public void onLoggedOut() {
 
     }
+
+    public void editProfileButtonClicked(View view) {
+
+    }
+
 }

@@ -200,7 +200,7 @@ public class ProfileFragment extends BaseFragment implements LoginView.LoginStat
         if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn())  {
             if (binding != null) {
                 binding.about.scrollTo(0, 0);
-            }   
+            }
             getUserDataRequest();
         } else {
             onLoggedOut();

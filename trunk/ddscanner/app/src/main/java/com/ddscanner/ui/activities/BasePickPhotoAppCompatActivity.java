@@ -9,7 +9,6 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v13.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.ddscanner.utils.ActivitiesRequestCodes;
@@ -83,7 +82,7 @@ public class BasePickPhotoAppCompatActivity extends BaseToolbarActivity {
             case ActivitiesRequestCodes.BASE_PICK_PHOTOS_ACTIVITY_PICK_PHOTO_FROM_CAMERA:
                 if (resultCode == RESULT_OK) {
                     takedListener = (PictureTakenListener) this;
-                    takedListener.onPictureTaken(capturedImageUri.toString());
+                    takedListener.onPictureFromCameraTaken(capturedImageUri.toString());
                 }
 
                 break;
@@ -119,7 +118,7 @@ public class BasePickPhotoAppCompatActivity extends BaseToolbarActivity {
 
     public interface PictureTakenListener {
         void onPicturesTaken(ArrayList<String> pictures);
-        void onPictureTaken(String picture);
+        void onPictureFromCameraTaken(String picture);
     }
 
 }

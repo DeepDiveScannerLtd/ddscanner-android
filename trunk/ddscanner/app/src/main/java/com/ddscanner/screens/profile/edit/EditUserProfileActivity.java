@@ -220,7 +220,7 @@ public class EditUserProfileActivity extends BasePickPhotoAppCompatActivity impl
     }
 
     @Override
-    public void onPictureTaken(String picture) {
+    public void onPictureFromCameraTaken(String picture) {
         pathToUploadedPhoto = picture;
         Picasso.with(this).load(picture)
                 .resize(Math.round(Helpers.convertDpToPixel(80, this)),

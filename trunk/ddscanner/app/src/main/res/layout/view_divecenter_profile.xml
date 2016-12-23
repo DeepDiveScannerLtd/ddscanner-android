@@ -390,6 +390,7 @@
         style="@style/DividerStyleFull" />
 
     <RelativeLayout
+        android:onClick="@{handlers::editProfileButtonClicked}"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@color/white">
