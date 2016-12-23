@@ -31,6 +31,7 @@ public class ActivitiesRequestCodes {
     public static final int REQUEST_CODE_MAIN_ACTIVITY_PERMISSION_CAMERA_AND_WRITE_STORAGE = 1309;
     public static final int REQUEST_CODE_MAIN_ACTIVITY_CHOSE_GOOGLE_ACCOUNT = 1310;
     public static final int REQUEST_CODE_MAIN_ACTIVITY_LOGIN_TO_ADD_ACCOUNT = 1311;
+    public static final int REQUEST_CODE_MAIN_ACTIVITY_SHOW_EDIT_PROFILE_ACTIVITY = 1312;
 
     //    SearchActivity
     public static final int REQUEST_CODE_SEARCH_ACTIVITY_LOGIN = 1401;
@@ -165,4 +166,10 @@ public class ActivitiesRequestCodes {
 
     //FilterActivity
     public static final int FILTER_ACTIVITY_PICK_SEALIFE = 4001;
+
+    //Base pick photos activity
+    public static final int BASE_PICK_PHOTOS_ACTIVITY_PERMISSIO_WRITE_STORAGE = 4101;
+    public static final int BASE_PICK_PHOTOS_ACTIVITY_PERMISSIO_READ_STORAGE = 4102;
+    public static final int BASE_PICK_PHOTOS_ACTIVITY_PICK_PHOTO_FROM_CAMERA = 4103;
+    public static final int BASE_PICK_PHOTOS_ACTIVITY_PICK_PHOTO_FROM_GALLERY = 4104;
 }

@@ -492,7 +492,7 @@
                         </LinearLayout>
 
                         <ImageView
-                            style="@style/DividerStyleFull"
+                            style="@style/DividerStyle"
                             android:layout_marginTop="10dp" />
 
                         <LinearLayout
@@ -515,41 +515,9 @@
                                 android:gravity="center_vertical"
                                 android:text="@string/edit_profile" />
 
-                            <ImageView
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:scaleType="center"
-                                android:src="@drawable/ic_arrow" />
                         </LinearLayout>
 
-                        <ImageView style="@style/DividerStyleFull" />
-
-                        <LinearLayout
-                            android:id="@+id/logout"
-                            android:layout_width="match_parent"
-                            android:layout_height="55dp"
-                            android:background="?attr/selectableItemBackground"
-                            android:onClick="@{handlers::logoutUser}"
-                            android:orientation="horizontal">
-
-                            <ImageView
-                                style="@style/CharacteristicsDiveSpotListIcons"
-                                android:src="@drawable/ic_profile_logout" />
-
-                            <TextView
-                                style="@style/CharacteristicsDiveSpotListTitle"
-                                android:layout_width="258dp"
-                                android:layout_height="match_parent"
-                                android:fontFamily="sans-serif-medium"
-                                android:gravity="center_vertical"
-                                android:text="Log out" />
-
-                            <ImageView
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:scaleType="center"
-                                android:src="@drawable/ic_arrow" />
-                        </LinearLayout>
+                        <ImageView style="@style/DividerStyle" />
 
                         <LinearLayout
                             android:id="@+id/about_dss_layout"
@@ -561,7 +529,7 @@
 
                             <ImageView
                                 style="@style/CharacteristicsDiveSpotListIcons"
-                                android:src="@drawable/shape" />
+                                android:src="@drawable/ic_profile_about" />
 
                             <TextView
                                 style="@style/CharacteristicsDiveSpotListTitle"
@@ -570,301 +538,10 @@
                                 android:fontFamily="sans-serif-medium"
                                 android:gravity="center_vertical"
                                 android:text="@string/about_dds"
-                                android:textColor="#a3a3a3" />
-                        </LinearLayout>
-                    </LinearLayout>
-
-                </LinearLayout>
-            </ScrollView>
-
-            <ScrollView
-                android:id="@+id/edit_profile_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/about"
-                android:visibility="gone">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="130dp"
-                        android:background="@color/white"
-                        android:gravity="center"
-                        android:orientation="horizontal">
-
-                        <LinearLayout
-                            android:id="@+id/capture_photo"
-                            android:layout_width="47dp"
-                            android:layout_height="47dp"
-                            android:background="@drawable/shape_gray_oval"
-                            android:gravity="center"
-                            android:onClick="@{handlers::capturePhoto}"
-                            android:padding="15dp">
-
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:src="@drawable/ic_attach_camera" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="80dp"
-                            android:layout_height="80dp"
-                            android:layout_marginLeft="31dp"
-                            android:layout_marginRight="31dp"
-                            android:background="@drawable/shape_gray_oval"
-                            android:gravity="center">
-
-                            <ImageView
-                                android:id="@+id/user_chosed_photo"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                app:loadImageFrom="@{profileFragmentViewModel}" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:id="@+id/pick_photo_from_gallery"
-                            android:layout_width="47dp"
-                            android:layout_height="47dp"
-                            android:background="@drawable/shape_gray_oval"
-                            android:gravity="center"
-                            android:onClick="@{handlers::pickPhotoFromGallery}"
-                            android:padding="15dp">
-
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:src="@drawable/ic_attach_gallery" />
-                        </LinearLayout>
-                    </LinearLayout>
-
-                    <ImageView style="@style/DividerStyleFull" />
-
-                    <ImageView
-                        style="@style/DividerStyleFull"
-                        android:layout_marginTop="15dp" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/white"
-                        android:orientation="vertical">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:minHeight="70dp"
-                            android:orientation="horizontal"
-                            android:paddingTop="10dp">
-
-                            <ImageView
-                                style="@style/CharacteristicsDiveSpotListIcons"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="3dp"
-                                android:src="@drawable/ic_profile_user" />
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="vertical">
-
-                                <RelativeLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:orientation="horizontal">
-
-                                    <TextView
-                                        android:id="@+id/name_title"
-                                        style="@style/AddDsCharTitleStyle"
-                                        android:layout_height="wrap_content"
-                                        android:text="@string/full_name"
-                                        android:textColor="#B2B2B2" />
-
-                                    <TextView
-                                        android:id="@+id/name_count"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_alignParentRight="true"
-                                        android:paddingRight="10dp"
-                                        android:textColor="#b2b2b2"
-                                        android:visibility="gone" />
-                                </RelativeLayout>
-
-                                <EditText
-                                    android:id="@+id/fullName"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginRight="15dp"
-                                    android:background="@android:color/transparent"
-                                    android:hint="Full name"
-                                    android:maxLength="30"
-                                    android:text="@{TextUtils.isEmpty(profileFragmentViewModel.user.name) ? null : profileFragmentViewModel.user.name}"
-                                    android:textSize="16sp" />
-                            </LinearLayout>
-
-                        </LinearLayout>
-
-                        <ImageView style="@style/DividerStyle" />
-
-                        <TextView
-                            android:id="@+id/error_name"
-                            style="@style/ValidationErrorTextView" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="10dp"
-                            android:minHeight="70dp"
-                            android:orientation="horizontal"
-                            android:paddingTop="10dp">
-
-                            <ImageView
-                                style="@style/CharacteristicsDiveSpotListIcons"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="3dp"
-                                android:src="@drawable/ic_profile_about" />
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="vertical">
-
-                                <RelativeLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:orientation="horizontal">
-
-                                    <TextView
-                                        android:id="@+id/about_title"
-                                        style="@style/AddDsCharTitleStyle"
-                                        android:layout_height="wrap_content"
-                                        android:text="@string/about"
-                                        android:textColor="#B2B2B2" />
-
-                                    <TextView
-                                        android:id="@+id/about_count"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_alignParentRight="true"
-                                        android:paddingRight="10dp"
-                                        android:textColor="#b2b2b2"
-                                        android:visibility="gone" />
-                                </RelativeLayout>
-
-                                <EditText
-                                    android:id="@+id/aboutEdit"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginRight="15dp"
-                                    android:background="@android:color/transparent"
-                                    android:hint="About"
-                                    android:maxLength="250"
-                                    android:text="@{profileFragmentViewModel.user.about != null ? null : profileFragmentViewModel.user.about}"
-                                    android:textSize="16sp" />
-                            </LinearLayout>
-                            
-                        </LinearLayout>
-                        <ImageView
-                            android:layout_marginLeft="65dp"
-                            style="@style/DividerStyle" />
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-                            <ImageView
-                                style="@style/CharacteristicsDiveSpotListIcons"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="3dp"
-                                android:src="@drawable/ic_profile_level" />
-                            <android.support.v7.widget.AppCompatSpinner
-                                android:id="@+id/level_spinner"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:dropDownWidth="150dp"
-                                android:gravity="center_vertical"
-                                android:popupBackground="@color/white"
                                 />
                         </LinearLayout>
                     </LinearLayout>
 
-                    <ImageView style="@style/DividerStyleFull" />
-
-                    <TextView
-                        android:id="@+id/error_about"
-                        style="@style/ValidationErrorTextView" />
-
-
-                    <ImageView
-                        style="@style/DividerStyleFull"
-                        android:layout_marginTop="15dp" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/white"
-                        android:orientation="vertical">
-
-                        <RadioGroup
-                            android:id="@+id/radiogroup"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:paddingBottom="5dp"
-                            android:paddingLeft="15dp"
-                            android:paddingTop="5dp">
-
-                        </RadioGroup>
-
-                        <ImageView style="@style/DividerStyleFull" />
-
-                        <RelativeLayout
-                            android:id="@+id/choose_dive_center_btn"
-                            android:layout_width="match_parent"
-                            android:layout_height="50dp"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal"
-                            android:paddingLeft="15dp">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/choose_dive_center"
-                                android:textColor="@color/black_text" />
-
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
-                                android:layout_marginRight="20dp"
-                                android:src="@drawable/ic_arrow" />
-                        </RelativeLayout>
-
-                        <ImageView style="@style/DividerStyleFull" />
-
-                    </LinearLayout>
-
-                    <Button
-                        android:id="@+id/button_save"
-                        android:layout_width="match_parent"
-                        android:layout_height="45dp"
-                        android:layout_margin="20dp"
-                        android:background="@drawable/border_button_orange_2px"
-                        android:text="@string/save_changes"
-                        android:onClick="@{handlers::saveChanges}"/>
-
-                    <Button
-                        android:id="@+id/cancel_button"
-                        android:layout_width="match_parent"
-                        android:layout_height="45dp"
-                        android:layout_marginBottom="10dp"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginRight="20dp"
-                        android:background="@drawable/border_button_white_2px"
-                        android:onClick="@{handlers::cancelButtonClicked}"
-                        android:text="@string/cancel" />
                 </LinearLayout>
             </ScrollView>
 

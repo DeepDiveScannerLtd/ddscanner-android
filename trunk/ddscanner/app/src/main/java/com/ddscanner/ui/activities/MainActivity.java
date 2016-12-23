@@ -412,12 +412,6 @@ public class MainActivity extends BaseAppCompatActivity
                     case RESULT_OK:
                         final LatLngBounds place = data.getParcelableExtra(Constants.SEARCH_ACTIVITY_INTENT_KEY);
                         DDScannerApplication.bus.post(new PlaceChoosedEvent(place));
-//                    if (place.getViewport() != null) {
-//                        DDScannerApplication.bus.post(new PlaceChoosedEvent(place.getViewport()));
-//                    } else {
-//                        LatLngBounds latLngBounds = new LatLngBounds(new LatLng(place.getLatLng().latitude - 0.2, place.getLatLng().longitude - 0.2), new LatLng(place.getLatLng().latitude + 0.2, place.getLatLng().longitude + 0.2) );
-//                        DDScannerApplication.bus.post(new PlaceChoosedEvent(latLngBounds));
-//                    }
                         break;
                     case ActivitiesRequestCodes.RESULT_CODE_SEARCH_ACTIVITY_MY_LOCATION:
                         Log.i(TAG, "MainActivity getLocation 2");
@@ -426,14 +420,9 @@ public class MainActivity extends BaseAppCompatActivity
                 }
 
                 break;
-            case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_IMAGE_CAPTURE:
+            case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_SHOW_EDIT_PROFILE_ACTIVITY:
                 if (resultCode == RESULT_OK) {
-                    mainViewPagerAdapter.setProfileImageFromCamera(capturedImageUri);
-                }
-                break;
-            case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_PICK_PHOTO:
-                if (resultCode == RESULT_OK) {
-                    mainViewPagerAdapter.setProfileImage(Helpers.getPhotosFromIntent(data, this).get(0));
+                    DDScannerApplication.bus.post(new LoadUserProfileInfoEvent());
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_LOGIN:
@@ -533,19 +522,6 @@ public class MainActivity extends BaseAppCompatActivity
         }
     }
 
-    private void dispatchTakePictureIntent() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        File imagesFolder = new File(Environment.getExternalStorageDirectory(), "DDScanner");
-        imagesFolder.mkdirs();
-        File image = new File(imagesFolder, "DDS_" + timeStamp + ".png");
-        capturedImageUri = Uri.fromFile(image);
-        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, capturedImageUri);
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(takePictureIntent, ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_IMAGE_CAPTURE);
-        }
-    }
-
     private void sendLoginRequest(SignInType signInType, String token) {
         materialDialog.show();
         // TODO Debug: switch calls after tests
@@ -591,41 +567,6 @@ public class MainActivity extends BaseAppCompatActivity
         } else {
             DDScannerApplication.getInstance().getDdScannerRestClient().postUserLogin(event.getEmail(), event.getPassword(), "24", "25", null, null, signUpLoginResultListener);
         }
-    }
-
-    @Subscribe
-    public void changeProfileFragmentView(TakePhotoFromCameraEvent event) {
-        if (checkWriteStoragePermission()) {
-            dispatchTakePictureIntent();
-        } else {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_PERMISSION_CAMERA_AND_WRITE_STORAGE);
-
-        }
-    }
-
-    @Subscribe
-    public void pickPhotoFromGallery(PickPhotoFromGallery event) {
-        if (checkReadStoragePermission(this)) {
-            pickphotoFromGallery();
-        } else {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_PERMISSION_READ_STORAGE);
-        }
-    }
-
-    private void pickphotoFromGallery() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_PICK_PHOTO);
-//        MultiImageSelector.create().showCamera(false).multi().count(1).start(this, ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_PICK_PHOTO);
-    }
-
-    private boolean checkPermissionReadStorage() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            return false;
-        }
-        return true;
     }
 
     @Subscribe
@@ -753,73 +694,6 @@ public class MainActivity extends BaseAppCompatActivity
         } else {
             this.diveCenterProfileFragment = diveCenterProfileFragment;
         }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_PERMISSION_READ_STORAGE: {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    pickphotoFromGallery();
-                } else {
-                    Toast.makeText(MainActivity.this, "Grand permission to pick photo from gallery!", Toast.LENGTH_SHORT).show();
-                }
-                return;
-            }
-            case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_PERMISSION_CAMERA: {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    dispatchTakePictureIntent();
-                } else {
-                    Toast.makeText(MainActivity.this, "Grand permission to pick photo from camera!", Toast.LENGTH_SHORT).show();
-                }
-                return;
-            }
-            case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_PERMISSION_CAMERA_AND_WRITE_STORAGE: {
-                if (grantResults.length > 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-                    dispatchTakePictureIntent();
-                } else {
-                    Toast.makeText(MainActivity.this, "Grand permissions to pick photo from camera!", Toast.LENGTH_SHORT).show();
-                }
-                return;
-            }
-            case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_PERMISSION_WRITE_STORAGE: {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    dispatchTakePictureIntent();
-                } else {
-                    Toast.makeText(MainActivity.this, "Grand permission to pick photo from camera!", Toast.LENGTH_SHORT).show();
-                }
-                return;
-            }
-
-        }
-    }
-
-    public boolean checkReadStoragePermission(Activity context) {
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            return false;
-        }
-        return true;
-    }
-
-    public boolean checkCameraPermission(Activity context) {
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            return false;
-        }
-        return true;
-    }
-
-    public boolean checkCameraPermissions(Activity context) {
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            return false;
-        }
-        return true;
-    }
-
-    public boolean checkWriteStoragePermission() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            return false;
-        }
-        return true;
     }
 
     @Subscribe

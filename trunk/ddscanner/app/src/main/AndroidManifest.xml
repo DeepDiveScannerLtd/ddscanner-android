@@ -253,6 +253,9 @@
         <activity
             android:name=".ui.activities.PickLanguageActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".screens.profile.edit.EditUserProfileActivity"
+            android:screenOrientation="portrait" />
         <service
             android:name=".services.FirebaseMessagingService">
             <intent-filter>

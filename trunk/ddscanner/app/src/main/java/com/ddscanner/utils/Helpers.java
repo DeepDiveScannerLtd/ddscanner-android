@@ -56,6 +56,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+
 /**
  * Created by lashket on 9.4.16.
  */
@@ -667,6 +670,10 @@ public class Helpers {
             return urisList;
         }
         return urisList;
+    }
+
+    public static RequestBody createRequestBodyForString(String string) {
+        return RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), string);
     }
 
 }

@@ -39,6 +39,7 @@ import com.ddscanner.events.PickPhotoFromGallery;
 import com.ddscanner.events.TakePhotoFromCameraEvent;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.achievements.AchievementsActivity;
+import com.ddscanner.screens.profile.edit.EditUserProfileActivity;
 import com.ddscanner.ui.activities.AboutActivity;
 import com.ddscanner.events.ChangeLoginViewEvent;
 import com.ddscanner.ui.activities.MainActivity;
@@ -48,9 +49,11 @@ import com.ddscanner.ui.adapters.DiverLevelSpinnerAdapter;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.ui.fragments.BaseFragment;
 import com.ddscanner.ui.views.LoginView;
+import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
+import com.google.gson.Gson;
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 
@@ -64,84 +67,28 @@ import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
-public class ProfileFragment extends BaseFragment implements View.OnClickListener, LoginView.LoginStateChangeListener, InfoDialogFragment.DialogClosedListener, SwipeRefreshLayout.OnRefreshListener {
+public class ProfileFragment extends BaseFragment implements LoginView.LoginStateChangeListener, InfoDialogFragment.DialogClosedListener, SwipeRefreshLayout.OnRefreshListener {
 
     private static final String TAG = ProfileFragment.class.getName();
 
     private static final int MAX_LENGTH_NAME = 30;
     private static final int MAX_LENGTH_ABOUT = 250;
 
-    private UserOld userOld;
-    private boolean isClickedChosingPhotoButton = false;
-    private boolean isAboutChanged = false;
-    private boolean isNamChanged = false;
-
-    private MaterialDialog materialDialog;
     private Map<String, TextView> errorsMap = new HashMap<>();
 
-    private String uri = null;
-    private Uri uriFromCamera = null;
     private User user;
-    private RequestBody name, about, divingSkill;
-    private MultipartBody.Part image;
 
     private FragmentProfileBinding binding;
-    private ArrayList<String> levels = new ArrayList<>();
-
-    ColorStateList colorStateList;
-
-
-    private DDScannerRestClient.ResultListener<Void> updateProfileInfoResultListener = new DDScannerRestClient.ResultListener<Void>() {
-        @Override
-        public void onSuccess(Void v) {
-            binding.userName.setText(binding.fullName.getText());
-            binding.userAbout.setText(binding.aboutEdit.getText());
-            materialDialog.dismiss();
-//            uri = null;
-//            changeUi(result);
-            binding.about.setVisibility(View.VISIBLE);
-            binding.about.scrollTo(0,0);
-            binding.editProfileLayout.setVisibility(View.GONE);
-            getUserDataRequest();
-//            getUserDataRequest(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId());
-//            swipeRefreshLayout.setEnabled(true);
-        }
-
-        @Override
-        public void onConnectionFailure() {
-            materialDialog.dismiss();
-            InfoDialogFragment.show(getFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
-        }
-
-        @Override
-        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-            materialDialog.dismiss();
-            switch (errorType) {
-                case UNAUTHORIZED_401:
-                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logout();
-                    onLoggedOut();
-                    break;
-                default:
-                    Helpers.handleUnexpectedServerError(getFragmentManager(), url, errorMessage);
-                    break;
-            }
-        }
-    };
 
     private DDScannerRestClient.ResultListener<ProfileResponseEntity> userResultListener = new DDScannerRestClient.ResultListener<ProfileResponseEntity>() {
         @Override
         public void onSuccess(ProfileResponseEntity result) {
-            if (binding != null && binding.editProfileLayout.getVisibility() != View.VISIBLE) {
+            if (binding != null) {
                 binding.about.setVisibility(View.VISIBLE);
             }
             switch (result.getType()) {
                 case 2:
                 case 1:
-                    if (result.getDiver().getDiverLevel() == null) {
-                        binding.levelSpinner.setSelection(1);
-                    } else {
-                        binding.levelSpinner.setSelection(result.getDiver().getDiverLevel());
-                    }
                     user = result.getDiver();
                     user.setToken(DDScannerApplication.getInstance().getSharedPreferenceHelper().getToken());
                     user.setType(result.getType());
@@ -183,30 +130,17 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         Log.i(TAG, "ProfileFragment onCreateView, this = " + this);
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_profile, container, false);
         View v = binding.getRoot();
-        colorStateList = new ColorStateList(
-                new int[][]{
-                        new int[]{-android.R.attr.state_checked},
-                        new int[]{android.R.attr.state_checked}
-                },
-                new int[]{
-                        ContextCompat.getColor(getContext(), R.color.radio_button_empty)
-                        , ContextCompat.getColor(getContext(), R.color.radio_button_fill),
-                }
-        );
         setupUi();
         binding.setHandlers(this);
 
         if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn() && DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == 1) {
             getUserDataRequest();
         }
-        
-        createErrorsMap();
         if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
             onLoggedIn();
         } else {
             onLoggedOut();
         }
-        materialDialog = Helpers.getMaterialDialog(getContext());
         return v;
     }
 
@@ -233,9 +167,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     @Override
     public void onDestroy() {
         super.onDestroy();
-
         userResultListener.setCancelled(true);
-        updateProfileInfoResultListener.setCancelled(true);
     }
 
     protected void onAttachToContext(Context context) {
@@ -248,99 +180,14 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         }
     }
 
-    private void setupRadioButtons(String title) {
-        AppCompatRadioButton button = new AppCompatRadioButton(getContext());
-        button.setSupportButtonTintList(colorStateList);
-        button.setText(title);
-        button.setPadding(Math.round(Helpers.convertDpToPixel(15, getContext())), Math.round(Helpers.convertDpToPixel(10, getContext())), Math.round(Helpers.convertDpToPixel(20, getContext())), Math.round(Helpers.convertDpToPixel(10, getContext())));
-        binding.radiogroup.addView(button);
-    }
-
     private void setupUi() {
-        setupRadioButtons("Diver");
-        setupRadioButtons("Instructor");
-        levels.add("Diver level");
-        levels.addAll(Helpers.getDiveLevelTypes());
-        binding.levelSpinner.setAdapter(new DiverLevelSpinnerAdapter(getActivity(), R.layout.spinner_item, levels));
         binding.swiperefresh.setOnRefreshListener(this);
-        binding.aboutEdit.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (isAboutChanged) {
-                    binding.aboutCount.setVisibility(View.VISIBLE);
-                }
-                if (MAX_LENGTH_ABOUT - binding.aboutEdit.length() < 10) {
-                    binding.aboutCount.setTextColor(ContextCompat.getColor(getContext(), R.color.tw__composer_red));
-                } else {
-                    binding.aboutCount.setTextColor(Color.parseColor("#b2b2b2"));
-                }
-                binding.aboutCount.setText(String.valueOf(MAX_LENGTH_ABOUT - binding.aboutEdit.length()));
-                isAboutChanged = true;
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-
-        binding.fullName.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (isNamChanged) {
-                    binding.nameCount.setVisibility(View.VISIBLE);
-                }
-                if (MAX_LENGTH_NAME - binding.fullName.length() < 10) {
-                    binding.nameCount.setTextColor(ContextCompat.getColor(getContext(), R.color.tw__composer_red));
-                } else {
-                    binding.nameCount.setTextColor(Color.parseColor("#b2b2b2"));
-                }
-                binding.nameCount.setText(String.valueOf(MAX_LENGTH_NAME - binding.fullName.length()));
-                isNamChanged = true;
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.button_save:
-                createUpdateRequest();
-                break;
-        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-//        Log.i(TAG, "ProfileFragment onCreateView, this = " + this);
-//        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
-//            if (!isClickedChosingPhotoButton) {
-//             //   getUserDataRequest(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId());
-//            }
-//        }
-//        if (!getUserVisibleHint()) {
-//            return;
-//        }
-
         userResultListener.setCancelled(false);
-        updateProfileInfoResultListener.setCancelled(false);
     }
 
     @Subscribe
@@ -350,10 +197,11 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
     @Subscribe
     public void getUserProfileInfo(LoadUserProfileInfoEvent event) {
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
-            if (!isClickedChosingPhotoButton) {
-                getUserDataRequest();
-            }
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn())  {
+            if (binding != null) {
+                binding.about.scrollTo(0, 0);
+            }   
+            getUserDataRequest();
         } else {
             onLoggedOut();
         }
@@ -373,26 +221,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         DDScannerApplication.bus.unregister(this);
     }
 
-    public void setImage(String uri) {
-        Picasso.with(getContext()).load("file://" + uri)
-                .resize(Math.round(Helpers.convertDpToPixel(80, getContext())),
-                        Math.round(Helpers.convertDpToPixel(80, getContext()))).centerCrop()
-                .transform(new CropCircleTransformation()).into(binding.userChosedPhoto);
-        this.uri = uri;
-        this.uriFromCamera = null;
-    }
-
-    public void setImage(Uri uri) {
-        Picasso.with(getContext()).load(uri)
-                .resize(Math.round(Helpers.convertDpToPixel(80, getContext())),
-                        Math.round(Helpers.convertDpToPixel(80, getContext()))).centerCrop()
-                .transform(new CropCircleTransformation()).into(binding.userChosedPhoto);
-        this.uriFromCamera = uri;
-        this.uri = null;
-    }
-
     private void getUserDataRequest() {
-     //   DDScannerApplication.getDdScannerRestClient().getUserInformation(id, getUserInformationResultListener);
         DDScannerApplication.getInstance().getDdScannerRestClient().getUserSelfInformation(userResultListener);
     }
 
@@ -417,50 +246,6 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     @Override
     public void setUserVisibleHint(final boolean visible) {
         super.setUserVisibleHint(visible);
-//        Log.i(TAG, "ProfileFragment setUserVisibleHint, this = " + this);
-//        if (visible) {
-//            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
-//                getUserDataRequest(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId());
-//            }
-//        }
-    }
-
-    private void createUpdateRequest() {
-        isClickedChosingPhotoButton = false;
-        materialDialog.show();
-        about = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), binding.aboutEdit.getText().toString());
-        name = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), binding.fullName.getText().toString());
-        if (uri != null) {
-            File file;
-            if (!uri.toString().contains("file:")) {
-                file = new File(uri);
-            } else {
-                file = new File(uri);
-            }
-            RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
-            image = MultipartBody.Part.createFormData("photo", file.getName(), requestFile);
-        }
-
-        if (uriFromCamera != null) {
-            File file;
-            if (!uriFromCamera.toString().contains("file:")) {
-                file = new File(Helpers.getRealPathFromURI(getContext(), uriFromCamera));
-            } else {
-                file = new File(uriFromCamera.getPath());
-            }
-            RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
-            image = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
-        }
-
-        divingSkill = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), String.valueOf(levels.indexOf(binding.levelSpinner.getSelectedItem())));
-
-        DDScannerApplication.getInstance().getDdScannerRestClient().potUpdateUserProfile(updateProfileInfoResultListener, image,  name, about, divingSkill);
-    }
-
-
-    private void createErrorsMap() {
-        errorsMap.put("name", binding.errorName);
-        errorsMap.put("about", binding.errorAbout);
     }
 
     @Override
@@ -469,13 +254,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         if (binding != null && binding.loginView != null && binding.about != null) {
             binding.loginView.setVisibility(View.GONE);
             binding.swiperefresh.setEnabled(true);
-          //  DDScannerApplication.getInstance().getDdScannerRestClient().getUserSelfInformation(userResultListener);
-          //  DDScannerApplication.getDdScannerRestClient().getUserInformation(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId(), getUserInformationResultListener);
-            if (binding.editProfileLayout.getVisibility() != View.VISIBLE) {
-                binding.about.setVisibility(View.VISIBLE);
-            } else {
-                binding.about.setVisibility(View.GONE);
-            }
+            binding.about.setVisibility(View.VISIBLE);
         }
     }
 
@@ -547,43 +326,14 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         }
     }
 
-    public void saveChanges(View view) {
-        createUpdateRequest();
-    }
-
-    public void cancelButtonClicked(View view) {
-        binding.swiperefresh.setEnabled(true);
-        isClickedChosingPhotoButton = false;
-        binding.about.setVisibility(View.VISIBLE);
-        binding.about.scrollTo(0,0);
-        binding.editProfileLayout.setVisibility(View.GONE);
-        View currentView = getActivity().getCurrentFocus();
-        if (currentView != null) {
-            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(currentView.getWindowToken(), 0);
-        }
-    }
-
     public void showEditLayout(View view) {
-        binding.swiperefresh.setEnabled(false);
-        binding.about.setVisibility(View.GONE);
-        binding.editProfileLayout.setVisibility(View.VISIBLE);
-        binding.nameCount.setVisibility(View.GONE);
-        binding.aboutCount.setVisibility(View.GONE);
+        if (user != null) {
+            EditUserProfileActivity.showForResult(getActivity(), new Gson().toJson(user), ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_SHOW_EDIT_PROFILE_ACTIVITY);
+        }
     }
 
     public void showAboutDDSButtonClicked(View view) {
         AboutActivity.show(getContext());
-    }
-
-    public void capturePhoto(View view) {
-        isClickedChosingPhotoButton = true;
-        DDScannerApplication.bus.post(new TakePhotoFromCameraEvent());
-    }
-
-    public void pickPhotoFromGallery(View view) {
-        isClickedChosingPhotoButton = true;
-        DDScannerApplication.bus.post(new PickPhotoFromGallery());
     }
 
     public void showAchievementsDetails(View view) {
