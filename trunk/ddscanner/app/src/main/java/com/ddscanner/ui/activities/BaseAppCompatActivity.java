@@ -6,8 +6,11 @@ import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 
+import com.ddscanner.R;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogHelpers;
 import com.ddscanner.utils.LocationHelper;
@@ -20,6 +23,7 @@ public class BaseAppCompatActivity extends AppCompatActivity {
 
     private LocationHelper locationHelper;
     private HashSet<Integer> requestCodes = new HashSet<>();
+    private int menuResourceId = -1;
 
     /**
      * Call this method to get user location. Subscribe to LocationReadyEvent for result
@@ -41,6 +45,42 @@ public class BaseAppCompatActivity extends AppCompatActivity {
         } catch (LocationHelper.LocationPPermissionsNotGrantedException e) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, ActivitiesRequestCodes.REQUEST_CODE_LOCATION_PERMISSION_NOT_GRANTED_ACTIVITY_LOCATION_PERMISSION);
         }
+    }
+
+    /**
+     * Show default toolbar with back button with title
+     * @param titleresId resource id for toolbar title
+     * @param toolbarId toolbar id in layout
+     */
+    public void setupToolbar(int titleresId, int toolbarId) {
+        setSupportActionBar((Toolbar) findViewById(toolbarId));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);
+        getSupportActionBar().setTitle(titleresId);
+    }
+
+    /**
+     * Show default toolbar with back button with title and menu
+     * @param titleresId resource id for toolbar title
+     * @param toolbarId toolbar id in layout
+     * @param menuResId resource id for menu
+     */
+    public void setupToolbar(int titleresId, int toolbarId, int menuResId) {
+        this.menuResourceId = menuResId;
+        setSupportActionBar((Toolbar) findViewById(toolbarId));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);
+        getSupportActionBar().setTitle(titleresId);
+        invalidateOptionsMenu();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if (menuResourceId != -1) {
+            getMenuInflater().inflate(this.menuResourceId, menu);
+            return true;
+        }
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override

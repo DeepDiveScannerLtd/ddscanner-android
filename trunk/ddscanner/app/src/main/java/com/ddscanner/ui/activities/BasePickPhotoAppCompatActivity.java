@@ -19,7 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class BasePickPhotoAppCompatActivity extends BaseToolbarActivity {
+public class BasePickPhotoAppCompatActivity extends BaseAppCompatActivity {
 
     private Uri capturedImageUri;
     private PictureTakenListener takedListener;

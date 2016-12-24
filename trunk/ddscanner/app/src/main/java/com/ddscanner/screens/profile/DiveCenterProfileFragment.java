@@ -23,6 +23,7 @@ import com.ddscanner.entities.User;
 import com.ddscanner.events.LoadUserProfileInfoEvent;
 import com.ddscanner.events.LoggedOutEvent;
 import com.ddscanner.rest.DDScannerRestClient;
+import com.ddscanner.screens.profile.edit.EditDiveCenterProfileActivity;
 import com.ddscanner.ui.activities.MainActivity;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.ui.fragments.BaseFragment;
@@ -145,7 +146,7 @@ public class DiveCenterProfileFragment extends BaseFragment implements LoginView
     }
 
     public void editProfileButtonClicked(View view) {
-
+        EditDiveCenterProfileActivity.showForResult(getActivity(), "", 1);
     }
 
 }

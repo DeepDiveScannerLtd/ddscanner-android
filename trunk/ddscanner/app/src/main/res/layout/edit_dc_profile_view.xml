@@ -1,112 +1,145 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <import type="android.view.View" />
+        <import type="android.text.TextUtils" />
+        <import type="java.lang.String" />
+
+        <variable
+            name="profileFragmentViewModel"
+            type="com.ddscanner.screens.profile.edit.EditDiveCenterProfileActivityViewModel" />
+
+        <variable
+            name="handlers"
+            type="com.ddscanner.screens.profile.edit.EditDiveCenterProfileActivity" />
+    </data>
+<LinearLayout
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:paddingLeft="20dp">
-    
-    <LinearLayout
-        android:layout_marginTop="15dp"
+    android:orientation="vertical">
+
+    <include layout="@layout/view_toolbar" />
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <RelativeLayout
-            android:layout_marginRight="25dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-            <LinearLayout
-                android:id="@+id/attach_photo_btn"
-                android:layout_width="65dp"
-                android:layout_height="65dp"
-                android:gravity="center"
-                android:background="@drawable/gray_rectangle_attach">
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_attach_camera"/>
-            </LinearLayout>
-            <TextView
-                android:layout_marginTop="4dp"
-                android:layout_below="@+id/attach_photo_btn"
-                android:layout_centerHorizontal="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="12sp"
-                android:textColor="#a3a3a3"
-                android:text="@string/change"
-                android:textStyle="bold"/>
-        </RelativeLayout>
+        android:layout_height="wrap_content">
+
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <com.rey.material.widget.EditText
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="20dp">
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/name"
-                style="@style/DiveCenterProfileEditText"/>
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal">
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="25dp">
+
+                    <LinearLayout
+                        android:id="@+id/attach_photo_btn"
+                        android:layout_width="65dp"
+                        android:layout_height="65dp"
+                        android:background="@drawable/gray_rectangle_attach"
+                        android:gravity="center">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_attach_camera" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/attach_photo_btn"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="4dp"
+                        android:text="@string/change"
+                        android:textColor="#a3a3a3"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <com.rey.material.widget.EditText
+                        style="@style/DiveCenterProfileEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/name" />
+
+                    <com.rey.material.widget.EditText
+                        android:id="@+id/country"
+                        style="@style/DiveCenterProfileEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:focusable="false"
+                        android:hint="@string/country_characteristic"
+                        android:onClick="@{handlers::pickCountryClicked}"/>
+                </LinearLayout>
+            </LinearLayout>
+
             <com.rey.material.widget.EditText
-                android:layout_marginTop="6dp"
                 style="@style/DiveCenterProfileEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/country_characteristic" />
-        </LinearLayout>
-    </LinearLayout>
-    <com.rey.material.widget.EditText
-        android:layout_marginTop="6dp"
-        style="@style/DiveCenterProfileEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/address" />
-    <LinearLayout
-        android:id="@+id/phones"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-        <com.rey.material.widget.EditText
-            android:id="@+id/phone"
-            android:layout_marginTop="6dp"
-            style="@style/DiveCenterProfileEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/phone" />
-    </LinearLayout>
-    <TextView
-        android:id="@+id/add_phone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/add_phone"
-        android:textSize="14sp"
-        android:textColor="@color/primary"
-        android:fontFamily="sans-serif-medium"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
-        android:paddingRight="100dp"/>
+                android:layout_marginTop="6dp"
+                android:hint="@string/address" />
 
-    <LinearLayout
-        android:id="@+id/emails"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-        <com.rey.material.widget.EditText
-            android:id="@+id/email"
-            style="@style/DiveCenterProfileEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/email" />
-    </LinearLayout>
-    <TextView
-        android:id="@+id/add_email"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/add_e_mail"
-        android:textSize="14sp"
-        android:textColor="@color/primary"
-        android:fontFamily="sans-serif-medium"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
-        android:paddingRight="100dp"/>
+            <LinearLayout
+                android:id="@+id/phones"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+            </LinearLayout>
+
+            <TextView
+                android:onClick="@{handlers::addPhoneClicked}"
+                android:id="@+id/add_phone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
+                android:paddingBottom="8dp"
+                android:paddingRight="100dp"
+                android:paddingTop="8dp"
+                android:text="@string/add_phone"
+                android:textColor="@color/primary"
+                android:textSize="14sp" />
+
+            <LinearLayout
+                android:id="@+id/emails"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/add_email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
+                android:paddingBottom="8dp"
+                android:paddingRight="100dp"
+                android:paddingTop="8dp"
+                android:text="@string/add_e_mail"
+                android:textColor="@color/primary"
+                android:textSize="14sp"
+                android:onClick="@{handlers::addEmailClicked}"/>
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>
+    </layout>

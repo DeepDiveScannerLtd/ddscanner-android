@@ -377,7 +377,7 @@ public class MainActivity extends BaseAppCompatActivity
 //                materialDialog.showForResult();
 //                openSearchLocationWindow();
 
-                SearchSpotOrLocationActivity.showForResult(MainActivity.this, ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_PLACE_AUTOCOMPLETE);
+                SearchSpotOrLocationActivity.showForResult(MainActivity.this, ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_PLACE_AUTOCOMPLETE, false);
                 //        EventsTracker.trackSearchActivityOpened();
                 break;
             case R.id.filter_menu_button:

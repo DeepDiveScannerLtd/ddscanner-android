@@ -17,6 +17,8 @@ import android.view.View;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.entities.DiveCenter;
+import com.ddscanner.entities.DiveCenterCountry;
 import com.ddscanner.entities.Language;
 import com.ddscanner.entities.SealifeShort;
 import com.ddscanner.events.LanguageChosedEvent;
@@ -41,6 +43,7 @@ public class PickLanguageActivity extends AppCompatActivity implements SearchVie
     private Menu menu;
     private ProgressView progressView;
     private LanguageSearchAdapter languageSearchAdapter;
+    private boolean isPickLanguage;
 
     private DDScannerRestClient.ResultListener<Map<String, String>> resultListener = new DDScannerRestClient.ResultListener<Map<String, String>>() {
         @Override
@@ -64,8 +67,9 @@ public class PickLanguageActivity extends AppCompatActivity implements SearchVie
         }
     };
 
-    public static void showForResult(Activity activity, int requestCode) {
+    public static void showForResult(Activity activity, int requestCode, boolean isForPickLanguage) {
         Intent intent = new Intent(activity, PickLanguageActivity.class);
+        intent.putExtra("isLanguage", isForPickLanguage);
         activity.startActivityForResult(intent, requestCode);
     }
 
@@ -73,8 +77,13 @@ public class PickLanguageActivity extends AppCompatActivity implements SearchVie
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_language);
+        isPickLanguage = getIntent().getBooleanExtra("isLanguage", false);
         findViews();
-        DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotLanguages(resultListener);
+        if (isPickLanguage) {
+            DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotLanguages(resultListener);
+        } else {
+            DDScannerApplication.getInstance().getDdScannerRestClient().getListOfCountries(resultListener);
+        }
     }
 
     private void findViews() {
@@ -146,13 +155,19 @@ public class PickLanguageActivity extends AppCompatActivity implements SearchVie
     @Subscribe
     public void languageChosed(LanguageChosedEvent event) {
         Language language;
+        DiveCenterCountry diveCenterCountry;
         for (Map.Entry<String, String> entry : languagesMap.entrySet()) {
             if (entry.getValue().equals(event.getLanguageName())) {
-                language = new Language(entry.getKey(), entry.getValue());
-                Log.i(TAG, language.getName());
-                Log.i(TAG, language.getCode());
                 Intent intent = new Intent();
-                intent.putExtra("language", language);
+                if (isPickLanguage) {
+                    language = new Language(entry.getKey(), entry.getValue());
+                    intent.putExtra("language", language);
+                    setResult(RESULT_OK, intent);
+                    finish();
+                    return;
+                }
+                diveCenterCountry = new DiveCenterCountry(entry.getKey(), entry.getValue());
+                intent.putExtra("country", diveCenterCountry);
                 setResult(RESULT_OK, intent);
                 finish();
                 return;

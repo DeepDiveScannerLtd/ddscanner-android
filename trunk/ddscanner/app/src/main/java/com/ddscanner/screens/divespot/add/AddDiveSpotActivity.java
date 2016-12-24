@@ -646,7 +646,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
 
     @Subscribe
     public void addLanguageToList(AddTranslationClickedEvent event) {
-        PickLanguageActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_LANGUAGE);
+        PickLanguageActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_LANGUAGE, true);
 //        Random random = new Random();
 //        String randon = String.valueOf(random.nextInt(9000));
 //        languages.add(randon);

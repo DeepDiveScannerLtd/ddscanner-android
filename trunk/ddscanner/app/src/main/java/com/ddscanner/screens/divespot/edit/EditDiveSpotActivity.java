@@ -748,7 +748,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
 
     @Subscribe
     public void addLanguageToList(AddTranslationClickedEvent event) {
-        PickLanguageActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_LANGUAGE);
+        PickLanguageActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_LANGUAGE, true);
     }
 
     private void addLanguageToList(Language language) {

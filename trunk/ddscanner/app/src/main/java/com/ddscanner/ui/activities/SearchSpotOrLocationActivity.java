@@ -13,6 +13,7 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
@@ -62,6 +63,7 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
 
     private boolean isTryToOpenAddDiveSpotActivity = false;
     private Runnable sendingSearchRequestRunnable;
+    private boolean isForDiveCenter;
 
     private DDScannerRestClient.ResultListener<ArrayList<DiveSpotShort>> divespotsWrapperResultListener = new DDScannerRestClient.ResultListener<ArrayList<DiveSpotShort>>() {
         @Override
@@ -85,11 +87,14 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_divespots);
-        googleApiClient = new GoogleApiClient
-                .Builder(this)
-                .addApi(Places.GEO_DATA_API)
-                .addApi(Places.PLACE_DETECTION_API)
-                .build();
+        isForDiveCenter = getIntent().getBooleanExtra("isfordivecenter", false);
+        if (!isForDiveCenter) {
+            googleApiClient = new GoogleApiClient
+                    .Builder(this)
+                    .addApi(Places.GEO_DATA_API)
+                    .addApi(Places.PLACE_DETECTION_API)
+                    .build();
+        }
         findViews();
     }
 
@@ -97,6 +102,9 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         viewPager = (ViewPager) findViewById(R.id.search_view_pager);
         tabLayout = (TabLayout) findViewById(R.id.search_tab_layout);
+        if (isForDiveCenter) {
+            tabLayout.setVisibility(View.GONE);
+        }
         setToolbarSettings(toolbar);
         setupViewPager();
     }
@@ -115,13 +123,17 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
 
     private void setupViewPager() {
         adapter = new CustomPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(searchLocationFragment, getString(R.string.location));
+        if (!isForDiveCenter) {
+            adapter.addFragment(searchLocationFragment, getString(R.string.location));
+        }
         adapter.addFragment(searchDiveSpotFragment, getString(R.string.dive_spot));
         viewPager.addOnPageChangeListener(this);
         viewPager.setAdapter(adapter);
         EventsTracker.trackSearchByLocation();
-        tabLayout.setupWithViewPager(viewPager);
-        setupTabLayout();
+        if (!isForDiveCenter) {
+            tabLayout.setupWithViewPager(viewPager);
+            setupTabLayout();
+        }
     }
 
     private void setupTabLayout() {
@@ -145,8 +157,9 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
         return true;
     }
 
-    public static void showForResult(Activity activity, int requestCode) {
+    public static void showForResult(Activity activity, int requestCode, boolean isForDiveCenter) {
         Intent intent = new Intent(activity, SearchSpotOrLocationActivity.class);
+        intent.putExtra("isfordivecenter", isForDiveCenter);
         activity.startActivityForResult(intent, requestCode);
     }
 
@@ -163,35 +176,36 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
             public void run() {
                 if (!newText.isEmpty()) {
                     DDScannerApplication.getInstance().getDdScannerRestClient().getDivespotsByName(newText, divespotsWrapperResultListener);
-                    placeList = new ArrayList<String>();
-                    Places.GeoDataApi.getAutocompletePredictions(googleApiClient, newText, new LatLngBounds(new LatLng(-180, -180), new LatLng(180, 180)), null).setResultCallback(
-                            new ResultCallback<AutocompletePredictionBuffer>() {
-                                @Override
-                                public void onResult(@NonNull AutocompletePredictionBuffer autocompletePredictions) {
-                                    if (autocompletePredictions.getStatus().isSuccess()) {
-                                        for (AutocompletePrediction prediction : autocompletePredictions) {
-                                            placeList.add(prediction.getPlaceId());
-                                            Places.GeoDataApi.getPlaceById(googleApiClient, prediction.getPlaceId()).setResultCallback(new ResultCallback<PlaceBuffer>() {
-                                                @Override
-                                                public void onResult(PlaceBuffer places) {
-                                                    if (places.getStatus().isSuccess()) {
-                                                        try {
-                                                            Place place = places.get(0);
-                                                            // placeList.add(place);
-                                                        } catch (IllegalStateException e) {
+                    if (!isForDiveCenter) {
+                        placeList = new ArrayList<String>();
+                        Places.GeoDataApi.getAutocompletePredictions(googleApiClient, newText, new LatLngBounds(new LatLng(-180, -180), new LatLng(180, 180)), null).setResultCallback(
+                                new ResultCallback<AutocompletePredictionBuffer>() {
+                                    @Override
+                                    public void onResult(@NonNull AutocompletePredictionBuffer autocompletePredictions) {
+                                        if (autocompletePredictions.getStatus().isSuccess()) {
+                                            for (AutocompletePrediction prediction : autocompletePredictions) {
+                                                placeList.add(prediction.getPlaceId());
+                                                Places.GeoDataApi.getPlaceById(googleApiClient, prediction.getPlaceId()).setResultCallback(new ResultCallback<PlaceBuffer>() {
+                                                    @Override
+                                                    public void onResult(PlaceBuffer places) {
+                                                        if (places.getStatus().isSuccess()) {
+                                                            try {
+                                                                Place place = places.get(0);
+                                                                // placeList.add(place);
+                                                            } catch (IllegalStateException e) {
 
+                                                            }
                                                         }
+                                                        places.release();
                                                     }
-                                                    places.release();
-                                                }
-                                            });
-                                            // searchLocationFragment.setList((ArrayList<Place>) placeList, googleApiClient);
+                                                });
+                                                // searchLocationFragment.setList((ArrayList<Place>) placeList, googleApiClient);
+                                            }
+                                            searchLocationFragment.setList((ArrayList<String>) placeList, googleApiClient);
                                         }
-                                        searchLocationFragment.setList((ArrayList<String>) placeList, googleApiClient);
                                     }
-                                }
-                            });
-
+                                });
+                    }
                 }
             }
         };

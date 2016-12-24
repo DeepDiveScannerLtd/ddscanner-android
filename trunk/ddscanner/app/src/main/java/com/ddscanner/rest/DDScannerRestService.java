@@ -327,4 +327,7 @@ public interface DDScannerRestService {
             @Part("about") RequestBody about,
             @Part("diving_skill") RequestBody skill
     );
+
+    @GET("v2_0/countries.get")
+    Call<ResponseBody> getListCountries();
 }

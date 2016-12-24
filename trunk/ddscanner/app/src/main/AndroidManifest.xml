@@ -256,6 +256,9 @@
         <activity
             android:name=".screens.profile.edit.EditUserProfileActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".screens.profile.edit.EditDiveCenterProfileActivity"
+            android:screenOrientation="portrait" />
         <service
             android:name=".services.FirebaseMessagingService">
             <intent-filter>
