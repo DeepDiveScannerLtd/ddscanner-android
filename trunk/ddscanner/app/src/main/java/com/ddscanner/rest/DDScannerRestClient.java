@@ -34,6 +34,7 @@ import com.ddscanner.entities.request.RegisterRequest;
 import com.ddscanner.entities.request.ReportRequest;
 import com.ddscanner.entities.request.SignInRequest;
 import com.ddscanner.entities.request.SignUpRequest;
+import com.ddscanner.entities.request.UpdateLocationRequest;
 import com.ddscanner.entities.request.ValidationRequest;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
@@ -333,6 +334,11 @@ public class DDScannerRestClient {
     }
 
     /*Methods using in API v2_0*/
+
+    public void postUpdateUserLocation(ResultListener<Void> resultListener, UpdateLocationRequest updateLocationRequest) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postUpdateUserLocation(updateLocationRequest);
+        call.enqueue(new NoResponseEntityCallback(gson, resultListener));
+    }
 
     public void getDiveSpotLanguages(ResultListener<Map<String, String>> resultListener) {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDivespotLanguages();
