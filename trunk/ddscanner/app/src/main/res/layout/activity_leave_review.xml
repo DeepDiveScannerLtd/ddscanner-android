@@ -17,50 +17,23 @@
         android:id="@+id/add_photo_layout"
         android:background="@color/white"
         android:layout_width="match_parent"
-        android:layout_height="150dp">
-        <TextView
-            android:textSize="14sp"
-            android:id="@+id/add_photo_title"
-            android:layout_centerInParent="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#b2b2b2"
-            android:text="@string/add_photos"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        android:layout_height="wrap_content">
+        <android.support.v7.widget.RecyclerView
             android:layout_marginLeft="20dp"
             android:layout_marginTop="15dp"
-            android:fontFamily="sans-serif-medium"
-            android:text="@string/photos"
-            android:textColor="@color/black_text" />
-
-        <ImageButton
-            android:id="@+id/btn_add_photo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="15dp"
-            android:clickable="true"
-            android:background="@drawable/ic_addds_plus" />
-        <android.support.v7.widget.RecyclerView
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="15dp"
-            android:layout_below="@+id/btn_add_photo"
-            android:layout_width="wrap_content"
-            android:layout_height="90dp"
+            android:layout_marginBottom="15dp"
             android:id="@+id/photos_rc"/>
 
     </RelativeLayout>
     <FrameLayout
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="@dimen/base_block_margin_top"
         android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="@color/white"
-        android:layout_marginBottom="15dp">
+        android:layout_marginBottom="@dimen/base_block_margin_top">
         <RatingBar
             android:id="@+id/rating_bar"
             style="@style/CustomRatingBar"

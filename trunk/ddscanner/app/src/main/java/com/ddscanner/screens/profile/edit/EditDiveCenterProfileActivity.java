@@ -11,14 +11,13 @@ import android.view.View;
 
 import com.ddscanner.R;
 import com.ddscanner.databinding.EditDcProfileViewBinding;
-import com.ddscanner.ui.activities.BasePickPhotoAppCompatActivity;
-import com.ddscanner.ui.activities.BasePickPhotoAppCompatActivity;
+import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.rey.material.widget.EditText;
 
 import java.util.ArrayList;
 
 
-public class EditDiveCenterProfileActivity extends BasePickPhotoAppCompatActivity implements BasePickPhotoAppCompatActivity.PictureTakenListener {
+public class EditDiveCenterProfileActivity extends BaseAppCompatActivity implements BaseAppCompatActivity.PictureTakenListener {
 
     private ArrayList<EditText> phonesEditTexts = new ArrayList<>();
     private ArrayList<EditText> emailsEditTexts = new ArrayList<>();

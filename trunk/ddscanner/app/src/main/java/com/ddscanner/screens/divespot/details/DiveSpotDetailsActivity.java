@@ -378,7 +378,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
 
     @Override
     public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-        LeaveReviewActivity.showForResult(this, String.valueOf(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getId()), rating, EventsTracker.SendReviewSource.FROM_RATING_BAR, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LEAVE_REVIEW);
+        LeaveReviewActivity.showForResult(this, String.valueOf(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getId()), rating, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LEAVE_REVIEW);
     }
 
     @Override
@@ -762,6 +762,10 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
                     }
                 });
         dialog.show();
+    }
+
+    public void writeReviewClicked(View view) {
+        LeaveReviewActivity.showForResult(this, diveSpotId, 1, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LEAVE_REVIEW);
     }
 
     private class ApproveResultListener extends DDScannerRestClient.ResultListener<Void> {

@@ -691,6 +691,7 @@
                                 android:textColor="@color/white"
                                 android:textSize="15sp"
                                 app:setCountReviewsFrom="@{diveSpotViewModel}"
+                                android:onClick="@{handlers::writeReviewClicked}"
                                 tools:text="Show all reviews (7)" />
 
                             <ImageView

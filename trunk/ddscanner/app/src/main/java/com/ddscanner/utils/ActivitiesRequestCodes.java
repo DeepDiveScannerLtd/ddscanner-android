@@ -13,6 +13,7 @@ public class ActivitiesRequestCodes {
     //    BaseAppCompatActivity
     public static final int REQUEST_CODE_LOCATION_PERMISSION = 1101;
     public static final int REQUEST_CODE_LOCATION_PROVIDERS = 1102;
+    public static final int REQUEST_PERMISSION_FRO_PICK_MULTIPLY_PHOTOS = 1103;
 
     //    SplashActivity
     public static final int REQUEST_CODE_SPLASH_ACTIVITY_PLAY_SERVICES_RESOLUTION = 1201;

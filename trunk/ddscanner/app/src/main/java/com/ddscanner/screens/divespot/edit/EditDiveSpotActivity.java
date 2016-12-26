@@ -522,9 +522,6 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btn_add_photo:
-                pickPhotoFromGallery();
-                break;
             case R.id.location_layout:
                 showPlacePikerIntent();
                 break;

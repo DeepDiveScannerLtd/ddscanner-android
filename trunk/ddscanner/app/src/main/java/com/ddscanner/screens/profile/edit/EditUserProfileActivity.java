@@ -21,7 +21,7 @@ import com.ddscanner.R;
 import com.ddscanner.databinding.ActivityEditProfileBinding;
 import com.ddscanner.entities.User;
 import com.ddscanner.rest.DDScannerRestClient;
-import com.ddscanner.ui.activities.BasePickPhotoAppCompatActivity;
+import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.adapters.DiverLevelSpinnerAdapter;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.utils.Constants;
@@ -40,7 +40,7 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
 
-public class EditUserProfileActivity extends BasePickPhotoAppCompatActivity implements BasePickPhotoAppCompatActivity.PictureTakenListener {
+public class EditUserProfileActivity extends BaseAppCompatActivity implements BaseAppCompatActivity.PictureTakenListener {
 
     private ActivityEditProfileBinding binding;
     private User user;

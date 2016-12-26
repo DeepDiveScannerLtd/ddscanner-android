@@ -53,7 +53,7 @@ import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
-public class EditCommentActivity extends AppCompatActivity implements View.OnClickListener, InfoDialogFragment.DialogClosedListener{
+public class EditCommentActivity extends AppCompatActivity implements InfoDialogFragment.DialogClosedListener{
 
     private static final String TAG = LeaveReviewActivity.class.getSimpleName();
     private static final String ID = "ID";
@@ -156,11 +156,8 @@ public class EditCommentActivity extends AppCompatActivity implements View.OnCli
         ratingBar = (RatingBar) findViewById(R.id.rating_bar);
         symbolNumberLeft = (TextView) findViewById(R.id.left_number);
         photos_rc = (RecyclerView) findViewById(R.id.photos_rc);
-        btnAddPhoto = (ImageButton) findViewById(R.id.btn_add_photo);
-        addPhotoTitle = (TextView) findViewById(R.id.add_photo_title);
         errorText = (TextView) findViewById(R.id.comment_error);
         errorsMap.put("comment", errorText);
-        btnAddPhoto.setOnClickListener(this);
         text.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -212,16 +209,6 @@ public class EditCommentActivity extends AppCompatActivity implements View.OnCli
     public void onStop() {
         super.onStop();
         DDScannerApplication.bus.unregister(this);
-    }
-
-
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.btn_add_photo:
-                pickPhotoFromGallery();
-                break;
-        }
     }
 
     private void pickPhotoFromGallery() {
