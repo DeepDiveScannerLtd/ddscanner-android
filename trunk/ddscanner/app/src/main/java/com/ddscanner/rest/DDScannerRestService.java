@@ -8,6 +8,7 @@ import com.ddscanner.entities.request.RegisterRequest;
 import com.ddscanner.entities.request.ReportRequest;
 import com.ddscanner.entities.request.SignInRequest;
 import com.ddscanner.entities.request.SignUpRequest;
+import com.ddscanner.entities.request.UpdateLocationRequest;
 import com.ddscanner.entities.request.ValidationRequest;
 
 import java.util.ArrayList;
@@ -235,13 +236,21 @@ public interface DDScannerRestService {
     @POST("v2_0/divespot.check_out")
     Call<ResponseBody> postCheckout(@Query("id") String diveSpotId);
 
+    @GET("v2_0/divespot.checked_in.get")
+    Call<ResponseBody> getDiveSpotsCheckedInUsers(@Query("id") String diveSpotId);
+
+    @GET("v2_0/divespot.editors.get")
+    Call<ResponseBody> getDiveSpotEditorsList(@Query("id") String diveSpotId);
+
+
+
     @GET("v2_0/divespot.photos.get")
     Call<ResponseBody> getDiveSpotPhotos(@Query("id") String diveSpotId);
 
     @POST("v2_0/photo.like")
     Call<ResponseBody> postLikePhoto(@Query("id") String id);
 
-    @POST("v2_0/photo.dislike")
+    @POST("v2_0/photo.unlike")
     Call<ResponseBody> postDislikePhoto(@Query("id") String id);
 
     @GET("v2_0/divespot.maps.get")
@@ -330,4 +339,50 @@ public interface DDScannerRestService {
 
     @GET("v2_0/countries.get")
     Call<ResponseBody> getListCountries();
+
+    @Multipart
+    @POST("v2_0/divespot.review.add")
+    Call<ResponseBody> postLeaveReview(
+            @Part List<MultipartBody.Part> photos,
+            @Part("id") RequestBody id,
+            @Part("rating") RequestBody rating,
+            @Part("review") RequestBody review
+    );
+
+    @Multipart
+    @POST("v2_0/divespot.review.update")
+    Call<ResponseBody> postUpdateReview(
+            @Part List<MultipartBody.Part> newPhotos,
+            @Part List<MultipartBody.Part> deletedPhotos,
+            @Part("id") RequestBody id,
+            @Part("rating") RequestBody rating,
+            @Part("review") RequestBody review
+    );
+
+    @POST("v2_0.divespot.review.delete")
+    Call<ResponseBody> postDeleteReview(@Query("id") String commentId);
+
+    @POST("v2_0/divespot.review.dislike")
+    Call<ResponseBody> postDislikeReview(@Query("id") String commentId);
+
+    @POST("v2_0/divespot.review.like")
+    Call<ResponseBody> postLikeReview(@Query("id") String commentId);
+
+    @GET("v2_0/user.dislikes.get")
+    Call<ResponseBody> getUserDislikes();
+
+    @GET("v2_0/user.likes.get")
+    Call<ResponseBody> getUserLikes();
+
+    @GET("v2_0/user.divespots.added.get")
+    Call<ResponseBody> getUserAddedDiveSpots();
+
+    @GET("v2_0/user.divespots.edited.get")
+    Call<ResponseBody> getUserEditedDiveSpots();
+
+    @GET("v2_0/user.divespots.checked_in.get")
+    Call<ResponseBody> getUserCheckedInSpots();
+
+    @POST("/v2_0/user.location.update")
+    Call<ResponseBody> postUpdateUserLocation(@Body UpdateLocationRequest updateLocationRequest);
 }
