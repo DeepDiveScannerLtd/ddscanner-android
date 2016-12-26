@@ -53,15 +53,15 @@ public class ForeignUserDiveSpotList extends AppCompatActivity implements InfoDi
         findViews();
         if (isEdited) {
             toolbarTitle = getString(R.string.edited);
-            DDScannerApplication.getInstance().getDdScannerRestClient().getEditedDiveSpots(userId, getEditedListener);
+//            DDScannerApplication.getInstance().getDdScannerRestClient().getEditedDiveSpots(userId, getEditedListener);
         }
         if (isCreated) {
             toolbarTitle = getString(R.string.created);
-            DDScannerApplication.getInstance().getDdScannerRestClient().getAddedDiveSpots(userId, getAddedListener);
+//            DDScannerApplication.getInstance().getDdScannerRestClient().getAddedDiveSpots(userId, getAddedListener);
         }
         if (isCheckIn) {
             toolbarTitle = getString(R.string.toolbar_title_check_ins);
-            DDScannerApplication.getInstance().getDdScannerRestClient().getUsersCheckins(userId, getCheckinsListener);
+//            DDScannerApplication.getInstance().getDdScannerRestClient().getUsersCheckins(userId, getCheckinsListener);
         }
         toolbarSettings();
     }
@@ -117,7 +117,7 @@ public class ForeignUserDiveSpotList extends AppCompatActivity implements InfoDi
         switch (requestCode) {
             case ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_SPOT_LIST_LOGIN_TO_GET_ADDED:
                 if (resultCode == RESULT_OK) {
-                    DDScannerApplication.getInstance().getDdScannerRestClient().getAddedDiveSpots(userId, getAddedListener);
+//                    DDScannerApplication.getInstance().getDdScannerRestClient().getAddedDiveSpots(userId, getAddedListener);
                 } else {
                     setResult(RESULT_CANCELED);
                     finish();
@@ -125,7 +125,7 @@ public class ForeignUserDiveSpotList extends AppCompatActivity implements InfoDi
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_SPOT_LIST_LOGIN_TO_GET_EDITED:
                 if (resultCode == RESULT_OK) {
-                    DDScannerApplication.getInstance().getDdScannerRestClient().getEditedDiveSpots(userId, getEditedListener);
+//                    DDScannerApplication.getInstance().getDdScannerRestClient().getEditedDiveSpots(userId, getEditedListener);
                 } else {
                     setResult(RESULT_CANCELED);
                     finish();
@@ -133,7 +133,7 @@ public class ForeignUserDiveSpotList extends AppCompatActivity implements InfoDi
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_SPOT_LIST_LOGIN_TO_GET_CHECKINS:
                 if (resultCode == RESULT_OK) {
-                    DDScannerApplication.getInstance().getDdScannerRestClient().getUsersCheckins(userId, getCheckinsListener);
+//                    DDScannerApplication.getInstance().getDdScannerRestClient().getUsersCheckins(userId, getCheckinsListener);
                 } else {
                     setResult(RESULT_CANCELED);
                     finish();

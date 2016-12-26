@@ -240,7 +240,7 @@ public class ReviewImageSliderActivity extends AppCompatActivity implements View
             LoginActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_REPORT);
             return;
         }
-        DDScannerApplication.getInstance().getDdScannerRestClient().postReportImage(imageName, reportType, reportDescription, reportImageResultListener);
+//        DDScannerApplication.getInstance().getDdScannerRestClient().postReportImage(imageName, reportType, reportDescription, reportImageResultListener);
 
     }
 
@@ -394,7 +394,7 @@ public class ReviewImageSliderActivity extends AppCompatActivity implements View
         switch (requestCode) {
             case ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_REPORT:
                 if (resultCode == RESULT_OK) {
-                    DDScannerApplication.getInstance().getDdScannerRestClient().postReportImage(reportName, reportType, reportDescription,reportImageResultListener);
+//                    DDScannerApplication.getInstance().getDdScannerRestClient().postReportImage(reportName, reportType, reportDescription,reportImageResultListener);
                 }
                 break;
         }

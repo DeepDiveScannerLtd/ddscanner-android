@@ -119,39 +119,6 @@ public class DDScannerRestClient {
         });
     }
 
-    public void getAddedDiveSpots(String userId, final ResultListener<DivespotsWrapper> resultListener) {
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUsersAdded(userId, getUserQueryMapRequest());
-        call.enqueue(new ResponseEntityCallback<DivespotsWrapper>(gson, resultListener) {
-            @Override
-            void handleResponseString(ResultListener<DivespotsWrapper> resultListener, String responseString) {
-                DivespotsWrapper divespotsWrapper = new Gson().fromJson(responseString, DivespotsWrapper.class);
-                resultListener.onSuccess(divespotsWrapper);
-            }
-        });
-    }
-
-    public void getEditedDiveSpots(String userId, final ResultListener<DivespotsWrapper> resultListener) {
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUsersEdited(userId, getUserQueryMapRequest());
-        call.enqueue(new ResponseEntityCallback<DivespotsWrapper>(gson, resultListener) {
-            @Override
-            void handleResponseString(ResultListener<DivespotsWrapper> resultListener, String responseString) {
-                DivespotsWrapper divespotsWrapper = new Gson().fromJson(responseString, DivespotsWrapper.class);
-                resultListener.onSuccess(divespotsWrapper);
-            }
-        });
-    }
-
-    public void getUsersCheckins(String userId, final ResultListener<DivespotsWrapper> resultListener) {
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUsersCheckins(userId, getUserQueryMapRequest());
-        call.enqueue(new ResponseEntityCallback<DivespotsWrapper>(gson, resultListener) {
-            @Override
-            void handleResponseString(ResultListener<DivespotsWrapper> resultListener, String responseString) {
-                DivespotsWrapper divespotsWrapper = new Gson().fromJson(responseString, DivespotsWrapper.class);
-                resultListener.onSuccess(divespotsWrapper);
-            }
-        });
-    }
-
     public void getUserLikes(String userId, final ResultListener<ForeignUserLikeWrapper> resultListener) {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getForeignUserLikes(userId, getUserQueryMapRequest());
         call.enqueue(new ResponseEntityCallback<ForeignUserLikeWrapper>(gson, resultListener) {
@@ -295,17 +262,6 @@ public class DDScannerRestClient {
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 
-    public void getUsersFavourites(String userId, @NonNull final ResultListener<DivespotsWrapper> resultListener) {
-        final Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUsersFavorites(userId, getUserQueryMapRequest());
-        call.enqueue(new ResponseEntityCallback<DivespotsWrapper>(gson, resultListener) {
-            @Override
-            void handleResponseString(ResultListener<DivespotsWrapper> resultListener, String responseString) {
-                DivespotsWrapper filtersResponseEntity = new Gson().fromJson(responseString, DivespotsWrapper.class);
-                resultListener.onSuccess(filtersResponseEntity);
-            }
-        });
-    }
-
     public void getDiveSpotsByArea(DiveSpotsRequestMap diveSpotsRequestMap, ResultListener<List<DiveSpotShort>> resultListener) {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveSpotsByFilter(diveSpotsRequestMap);
         call.enqueue(new ResponseEntityCallback<List<DiveSpotShort>>(gson, resultListener) {
@@ -330,6 +286,54 @@ public class DDScannerRestClient {
     }
 
     /*Methods using in API v2_0*/
+
+    public void getUsersFavourites(@NonNull final ResultListener<ArrayList<DiveSpotShort>> resultListener) {
+        final Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserFavoritesSpots();
+        call.enqueue(new ResponseEntityCallback<ArrayList<DiveSpotShort>>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<ArrayList<DiveSpotShort>> resultListener, String responseString) {
+                Type listType = new TypeToken<ArrayList<DiveSpotShort>>(){}.getType();
+                ArrayList<DiveSpotShort> diveSpots = gson.fromJson(responseString, listType);
+                resultListener.onSuccess(diveSpots);
+            }
+        });
+    }
+
+    public void getAddedDiveSpots(final ResultListener<ArrayList<DiveSpotShort>> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserAddedDiveSpots();
+        call.enqueue(new ResponseEntityCallback<ArrayList<DiveSpotShort>>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<ArrayList<DiveSpotShort>> resultListener, String responseString) {
+                Type listType = new TypeToken<ArrayList<DiveSpotShort>>(){}.getType();
+                ArrayList<DiveSpotShort> diveSpots = gson.fromJson(responseString, listType);
+                resultListener.onSuccess(diveSpots);
+            }
+        });
+    }
+
+    public void getEditedDiveSpots(final ResultListener<ArrayList<DiveSpotShort>> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserEditedDiveSpots();
+        call.enqueue(new ResponseEntityCallback<ArrayList<DiveSpotShort>>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<ArrayList<DiveSpotShort>> resultListener, String responseString) {
+                Type listType = new TypeToken<ArrayList<DiveSpotShort>>(){}.getType();
+                ArrayList<DiveSpotShort> diveSpots = gson.fromJson(responseString, listType);
+                resultListener.onSuccess(diveSpots);
+            }
+        });
+    }
+
+    public void getUsersCheckins(final ResultListener<ArrayList<DiveSpotShort>> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserCheckedInSpots();
+        call.enqueue(new ResponseEntityCallback<ArrayList<DiveSpotShort>>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<ArrayList<DiveSpotShort>> resultListener, String responseString) {
+                Type listType = new TypeToken<ArrayList<DiveSpotShort>>(){}.getType();
+                ArrayList<DiveSpotShort> diveSpots = gson.fromJson(responseString, listType);
+                resultListener.onSuccess(diveSpots);
+            }
+        });
+    }
 
     public void postReportImage(ResultListener<Void> resultListener, ReportImageRequest reportImageRequest) {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postReportImage(reportImageRequest);

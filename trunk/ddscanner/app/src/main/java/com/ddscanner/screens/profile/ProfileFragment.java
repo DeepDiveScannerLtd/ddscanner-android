@@ -28,6 +28,7 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.databinding.FragmentProfileBinding;
+import com.ddscanner.entities.DiveSpotListSource;
 import com.ddscanner.entities.ProfileAchievement;
 import com.ddscanner.entities.ProfileResponseEntity;
 import com.ddscanner.entities.User;
@@ -42,6 +43,7 @@ import com.ddscanner.screens.achievements.AchievementsActivity;
 import com.ddscanner.screens.profile.edit.EditUserProfileActivity;
 import com.ddscanner.ui.activities.AboutActivity;
 import com.ddscanner.events.ChangeLoginViewEvent;
+import com.ddscanner.ui.activities.DiveSpotsListActivity;
 import com.ddscanner.ui.activities.MainActivity;
 import com.ddscanner.ui.adapters.AchievmentProfileListAdapter;
 import com.ddscanner.ui.adapters.CharacteristicSpinnerItemsAdapter;
@@ -304,25 +306,25 @@ public class ProfileFragment extends BaseFragment implements LoginView.LoginStat
 
     public void showCheckinns(View view) {
         if (binding.getProfileFragmentViewModel().getUser().getCounters().getCheckinsCount() > 0) {
-            //TODO show comments activity
+            DiveSpotsListActivity.show(getContext(), DiveSpotListSource.CHECKINS);
         }
     }
 
     public void showAdded(View view) {
         if (binding.getProfileFragmentViewModel().getUser().getCounters().getAddedCount() > 0) {
-            //TODO show comments activity
+            DiveSpotsListActivity.show(getContext(), DiveSpotListSource.ADDED);
         }
     }
 
     public void showEdited(View view) {
         if (binding.getProfileFragmentViewModel().getUser().getCounters().getEditedCount() > 0) {
-            //TODO show comments activity
+            DiveSpotsListActivity.show(getContext(), DiveSpotListSource.EDITED);
         }
     }
 
     public void showFavorites(View view) {
         if (binding.getProfileFragmentViewModel().getUser().getCounters().getFavoritesCount() > 0) {
-            //TODO show comments activity
+            DiveSpotsListActivity.show(getContext(), DiveSpotListSource.FAVORITES);
         }
     }
 

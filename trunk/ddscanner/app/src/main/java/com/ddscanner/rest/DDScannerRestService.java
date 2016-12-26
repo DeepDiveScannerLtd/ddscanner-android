@@ -139,18 +139,6 @@ public interface DDScannerRestService {
     @GET("diving/divespot/{id}/comments")
     Call<ResponseBody> getComments(@Path("id") String id, @QueryMap Map<String, String> map);
 
-    @GET("diving/user/{id}/divespot/checkins")
-    Call<ResponseBody> getUsersCheckins(@Path("id") String id, @QueryMap Map<String, String> map);
-
-    @GET("diving/user/{id}/divespot/favorites")
-    Call<ResponseBody> getUsersFavorites(@Path("id") String id, @QueryMap Map<String, String> map);
-
-    @GET("diving/user/{id}/divespot/added")
-    Call<ResponseBody> getUsersAdded(@Path("id") String id, @QueryMap Map<String, String> map);
-
-    @GET("diving/user/{id}/divespot/edited")
-    Call<ResponseBody> getUsersEdited(@Path("id") String id, @QueryMap Map<String, String> map);
-
     @GET("/diving/divespot/{id}/editors")
     Call<ResponseBody> getDiveSpotEditors(@Path("id") String id, @QueryMap Map<String, String> map);
 
@@ -383,6 +371,9 @@ public interface DDScannerRestService {
 
     @GET("v2_0/user.divespots.checked_in.get")
     Call<ResponseBody> getUserCheckedInSpots();
+
+    @GET("v2_0/user.divespots.favorites.get")
+    Call<ResponseBody> getUserFavoritesSpots();
 
     @POST("/v2_0/user.location.update")
     Call<ResponseBody> postUpdateUserLocation(@Body UpdateLocationRequest updateLocationRequest);

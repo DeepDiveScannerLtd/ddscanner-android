@@ -40,11 +40,11 @@ public class DiveSpotsListActivity extends AppCompatActivity implements InfoDial
     private EventsTracker.SpotViewSource spotViewSource;
     private DiveSpotListSource diveSpotListSource;
 
-    private DDScannerRestClient.ResultListener<DivespotsWrapper> divespotsWrapperResultListener = new DDScannerRestClient.ResultListener<DivespotsWrapper>() {
+    private DDScannerRestClient.ResultListener<ArrayList<DiveSpotShort>> divespotsWrapperResultListener = new DDScannerRestClient.ResultListener<ArrayList<DiveSpotShort>>() {
 
         @Override
-        public void onSuccess(DivespotsWrapper result) {
-            DiveSpotsListActivity.this.diveSpotShorts = result.getDiveSpots();
+        public void onSuccess(ArrayList<DiveSpotShort> result) {
+            DiveSpotsListActivity.this.diveSpotShorts = result;
             setUi();
         }
 
@@ -74,19 +74,18 @@ public class DiveSpotsListActivity extends AppCompatActivity implements InfoDial
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_users_dive_spots);
         diveSpotListSource = (DiveSpotListSource) getIntent().getSerializableExtra("source");
-        spotViewSource = EventsTracker.SpotViewSource.getByName(getIntent().getStringExtra(BUNDLE_KEY_SPOT_VIEW_SOURCE));
         switch (diveSpotListSource) {
             case ADDED:
-                DDScannerApplication.getInstance().getDdScannerRestClient().getAddedDiveSpots(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId(), divespotsWrapperResultListener);
+                DDScannerApplication.getInstance().getDdScannerRestClient().getAddedDiveSpots(divespotsWrapperResultListener);
                 break;
             case EDITED:
-                DDScannerApplication.getInstance().getDdScannerRestClient().getEditedDiveSpots(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId(), divespotsWrapperResultListener);
+                DDScannerApplication.getInstance().getDdScannerRestClient().getEditedDiveSpots(divespotsWrapperResultListener);
                 break;
             case FAVORITES:
-                DDScannerApplication.getInstance().getDdScannerRestClient().getUsersFavourites(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId(), divespotsWrapperResultListener);
+                DDScannerApplication.getInstance().getDdScannerRestClient().getUsersFavourites(divespotsWrapperResultListener);
                 break;
             case CHECKINS:
-                DDScannerApplication.getInstance().getDdScannerRestClient().getUsersCheckins(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId(), divespotsWrapperResultListener);
+                DDScannerApplication.getInstance().getDdScannerRestClient().getUsersCheckins(divespotsWrapperResultListener);
                 break;
         }
         findViews();
@@ -100,16 +99,16 @@ public class DiveSpotsListActivity extends AppCompatActivity implements InfoDial
                 if (resultCode == RESULT_OK) {
                     switch (diveSpotListSource) {
                         case ADDED:
-                            DDScannerApplication.getInstance().getDdScannerRestClient().getAddedDiveSpots(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId(), divespotsWrapperResultListener);
+                            DDScannerApplication.getInstance().getDdScannerRestClient().getAddedDiveSpots(divespotsWrapperResultListener);
                             break;
                         case EDITED:
-                            DDScannerApplication.getInstance().getDdScannerRestClient().getEditedDiveSpots(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId(), divespotsWrapperResultListener);
+                            DDScannerApplication.getInstance().getDdScannerRestClient().getEditedDiveSpots(divespotsWrapperResultListener);
                             break;
                         case FAVORITES:
-                            DDScannerApplication.getInstance().getDdScannerRestClient().getUsersFavourites(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId(), divespotsWrapperResultListener);
+                            DDScannerApplication.getInstance().getDdScannerRestClient().getUsersFavourites(divespotsWrapperResultListener);
                             break;
                         case CHECKINS:
-                            DDScannerApplication.getInstance().getDdScannerRestClient().getUsersCheckins(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId(), divespotsWrapperResultListener);
+                            DDScannerApplication.getInstance().getDdScannerRestClient().getUsersCheckins(divespotsWrapperResultListener);
                             break;
                     }
                     if (resultCode == RESULT_CANCELED) {
@@ -170,10 +169,9 @@ public class DiveSpotsListActivity extends AppCompatActivity implements InfoDial
         finish();
     }
 
-    public static void show(Context context, DiveSpotListSource diveSpotListSource, EventsTracker.SpotViewSource spotViewSource) {
+    public static void show(Context context, DiveSpotListSource diveSpotListSource) {
         Intent intent = new Intent(context, DiveSpotsListActivity.class);
         intent.putExtra("source", diveSpotListSource);
-        intent.putExtra(BUNDLE_KEY_SPOT_VIEW_SOURCE, spotViewSource.getName());
         context.startActivity(intent);
     }
 
