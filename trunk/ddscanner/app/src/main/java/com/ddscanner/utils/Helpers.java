@@ -676,4 +676,16 @@ public class Helpers {
         return RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), string);
     }
 
+    public static ArrayList<String> getReportTypes() {
+        ArrayList<String> reportTypes = new ArrayList<>();
+        reportTypes.add("Adult content");
+        reportTypes.add("Child pornography");
+        reportTypes.add("Violence");
+        reportTypes.add("Advocacy");
+        reportTypes.add("Insult");
+        reportTypes.add("Spam");
+        reportTypes.add("Other");
+        return reportTypes;
+    }
+
 }

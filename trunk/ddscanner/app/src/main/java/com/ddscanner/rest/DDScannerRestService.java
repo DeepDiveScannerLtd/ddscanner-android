@@ -5,6 +5,7 @@ import com.ddscanner.entities.Translation;
 import com.ddscanner.entities.request.DeleteImageRequest;
 import com.ddscanner.entities.request.IdentifyRequest;
 import com.ddscanner.entities.request.RegisterRequest;
+import com.ddscanner.entities.request.ReportImageRequest;
 import com.ddscanner.entities.request.ReportRequest;
 import com.ddscanner.entities.request.SignInRequest;
 import com.ddscanner.entities.request.SignUpRequest;
@@ -385,4 +386,7 @@ public interface DDScannerRestService {
 
     @POST("/v2_0/user.location.update")
     Call<ResponseBody> postUpdateUserLocation(@Body UpdateLocationRequest updateLocationRequest);
+
+    @POST("v2_0/image.report")
+    Call<ResponseBody> postReportImage(@Body ReportImageRequest reportImageRequest);
 }

@@ -31,6 +31,7 @@ import com.ddscanner.entities.request.DeleteImageRequest;
 import com.ddscanner.entities.request.DiveSpotsRequestMap;
 import com.ddscanner.entities.request.IdentifyRequest;
 import com.ddscanner.entities.request.RegisterRequest;
+import com.ddscanner.entities.request.ReportImageRequest;
 import com.ddscanner.entities.request.ReportRequest;
 import com.ddscanner.entities.request.SignInRequest;
 import com.ddscanner.entities.request.SignUpRequest;
@@ -171,11 +172,6 @@ public class DDScannerRestClient {
                 resultListener.onSuccess(foreignUserDislikesWrapper);
             }
         });
-    }
-
-    public void postReportImage(String imageName, String reportName, String reportDescription, final ResultListener<Void> resultListener) {
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().reportImage(getReportRequest(reportName, reportDescription, imageName));
-        call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 
     public void getUsersComments(String userId, final ResultListener<Comments> resultListener) {
@@ -334,6 +330,11 @@ public class DDScannerRestClient {
     }
 
     /*Methods using in API v2_0*/
+
+    public void postReportImage(ResultListener<Void> resultListener, ReportImageRequest reportImageRequest) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postReportImage(reportImageRequest);
+        call.enqueue(new NoResponseEntityCallback(gson, resultListener));
+    }
 
     public void getDiveSpotEditors(ResultListener<ArrayList<User>> resultListener, String diveSpotId) {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveSpotEditorsList(diveSpotId);

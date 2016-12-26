@@ -27,6 +27,7 @@ import com.ddscanner.entities.DiveSpotPhoto;
 import com.ddscanner.entities.DiveSpotPhotosResponseEntity;
 import com.ddscanner.entities.FiltersResponseEntity;
 import com.ddscanner.entities.PhotoOpenedSource;
+import com.ddscanner.entities.request.ReportImageRequest;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.activities.LoginActivity;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
@@ -59,7 +60,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     private FiltersResponseEntity filters = new FiltersResponseEntity();
     private String imageNameForDeletion;
     private String reportName;
-    private String reportType;
+    private int reportType;
     private String reportDescription;
     private String deleteImageName;
     private MaterialDialog materialDialog;
@@ -167,25 +168,6 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         }
     };
 
-    private DDScannerRestClient.ResultListener<FiltersResponseEntity> filtersResponseEntityResultListener = new DDScannerRestClient.ResultListener<FiltersResponseEntity>() {
-        @Override
-        public void onSuccess(FiltersResponseEntity result) {
-            filters = result;
-            options.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        public void onConnectionFailure() {
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_IMAGE_SLIDER_ACTIVITY_FAILED_TO_CONNECT, false);
-        }
-
-        @Override
-        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_IMAGE_SLIDER_ACTIVITY_CONNECTION_FAILURE_GET_REPORT_TYPES, false);
-        }
-    };
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -196,7 +178,6 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         }
         detector = new SimpleGestureFilter(this, this);
         materialDialog = Helpers.getMaterialDialog(this);
-//        DDScannerApplication.getInstance().getDdScannerRestClient().getReportTypes(filtersResponseEntityResultListener);
         Bundle bundle = getIntent().getExtras();
         images = bundle.getParcelableArrayList("IMAGES");
         position = getIntent().getIntExtra("position", 0);
@@ -205,7 +186,6 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         sliderImagesAdapter = new SliderImagesAdapter(getFragmentManager(), images);
         viewPager.setAdapter(sliderImagesAdapter);
         close.setOnClickListener(this);
-//        options.setVisibility(View.VISIBLE);
         changeUiAccrodingPosition(position);
         setUi();
 
@@ -311,7 +291,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     }
 
     private void showDeleteMenu(View view) {
-//        deleteImageName = images.get(position).getName();
+        deleteImageName = images.get(position).getId();
         PopupMenu popup = new PopupMenu(this, view);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.menu_photo_delete, popup.getMenu());
@@ -324,7 +304,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
             position = 0;
             this.position = 0;
         }
-//        reportName = images.get(position).getName();
+        reportName = images.get(position).getId();
         PopupMenu popup = new PopupMenu(this, view);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.menu_photo_report, popup.getMenu());
@@ -426,32 +406,29 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void reportImage(String imageName, String reportType, String reportDescription) {
+    private void reportImage(String imageName, int reportType, String reportDescription) {
         isChanged = true;
         materialDialog.show();
         if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn() || DDScannerApplication.getInstance().getSharedPreferenceHelper().getToken().isEmpty() || DDScannerApplication.getInstance().getSharedPreferenceHelper().getSn().isEmpty()) {
             LoginActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_REPORT);
             return;
         }
-       DDScannerApplication.getInstance().getDdScannerRestClient().postReportImage(imageName, reportType, reportDescription, reportImageRequestListener);
+
+       DDScannerApplication.getInstance().getDdScannerRestClient().postReportImage(reportImageRequestListener, new ReportImageRequest(imageName, reportType, reportDescription));
 
     }
 
 
     public void showReportDialog() {
-        List<String> objects = new ArrayList<String>();
-        for (Map.Entry<String, String> entry : filters.getReport().entrySet()) {
-            objects.add(entry.getValue());
-        }
+        ArrayList<String> objects = Helpers.getReportTypes();
         new MaterialDialog.Builder(this)
                 .title("Report")
                 .items(objects)
                 .itemsCallback(new MaterialDialog.ListCallback() {
                     @Override
                     public void onSelection(final MaterialDialog dialog, View view, int which, CharSequence text) {
-
-                        reportType = Helpers.getMirrorOfHashMap(filters.getReport()).get(text);
-                        if (reportType.equals("other")) {
+                        reportType = Helpers.getReportTypes().indexOf(text) + 1;
+                        if (text.equals("Other")) {
                             showOtherReportDialog();
                             dialog.dismiss();
                         } else {
@@ -471,7 +448,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
                     @Override
                     public void onInput(MaterialDialog dialog, CharSequence input) {
                         if (input.toString().trim().length() > 1) {
-                            reportImage(reportName, "other", input.toString());
+                            reportImage(reportName, 7, input.toString());
                             reportDescription = input.toString();
                         } else {
                             Toast.makeText(ImageSliderActivity.this, "Write a reason", Toast.LENGTH_SHORT).show();
