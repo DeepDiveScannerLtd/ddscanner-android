@@ -206,7 +206,7 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements BaseAp
             requessToken = RequestBody.create(MediaType.parse("multipart/form-data"),
                     DDScannerApplication.getInstance().getSharedPreferenceHelper().getToken());
         }
-        DDScannerApplication.getInstance().getDdScannerRestClient().postLeaveReview(requestId, requestComment, requestRating, images, requessToken, requestSocial, commentAddedResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient().postLeaveCommentForDiveSpot(commentAddedResultListener, images, requestId, requestRating, requestComment);
     }
 
 

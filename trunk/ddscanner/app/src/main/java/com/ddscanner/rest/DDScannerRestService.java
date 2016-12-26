@@ -48,17 +48,6 @@ public interface DDScannerRestService {
             @Body ValidationRequest validationReguest
             );
 
-    @POST("/diving/divespot/comment")
-    @Multipart
-    Call<ResponseBody> addCommentToDiveSpot(
-            @Part("diveSpotId") RequestBody id,
-            @Part("comment") RequestBody comment,
-            @Part("rating") RequestBody rating,
-            @Part List<MultipartBody.Part> image,
-            @Part("token") RequestBody token,
-            @Part("social") RequestBody sn
-    );
-
     @POST("/diving/sealife")
     @Multipart
     Call<ResponseBody> addSealife(
@@ -331,7 +320,7 @@ public interface DDScannerRestService {
 
     @Multipart
     @POST("v2_0/divespot.review.add")
-    Call<ResponseBody> postLeaveReview(
+    Call<ResponseBody> postLeaveComment(
             @Part List<MultipartBody.Part> photos,
             @Part("id") RequestBody id,
             @Part("rating") RequestBody rating,

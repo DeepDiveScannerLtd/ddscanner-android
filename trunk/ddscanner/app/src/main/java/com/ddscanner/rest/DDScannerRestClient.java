@@ -152,11 +152,6 @@ public class DDScannerRestClient {
         });
     }
 
-    public void postLeaveReview(RequestBody id, RequestBody comment, RequestBody rating, List<MultipartBody.Part> image, RequestBody token, RequestBody sn, final ResultListener<Void> resultListener) {
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().addCommentToDiveSpot(id, comment, rating, image, token, sn);
-        call.enqueue(new NoResponseEntityCallback(gson, resultListener));
-    }
-
     public void putEditComment(String commentId, RequestBody _method, RequestBody comment, RequestBody rating, List<MultipartBody.Part> images_new, List<MultipartBody.Part> images_del, RequestBody token, RequestBody sn, ResultListener<Void> resultListener) {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().updateComment(commentId, _method, comment, rating, images_new, images_del, token, sn);
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
@@ -286,6 +281,11 @@ public class DDScannerRestClient {
     }
 
     /*Methods using in API v2_0*/
+
+    public void postLeaveCommentForDiveSpot(ResultListener<Void> resultListener, List<MultipartBody.Part> images, RequestBody... requestBodies) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postLeaveComment(images, requestBodies[0], requestBodies[1], requestBodies[2]);
+        call.enqueue(new NoResponseEntityCallback(gson, resultListener));
+    }
 
     public void getUsersFavourites(@NonNull final ResultListener<ArrayList<DiveSpotShort>> resultListener) {
         final Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserFavoritesSpots();
