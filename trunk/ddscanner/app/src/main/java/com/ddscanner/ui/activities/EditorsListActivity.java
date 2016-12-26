@@ -12,49 +12,65 @@ import android.view.MenuItem;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.entities.User;
 import com.ddscanner.entities.UserOld;
+import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.adapters.EditorsUsersListAdapter;
 import com.ddscanner.utils.Helpers;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
-public class EditorsListActivity extends AppCompatActivity {
+public class EditorsListActivity extends BaseAppCompatActivity {
 
     private RecyclerView usersRecyclerView;
-    private Toolbar toolbar;
-    private ArrayList<UserOld> userOlds;
+    private User creator;
+    private ArrayList<User> users;
+
+    private DDScannerRestClient.ResultListener<ArrayList<User>> usersResultListener = new DDScannerRestClient.ResultListener<ArrayList<User>>() {
+        @Override
+        public void onSuccess(ArrayList<User> result) {
+            users.addAll(result);
+            setUi(users);
+        }
+
+        @Override
+        public void onConnectionFailure() {
+
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+
+        }
+    };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_peoples_checkin);
-        userOlds = getIntent().getParcelableArrayListExtra("USERS");
         findViews();
-        setupToolbar();
-        setUi();
+        setupToolbar(R.string.people, R.id.toolbar);
+        creator = new Gson().fromJson(getIntent().getStringExtra("user"), User.class);
+        users.add(creator);
+        DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotEditors(usersResultListener, getIntent().getStringExtra("id"));
+
     }
 
     private void findViews() {
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
         usersRecyclerView = (RecyclerView) findViewById(R.id.peoples_rc);
     }
 
-    private void setupToolbar() {
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);
-        getSupportActionBar().setTitle(R.string.people);
-    }
-
-    private void setUi() {
+    private void setUi(ArrayList<User> users) {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         usersRecyclerView.setLayoutManager(linearLayoutManager);
-        usersRecyclerView.setAdapter(new EditorsUsersListAdapter(this, userOlds));
+        usersRecyclerView.setAdapter(new EditorsUsersListAdapter(this, users));
     }
 
-    public static void show(Context context, ArrayList<UserOld> userOlds) {
+    public static void show(Context context, String id, String creator) {
         Intent intent = new Intent(context, EditorsListActivity.class);
-        intent.putParcelableArrayListExtra("USERS", userOlds);
+        intent.putExtra("id", id);
+        intent.putExtra("user", creator);
         context.startActivity(intent);
     }
 

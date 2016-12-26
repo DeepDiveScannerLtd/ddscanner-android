@@ -8,8 +8,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
-import com.ddscanner.entities.UserOld;
+import com.ddscanner.entities.User;
 import com.ddscanner.ui.activities.ForeignProfileActivity;
 import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;
@@ -24,10 +25,10 @@ import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 public class EditorsUsersListAdapter extends RecyclerView.Adapter<EditorsUsersListAdapter.EditorsUsersListViewHolder> {
 
     private Context context;
-    private ArrayList<UserOld> userOldArrayList;
+    private ArrayList<User> users;
 
-    public EditorsUsersListAdapter(Context context, ArrayList<UserOld> userOlds) {
-        userOldArrayList = userOlds;
+    public EditorsUsersListAdapter(Context context, ArrayList<User> Users) {
+        users = Users;
         this.context = context;
     }
 
@@ -41,40 +42,23 @@ public class EditorsUsersListAdapter extends RecyclerView.Adapter<EditorsUsersLi
 
     @Override
     public void onBindViewHolder(EditorsUsersListViewHolder holder, final int position) {
-        if (!userOldArrayList.get(position).getPicture().contains("http")) {
-            Picasso.with(context)
-                    .load(R.drawable.avatar_profile_dds)
+        Picasso.with(context)
+                    .load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, users.get(position).getPhoto(), "1"))
                     .resize(Math.round(Helpers.convertDpToPixel(58, context)), Math.round(Helpers.convertDpToPixel(58, context)))
                     .centerCrop()
                     .transform(new CropCircleTransformation())
                     .into(holder.userAvatar);
-        } else {
-            Picasso.with(context)
-                    .load(userOldArrayList.get(position).getPicture())
-                    .resize(Math.round(Helpers.convertDpToPixel(58, context)), Math.round(Helpers.convertDpToPixel(58, context)))
-                    .centerCrop()
-                    .transform(new CropCircleTransformation())
-                    .into(holder.userAvatar);
-        }
-        holder.userName.setText(userOldArrayList.get(position).getName());
+        holder.userName.setText(users.get(position).getName());
         if (position == 0) {
             holder.info.setText(R.string.creator);
         } else {
             holder.info.setText(R.string.editor);
         }
-        if (userOldArrayList.get(position).getAuthor() != null && userOldArrayList.get(position).getAuthor().equals("social")) {
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    ForeignProfileActivity.show(context, userOldArrayList.get(position).getId());
-                }
-            });
-        }
     }
 
     @Override
     public int getItemCount() {
-        return userOldArrayList.size();
+        return users.size();
     }
 
     public class EditorsUsersListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -93,8 +77,8 @@ public class EditorsUsersListAdapter extends RecyclerView.Adapter<EditorsUsersLi
 
         @Override
         public void onClick(View v) {
-//            if (userOldArrayList.get(getAdapterPosition()).getAuthor() != null && userOldArrayList.get(getAdapterPosition()).getAuthor().equals("social")) {
-//                ForeignProfileActivity.showForResult(context, userOldArrayList.get(getAdapterPosition()).getId());
+//            if (users.get(getAdapterPosition()).getAuthor() != null && users.get(getAdapterPosition()).getAuthor().equals("social")) {
+//                ForeignProfileActivity.showForResult(context, users.get(getAdapterPosition()).getId());
 //            }
         }
     }
