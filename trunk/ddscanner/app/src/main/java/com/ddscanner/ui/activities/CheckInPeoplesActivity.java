@@ -12,7 +12,9 @@ import android.view.MenuItem;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.entities.User;
 import com.ddscanner.entities.UserOld;
+import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.adapters.UserListAdapter;
 import com.ddscanner.utils.Helpers;
 
@@ -21,64 +23,52 @@ import java.util.ArrayList;
 /**
  * Created by lashket on 28.4.16.
  */
-public class CheckInPeoplesActivity extends AppCompatActivity {
+public class CheckInPeoplesActivity extends BaseAppCompatActivity {
 
     private RecyclerView usersRecyclerView;
     private Toolbar toolbar;
     private ArrayList<UserOld> userOlds;
 
+    private DDScannerRestClient.ResultListener<ArrayList<User>> usersResultListener = new DDScannerRestClient.ResultListener<ArrayList<User>>() {
+        @Override
+        public void onSuccess(ArrayList<User> result) {
+            setUi(result);
+        }
+
+        @Override
+        public void onConnectionFailure() {
+
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+
+        }
+    };
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_peoples_checkin);
-        userOlds = getIntent().getParcelableArrayListExtra("USERS");
         findViews();
-        setupToolbar();
-        setUi();
+        setupToolbar(R.string.people, R.id.toolbar);
+        DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotsCheckedInUsers(usersResultListener, getIntent().getStringExtra("id"));
     }
-
-    /**
-     * Find views in activity
-     * @author Andrei Lashkevich
-     */
 
     private void findViews() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         usersRecyclerView = (RecyclerView) findViewById(R.id.peoples_rc);
     }
 
-    /**
-     * Create toolbar ui
-     * @author Andrei Lashkevich
-     */
-
-    private void setupToolbar() {
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);
-        getSupportActionBar().setTitle(R.string.people);
-    }
-
-    /**
-     * Create ui of activity
-     * @author Andrei Lashkevich
-     */
-
-    private void setUi() {
+    private void setUi(ArrayList<User> users) {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         usersRecyclerView.setLayoutManager(linearLayoutManager);
-        usersRecyclerView.setAdapter(new UserListAdapter(this, userOlds));
+        usersRecyclerView.setAdapter(new UserListAdapter(this, users));
     }
 
-    /**
-     * Show current activity from another place of app
-     * @author Andrei Lashkevich
-     * @param context
-     */
-
-    public static void show(Context context, ArrayList<UserOld> userOlds) {
+    public static void show(Context context, String diveSpotId) {
         Intent intent = new Intent(context, CheckInPeoplesActivity.class);
-        intent.putParcelableArrayListExtra("USERS", userOlds);
+        intent.putExtra("id", diveSpotId);
         context.startActivity(intent);
     }
 
@@ -86,7 +76,7 @@ public class CheckInPeoplesActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                    onBackPressed();
+                    finish();
                 return true;
         }
         return super.onOptionsItemSelected(item);

@@ -8,7 +8,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.entities.User;
 import com.ddscanner.entities.UserOld;
 import com.ddscanner.ui.activities.ForeignProfileActivity;
 import com.ddscanner.utils.Helpers;
@@ -24,10 +26,10 @@ import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserListViewHolder> {
 
     private Context context;
-    private ArrayList<UserOld> userOldArrayList;
+    private ArrayList<User> users;
 
-    public UserListAdapter(Context context, ArrayList<UserOld> userOlds) {
-        userOldArrayList = userOlds;
+    public UserListAdapter(Context context, ArrayList<User> userOlds) {
+        users = userOlds;
         this.context = context;
     }
 
@@ -42,19 +44,19 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserLi
     @Override
     public void onBindViewHolder(UserListViewHolder holder, int position) {
         Picasso.with(context)
-                .load(userOldArrayList.get(position).getPicture())
+                .load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, users.get(position).getPhoto(), "1"))
                 .resize(Math.round(Helpers.convertDpToPixel(58, context)), Math.round(Helpers.convertDpToPixel(58, context)))
                 .centerCrop()
                 .transform(new CropCircleTransformation())
                 .into(holder.userAvatar);
-        holder.userName.setText(userOldArrayList.get(position).getName());
-        holder.info.setText(userOldArrayList.get(position).getCountComment() + " reviews, " +
-                userOldArrayList.get(position).getCountLike() + " likes");
+        holder.userName.setText(users.get(position).getName());
+        holder.info.setText(users.get(position).getCounters().getCommentsCount() + " reviews, " +
+                users.get(position).getCounters().getLikesCount() + " likes");
     }
 
     @Override
     public int getItemCount() {
-        return userOldArrayList.size();
+        return users.size();
     }
 
     public class UserListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -75,7 +77,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserLi
 
         @Override
         public void onClick(View v) {
-           ForeignProfileActivity.show(context, userOldArrayList.get(getAdapterPosition()).getId());
+           ForeignProfileActivity.show(context, users.get(getAdapterPosition()).getId());
         }
     }
 

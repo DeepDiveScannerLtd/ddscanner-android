@@ -335,6 +335,18 @@ public class DDScannerRestClient {
 
     /*Methods using in API v2_0*/
 
+    public void getDiveSpotsCheckedInUsers(ResultListener<ArrayList<User>> resultListener, String diveSpotId) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveSpotsCheckedInUsers(diveSpotId);
+        call.enqueue(new ResponseEntityCallback<ArrayList<User>>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<ArrayList<User>> resultListener, String responseString) throws JSONException {
+                Type listType = new TypeToken<ArrayList<User>>(){}.getType();
+                ArrayList<User> users = gson.fromJson(responseString, listType);
+                resultListener.onSuccess(users);
+            }
+        });
+    }
+
     public void postUpdateUserLocation(ResultListener<Void> resultListener, UpdateLocationRequest updateLocationRequest) {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postUpdateUserLocation(updateLocationRequest);
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));

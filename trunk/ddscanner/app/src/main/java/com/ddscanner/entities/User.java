@@ -19,6 +19,15 @@ public class User implements Serializable {
     private Integer diverLevel;
     @SerializedName("about")
     private String about;
+    private String id;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public Integer getDiverLevel() {
         return diverLevel;
