@@ -17,6 +17,7 @@ import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.ForeignUserDislikesWrapper;
 import com.ddscanner.entities.ForeignUserLike;
 import com.ddscanner.entities.ForeignUserLikeWrapper;
+import com.ddscanner.entities.UserLikeEntity;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.adapters.ForeignUserLikesAdapter;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
@@ -28,7 +29,7 @@ import com.rey.material.widget.ProgressView;
 
 import java.util.ArrayList;
 
-public class UserLikesDislikesActivity extends AppCompatActivity implements InfoDialogFragment.DialogClosedListener {
+public class UserLikesDislikesActivity extends BaseAppCompatActivity implements InfoDialogFragment.DialogClosedListener {
 
     private Toolbar toolbar;
     private RecyclerView recyclerView;
@@ -36,10 +37,10 @@ public class UserLikesDislikesActivity extends AppCompatActivity implements Info
     private String userId;
     private ProgressView progressView;
 
-    private DDScannerRestClient.ResultListener<ForeignUserLikeWrapper> foreignUserLikeWrapperResultListener = new DDScannerRestClient.ResultListener<ForeignUserLikeWrapper>() {
+    private DDScannerRestClient.ResultListener<ArrayList<UserLikeEntity>> likesResultListener = new DDScannerRestClient.ResultListener<ArrayList<UserLikeEntity>>() {
         @Override
-        public void onSuccess(ForeignUserLikeWrapper result) {
-            recyclerView.setAdapter(new ForeignUserLikesAdapter(UserLikesDislikesActivity.this, (ArrayList<ForeignUserLike>) result.getLikes(), true));
+        public void onSuccess(ArrayList<UserLikeEntity> result) {
+            recyclerView.setAdapter(new ForeignUserLikesAdapter(UserLikesDislikesActivity.this, result, true));
             recyclerView.setVisibility(View.VISIBLE);
             progressView.setVisibility(View.GONE);
         }
@@ -63,10 +64,10 @@ public class UserLikesDislikesActivity extends AppCompatActivity implements Info
         }
     };
 
-    private DDScannerRestClient.ResultListener<ForeignUserDislikesWrapper> foreignUserDislikesWrapperResultListener = new DDScannerRestClient.ResultListener<ForeignUserDislikesWrapper>() {
+    private DDScannerRestClient.ResultListener<ArrayList<UserLikeEntity>> dislikesResultListener = new DDScannerRestClient.ResultListener<ArrayList<UserLikeEntity>>() {
         @Override
-        public void onSuccess(ForeignUserDislikesWrapper result) {
-            recyclerView.setAdapter(new ForeignUserLikesAdapter(UserLikesDislikesActivity.this, (ArrayList<ForeignUserLike>) result.getDislikes(), false));
+        public void onSuccess(ArrayList<UserLikeEntity> result) {
+            recyclerView.setAdapter(new ForeignUserLikesAdapter(UserLikesDislikesActivity.this, result, false));
             recyclerView.setVisibility(View.VISIBLE);
             progressView.setVisibility(View.GONE);
         }
@@ -98,9 +99,9 @@ public class UserLikesDislikesActivity extends AppCompatActivity implements Info
         userId = getIntent().getStringExtra(Constants.USER_LIKES_ACTIVITY_INTENT_USER_ID);
         findViews();
         if (isLikes) {
-            DDScannerApplication.getInstance().getDdScannerRestClient().getUserLikes(userId, foreignUserLikeWrapperResultListener);
+            DDScannerApplication.getInstance().getDdScannerRestClient().getUserLikes(likesResultListener);
         } else {
-            DDScannerApplication.getInstance().getDdScannerRestClient().getUserDislikes(userId, foreignUserDislikesWrapperResultListener);
+            DDScannerApplication.getInstance().getDdScannerRestClient().getUserDislikes(dislikesResultListener);
         }
     }
 
@@ -156,9 +157,9 @@ public class UserLikesDislikesActivity extends AppCompatActivity implements Info
             case ActivitiesRequestCodes.REQUEST_CODE_USER_LIKES_DISLIKES_ACTIVITY_LOGIN:
                 if (resultCode == RESULT_OK) {
                     if (isLikes) {
-                        DDScannerApplication.getInstance().getDdScannerRestClient().getUserLikes(userId, foreignUserLikeWrapperResultListener);
+                        DDScannerApplication.getInstance().getDdScannerRestClient().getUserLikes(likesResultListener);
                     } else {
-                        DDScannerApplication.getInstance().getDdScannerRestClient().getUserDislikes(userId, foreignUserDislikesWrapperResultListener);
+                        DDScannerApplication.getInstance().getDdScannerRestClient().getUserDislikes(dislikesResultListener);
                     }
                 } else {
                     setResult(RESULT_CANCELED);

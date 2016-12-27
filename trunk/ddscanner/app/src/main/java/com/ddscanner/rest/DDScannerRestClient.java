@@ -28,6 +28,7 @@ import com.ddscanner.entities.SignInType;
 import com.ddscanner.entities.SignUpResponseEntity;
 import com.ddscanner.entities.Translation;
 import com.ddscanner.entities.User;
+import com.ddscanner.entities.UserLikeEntity;
 import com.ddscanner.entities.request.DeleteImageRequest;
 import com.ddscanner.entities.request.DiveSpotsRequestMap;
 import com.ddscanner.entities.request.IdentifyRequest;
@@ -266,6 +267,28 @@ public class DDScannerRestClient {
     }
 
     /*Methods using in API v2_0*/
+
+    public void getUserLikes(ResultListener<ArrayList<UserLikeEntity>> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserLikes();
+        call.enqueue(new ResponseEntityCallback<ArrayList<UserLikeEntity>>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<ArrayList<UserLikeEntity>> resultListener, String responseString) throws JSONException {
+
+            }
+        });
+    }
+
+    public void getUserDislikes(ResultListener<ArrayList<UserLikeEntity>> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserDislikes();
+        call.enqueue(new ResponseEntityCallback<ArrayList<UserLikeEntity>>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<ArrayList<UserLikeEntity>> resultListener, String responseString) throws JSONException {
+                Type listType = new TypeToken<ArrayList<UserLikeEntity>>(){}.getType();
+                ArrayList<UserLikeEntity> dislikes = gson.fromJson(responseString, listType);
+                resultListener.onSuccess(dislikes);
+            }
+        });
+    }
 
     public void postReportReview(ResultListener<Void> resultListener, ReportRequest reportRequest) {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postReportReview(reportRequest);

@@ -9,9 +9,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.ForeignUserLike;
+import com.ddscanner.entities.UserLikeEntity;
 import com.ddscanner.screens.divespot.details.DiveSpotDetailsActivity;
 import com.ddscanner.ui.activities.ForeignProfileActivity;
 import com.ddscanner.utils.Helpers;
@@ -21,17 +23,14 @@ import java.util.ArrayList;
 
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
-/**
- * Created by lashket on 20.7.16.
- */
 public class ForeignUserLikesAdapter extends RecyclerView.Adapter<ForeignUserLikesAdapter.ForeignUserLikesViewHolder> {
 
-    private ArrayList<ForeignUserLike> likes;
+    private ArrayList<UserLikeEntity> likes;
     private Context context;
     private boolean isLikes;
     private static final int REVIEW_TEXT_MAX_LENGTH = 30;
 
-    public ForeignUserLikesAdapter(Context context, ArrayList<ForeignUserLike> likes, boolean islikes) {
+    public ForeignUserLikesAdapter(Context context, ArrayList<UserLikeEntity> likes, boolean islikes) {
         this.likes = likes;
         this.context = context;
         this.isLikes = islikes;
@@ -47,25 +46,25 @@ public class ForeignUserLikesAdapter extends RecyclerView.Adapter<ForeignUserLik
 
     @Override
     public void onBindViewHolder(ForeignUserLikesViewHolder holder, int position) {
-        ForeignUserLike foreignUserLike = likes.get(position);
+        UserLikeEntity userLikeEntity = likes.get(position);
         Picasso.with(context)
-                .load(foreignUserLike.getUserOld().getPicture())
+                .load(DDScannerApplication.getInstance().getString(R.string.base_photo_url,userLikeEntity.getUser().getPhoto(), "1"))
                 .resize(Math.round(Helpers.convertDpToPixel(40, context)), Math.round(Helpers.convertDpToPixel(40, context)))
                 .transform(new CropCircleTransformation())
                 .into(holder.avatar);
-        holder.timeAgo.setText(Helpers.getDate(foreignUserLike.getDate()));
-        String comment = foreignUserLike.getComment();
+        holder.timeAgo.setText(Helpers.getDate(userLikeEntity.getDate()));
+        String comment = userLikeEntity.getReview().getReview();
 
         if (comment.length() > 30) {
             comment = reformatString(comment);
         }
-        String mainText = context.getResources().getString(R.string.foreign_user_likes_main_text, foreignUserLike.getDiveSpotName(), comment);
+        String mainText = context.getResources().getString(R.string.foreign_user_likes_main_text, userLikeEntity.getDiveSpot().getName(), comment);
         holder.mainText.setText(mainText);
 
         if (isLikes) {
-            holder.whoCreatedAction.setText(context.getResources().getString(R.string.foreign_user_like_by, foreignUserLike.getUserOld().getName()));
+            holder.whoCreatedAction.setText(context.getResources().getString(R.string.foreign_user_like_by, userLikeEntity.getUser().getName()));
         } else {
-            holder.whoCreatedAction.setText(context.getResources().getString(R.string.foreign_user_dislike_by, foreignUserLike.getUserOld().getName()));
+            holder.whoCreatedAction.setText(context.getResources().getString(R.string.foreign_user_dislike_by, userLikeEntity.getUser().getName()));
         }
     }
 
@@ -109,10 +108,10 @@ public class ForeignUserLikesAdapter extends RecyclerView.Adapter<ForeignUserLik
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.avatar:
-                    ForeignProfileActivity.show(context, likes.get(getAdapterPosition()).getUserOld().getId());
+                  //  ForeignProfileActivity.show(context, likes.get(getAdapterPosition()).getUserOld().getId());
                     break;
                 case R.id.main_layout:
-                    DiveSpotDetailsActivity.show(context, String.valueOf(likes.get(getAdapterPosition()).getDiveSpotId()), EventsTracker.SpotViewSource.FROM_LIST);
+                  //  DiveSpotDetailsActivity.show(context, String.valueOf(likes.get(getAdapterPosition()).getDiveSpotId()), EventsTracker.SpotViewSource.FROM_LIST);
                     break;
             }
         }
