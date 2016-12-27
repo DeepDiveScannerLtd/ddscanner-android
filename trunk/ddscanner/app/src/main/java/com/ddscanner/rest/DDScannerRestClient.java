@@ -6,6 +6,7 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.entities.AchievmentsResponseEntity;
 import com.ddscanner.entities.AddDiveSpotResponseEntity;
 import com.ddscanner.entities.AddressComponent;
+import com.ddscanner.entities.CommentEntity;
 import com.ddscanner.entities.Comments;
 import com.ddscanner.entities.DiveCenterProfile;
 import com.ddscanner.entities.DiveCentersResponseEntity;
@@ -281,6 +282,23 @@ public class DDScannerRestClient {
     }
 
     /*Methods using in API v2_0*/
+
+    public void getCommentsForDiveSpot(ResultListener<ArrayList<CommentEntity>> resultListener, String diveSpotId) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getCommentsForDiveSpot(diveSpotId);
+        call.enqueue(new ResponseEntityCallback<ArrayList<CommentEntity>>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<ArrayList<CommentEntity>> resultListener, String responseString) throws JSONException {
+                Type listType = new TypeToken<ArrayList<CommentEntity>>(){}.getType();
+                ArrayList<CommentEntity> comments = gson.fromJson(responseString, listType);
+                resultListener.onSuccess(comments);
+            }
+        });
+    }
+
+    public void postUpdateReview(ResultListener<Void> resultListener, List<MultipartBody.Part> newPhotos, List<MultipartBody.Part> deletedPhotos, RequestBody... requestBodies) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postUpdateReview(newPhotos, deletedPhotos, requestBodies[0], requestBodies[1], requestBodies[2]);
+        call.enqueue(new NoResponseEntityCallback(gson, resultListener));
+    }
 
     public void postLeaveCommentForDiveSpot(ResultListener<Void> resultListener, List<MultipartBody.Part> images, RequestBody... requestBodies) {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postLeaveComment(images, requestBodies[0], requestBodies[1], requestBodies[2]);

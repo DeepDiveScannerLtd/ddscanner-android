@@ -724,6 +724,7 @@
                                 app:visibilityForBookButtonFrom="@{diveSpotViewModel}"
                                 android:onClick="@{handlers::showDiveCentersButtonClicked}"/>
                             <RelativeLayout
+                                app:changeVisibilityAccording="@{diveSpotViewModel}"
                                 android:id="@+id/approve_layout"
                                 android:layout_width="match_parent"
                                 android:layout_height="55dp"

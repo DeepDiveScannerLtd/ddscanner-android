@@ -20,7 +20,7 @@ import android.widget.TextView;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
-import com.ddscanner.entities.Comment;
+import com.ddscanner.entities.CommentEntity;
 import com.ddscanner.events.DeleteCommentEvent;
 import com.ddscanner.events.DislikeCommentEvent;
 import com.ddscanner.events.EditCommentEvent;
@@ -40,13 +40,11 @@ import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.ReviewsListViewHolder> {
 
     private static final String TAG = ReviewsListAdapter.class.getSimpleName();
-    private ArrayList<Comment> comments;
+    private ArrayList<CommentEntity> comments;
     private Context context;
-    private String path;
     private boolean isAdapterSet = false;
 
-    public ReviewsListAdapter(ArrayList<Comment> comments, Context context, String path) {
-        this.path = path;
+    public ReviewsListAdapter(ArrayList<CommentEntity> comments, Context context) {
         this.comments = comments;
         this.context = context;
     }
@@ -64,6 +62,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
     public void onBindViewHolder(final ReviewsListViewHolder reviewsListViewHolder, final int i) {
         boolean isLiked;
         boolean isDisliked;
+        final CommentEntity commentEntity = comments.get(i);
         reviewsListViewHolder.rating.removeAllViews();
         reviewsListViewHolder.date.setText("");
         reviewsListViewHolder.dislikeImage.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_review_dislike_empty));
@@ -72,8 +71,8 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         reviewsListViewHolder.expand.setText("");
         reviewsListViewHolder.dislikesCount.setText("");
         reviewsListViewHolder.likesCount.setText("");
-        isLiked = comments.get(reviewsListViewHolder.getAdapterPosition()).isLike();
-        isDisliked = comments.get(reviewsListViewHolder.getAdapterPosition()).isDislike();
+        isLiked = commentEntity.getComment().isLike();
+        isDisliked = commentEntity.getComment().isDislike();
         if (isLiked) {
             reviewsListViewHolder.likeImage.setImageDrawable(AppCompatDrawableManager.get().getDrawable(
                     context, R.drawable.ic_like_review));
@@ -83,17 +82,17 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
                     .getDrawable(context, R.drawable.ic_review_dislike));
         }
         Log.i(TAG, reviewsListViewHolder.toString());
-        if (comments.get(reviewsListViewHolder.getAdapterPosition()).getImages() != null) {
+        if (commentEntity.getComment().getPhotos() != null) {
        //     reviewsListViewHolder.photos.setVisibility(View.VISIBLE);
             LinearLayoutManager layoutManager = new LinearLayoutManager(context);
             layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
             reviewsListViewHolder.photos.setNestedScrollingEnabled(false);
             reviewsListViewHolder.photos.setHasFixedSize(false);
             reviewsListViewHolder.photos.setLayoutManager(layoutManager);
-            if (comments.get(reviewsListViewHolder.getAdapterPosition()).getUserOld().getId().equals(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId())) {
-                reviewsListViewHolder.photos.setAdapter(new ReviewPhotosAdapter((ArrayList<String>) comments.get(reviewsListViewHolder.getAdapterPosition()).getImages(), context, path, true, reviewsListViewHolder.getAdapterPosition()));
+            if (commentEntity.getAuthor().getId().equals(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId())) {
+                reviewsListViewHolder.photos.setAdapter(new ReviewPhotosAdapter(commentEntity.getComment().getPhotos(), context, true, reviewsListViewHolder.getAdapterPosition()));
             } else {
-                reviewsListViewHolder.photos.setAdapter(new ReviewPhotosAdapter((ArrayList<String>) comments.get(reviewsListViewHolder.getAdapterPosition()).getImages(), context, path, false, reviewsListViewHolder.getAdapterPosition()));
+                reviewsListViewHolder.photos.setAdapter(new ReviewPhotosAdapter(commentEntity.getComment().getPhotos(), context, false, reviewsListViewHolder.getAdapterPosition()));
             }
         } else {
             reviewsListViewHolder.photos.setAdapter(null);
@@ -114,31 +113,31 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
                 }
             });
         }
-        if (comments.get(i).isEdit()) {
+        if (commentEntity.getAuthor().getId().equals(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId())) {
             reviewsListViewHolder.menu.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    showPopupMenu(reviewsListViewHolder.menu, Integer.parseInt(comments.get(i).getId()), comments.get(i));
+                    showPopupMenu(reviewsListViewHolder.menu, Integer.parseInt(commentEntity.getComment().getId()), comments.get(i));
                 }
             });
         } else {
             reviewsListViewHolder.menu.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    showReportMenu(reviewsListViewHolder.menu, Integer.parseInt(comments.get(i).getId()), comments.get(i));
+                    showReportMenu(reviewsListViewHolder.menu, Integer.parseInt(commentEntity.getComment().getId()), comments.get(i));
                 }
             });
         }
 
-        reviewsListViewHolder.user_name.setText(comments.get(reviewsListViewHolder.getAdapterPosition()).getUserOld().getName());
-        reviewsListViewHolder.user_review.setText(comments.get(reviewsListViewHolder.getAdapterPosition()).getComment());
-        reviewsListViewHolder.likesCount.setText(Helpers.formatLikesCommentsCountNumber(comments.get(reviewsListViewHolder.getAdapterPosition()).getLikes()));
-        reviewsListViewHolder.dislikesCount.setText(Helpers.formatLikesCommentsCountNumber(comments.get(reviewsListViewHolder.getAdapterPosition()).getDislikes()));
+        reviewsListViewHolder.user_name.setText(commentEntity.getAuthor().getName());
+        reviewsListViewHolder.user_review.setText(commentEntity.getComment().getReview());
+        reviewsListViewHolder.likesCount.setText(Helpers.formatLikesCommentsCountNumber(commentEntity.getComment().getLikes()));
+        reviewsListViewHolder.dislikesCount.setText(Helpers.formatLikesCommentsCountNumber(commentEntity.getComment().getDislikes()));
         isAdapterSet = true;
 
-        if (comments.get(reviewsListViewHolder.getAdapterPosition()).getUserOld().getPicture() != null) {
+        if (comments.get(reviewsListViewHolder.getAdapterPosition()).getAuthor().getPhoto() != null) {
             Picasso.with(context)
-                    .load(comments.get(reviewsListViewHolder.getAdapterPosition()).getUserOld().getPicture()).resize(Math.round(Helpers.convertDpToPixel(40, context)), Math.round(Helpers.convertDpToPixel(40, context)))
+                    .load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, commentEntity.getAuthor().getPhoto(), "1")).resize(Math.round(Helpers.convertDpToPixel(40, context)), Math.round(Helpers.convertDpToPixel(40, context)))
                     .transform(new CropCircleTransformation())
                     .centerCrop()
                     .placeholder(R.drawable.avatar_profile_default)
@@ -147,68 +146,68 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         } else {
             reviewsListViewHolder.user_avatar.setImageResource(R.drawable.avatar_profile_default);
         }
-        for (int k = 0; k < Integer.parseInt(comments.get(reviewsListViewHolder.getAdapterPosition()).getRating()); k++) {
+        for (int k = 0; k < Integer.parseInt(commentEntity.getComment().getRating()); k++) {
             ImageView iv = new ImageView(context);
             iv.setImageResource(R.drawable.ic_list_star_full);
             iv.setPadding(0, 0, 5, 0);
             reviewsListViewHolder.rating.addView(iv);
         }
-        for (int k = 0; k < 5 - Integer.parseInt(comments.get(reviewsListViewHolder.getAdapterPosition()).getRating()); k++) {
+        for (int k = 0; k < 5 - Integer.parseInt(commentEntity.getComment().getRating()); k++) {
             ImageView iv = new ImageView(context);
             iv.setImageResource(R.drawable.ic_list_star_empty);
             iv.setPadding(0, 0, 5, 0);
             reviewsListViewHolder.rating.addView(iv);
         }
-        if (comments.get(i).getDate() != null && !comments.get(i).getDate().isEmpty()) {
-            reviewsListViewHolder.date.setText(Helpers.getCommentDate(comments.get(i).getDate()));
+        if (commentEntity.getComment().getDate() != null && !commentEntity.getComment().getDate().isEmpty()) {
+            reviewsListViewHolder.date.setText(Helpers.getCommentDate(commentEntity.getComment().getDate()));
         }
     }
 
     public void commentLiked(int position) {
-        if (comments.get(position).isDislike()) {
-            comments.get(position).setDislikes(String.valueOf(Integer.parseInt(comments.get(position).getDislikes()) - 1));
-            comments.get(position).setDislike(false);
+        if (comments.get(position).getComment().isDislike()) {
+            comments.get(position).getComment().setDislikes(String.valueOf(Integer.parseInt(comments.get(position).getComment().getDislikes()) - 1));
+//            comments.get(position).getComment().setDislike(false);
         }
-        comments.get(position).setLikes(String.valueOf(Integer.parseInt(comments.get(position).getLikes()) + 1));
-        comments.get(position).setLike(true);
+//        comments.get(position).getComment().setLikes(String.valueOf(Integer.parseInt(comments.get(position).getComment().getLikes()) + 1));
+//        comments.get(position).getComment().setLike(true);
         notifyItemChanged(position);
     }
 
     public void commentDisliked(int position) {
-        if (comments.get(position).isLike()) {
-            comments.get(position).setLikes(String.valueOf(Integer.parseInt(comments.get(position).getLikes()) - 1));
-            comments.get(position).setLike(false);
+        if (comments.get(position).getComment().isLike()) {
+            comments.get(position).getComment().setLikes(String.valueOf(Integer.parseInt(comments.get(position).getComment().getLikes()) - 1));
+//            comments.get(position).getComment().setLike(false);
         }
-        comments.get(position).setDislikes(String.valueOf(Integer.parseInt(comments.get(position).getDislikes()) + 1));
-        comments.get(position).setDislike(true);
+        comments.get(position).getComment().setDislikes(String.valueOf(Integer.parseInt(comments.get(position).getComment().getDislikes()) + 1));
+//        comments.get(position).getComment().setDislike(true);
         notifyItemChanged(position);
     }
 
-    private void showPopupMenu(View view, int commentId, Comment comment) {
+    private void showPopupMenu(View view, int commentId, CommentEntity CommentEntity) {
         PopupMenu popup = new PopupMenu(context, view);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.menu_comment, popup.getMenu());
-        popup.setOnMenuItemClickListener(new MenuItemClickListener(commentId, comment));
+        popup.setOnMenuItemClickListener(new MenuItemClickListener(commentId, CommentEntity));
         popup.show();
     }
 
-    private void showReportMenu(View view, int commentId, Comment comment) {
+    private void showReportMenu(View view, int commentId, CommentEntity CommentEntity) {
         // inflate menu
         Context wrapper = new ContextThemeWrapper(context, R.style.popupMenuStyle);
         PopupMenu popup = new PopupMenu(wrapper, view);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.menu_comment_report, popup.getMenu());
-        popup.setOnMenuItemClickListener(new MenuItemClickListener(commentId, comment));
+        popup.setOnMenuItemClickListener(new MenuItemClickListener(commentId, CommentEntity));
         popup.show();
     }
 
     public void imageDeleted(int commentPosition, ArrayList<String> deletedImages) {
-        ArrayList<String> newImagesList = (ArrayList<String>) comments.get(commentPosition).getImages();
+        ArrayList<String> newImagesList =  comments.get(commentPosition).getComment().getPhotos();
         newImagesList.removeAll(deletedImages);
         if (newImagesList.size() == 0) {
             newImagesList = null;
         }
-        comments.get(commentPosition).setImages(newImagesList);
+        comments.get(commentPosition).getComment().setPhotos(newImagesList);
         notifyItemChanged(commentPosition);
     }
 
@@ -223,11 +222,11 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
     class MenuItemClickListener implements PopupMenu.OnMenuItemClickListener {
 
         private int commentId;
-        private Comment comment;
+        private CommentEntity commentEntity;
 
-        public MenuItemClickListener(int commentId, Comment comment) {
+        public MenuItemClickListener(int commentId, CommentEntity commentEntity) {
             this.commentId = commentId;
-            this.comment = comment;
+            this.commentEntity = commentEntity;
         }
 
         @Override
@@ -235,7 +234,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
             switch (menuItem.getItemId()) {
                 case R.id.comment_edit:
                     EventsTracker.trackEditReview();
-                    DDScannerApplication.bus.post(new EditCommentEvent(comment));
+                    DDScannerApplication.bus.post(new EditCommentEvent(commentEntity));
                     return true;
                 case R.id.comment_delete:
                     EventsTracker.trackDeleteReview();
@@ -296,7 +295,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
             switch (v.getId()) {
                 case R.id.user_avatar:
                     EventsTracker.trackReviewerProfileView();
-                    ForeignProfileActivity.show(context, comments.get(getAdapterPosition()).getUserOld().getId());
+                    ForeignProfileActivity.show(context, comments.get(getAdapterPosition()).getAuthor().getId());
                     break;
                 case R.id.like_layout:
                     if (!isLiked) {

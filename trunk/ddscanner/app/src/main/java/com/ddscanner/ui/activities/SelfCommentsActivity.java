@@ -15,7 +15,7 @@ import android.view.View;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
-import com.ddscanner.entities.Comment;
+import com.ddscanner.entities.CommentOld;
 import com.ddscanner.entities.Comments;
 import com.ddscanner.events.DeleteCommentEvent;
 import com.ddscanner.events.EditCommentEvent;
@@ -34,7 +34,7 @@ import java.util.ArrayList;
 
 public class SelfCommentsActivity extends AppCompatActivity implements InfoDialogFragment.DialogClosedListener {
 
-    private ArrayList<Comment> comments;
+    private ArrayList<CommentOld> commentOlds;
     private RecyclerView commentsRc;
     private ProgressView progressView;
 
@@ -52,7 +52,7 @@ public class SelfCommentsActivity extends AppCompatActivity implements InfoDialo
             progressView.setVisibility(View.GONE);
             commentsRc.setVisibility(View.VISIBLE);
             path = comments.getDiveSpotPathMedium();
-            commentsRc.setAdapter(new SelfReviewsListAdapter((ArrayList<Comment>) comments.getComments(), SelfCommentsActivity.this, comments.getDiveSpotPathMedium()));
+            commentsRc.setAdapter(new SelfReviewsListAdapter((ArrayList<CommentOld>) comments.getCommentOlds(), SelfCommentsActivity.this, comments.getDiveSpotPathMedium()));
         }
 
         @Override
@@ -197,7 +197,7 @@ public class SelfCommentsActivity extends AppCompatActivity implements InfoDialo
 
     @Subscribe
     public void editComment(EditCommentEvent editCommentEvent) {
-        EditCommentActivity.showForResult(this, editCommentEvent.getComment(), path, ActivitiesRequestCodes.REQUEST_CODE_SELF_REVIEWS_EDIT_MY_REVIEW);
+        EditCommentActivity.showForResult(this, editCommentEvent.getComment(), ActivitiesRequestCodes.REQUEST_CODE_SELF_REVIEWS_EDIT_MY_REVIEW);
     }
 
     @Override

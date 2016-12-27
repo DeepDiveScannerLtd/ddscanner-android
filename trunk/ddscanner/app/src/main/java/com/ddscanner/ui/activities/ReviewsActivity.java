@@ -17,8 +17,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
-import com.ddscanner.entities.Comment;
-import com.ddscanner.entities.Comments;
+import com.ddscanner.entities.CommentEntity;
 import com.ddscanner.entities.FiltersResponseEntity;
 import com.ddscanner.events.DeleteCommentEvent;
 import com.ddscanner.events.DislikeCommentEvent;
@@ -44,8 +43,8 @@ import java.util.Map;
 
 public class ReviewsActivity extends AppCompatActivity implements View.OnClickListener, InfoDialogFragment.DialogClosedListener {
 
-    private ArrayList<Comment> comments;
-    private RecyclerView commentsRc;
+    private ArrayList<CommentEntity> comments;
+    private RecyclerView commentsRecyclerView;
     private ProgressView progressView;
 
     private Toolbar toolbar;
@@ -54,11 +53,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     private String diveSpotId;
     private String commentToDelete;
 
-    private String path;
-
     private boolean isHasNewComment = false;
-
-    private FiltersResponseEntity filters = new FiltersResponseEntity();
 
     private List<String> reportItems = new ArrayList<>();
 
@@ -68,25 +63,8 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     private MaterialDialog materialDialog;
     private ReviewsListAdapter reviewsListAdapter;
     private int reviewPositionToRate;
-    private boolean isNeedRefreshComments;
+    private boolean isNeedRefresh;
     private int commentPosition;
-
-    private DDScannerRestClient.ResultListener<FiltersResponseEntity> filtersResponseEntityResultListener = new DDScannerRestClient.ResultListener<FiltersResponseEntity>() {
-        @Override
-        public void onSuccess(FiltersResponseEntity result) {
-            filters = result;
-        }
-
-        @Override
-        public void onConnectionFailure() {
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_CONNECTION_FAILURE, false);
-        }
-
-        @Override
-        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_FAILED_TO_CONNECT, false);
-        }
-    };
 
     private DDScannerRestClient.ResultListener<Void> likeCommentResultListener = new DDScannerRestClient.ResultListener<Void>() {
         @Override
@@ -94,9 +72,9 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
             EventsTracker.trackCommentLiked();
             reviewsListAdapter.commentLiked(reviewPositionToRate);
             isHasNewComment = true;
-            if (isNeedRefreshComments) {
+            if (isNeedRefresh) {
                 getComments();
-                isNeedRefreshComments = !isNeedRefreshComments;
+                isNeedRefresh = !isNeedRefresh;
             }
         }
 
@@ -135,9 +113,9 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
             EventsTracker.trackCommentLiked();
             isHasNewComment = true;
             reviewsListAdapter.commentDisliked(reviewPositionToRate);
-            if (isNeedRefreshComments) {
+            if (isNeedRefresh) {
                 getComments();
-                isNeedRefreshComments = !isNeedRefreshComments;
+                isNeedRefresh = !isNeedRefresh;
             }
         }
 
@@ -205,21 +183,16 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
         }
     };
 
-    private DDScannerRestClient.ResultListener<Comments> commentsResultListener = new DDScannerRestClient.ResultListener<Comments>() {
+    private DDScannerRestClient.ResultListener<ArrayList<CommentEntity>> commentsResultListener = new DDScannerRestClient.ResultListener<ArrayList<CommentEntity>>() {
         @Override
-        public void onSuccess(Comments result) {
-            ReviewsActivity.this.comments = (ArrayList<Comment>) result.getComments();
+        public void onSuccess(ArrayList<CommentEntity> result) {
+            ReviewsActivity.this.comments = result;
             progressView.setVisibility(View.GONE);
-            commentsRc.setVisibility(View.VISIBLE);
-            ArrayList<Comment> commentsList = new ArrayList<>();
-            if (result.getComments() != null) {
-                for (Comment comment : result.getComments()) {
-                    comment.setImages(Helpers.appendImagesWithPath((ArrayList<String>) comment.getImages(), path));
-                    commentsList.add(comment);
-                }
-            }
-            reviewsListAdapter = new ReviewsListAdapter(commentsList, ReviewsActivity.this, path);
-            commentsRc.setAdapter(reviewsListAdapter);
+            commentsRecyclerView.setVisibility(View.VISIBLE);
+            ArrayList<CommentEntity> List = new ArrayList<>();
+           List = result;
+            reviewsListAdapter = new ReviewsListAdapter(List, ReviewsActivity.this);
+            commentsRecyclerView.setAdapter(reviewsListAdapter);
         }
 
         @Override
@@ -272,15 +245,19 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
         }
     };
 
+    public static void showForResult(Activity context, String diveSpotId, int requestCode) {
+        Intent intent = new Intent(context, ReviewsActivity.class);
+        intent.putExtra(Constants.DIVESPOTID, diveSpotId);
+        context.startActivityForResult(intent, requestCode);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reviews);
         Bundle bundle = getIntent().getExtras();
-       // comments = (ArrayList<Comment>) bundle.getSerializable("COMMENTS");
+       // comments = (ArrayList<CommentEntity>) bundle.getSerializable("");
         diveSpotId = bundle.getString(Constants.DIVESPOTID);
-        path = bundle.getString("PATH");
-        DDScannerApplication.getInstance().getDdScannerRestClient().getReportTypes(filtersResponseEntityResultListener);
         findViews();
         toolbarSettings();
         setContent();
@@ -289,7 +266,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
 
     private void findViews() {
         materialDialog = Helpers.getMaterialDialog(this);
-        commentsRc = (RecyclerView) findViewById(R.id.reviews_rc);
+        commentsRecyclerView = (RecyclerView) findViewById(R.id.reviews_rc);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         leaveReview = (FloatingActionButton) findViewById(R.id.fab_write_review);
         progressView = (ProgressView) findViewById(R.id.progressBarFull);
@@ -304,10 +281,10 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void setContent() {
-        commentsRc.setHasFixedSize(true);
-        commentsRc.setLayoutManager(new LinearLayoutManager(this));
-        commentsRc.getItemAnimator().setChangeDuration(0);
-     //   commentsRc.setAdapter(new ReviewsListAdapter(comments, ReviewsActivity.this, path));
+        commentsRecyclerView.setHasFixedSize(true);
+        commentsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        commentsRecyclerView.getItemAnimator().setChangeDuration(0);
+     //   commentsRecyclerView.setAdapter(new ReviewsListAdapter(comments, ReviewsActivity.this, path));
     }
 
     @Override
@@ -357,14 +334,14 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_LIKE_REVIEW:
                 if (resultCode == RESULT_OK) {
-                    likeComment(comments.get(reviewPositionToRate).getId(), reviewPositionToRate);
-                    isNeedRefreshComments = true;
+                    likeComment(comments.get(reviewPositionToRate).getComment().getId(), reviewPositionToRate);
+                    isNeedRefresh = true;
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_DISLIKE_REVIEW:
                 if (resultCode == RESULT_OK) {
-                    dislikeComment(comments.get(reviewPositionToRate).getId(), reviewPositionToRate);
-                    isNeedRefreshComments = true;
+                    dislikeComment(comments.get(reviewPositionToRate).getComment().getId(), reviewPositionToRate);
+                    isNeedRefresh = true;
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_SHOW_SLIDER:
@@ -378,10 +355,10 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void getComments() {
-        commentsRc.setVisibility(View.GONE);
+        commentsRecyclerView.setVisibility(View.GONE);
         progressView.setVisibility(View.VISIBLE);
         isHasNewComment = true;
-        DDScannerApplication.getInstance().getDdScannerRestClient().getComments(diveSpotId, commentsResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient().getCommentsForDiveSpot(commentsResultListener, diveSpotId);
     }
 
     @Override
@@ -448,7 +425,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
 
     @Subscribe
     public void editComment(EditCommentEvent editCommentEvent) {
-        EditCommentActivity.showForResult(this, editCommentEvent.getComment(), path, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_EDIT_MY_REVIEW);
+        EditCommentActivity.showForResult(this, editCommentEvent.getComment(), ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_EDIT_MY_REVIEW);
     }
 
     private void deleteUsersComment(String id) {
@@ -458,27 +435,24 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
 
     @Subscribe
     public void showReportDialog(ReportCommentEvent event) {
-        reportCommentId = event.getCommentId();
-        List<String> objects = new ArrayList<String>();
-        for (Map.Entry<String, String> entry : filters.getReport().entrySet()) {
-            objects.add(entry.getValue());
-        }
-        new MaterialDialog.Builder(this)
-                .title("Report")
-                .items(objects)
-                .itemsCallback(new MaterialDialog.ListCallback() {
-                    @Override
-                    public void onSelection(final MaterialDialog dialog, View view, int which, CharSequence text) {
-                        reportType = Helpers.getMirrorOfHashMap(filters.getReport()).get(text);
-                        if (reportType.equals("other")) {
-                            showOtherReportDialog();
-                            dialog.dismiss();
-                        } else {
-                            sendReportRequest(reportType, null);
-                        }
-                    }
-                })
-                .show();
+//        reportCommentId = event.getCommentId();
+//        List<String> objects = Helpers.getReportTypes();
+//        new MaterialDialog.Builder(this)
+//                .title("Report")
+//                .items(objects)
+//                .itemsCallback(new MaterialDialog.ListCallback() {
+//                    @Override
+//                    public void onSelection(final MaterialDialog dialog, View view, int which, CharSequence text) {
+//                        reportType = Helpers.getMirrorOfHashMap(filters.getReport()).get(text);
+//                        if (reportType.equals("other")) {
+//                            showOtherReportDialog();
+//                            dialog.dismiss();
+//                        } else {
+//                            sendReportRequest(reportType, null);
+//                        }
+//                    }
+//                })
+//                .show();
     }
 
     private void showOtherReportDialog() {
@@ -525,19 +499,19 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     @Subscribe
     public void likeComment(LikeCommentEvent event) {
         this.reviewPositionToRate = event.getPosition();
-        likeComment(comments.get(event.getPosition()).getId(), event.getPosition());
+        likeComment(comments.get(event.getPosition()).getComment().getId(), event.getPosition());
     }
 
     @Subscribe
     public void dislikeComment(DislikeCommentEvent event) {
         this.reviewPositionToRate = event.getPosition();
-        dislikeComment(comments.get(event.getPosition()).getId(), event.getPosition());
+        dislikeComment(comments.get(event.getPosition()).getComment().getId(), event.getPosition());
     }
 
     @Subscribe
     public void showSliderActivity(ShowSliderForReviewImagesEvent event) {
         this.commentPosition = event.getCommentPosition();
-        ReviewImageSliderActivity.showForResult(this, event.getPhotos(), event.getPosition(), event.isSelfReview(), true, path, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_SHOW_SLIDER);
+    //    ReviewImageSliderActivity.showForResult(this, event.getPhotos(), event.getPosition(), event.isSelfReview(), true, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_SHOW_SLIDER);
     }
 
     @Override

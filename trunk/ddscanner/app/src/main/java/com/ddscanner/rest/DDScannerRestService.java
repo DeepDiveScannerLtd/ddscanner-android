@@ -369,4 +369,7 @@ public interface DDScannerRestService {
 
     @POST("v2_0/image.report")
     Call<ResponseBody> postReportImage(@Body ReportImageRequest reportImageRequest);
+
+    @GET("v2_0/divespot.reviews.get")
+    Call<ResponseBody> getCommentsForDiveSpot(@Query("id") String diveSpotId);
 }

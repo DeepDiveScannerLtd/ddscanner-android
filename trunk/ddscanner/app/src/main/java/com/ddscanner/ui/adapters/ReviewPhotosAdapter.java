@@ -24,15 +24,13 @@ public class ReviewPhotosAdapter extends RecyclerView.Adapter<ReviewPhotosAdapte
 
     public ArrayList<String> photos;
     public String reviewId;
-    public String path;
     public Context context;
     public boolean isSelfPhotos;
     public int commentPosition;
 
-    public ReviewPhotosAdapter(ArrayList<String> photos, Context context, String path, boolean isSelfPhotos, int commentPosition) {
+    public ReviewPhotosAdapter(ArrayList<String> photos, Context context, boolean isSelfPhotos, int commentPosition) {
         this.photos = photos;
         this.context = context;
-        this.path = path;
         this.isSelfPhotos =  isSelfPhotos;
         this.commentPosition = commentPosition;
 
@@ -53,7 +51,7 @@ public class ReviewPhotosAdapter extends RecyclerView.Adapter<ReviewPhotosAdapte
             holder.morePhotos.setText("+" + String.valueOf(8 - 4));
             holder.morePhotos.setVisibility(View.VISIBLE);
         }
-        Picasso.with(context).load(photos.get(position)).transform(new TransformationRoundImage(2,0)).resize(70,70).centerCrop().into(holder.photo,
+        Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, photos.get(position), "1")).transform(new TransformationRoundImage(2,0)).resize(70,70).centerCrop().into(holder.photo,
                 new ImageLoadedCallback(holder.progressBar){
                     @Override
                     public void onSuccess() {

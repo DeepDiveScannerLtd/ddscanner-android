@@ -47,6 +47,7 @@ import com.ddscanner.screens.divespot.photos.DiveSpotPhotosActivity;
 import com.ddscanner.screens.divespot.edit.EditDiveSpotActivity;
 import com.ddscanner.ui.activities.LeaveReviewActivity;
 import com.ddscanner.ui.activities.LoginActivity;
+import com.ddscanner.ui.activities.ReviewsActivity;
 import com.ddscanner.ui.activities.ShowDsLocationActivity;
 import com.ddscanner.ui.adapters.SealifeListAdapter;
 import com.ddscanner.ui.dialogs.CheckedInDialogFragment;
@@ -432,7 +433,8 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
         switch (requestCode) {
             case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LEAVE_REVIEW:
                 if (resultCode == RESULT_OK) {
-
+                    binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().setReviewsCount(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getReviewsCount() + 1);
+                    DiveSpotDetailsActivityViewModel.setReviewsCount(binding.btnShowAllReviews, binding.getDiveSpotViewModel());
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_REVIEWS:
@@ -765,7 +767,11 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
     }
 
     public void writeReviewClicked(View view) {
-        LeaveReviewActivity.showForResult(this, diveSpotId, 1, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LEAVE_REVIEW);
+        if (binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getReviewsCount() < 1) {
+            LeaveReviewActivity.showForResult(this, diveSpotId, 1, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LEAVE_REVIEW);
+        } else {
+            ReviewsActivity.showForResult(this, diveSpotId, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_REVIEWS);
+        }
     }
 
     private class ApproveResultListener extends DDScannerRestClient.ResultListener<Void> {

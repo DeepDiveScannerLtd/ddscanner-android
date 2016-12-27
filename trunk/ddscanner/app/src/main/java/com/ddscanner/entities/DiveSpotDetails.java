@@ -4,7 +4,7 @@ import java.util.List;
 
 public class DiveSpotDetails {
 
-    private List<Comment> comments;
+    private List<CommentOld> commentOlds;
     private DiveSpotFull divespot;
     private List<Sealife> sealifes;
     private List<UserOld> checkins;
@@ -30,11 +30,11 @@ public class DiveSpotDetails {
         this.editors = editors;
     }
 
-    public List<Comment> getComments() {
-        return comments;
+    public List<CommentOld> getCommentOlds() {
+        return commentOlds;
     }
-    public void setComments(List<Comment> comments) {
-        this.comments = comments;
+    public void setCommentOlds(List<CommentOld> commentOlds) {
+        this.commentOlds = commentOlds;
     }
 
     public DiveSpotFull getDivespot() { return divespot; }

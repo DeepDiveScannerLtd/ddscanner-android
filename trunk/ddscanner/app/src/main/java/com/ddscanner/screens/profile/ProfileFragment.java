@@ -97,6 +97,7 @@ public class ProfileFragment extends BaseFragment implements LoginView.LoginStat
                     DDScannerApplication.getInstance().getSharedPreferenceHelper().setActiveUser(user);
                     DDScannerApplication.getInstance().getSharedPreferenceHelper().setActiveUserType(result.getType());
                     DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsUserLoggedIn(true);
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().setUserServerId(user.getId());
                     break;
                 case 0:
                     break;

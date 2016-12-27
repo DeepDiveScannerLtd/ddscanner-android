@@ -1,97 +1,65 @@
 package com.ddscanner.entities;
 
-import java.io.Serializable;
-import java.util.List;
+import java.util.ArrayList;
 
-/**
- * Created by lashket on 12.3.16.
- */
-public class Comment implements Serializable{
-    private String comment;
-    private String rating;
+public class Comment {
+
     private String id;
-    private List<String> images;
-    private String date;
+    private String review;
+    private String rating;
+    private ArrayList<String> photos;
     private String likes;
     private String dislikes;
-    private UserOld userOld;
-    private boolean isLike;
-    private boolean isDislike;
-    private boolean isEdit;
-    private String diveSpotName;
-    private String diveSpotImage;
-    private String diveSpotId;
-
-    public String getDiveSpotName() {
-        return diveSpotName;
-    }
-
-    public void setDiveSpotName(String diveSpotName) {
-        this.diveSpotName = diveSpotName;
-    }
-
-    public String getDiveSpotImage() {
-        return diveSpotImage;
-    }
-
-    public void setDiveSpotImage(String diveSpotImage) {
-        this.diveSpotImage = diveSpotImage;
-    }
-
-    public String getDiveSpotId() {
-        return diveSpotId;
-    }
-
-    public void setDiveSpotId(String diveSpotId) {
-        this.diveSpotId = diveSpotId;
-    }
-
-    public boolean isEdit() {
-        return isEdit;
-    }
-
-    public void setEdit(boolean edit) {
-        isEdit = edit;
-    }
+    private String date;
+    private boolean isLike = true;
+    private boolean isDislike = true;
 
     public boolean isLike() {
         return isLike;
     }
 
-    public void setLike(boolean like) {
-        isLike = like;
-    }
+//    public void setLike(boolean like) {
+//        isLike = like;
+//    }
 
     public boolean isDislike() {
         return isDislike;
     }
 
-    public void setDislike(boolean dislike) {
-        isDislike = dislike;
+//    public void setDislike(boolean dislike) {
+//        isDislike = dislike;
+//    }
+
+    public String getId() {
+        return id;
     }
 
-    /*  protected Comment(Parcel in) {
-            comment = in.readString();
-            rating = in.readString();
-            id = in.readString();
-            images = in.readList(images, List.class.getClassLoader());
-            date = in.readString();
-        }
-    */
-    public List<String> getImages() {
-        return images;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public void setImages(List<String> images) {
-        this.images = images;
+    public String getReview() {
+        return review;
     }
 
-    public String getDate() {
-        return date;
+    public void setReview(String review) {
+        this.review = review;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public String getRating() {
+        return rating;
+    }
+
+    public void setRating(String rating) {
+        this.rating = rating;
+    }
+
+    public ArrayList<String> getPhotos() {
+        return photos;
+    }
+
+    public void setPhotos(ArrayList<String> photos) {
+        this.photos = photos;
     }
 
     public String getLikes() {
@@ -110,35 +78,11 @@ public class Comment implements Serializable{
         this.dislikes = dislikes;
     }
 
-    public String getId() {
-        return id;
+    public String getDate() {
+        return date;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getRating() {
-        return rating;
-    }
-
-    public void setRating(String rating) {
-        this.rating = rating;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
-
-    public UserOld getUserOld() {
-        return userOld;
-    }
-
-    public void setUserOld(UserOld userOld) {
-        this.userOld = userOld;
+    public void setDate(String date) {
+        this.date = date;
     }
 }

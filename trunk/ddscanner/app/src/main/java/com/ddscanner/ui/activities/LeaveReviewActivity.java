@@ -1,20 +1,14 @@
 package com.ddscanner.ui.activities;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v13.app.ActivityCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RatingBar;
@@ -25,7 +19,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
-import com.ddscanner.entities.Comment;
+import com.ddscanner.entities.CommentOld;
 import com.ddscanner.entities.errors.ValidationError;
 import com.ddscanner.events.AddPhotoDoListEvent;
 import com.ddscanner.events.ImageDeletedEvent;
@@ -57,7 +51,7 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements BaseAp
     private static final int COMMENT_MAX_LENGTH = 250;
 
     private Toolbar toolbar;
-    private Comment comment = new Comment();
+    private CommentOld commentOld = new CommentOld();
     private String diveSpotId;
     private EditText text;
     private RatingBar ratingBar;
@@ -128,7 +122,7 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements BaseAp
     private void findViews() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         text = (EditText) findViewById(R.id.review_text);
-        text.setTag("comment");
+        text.setTag("commentOld");
         ratingBar = (RatingBar) findViewById(R.id.rating_bar);
         if (rating > 0) {
             ratingBar.setRating(rating);
@@ -138,7 +132,7 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements BaseAp
         symbolNumberLeft = (TextView) findViewById(R.id.left_number);
         photosRecyclerView = (RecyclerView) findViewById(R.id.photos_rc);
         errorText = (TextView) findViewById(R.id.comment_error);
-        errorsMap.put("comment", errorText);
+        errorsMap.put("commentOld", errorText);
     }
 
     private void setRcSettings() {
@@ -180,7 +174,7 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements BaseAp
         for (int i = 0; i < imageUris.size(); i++) {
             File image = new File(imageUris.get(i));
             RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), image);
-            MultipartBody.Part part = MultipartBody.Part.createFormData("images[]", image.getName(),
+            MultipartBody.Part part = MultipartBody.Part.createFormData("photos[]", image.getName(),
                     requestFile);
             images.add(part);
         }

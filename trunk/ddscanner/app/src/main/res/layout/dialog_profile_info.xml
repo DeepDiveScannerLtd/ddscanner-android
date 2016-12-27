@@ -31,7 +31,7 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_comment_reviews"/>
             <TextView
-                android:id="@+id/comments"
+                android:id="@+id/commentOlds"
                 android:layout_marginTop="1dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
