@@ -32,7 +32,7 @@ public class DiveSpotMapsActivity extends AppCompatActivity implements InfoDialo
     private DDScannerRestClient.ResultListener<ArrayList<DiveSpotPhoto>> resultListener = new DDScannerRestClient.ResultListener<ArrayList<DiveSpotPhoto>>() {
         @Override
         public void onSuccess(ArrayList<DiveSpotPhoto> result) {
-            mapsRecyclerView.setAdapter(new AllPhotosDiveSpotAdapter(result, DiveSpotMapsActivity.this, diveSpotId, PhotoOpenedSource.DIVESPOT));
+            mapsRecyclerView.setAdapter(new AllPhotosDiveSpotAdapter(result, DiveSpotMapsActivity.this, diveSpotId, PhotoOpenedSource.DIVESPOT, true));
             progressView.setVisibility(View.GONE);
             mapsRecyclerView.setVisibility(View.VISIBLE);
         }

@@ -50,6 +50,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     private ViewPager viewPager;
     private ImageView close;
     private ArrayList<DiveSpotPhoto> images;
+    private boolean isFromMaps;
     private Drawable drawable;
     private int position;
     private ImageView avatar;
@@ -181,6 +182,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         Bundle bundle = getIntent().getExtras();
         images = bundle.getParcelableArrayList("IMAGES");
         position = getIntent().getIntExtra("position", 0);
+        isFromMaps = getIntent().getBooleanExtra("ismap", false);
         photoOpenedSource = (PhotoOpenedSource) getIntent().getSerializableExtra("source");
         viewPager.addOnPageChangeListener(this);
         sliderImagesAdapter = new SliderImagesAdapter(getFragmentManager(), images);
@@ -240,6 +242,9 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     private void setUi() {
         options.setVisibility(View.VISIBLE);
         viewPager.setCurrentItem(position);
+        if (isFromMaps) {
+            likesLayout.setVisibility(View.GONE);
+        }
         likesLayout.setOnClickListener(this);
     }
 
@@ -312,11 +317,12 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         popup.show();
     }
 
-    public static void showForResult(Activity context, ArrayList<DiveSpotPhoto> images, int position, int requestCode, PhotoOpenedSource photoOpenedSource) {
+    public static void showForResult(Activity context, ArrayList<DiveSpotPhoto> images, int position, int requestCode, PhotoOpenedSource photoOpenedSource, boolean isFromMaps) {
         Intent intent = new Intent(context, ImageSliderActivity.class);
         intent.putParcelableArrayListExtra("IMAGES", images);
         intent.putExtra("position", position);
         intent.putExtra("source", photoOpenedSource);
+        intent.putExtra("ismap", isFromMaps);
         context.startActivityForResult(intent, requestCode);
     }
 

@@ -33,12 +33,14 @@ public class AllPhotosDiveSpotAdapter extends RecyclerView.Adapter<AllPhotosDive
     private Activity context;
     private String diveSpotId;
     private PhotoOpenedSource photoOpenedSource;
+    private boolean isFromMaps;
 
-    public AllPhotosDiveSpotAdapter(ArrayList<DiveSpotPhoto> photos, Activity context, String diveSpotId, PhotoOpenedSource photoOpenedSource) {
+    public AllPhotosDiveSpotAdapter(ArrayList<DiveSpotPhoto> photos, Activity context, String diveSpotId, PhotoOpenedSource photoOpenedSource, boolean isFromMaps) {
         images = photos;
         this.context = context;
         this.diveSpotId = diveSpotId;
         this.photoOpenedSource = photoOpenedSource;
+        this.isFromMaps = isFromMaps;
     }
 
     @Override
@@ -80,7 +82,7 @@ public class AllPhotosDiveSpotAdapter extends RecyclerView.Adapter<AllPhotosDive
         @Override
         public void onClick(View v) {
             EventsTracker.trackDiveSpotPhotosView();
-            ImageSliderActivity.showForResult(context, images, getAdapterPosition(), ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_ACTIVITY_SLIDER, photoOpenedSource);
+            ImageSliderActivity.showForResult(context, images, getAdapterPosition(), ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_ACTIVITY_SLIDER, photoOpenedSource, isFromMaps);
         }
     }
 
