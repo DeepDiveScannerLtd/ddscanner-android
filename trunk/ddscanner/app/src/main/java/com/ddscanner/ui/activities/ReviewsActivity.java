@@ -19,6 +19,7 @@ import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.CommentEntity;
 import com.ddscanner.entities.FiltersResponseEntity;
+import com.ddscanner.entities.request.ReportRequest;
 import com.ddscanner.events.DeleteCommentEvent;
 import com.ddscanner.events.DislikeCommentEvent;
 import com.ddscanner.events.EditCommentEvent;
@@ -430,29 +431,29 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
 
     private void deleteUsersComment(String id) {
         commentToDelete = id;
-        DDScannerApplication.getInstance().getDdScannerRestClient().deleteUserComment(id, deleteCommentResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient().postDeleteReview(deleteCommentResultListener, id);
     }
 
     @Subscribe
     public void showReportDialog(ReportCommentEvent event) {
-//        reportCommentId = event.getCommentId();
-//        List<String> objects = Helpers.getReportTypes();
-//        new MaterialDialog.Builder(this)
-//                .title("Report")
-//                .items(objects)
-//                .itemsCallback(new MaterialDialog.ListCallback() {
-//                    @Override
-//                    public void onSelection(final MaterialDialog dialog, View view, int which, CharSequence text) {
-//                        reportType = Helpers.getMirrorOfHashMap(filters.getReport()).get(text);
-//                        if (reportType.equals("other")) {
-//                            showOtherReportDialog();
-//                            dialog.dismiss();
-//                        } else {
-//                            sendReportRequest(reportType, null);
-//                        }
-//                    }
-//                })
-//                .show();
+        reportCommentId = event.getCommentId();
+        List<String> objects = Helpers.getReportTypes();
+        new MaterialDialog.Builder(this)
+                .title("Report")
+                .items(objects)
+                .itemsCallback(new MaterialDialog.ListCallback() {
+                    @Override
+                    public void onSelection(final MaterialDialog dialog, View view, int which, CharSequence text) {
+                        reportType = String.valueOf(Helpers.getReportTypes().indexOf(text) + 1);
+                        if (text.equals("Other")) {
+                            showOtherReportDialog();
+                            dialog.dismiss();
+                        } else {
+                            sendReportRequest(reportType, null);
+                        }
+                    }
+                })
+                .show();
     }
 
     private void showOtherReportDialog() {
@@ -463,7 +464,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
                     @Override
                     public void onInput(MaterialDialog dialog, CharSequence input) {
                         if (input.toString().trim().length() > 1) {
-                            sendReportRequest("other", input.toString());
+                            sendReportRequest(reportType, input.toString());
                             reportDescription = input.toString();
                         } else {
                             Toast.makeText(ReviewsActivity.this, "Write a reason", Toast.LENGTH_SHORT).show();
@@ -477,7 +478,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
             LoginActivity.showForResult(ReviewsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_LEAVE_REPORT);
             return;
         }
-        DDScannerApplication.getInstance().getDdScannerRestClient().postSendReportToComment(type, description, reportCommentId, reportCommentResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient().postReportReview(reportCommentResultListener, new ReportRequest(String.valueOf(reportType), description, reportCommentId));
     }
 
     private void likeComment(String id, final int position) {

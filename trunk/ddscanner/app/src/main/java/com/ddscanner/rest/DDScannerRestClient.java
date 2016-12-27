@@ -185,25 +185,9 @@ public class DDScannerRestClient {
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 
-    public void getReportTypes(@NonNull final ResultListener<FiltersResponseEntity> resultListener) {
-        final Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getFilters();
-        call.enqueue(new ResponseEntityCallback<FiltersResponseEntity>(gson, resultListener) {
-            @Override
-            void handleResponseString(ResultListener<FiltersResponseEntity> resultListener, String responseString) {
-                FiltersResponseEntity filtersResponseEntity = new Gson().fromJson(responseString, FiltersResponseEntity.class);
-                resultListener.onSuccess(filtersResponseEntity);
-            }
-        });
-    }
-
     public void deleteUserComment(String commentId, @NonNull final ResultListener<Void> resultListener) {
         Map<String, String> map = getUserQueryMapRequest();
         final Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().deleteComment(commentId, map);
-        call.enqueue(new NoResponseEntityCallback(gson, resultListener));
-    }
-
-    public void postSendReportToComment(String reportType, String reportDescription, String commentId, @NonNull final ResultListener<Void> resultListener) {
-        final Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().reportComment(commentId, getReportRequest(reportType, reportDescription));
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 
@@ -282,6 +266,16 @@ public class DDScannerRestClient {
     }
 
     /*Methods using in API v2_0*/
+
+    public void postReportReview(ResultListener<Void> resultListener, ReportRequest reportRequest) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postReportReview(reportRequest);
+        call.enqueue(new NoResponseEntityCallback(gson, resultListener));
+    }
+
+    public void postDeleteReview(ResultListener<Void> resultListener, String reviewId) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postDeleteReview(reviewId);
+        call.enqueue(new NoResponseEntityCallback(gson, resultListener));
+    }
 
     public void getCommentsForDiveSpot(ResultListener<ArrayList<CommentEntity>> resultListener, String diveSpotId) {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getCommentsForDiveSpot(diveSpotId);
@@ -618,29 +612,6 @@ public class DDScannerRestClient {
                 resultListener.onSuccess(photos);
             }
         });
-    }
-
-    private ReportRequest getReportRequest(String reportType, String reportDescription) {
-        ReportRequest reportRequest = new ReportRequest();
-        reportRequest.setType(reportType);
-        reportRequest.setDescription(reportDescription);
-        if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().getToken().isEmpty()) {
-            reportRequest.setSocial(DDScannerApplication.getInstance().getSharedPreferenceHelper().getSn());
-            reportRequest.setToken(DDScannerApplication.getInstance().getSharedPreferenceHelper().getToken());
-        }
-        return reportRequest;
-    }
-
-    private ReportRequest getReportRequest(String reportType, String reportDescription, String imageName) {
-        ReportRequest reportRequest = new ReportRequest();
-        reportRequest.setType(reportType);
-        reportRequest.setDescription(reportDescription);
-        reportRequest.setName(imageName);
-        if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().getToken().isEmpty()) {
-            reportRequest.setSocial(DDScannerApplication.getInstance().getSharedPreferenceHelper().getSn());
-            reportRequest.setToken(DDScannerApplication.getInstance().getSharedPreferenceHelper().getToken());
-        }
-        return reportRequest;
     }
 
     private Map<String, String> getDivecentersRequestmap(LatLng latLng) {

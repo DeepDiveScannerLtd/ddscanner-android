@@ -127,7 +127,7 @@ public class ReviewImageSliderActivity extends AppCompatActivity implements View
         viewPager.addOnPageChangeListener(this);
         sliderImagesAdapter = new ReviewImageSLiderAdapter(getFragmentManager(), images);
         viewPager.setAdapter(sliderImagesAdapter);
-        DDScannerApplication.getInstance().getDdScannerRestClient().getReportTypes(filtersResponseEntityResultListener);
+      //  DDScannerApplication.getInstance().getDdScannerRestClient().getReportTypes(filtersResponseEntityResultListener);
         setUi();
 
     }

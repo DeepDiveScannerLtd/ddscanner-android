@@ -337,8 +337,11 @@ public interface DDScannerRestService {
             @Part("review") RequestBody review
     );
 
-    @POST("v2_0.divespot.review.delete")
+    @POST("v2_0/divespot.review.delete")
     Call<ResponseBody> postDeleteReview(@Query("id") String commentId);
+
+    @POST("/v2_0/divespot.review.report")
+    Call<ResponseBody> postReportReview(@Body ReportRequest reportRequest);
 
     @POST("v2_0/divespot.review.dislike")
     Call<ResponseBody> postDislikeReview(@Query("id") String commentId);
