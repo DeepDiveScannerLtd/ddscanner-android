@@ -44,12 +44,8 @@ public class DiveCenterProfileFragment extends BaseFragment implements LoginView
                     break;
                 case 0:
                     diveCenterProfile = result.getDiveCenter();
-                    diveCenterProfile.setType(0);
-                    diveCenterProfile.setToken(DDScannerApplication.getInstance().getSharedPreferenceHelper().getToken());
                     DDScannerApplication.getInstance().getSharedPreferenceHelper().setUserServerId(String.valueOf(diveCenterProfile.getId()));
                     DDScannerApplication.getInstance().getSharedPreferenceHelper().saveDiveCenter(diveCenterProfile);
-                    DDScannerApplication.getInstance().getSharedPreferenceHelper().setActiveUserType(result.getType());
-                    DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsDiveCenterLoggedIn(true);
                     binding.setDiveCenterViewModel(new DiveCenterProfileFragmentViewModel(diveCenterProfile));
                     break;
             }

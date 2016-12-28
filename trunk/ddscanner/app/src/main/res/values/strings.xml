@@ -387,4 +387,7 @@
     <string name="edit_profile_activity">Edit profile</string>
     <string name="logout_menu">LOGOUT</string>
     <string name="edit_comment">Edit Comment</string>
+    <string name="choose_address">choose address</string>
+    <string name="my_dive_spots">My dive spots</string>
+    <string name="add_ds">Add dive spot</string>
 </resources>

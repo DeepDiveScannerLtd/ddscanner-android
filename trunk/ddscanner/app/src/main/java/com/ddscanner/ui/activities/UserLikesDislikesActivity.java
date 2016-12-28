@@ -99,33 +99,21 @@ public class UserLikesDislikesActivity extends BaseAppCompatActivity implements 
         userId = getIntent().getStringExtra(Constants.USER_LIKES_ACTIVITY_INTENT_USER_ID);
         findViews();
         if (isLikes) {
+            setupToolbar(R.string.user_likes, R.id.toolbar);
             DDScannerApplication.getInstance().getDdScannerRestClient().getUserLikes(likesResultListener);
         } else {
+            setupToolbar(R.string.user_dislikes, R.id.toolbar);
             DDScannerApplication.getInstance().getDdScannerRestClient().getUserDislikes(dislikesResultListener);
         }
     }
 
     private void findViews() {
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
         recyclerView = (RecyclerView) findViewById(R.id.likesRecyclerView);
         progressView = (ProgressView) findViewById(R.id.progressBar);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
-        toolbarSettings();
     }
-    private void toolbarSettings() {
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);
-        if (!isLikes) {
-            getSupportActionBar().setTitle(R.string.user_dislikes);
-        } else {
-            getSupportActionBar().setTitle(R.string.user_likes);
-        }
-    }
-
-
 
     public static void showForResult(Activity context, boolean isLikes, String userId, int requestCode) {
         Intent intent = new Intent(context, UserLikesDislikesActivity.class);

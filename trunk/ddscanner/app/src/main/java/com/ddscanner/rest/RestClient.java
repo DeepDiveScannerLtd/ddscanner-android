@@ -31,7 +31,7 @@ public abstract class RestClient {
                         request = request.newBuilder()
                                // .addHeader("Accept", "application/vnd.trizeri.v1+json") // dev
                                 //   .addHeader("Content-Type", "application/json;charset=utf-8")
-                                .addHeader("Authorization", "Bearer " + DDScannerApplication.getInstance().getSharedPreferenceHelper().getToken())
+                                .addHeader("Authorization", "Bearer " + DDScannerApplication.getInstance().getSharedPreferenceHelper().getLoggedUserToken())
                                 .build();
                         Response response = chain.proceed(request);
                         return response;

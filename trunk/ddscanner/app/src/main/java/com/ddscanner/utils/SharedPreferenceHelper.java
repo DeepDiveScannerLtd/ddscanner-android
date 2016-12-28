@@ -39,6 +39,8 @@ public class SharedPreferenceHelper {
     private static final String LOGGED_TYPE = "LOGGED_TYPE";
     private static final String IS_DC_LOGGED_IN = "IS_DC_LOGGED_IN";
     private static final String IS_USER_LOGGED_IN = "IS_USER_LOGGED_IN";
+    private static final String DC_TOKEN = "DC_TOKEN";
+    private static final String USER_TOKEN= "USER_TOKEN";
 
 
     private static SharedPreferences prefs;
@@ -148,9 +150,10 @@ public class SharedPreferenceHelper {
     }
 
     public boolean isUserLoggedIn() {
-        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
-        Log.i(TAG, "isUserLoggedIn " + prefs.getBoolean(IS_USER_SIGNED_IN, false));
-        return prefs.getBoolean(IS_USER_SIGNED_IN, false);
+        if (getIsDcLoggedIn() || getIsUserLoggedIn()) {
+            return true;
+        }
+        return false;
     }
 
     public boolean isFirstLaunch() {
@@ -309,10 +312,10 @@ public class SharedPreferenceHelper {
     public String getLoggedUserToken() {
         switch (getActiveUserType()) {
             case 0:
-                return getLoggedDiveCenter().getToken();
+                return getDiveCenterToken();
             case 1:
             case 2:
-                return getUser().getToken();
+                return getUserToken();
             default:
                 return "";
         }
@@ -342,4 +345,45 @@ public class SharedPreferenceHelper {
         return prefs.getBoolean(IS_USER_LOGGED_IN, false);
     }
 
+    public void diveCenterLoggedIn(String token) {
+        setDiveCenterToken(token);
+        setIsDiveCenterLoggedIn(true);
+    }
+
+    public void userLoggedIn(String token) {
+        setUserToken(token);
+        setIsUserLoggedIn(true);
+    }
+
+    public void logoutUser() {
+        setIsUserLoggedIn(false);
+    }
+
+    public void logoutDiveCenter() {
+        setIsDiveCenterLoggedIn(false);
+    }
+
+    private void setDiveCenterToken(String token) {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        Editor editor = prefs.edit();
+        editor.putString(DC_TOKEN, token);
+        editor.commit();
+    }
+
+    public String getDiveCenterToken() {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        return prefs.getString(DC_TOKEN, "");
+    }
+
+    private void setUserToken(String token) {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        Editor editor = prefs.edit();
+        editor.putString(USER_TOKEN, token);
+        editor.commit();
+    }
+
+    public String getUserToken() {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        return prefs.getString(USER_TOKEN, "");
+    }
 }

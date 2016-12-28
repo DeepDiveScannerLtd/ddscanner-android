@@ -4,7 +4,9 @@
     <data>
 
         <import type="android.view.View" />
+
         <import type="android.text.TextUtils" />
+
         <import type="java.lang.String" />
 
         <variable
@@ -15,131 +17,174 @@
             name="handlers"
             type="com.ddscanner.screens.profile.edit.EditDiveCenterProfileActivity" />
     </data>
-<LinearLayout
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white"
-    android:orientation="vertical">
 
-    <include layout="@layout/view_toolbar" />
-
-    <ScrollView
+    <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
 
-        <LinearLayout
+        android:orientation="vertical">
+
+        <include layout="@layout/view_toolbar" />
+
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingLeft="20dp">
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:orientation="horizontal">
-
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="25dp">
-
-                    <LinearLayout
-                        android:id="@+id/attach_photo_btn"
-                        android:layout_width="65dp"
-                        android:layout_height="65dp"
-                        android:background="@drawable/gray_rectangle_attach"
-                        android:gravity="center">
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/ic_attach_camera" />
-                    </LinearLayout>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/attach_photo_btn"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="4dp"
-                        android:text="@string/change"
-                        android:textColor="#a3a3a3"
-                        android:textSize="12sp"
-                        android:textStyle="bold" />
-                </RelativeLayout>
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@color/white"
                     android:orientation="vertical">
 
-                    <com.rey.material.widget.EditText
-                        style="@style/DiveCenterProfileEditText"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/name" />
+                        android:layout_marginTop="15dp"
+                        android:orientation="horizontal"
+                        android:paddingLeft="20dp">
 
-                    <com.rey.material.widget.EditText
-                        android:id="@+id/country"
-                        style="@style/DiveCenterProfileEditText"
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="25dp">
+
+                            <LinearLayout
+                                android:id="@+id/attach_photo_btn"
+                                android:layout_width="65dp"
+                                android:layout_height="65dp"
+                                android:background="@drawable/gray_rectangle_attach"
+                                android:gravity="center">
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:src="@drawable/ic_attach_camera" />
+                            </LinearLayout>
+                        </RelativeLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <com.rey.material.widget.EditText
+                                style="@style/DiveCenterProfileEditText"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="@string/name" />
+
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/phones"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
-                        android:focusable="false"
-                        android:hint="@string/country_characteristic"
-                        android:onClick="@{handlers::pickCountryClicked}"/>
+                        android:orientation="vertical"
+                        android:paddingLeft="20dp"></LinearLayout>
+
+                    <TextView
+                        android:id="@+id/add_phone"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-medium"
+                        android:onClick="@{handlers::addPhoneClicked}"
+                        android:paddingBottom="8dp"
+                        android:paddingLeft="20dp"
+                        android:paddingRight="100dp"
+                        android:paddingTop="8dp"
+                        android:text="@string/add_phone"
+                        android:textColor="@color/primary"
+                        android:textSize="14sp" />
+
+                    <LinearLayout
+                        android:id="@+id/emails"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingLeft="20dp"></LinearLayout>
+
+                    <TextView
+                        android:id="@+id/add_email"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-medium"
+                        android:onClick="@{handlers::addEmailClicked}"
+                        android:paddingBottom="8dp"
+                        android:paddingLeft="20dp"
+                        android:paddingRight="100dp"
+                        android:paddingTop="8dp"
+                        android:text="@string/add_e_mail"
+                        android:textColor="@color/primary"
+                        android:textSize="14sp" />
+
+                    <ImageView style="@style/DividerStyleFull" />
+
+                    <Button
+                        android:id="@+id/pick_address_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"
+                        android:layout_margin="20dp"
+                        android:background="@drawable/border_button_blue_2px"
+                        android:text="@string/choose_address"
+                        android:textColor="#c4ceee"
+                        android:onClick="@{handlers::chooseAddressClicked}"/>
+
+                    <ImageView style="@style/DividerStyleFull" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:paddingLeft="20dp"
+                        android:text="@string/my_dive_spots"
+                        android:textColor="#bbbbbb"
+                        android:textSize="12sp" />
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/dive_spot_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="3dp" />
+
+                    <LinearLayout
+                        android:id="@+id/add_dive_spot_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/add_photo_background"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:onClick="@{handlers::addDiveSpotClicked}">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_addds_plus_sl" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="3dp"
+                            android:text="@string/add_ds"
+                            android:textColor="#a9a9a9" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_marginTop="20dp"
+                        style="@style/DividerStyleFull" />
+
                 </LinearLayout>
             </LinearLayout>
-
-            <com.rey.material.widget.EditText
-                style="@style/DiveCenterProfileEditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:hint="@string/address" />
-
-            <LinearLayout
-                android:id="@+id/phones"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-            </LinearLayout>
-
-            <TextView
-                android:onClick="@{handlers::addPhoneClicked}"
-                android:id="@+id/add_phone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-medium"
-                android:paddingBottom="8dp"
-                android:paddingRight="100dp"
-                android:paddingTop="8dp"
-                android:text="@string/add_phone"
-                android:textColor="@color/primary"
-                android:textSize="14sp" />
-
-            <LinearLayout
-                android:id="@+id/emails"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/add_email"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-medium"
-                android:paddingBottom="8dp"
-                android:paddingRight="100dp"
-                android:paddingTop="8dp"
-                android:text="@string/add_e_mail"
-                android:textColor="@color/primary"
-                android:textSize="14sp"
-                android:onClick="@{handlers::addEmailClicked}"/>
-        </LinearLayout>
-    </ScrollView>
-</LinearLayout>
-    </layout>
+        </ScrollView>
+    </LinearLayout>
+</layout>

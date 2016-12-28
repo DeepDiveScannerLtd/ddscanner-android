@@ -38,16 +38,6 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
         setupToolbar(R.string.edit_profile_activity, R.id.toolbar, R.menu.edit_profile_menu);
         addPhoneClicked(null);
         addEmailClicked(null);
-        setuoUi();
-    }
-
-    private void setuoUi() {
-        binding.country.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.i("213", "3123");
-            }
-        });
     }
 
     public void addEmailClicked(View view) {
@@ -62,6 +52,14 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
         editText.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
         phonesEditTexts.add(editText);
         binding.phones.addView(editText);
+    }
+
+    public void addDiveSpotClicked(View view) {
+
+    }
+
+    public void chooseAddressClicked(View view) {
+
     }
 
     public void pickCountryClicked(View view) {

@@ -83,18 +83,15 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         public void onSuccess(SignUpResponseEntity result) {
             materialDialog.dismiss();
             Log.i(TAG, "onSuccess: ");
-            DDScannerApplication.getInstance().getSharedPreferenceHelper().setToken(result.getToken());
-            DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsUserSignedIn(true, SignInType.EMAIL);
-            DDScannerApplication.getInstance().getSharedPreferenceHelper().setUserServerId(result.getId());
             switch (result.getType()) {
                 case 0:
-                    DDScannerApplication.getInstance().getSharedPreferenceHelper().setActiveUserType(result.getType());
-                    DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsDiveCenterLoggedIn(true);
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().diveCenterLoggedIn(result.getToken());
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().setActiveUserType(0);
                     break;
                 case 1:
                 case 2:
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().userLoggedIn(result.getToken());
                     DDScannerApplication.getInstance().getSharedPreferenceHelper().setActiveUserType(result.getType());
-                    DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsUserLoggedIn(true);
                     break;
             }
 

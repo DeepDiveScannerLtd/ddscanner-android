@@ -31,6 +31,8 @@ import java.util.HashSet;
 public class BaseAppCompatActivity extends AppCompatActivity {
 
     private static final String TAG = BaseAppCompatActivity.class.getName();
+    public static final int RESULT_CODE_PROFILE_LOGOUT = 1010;
+
 
     private LocationHelper locationHelper;
     private HashSet<Integer> requestCodes = new HashSet<>();
