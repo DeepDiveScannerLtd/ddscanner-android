@@ -32,6 +32,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
+import com.ddscanner.entities.Comment;
 import com.ddscanner.entities.CommentEntity;
 import com.ddscanner.entities.CommentOld;
 import com.ddscanner.events.AddPhotoDoListEvent;
@@ -72,7 +73,7 @@ public class EditCommentActivity extends BaseAppCompatActivity implements InfoDi
     private RecyclerView photosRecyclerView;
     private EditSpotPhotosListAdapter editSpotPhotosListAdapter;
     private Map<String, TextView> errorsMap = new HashMap<>();
-    private CommentEntity comment;
+    private Comment comment;
     private ArrayList<String> deleted = new ArrayList<>();
 
     private DDScannerRestClient.ResultListener<Void> editCommentResultListener = new DDScannerRestClient.ResultListener<Void>() {
@@ -111,7 +112,7 @@ public class EditCommentActivity extends BaseAppCompatActivity implements InfoDi
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_leave_review);
-        comment = new Gson().fromJson(getIntent().getStringExtra("COMMENT"), CommentEntity.class);
+        comment = new Gson().fromJson(getIntent().getStringExtra("COMMENT"), Comment.class);
         editSpotPhotosListAdapter = new EditSpotPhotosListAdapter(this);
         setupToolbar(R.string.edit_comment, R.id.toolbar, R.menu.menu_add_review);
         findViews();
@@ -124,12 +125,12 @@ public class EditCommentActivity extends BaseAppCompatActivity implements InfoDi
         photosRecyclerView.setHasFixedSize(false);
         photosRecyclerView.setLayoutManager(layoutManager);
         photosRecyclerView.setAdapter(editSpotPhotosListAdapter);
-        if (comment.getComment().getPhotos() != null) {
-            editSpotPhotosListAdapter.addServerPhoto(comment.getComment().getPhotos());
+        if (comment.getPhotos() != null) {
+            editSpotPhotosListAdapter.addServerPhoto(comment.getPhotos());
            // setRcSettings();
         }
-        ratingBar.setRating(Integer.parseInt(comment.getComment().getRating()));
-        text.setText(comment.getComment().getReview());
+        ratingBar.setRating(Integer.parseInt(comment.getRating()));
+        text.setText(comment.getReview());
 
     }
 
@@ -192,7 +193,7 @@ public class EditCommentActivity extends BaseAppCompatActivity implements InfoDi
         DDScannerApplication.bus.unregister(this);
     }
 
-    public static void showForResult(Activity context, CommentEntity comment, int requestCode) {
+    public static void showForResult(Activity context, Comment comment, int requestCode) {
         Intent intent = new Intent(context, EditCommentActivity.class);
         intent.putExtra("COMMENT", new Gson().toJson(comment));
         context.startActivityForResult(intent, requestCode);
@@ -253,7 +254,7 @@ public class EditCommentActivity extends BaseAppCompatActivity implements InfoDi
                 deletedImages.add(MultipartBody.Part.createFormData("deleted_photos[]", deleted.get(i)));
             }
         }
-        DDScannerApplication.getInstance().getDdScannerRestClient().postUpdateReview(editCommentResultListener, newImages, deletedImages, Helpers.createRequestBodyForString(comment.getComment().getId()), Helpers.createRequestBodyForString(String.valueOf(Math.round(ratingBar.getRating()))), Helpers.createRequestBodyForString( text.getText().toString().trim()));
+        DDScannerApplication.getInstance().getDdScannerRestClient().postUpdateReview(editCommentResultListener, newImages, deletedImages, Helpers.createRequestBodyForString(comment.getId()), Helpers.createRequestBodyForString(String.valueOf(Math.round(ratingBar.getRating()))), Helpers.createRequestBodyForString( text.getText().toString().trim()));
     }
 
     @Override

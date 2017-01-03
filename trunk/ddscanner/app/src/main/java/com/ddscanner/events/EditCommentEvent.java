@@ -1,20 +1,21 @@
 package com.ddscanner.events;
 
+import com.ddscanner.entities.Comment;
 import com.ddscanner.entities.CommentEntity;
-import com.ddscanner.entities.CommentOld;
+import com.ddscanner.entities.SelfCommentEntity;
 
 /**
  * Created by lashket on 9.8.16.
  */
 public class EditCommentEvent {
 
-    private CommentEntity commentOld;
+    private Comment comment;
 
-    public EditCommentEvent(CommentEntity commentOld) {
-        this.commentOld = commentOld;
+    public EditCommentEvent(Comment commentOld) {
+        this.comment = commentOld;
     }
 
-    public CommentEntity getComment() {
-        return this.commentOld;
+    public Comment getComment() {
+        return this.comment;
     }
 }

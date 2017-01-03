@@ -315,6 +315,18 @@ public interface DDScannerRestService {
             @Part("diving_skill") RequestBody skill
     );
 
+    @Multipart
+    @POST("v2_0/user.profile.update")
+    Call<ResponseBody> postUpdateDiveCenterProfile(
+            @Part MultipartBody.Part image,
+            @Part("name") RequestBody name,
+            @Part("country") RequestBody country,
+            @Part("addresses") RequestBody adresses,
+            @Part("service") RequestBody service,
+            @Part List<MultipartBody.Part> emails,
+            @Part List<MultipartBody.Part> phones
+    );
+
     @GET("v2_0/countries.get")
     Call<ResponseBody> getListCountries();
 
@@ -375,4 +387,8 @@ public interface DDScannerRestService {
 
     @GET("v2_0/divespot.reviews.get")
     Call<ResponseBody> getCommentsForDiveSpot(@Query("id") String diveSpotId);
+
+    @GET("v2_0/user.reviews.get")
+    Call<ResponseBody> getSelfCommentsList();
+
 }

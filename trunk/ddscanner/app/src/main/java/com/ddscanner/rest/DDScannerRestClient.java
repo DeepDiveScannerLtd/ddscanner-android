@@ -24,6 +24,7 @@ import com.ddscanner.entities.ProfileResponseEntity;
 import com.ddscanner.entities.RegisterResponse;
 import com.ddscanner.entities.Sealife;
 import com.ddscanner.entities.SealifeShort;
+import com.ddscanner.entities.SelfCommentEntity;
 import com.ddscanner.entities.SignInType;
 import com.ddscanner.entities.SignUpResponseEntity;
 import com.ddscanner.entities.Translation;
@@ -186,12 +187,6 @@ public class DDScannerRestClient {
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 
-    public void deleteUserComment(String commentId, @NonNull final ResultListener<Void> resultListener) {
-        Map<String, String> map = getUserQueryMapRequest();
-        final Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().deleteComment(commentId, map);
-        call.enqueue(new NoResponseEntityCallback(gson, resultListener));
-    }
-
     public void postLikeReview(String commentId, @NonNull final ResultListener<Void> resultListener) {
         final Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().likeComment(commentId, getRegisterRequest());
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
@@ -267,6 +262,23 @@ public class DDScannerRestClient {
     }
 
     /*Methods using in API v2_0*/
+
+    public void postUpdateDiveCenterProfile(ResultListener<Void> resultListener, MultipartBody.Part image, List<MultipartBody.Part> emails, List<MultipartBody.Part> phones, RequestBody... requestBodies) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postUpdateDiveCenterProfile(image, requestBodies[0], requestBodies[1], requestBodies[2], requestBodies[3], emails, phones);
+        call.enqueue(new NoResponseEntityCallback(gson, resultListener));
+    }
+
+    public void getUsersSelfComments(ResultListener<ArrayList<SelfCommentEntity>> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getSelfCommentsList();
+        call.enqueue(new ResponseEntityCallback<ArrayList<SelfCommentEntity>>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<ArrayList<SelfCommentEntity>> resultListener, String responseString) throws JSONException {
+                Type listType = new TypeToken<ArrayList<SelfCommentEntity>>(){}.getType();
+                ArrayList<SelfCommentEntity> comments = gson.fromJson(responseString, listType);
+                resultListener.onSuccess(comments);
+            }
+        });
+    }
 
     public void getUserLikes(ResultListener<ArrayList<UserLikeEntity>> resultListener) {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserLikes();

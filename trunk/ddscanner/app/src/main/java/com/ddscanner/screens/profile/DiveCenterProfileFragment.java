@@ -20,6 +20,7 @@ import com.ddscanner.databinding.ViewDivecenterProfileBinding;
 import com.ddscanner.entities.DiveCenterProfile;
 import com.ddscanner.entities.ProfileResponseEntity;
 import com.ddscanner.entities.User;
+import com.ddscanner.events.ChangePageOfMainViewPagerEvent;
 import com.ddscanner.events.LoadUserProfileInfoEvent;
 import com.ddscanner.events.LoggedOutEvent;
 import com.ddscanner.rest.DDScannerRestClient;
@@ -28,10 +29,12 @@ import com.ddscanner.ui.activities.MainActivity;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.ui.fragments.BaseFragment;
 import com.ddscanner.ui.views.LoginView;
+import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogsRequestCodes;
+import com.google.gson.Gson;
 import com.squareup.otto.Subscribe;
 
-public class DiveCenterProfileFragment extends BaseFragment implements LoginView.LoginStateChangeListener{
+public class DiveCenterProfileFragment extends BaseFragment implements LoginView.LoginStateChangeListener, InfoDialogFragment.DialogClosedListener{
 
     private DiveCenterProfile diveCenterProfile;
     private ViewDivecenterProfileBinding binding;
@@ -142,7 +145,15 @@ public class DiveCenterProfileFragment extends BaseFragment implements LoginView
     }
 
     public void editProfileButtonClicked(View view) {
-        EditDiveCenterProfileActivity.showForResult(getActivity(), "", 1);
+        EditDiveCenterProfileActivity.showForResult(getActivity(), new Gson().toJson(diveCenterProfile), ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_SHOW_EDIT_DC_PROFILE_ACTIVITY);
     }
 
+    @Override
+    public void onDialogClosed(int requestCode) {
+        switch (requestCode) {
+            case DialogsRequestCodes.DRC_PROFILE_FRAGMENT_FAILED_TO_CONNECT:
+                DDScannerApplication.bus.post(new ChangePageOfMainViewPagerEvent(0));
+                break;
+        }
+    }
 }

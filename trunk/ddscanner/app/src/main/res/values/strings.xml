@@ -390,4 +390,6 @@
     <string name="choose_address">choose address</string>
     <string name="my_dive_spots">My dive spots</string>
     <string name="add_ds">Add dive spot</string>
+    <string name="open_map">open map</string>
+    <string name="addressd">Address</string>
 </resources>

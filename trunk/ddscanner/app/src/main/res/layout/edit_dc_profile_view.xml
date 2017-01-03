@@ -61,9 +61,12 @@
                                 android:gravity="center">
 
                                 <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:src="@drawable/ic_attach_camera" />
+                                    android:id="@+id/pick_photos"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:scaleType="center"
+                                    android:src="@drawable/ic_attach_camera"
+                                    android:onClick="@{handlers::changePhotoButtonCLicked}"/>
                             </LinearLayout>
                         </RelativeLayout>
 
@@ -77,7 +80,9 @@
                                 style="@style/DiveCenterProfileEditText"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:hint="@string/name" />
+                                android:id="@+id/name"
+                                android:hint="@string/name"
+                                android:text="@{profileFragmentViewModel.diveCenterProfile.name}"/>
 
                         </LinearLayout>
                     </LinearLayout>
@@ -126,6 +131,13 @@
 
                     <ImageView style="@style/DividerStyleFull" />
 
+                    <LinearLayout
+                        android:id="@+id/addresses"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingLeft="20dp"></LinearLayout>
+
                     <Button
                         android:id="@+id/pick_address_button"
                         android:layout_width="match_parent"
@@ -145,7 +157,7 @@
                         android:paddingLeft="20dp"
                         android:text="@string/my_dive_spots"
                         android:textColor="#bbbbbb"
-                        android:textSize="12sp" />
+                        android:textSize="15sp" />
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/dive_spot_list"
@@ -182,8 +194,15 @@
                     <ImageView
                         android:layout_marginTop="20dp"
                         style="@style/DividerStyleFull" />
-
                 </LinearLayout>
+                <Button
+                    android:layout_margin="20dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:text="@string/save_changes"
+                    android:background="@drawable/border_button_orange_2px"
+                    android:onClick="@{handlers::saveChangesClicked}"/>
+
             </LinearLayout>
         </ScrollView>
     </LinearLayout>

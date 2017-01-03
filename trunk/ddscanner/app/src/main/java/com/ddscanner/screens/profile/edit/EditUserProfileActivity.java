@@ -24,7 +24,6 @@ import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.adapters.DiverLevelSpinnerAdapter;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
-import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
@@ -201,7 +200,7 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
 
     /*Called when user clicked pick photo from gallery button*/
     public void pickPhotoFromGallery(View view) {
-        pickSinlePhotoFromGallery();
+        pickSinglePhotoFromGallery();
     }
 
     /*Called when user try to pick photo from camera*/

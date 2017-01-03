@@ -98,7 +98,7 @@ public class BaseAppCompatActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    public void pickSinlePhotoFromGallery() {
+    public void pickSinglePhotoFromGallery() {
         if (checkReadStoragePermission(this)) {
             pickphotoFromGallery();
         } else {

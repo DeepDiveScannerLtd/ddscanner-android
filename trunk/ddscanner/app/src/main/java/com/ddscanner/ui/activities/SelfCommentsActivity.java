@@ -17,6 +17,7 @@ import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.CommentOld;
 import com.ddscanner.entities.Comments;
+import com.ddscanner.entities.SelfCommentEntity;
 import com.ddscanner.events.DeleteCommentEvent;
 import com.ddscanner.events.EditCommentEvent;
 import com.ddscanner.events.ShowLoginActivityIntent;
@@ -42,17 +43,15 @@ public class SelfCommentsActivity extends AppCompatActivity implements InfoDialo
     private FloatingActionButton leaveReview;
 
     private String commentToDelete;
-    private String userId;
-    private String path;
 
-    private DDScannerRestClient.ResultListener<Comments> commentsResultListener = new DDScannerRestClient.ResultListener<Comments>() {
+    private DDScannerRestClient.ResultListener<ArrayList<SelfCommentEntity>> commentsResultListener = new DDScannerRestClient.ResultListener<ArrayList<SelfCommentEntity>>() {
         @Override
-        public void onSuccess(Comments result) {
-            Comments comments = result;
+        public void onSuccess(ArrayList<SelfCommentEntity> result) {
+           // Comments comments = result;
             progressView.setVisibility(View.GONE);
             commentsRc.setVisibility(View.VISIBLE);
-            path = comments.getDiveSpotPathMedium();
-            commentsRc.setAdapter(new SelfReviewsListAdapter((ArrayList<CommentOld>) comments.getCommentOlds(), SelfCommentsActivity.this, comments.getDiveSpotPathMedium()));
+           // path = comments.getDiveSpotPathMedium();
+            commentsRc.setAdapter(new SelfReviewsListAdapter(result, SelfCommentsActivity.this));
         }
 
         @Override
@@ -107,7 +106,6 @@ public class SelfCommentsActivity extends AppCompatActivity implements InfoDialo
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reviews);
-        userId = getIntent().getStringExtra(Constants.SELF_REVIEWS_ACTIVITY_INTENT_USER_ID);
         findViews();
         getComments();
     }
@@ -131,12 +129,11 @@ public class SelfCommentsActivity extends AppCompatActivity implements InfoDialo
     private void getComments() {
         commentsRc.setVisibility(View.GONE);
         progressView.setVisibility(View.VISIBLE);
-        DDScannerApplication.getInstance().getDdScannerRestClient().getUsersComments(userId, commentsResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient().getUsersSelfComments(commentsResultListener);
     }
 
-    public static void show(Context context, String userId) {
+    public static void show(Context context) {
         Intent intent = new Intent(context, SelfCommentsActivity.class);
-        intent.putExtra(Constants.SELF_REVIEWS_ACTIVITY_INTENT_USER_ID, userId);
         context.startActivity(intent);
     }
 
@@ -182,7 +179,7 @@ public class SelfCommentsActivity extends AppCompatActivity implements InfoDialo
 
     private void deleteUsersComment(String id) {
         commentToDelete = id;
-        DDScannerApplication.getInstance().getDdScannerRestClient().deleteUserComment(id, deleteCommentResulListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient().postDeleteReview(deleteCommentResulListener, id);
     }
 
     @Subscribe

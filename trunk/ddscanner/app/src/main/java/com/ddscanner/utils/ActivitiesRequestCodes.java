@@ -174,4 +174,9 @@ public class ActivitiesRequestCodes {
     public static final int BASE_PICK_PHOTOS_ACTIVITY_PERMISSIO_READ_STORAGE = 4102;
     public static final int BASE_PICK_PHOTOS_ACTIVITY_PICK_PHOTO_FROM_CAMERA = 4103;
     public static final int BASE_PICK_PHOTOS_ACTIVITY_PICK_PHOTO_FROM_GALLERY = 4104;
+
+    //Edit dive center profile activity
+    public static final int EDIT_DIVE_CENTER_ACTIVITY_ADD_SPOT = 4201;
+    public static final int EDIT_DIVE_CENTER_ACTIVITY_PICK_LOCATION = 4202;
+
 }

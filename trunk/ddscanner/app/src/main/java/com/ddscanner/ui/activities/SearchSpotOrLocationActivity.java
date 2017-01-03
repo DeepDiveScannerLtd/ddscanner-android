@@ -18,12 +18,14 @@ import android.view.View;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
+import com.ddscanner.entities.DiveSpotChosedFromSearch;
 import com.ddscanner.entities.DiveSpotShort;
 import com.ddscanner.events.GoToMyLocationButtonClickedEvent;
 import com.ddscanner.events.LocationChosedEvent;
 import com.ddscanner.events.OpenAddDsActivityAfterLogin;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.divespot.add.AddDiveSpotActivity;
+import com.ddscanner.screens.divespot.details.DiveSpotDetailsActivity;
 import com.ddscanner.ui.adapters.CustomPagerAdapter;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.ui.fragments.SearchDiveSpotsFragment;
@@ -232,7 +234,9 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
     protected void onStart() {
         super.onStart();
         DDScannerApplication.bus.register(this);
-        googleApiClient.connect();
+        if (!isForDiveCenter) {
+            googleApiClient.connect();
+        }
     }
 
     private void setResultOfActivity(LatLngBounds latLngBounds) {
@@ -351,4 +355,17 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
                 break;
         }
     }
+
+    @Subscribe
+    public void diveSpotChosed(DiveSpotChosedFromSearch event) {
+        if (isForDiveCenter) {
+            Intent intent = new Intent();
+            intent.putExtra("divespot",event.getDiveSpot());
+            setResult(RESULT_OK, intent);
+            finish();
+            return;
+        }
+        DiveSpotDetailsActivity.show(this, String.valueOf(event.getDiveSpot().getId()), EventsTracker.SpotViewSource.FROM_SEARCH);
+    }
+
 }

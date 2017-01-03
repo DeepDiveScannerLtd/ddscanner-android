@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
+import com.ddscanner.entities.Comment;
 import com.ddscanner.entities.CommentEntity;
 import com.ddscanner.events.DeleteCommentEvent;
 import com.ddscanner.events.DislikeCommentEvent;
@@ -234,7 +235,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
             switch (menuItem.getItemId()) {
                 case R.id.comment_edit:
                     EventsTracker.trackEditReview();
-                    DDScannerApplication.bus.post(new EditCommentEvent(commentEntity));
+                    DDScannerApplication.bus.post(new EditCommentEvent( commentEntity.getComment()));
                     return true;
                 case R.id.comment_delete:
                     EventsTracker.trackDeleteReview();

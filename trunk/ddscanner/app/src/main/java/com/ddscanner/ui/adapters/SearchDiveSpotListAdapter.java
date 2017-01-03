@@ -7,8 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
+import com.ddscanner.entities.DiveSpotChosedFromSearch;
 import com.ddscanner.entities.DiveSpotShort;
 import com.ddscanner.screens.divespot.details.DiveSpotDetailsActivity;
 
@@ -62,7 +64,7 @@ public class SearchDiveSpotListAdapter extends RecyclerView.Adapter<SearchDiveSp
 
         @Override
         public void onClick(View v) {
-            DiveSpotDetailsActivity.show(context, String.valueOf(diveSpotShorts.get(getAdapterPosition()).getId()), EventsTracker.SpotViewSource.FROM_SEARCH);
+            DDScannerApplication.bus.post(new DiveSpotChosedFromSearch(diveSpotShorts.get(getAdapterPosition())));
         }
     }
 }

@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.CommentOld;
+import com.ddscanner.entities.SelfCommentEntity;
 import com.ddscanner.events.DeleteCommentEvent;
 import com.ddscanner.events.EditCommentEvent;
 import com.ddscanner.screens.divespot.details.DiveSpotDetailsActivity;
@@ -31,14 +32,12 @@ import java.util.ArrayList;
  */
 public class SelfReviewsListAdapter extends RecyclerView.Adapter<SelfReviewsListAdapter.SelfReviewsListViewHolder>{
 
-    private ArrayList<CommentOld> commentOlds;
+    private ArrayList<SelfCommentEntity> comments;
     private Context context;
-    private String diveSpotPath;
 
-    public SelfReviewsListAdapter(ArrayList<CommentOld> commentOlds, Context context, String diveSpotPath) {
-        this.commentOlds = commentOlds;
+    public SelfReviewsListAdapter(ArrayList<SelfCommentEntity> comments, Context context) {
+        this.comments = comments;
         this.context = context;
-        this.diveSpotPath = diveSpotPath;
     }
 
     @Override
@@ -52,85 +51,86 @@ public class SelfReviewsListAdapter extends RecyclerView.Adapter<SelfReviewsList
     @Override
     public void onBindViewHolder(final SelfReviewsListViewHolder holder, final int position) {
         holder.rating.removeAllViews();
-        if (commentOlds.get(holder.getAdapterPosition()).getImages() != null) {
+        final SelfCommentEntity comment = comments.get(position);
+        if (comment.getPhotos() != null) {
             LinearLayoutManager layoutManager = new LinearLayoutManager(context);
             layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
             holder.photos.setNestedScrollingEnabled(false);
             holder.photos.setHasFixedSize(false);
             holder.photos.setLayoutManager(layoutManager);
-//            holder.photos.setAdapter(new ReviewPhotosAdapter((ArrayList<String>) commentOlds.get(holder.getAdapterPosition()).getImages(), context, diveSpotPath, false, holder.getAdapterPosition()));
+            holder.photos.setAdapter(new ReviewPhotosAdapter(comment.getPhotos(), context, false, holder.getAdapterPosition()));
         } else {
             holder.photos.setAdapter(null);
         }
-        holder.user_name.setText(commentOlds.get(holder.getAdapterPosition()).getDiveSpotName());
-        holder.user_review.setText(commentOlds.get(holder.getAdapterPosition()).getComment());
-        holder.likesCount.setText(Helpers.formatLikesCommentsCountNumber(commentOlds.get(holder.getAdapterPosition()).getLikes()));
-        holder.dislikesCount.setText(Helpers.formatLikesCommentsCountNumber(commentOlds.get(holder.getAdapterPosition()).getDislikes()));
-        if (commentOlds.get(position).getDiveSpotImage() == null) {
+        holder.user_name.setText(comment.getDiveSpot().getName());
+        holder.user_review.setText(comment.getReview());
+        holder.likesCount.setText(Helpers.formatLikesCommentsCountNumber(comment.getLikes()));
+        holder.dislikesCount.setText(Helpers.formatLikesCommentsCountNumber(comment.getDislikes()));
+        if (comment.getDiveSpot().getImage() == null) {
             holder.user_avatar.setImageResource(R.drawable.list_photo_default);
         } else {
             Picasso.with(context)
-                    .load(diveSpotPath + commentOlds.get(position).getDiveSpotImage())
+                    .load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, comment.getDiveSpot().getImage(), "1"))
                     .resize(Math.round(Helpers.convertDpToPixel(40, context)),Math.round(Helpers.convertDpToPixel(40, context)))
                     .centerCrop()
                     .placeholder(R.drawable.list_photo_default)
                     .transform(new TransformationRoundImage(4,0))
                     .into(holder.user_avatar);
         }
-        for (int k = 0; k < Integer.parseInt(commentOlds.get(holder.getAdapterPosition()).getRating()); k++) {
+        for (int k = 0; k < Integer.parseInt(comment.getRating()); k++) {
             ImageView iv = new ImageView(context);
             iv.setImageResource(R.drawable.ic_list_star_full);
             iv.setPadding(0, 0, 5, 0);
             holder.rating.addView(iv);
         }
-        for (int k = 0; k < 5 - Integer.parseInt(commentOlds.get(holder.getAdapterPosition()).getRating()); k++) {
+        for (int k = 0; k < 5 - Integer.parseInt(comment.getRating()); k++) {
             ImageView iv = new ImageView(context);
             iv.setImageResource(R.drawable.ic_list_star_empty);
             iv.setPadding(0, 0, 5, 0);
             holder.rating.addView(iv);
         }
-        if (commentOlds.get(position).getDate() != null && !commentOlds.get(position).getDate().isEmpty()) {
-            holder.date.setText(Helpers.getCommentDate(commentOlds.get(position).getDate()));
+        if (comment.getDate() != null && !comment.getDate().isEmpty()) {
+            holder.date.setText(Helpers.getCommentDate(comment.getDate()));
         }
         holder.menu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showPopupMenu(holder.menu, Integer.parseInt(commentOlds.get(position).getId()), commentOlds.get(position));
+                showPopupMenu(holder.menu, Integer.parseInt(comment.getId()), comments.get(position));
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        if (commentOlds == null) {
+        if (comments == null) {
             return 0;
         }
-        return commentOlds.size();
+        return comments.size();
     }
 
-    private void showPopupMenu(View view, int commentId, CommentOld commentOld) {
+    private void showPopupMenu(View view, int commentId, SelfCommentEntity selfCommentEntity) {
         PopupMenu popup = new PopupMenu(context, view);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.menu_comment, popup.getMenu());
-        popup.setOnMenuItemClickListener(new MenuItemClickListener(commentId, commentOld));
+        popup.setOnMenuItemClickListener(new MenuItemClickListener(commentId, selfCommentEntity));
         popup.show();
     }
 
     class MenuItemClickListener implements PopupMenu.OnMenuItemClickListener {
 
         private int commentId;
-        private CommentOld commentOld;
+        private SelfCommentEntity selfCommentEntity;
 
-        public MenuItemClickListener(int commentId, CommentOld commentOld) {
+        public MenuItemClickListener(int commentId, SelfCommentEntity selfCommentEntity) {
             this.commentId = commentId;
-            this.commentOld = commentOld;
+            this.selfCommentEntity = selfCommentEntity;
         }
 
         @Override
         public boolean onMenuItemClick(MenuItem menuItem) {
             switch (menuItem.getItemId()) {
                 case R.id.comment_edit:
-//                    DDScannerApplication.bus.post(new EditCommentEvent(commentOld));
+                    DDScannerApplication.bus.post(new EditCommentEvent(selfCommentEntity));
                     return true;
                 case R.id.comment_delete:
                     DDScannerApplication.bus.post(new DeleteCommentEvent(commentId));
@@ -181,7 +181,7 @@ public class SelfReviewsListAdapter extends RecyclerView.Adapter<SelfReviewsList
         @Override
         public void onClick(View view) {
             if (view.getId() == R.id.user_avatar) {
-                DiveSpotDetailsActivity.show(context, commentOlds.get(getAdapterPosition()).getDiveSpotId(), null);
+                DiveSpotDetailsActivity.show(context, String.valueOf(comments.get(getAdapterPosition()).getDiveSpot().getId()), null);
             }
         }
     }

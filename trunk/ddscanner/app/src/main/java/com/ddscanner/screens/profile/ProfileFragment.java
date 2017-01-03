@@ -45,6 +45,7 @@ import com.ddscanner.ui.activities.AboutActivity;
 import com.ddscanner.events.ChangeLoginViewEvent;
 import com.ddscanner.ui.activities.DiveSpotsListActivity;
 import com.ddscanner.ui.activities.MainActivity;
+import com.ddscanner.ui.activities.SelfCommentsActivity;
 import com.ddscanner.ui.adapters.AchievmentProfileListAdapter;
 import com.ddscanner.ui.adapters.CharacteristicSpinnerItemsAdapter;
 import com.ddscanner.ui.adapters.DiverLevelSpinnerAdapter;
@@ -287,7 +288,7 @@ public class ProfileFragment extends BaseFragment implements LoginView.LoginStat
 
     public void showComments(View view) {
         if (binding.getProfileFragmentViewModel().getUser().getCounters().getCommentsCount() > 0) {
-            //TODO show comments activity
+            SelfCommentsActivity.show(getContext());
         }
     }
 
