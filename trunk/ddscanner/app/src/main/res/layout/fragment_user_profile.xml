@@ -21,6 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
         <ScrollView
             android:id="@+id/about"
             android:layout_width="match_parent"
@@ -45,12 +46,12 @@
 
                         <ImageView
                             android:id="@+id/user_avatar"
-                            app:loadImageFrom="@{userProfileViewModel}"
                             android:layout_width="80dp"
                             android:layout_height="80dp"
                             android:layout_marginLeft="20dp"
                             android:layout_marginRight="20dp"
-                            android:src="@drawable/avatar_profile_default" />
+                            android:src="@drawable/avatar_profile_default"
+                            app:loadImageFrom="@{userProfileViewModel}" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -95,12 +96,12 @@
 
                         <LinearLayout
                             android:id="@+id/comments_layout"
-                            app:layout_widthPercent="33%"
                             android:layout_height="64dp"
                             android:layout_alignParentLeft="true"
                             android:background="?attr/selectableItemBackground"
                             android:gravity="center"
-                            android:orientation="vertical">
+                            android:orientation="vertical"
+                            app:layout_widthPercent="33%">
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -113,16 +114,16 @@
                             <TextView
                                 android:id="@+id/user_comments"
                                 style="@style/ProfileNumberDivespotsSrtyle"
-                                tools:text="321"
-                                android:text="@{String.valueOf(userProfileViewModel.user.counters.commentsCount)}" />
+                                android:text="@{String.valueOf(userProfileViewModel.user.counters.commentsCount)}"
+                                tools:text="321" />
                         </LinearLayout>
 
                         <RelativeLayout
                             android:id="@+id/likeLayout"
-                            app:layout_widthPercent="33%"
                             android:layout_height="64dp"
                             android:layout_centerHorizontal="true"
-                            android:background="?attr/selectableItemBackground">
+                            android:background="?attr/selectableItemBackground"
+                            app:layout_widthPercent="33%">
 
                             <LinearLayout
                                 android:layout_width="wrap_content"
@@ -143,19 +144,19 @@
                                 <TextView
                                     android:id="@+id/user_likes"
                                     style="@style/ProfileNumberDivespotsSrtyle"
-                                    tools:text="321"
-                                    android:text="@{String.valueOf(userProfileViewModel.user.counters.likesCount)}" />
+                                    android:text="@{String.valueOf(userProfileViewModel.user.counters.likesCount)}"
+                                    tools:text="321" />
                             </LinearLayout>
                         </RelativeLayout>
 
                         <LinearLayout
                             android:id="@+id/dislikeLayout"
-                            app:layout_widthPercent="33%"
                             android:layout_height="64dp"
                             android:layout_alignParentRight="true"
                             android:background="?attr/selectableItemBackground"
                             android:gravity="center"
-                            android:orientation="vertical">
+                            android:orientation="vertical"
+                            app:layout_widthPercent="33%">
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -169,8 +170,8 @@
                             <TextView
                                 android:id="@+id/user_dislikes"
                                 style="@style/ProfileNumberDivespotsSrtyle"
-                                tools:text="321"
-                                android:text="@{String.valueOf(userProfileViewModel.user.counters.dislikesCount)}" />
+                                android:text="@{String.valueOf(userProfileViewModel.user.counters.dislikesCount)}"
+                                tools:text="321" />
                         </LinearLayout>
                     </android.support.percent.PercentRelativeLayout>
                 </LinearLayout>
@@ -178,15 +179,15 @@
                 <ImageView style="@style/DividerStyleFull" />
 
                 <LinearLayout
-                    android:visibility="@{userProfileViewModel.user.achievements != null ? View.VISIBLE : View.GONE}"
-                    android:layout_marginTop="15dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
                     android:background="@color/white"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:visibility="@{userProfileViewModel.user.achievements != null ? View.VISIBLE : View.GONE}">
 
-                    <ImageView
-                        style="@style/DividerStyleFull" />
+                    <ImageView style="@style/DividerStyleFull" />
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -205,19 +206,19 @@
                         android:paddingRight="20dp"
                         android:paddingTop="12dp"
                         android:visibility="visible" />
+
                     <ImageView style="@style/DividerStyleFull" />
                 </LinearLayout>
 
                 <LinearLayout
-                    android:visibility="@{userProfileViewModel.user.photos != null ? View.VISIBLE : View.GONE}"
-                    android:layout_marginTop="15dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
                     android:background="@color/white"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:visibility="@{userProfileViewModel.user.photos != null ? View.VISIBLE : View.GONE}">
 
-                    <ImageView
-                        style="@style/DividerStyleFull" />
+                    <ImageView style="@style/DividerStyleFull" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -228,19 +229,15 @@
                         android:textColor="#afafaf"
                         android:textSize="15sp" />
 
-                    <TextView
-                        android:id="@+id/no_photos_view"
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/photos_list"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="20dp"
-                        android:gravity="center"
                         android:paddingBottom="12dp"
                         android:paddingLeft="20dp"
                         android:paddingRight="20dp"
-                        android:paddingTop="12dp"
-                        android:text="@string/no_photos_yet"
-                        android:textColor="#bbbbbb"
-                        android:textSize="13sp" />
+                        android:paddingTop="12dp" />
+
                     <ImageView style="@style/DividerStyleFull" />
                 </LinearLayout>
 
@@ -278,10 +275,10 @@
 
                             <TextView
                                 android:id="@+id/checkin_count"
-                                app:countCheckinsFrom="@{userProfileViewModel}"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="3dp" />
+                                android:layout_marginTop="3dp"
+                                app:countCheckinsFrom="@{userProfileViewModel}" />
                         </LinearLayout>
 
                         <ImageView
@@ -317,10 +314,10 @@
 
                             <TextView
                                 android:id="@+id/added_count"
-                                app:countAddedFrom="@{userProfileViewModel}"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="3dp" />
+                                android:layout_marginTop="3dp"
+                                app:countAddedFrom="@{userProfileViewModel}" />
                         </LinearLayout>
 
                         <ImageView
@@ -356,10 +353,10 @@
 
                             <TextView
                                 android:id="@+id/edited_count"
-                                app:countEditedFrom="@{userProfileViewModel}"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="3dp" />
+                                android:layout_marginTop="3dp"
+                                app:countEditedFrom="@{userProfileViewModel}" />
                         </LinearLayout>
 
                         <ImageView
@@ -395,10 +392,10 @@
 
                             <TextView
                                 android:id="@+id/favourites_count"
-                                app:countFavoriteFrom="@{userProfileViewModel}"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="3dp" />
+                                android:layout_marginTop="3dp"
+                                app:countFavoriteFrom="@{userProfileViewModel}" />
                         </LinearLayout>
 
                         <ImageView

@@ -1,4 +1,4 @@
-package com.ddscanner.screens.divespot.photos;
+package com.ddscanner.ui.activities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,25 +14,38 @@ import android.view.View;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.DiveSpotPhoto;
+import com.ddscanner.entities.GalleryOpenedSource;
+import com.ddscanner.entities.PhotoAuthor;
 import com.ddscanner.entities.PhotoOpenedSource;
 import com.ddscanner.rest.DDScannerRestClient;
+import com.ddscanner.screens.divespot.photos.AllPhotosDiveSpotAdapter;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.utils.DialogsRequestCodes;
+import com.google.gson.Gson;
 import com.rey.material.widget.ProgressView;
 
 import java.util.ArrayList;
 
-public class DiveSpotMapsActivity extends AppCompatActivity implements InfoDialogFragment.DialogClosedListener {
+public class PhotosGalleryActivity extends BaseAppCompatActivity implements InfoDialogFragment.DialogClosedListener {
 
     private RecyclerView mapsRecyclerView;
     private Toolbar toolbar;
     private ProgressView progressView;
-    private String diveSpotId;
+    private String loadedInfoId;
+    private GalleryOpenedSource source;
+    private PhotoAuthor photoAuthor;
 
     private DDScannerRestClient.ResultListener<ArrayList<DiveSpotPhoto>> resultListener = new DDScannerRestClient.ResultListener<ArrayList<DiveSpotPhoto>>() {
         @Override
         public void onSuccess(ArrayList<DiveSpotPhoto> result) {
-            mapsRecyclerView.setAdapter(new AllPhotosDiveSpotAdapter(result, DiveSpotMapsActivity.this, diveSpotId, PhotoOpenedSource.DIVESPOT, true));
+            if (source.equals(GalleryOpenedSource.MAPS)) {
+                mapsRecyclerView.setAdapter(new AllPhotosDiveSpotAdapter(result, PhotosGalleryActivity.this, PhotoOpenedSource.DIVESPOT, true));
+            } else {
+                for (DiveSpotPhoto diveSpotPhoto : result) {
+                    result.get(result.indexOf(diveSpotPhoto)).setAuthor(photoAuthor);
+                }
+                mapsRecyclerView.setAdapter(new AllPhotosDiveSpotAdapter(result, PhotosGalleryActivity.this, PhotoOpenedSource.DIVESPOT, false));
+            }
             progressView.setVisibility(View.GONE);
             mapsRecyclerView.setVisibility(View.VISIBLE);
         }
@@ -48,9 +61,13 @@ public class DiveSpotMapsActivity extends AppCompatActivity implements InfoDialo
         }
     };
 
-    public static void show(String diveSpotId, Context context) {
-        Intent intent = new Intent(context, DiveSpotMapsActivity.class);
+    public static void show(String diveSpotId, Context context, GalleryOpenedSource source, String author) {
+        Intent intent = new Intent(context, PhotosGalleryActivity.class);
         intent.putExtra("id", diveSpotId);
+        intent.putExtra("source", source);
+        if (author != null) {
+            intent.putExtra("user", author);
+        }
         context.startActivity(intent);
     }
 
@@ -61,22 +78,24 @@ public class DiveSpotMapsActivity extends AppCompatActivity implements InfoDialo
         mapsRecyclerView = (RecyclerView) findViewById(R.id.maps_rv);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         progressView = (ProgressView) findViewById(R.id.progress_view);
-        diveSpotId = getIntent().getStringExtra("id");
-        setupToolbar();
+        source = (GalleryOpenedSource) getIntent().getSerializableExtra("source");
+        loadedInfoId = getIntent().getStringExtra("id");
+        setupToolbar(R.string.photos, R.id.toolbar);
         setupRecyclerView();
-        DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotMaps(diveSpotId, resultListener);
+        switch (source) {
+            case USER_PROFILE:
+                photoAuthor = new Gson().fromJson(getIntent().getStringExtra("user"), PhotoAuthor.class);
+                DDScannerApplication.getInstance().getDdScannerRestClient().getUserAddedPhotos(resultListener, loadedInfoId);
+                break;
+            case MAPS:
+                DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotMaps(loadedInfoId, resultListener);
+                break;
+        }
     }
 
     private void setupRecyclerView() {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
         mapsRecyclerView.setLayoutManager(gridLayoutManager);
-    }
-
-    private void setupToolbar() {
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);
-        getSupportActionBar().setTitle(R.string.maps_toolbar_title);
     }
 
     @Override

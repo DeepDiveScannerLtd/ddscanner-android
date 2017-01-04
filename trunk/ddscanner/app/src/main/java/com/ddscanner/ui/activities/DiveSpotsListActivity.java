@@ -39,6 +39,7 @@ public class DiveSpotsListActivity extends AppCompatActivity implements InfoDial
     private ProgressView progressBarFull;
     private EventsTracker.SpotViewSource spotViewSource;
     private DiveSpotListSource diveSpotListSource;
+    private String userId;
 
     private DDScannerRestClient.ResultListener<ArrayList<DiveSpotShort>> divespotsWrapperResultListener = new DDScannerRestClient.ResultListener<ArrayList<DiveSpotShort>>() {
 
@@ -73,19 +74,20 @@ public class DiveSpotsListActivity extends AppCompatActivity implements InfoDial
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_users_dive_spots);
+        userId = getIntent().getStringExtra("id");
         diveSpotListSource = (DiveSpotListSource) getIntent().getSerializableExtra("source");
         switch (diveSpotListSource) {
             case ADDED:
-                DDScannerApplication.getInstance().getDdScannerRestClient().getAddedDiveSpots(divespotsWrapperResultListener);
+                DDScannerApplication.getInstance().getDdScannerRestClient().getAddedDiveSpots(divespotsWrapperResultListener, userId);
                 break;
             case EDITED:
-                DDScannerApplication.getInstance().getDdScannerRestClient().getEditedDiveSpots(divespotsWrapperResultListener);
+                DDScannerApplication.getInstance().getDdScannerRestClient().getEditedDiveSpots(divespotsWrapperResultListener, userId);
                 break;
             case FAVORITES:
-                DDScannerApplication.getInstance().getDdScannerRestClient().getUsersFavourites(divespotsWrapperResultListener);
+                DDScannerApplication.getInstance().getDdScannerRestClient().getUsersFavourites(divespotsWrapperResultListener, userId);
                 break;
             case CHECKINS:
-                DDScannerApplication.getInstance().getDdScannerRestClient().getUsersCheckins(divespotsWrapperResultListener);
+                DDScannerApplication.getInstance().getDdScannerRestClient().getUsersCheckins(divespotsWrapperResultListener, userId);
                 break;
         }
         findViews();
@@ -99,16 +101,16 @@ public class DiveSpotsListActivity extends AppCompatActivity implements InfoDial
                 if (resultCode == RESULT_OK) {
                     switch (diveSpotListSource) {
                         case ADDED:
-                            DDScannerApplication.getInstance().getDdScannerRestClient().getAddedDiveSpots(divespotsWrapperResultListener);
+                            DDScannerApplication.getInstance().getDdScannerRestClient().getAddedDiveSpots(divespotsWrapperResultListener, userId);
                             break;
                         case EDITED:
-                            DDScannerApplication.getInstance().getDdScannerRestClient().getEditedDiveSpots(divespotsWrapperResultListener);
+                            DDScannerApplication.getInstance().getDdScannerRestClient().getEditedDiveSpots(divespotsWrapperResultListener, userId);
                             break;
                         case FAVORITES:
-                            DDScannerApplication.getInstance().getDdScannerRestClient().getUsersFavourites(divespotsWrapperResultListener);
+                            DDScannerApplication.getInstance().getDdScannerRestClient().getUsersFavourites(divespotsWrapperResultListener, userId);
                             break;
                         case CHECKINS:
-                            DDScannerApplication.getInstance().getDdScannerRestClient().getUsersCheckins(divespotsWrapperResultListener);
+                            DDScannerApplication.getInstance().getDdScannerRestClient().getUsersCheckins(divespotsWrapperResultListener, userId);
                             break;
                     }
                     if (resultCode == RESULT_CANCELED) {
@@ -169,9 +171,10 @@ public class DiveSpotsListActivity extends AppCompatActivity implements InfoDial
         finish();
     }
 
-    public static void show(Context context, DiveSpotListSource diveSpotListSource) {
+    public static void show(Context context, DiveSpotListSource diveSpotListSource, String userId) {
         Intent intent = new Intent(context, DiveSpotsListActivity.class);
         intent.putExtra("source", diveSpotListSource);
+        intent.putExtra("id", userId);
         context.startActivity(intent);
     }
 

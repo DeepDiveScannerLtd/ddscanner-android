@@ -3,11 +3,19 @@ package com.ddscanner.entities;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class PhotoAuthor implements Parcelable {
+import java.io.Serializable;
+
+public class PhotoAuthor implements Parcelable, Serializable {
 
     private String id;
     private String name;
     private String photo;
+
+    public PhotoAuthor(String id, String name, String photo) {
+        this.id = id;
+        this.name = name;
+        this.photo = photo;
+    }
 
     protected PhotoAuthor(Parcel in) {
         id = in.readString();

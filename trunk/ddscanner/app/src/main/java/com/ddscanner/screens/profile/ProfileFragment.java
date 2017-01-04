@@ -306,25 +306,25 @@ public class ProfileFragment extends BaseFragment implements LoginView.LoginStat
 
     public void showCheckinns(View view) {
         if (binding.getProfileFragmentViewModel().getUser().getCounters().getCheckinsCount() > 0) {
-            DiveSpotsListActivity.show(getContext(), DiveSpotListSource.CHECKINS);
+            DiveSpotsListActivity.show(getContext(), DiveSpotListSource.CHECKINS, binding.getProfileFragmentViewModel().getUser().getId());
         }
     }
 
     public void showAdded(View view) {
         if (binding.getProfileFragmentViewModel().getUser().getCounters().getAddedCount() > 0) {
-            DiveSpotsListActivity.show(getContext(), DiveSpotListSource.ADDED);
+            DiveSpotsListActivity.show(getContext(), DiveSpotListSource.ADDED, binding.getProfileFragmentViewModel().getUser().getId());
         }
     }
 
     public void showEdited(View view) {
         if (binding.getProfileFragmentViewModel().getUser().getCounters().getEditedCount() > 0) {
-            DiveSpotsListActivity.show(getContext(), DiveSpotListSource.EDITED);
+            DiveSpotsListActivity.show(getContext(), DiveSpotListSource.EDITED, binding.getProfileFragmentViewModel().getUser().getId());
         }
     }
 
     public void showFavorites(View view) {
         if (binding.getProfileFragmentViewModel().getUser().getCounters().getFavoritesCount() > 0) {
-            DiveSpotsListActivity.show(getContext(), DiveSpotListSource.FAVORITES);
+            DiveSpotsListActivity.show(getContext(), DiveSpotListSource.FAVORITES, binding.getProfileFragmentViewModel().getUser().getId());
         }
     }
 

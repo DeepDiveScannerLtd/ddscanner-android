@@ -180,10 +180,10 @@ public interface DDScannerRestService {
     Call<ResponseBody> signUpUser(@Body SignUpRequest signUpRequest);
 
     @GET("v2_0/user.profile.get")
-    Call<ResponseBody> getSelfProfileInformation();
+    Call<ResponseBody> getSelfProfileInformation(@Query("include_photo_details") int value);
 
     @GET("v2_0/user.profile.get")
-    Call<ResponseBody> getUserInformation(@Query("id") String id);
+    Call<ResponseBody> getUserInformation(@Query("id") String id, @Query("include_photo_details") int value);
 
     @GET("v2_0/user.achievements.get")
     Call<ResponseBody> getUserAchievements();
@@ -368,17 +368,20 @@ public interface DDScannerRestService {
     @GET("v2_0/user.likes.get")
     Call<ResponseBody> getUserLikes();
 
+    @GET("v2_0/user.photos_added.get")
+    Call<ResponseBody> getUserPhotos(@Query("id") String userId);
+
     @GET("v2_0/user.divespots.added.get")
-    Call<ResponseBody> getUserAddedDiveSpots();
+    Call<ResponseBody> getUserAddedDiveSpots(@Query("id") String userId);
 
     @GET("v2_0/user.divespots.edited.get")
-    Call<ResponseBody> getUserEditedDiveSpots();
+    Call<ResponseBody> getUserEditedDiveSpots(@Query("id") String userId);
 
     @GET("v2_0/user.divespots.checked_in.get")
-    Call<ResponseBody> getUserCheckedInSpots();
+    Call<ResponseBody> getUserCheckedInSpots(@Query("id") String userId);
 
     @GET("v2_0/user.divespots.favorites.get")
-    Call<ResponseBody> getUserFavoritesSpots();
+    Call<ResponseBody> getUserFavoritesSpots(@Query("id") String userId);
 
     @POST("/v2_0/user.location.update")
     Call<ResponseBody> postUpdateUserLocation(@Body UpdateLocationRequest updateLocationRequest);

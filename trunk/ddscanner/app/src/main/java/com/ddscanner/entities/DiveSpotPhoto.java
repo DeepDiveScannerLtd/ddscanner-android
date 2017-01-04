@@ -5,7 +5,9 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
-public class DiveSpotPhoto implements Parcelable{
+import java.io.Serializable;
+
+public class DiveSpotPhoto implements Parcelable, Serializable{
 
     private String id;
     private String date;

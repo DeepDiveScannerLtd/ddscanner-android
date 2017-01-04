@@ -31,14 +31,12 @@ public class AllPhotosDiveSpotAdapter extends RecyclerView.Adapter<AllPhotosDive
     private String path;
     private ArrayList<DiveSpotPhoto> images;
     private Activity context;
-    private String diveSpotId;
     private PhotoOpenedSource photoOpenedSource;
     private boolean isFromMaps;
 
-    public AllPhotosDiveSpotAdapter(ArrayList<DiveSpotPhoto> photos, Activity context, String diveSpotId, PhotoOpenedSource photoOpenedSource, boolean isFromMaps) {
+    public AllPhotosDiveSpotAdapter(ArrayList<DiveSpotPhoto> photos, Activity context, PhotoOpenedSource photoOpenedSource, boolean isFromMaps) {
         images = photos;
         this.context = context;
-        this.diveSpotId = diveSpotId;
         this.photoOpenedSource = photoOpenedSource;
         this.isFromMaps = isFromMaps;
     }

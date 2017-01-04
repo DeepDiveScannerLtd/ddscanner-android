@@ -117,7 +117,7 @@ public class DialogsRequestCodes {
     //UserProfileActivity
     public static final int DRC_USER_PROFILE_ACTIVITY_FAILED_TO_CONNECT = 3901;
 
-    //DiveSpotMapsActivity
+    //PhotosGalleryActivity
     public static final int DRC_MAPS_ACTIVITY_FAILED = 4001;
 
 }

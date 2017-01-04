@@ -35,12 +35,12 @@ import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.databinding.ActivityDiveSpotDetailsBinding;
 import com.ddscanner.entities.DiveSpotDetailsEntity;
-import com.ddscanner.entities.DiveSpotSealife;
+import com.ddscanner.entities.GalleryOpenedSource;
 import com.ddscanner.entities.SealifeShort;
 import com.ddscanner.events.OpenPhotosActivityEvent;
 import com.ddscanner.events.PickPhotoForCheckedInDialogEvent;
 import com.ddscanner.rest.DDScannerRestClient;
-import com.ddscanner.screens.divespot.photos.DiveSpotMapsActivity;
+import com.ddscanner.ui.activities.PhotosGalleryActivity;
 import com.ddscanner.ui.activities.AddPhotosDoDiveSpotActivity;
 import com.ddscanner.ui.activities.CheckInPeoplesActivity;
 import com.ddscanner.ui.activities.DiveCentersActivity;
@@ -620,7 +620,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
             DiveSpotPhotosActivity.show(this, diveSpotId);
             return;
         }
-        DiveSpotMapsActivity.show(diveSpotId, this);
+        PhotosGalleryActivity.show(diveSpotId, this, GalleryOpenedSource.MAPS, null);
     }
 
     @Override

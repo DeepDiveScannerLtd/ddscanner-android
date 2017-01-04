@@ -1,8 +1,9 @@
 package com.ddscanner.entities;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class ProfileAchievement {
+public class ProfileAchievement implements Serializable {
 
     private String name;
     private String type;

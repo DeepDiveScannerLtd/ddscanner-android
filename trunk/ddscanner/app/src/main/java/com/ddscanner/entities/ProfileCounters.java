@@ -2,7 +2,9 @@ package com.ddscanner.entities;
 
 import com.google.gson.annotations.SerializedName;
 
-public class ProfileCounters {
+import java.io.Serializable;
+
+public class ProfileCounters implements Serializable{
 
     @SerializedName("likes")
     private int likesCount;

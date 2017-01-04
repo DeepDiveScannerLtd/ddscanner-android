@@ -248,7 +248,7 @@
             android:name=".screens.user.profile.UserProfileActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".screens.divespot.photos.DiveSpotMapsActivity"
+            android:name=".ui.activities.PhotosGalleryActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activities.PickLanguageActivity"

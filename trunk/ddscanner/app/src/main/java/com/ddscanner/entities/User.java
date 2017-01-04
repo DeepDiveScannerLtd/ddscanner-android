@@ -20,6 +20,16 @@ public class User implements Serializable {
     @SerializedName("about")
     private String about;
     private String id;
+    @SerializedName("photos_count")
+    private int photosCount;
+
+    public int getPhotosCount() {
+        return photosCount;
+    }
+
+    public void setPhotosCount(int photosCount) {
+        this.photosCount = photosCount;
+    }
 
     public String getId() {
         return id;
@@ -58,6 +68,13 @@ public class User implements Serializable {
     }
 
     public List<DiveSpotPhoto> getPhotos() {
+        if (photos != null) {
+            for (DiveSpotPhoto diveSpotPhoto : photos) {
+                PhotoAuthor photoAuthor = new PhotoAuthor(id, name, photo);
+                photos.get(photos.indexOf(diveSpotPhoto)).setAuthor(photoAuthor);
+            }
+            return photos;
+        }
         return photos;
     }
 

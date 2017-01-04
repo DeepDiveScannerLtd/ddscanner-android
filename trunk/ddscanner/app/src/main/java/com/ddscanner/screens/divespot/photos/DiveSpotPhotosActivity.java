@@ -303,9 +303,9 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
 
         allPhotos = new ArrayList<>();
         allPhotos = Helpers.compareObjectsArray(reviewsImages, diveSpotImages);
-        diveSpotReviewsPhotoFragment.setList(reviewsImages, path, dsId);
-        diveSpotAllPhotosFragment.setList(allPhotos, path, dsId);
-        diveSpotPhotosFragment.setList(diveSpotImages, path, dsId);
+        diveSpotReviewsPhotoFragment.setList(reviewsImages);
+        diveSpotAllPhotosFragment.setList(allPhotos);
+        diveSpotPhotosFragment.setList(diveSpotImages);
 
         progressView.setVisibility(View.GONE);
         photosViewPager.setVisibility(View.VISIBLE);

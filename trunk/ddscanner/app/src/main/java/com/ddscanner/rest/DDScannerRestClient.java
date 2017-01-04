@@ -334,8 +334,8 @@ public class DDScannerRestClient {
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 
-    public void getUsersFavourites(@NonNull final ResultListener<ArrayList<DiveSpotShort>> resultListener) {
-        final Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserFavoritesSpots();
+    public void getUsersFavourites(@NonNull final ResultListener<ArrayList<DiveSpotShort>> resultListener, String id) {
+        final Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserFavoritesSpots(id);
         call.enqueue(new ResponseEntityCallback<ArrayList<DiveSpotShort>>(gson, resultListener) {
             @Override
             void handleResponseString(ResultListener<ArrayList<DiveSpotShort>> resultListener, String responseString) {
@@ -346,8 +346,8 @@ public class DDScannerRestClient {
         });
     }
 
-    public void getAddedDiveSpots(final ResultListener<ArrayList<DiveSpotShort>> resultListener) {
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserAddedDiveSpots();
+    public void getAddedDiveSpots(final ResultListener<ArrayList<DiveSpotShort>> resultListener, String id) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserAddedDiveSpots(id);
         call.enqueue(new ResponseEntityCallback<ArrayList<DiveSpotShort>>(gson, resultListener) {
             @Override
             void handleResponseString(ResultListener<ArrayList<DiveSpotShort>> resultListener, String responseString) {
@@ -358,8 +358,8 @@ public class DDScannerRestClient {
         });
     }
 
-    public void getEditedDiveSpots(final ResultListener<ArrayList<DiveSpotShort>> resultListener) {
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserEditedDiveSpots();
+    public void getEditedDiveSpots(final ResultListener<ArrayList<DiveSpotShort>> resultListener, String id) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserEditedDiveSpots(id);
         call.enqueue(new ResponseEntityCallback<ArrayList<DiveSpotShort>>(gson, resultListener) {
             @Override
             void handleResponseString(ResultListener<ArrayList<DiveSpotShort>> resultListener, String responseString) {
@@ -370,8 +370,8 @@ public class DDScannerRestClient {
         });
     }
 
-    public void getUsersCheckins(final ResultListener<ArrayList<DiveSpotShort>> resultListener) {
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserCheckedInSpots();
+    public void getUsersCheckins(final ResultListener<ArrayList<DiveSpotShort>> resultListener, String id) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserCheckedInSpots(id);
         call.enqueue(new ResponseEntityCallback<ArrayList<DiveSpotShort>>(gson, resultListener) {
             @Override
             void handleResponseString(ResultListener<ArrayList<DiveSpotShort>> resultListener, String responseString) {
@@ -489,7 +489,7 @@ public class DDScannerRestClient {
     }
 
     public void getUserSelfInformation(final ResultListener<ProfileResponseEntity> resultListener) {
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getSelfProfileInformation();
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getSelfProfileInformation(1);
         call.enqueue(new ResponseEntityCallback<ProfileResponseEntity>(gson, resultListener) {
             @Override
             void handleResponseString(ResultListener<ProfileResponseEntity> resultListener, String responseString) throws JSONException {
@@ -510,7 +510,7 @@ public class DDScannerRestClient {
     }
 
     public void getUserProfileInformation(String id, final ResultListener<ProfileResponseEntity> resultListener) {
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserInformation(id);
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserInformation(id, 1);
         call.enqueue(new ResponseEntityCallback<ProfileResponseEntity>(gson, resultListener) {
             @Override
             void handleResponseString(ResultListener<ProfileResponseEntity> resultListener, String responseString) throws JSONException {
@@ -589,6 +589,18 @@ public class DDScannerRestClient {
             void handleResponseString(ResultListener<List<String>> resultListener, String responseString) throws JSONException {
                 Type listType = new TypeToken<List<String>>(){}.getType();
                 ArrayList<String> photos = gson.fromJson(responseString, listType);
+                resultListener.onSuccess(photos);
+            }
+        });
+    }
+
+    public void getUserAddedPhotos(ResultListener<ArrayList<DiveSpotPhoto>> resultListener, String userId) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserPhotos(userId);
+        call.enqueue(new ResponseEntityCallback<ArrayList<DiveSpotPhoto>>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<ArrayList<DiveSpotPhoto>> resultListener, String responseString) throws JSONException {
+                Type listType = new TypeToken<ArrayList<DiveSpotPhoto>>(){}.getType();
+                ArrayList<DiveSpotPhoto> photos = gson.fromJson(responseString, listType);
                 resultListener.onSuccess(photos);
             }
         });

@@ -12,17 +12,25 @@ import android.view.View;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.entities.GalleryOpenedSource;
+import com.ddscanner.entities.PhotoAuthor;
 import com.ddscanner.entities.User;
 import com.ddscanner.entities.ProfileResponseEntity;
+import com.ddscanner.events.OpenPhotosActivityEvent;
 import com.ddscanner.rest.DDScannerRestClient;
+import com.ddscanner.ui.activities.PhotosGalleryActivity;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.utils.DialogsRequestCodes;
+import com.google.gson.Gson;
 import com.rey.material.widget.ProgressView;
+import com.squareup.otto.Subscribe;
 
 public class UserProfileActivity extends AppCompatActivity implements InfoDialogFragment.DialogClosedListener{
 
     private ProgressView progressView;
     private Toolbar toolbar;
+    private String userId;
+    private PhotoAuthor photoAuthor;
 
     private DDScannerRestClient.ResultListener<ProfileResponseEntity> resultListener = new DDScannerRestClient.ResultListener<ProfileResponseEntity>() {
         @Override
@@ -46,7 +54,7 @@ public class UserProfileActivity extends AppCompatActivity implements InfoDialog
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        String userId = getIntent().getStringExtra("id");
+        userId = getIntent().getStringExtra("id");
         setContentView(R.layout.activity_user_profile);
         progressView = (ProgressView) findViewById(R.id.progress_view);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -75,6 +83,7 @@ public class UserProfileActivity extends AppCompatActivity implements InfoDialog
                 break;
             case 1:
             case 2:
+                photoAuthor = new PhotoAuthor(user.getDiver().getId(), user.getDiver().getName(), user.getDiver().getPhoto());
                 FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                 UserProfileFragment userProfileFragment = UserProfileFragment.newInstance(user.getDiver());
                 fragmentTransaction.replace(R.id.content, userProfileFragment);
@@ -92,4 +101,22 @@ public class UserProfileActivity extends AppCompatActivity implements InfoDialog
         }
         return true;
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        DDScannerApplication.bus.register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        DDScannerApplication.bus.unregister(this);
+    }
+
+    @Subscribe
+    public void openPhotosActivity(OpenPhotosActivityEvent event) {
+        PhotosGalleryActivity.show(userId, this, GalleryOpenedSource.USER_PROFILE, new Gson().toJson(photoAuthor));
+    }
+
 }
