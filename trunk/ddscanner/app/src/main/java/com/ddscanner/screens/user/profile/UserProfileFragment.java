@@ -12,10 +12,12 @@ import android.view.ViewGroup;
 
 import com.ddscanner.R;
 import com.ddscanner.databinding.FragmentUserProfileBinding;
+import com.ddscanner.entities.DiveSpotListSource;
 import com.ddscanner.entities.DiveSpotPhoto;
 import com.ddscanner.entities.ProfileAchievement;
 import com.ddscanner.entities.User;
 import com.ddscanner.screens.profile.ProfileFragmentViewModel;
+import com.ddscanner.ui.activities.DiveSpotsListActivity;
 import com.ddscanner.ui.adapters.AchievmentProfileListAdapter;
 import com.ddscanner.ui.adapters.UserPhotosListAdapter;
 
@@ -41,6 +43,7 @@ public class UserProfileFragment extends Fragment {
         user = (User) getArguments().getSerializable("user");
         binding.setUserProfileViewModel(new ProfileFragmentViewModel(user));
         View v = binding.getRoot();
+        binding.setHandlers(this);
         if (user.getAchievements() != null) {
             binding.achievmentRv.setLayoutManager(new LinearLayoutManager(getContext()));
             binding.achievmentRv.setAdapter(new AchievmentProfileListAdapter((ArrayList<ProfileAchievement>) user.getAchievements(), getContext()));
@@ -51,4 +54,29 @@ public class UserProfileFragment extends Fragment {
         }
         return v;
     }
+
+    public void showCheckinns(View view) {
+        if (binding.getUserProfileViewModel().getUser().getCounters().getCheckinsCount() > 0) {
+            DiveSpotsListActivity.show(getContext(), DiveSpotListSource.CHECKINS, binding.getUserProfileViewModel().getUser().getId());
+        }
+    }
+
+    public void showAdded(View view) {
+        if (binding.getUserProfileViewModel().getUser().getCounters().getAddedCount() > 0) {
+            DiveSpotsListActivity.show(getContext(), DiveSpotListSource.ADDED, binding.getUserProfileViewModel().getUser().getId());
+        }
+    }
+
+    public void showEdited(View view) {
+        if (binding.getUserProfileViewModel().getUser().getCounters().getEditedCount() > 0) {
+            DiveSpotsListActivity.show(getContext(), DiveSpotListSource.EDITED, binding.getUserProfileViewModel().getUser().getId());
+        }
+    }
+
+    public void showFavorites(View view) {
+        if (binding.getUserProfileViewModel().getUser().getCounters().getFavoritesCount() > 0) {
+            DiveSpotsListActivity.show(getContext(), DiveSpotListSource.FAVORITES, binding.getUserProfileViewModel().getUser().getId());
+        }
+    }
+    
 }

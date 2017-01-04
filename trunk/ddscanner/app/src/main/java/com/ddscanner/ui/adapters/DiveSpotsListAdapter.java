@@ -59,22 +59,9 @@ public class DiveSpotsListAdapter
     public void onBindViewHolder(ProductListViewHolder productListViewHolder, int i) {
         DiveSpotShort divespot = new DiveSpotShort();
         divespot = divespots.get(i);
-        productListViewHolder.progressBar.getIndeterminateDrawable().
-                setColorFilter(ContextCompat.getColor(context, R.color.primary),
-                        PorterDuff.Mode.MULTIPLY);
         if (divespot.getImage() != null) {
             String imageAddress = DDScannerApplication.getInstance().getString(R.string.base_photo_url, divespot.getImage(), "1");
-            Picasso.with(context).load(imageAddress).resize(Math.round(Helpers.convertDpToPixel(130, context)), Math.round(Helpers.convertDpToPixel(130, context))).centerCrop()
-                    .transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2, context)),0))
-                    .into(productListViewHolder.imageView,
-                            new ImageLoadedCallback(productListViewHolder.progressBar) {
-                                @Override
-                                public void onSuccess() {
-                                    if (this.progressBar != null) {
-                                        progressBar.setVisibility(View.GONE);
-                                    }
-                                }
-                            });
+            Picasso.with(context).load(imageAddress).resize(Math.round(Helpers.convertDpToPixel(130, context)), Math.round(Helpers.convertDpToPixel(130, context))).centerCrop().placeholder(R.drawable.ds_list_photo_default).error(R.drawable.ds_list_photo_default).transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2, context)),0)).into(productListViewHolder.imageView);
         } else {
             productListViewHolder.imageView.setImageDrawable(ContextCompat.getDrawable(context,
                     R.drawable.list_photo_default));
@@ -106,12 +93,10 @@ public class DiveSpotsListAdapter
         return divespots.size();
     }
 
-    public class ProductListViewHolder extends RecyclerView.ViewHolder
-            implements View.OnClickListener {
+    public class ProductListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         protected ImageView imageView;
         protected TextView title;
         protected LinearLayout stars;
-        protected ProgressBar progressBar;
         protected TextView object;
         private int position;
         private Context context;
@@ -121,11 +106,9 @@ public class DiveSpotsListAdapter
             super(v);
             context = itemView.getContext();
             v.setOnClickListener(this);
-            // productPrice = (TextView) v.findViewById(R.id.product_price);
             imageView = (ImageView) v.findViewById(R.id.product_logo);
             title = (TextView) v.findViewById(R.id.product_title);
             stars = (LinearLayout) v.findViewById(R.id.stars);
-            progressBar = (ProgressBar) v.findViewById(R.id.progressBar);
             object = (TextView) v.findViewById(R.id.object);
         }
 
@@ -138,24 +121,6 @@ public class DiveSpotsListAdapter
     public void setDiveSpots(ArrayList<DiveSpotShort> diveSpotShorts) {
         this.divespots = diveSpotShorts;
         notifyDataSetChanged();
-    }
-
-    private class ImageLoadedCallback implements Callback {
-        ProgressBar progressBar;
-
-        public ImageLoadedCallback(ProgressBar progBar) {
-            progressBar = progBar;
-        }
-
-        @Override
-        public void onSuccess() {
-
-        }
-
-        @Override
-        public void onError() {
-
-        }
     }
 
 }

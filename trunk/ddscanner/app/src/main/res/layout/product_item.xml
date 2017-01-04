@@ -20,17 +20,7 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="15dp"
-            android:layout_marginRight="20dp"
-            android:src="@drawable/list_photo_default" />
-        <ProgressBar
-            android:id="@+id/progressBar"
-            style="?android:attr/progressBarStyleSmall"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:layout_marginLeft="37dp"
-            android:layout_centerVertical="true"
-            android:layout_gravity="center"
-            android:visibility="visible" />
+            android:layout_marginRight="20dp" />
         <RelativeLayout
             android:id="@+id/product_data_layout"
             android:layout_width="wrap_content"

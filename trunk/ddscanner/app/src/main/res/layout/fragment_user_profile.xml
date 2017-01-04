@@ -15,6 +15,10 @@
             name="userProfileViewModel"
             type="com.ddscanner.screens.profile.ProfileFragmentViewModel" />
 
+        <variable
+            name="handlers"
+            type="com.ddscanner.screens.user.profile.UserProfileFragment" />
+
     </data>
 
     <LinearLayout
@@ -257,7 +261,8 @@
                         android:layout_height="66dp"
                         android:background="?attr/selectableItemBackground"
                         android:orientation="horizontal"
-                        android:paddingTop="10dp">
+                        android:paddingTop="10dp"
+                        android:onClick="@{handlers::showCheckinns}">
 
                         <ImageView
                             style="@style/CharacteristicsDiveSpotListIcons"
@@ -296,7 +301,8 @@
                         android:layout_height="66dp"
                         android:background="?attr/selectableItemBackground"
                         android:orientation="horizontal"
-                        android:paddingTop="10dp">
+                        android:paddingTop="10dp"
+                        android:onClick="@{handlers::showAdded}">
 
                         <ImageView
                             style="@style/CharacteristicsDiveSpotListIcons"
@@ -335,7 +341,8 @@
                         android:layout_height="66dp"
                         android:background="?attr/selectableItemBackground"
                         android:orientation="horizontal"
-                        android:paddingTop="10dp">
+                        android:paddingTop="10dp"
+                        android:onClick="@{handlers::showEdited}">
 
                         <ImageView
                             style="@style/CharacteristicsDiveSpotListIcons"
@@ -374,7 +381,8 @@
                         android:layout_height="66dp"
                         android:background="?attr/selectableItemBackground"
                         android:orientation="horizontal"
-                        android:paddingTop="10dp">
+                        android:paddingTop="10dp"
+                        android:onClick="@{handlers::showFavorites}">
 
                         <ImageView
                             style="@style/CharacteristicsDiveSpotListIcons"

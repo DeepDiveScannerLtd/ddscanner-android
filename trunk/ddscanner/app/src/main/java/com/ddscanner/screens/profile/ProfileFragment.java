@@ -294,13 +294,13 @@ public class ProfileFragment extends BaseFragment implements LoginView.LoginStat
 
     public void showLikes(View view) {
         if (binding.getProfileFragmentViewModel().getUser().getCounters().getLikesCount() > 0) {
-            //TODO show comments activity
+
         }
     }
 
     public void showDislikes(View view) {
         if (binding.getProfileFragmentViewModel().getUser().getCounters().getDislikesCount() > 0) {
-            //TODO show comments activity
+
         }
     }
 

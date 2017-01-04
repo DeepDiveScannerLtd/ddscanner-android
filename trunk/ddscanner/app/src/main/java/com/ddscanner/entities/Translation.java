@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class Translation {
 
-    @SerializedName("lang_code")
+    @SerializedName("content_lang")
     private String code;
     @SerializedName("lang_name")
     private String language;

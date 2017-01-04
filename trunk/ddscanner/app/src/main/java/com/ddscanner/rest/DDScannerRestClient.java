@@ -579,7 +579,7 @@ public class DDScannerRestClient {
         for (int i = 0; i < images.size(); i++) {
             File image = new File(images.get(i));
             RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), image);
-            MultipartBody.Part part = MultipartBody.Part.createFormData("images[]",
+            MultipartBody.Part part = MultipartBody.Part.createFormData("photos[]",
                     image.getName(), requestFile);
             imagesToSend.add(part);
         }
