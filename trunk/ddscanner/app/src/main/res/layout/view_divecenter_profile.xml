@@ -41,7 +41,8 @@
                     android:layout_marginBottom="13dp"
                     android:layout_marginLeft="13dp"
                     android:layout_marginTop="13dp"
-                    android:src="@drawable/avatar_dc_profile" />
+                    android:src="@drawable/avatar_dc_profile"
+                    app:loadImageFrom="@{diveCenterViewModel}"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -98,7 +99,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
-
                     <ImageView
                         style="@style/DiveCenterProfileCharacteristicIcon"
                         android:src="@drawable/ic_dc_location" />
@@ -114,8 +114,8 @@
                             android:text="@string/dc_address" />
 
                         <TextView
-                            style="@style/DiveCenterProfileCharacteristicDesciption"
-                            android:text="@{diveCenterViewModel.diveCenterProfile.addresses.get(0)}" />
+                            app:setAddressFrom="@{diveCenterViewModel}"
+                            style="@style/DiveCenterProfileCharacteristicDesciption" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -140,7 +140,7 @@
 
                         <TextView
                             style="@style/DiveCenterProfileCharacteristicDesciption"
-                            android:text="@{diveCenterViewModel.diveCenterProfile.emails.get(0)}" />
+                            app:setEmails="@{diveCenterViewModel}"/>
                     </LinearLayout>
                 </LinearLayout>
 
@@ -165,7 +165,7 @@
 
                         <TextView
                             style="@style/DiveCenterProfileCharacteristicDesciption"
-                            android:text="@{diveCenterViewModel.diveCenterProfile.phones.get(0)}" />
+                            app:setPhones="@{diveCenterViewModel}" />
                     </LinearLayout>
                 </LinearLayout>
 

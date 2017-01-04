@@ -13,7 +13,7 @@ public class DiveCenterProfile {
     private int type;
     @SerializedName("country_name")
     private String contryName;
-    private ArrayList<String> addresses;
+    private ArrayList<Address> addresses;
     private ArrayList<String> emails;
     private ArrayList<String> phones;
     private ArrayList<String> languages;
@@ -94,11 +94,11 @@ public class DiveCenterProfile {
         this.contryName = contryName;
     }
 
-    public ArrayList<String> getAddresses() {
+    public ArrayList<Address> getAddresses() {
         return addresses;
     }
 
-    public void setAddresses(ArrayList<String> addresses) {
+    public void setAddresses(ArrayList<Address> addresses) {
         this.addresses = addresses;
     }
 

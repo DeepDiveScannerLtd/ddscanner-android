@@ -324,7 +324,8 @@ public interface DDScannerRestService {
             @Part("addresses") RequestBody adresses,
             @Part("service") RequestBody service,
             @Part List<MultipartBody.Part> emails,
-            @Part List<MultipartBody.Part> phones
+            @Part List<MultipartBody.Part> phones,
+            @Part List<MultipartBody.Part> divespots
     );
 
     @GET("v2_0/countries.get")

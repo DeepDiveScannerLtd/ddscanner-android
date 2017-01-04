@@ -9,11 +9,13 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.telephony.PhoneNumberFormattingTextWatcher;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.databinding.EditDcProfileViewBinding;
@@ -23,6 +25,7 @@ import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.activities.SearchSpotOrLocationActivity;
 import com.ddscanner.ui.adapters.DiveSpotsListForEditDcAdapter;
+import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
@@ -52,6 +55,7 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
     private ArrayList<EditText> addresses = new ArrayList<>();
     private List<MultipartBody.Part> emails =  new ArrayList<>();
     private List<MultipartBody.Part> phones = new ArrayList<>();
+    private List<MultipartBody.Part> diveSpots = null;
     private EditText countryEdiText;
     private EditText addressEditText;
     private String imagePath;
@@ -62,23 +66,26 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
     private RequestBody countryRequestBody = null, addressRequestBody = null, nameRequestBody = null;
     private DiveSpotsListForEditDcAdapter diveSpotsListForEditDcAdapter = new DiveSpotsListForEditDcAdapter();
     private String country;
+    private MaterialDialog materialDialog;
 
     private EditDcProfileViewBinding binding;
 
     private DDScannerRestClient.ResultListener<Void> resultListener = new DDScannerRestClient.ResultListener<Void>() {
         @Override
         public void onSuccess(Void result) {
-
+            materialDialog.dismiss();
+            setResult(RESULT_OK);
         }
 
         @Override
         public void onConnectionFailure() {
-
+            materialDialog.dismiss();
+            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-
+            materialDialog.dismiss();
         }
     };
 
@@ -94,17 +101,39 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         binding = DataBindingUtil.setContentView(this, R.layout.edit_dc_profile_view);
         binding.setHandlers(this);
-        binding.setProfileFragmentViewModel(new EditDiveCenterProfileActivityViewModel(new Gson().fromJson(getIntent().getStringExtra("divecenter"), DiveCenterProfile.class)));
+        binding.setDcViewModel(new EditDiveCenterProfileActivityViewModel(new Gson().fromJson(getIntent().getStringExtra("divecenter"), DiveCenterProfile.class)));
         setupToolbar(R.string.edit_profile_activity, R.id.toolbar, R.menu.edit_profile_menu);
+        setupUi();
+    }
+
+    private void setupUi() {
+        materialDialog = Helpers.getMaterialDialog(this);
         binding.diveSpotList.setLayoutManager(new LinearLayoutManager(this));
         binding.diveSpotList.setAdapter(diveSpotsListForEditDcAdapter);
-        addPhoneClicked(null);
-        addEmailClicked(null);
+        if (binding.getDcViewModel().getDiveCenterProfile().getPhones() == null) {
+            addPhoneClicked(null);
+        } else {
+            for (String phone : binding.getDcViewModel().getDiveCenterProfile().getPhones()) {
+                addPhoneView(phone);
+            }
+        }
+        if (binding.getDcViewModel().getDiveCenterProfile().getEmails() == null) {
+            addEmailClicked(null);
+        } else {
+            for (String email : binding.getDcViewModel().getDiveCenterProfile().getEmails()) {
+                addEmailView(email);
+            }
+        }
+        if (binding.getDcViewModel().getDiveCenterProfile().getAddresses() != null) {
+            locationLatitude = binding.getDcViewModel().getDiveCenterProfile().getAddresses().get(0).getLat();
+            locationLongitude = binding.getDcViewModel().getDiveCenterProfile().getAddresses().get(0).getLng();
+            addAddressesView(binding.getDcViewModel().getDiveCenterProfile().getAddresses().get(0).getName(), binding.getDcViewModel().getDiveCenterProfile().getContryName());
+        }
     }
 
     public void addEmailClicked(View view) {
         EditText editText = (EditText) getLayoutInflater().inflate(R.layout.edit_dive_center_email_edit_text, null);
-        editText.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
+        editText.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
         emailsEditTexts.add(editText);
         binding.emails.addView(editText);
     }
@@ -113,6 +142,22 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
         EditText editText = (EditText) getLayoutInflater().inflate(R.layout.edit_dive_center_edit_text, null);
         editText.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
         phonesEditTexts.add(editText);
+        binding.phones.addView(editText);
+    }
+
+    private void addEmailView(String text) {
+        EditText editText = (EditText) getLayoutInflater().inflate(R.layout.edit_dive_center_email_edit_text, null);
+        editText.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+        emailsEditTexts.add(editText);
+        editText.setText(text);
+        binding.emails.addView(editText);
+    }
+
+    private void addPhoneView(String text) {
+        EditText editText = (EditText) getLayoutInflater().inflate(R.layout.edit_dive_center_edit_text, null);
+        editText.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
+        phonesEditTexts.add(editText);
+        editText.setText(text);
         binding.phones.addView(editText);
     }
 
@@ -218,11 +263,21 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
             }
         }
 
+        if (diveSpotsListForEditDcAdapter.getDiveSpots().size() > 0) {
+            diveSpots = new ArrayList<>();
+            for (DiveSpotShort diveSpotShort : diveSpotsListForEditDcAdapter.getDiveSpots()) {
+                diveSpots.add(MultipartBody.Part.createFormData("dive_spots[]", String.valueOf(diveSpotShort.getId())));
+            }
+        }
+
         if (locationLatitude != null && locationLongitude != null && addressEditText != null && !addressEditText.getText().toString().isEmpty()) {
             com.ddscanner.entities.Address address = new com.ddscanner.entities.Address(addressEditText.getText().toString(), locationLatitude, locationLongitude);
             ArrayList<com.ddscanner.entities.Address> addresses = new ArrayList<>();
             addresses.add(address);
             addressRequestBody = Helpers.createRequestBodyForString(new Gson().toJson(addresses));
+        }
+
+        if (countryCode != null) {
             countryRequestBody = Helpers.createRequestBodyForString(countryCode);
         }
 
@@ -232,8 +287,8 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
             photo = MultipartBody.Part.createFormData("photo", file.getName(), requestFile);
         }
 
-        DDScannerApplication.getInstance().getDdScannerRestClient().postUpdateDiveCenterProfile(resultListener, photo,  emails, phones, nameRequestBody, countryRequestBody, addressRequestBody, Helpers.createRequestBodyForString("1"));
-
+        DDScannerApplication.getInstance().getDdScannerRestClient().postUpdateDiveCenterProfile(resultListener, photo,  emails, phones, diveSpots, nameRequestBody, countryRequestBody, addressRequestBody, Helpers.createRequestBodyForString("1"));
+        materialDialog.show();
     }
 
 

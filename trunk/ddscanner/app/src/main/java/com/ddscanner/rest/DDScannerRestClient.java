@@ -263,8 +263,8 @@ public class DDScannerRestClient {
 
     /*Methods using in API v2_0*/
 
-    public void postUpdateDiveCenterProfile(ResultListener<Void> resultListener, MultipartBody.Part image, List<MultipartBody.Part> emails, List<MultipartBody.Part> phones, RequestBody... requestBodies) {
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postUpdateDiveCenterProfile(image, requestBodies[0], requestBodies[1], requestBodies[2], requestBodies[3], emails, phones);
+    public void postUpdateDiveCenterProfile(ResultListener<Void> resultListener, MultipartBody.Part image, List<MultipartBody.Part> emails, List<MultipartBody.Part> phones, List<MultipartBody.Part> diveSpots, RequestBody... requestBodies) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postUpdateDiveCenterProfile(image, requestBodies[0], requestBodies[1], requestBodies[2], requestBodies[3], emails, phones, diveSpots);
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 

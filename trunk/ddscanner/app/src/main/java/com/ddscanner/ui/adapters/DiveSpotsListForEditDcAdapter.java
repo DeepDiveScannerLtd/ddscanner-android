@@ -11,6 +11,7 @@ import com.ddscanner.R;
 import com.ddscanner.entities.DiveSpotShort;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class DiveSpotsListForEditDcAdapter extends RecyclerView.Adapter<DiveSpotsListForEditDcAdapter.DiveSpotViewHolder> {
 
@@ -45,6 +46,10 @@ public class DiveSpotsListForEditDcAdapter extends RecyclerView.Adapter<DiveSpot
     public void remove(int position) {
         this.diveSpots.remove(position);
         notifyDataSetChanged();
+    }
+
+    public List<DiveSpotShort> getDiveSpots() {
+        return this.diveSpots;
     }
 
     class DiveSpotViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
