@@ -12,7 +12,7 @@ public class User implements Serializable {
     private String photo;
     private ProfileCounters counters;
     private List<ProfileAchievement> achievements;
-    private List<String> photos;
+    private List<DiveSpotPhoto> photos;
     private int type;
     private String token;
     @SerializedName("diving_skill")
@@ -57,11 +57,11 @@ public class User implements Serializable {
         this.type = type;
     }
 
-    public List<String> getPhotos() {
+    public List<DiveSpotPhoto> getPhotos() {
         return photos;
     }
 
-    public void setPhotos(List<String> photos) {
+    public void setPhotos(List<DiveSpotPhoto> photos) {
         this.photos = photos;
     }
 

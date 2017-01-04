@@ -13,6 +13,7 @@ import android.view.View;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.User;
+import com.ddscanner.entities.ProfileResponseEntity;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.utils.DialogsRequestCodes;
@@ -23,9 +24,9 @@ public class UserProfileActivity extends AppCompatActivity implements InfoDialog
     private ProgressView progressView;
     private Toolbar toolbar;
 
-    private DDScannerRestClient.ResultListener<User> resultListener = new DDScannerRestClient.ResultListener<User>() {
+    private DDScannerRestClient.ResultListener<ProfileResponseEntity> resultListener = new DDScannerRestClient.ResultListener<ProfileResponseEntity>() {
         @Override
-        public void onSuccess(User result) {
+        public void onSuccess(ProfileResponseEntity result) {
 //            binding.setUserProfileViewModel(new ProfileFragmentViewModel(result));
             progressView.setVisibility(View.GONE);
             setupFragment(result.getType(), result);
@@ -67,14 +68,15 @@ public class UserProfileActivity extends AppCompatActivity implements InfoDialog
         finish();
     }
 
-    private void setupFragment(int userType, User user) {
+    private void setupFragment(int userType, ProfileResponseEntity user) {
         switch (userType) {
             case 0:
 
                 break;
             case 1:
+            case 2:
                 FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                UserProfileFragment userProfileFragment = UserProfileFragment.newInstance(user);
+                UserProfileFragment userProfileFragment = UserProfileFragment.newInstance(user.getDiver());
                 fragmentTransaction.replace(R.id.content, userProfileFragment);
                 fragmentTransaction.commit();
                 break;

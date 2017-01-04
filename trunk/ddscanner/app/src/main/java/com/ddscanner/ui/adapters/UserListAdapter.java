@@ -12,6 +12,7 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.User;
 import com.ddscanner.entities.UserOld;
+import com.ddscanner.screens.user.profile.UserProfileActivity;
 import com.ddscanner.ui.activities.ForeignProfileActivity;
 import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;
@@ -28,7 +29,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserLi
     private Context context;
     private ArrayList<User> users;
 
-    public UserListAdapter(Context context, ArrayList<User> userOlds) {
+    public  UserListAdapter(Context context, ArrayList<User> userOlds) {
         users = userOlds;
         this.context = context;
     }
@@ -45,6 +46,8 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserLi
     public void onBindViewHolder(UserListViewHolder holder, int position) {
         Picasso.with(context)
                 .load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, users.get(position).getPhoto(), "1"))
+                .placeholder(R.drawable.avatar_profile_default)
+                .error(R.drawable.avatar_profile_default)
                 .resize(Math.round(Helpers.convertDpToPixel(58, context)), Math.round(Helpers.convertDpToPixel(58, context)))
                 .centerCrop()
                 .transform(new CropCircleTransformation())
@@ -77,7 +80,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserLi
 
         @Override
         public void onClick(View v) {
-           ForeignProfileActivity.show(context, users.get(getAdapterPosition()).getId());
+           UserProfileActivity.show(context, users.get(getAdapterPosition()).getId());
         }
     }
 

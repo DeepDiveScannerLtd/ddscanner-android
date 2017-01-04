@@ -509,12 +509,12 @@ public class DDScannerRestClient {
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 
-    public void getUserProfileInformation(String id, final ResultListener<User> resultListener) {
+    public void getUserProfileInformation(String id, final ResultListener<ProfileResponseEntity> resultListener) {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserInformation(id);
-        call.enqueue(new ResponseEntityCallback<User>(gson, resultListener) {
+        call.enqueue(new ResponseEntityCallback<ProfileResponseEntity>(gson, resultListener) {
             @Override
-            void handleResponseString(ResultListener<User> resultListener, String responseString) throws JSONException {
-                User user = new Gson().fromJson(responseString, User.class);
+            void handleResponseString(ResultListener<ProfileResponseEntity> resultListener, String responseString) throws JSONException {
+                ProfileResponseEntity user = new Gson().fromJson(responseString, ProfileResponseEntity.class);
                 resultListener.onSuccess(user);
             }
         });

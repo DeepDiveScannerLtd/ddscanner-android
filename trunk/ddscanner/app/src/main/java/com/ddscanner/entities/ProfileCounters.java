@@ -5,79 +5,79 @@ import com.google.gson.annotations.SerializedName;
 public class ProfileCounters {
 
     @SerializedName("likes")
-    private Integer likesCount;
+    private int likesCount;
 
     @SerializedName("dislikes")
-    private Integer dislikesCount;
+    private int dislikesCount;
 
     @SerializedName("checkins")
-    private Integer checkinsCount;
+    private int checkinsCount;
 
     @SerializedName("additions")
-    private Integer addedCount;
+    private int addedCount;
 
     @SerializedName("changes")
-    private Integer editedCount;
+    private int editedCount;
 
     @SerializedName("comments")
-    private Integer commentsCount;
+    private int commentsCount;
 
     @SerializedName("favourites")
-    private Integer favoritesCount;
+    private int favoritesCount;
 
-    public Integer getLikesCount() {
+    public int getLikesCount() {
         return likesCount;
     }
 
-    public void setLikesCount(Integer likesCount) {
+    public void setLikesCount(int likesCount) {
         this.likesCount = likesCount;
     }
 
-    public Integer getDislikesCount() {
+    public int getDislikesCount() {
         return dislikesCount;
     }
 
-    public void setDislikesCount(Integer dislikesCount) {
+    public void setDislikesCount(int dislikesCount) {
         this.dislikesCount = dislikesCount;
     }
 
-    public Integer getCheckinsCount() {
+    public int getCheckinsCount() {
         return checkinsCount;
     }
 
-    public void setCheckinsCount(Integer checkinsCount) {
+    public void setCheckinsCount(int checkinsCount) {
         this.checkinsCount = checkinsCount;
     }
 
-    public Integer getAddedCount() {
+    public int getAddedCount() {
         return addedCount;
     }
 
-    public void setAddedCount(Integer addedCount) {
+    public void setAddedCount(int addedCount) {
         this.addedCount = addedCount;
     }
 
-    public Integer getEditedCount() {
+    public int getEditedCount() {
         return editedCount;
     }
 
-    public void setEditedCount(Integer editedCount) {
+    public void setEditedCount(int editedCount) {
         this.editedCount = editedCount;
     }
 
-    public Integer getCommentsCount() {
+    public int getCommentsCount() {
         return commentsCount;
     }
 
-    public void setCommentsCount(Integer commentsCount) {
+    public void setCommentsCount(int commentsCount) {
         this.commentsCount = commentsCount;
     }
 
-    public Integer getFavoritesCount() {
+    public int getFavoritesCount() {
         return favoritesCount;
     }
 
-    public void setFavoritesCount(Integer favoritesCount) {
+    public void setFavoritesCount(int favoritesCount) {
         this.favoritesCount = favoritesCount;
     }
 }

@@ -42,6 +42,7 @@ import com.ddscanner.events.PickPhotoForCheckedInDialogEvent;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.divespot.photos.DiveSpotMapsActivity;
 import com.ddscanner.ui.activities.AddPhotosDoDiveSpotActivity;
+import com.ddscanner.ui.activities.CheckInPeoplesActivity;
 import com.ddscanner.ui.activities.DiveCentersActivity;
 import com.ddscanner.screens.divespot.photos.DiveSpotPhotosActivity;
 import com.ddscanner.screens.divespot.edit.EditDiveSpotActivity;
@@ -659,7 +660,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
     }
 
     public void showCheckinsActivity(View view) {
-
+        CheckInPeoplesActivity.show(this, diveSpotId);
     }
 
     public void addPhotoToDiveSpotButtonClicked(View view) {
