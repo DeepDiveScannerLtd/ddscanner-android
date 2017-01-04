@@ -1,5 +1,7 @@
 package com.ddscanner.entities;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 
 public class Comment {
@@ -11,24 +13,32 @@ public class Comment {
     private String likes;
     private String dislikes;
     private String date;
-    private boolean isLike = true;
-    private boolean isDislike = true;
+    @SerializedName("is_liked")
+    private Boolean isLike;
+    @SerializedName("is_disliked")
+    private Boolean isDislike;
 
     public boolean isLike() {
+        if (isLike == null) {
+            return false;
+        }
         return isLike;
     }
 
-//    public void setLike(boolean like) {
-//        isLike = like;
-//    }
+    public void setLike(boolean like) {
+        isLike = like;
+    }
 
     public boolean isDislike() {
+        if (isDislike == null) {
+            return false;
+        }
         return isDislike;
     }
 
-//    public void setDislike(boolean dislike) {
-//        isDislike = dislike;
-//    }
+    public void setDislike(boolean dislike) {
+        isDislike = dislike;
+    }
 
     public String getId() {
         return id;

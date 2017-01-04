@@ -188,12 +188,12 @@ public class DDScannerRestClient {
     }
 
     public void postLikeReview(String commentId, @NonNull final ResultListener<Void> resultListener) {
-        final Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().likeComment(commentId, getRegisterRequest());
+        final Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postLikeReview(commentId);
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 
     public void postDislikeReview(String commentId, @NonNull final ResultListener<Void> resultListener) {
-        final Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().dislikeComment(commentId, getRegisterRequest());
+        final Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postDislikeReview(commentId);
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 

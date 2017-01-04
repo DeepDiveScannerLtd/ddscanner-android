@@ -167,20 +167,20 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
     public void commentLiked(int position) {
         if (comments.get(position).getComment().isDislike()) {
             comments.get(position).getComment().setDislikes(String.valueOf(Integer.parseInt(comments.get(position).getComment().getDislikes()) - 1));
-//            comments.get(position).getComment().setDislike(false);
+            comments.get(position).getComment().setDislike(false);
         }
-//        comments.get(position).getComment().setLikes(String.valueOf(Integer.parseInt(comments.get(position).getComment().getLikes()) + 1));
-//        comments.get(position).getComment().setLike(true);
+        comments.get(position).getComment().setLikes(String.valueOf(Integer.parseInt(comments.get(position).getComment().getLikes()) + 1));
+        comments.get(position).getComment().setLike(true);
         notifyItemChanged(position);
     }
 
     public void commentDisliked(int position) {
         if (comments.get(position).getComment().isLike()) {
             comments.get(position).getComment().setLikes(String.valueOf(Integer.parseInt(comments.get(position).getComment().getLikes()) - 1));
-//            comments.get(position).getComment().setLike(false);
+            comments.get(position).getComment().setLike(false);
         }
         comments.get(position).getComment().setDislikes(String.valueOf(Integer.parseInt(comments.get(position).getComment().getDislikes()) + 1));
-//        comments.get(position).getComment().setDislike(true);
+        comments.get(position).getComment().setDislike(true);
         notifyItemChanged(position);
     }
 
