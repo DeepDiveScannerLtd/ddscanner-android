@@ -2,7 +2,9 @@ package com.ddscanner.entities;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Address {
+import java.io.Serializable;
+
+public class Address implements Serializable {
 
     @SerializedName("address")
     private String name;

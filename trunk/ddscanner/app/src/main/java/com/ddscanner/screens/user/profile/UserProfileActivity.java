@@ -79,7 +79,11 @@ public class UserProfileActivity extends AppCompatActivity implements InfoDialog
     private void setupFragment(int userType, ProfileResponseEntity user) {
         switch (userType) {
             case 0:
-
+                photoAuthor = new PhotoAuthor(String.valueOf(user.getDiveCenter().getId()), user.getDiveCenter().getName(), user.getDiveCenter().getPhoto());
+                FragmentTransaction dcfragmentTransaction = getSupportFragmentManager().beginTransaction();
+                DiveCenterProfileFragment diveCenterProfileFragment = DiveCenterProfileFragment.newInstance(user.getDiveCenter());
+                dcfragmentTransaction.replace(R.id.content, diveCenterProfileFragment);
+                dcfragmentTransaction.commit();
                 break;
             case 1:
             case 2:

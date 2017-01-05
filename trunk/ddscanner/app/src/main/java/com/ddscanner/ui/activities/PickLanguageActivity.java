@@ -10,21 +10,17 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
-import com.ddscanner.entities.DiveCenter;
 import com.ddscanner.entities.DiveCenterCountry;
 import com.ddscanner.entities.Language;
-import com.ddscanner.entities.SealifeShort;
 import com.ddscanner.events.LanguageChosedEvent;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.adapters.LanguageSearchAdapter;
-import com.ddscanner.utils.Helpers;
 import com.rey.material.widget.ProgressView;
 import com.squareup.otto.Subscribe;
 
@@ -76,7 +72,7 @@ public class PickLanguageActivity extends AppCompatActivity implements SearchVie
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_language);
+        setContentView(R.layout.activity_search);
         isPickLanguage = getIntent().getBooleanExtra("isLanguage", false);
         findViews();
         if (isPickLanguage) {

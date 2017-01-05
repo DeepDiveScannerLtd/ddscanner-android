@@ -29,6 +29,7 @@ import com.ddscanner.entities.FiltersResponseEntity;
 import com.ddscanner.entities.PhotoOpenedSource;
 import com.ddscanner.entities.request.ReportImageRequest;
 import com.ddscanner.rest.DDScannerRestClient;
+import com.ddscanner.screens.user.profile.UserProfileActivity;
 import com.ddscanner.ui.activities.LoginActivity;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.ui.views.SimpleGestureFilter;
@@ -198,6 +199,8 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         likesCount.setText(images.get(position).getLikesCount());
         if (images.get(position).isLiked()) {
             likeIcon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_like_photo_full));
+        } else {
+            likeIcon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_like_photo_empty));
         }
         userName.setText(images.get(position).getAuthor().getName());
         date.setText(Helpers.convertDateToImageSliderActivity(images.get(position).getDate()));
@@ -246,6 +249,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
             likesLayout.setVisibility(View.GONE);
         }
         likesLayout.setOnClickListener(this);
+        avatar.setOnClickListener(this);
     }
 
     @Override
@@ -262,6 +266,9 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
                 }
                 dislikeUi();
                 DDScannerApplication.getInstance().getDdScannerRestClient().postDislikePhoto(images.get(position).getId(), dislikeResultListener);
+                break;
+            case R.id.user_avatar:
+                UserProfileActivity.show(this, images.get(position).getAuthor().getId());
                 break;
         }
     }

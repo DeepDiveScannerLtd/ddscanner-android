@@ -6,6 +6,7 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.entities.AchievmentsResponseEntity;
 import com.ddscanner.entities.AddDiveSpotResponseEntity;
 import com.ddscanner.entities.AddressComponent;
+import com.ddscanner.entities.BaseIdNamePhotoEntity;
 import com.ddscanner.entities.CommentEntity;
 import com.ddscanner.entities.Comments;
 import com.ddscanner.entities.DiveCenterProfile;
@@ -262,6 +263,23 @@ public class DDScannerRestClient {
     }
 
     /*Methods using in API v2_0*/
+
+    public void postAddInstructorToDiveCenter(ResultListener<Void> resultListener, String diveCenterId) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postAddIstructorToDiveCenter(diveCenterId);
+        call.enqueue(new NoResponseEntityCallback(gson, resultListener));
+    }
+
+    public void getDiveCentersList(ResultListener<ArrayList<BaseIdNamePhotoEntity>> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveCentersList("%", "10000");
+        call.enqueue(new ResponseEntityCallback<ArrayList<BaseIdNamePhotoEntity>>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<ArrayList<BaseIdNamePhotoEntity>> resultListener, String responseString) throws JSONException {
+                Type listType = new TypeToken<ArrayList<BaseIdNamePhotoEntity>>(){}.getType();
+                ArrayList<BaseIdNamePhotoEntity> list = gson.fromJson(responseString, listType);
+                resultListener.onSuccess(list);
+            }
+        });
+    }
 
     public void postUpdateDiveCenterProfile(ResultListener<Void> resultListener, MultipartBody.Part image, List<MultipartBody.Part> emails, List<MultipartBody.Part> phones, List<MultipartBody.Part> diveSpots, RequestBody... requestBodies) {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postUpdateDiveCenterProfile(image, requestBodies[0], requestBodies[1], requestBodies[2], requestBodies[3], emails, phones, diveSpots);

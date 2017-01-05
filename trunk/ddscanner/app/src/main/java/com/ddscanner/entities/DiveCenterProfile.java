@@ -2,9 +2,10 @@ package com.ddscanner.entities;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class DiveCenterProfile {
+public class DiveCenterProfile implements Serializable{
 
     private int id;
     private String name;

@@ -220,7 +220,8 @@ public interface DDScannerRestService {
     @GET("v2_0/divespot.editors.get")
     Call<ResponseBody> getDiveSpotEditorsList(@Query("id") String diveSpotId);
 
-
+    @GET("v2_0/divecenters.search")
+    Call<ResponseBody> getDiveCentersList(@Query("query") String query, @Query("limit") String limit);
 
     @GET("v2_0/divespot.photos.get")
     Call<ResponseBody> getDiveSpotPhotos(@Query("id") String diveSpotId);
@@ -353,7 +354,7 @@ public interface DDScannerRestService {
     @POST("v2_0/divespot.review.delete")
     Call<ResponseBody> postDeleteReview(@Query("id") String commentId);
 
-    @POST("/v2_0/divespot.review.report")
+    @POST("v2_0/divespot.review.report")
     Call<ResponseBody> postReportReview(@Body ReportRequest reportRequest);
 
     @POST("v2_0/divespot.review.dislike")
@@ -383,7 +384,7 @@ public interface DDScannerRestService {
     @GET("v2_0/user.divespots.favorites.get")
     Call<ResponseBody> getUserFavoritesSpots(@Query("id") String userId);
 
-    @POST("/v2_0/user.location.update")
+    @POST("v2_0/user.location.update")
     Call<ResponseBody> postUpdateUserLocation(@Body UpdateLocationRequest updateLocationRequest);
 
     @POST("v2_0/image.report")
@@ -394,5 +395,9 @@ public interface DDScannerRestService {
 
     @GET("v2_0/user.reviews.get")
     Call<ResponseBody> getSelfCommentsList();
+
+    @POST("v2_0/instructor.divecenter.add")
+    Call<ResponseBody> postAddIstructorToDiveCenter(@Query("id") String diveCenterId);
+
 
 }

@@ -11,8 +11,10 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatRadioButton;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -21,6 +23,7 @@ import com.ddscanner.R;
 import com.ddscanner.databinding.ActivityEditProfileBinding;
 import com.ddscanner.entities.User;
 import com.ddscanner.rest.DDScannerRestClient;
+import com.ddscanner.screens.profile.edit.divecenter.search.SearchDiveCenterActivity;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.adapters.DiverLevelSpinnerAdapter;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
@@ -55,6 +58,8 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
     private static final int MAX_LENGTH_ABOUT = 250;
     private boolean isAboutChanged = false;
     private boolean isNamChanged = false;
+    private AppCompatRadioButton diverRadio;
+    private AppCompatRadioButton insructorRadio;
 
     private DDScannerRestClient.ResultListener<Void> updateProfileInfoResultListener = new DDScannerRestClient.ResultListener<Void>() {
         @Override
@@ -160,8 +165,13 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
             }
         });
         materialDialog = Helpers.getMaterialDialog(this);
-        setupRadioButtons("Diver");
-        setupRadioButtons("Instructor");
+        if (user.getUserTypeString().equals("Diver")) {
+            setupRadioButtons("Diver", true, false);
+            setupRadioButtons("Instructor", false, false);
+        } else {
+            setupRadioButtons("Diver", false, false);
+            setupRadioButtons("Instructor", true, true);
+        }
         levels.add("Diver level");
         levels.addAll(Helpers.getDiveLevelTypes());
         binding.levelSpinner.setAdapter(new DiverLevelSpinnerAdapter(this, R.layout.spinner_item, levels));
@@ -170,15 +180,35 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
         } else {
             binding.levelSpinner.setSelection(1);
         }
-
+        binding.radiogroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                if (diverRadio.isChecked()) {
+                    binding.chooseDiveCenterBtn.setVisibility(View.GONE);
+                } else {
+                    binding.chooseDiveCenterBtn.setVisibility(View.VISIBLE);
+                }
+            }
+        });
     }
 
-    private void setupRadioButtons(String title) {
+    private void setupRadioButtons(String title, boolean isActive, boolean isShowChoseDiveCenter) {
         AppCompatRadioButton button = new AppCompatRadioButton(this);
         button.setSupportButtonTintList(colorStateList);
         button.setText(title);
+        if (title.equals("Diver")) {
+            diverRadio = button;
+        } else {
+            insructorRadio = button;
+        }
         button.setPadding(Math.round(Helpers.convertDpToPixel(15, this)), Math.round(Helpers.convertDpToPixel(10, this)), Math.round(Helpers.convertDpToPixel(20, this)), Math.round(Helpers.convertDpToPixel(10, this)));
         binding.radiogroup.addView(button);
+        if (isActive) {
+            binding.radiogroup.check(button.getId());
+        }
+        if (isShowChoseDiveCenter) {
+            binding.chooseDiveCenterBtn.setVisibility(View.VISIBLE);
+        }
     }
 
     private void sendUpdateRequest() {
@@ -206,6 +236,10 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
     /*Called when user try to pick photo from camera*/
     public void capturePhoto(View view) {
         pickPhotoFromCamera();
+    }
+
+    public void chooseDiveCenter(View view) {
+        SearchDiveCenterActivity.showForResult(this, 1);
     }
 
     @Override

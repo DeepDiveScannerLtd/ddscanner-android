@@ -108,7 +108,7 @@ public class ProfileFragment extends BaseFragment implements LoginView.LoginStat
 
         @Override
         public void onConnectionFailure() {
-            InfoDialogFragment.showForFragmentResult(getChildFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_PROFILE_FRAGMENT_FAILED_TO_CONNECT, false);
+            InfoDialogFragment.show(getChildFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
         }
 
         @Override

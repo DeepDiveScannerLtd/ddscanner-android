@@ -78,6 +78,19 @@ public class User implements Serializable {
         return photos;
     }
 
+    public String getUserTypeString() {
+        switch (type) {
+            case 0:
+                return "Dive center";
+            case 1:
+                return "Diver";
+            case 2:
+                return "Instructor";
+            default:
+                return "";
+        }
+    }
+
     public void setPhotos(List<DiveSpotPhoto> photos) {
         this.photos = photos;
     }
