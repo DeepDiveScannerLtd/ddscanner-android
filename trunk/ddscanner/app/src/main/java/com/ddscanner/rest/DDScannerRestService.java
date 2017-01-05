@@ -399,5 +399,8 @@ public interface DDScannerRestService {
     @POST("v2_0/instructor.divecenter.add")
     Call<ResponseBody> postAddIstructorToDiveCenter(@Query("id") String diveCenterId);
 
+    @GET("v2_0/divecenter.instructors.get")
+    Call<ResponseBody> getInstructorsList(@Query("id") String diveCenterId);
+
 
 }

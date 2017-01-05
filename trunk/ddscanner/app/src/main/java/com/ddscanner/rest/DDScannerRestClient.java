@@ -21,6 +21,7 @@ import com.ddscanner.entities.FiltersResponseEntity;
 import com.ddscanner.entities.ForeignUserDislikesWrapper;
 import com.ddscanner.entities.ForeignUserLikeWrapper;
 import com.ddscanner.entities.GoogleMapsGeocodeResponseEntity;
+import com.ddscanner.entities.Instructor;
 import com.ddscanner.entities.ProfileResponseEntity;
 import com.ddscanner.entities.RegisterResponse;
 import com.ddscanner.entities.Sealife;
@@ -263,6 +264,18 @@ public class DDScannerRestClient {
     }
 
     /*Methods using in API v2_0*/
+
+    public void getDiveCenterInstructorsList(ResultListener<ArrayList<Instructor>> resultListener, String diveCenterId) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getInstructorsList(diveCenterId);
+        call.enqueue(new ResponseEntityCallback<ArrayList<Instructor>>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<ArrayList<Instructor>> resultListener, String responseString) throws JSONException {
+                Type listType = new TypeToken<ArrayList<Instructor>>(){}.getType();
+                ArrayList<Instructor> instructors = gson.fromJson(responseString, listType);
+                resultListener.onSuccess(instructors);
+            }
+        });
+    }
 
     public void postAddInstructorToDiveCenter(ResultListener<Void> resultListener, String diveCenterId) {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postAddIstructorToDiveCenter(diveCenterId);

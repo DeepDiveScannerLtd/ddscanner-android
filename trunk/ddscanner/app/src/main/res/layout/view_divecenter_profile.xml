@@ -56,15 +56,16 @@
 
             <ImageView style="@style/DividerStyleFull" />
 
-            <ImageView
-                style="@style/DividerStyleFull"
-                android:layout_marginBottom="@dimen/base_block_margin_top" />
 
             <LinearLayout
+                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
+                android:visibility="gone"
                 android:orientation="vertical">
+                <ImageView
+                    style="@style/DividerStyleFull" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -81,13 +82,13 @@
                     android:layout_marginBottom="18dp"
                     android:layout_marginLeft="20dp"
                     android:layout_marginTop="14dp" />
+                <ImageView style="@style/DividerStyleFull" />
             </LinearLayout>
 
-            <ImageView style="@style/DividerStyleFull" />
 
             <ImageView
                 style="@style/DividerStyleFull"
-                android:layout_marginBottom="@dimen/base_block_margin_top" />
+                android:layout_marginTop="@dimen/base_block_margin_top" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -172,7 +173,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:onClick="@{handlers::showInstructors}">
 
                     <ImageView
                         style="@style/DiveCenterProfileCharacteristicIcon"

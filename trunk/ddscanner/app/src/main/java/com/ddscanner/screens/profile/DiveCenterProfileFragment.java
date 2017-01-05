@@ -24,6 +24,7 @@ import com.ddscanner.events.ChangePageOfMainViewPagerEvent;
 import com.ddscanner.events.LoadUserProfileInfoEvent;
 import com.ddscanner.events.LoggedOutEvent;
 import com.ddscanner.rest.DDScannerRestClient;
+import com.ddscanner.screens.instructors.InstructorsActivity;
 import com.ddscanner.screens.profile.edit.EditDiveCenterProfileActivity;
 import com.ddscanner.ui.activities.MainActivity;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
@@ -146,6 +147,10 @@ public class DiveCenterProfileFragment extends BaseFragment implements LoginView
 
     public void editProfileButtonClicked(View view) {
         EditDiveCenterProfileActivity.showForResult(getActivity(), new Gson().toJson(diveCenterProfile), ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_SHOW_EDIT_DC_PROFILE_ACTIVITY);
+    }
+
+    public void showInstructors(View view) {
+        InstructorsActivity.showForResult(getActivity(), ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_SHOW_INSTRUCTORS_ACTIVITY, String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId()));
     }
 
     @Override

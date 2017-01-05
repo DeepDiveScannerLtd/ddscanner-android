@@ -262,6 +262,9 @@
         <activity
             android:name=".screens.profile.edit.divecenter.search.SearchDiveCenterActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".screens.instructors.InstructorsActivity"
+            android:screenOrientation="portrait" />
         <service
             android:name=".services.FirebaseMessagingService">
             <intent-filter>
