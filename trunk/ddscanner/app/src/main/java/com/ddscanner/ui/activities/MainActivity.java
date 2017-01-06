@@ -135,6 +135,7 @@ public class MainActivity extends BaseAppCompatActivity
         @Override
         public void onSuccess(SignUpResponseEntity result) {
             materialDialog.dismiss();
+            DDScannerApplication.getInstance().getSharedPreferenceHelper().setUserServerId(result.getId());
             switch (result.getType()) {
                 case 0:
                     DDScannerApplication.getInstance().getSharedPreferenceHelper().diveCenterLoggedIn(result.getToken());

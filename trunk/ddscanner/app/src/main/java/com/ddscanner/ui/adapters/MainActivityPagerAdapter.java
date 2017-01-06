@@ -58,6 +58,7 @@ public class MainActivityPagerAdapter extends FragmentStatePagerAdapter implemen
                     case 0:
                         return diveCenterProfileFragment;
                     case 1:
+                    case 2:
                         return profileFragment;
                     case -1:
                         return profileFragment;

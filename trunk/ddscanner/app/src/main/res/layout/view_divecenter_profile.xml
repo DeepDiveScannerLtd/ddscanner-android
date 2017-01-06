@@ -42,7 +42,7 @@
                     android:layout_marginLeft="13dp"
                     android:layout_marginTop="13dp"
                     android:src="@drawable/avatar_dc_profile"
-                    app:loadImageFrom="@{diveCenterViewModel}"/>
+                    app:loadImageFrom="@{diveCenterViewModel}" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -58,14 +58,14 @@
 
 
             <LinearLayout
-                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:background="@color/white"
-                android:visibility="gone"
-                android:orientation="vertical">
-                <ImageView
-                    style="@style/DividerStyleFull" />
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <ImageView style="@style/DividerStyleFull" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -82,6 +82,7 @@
                     android:layout_marginBottom="18dp"
                     android:layout_marginLeft="20dp"
                     android:layout_marginTop="14dp" />
+
                 <ImageView style="@style/DividerStyleFull" />
             </LinearLayout>
 
@@ -100,6 +101,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
+
                     <ImageView
                         style="@style/DiveCenterProfileCharacteristicIcon"
                         android:src="@drawable/ic_dc_location" />
@@ -115,8 +117,8 @@
                             android:text="@string/dc_address" />
 
                         <TextView
-                            app:setAddressFrom="@{diveCenterViewModel}"
-                            style="@style/DiveCenterProfileCharacteristicDesciption" />
+                            style="@style/DiveCenterProfileCharacteristicDesciption"
+                            app:setAddressFrom="@{diveCenterViewModel}" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -141,7 +143,7 @@
 
                         <TextView
                             style="@style/DiveCenterProfileCharacteristicDesciption"
-                            app:setEmails="@{diveCenterViewModel}"/>
+                            app:setEmails="@{diveCenterViewModel}" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -173,8 +175,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:onClick="@{handlers::showInstructors}">
+                    android:onClick="@{handlers::showInstructors}"
+                    android:orientation="horizontal">
 
                     <ImageView
                         style="@style/DiveCenterProfileCharacteristicIcon"
@@ -260,16 +262,15 @@
 
             <ImageView style="@style/DividerStyleFull" />
 
-            <ImageView
-                style="@style/DividerStyleFull"
-                android:layout_marginBottom="@dimen/base_block_margin_top" />
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/base_block_margin_top"
                 android:background="@color/white"
                 android:orientation="vertical"
-                android:visibility="visible">
+                android:visibility="@{diveCenterViewModel.diveCenterProfile.photos != null ? View.VISIBLE : View.GONE}">
+
+                <ImageView style="@style/DividerStyleFull" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -281,18 +282,21 @@
                     android:textSize="15sp" />
 
                 <android.support.v7.widget.RecyclerView
+                    android:id="@+id/photos_list"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="18dp"
                     android:layout_marginLeft="20dp"
                     android:layout_marginTop="14dp" />
+
+                <ImageView style="@style/DividerStyleFull" />
+
             </LinearLayout>
 
-            <ImageView style="@style/DividerStyleFull" />
 
             <ImageView
                 style="@style/DividerStyleFull"
-                android:layout_marginBottom="@dimen/base_block_margin_top" />
+                android:layout_marginTop="@dimen/base_block_margin_top" />
 
             <LinearLayout
                 android:layout_width="match_parent"

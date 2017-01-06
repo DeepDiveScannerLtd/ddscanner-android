@@ -20,7 +20,7 @@ public class DiveCenterProfile implements Serializable{
     private ArrayList<String> languages;
     @SerializedName("instructors_count")
     private String instructorsCount;
-    private ArrayList<String> photos;
+    private ArrayList<DiveSpotPhoto> photos;
     @SerializedName("photos_count")
     private int photosCount;
     @SerializedName("created_spots_count")
@@ -135,11 +135,18 @@ public class DiveCenterProfile implements Serializable{
         this.instructorsCount = instructorsCount;
     }
 
-    public ArrayList<String> getPhotos() {
+    public ArrayList<DiveSpotPhoto> getPhotos() {
+        if (photos != null) {
+            for (DiveSpotPhoto diveSpotPhoto : photos) {
+                PhotoAuthor photoAuthor = new PhotoAuthor(String.valueOf(id), name, photo);
+                photos.get(photos.indexOf(diveSpotPhoto)).setAuthor(photoAuthor);
+            }
+            return photos;
+        }
         return photos;
     }
 
-    public void setPhotos(ArrayList<String> photos) {
+    public void setPhotos(ArrayList<DiveSpotPhoto> photos) {
         this.photos = photos;
     }
 

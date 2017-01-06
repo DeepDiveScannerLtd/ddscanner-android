@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +28,7 @@ import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.instructors.InstructorsActivity;
 import com.ddscanner.screens.profile.edit.EditDiveCenterProfileActivity;
 import com.ddscanner.ui.activities.MainActivity;
+import com.ddscanner.ui.adapters.UserPhotosListAdapter;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.ui.fragments.BaseFragment;
 import com.ddscanner.ui.views.LoginView;
@@ -51,6 +53,7 @@ public class DiveCenterProfileFragment extends BaseFragment implements LoginView
                     DDScannerApplication.getInstance().getSharedPreferenceHelper().setUserServerId(String.valueOf(diveCenterProfile.getId()));
                     DDScannerApplication.getInstance().getSharedPreferenceHelper().saveDiveCenter(diveCenterProfile);
                     binding.setDiveCenterViewModel(new DiveCenterProfileFragmentViewModel(diveCenterProfile));
+                    setUi();
                     break;
             }
         }
@@ -85,6 +88,13 @@ public class DiveCenterProfileFragment extends BaseFragment implements LoginView
             DDScannerApplication.getInstance().getDdScannerRestClient().getUserSelfInformation(userResultListener);
         }
         return view;
+    }
+
+    private void setUi() {
+        if (binding.getDiveCenterViewModel().getDiveCenterProfile().getPhotos() != null) {
+            binding.photosList.setLayoutManager(new GridLayoutManager(getContext(), 4));
+            binding.photosList.setAdapter(new UserPhotosListAdapter(binding.getDiveCenterViewModel().getDiveCenterProfile().getPhotos(), binding.getDiveCenterViewModel().getDiveCenterProfile().getPhotosCount(), getContext()));
+        }
     }
 
     @TargetApi(23)
