@@ -30,6 +30,16 @@ public class DiveCenterProfile implements Serializable{
     private String token;
     @SerializedName("where_working_count")
     private int workingCount;
+    @SerializedName("where_working_dive_spots")
+    private ArrayList<DiveSpotShort> workingSpots;
+
+    public ArrayList<DiveSpotShort> getWorkingSpots() {
+        return workingSpots;
+    }
+
+    public void setWorkingSpots(ArrayList<DiveSpotShort> workingSpots) {
+        this.workingSpots = workingSpots;
+    }
 
     public int getWorkingCount() {
         return workingCount;

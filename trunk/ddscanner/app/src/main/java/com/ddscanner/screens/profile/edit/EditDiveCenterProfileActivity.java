@@ -12,6 +12,7 @@ import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 
@@ -28,6 +29,7 @@ import com.ddscanner.ui.adapters.DiveSpotsListForEditDcAdapter;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
+import com.ddscanner.utils.DialogHelpers;
 import com.ddscanner.utils.Helpers;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -75,6 +77,7 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
         public void onSuccess(Void result) {
             materialDialog.dismiss();
             setResult(RESULT_OK);
+            finish();
         }
 
         @Override
@@ -110,6 +113,9 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
         materialDialog = Helpers.getMaterialDialog(this);
         binding.diveSpotList.setLayoutManager(new LinearLayoutManager(this));
         binding.diveSpotList.setAdapter(diveSpotsListForEditDcAdapter);
+        if (binding.getDcViewModel().getDiveCenterProfile().getWorkingSpots() != null) {
+            diveSpotsListForEditDcAdapter.addAll(binding.getDcViewModel().getDiveCenterProfile().getWorkingSpots());
+        }
         if (binding.getDcViewModel().getDiveCenterProfile().getPhones() == null) {
             addPhoneClicked(null);
         } else {
@@ -281,7 +287,7 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
             countryRequestBody = Helpers.createRequestBodyForString(countryCode);
         }
 
-        if (!imagePath.isEmpty()) {
+        if (imagePath != null && !imagePath.isEmpty()) {
             File file = new File(imagePath);
             RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
             photo = MultipartBody.Part.createFormData("photo", file.getName(), requestFile);
@@ -291,5 +297,13 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
         materialDialog.show();
     }
 
-
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                DialogHelpers.showDialogAfterChanging(R.string.dialog_leave_title, R.string.dialog_leave_review_message, this, this);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }
