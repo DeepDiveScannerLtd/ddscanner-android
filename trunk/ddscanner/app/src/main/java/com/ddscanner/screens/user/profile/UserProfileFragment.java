@@ -46,11 +46,11 @@ public class UserProfileFragment extends Fragment {
         binding.setHandlers(this);
         if (user.getAchievements() != null) {
             binding.achievmentRv.setLayoutManager(new LinearLayoutManager(getContext()));
-            binding.achievmentRv.setAdapter(new AchievmentProfileListAdapter((ArrayList<ProfileAchievement>) user.getAchievements(), getContext()));
+            binding.achievmentRv.setAdapter(new AchievmentProfileListAdapter((ArrayList<ProfileAchievement>) user.getAchievements(), getActivity()));
         }
         if (user.getPhotos() != null) {
             binding.photosList.setLayoutManager(new GridLayoutManager(getContext(), 4));
-            binding.photosList.setAdapter(new UserPhotosListAdapter((ArrayList<DiveSpotPhoto>) user.getPhotos(), user.getPhotosCount(), getContext()));
+            binding.photosList.setAdapter(new UserPhotosListAdapter((ArrayList<DiveSpotPhoto>) user.getPhotos(), user.getPhotosCount(), getActivity()));
         }
         return v;
     }

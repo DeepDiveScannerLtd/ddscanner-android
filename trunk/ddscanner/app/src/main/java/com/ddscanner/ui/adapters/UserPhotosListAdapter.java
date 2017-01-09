@@ -1,5 +1,6 @@
 package com.ddscanner.ui.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -13,8 +14,10 @@ import android.widget.TextView;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.DiveSpotPhoto;
+import com.ddscanner.entities.PhotoOpenedSource;
 import com.ddscanner.events.OpenPhotosActivityEvent;
 import com.ddscanner.screens.divespot.details.DiveSpotPhotosAdapter;
+import com.ddscanner.screens.photo.slider.ImageSliderActivity;
 import com.ddscanner.ui.views.TransformationRoundImage;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.ImageLoadedCallback;
@@ -28,10 +31,10 @@ public class UserPhotosListAdapter extends RecyclerView.Adapter<UserPhotosListAd
 
     private ArrayList<DiveSpotPhoto> photos = new ArrayList<>();
     private int photosCount;
-    private Context context;
+    private Activity context;
     private int photoSize;
 
-    public UserPhotosListAdapter(ArrayList<DiveSpotPhoto> photos, int photosCount, Context context) {
+    public UserPhotosListAdapter(ArrayList<DiveSpotPhoto> photos, int photosCount, Activity context) {
         this.photos = photos;
         this.photosCount = photosCount;
         this.context = context;
@@ -95,7 +98,11 @@ public class UserPhotosListAdapter extends RecyclerView.Adapter<UserPhotosListAd
 
         @Override
         public void onClick(View view) {
-            DDScannerApplication.bus.post(new OpenPhotosActivityEvent());
+            if (photosCount > 4) {
+                DDScannerApplication.bus.post(new OpenPhotosActivityEvent());
+                return;
+            }
+            ImageSliderActivity.showForResult(context, photos, getAdapterPosition(), 0, PhotoOpenedSource.PROFILE, false);
         }
     }
 
