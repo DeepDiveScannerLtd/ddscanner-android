@@ -4,6 +4,7 @@ package com.ddscanner.rest;
 import com.ddscanner.entities.Translation;
 import com.ddscanner.entities.request.DeleteImageRequest;
 import com.ddscanner.entities.request.IdentifyRequest;
+import com.ddscanner.entities.request.InstructorsSeeRequests;
 import com.ddscanner.entities.request.RegisterRequest;
 import com.ddscanner.entities.request.ReportImageRequest;
 import com.ddscanner.entities.request.ReportRequest;
@@ -402,5 +403,7 @@ public interface DDScannerRestService {
     @GET("v2_0/divecenter.instructors.get")
     Call<ResponseBody> getInstructorsList(@Query("id") String diveCenterId);
 
+    @POST("v2_0/divecenter.instructors.see")
+    Call<ResponseBody> postInstructorsSees(@Body InstructorsSeeRequests instructorsSeeRequests);
 
 }

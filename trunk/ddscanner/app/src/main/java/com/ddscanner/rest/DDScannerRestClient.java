@@ -35,6 +35,7 @@ import com.ddscanner.entities.UserLikeEntity;
 import com.ddscanner.entities.request.DeleteImageRequest;
 import com.ddscanner.entities.request.DiveSpotsRequestMap;
 import com.ddscanner.entities.request.IdentifyRequest;
+import com.ddscanner.entities.request.InstructorsSeeRequests;
 import com.ddscanner.entities.request.RegisterRequest;
 import com.ddscanner.entities.request.ReportImageRequest;
 import com.ddscanner.entities.request.ReportRequest;
@@ -264,6 +265,12 @@ public class DDScannerRestClient {
     }
 
     /*Methods using in API v2_0*/
+
+    public void postInstructorsSee(ResultListener<Void> resultListener, ArrayList<String> ids) {
+        InstructorsSeeRequests instructorsSeeRequests = new InstructorsSeeRequests(ids);
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postInstructorsSees(instructorsSeeRequests);
+        call.enqueue(new NoResponseEntityCallback(gson, resultListener));
+    }
 
     public void getDiveCenterInstructorsList(ResultListener<ArrayList<Instructor>> resultListener, String diveCenterId) {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getInstructorsList(diveCenterId);

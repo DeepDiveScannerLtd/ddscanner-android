@@ -131,6 +131,23 @@ public class MainActivity extends BaseAppCompatActivity
     private boolean loggedInDuringLastOnStart;
     private boolean needToClearDefaultAccount;
 
+    private DDScannerRestClient.ResultListener<Void> instructorsResultListene = new DDScannerRestClient.ResultListener<Void>() {
+        @Override
+        public void onSuccess(Void result) {
+
+        }
+
+        @Override
+        public void onConnectionFailure() {
+
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+
+        }
+    };
+
     private DDScannerRestClient.ResultListener<SignUpResponseEntity> signUpLoginResultListener = new DDScannerRestClient.ResultListener<SignUpResponseEntity>() {
         @Override
         public void onSuccess(SignUpResponseEntity result) {
@@ -444,6 +461,11 @@ public class MainActivity extends BaseAppCompatActivity
                         DDScannerApplication.getInstance().getSharedPreferenceHelper().setActiveUserType(1);
                         mainViewPagerAdapter.onLoggedOut();
                     }
+                }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_SHOW_INSTRUCTORS_ACTIVITY:
+                if (resultCode == RESULT_OK) {
+                    DDScannerApplication.getInstance().getDdScannerRestClient().postInstructorsSee(instructorsResultListene, data.getStringArrayListExtra("ids"));
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_SHOW_EDIT_DC_PROFILE_ACTIVITY:

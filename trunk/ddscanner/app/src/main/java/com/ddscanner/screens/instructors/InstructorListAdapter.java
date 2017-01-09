@@ -24,6 +24,7 @@ public class InstructorListAdapter extends RecyclerView.Adapter<InstructorListAd
 
     private ArrayList<Instructor> instructors;
     private Context context;
+    private ArrayList<String> showedInstructors = new ArrayList<>();
 
     public InstructorListAdapter(ArrayList<Instructor> instructors, Context context) {
         this.instructors = instructors;
@@ -42,6 +43,9 @@ public class InstructorListAdapter extends RecyclerView.Adapter<InstructorListAd
         holder.isNew.setVisibility(View.GONE);
         if (instructors.get(position).getIsNew()) {
             holder.isNew.setVisibility(View.VISIBLE);
+            if (showedInstructors.indexOf(instructors.get(position).getId()) == -1) {
+                showedInstructors.add(instructors.get(position).getId());
+            }
         }
         Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, instructors.get(position).getPhoto(), "1")).placeholder(R.drawable.review_default_avatar).error(R.drawable.review_default_avatar).resize(Math.round(Helpers.convertDpToPixel(60, context)),Math.round(Helpers.convertDpToPixel(60, context))).centerCrop().transform(new CropCircleTransformation()).into(holder.avatar);
     }
@@ -52,6 +56,18 @@ public class InstructorListAdapter extends RecyclerView.Adapter<InstructorListAd
             return 0;
         }
         return instructors.size();
+    }
+
+    public void remove(int position) {
+        if (showedInstructors.indexOf(instructors.get(position).getId()) != -1) {
+            showedInstructors.remove(showedInstructors.indexOf(instructors.get(position).getId()));
+        }
+        instructors.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    public ArrayList<String> getShowedInstructors() {
+        return this.showedInstructors;
     }
 
     class InstructorListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
