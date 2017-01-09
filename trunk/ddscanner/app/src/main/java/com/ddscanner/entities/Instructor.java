@@ -9,6 +9,15 @@ public class Instructor {
     private String photo;
     @SerializedName("is_new")
     private Boolean isNew;
+    private int type;
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
 
     public String getId() {
         return id;

@@ -83,25 +83,24 @@ public class ProfileFragment extends BaseFragment implements LoginView.LoginStat
 
     private FragmentProfileBinding binding;
 
-    private DDScannerRestClient.ResultListener<ProfileResponseEntity> userResultListener = new DDScannerRestClient.ResultListener<ProfileResponseEntity>() {
+    private DDScannerRestClient.ResultListener<User> userResultListener = new DDScannerRestClient.ResultListener<User>() {
         @Override
-        public void onSuccess(ProfileResponseEntity result) {
+        public void onSuccess(User result) {
             if (binding != null) {
                 binding.about.setVisibility(View.VISIBLE);
             }
             switch (result.getType()) {
                 case 2:
                 case 1:
-                    user = result.getDiver();
+                    user = result;
                     user.setToken(DDScannerApplication.getInstance().getSharedPreferenceHelper().getToken());
-                    user.setType(result.getType());
                     DDScannerApplication.getInstance().getSharedPreferenceHelper().setActiveUser(user);
                     DDScannerApplication.getInstance().getSharedPreferenceHelper().setUserServerId(user.getId());
                     break;
                 case 0:
                     break;
             }
-            binding.setProfileFragmentViewModel(new ProfileFragmentViewModel(result.getDiver()));
+            binding.setProfileFragmentViewModel(new ProfileFragmentViewModel(result));
             binding.swiperefresh.setRefreshing(false);
             changeUi();
         }

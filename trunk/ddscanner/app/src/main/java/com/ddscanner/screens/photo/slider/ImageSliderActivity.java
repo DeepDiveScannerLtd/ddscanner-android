@@ -268,7 +268,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
                 DDScannerApplication.getInstance().getDdScannerRestClient().postDislikePhoto(images.get(position).getId(), dislikeResultListener);
                 break;
             case R.id.user_avatar:
-                UserProfileActivity.show(this, images.get(position).getAuthor().getId());
+                UserProfileActivity.show(this, images.get(position).getAuthor().getId(), images.get(position).getAuthor().getType());
                 break;
         }
     }

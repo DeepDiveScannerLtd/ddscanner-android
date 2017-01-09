@@ -70,7 +70,7 @@ public class User implements Serializable {
     public List<DiveSpotPhoto> getPhotos() {
         if (photos != null) {
             for (DiveSpotPhoto diveSpotPhoto : photos) {
-                PhotoAuthor photoAuthor = new PhotoAuthor(id, name, photo);
+                PhotoAuthor photoAuthor = new PhotoAuthor(id, name, photo, type);
                 photos.get(photos.indexOf(diveSpotPhoto)).setAuthor(photoAuthor);
             }
             return photos;

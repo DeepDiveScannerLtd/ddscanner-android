@@ -80,7 +80,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserLi
 
         @Override
         public void onClick(View v) {
-           UserProfileActivity.show(context, users.get(getAdapterPosition()).getId());
+           UserProfileActivity.show(context, users.get(getAdapterPosition()).getId(), users.get(getAdapterPosition()).getType());
         }
     }
 

@@ -43,6 +43,7 @@ import com.ddscanner.entities.request.SignInRequest;
 import com.ddscanner.entities.request.SignUpRequest;
 import com.ddscanner.entities.request.UpdateLocationRequest;
 import com.ddscanner.entities.request.ValidationRequest;
+import com.ddscanner.screens.user.profile.DiveCenterProfileFragment;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
 import com.google.android.gms.maps.model.LatLng;
@@ -526,12 +527,23 @@ public class DDScannerRestClient {
         });
     }
 
-    public void getUserSelfInformation(final ResultListener<ProfileResponseEntity> resultListener) {
+    public void getUserSelfInformation(final ResultListener<User> resultListener) {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getSelfProfileInformation(1);
-        call.enqueue(new ResponseEntityCallback<ProfileResponseEntity>(gson, resultListener) {
+        call.enqueue(new ResponseEntityCallback<User>(gson, resultListener) {
             @Override
-            void handleResponseString(ResultListener<ProfileResponseEntity> resultListener, String responseString) throws JSONException {
-                ProfileResponseEntity user = new Gson().fromJson(responseString, ProfileResponseEntity.class);
+            void handleResponseString(ResultListener<User> resultListener, String responseString) throws JSONException {
+                User user = new Gson().fromJson(responseString, User.class);
+                resultListener.onSuccess(user);
+            }
+        });
+    }
+
+    public void getDiveCenterSelfInformation(final ResultListener<DiveCenterProfile> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getSelfDiveCenterInformation(1);
+        call.enqueue(new ResponseEntityCallback<DiveCenterProfile>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<DiveCenterProfile> resultListener, String responseString) throws JSONException {
+                DiveCenterProfile user = new Gson().fromJson(responseString, DiveCenterProfile.class);
                 resultListener.onSuccess(user);
             }
         });
@@ -547,12 +559,23 @@ public class DDScannerRestClient {
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 
-    public void getUserProfileInformation(String id, final ResultListener<ProfileResponseEntity> resultListener) {
+    public void getUserProfileInformation(String id, final ResultListener<User> resultListener) {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserInformation(id, 1);
-        call.enqueue(new ResponseEntityCallback<ProfileResponseEntity>(gson, resultListener) {
+        call.enqueue(new ResponseEntityCallback<User>(gson, resultListener) {
             @Override
-            void handleResponseString(ResultListener<ProfileResponseEntity> resultListener, String responseString) throws JSONException {
-                ProfileResponseEntity user = new Gson().fromJson(responseString, ProfileResponseEntity.class);
+            void handleResponseString(ResultListener<User> resultListener, String responseString) throws JSONException {
+                User user = new Gson().fromJson(responseString, User.class);
+                resultListener.onSuccess(user);
+            }
+        });
+    }
+
+    public void getDiveCenterInformation(String id, final ResultListener<DiveCenterProfile> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserInformation(id, 1);
+        call.enqueue(new ResponseEntityCallback<DiveCenterProfile>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<DiveCenterProfile> resultListener, String responseString) throws JSONException {
+                DiveCenterProfile user = new Gson().fromJson(responseString, DiveCenterProfile.class);
                 resultListener.onSuccess(user);
             }
         });

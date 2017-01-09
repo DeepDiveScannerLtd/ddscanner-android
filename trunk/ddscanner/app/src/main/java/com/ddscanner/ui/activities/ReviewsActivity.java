@@ -272,6 +272,9 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         leaveReview = (FloatingActionButton) findViewById(R.id.fab_write_review);
         progressView = (ProgressView) findViewById(R.id.progressBarFull);
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == 0) {
+            leaveReview.setVisibility(View.GONE);
+        }
         leaveReview.setOnClickListener(this);
     }
 

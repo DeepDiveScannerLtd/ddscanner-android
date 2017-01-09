@@ -10,17 +10,20 @@ public class PhotoAuthor implements Parcelable, Serializable {
     private String id;
     private String name;
     private String photo;
+    private int type;
 
-    public PhotoAuthor(String id, String name, String photo) {
+    public PhotoAuthor(String id, String name, String photo, int type) {
         this.id = id;
         this.name = name;
         this.photo = photo;
+        this.type = type;
     }
 
     protected PhotoAuthor(Parcel in) {
         id = in.readString();
         name = in.readString();
         photo = in.readString();
+        type = in.readInt();
     }
 
     public static final Creator<PhotoAuthor> CREATOR = new Creator<PhotoAuthor>() {
@@ -45,6 +48,7 @@ public class PhotoAuthor implements Parcelable, Serializable {
         parcel.writeString(id);
         parcel.writeString(name);
         parcel.writeString(photo);
+        parcel.writeInt(type);
     }
 
     public String getId() {
@@ -69,5 +73,13 @@ public class PhotoAuthor implements Parcelable, Serializable {
 
     public void setPhoto(String photo) {
         this.photo = photo;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 }

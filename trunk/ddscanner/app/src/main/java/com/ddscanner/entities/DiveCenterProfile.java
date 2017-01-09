@@ -148,7 +148,7 @@ public class DiveCenterProfile implements Serializable{
     public ArrayList<DiveSpotPhoto> getPhotos() {
         if (photos != null) {
             for (DiveSpotPhoto diveSpotPhoto : photos) {
-                PhotoAuthor photoAuthor = new PhotoAuthor(String.valueOf(id), name, photo);
+                PhotoAuthor photoAuthor = new PhotoAuthor(String.valueOf(id), name, photo, type);
                 photos.get(photos.indexOf(diveSpotPhoto)).setAuthor(photoAuthor);
             }
             return photos;

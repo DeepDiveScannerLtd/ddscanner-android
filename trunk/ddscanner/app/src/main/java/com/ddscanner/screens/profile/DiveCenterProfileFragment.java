@@ -41,15 +41,15 @@ public class DiveCenterProfileFragment extends BaseFragment implements LoginView
 
     private DiveCenterProfile diveCenterProfile;
     private ViewDivecenterProfileBinding binding;
-    private DDScannerRestClient.ResultListener<ProfileResponseEntity> userResultListener = new DDScannerRestClient.ResultListener<ProfileResponseEntity>() {
+    private DDScannerRestClient.ResultListener<DiveCenterProfile> userResultListener = new DDScannerRestClient.ResultListener<DiveCenterProfile>() {
         @Override
-        public void onSuccess(ProfileResponseEntity result) {
+        public void onSuccess(DiveCenterProfile result) {
             switch (result.getType()) {
                 case 2:
                 case 1:
                     break;
                 case 0:
-                    diveCenterProfile = result.getDiveCenter();
+                    diveCenterProfile = result;
                     DDScannerApplication.getInstance().getSharedPreferenceHelper().setUserServerId(String.valueOf(diveCenterProfile.getId()));
                     DDScannerApplication.getInstance().getSharedPreferenceHelper().saveDiveCenter(diveCenterProfile);
                     binding.setDiveCenterViewModel(new DiveCenterProfileFragmentViewModel(diveCenterProfile));
@@ -85,7 +85,7 @@ public class DiveCenterProfileFragment extends BaseFragment implements LoginView
         binding.setHandlers(this);
         View view = binding.getRoot();
         if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == 0) {
-            DDScannerApplication.getInstance().getDdScannerRestClient().getUserSelfInformation(userResultListener);
+            DDScannerApplication.getInstance().getDdScannerRestClient().getDiveCenterSelfInformation(userResultListener);
         }
         return view;
     }
@@ -141,7 +141,7 @@ public class DiveCenterProfileFragment extends BaseFragment implements LoginView
     @Subscribe
     public void getUserProfileInfo(LoadUserProfileInfoEvent event) {
         if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == 0) {
-            DDScannerApplication.getInstance().getDdScannerRestClient().getUserSelfInformation(userResultListener);
+            DDScannerApplication.getInstance().getDdScannerRestClient().getDiveCenterSelfInformation(userResultListener);
         }
     }
 

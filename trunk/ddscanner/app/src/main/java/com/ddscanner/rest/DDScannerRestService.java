@@ -183,8 +183,14 @@ public interface DDScannerRestService {
     @GET("v2_0/user.profile.get")
     Call<ResponseBody> getSelfProfileInformation(@Query("include_photo_details") int value);
 
+    @GET("v2_0/divecenter.profile.get")
+    Call<ResponseBody> getSelfDiveCenterInformation(@Query("include_photo_details") int value);
+
     @GET("v2_0/user.profile.get")
     Call<ResponseBody> getUserInformation(@Query("id") String id, @Query("include_photo_details") int value);
+
+    @GET("v2_0/divecenter.profile.get")
+    Call<ResponseBody> getDiveCenterInformation(@Query("id") String id, @Query("include_photo_details") int value);
 
     @GET("v2_0/user.achievements.get")
     Call<ResponseBody> getUserAchievements();
@@ -405,5 +411,7 @@ public interface DDScannerRestService {
 
     @POST("v2_0/divecenter.instructors.see")
     Call<ResponseBody> postInstructorsSees(@Body InstructorsSeeRequests instructorsSeeRequests);
+
+
 
 }

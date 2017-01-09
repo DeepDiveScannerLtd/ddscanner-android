@@ -12,6 +12,7 @@ import android.view.View;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.entities.DiveCenterProfile;
 import com.ddscanner.entities.GalleryOpenedSource;
 import com.ddscanner.entities.PhotoAuthor;
 import com.ddscanner.entities.User;
@@ -31,11 +32,30 @@ public class UserProfileActivity extends AppCompatActivity implements InfoDialog
     private Toolbar toolbar;
     private String userId;
     private PhotoAuthor photoAuthor;
+    private int userType;
 
-    private DDScannerRestClient.ResultListener<ProfileResponseEntity> resultListener = new DDScannerRestClient.ResultListener<ProfileResponseEntity>() {
+    private DDScannerRestClient.ResultListener<User> resultListener = new DDScannerRestClient.ResultListener<User>() {
         @Override
-        public void onSuccess(ProfileResponseEntity result) {
+        public void onSuccess(User result) {
 //            binding.setUserProfileViewModel(new ProfileFragmentViewModel(result));
+            progressView.setVisibility(View.GONE);
+            setupFragment(result.getType(), result);
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_USER_PROFILE_ACTIVITY_FAILED_TO_CONNECT, false);
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_USER_PROFILE_ACTIVITY_FAILED_TO_CONNECT, false);
+        }
+    };
+
+    private DDScannerRestClient.ResultListener<DiveCenterProfile> diveCenterProfileResultListener = new DDScannerRestClient.ResultListener<DiveCenterProfile>() {
+        @Override
+        public void onSuccess(DiveCenterProfile result) {
             progressView.setVisibility(View.GONE);
             setupFragment(result.getType(), result);
         }
@@ -55,6 +75,7 @@ public class UserProfileActivity extends AppCompatActivity implements InfoDialog
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         userId = getIntent().getStringExtra("id");
+        userType = getIntent().getIntExtra("type", 0);
         setContentView(R.layout.activity_user_profile);
         progressView = (ProgressView) findViewById(R.id.progress_view);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -62,12 +83,17 @@ public class UserProfileActivity extends AppCompatActivity implements InfoDialog
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);
         getSupportActionBar().setTitle(R.string.profile);
-        DDScannerApplication.getInstance().getDdScannerRestClient().getUserProfileInformation(userId, resultListener);
+        if (userType != 0) {
+            DDScannerApplication.getInstance().getDdScannerRestClient().getUserProfileInformation(userId, resultListener);
+        } else {
+            DDScannerApplication.getInstance().getDdScannerRestClient().getDiveCenterInformation(userId, diveCenterProfileResultListener);
+        }
     }
 
-    public static void show(Context context, String userId) {
+    public static void show(Context context, String userId, int userType) {
         Intent intent = new Intent(context, UserProfileActivity.class);
         intent.putExtra("id", userId);
+        intent.putExtra("type", userType);
         context.startActivity(intent);
     }
 
@@ -76,20 +102,22 @@ public class UserProfileActivity extends AppCompatActivity implements InfoDialog
         finish();
     }
 
-    private void setupFragment(int userType, ProfileResponseEntity user) {
+    private void setupFragment(int userType, Object object) {
         switch (userType) {
             case 0:
-                photoAuthor = new PhotoAuthor(String.valueOf(user.getDiveCenter().getId()), user.getDiveCenter().getName(), user.getDiveCenter().getPhoto());
+                DiveCenterProfile diveCenterProfile = (DiveCenterProfile) object;
+                photoAuthor = new PhotoAuthor(String.valueOf(diveCenterProfile.getId()), diveCenterProfile.getName(), diveCenterProfile.getPhoto(), diveCenterProfile.getType());
                 FragmentTransaction dcfragmentTransaction = getSupportFragmentManager().beginTransaction();
-                DiveCenterProfileFragment diveCenterProfileFragment = DiveCenterProfileFragment.newInstance(user.getDiveCenter());
+                DiveCenterProfileFragment diveCenterProfileFragment = DiveCenterProfileFragment.newInstance(diveCenterProfile);
                 dcfragmentTransaction.replace(R.id.content, diveCenterProfileFragment);
                 dcfragmentTransaction.commit();
                 break;
             case 1:
             case 2:
-                photoAuthor = new PhotoAuthor(user.getDiver().getId(), user.getDiver().getName(), user.getDiver().getPhoto());
+                User user = (User) object;
+                photoAuthor = new PhotoAuthor(user.getId(), user.getName(), user.getPhoto(), user.getType());
                 FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                UserProfileFragment userProfileFragment = UserProfileFragment.newInstance(user.getDiver());
+                UserProfileFragment userProfileFragment = UserProfileFragment.newInstance(user);
                 fragmentTransaction.replace(R.id.content, userProfileFragment);
                 fragmentTransaction.commit();
                 break;

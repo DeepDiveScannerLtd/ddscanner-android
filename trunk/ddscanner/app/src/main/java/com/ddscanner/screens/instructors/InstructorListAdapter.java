@@ -86,7 +86,7 @@ public class InstructorListAdapter extends RecyclerView.Adapter<InstructorListAd
 
         @Override
         public void onClick(View view) {
-            UserProfileActivity.show(context, instructors.get(getAdapterPosition()).getId());
+            UserProfileActivity.show(context, instructors.get(getAdapterPosition()).getId(), instructors.get(getAdapterPosition()).getType());
         }
     }
 
