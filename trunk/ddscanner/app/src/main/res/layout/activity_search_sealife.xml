@@ -44,6 +44,7 @@
             android:text="@string/no_results"
             />
         <Button
+            android:visibility="gone"
             android:layout_marginTop="170dp"
             android:layout_below="@+id/text_not_found"
             android:id="@+id/add_manualy"
