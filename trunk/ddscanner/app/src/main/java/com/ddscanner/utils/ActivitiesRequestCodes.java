@@ -49,6 +49,7 @@ public class ActivitiesRequestCodes {
     public static final int REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_LOGIN_TO_GET_DATA = 1506;
     public static final int REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PERMISSION_READ_STORAGE = 1507;
     public static final int REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_LANGUAGE = 1508;
+    public static final int REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_COUNTRY = 1509;
 
     //    MapListFragment
     public static final int REQUEST_CODE_MAP_LIST_FRAGMENT_GET_LOCATION_ON_FRAGMENT_START = 1601;
@@ -132,6 +133,7 @@ public class ActivitiesRequestCodes {
     public static final int REQUEST_CODE_EDIT_DIVE_SPOT_ACTIVITY_PICK_SEALIFE = 3003;
     public static final int REQUEST_CODE_EDIT_DIVE_SPOT_ACTIVITY_LOGIN_TO_SEND = 3004;
     public static final int REQUEST_CODE_EDIT_DIVE_SPOT_ACTIVITY_LOGIN_TO_GET_DATA = 3005;
+    public static final int REQUEST_CODE_EDIT_DIVE_SPOT_ACTIVITY_PICK_COUNTRY = 3006;
 
     //    UserLikesDislikesActivity
     public static final int REQUEST_CODE_USER_LIKES_DISLIKES_ACTIVITY_LOGIN = 3101;

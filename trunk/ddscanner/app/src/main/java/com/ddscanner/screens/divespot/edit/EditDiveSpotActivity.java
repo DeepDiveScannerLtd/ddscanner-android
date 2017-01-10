@@ -33,6 +33,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
+import com.ddscanner.entities.BaseIdNamePhotoEntity;
 import com.ddscanner.entities.DiveSpotDetailsEntity;
 import com.ddscanner.entities.DiveSpotPhoto;
 import com.ddscanner.entities.DiveSpotPhotosResponseEntity;
@@ -46,6 +47,7 @@ import com.ddscanner.events.AddTranslationClickedEvent;
 import com.ddscanner.events.ImageDeletedEvent;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.activities.LoginActivity;
+import com.ddscanner.ui.activities.PickCountryActivity;
 import com.ddscanner.ui.activities.PickLanguageActivity;
 import com.ddscanner.ui.activities.SearchSealifeActivity;
 import com.ddscanner.ui.adapters.AddPhotoToDsListAdapter;
@@ -97,6 +99,8 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
     private RecyclerView diveSpotPhotosRecyclrView;
     private TextView addPhotoTitle;
     private TextView locationTitle;
+    private TextView countryTitle;
+    private LinearLayout countryLayout;
     private AppCompatSpinner levelAppCompatSpinner;
     private AppCompatSpinner currentsAppCompatSpinner;
     private AppCompatSpinner objectAppCompatSpinner;
@@ -187,23 +191,6 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
                 }
             }
             setupUiAfterRequests();
-        }
-
-        @Override
-        public void onConnectionFailure() {
-
-        }
-
-        @Override
-        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-
-        }
-    };
-
-    private DDScannerRestClient.ResultListener<String> countryResultListener = new DDScannerRestClient.ResultListener<String>() {
-        @Override
-        public void onSuccess(String result) {
-            requsetCountryCode = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), result);
         }
 
         @Override
@@ -350,11 +337,17 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
         photos = (TextView) findViewById(R.id.photos);
         maps = (TextView) findViewById(R.id.maps);
         mapsRecyclerView = (RecyclerView) findViewById(R.id.maps_rc);
+        countryLayout = (LinearLayout) findViewById(R.id.country_layout);
+        countryTitle = (TextView) findViewById(R.id.country_title);
+        countryLayout.setOnClickListener(this);
     }
 
     private void setUi() {
         diveSpotDetailsEntity.setPhotos(userPhotosIds);
         diveSpotDetailsEntity.setMaps(userMapsIds);
+        requsetCountryCode = Helpers.createRequestBodyForString(diveSpotDetailsEntity.getCountryCode());
+        countryTitle.setTextColor(ContextCompat.getColor(this, R.color.black_text));
+        countryTitle.setText(diveSpotDetailsEntity.getCountryName());
         if (diveSpotDetailsEntity.getPhotos() != null) {
             photosListAdapter.addServerPhoto((ArrayList<String>) diveSpotDetailsEntity.getPhotos());
         }
@@ -415,7 +408,6 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
             case ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_LOCATION:
                 if (resultCode == RESULT_OK) {
                     this.diveSpotLocation = data.getParcelableExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_LATLNG);
-                    DDScannerApplication.getInstance().getDdScannerRestClient().getCountryCode(String.valueOf(diveSpotLocation.latitude), String.valueOf(diveSpotLocation.longitude), countryResultListener);
                     if (data.getStringExtra(Constants.ADD_DIVE_SPOT_INTENT_LOCATION_NAME) != null) {
                         locationTitle.setText(data.getStringExtra(Constants.ADD_DIVE_SPOT_INTENT_LOCATION_NAME));
                     } else {
@@ -466,6 +458,15 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
                     diveSpotLocation = place.getLatLng();
                 }
                 break;
+            case ActivitiesRequestCodes.REQUEST_CODE_EDIT_DIVE_SPOT_ACTIVITY_PICK_COUNTRY:
+                if (resultCode == RESULT_OK) {
+                    countryTitle.setTextColor(ContextCompat.getColor(this, R.color.black_text));
+                    BaseIdNamePhotoEntity baseIdNamePhotoEntity = (BaseIdNamePhotoEntity)data.getSerializableExtra("country");
+                    countryTitle.setText(baseIdNamePhotoEntity.getName());
+                    requsetCountryCode = Helpers.createRequestBodyForString(baseIdNamePhotoEntity.getCode());
+                }
+                break;
+
         }
     }
 
@@ -547,6 +548,9 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
                 changeViewState(maps, photos);
                 mapsRecyclerView.setVisibility(View.VISIBLE);
                 diveSpotPhotosRecyclrView.setVisibility(View.GONE);
+                break;
+            case R.id.country_layout:
+                PickCountryActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_EDIT_DIVE_SPOT_ACTIVITY_PICK_COUNTRY);
                 break;
         }
     }
@@ -745,7 +749,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
 
     @Subscribe
     public void addLanguageToList(AddTranslationClickedEvent event) {
-        PickLanguageActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_LANGUAGE, true);
+        PickLanguageActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_LANGUAGE);
     }
 
     private void addLanguageToList(Language language) {

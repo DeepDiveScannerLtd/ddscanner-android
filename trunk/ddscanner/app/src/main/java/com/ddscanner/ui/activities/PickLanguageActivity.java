@@ -16,6 +16,8 @@ import android.view.View;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.entities.BaseIdNamePhotoEntity;
+import com.ddscanner.entities.CountryEntity;
 import com.ddscanner.entities.DiveCenterCountry;
 import com.ddscanner.entities.Language;
 import com.ddscanner.events.LanguageChosedEvent;
@@ -63,9 +65,8 @@ public class PickLanguageActivity extends AppCompatActivity implements SearchVie
         }
     };
 
-    public static void showForResult(Activity activity, int requestCode, boolean isForPickLanguage) {
+    public static void showForResult(Activity activity, int requestCode) {
         Intent intent = new Intent(activity, PickLanguageActivity.class);
-        intent.putExtra("isLanguage", isForPickLanguage);
         activity.startActivityForResult(intent, requestCode);
     }
 
@@ -75,11 +76,7 @@ public class PickLanguageActivity extends AppCompatActivity implements SearchVie
         setContentView(R.layout.activity_search);
         isPickLanguage = getIntent().getBooleanExtra("isLanguage", false);
         findViews();
-        if (isPickLanguage) {
-            DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotLanguages(resultListener);
-        } else {
-            DDScannerApplication.getInstance().getDdScannerRestClient().getListOfCountries(resultListener);
-        }
+        DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotLanguages(resultListener);
     }
 
     private void findViews() {

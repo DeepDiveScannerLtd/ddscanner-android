@@ -37,6 +37,7 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.AddDiveSpotResponseEntity;
+import com.ddscanner.entities.BaseIdNamePhotoEntity;
 import com.ddscanner.entities.DiveSpotShort;
 import com.ddscanner.entities.FiltersResponseEntity;
 import com.ddscanner.entities.Language;
@@ -49,6 +50,7 @@ import com.ddscanner.events.ImageDeletedEvent;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.divespot.details.DiveSpotDetailsActivity;
 import com.ddscanner.ui.activities.LoginActivity;
+import com.ddscanner.ui.activities.PickCountryActivity;
 import com.ddscanner.ui.activities.PickLanguageActivity;
 import com.ddscanner.ui.activities.PickLocationActivity;
 import com.ddscanner.ui.activities.SearchSealifeActivity;
@@ -93,9 +95,11 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     private LatLng diveSpotLocation;
 
     private LinearLayout pickLocation;
+    private LinearLayout pickCountry;
     private RecyclerView photos_rc;
     private TextView addPhotoTitle;
     private TextView locationTitle;
+    private TextView countryTitle;
     private AppCompatSpinner levelAppCompatSpinner;
     private AppCompatSpinner currentsAppCompatSpinner;
     private AppCompatSpinner objectAppCompatSpinner;
@@ -142,23 +146,6 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     private ArrayList<String> languages = new ArrayList<>();
     private Translation currentTranslation;
     private Map<String, Translation> languagesMap = new HashMap<>();
-
-    private DDScannerRestClient.ResultListener<String> countryResultListener = new DDScannerRestClient.ResultListener<String>() {
-        @Override
-        public void onSuccess(String result) {
-            requsetCountryCode = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), result);
-        }
-
-        @Override
-        public void onConnectionFailure() {
-
-        }
-
-        @Override
-        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-
-        }
-    };
 
     private DDScannerRestClient.ResultListener<String> resultListener = new DDScannerRestClient.ResultListener<String>() {
         @Override
@@ -241,6 +228,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         currentsAppCompatSpinner = (AppCompatSpinner) findViewById(R.id.currents_spinner);
         languageAppCompatSpinner = (AppCompatSpinner) findViewById(R.id.language_spinner);
         pickLocation = (LinearLayout) findViewById(R.id.location_layout);
+        pickCountry = (LinearLayout) findViewById(R.id.country_layout);
         locationTitle = (TextView) findViewById(R.id.location);
         btnSave = (Button) findViewById(R.id.button_create);
         sealifesRc = (RecyclerView) findViewById(R.id.sealifes_rc);
@@ -259,6 +247,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         photos = (TextView) findViewById(R.id.photos);
         maps = (TextView) findViewById(R.id.maps);
         mapsRecyclerView = (RecyclerView) findViewById(R.id.maps_rc);
+        countryTitle = (TextView) findViewById(R.id.country_title);
     }
 
     private void setUi() {
@@ -266,6 +255,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         languageAppCompatSpinner.setAdapter(new LanguagesSpinnerAdapter(this, R.layout.item_language_spinner, languages));
         languageAppCompatSpinner.setOnItemSelectedListener(this);
         progressDialogUpload = Helpers.getMaterialDialog(this);
+        pickCountry.setOnClickListener(this);
         ProgressDialog progressDialog = new ProgressDialog(this);
         name.setEnabled(false);
         description.setEnabled(false);
@@ -314,7 +304,6 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
             case ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_LOCATION:
                 if (resultCode == RESULT_OK) {
                     this.diveSpotLocation = data.getParcelableExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_LATLNG);
-                    DDScannerApplication.getInstance().getDdScannerRestClient().getCountryCode(String.valueOf(diveSpotLocation.latitude), String.valueOf(diveSpotLocation.longitude), countryResultListener);
                     if (data.getStringExtra(Constants.ADD_DIVE_SPOT_INTENT_LOCATION_NAME) != null) {
                         locationTitle.setText(data.getStringExtra(Constants.ADD_DIVE_SPOT_INTENT_LOCATION_NAME));
                     } else {
@@ -361,6 +350,14 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                 if (resultCode == RESULT_OK) {
                     Language language = (Language) data.getSerializableExtra("language");
                     addLanguageToList(language);
+                }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_COUNTRY:
+                if (resultCode == RESULT_OK) {
+                    countryTitle.setTextColor(ContextCompat.getColor(this, R.color.black_text));
+                    BaseIdNamePhotoEntity baseIdNamePhotoEntity = (BaseIdNamePhotoEntity)data.getSerializableExtra("country");
+                    countryTitle.setText(baseIdNamePhotoEntity.getName());
+                    requsetCountryCode = Helpers.createRequestBodyForString(baseIdNamePhotoEntity.getCode());
                 }
                 break;
         }
@@ -432,6 +429,9 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                 changeViewState(maps, photos);
                 mapsRecyclerView.setVisibility(View.VISIBLE);
                 photos_rc.setVisibility(View.GONE);
+                break;
+            case R.id.country_layout:
+                PickCountryActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_COUNTRY);
                 break;
         }
     }
@@ -643,7 +643,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
 
     @Subscribe
     public void addLanguageToList(AddTranslationClickedEvent event) {
-        PickLanguageActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_LANGUAGE, true);
+        PickLanguageActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_LANGUAGE);
 //        Random random = new Random();
 //        String randon = String.valueOf(random.nextInt(9000));
 //        languages.add(randon);

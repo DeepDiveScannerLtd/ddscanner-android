@@ -34,7 +34,16 @@ public class DiveSpotDetailsEntity extends DiveSpotShort {
     private int photosCount;
     @SerializedName("maps_count")
     private int mapsPhotosCount;
+    @SerializedName("country_code")
+    private String countryCode;
 
+    public String getCountryCode() {
+        return countryCode;
+    }
+
+    public void setCountryCode(String countryCode) {
+        this.countryCode = countryCode;
+    }
 
     public int getMapsPhotosCount() {
         return mapsPhotosCount;

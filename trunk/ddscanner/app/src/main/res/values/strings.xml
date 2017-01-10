@@ -395,4 +395,5 @@
     <string name="choose_dc">Chose dive center</string>
     <string name="instructors">Instructors</string>
     <string name="name_register">Name</string>
+    <string name="chose_country">Choose country</string>
 </resources>

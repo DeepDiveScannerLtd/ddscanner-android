@@ -1,4 +1,4 @@
-package com.ddscanner.screens.profile.edit.divecenter.search;
+package com.ddscanner.ui.activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -18,7 +18,7 @@ import com.ddscanner.R;
 import com.ddscanner.entities.BaseIdNamePhotoEntity;
 import com.ddscanner.events.ObjectChosedEvent;
 import com.ddscanner.rest.DDScannerRestClient;
-import com.ddscanner.ui.activities.BaseAppCompatActivity;
+import com.ddscanner.screens.profile.edit.divecenter.search.SearchDiveCenterActivity;
 import com.ddscanner.ui.adapters.BaseSearchAdapter;
 import com.ddscanner.utils.Helpers;
 import com.rey.material.widget.ProgressView;
@@ -27,15 +27,15 @@ import com.squareup.otto.Subscribe;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchDiveCenterActivity extends BaseAppCompatActivity implements SearchView.OnQueryTextListener{
-    
+public class PickCountryActivity extends BaseAppCompatActivity implements SearchView.OnQueryTextListener {
+
     private ArrayList<BaseIdNamePhotoEntity> objects;
     private ProgressView progressView;
     private RecyclerView recyclerView;
     private BaseSearchAdapter diveCentersListAdapter;
     private Menu menu;
     private MaterialDialog materialDialog;
-    
+
     private DDScannerRestClient.ResultListener<ArrayList<BaseIdNamePhotoEntity>> resultListener = new DDScannerRestClient.ResultListener<ArrayList<BaseIdNamePhotoEntity>>() {
         @Override
         public void onSuccess(ArrayList<BaseIdNamePhotoEntity> result) {
@@ -57,27 +57,8 @@ public class SearchDiveCenterActivity extends BaseAppCompatActivity implements S
         }
     };
 
-    private DDScannerRestClient.ResultListener<Void> voidResultListener = new DDScannerRestClient.ResultListener<Void>() {
-        @Override
-        public void onSuccess(Void result) {
-            materialDialog.dismiss();
-            setResult(RESULT_OK);
-            finish();
-        }
-
-        @Override
-        public void onConnectionFailure() {
-
-        }
-
-        @Override
-        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-
-        }
-    };
-
     public static void showForResult(Activity context, int requestCode) {
-        Intent intent = new Intent(context, SearchDiveCenterActivity.class);
+        Intent intent = new Intent(context, PickCountryActivity.class);
         context.startActivityForResult(intent, requestCode);
     }
 
@@ -85,10 +66,11 @@ public class SearchDiveCenterActivity extends BaseAppCompatActivity implements S
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-        setupToolbar(R.string.choose_dc, R.id.toolbar);
+        setupToolbar(R.string.chose_country, R.id.toolbar);
         findViews();
-        DDScannerApplication.getInstance().getDdScannerRestClient().getDiveCentersList(resultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient().getListOfCountries(resultListener);
     }
+
 
     private void findViews() {
         materialDialog = Helpers.getMaterialDialog(this);
@@ -161,10 +143,9 @@ public class SearchDiveCenterActivity extends BaseAppCompatActivity implements S
 
     @Subscribe
     public void objectChsedEvent(ObjectChosedEvent event) {
-        if (event.getBaseIdNamePhotoEntity().getId() != null) {
-            materialDialog.show();
-            DDScannerApplication.getInstance().getDdScannerRestClient().postAddInstructorToDiveCenter(voidResultListener, event.getBaseIdNamePhotoEntity().getId());
-        }
+        Intent intent = new Intent();
+        intent.putExtra("country", event.getBaseIdNamePhotoEntity());
+        setResult(RESULT_OK, intent);
+        finish();
     }
-
 }

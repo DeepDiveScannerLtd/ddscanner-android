@@ -9,6 +9,7 @@ import com.ddscanner.entities.AddressComponent;
 import com.ddscanner.entities.BaseIdNamePhotoEntity;
 import com.ddscanner.entities.CommentEntity;
 import com.ddscanner.entities.Comments;
+import com.ddscanner.entities.CountryEntity;
 import com.ddscanner.entities.DiveCenterProfile;
 import com.ddscanner.entities.DiveCentersResponseEntity;
 import com.ddscanner.entities.DiveSpotDetailsEntity;
@@ -467,14 +468,14 @@ public class DDScannerRestClient {
         });
     }
 
-    public void getListOfCountries(ResultListener<Map<String,String>> resultListener) {
+    public void getListOfCountries(ResultListener<ArrayList<BaseIdNamePhotoEntity>> resultListener) {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getListCountries();
-        call.enqueue(new ResponseEntityCallback<Map<String, String>>(gson,resultListener) {
+        call.enqueue(new ResponseEntityCallback<ArrayList<BaseIdNamePhotoEntity>>(gson,resultListener) {
             @Override
-            void handleResponseString(ResultListener<Map<String, String>> resultListener, String responseString) throws JSONException {
-                Map<String, String> result = new HashMap<String, String>();
-                result = gson.fromJson(responseString, result.getClass());
-                resultListener.onSuccess(result);
+            void handleResponseString(ResultListener<ArrayList<BaseIdNamePhotoEntity>> resultListener, String responseString) throws JSONException {
+                Type listType = new TypeToken<ArrayList<BaseIdNamePhotoEntity>>(){}.getType();
+                ArrayList<BaseIdNamePhotoEntity> countries  = gson.fromJson(responseString, listType);
+                resultListener.onSuccess(countries);
             }
         });
     }

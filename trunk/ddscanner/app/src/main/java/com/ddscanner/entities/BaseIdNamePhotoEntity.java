@@ -1,10 +1,21 @@
 package com.ddscanner.entities;
 
-public class BaseIdNamePhotoEntity {
+import java.io.Serializable;
+
+public class BaseIdNamePhotoEntity implements Serializable{
 
     private String id;
     private String name;
     private String photo;
+    private String code;
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
 
     public String getId() {
         return id;

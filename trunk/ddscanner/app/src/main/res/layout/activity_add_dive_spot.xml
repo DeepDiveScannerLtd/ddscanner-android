@@ -22,7 +22,7 @@
         android:id="@+id/main_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -120,6 +120,26 @@
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/country_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:background="@color/white"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        style="@style/CharacteristicsDiveSpotListIcons"
+                        android:src="@drawable/ic_ds_country" />
+
+                    <TextView
+                        android:id="@+id/country_title"
+                        style="@style/AddDsCharTitleStyle"
+                        android:text="@string/country_characteristic"
+                        android:textColor="#b2b2b2" />
+                </LinearLayout>
+
+                <ImageView style="@style/DividerStyle" />
 
                 <LinearLayout
                     android:id="@+id/location_layout"

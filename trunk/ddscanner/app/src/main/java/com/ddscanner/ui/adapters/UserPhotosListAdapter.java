@@ -38,7 +38,7 @@ public class UserPhotosListAdapter extends RecyclerView.Adapter<UserPhotosListAd
         this.photos = photos;
         this.photosCount = photosCount;
         this.context = context;
-        photoSize = (int) context.getResources().getDimension(R.dimen.image_in_divespot_small);
+        photoSize = 75;
     }
 
     @Override

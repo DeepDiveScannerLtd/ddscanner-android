@@ -1,4 +1,4 @@
-package com.ddscanner.screens.profile.edit.divecenter.search;
+package com.ddscanner.ui.adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,11 +14,11 @@ import com.ddscanner.events.ObjectChosedEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DiveCentersListAdapter extends RecyclerView.Adapter<DiveCentersListAdapter.DiveCentersViewHolder> {
+public class BaseSearchAdapter extends RecyclerView.Adapter<BaseSearchAdapter.DiveCentersViewHolder> {
     
     private ArrayList<BaseIdNamePhotoEntity> objectsList = new ArrayList<>();
 
-    public DiveCentersListAdapter(ArrayList<BaseIdNamePhotoEntity> objectsList) {
+    public BaseSearchAdapter(ArrayList<BaseIdNamePhotoEntity> objectsList) {
         this.objectsList = objectsList;
     }
 
