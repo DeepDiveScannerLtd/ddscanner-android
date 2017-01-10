@@ -27,6 +27,7 @@ import com.ddscanner.screens.profile.edit.divecenter.search.SearchDiveCenterActi
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.adapters.DiverLevelSpinnerAdapter;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
+import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Helpers;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
@@ -60,6 +61,8 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
     private boolean isNamChanged = false;
     private AppCompatRadioButton diverRadio;
     private AppCompatRadioButton insructorRadio;
+    private RequestBody diveCenterId = null;
+    private String dcId;
 
     private DDScannerRestClient.ResultListener<Void> updateProfileInfoResultListener = new DDScannerRestClient.ResultListener<Void>() {
         @Override
@@ -213,12 +216,15 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
 
     private void sendUpdateRequest() {
         materialDialog.show();
+        if (dcId != null) {
+            diveCenterId = Helpers.createRequestBodyForString(dcId);
+        }
         if (!pathToUploadedPhoto.isEmpty()) {
             File file = new File(pathToUploadedPhoto);
             RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
             image = MultipartBody.Part.createFormData("photo", file.getName(), requestFile);
         }
-        DDScannerApplication.getInstance().getDdScannerRestClient().potUpdateUserProfile(updateProfileInfoResultListener, image, Helpers.createRequestBodyForString(binding.fullName.getText().toString()), Helpers.createRequestBodyForString(binding.aboutEdit.getText().toString()), Helpers.createRequestBodyForString(String.valueOf(levels.indexOf(binding.levelSpinner.getSelectedItem()))));
+        DDScannerApplication.getInstance().getDdScannerRestClient().potUpdateUserProfile(updateProfileInfoResultListener, image, Helpers.createRequestBodyForString(binding.fullName.getText().toString()), Helpers.createRequestBodyForString(binding.aboutEdit.getText().toString()), Helpers.createRequestBodyForString(String.valueOf(levels.indexOf(binding.levelSpinner.getSelectedItem()))), diveCenterId);
     }
 
 
@@ -239,7 +245,7 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
     }
 
     public void chooseDiveCenter(View view) {
-        SearchDiveCenterActivity.showForResult(this, 1);
+        SearchDiveCenterActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_EDIT_PROFILE_ACTIVITY_CHOOSE_DIVE_CENTER);
     }
 
     @Override
@@ -275,4 +281,15 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
         errorsMap.put("about", binding.errorAbout);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case ActivitiesRequestCodes.REQUEST_CODE_EDIT_PROFILE_ACTIVITY_CHOOSE_DIVE_CENTER:
+                if (resultCode == RESULT_OK) {
+                    dcId = data.getStringExtra("id");
+                }
+                break;
+        }
+    }
 }

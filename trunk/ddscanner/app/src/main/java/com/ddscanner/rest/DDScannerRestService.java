@@ -320,6 +320,7 @@ public interface DDScannerRestService {
             @Part MultipartBody.Part image,
             @Part("name") RequestBody name,
             @Part("about") RequestBody about,
+            @Part("dive_center_id") RequestBody diveCenterId,
             @Part("diving_skill") RequestBody skill
     );
 

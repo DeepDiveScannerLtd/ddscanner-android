@@ -35,6 +35,7 @@ public class SearchDiveCenterActivity extends BaseAppCompatActivity implements S
     private BaseSearchAdapter diveCentersListAdapter;
     private Menu menu;
     private MaterialDialog materialDialog;
+    private String diveCenterId;
     
     private DDScannerRestClient.ResultListener<ArrayList<BaseIdNamePhotoEntity>> resultListener = new DDScannerRestClient.ResultListener<ArrayList<BaseIdNamePhotoEntity>>() {
         @Override
@@ -61,7 +62,9 @@ public class SearchDiveCenterActivity extends BaseAppCompatActivity implements S
         @Override
         public void onSuccess(Void result) {
             materialDialog.dismiss();
-            setResult(RESULT_OK);
+            Intent intent = new Intent();
+            intent.putExtra("id", diveCenterId);
+            setResult(RESULT_OK, intent);
             finish();
         }
 
@@ -163,6 +166,7 @@ public class SearchDiveCenterActivity extends BaseAppCompatActivity implements S
     public void objectChsedEvent(ObjectChosedEvent event) {
         if (event.getBaseIdNamePhotoEntity().getId() != null) {
             materialDialog.show();
+            diveCenterId = event.getBaseIdNamePhotoEntity().getId();
             DDScannerApplication.getInstance().getDdScannerRestClient().postAddInstructorToDiveCenter(voidResultListener, event.getBaseIdNamePhotoEntity().getId());
         }
     }
