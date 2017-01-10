@@ -42,6 +42,7 @@ public class LoginView extends RelativeLayout implements View.OnClickListener {
     private LinearLayout loginWithGoogle;
     private TextView forgotPasswordView;
     private EditText email;
+    private EditText name;
     private EditText password;
     private boolean isSignUp;
     private String userType;
@@ -82,6 +83,7 @@ public class LoginView extends RelativeLayout implements View.OnClickListener {
         forgotPasswordView = (TextView) findViewById(R.id.forgot_password);
         email = (EditText) findViewById(R.id.email);
         password = (EditText) findViewById(R.id.password);
+        name = (EditText) findViewById(R.id.name);
 
         forgotPasswordView.setOnClickListener(this);
         buttonSubmitData.setOnClickListener(this);
@@ -160,6 +162,7 @@ public class LoginView extends RelativeLayout implements View.OnClickListener {
                 tabLayout.setVisibility(VISIBLE);
                 signView.setVisibility(VISIBLE);
                 loginView.setVisibility(GONE);
+                name.setVisibility(VISIBLE);
                 buttonSubmitData.setText(R.string.sign_up);
                 DDScannerApplication.bus.post(new SignupLoginButtonClicked(true));
                 isSignUp = true;
@@ -168,6 +171,7 @@ public class LoginView extends RelativeLayout implements View.OnClickListener {
                 tabLayout.setVisibility(GONE);
                 loginView.setVisibility(GONE);
                 signView.setVisibility(VISIBLE);
+                name.setVisibility(GONE);
                 buttonSubmitData.setText(R.string.login);
                 DDScannerApplication.bus.post(new SignupLoginButtonClicked(true));
                 isSignUp = false;
@@ -185,7 +189,7 @@ public class LoginView extends RelativeLayout implements View.OnClickListener {
                 DDScannerApplication.bus.post(new LoginViaGoogleClickEvent());
                 break;
             case R.id.btn_login_or_sign_up_via_email:
-                DDScannerApplication.bus.post(new LoginSignUpViaEmailEvent(email.getText().toString(), password.getText().toString(), userType, isSignUp));
+                DDScannerApplication.bus.post(new LoginSignUpViaEmailEvent(email.getText().toString(), password.getText().toString(), userType, isSignUp, name.getText().toString()));
                 break;
         }
     }

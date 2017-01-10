@@ -67,6 +67,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     private TextView forgotPasswordView;
     private EditText email;
     private EditText password;
+    private EditText name;
     private MaterialDialog materialDialog;
     private String userType;
 
@@ -145,12 +146,14 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         forgotPasswordView = (TextView) findViewById(R.id.forgot_password);
         email = (EditText) findViewById(R.id.email);
         password = (EditText) findViewById(R.id.password);
+        name = (EditText) findViewById(R.id.name);
         setUi();
     }
 
     private void setUi() {
         if (!isRegister) {
             tabLayout.setVisibility(View.GONE);
+            name.setVisibility(View.GONE);
         }
         materialDialog = Helpers.getMaterialDialog(this);
         forgotPasswordView.setOnClickListener(this);
@@ -253,7 +256,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             case R.id.btn_login_or_sign_up_via_email:
                 materialDialog.show();
                 if (isRegister) {
-                    DDScannerApplication.getInstance().getDdScannerRestClient().postUserSignUp(email.getText().toString(), password.getText().toString(), userType, null, null, signUpResultListener);
+                    DDScannerApplication.getInstance().getDdScannerRestClient().postUserSignUp(email.getText().toString(), password.getText().toString(), userType, null, null, name.getText().toString(), signUpResultListener);
                     break;
                 }
                 DDScannerApplication.getInstance().getDdScannerRestClient().postUserLogin(email.getText().toString(), password.getText().toString(), "28.13123", "21.323232", null, null, signUpResultListener);

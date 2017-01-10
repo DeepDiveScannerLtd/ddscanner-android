@@ -624,7 +624,7 @@ public class MainActivity extends BaseAppCompatActivity
         //TODO remove hardcoded coordinates
         materialDialog.show();
         if (event.isSignUp()) {
-            DDScannerApplication.getInstance().getDdScannerRestClient().postUserSignUp(event.getEmail(), event.getPassword(), event.getUserType(), "23", "22", signUpLoginResultListener);
+            DDScannerApplication.getInstance().getDdScannerRestClient().postUserSignUp(event.getEmail(), event.getPassword(), event.getUserType(), "23", "22", event.getName(), signUpLoginResultListener);
         } else {
             DDScannerApplication.getInstance().getDdScannerRestClient().postUserLogin(event.getEmail(), event.getPassword(), "24", "25", null, null, signUpLoginResultListener);
         }

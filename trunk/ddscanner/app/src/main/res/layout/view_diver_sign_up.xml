@@ -38,7 +38,6 @@
                 android:background="@android:color/transparent"
                 android:gravity="center_vertical"
                 android:hint="@string/name_register"
-                android:inputType="textPassword"
                 android:lines="1"
                 android:textColor="@color/black_text"
                 android:textColorHint="#a3a3a3" />
