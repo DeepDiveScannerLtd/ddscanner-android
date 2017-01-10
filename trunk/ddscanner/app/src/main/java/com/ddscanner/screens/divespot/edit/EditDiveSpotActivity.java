@@ -456,6 +456,10 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
                 if (resultCode == RESULT_OK) {
                     Place place = PlacePicker.getPlace(this, data);
                     diveSpotLocation = place.getLatLng();
+                    diveSpotLatLngBounds = place.getViewport();
+                    if (place.getAddress() != null) {
+                        locationTitle.setText(place.getAddress());
+                    }
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_EDIT_DIVE_SPOT_ACTIVITY_PICK_COUNTRY:

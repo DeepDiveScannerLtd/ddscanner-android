@@ -65,7 +65,12 @@ import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogHelpers;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.gson.Gson;
 import com.rey.material.widget.ProgressView;
 import com.squareup.otto.Subscribe;
@@ -127,6 +132,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     private TextView maps;
     private RecyclerView mapsRecyclerView;
     private AppCompatSpinner languageAppCompatSpinner;
+    private LatLngBounds diveSpotLatLngBounds;
 
     private List<String> photoUris = new ArrayList<>();
     private List<String> mapsUris = new ArrayList<>();
@@ -360,6 +366,31 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                     requsetCountryCode = Helpers.createRequestBodyForString(baseIdNamePhotoEntity.getCode());
                 }
                 break;
+            case ActivitiesRequestCodes.REQUEST_CODE_PICK_LOCATION_ACTIVITY_PLACE_AUTOCOMPLETE:
+                if (resultCode == RESULT_OK) {
+                    Place place = PlacePicker.getPlace(this, data);
+                    diveSpotLocation = place.getLatLng();
+                    diveSpotLatLngBounds = place.getViewport();
+                    if (place.getAddress() != null) {
+                        locationTitle.setText(place.getAddress().toString());
+                    }
+                    locationTitle.setTextColor(ContextCompat.getColor(this, R.color.black_text));
+                }
+                break;
+        }
+    }
+
+    private void showPlacePikerIntent() {
+        try {
+            PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+            if (diveSpotLatLngBounds != null) {
+                builder.setLatLngBounds(diveSpotLatLngBounds);
+            }
+            startActivityForResult(builder.build(this), ActivitiesRequestCodes.REQUEST_CODE_PICK_LOCATION_ACTIVITY_PLACE_AUTOCOMPLETE);
+        } catch (GooglePlayServicesRepairableException e) {
+            Log.i(TAG, e.toString());
+        } catch (GooglePlayServicesNotAvailableException e) {
+            Log.i(TAG, e.toString());
         }
     }
 
@@ -403,9 +434,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.location_layout:
-                Intent intent = new Intent(AddDiveSpotActivity.this,
-                        PickLocationActivity.class);
-                startActivityForResult(intent, ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_LOCATION);
+                showPlacePikerIntent();
                 break;
             case R.id.btn_add_sealife:
                 Intent sealifeIntent = new Intent(AddDiveSpotActivity.this,
