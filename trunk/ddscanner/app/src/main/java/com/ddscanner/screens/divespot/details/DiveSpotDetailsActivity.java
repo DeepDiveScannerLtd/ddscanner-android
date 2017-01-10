@@ -853,11 +853,15 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
         public void onSuccess(Void result) {
             if (isCheckIn) {
                 DiveSpotDetailsActivity.this.isCheckedIn = true;
+                binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().setCheckinCount(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getCheckinCount() + 1);
+                DiveSpotDetailsActivityViewModel.setCheckinsCount(binding.numberOfCheckingPeople, binding.getDiveSpotViewModel());
                 EventsTracker.trackCheckIn(EventsTracker.CheckInStatus.SUCCESS);
                 checkedInDialogFragment = CheckedInDialogFragment.getCheckedInDialog(diveSpotId, DiveSpotDetailsActivity.this);
                 checkedInDialogFragment.show(getSupportFragmentManager(), "");
             } else {
                 DiveSpotDetailsActivity.this.isCheckedIn = false;
+                binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().setCheckinCount(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getCheckinCount() - 1);
+                DiveSpotDetailsActivityViewModel.setCheckinsCount(binding.numberOfCheckingPeople, binding.getDiveSpotViewModel());
                 EventsTracker.trackCheckOut();
             }
         }
