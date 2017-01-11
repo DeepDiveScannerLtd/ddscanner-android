@@ -15,6 +15,7 @@ import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.ForeignUserLike;
 import com.ddscanner.entities.UserLikeEntity;
 import com.ddscanner.screens.divespot.details.DiveSpotDetailsActivity;
+import com.ddscanner.screens.user.profile.UserProfileActivity;
 import com.ddscanner.ui.activities.ForeignProfileActivity;
 import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;
@@ -108,7 +109,7 @@ public class ForeignUserLikesAdapter extends RecyclerView.Adapter<ForeignUserLik
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.avatar:
-                  //  ForeignProfileActivity.show(context, likes.get(getAdapterPosition()).getUserOld().getId());
+                    UserProfileActivity.show(context, likes.get(getAdapterPosition()).getUser().getId(), likes.get(getAdapterPosition()).getUser().getType());
                     break;
                 case R.id.main_layout:
                   //  DiveSpotDetailsActivity.show(context, String.valueOf(likes.get(getAdapterPosition()).getDiveSpotId()), EventsTracker.SpotViewSource.FROM_LIST);

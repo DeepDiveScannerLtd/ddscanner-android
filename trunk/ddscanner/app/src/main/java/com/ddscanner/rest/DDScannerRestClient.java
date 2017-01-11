@@ -325,7 +325,9 @@ public class DDScannerRestClient {
         call.enqueue(new ResponseEntityCallback<ArrayList<UserLikeEntity>>(gson, resultListener) {
             @Override
             void handleResponseString(ResultListener<ArrayList<UserLikeEntity>> resultListener, String responseString) throws JSONException {
-
+                Type listType = new TypeToken<ArrayList<UserLikeEntity>>(){}.getType();
+                ArrayList<UserLikeEntity> likes = gson.fromJson(responseString, listType);
+                resultListener.onSuccess(likes);
             }
         });
     }
@@ -572,7 +574,7 @@ public class DDScannerRestClient {
     }
 
     public void getDiveCenterInformation(String id, final ResultListener<DiveCenterProfile> resultListener) {
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserInformation(id, 1);
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveCenterInformation(id, 1);
         call.enqueue(new ResponseEntityCallback<DiveCenterProfile>(gson, resultListener) {
             @Override
             void handleResponseString(ResultListener<DiveCenterProfile> resultListener, String responseString) throws JSONException {

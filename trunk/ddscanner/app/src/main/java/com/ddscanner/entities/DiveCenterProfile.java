@@ -32,6 +32,16 @@ public class DiveCenterProfile implements Serializable{
     private int workingCount;
     @SerializedName("where_working_dive_spots")
     private ArrayList<DiveSpotShort> workingSpots;
+    @SerializedName("new_instructors_exist")
+    private boolean isNewInstructors;
+
+    public boolean isNewInstructors() {
+        return isNewInstructors;
+    }
+
+    public void setNewInstructors(boolean newInstructors) {
+        isNewInstructors = newInstructors;
+    }
 
     public ArrayList<DiveSpotShort> getWorkingSpots() {
         return workingSpots;

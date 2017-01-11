@@ -96,7 +96,6 @@ public class UserLikesDislikesActivity extends BaseAppCompatActivity implements 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_foreign_user_likes_dislikes);
         isLikes = getIntent().getBooleanExtra(Constants.USER_LIKES_ACTIVITY_INTENT_IS_LIKE, false);
-        userId = getIntent().getStringExtra(Constants.USER_LIKES_ACTIVITY_INTENT_USER_ID);
         findViews();
         if (isLikes) {
             setupToolbar(R.string.user_likes, R.id.toolbar);
@@ -122,10 +121,9 @@ public class UserLikesDislikesActivity extends BaseAppCompatActivity implements 
         context.startActivityForResult(intent, requestCode);
     }
 
-    public static void show(Activity context, boolean isLikes, String userId) {
+    public static void show(Activity context, boolean isLikes) {
         Intent intent = new Intent(context, UserLikesDislikesActivity.class);
         intent.putExtra(Constants.USER_LIKES_ACTIVITY_INTENT_IS_LIKE, isLikes);
-        intent.putExtra(Constants.USER_LIKES_ACTIVITY_INTENT_USER_ID, userId);
         context.startActivity(intent);
     }
 

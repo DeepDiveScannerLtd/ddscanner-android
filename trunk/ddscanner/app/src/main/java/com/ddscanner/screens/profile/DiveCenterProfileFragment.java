@@ -94,6 +94,7 @@ public class DiveCenterProfileFragment extends BaseFragment implements LoginView
         if (binding.getDiveCenterViewModel().getDiveCenterProfile().getPhotos() != null) {
             binding.photosList.setLayoutManager(new GridLayoutManager(getContext(), 4));
             binding.photosList.setAdapter(new UserPhotosListAdapter(binding.getDiveCenterViewModel().getDiveCenterProfile().getPhotos(), binding.getDiveCenterViewModel().getDiveCenterProfile().getPhotosCount(), getActivity()));
+            binding.scrollView.scrollTo(0,0);
         }
     }
 

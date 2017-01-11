@@ -46,6 +46,7 @@ import com.ddscanner.events.ChangeLoginViewEvent;
 import com.ddscanner.ui.activities.DiveSpotsListActivity;
 import com.ddscanner.ui.activities.MainActivity;
 import com.ddscanner.ui.activities.SelfCommentsActivity;
+import com.ddscanner.ui.activities.UserLikesDislikesActivity;
 import com.ddscanner.ui.adapters.AchievmentProfileListAdapter;
 import com.ddscanner.ui.adapters.CharacteristicSpinnerItemsAdapter;
 import com.ddscanner.ui.adapters.DiverLevelSpinnerAdapter;
@@ -293,13 +294,13 @@ public class ProfileFragment extends BaseFragment implements LoginView.LoginStat
 
     public void showLikes(View view) {
         if (binding.getProfileFragmentViewModel().getUser().getCounters().getLikesCount() > 0) {
-
+            UserLikesDislikesActivity.show(getActivity(), true);
         }
     }
 
     public void showDislikes(View view) {
         if (binding.getProfileFragmentViewModel().getUser().getCounters().getDislikesCount() > 0) {
-
+            UserLikesDislikesActivity.show(getActivity(), false);
         }
     }
 
