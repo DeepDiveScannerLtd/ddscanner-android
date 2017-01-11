@@ -9,13 +9,14 @@ import android.widget.TextView;
 
 import com.ddscanner.R;
 import com.ddscanner.entities.DiveSpotShort;
+import com.ddscanner.entities.Language;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class DiveSpotsListForEditDcAdapter extends RecyclerView.Adapter<DiveSpotsListForEditDcAdapter.DiveSpotViewHolder> {
 
-    private ArrayList<DiveSpotShort> diveSpots = new ArrayList<>();
+    private ArrayList<Object> objects = new ArrayList<>();
 
     @Override
     public DiveSpotViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -25,43 +26,62 @@ public class DiveSpotsListForEditDcAdapter extends RecyclerView.Adapter<DiveSpot
 
     @Override
     public void onBindViewHolder(DiveSpotViewHolder holder, int position) {
-        holder.diveSpotName.setText(diveSpots.get(position).getName());
+        DiveSpotShort diveSpotShort;
+        Language language;
+        if (objects.get(position) instanceof DiveSpotShort) {
+            diveSpotShort = (DiveSpotShort) objects.get(position);
+            holder.name.setText(diveSpotShort.getName());
+        }
+        if (objects.get(position) instanceof Language) {
+            language = (Language) objects.get(position);
+            holder.name.setText(language.getName());
+        }
     }
 
     @Override
     public int getItemCount() {
-        return diveSpots.size();
+        return objects.size();
     }
 
-    public void addAll(ArrayList<DiveSpotShort> diveSpots) {
-        this.diveSpots.addAll(diveSpots);
+    public void addAllDiveSpots(ArrayList<DiveSpotShort> objects) {
+        this.objects.addAll(objects);
         notifyDataSetChanged();
     }
 
-    public void add(DiveSpotShort diveSpotShort) {
-        this.diveSpots.add(diveSpotShort);
+    public void addAllLanguages(ArrayList<Language> objects) {
+        this.objects.addAll(objects);
+        notifyDataSetChanged();
+    }
+
+    public void addDiveSpot(DiveSpotShort object) {
+        this.objects.add(object);
+        notifyDataSetChanged();
+    }
+
+    public void addLanguage(Language object) {
+        this.objects.add(object);
         notifyDataSetChanged();
     }
 
     public void remove(int position) {
-        this.diveSpots.remove(position);
+        this.objects.remove(position);
         notifyDataSetChanged();
     }
 
-    public List<DiveSpotShort> getDiveSpots() {
-        return this.diveSpots;
+    public List<Object> getObjects() {
+        return this.objects;
     }
 
     class DiveSpotViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private TextView diveSpotName;
-        private ImageView diveSpotDelete;
+        private TextView name;
+        private ImageView delete;
 
         public DiveSpotViewHolder(View view) {
             super(view);
-            diveSpotName = (TextView) view.findViewById(R.id.dive_spot_name);
-            diveSpotDelete = (ImageView) view.findViewById(R.id.ic_delete);
-            diveSpotDelete.setOnClickListener(this);
+            name = (TextView) view.findViewById(R.id.dive_spot_name);
+            delete = (ImageView) view.findViewById(R.id.ic_delete);
+            delete.setOnClickListener(this);
         }
 
         @Override

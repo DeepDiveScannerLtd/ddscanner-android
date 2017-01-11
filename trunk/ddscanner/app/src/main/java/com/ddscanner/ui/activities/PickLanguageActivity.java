@@ -146,16 +146,10 @@ public class PickLanguageActivity extends AppCompatActivity implements SearchVie
 
     @Subscribe
     public void languageChosed(LanguageChosedEvent event) {
-        Language language;
-        DiveCenterCountry diveCenterCountry;
         Intent intent = new Intent();
-        if (isPickLanguage) {
-            intent.putExtra("language", event.getLanguageName());
-            setResult(RESULT_OK, intent);
-            finish();
-            return;
-        }
-        return;
+        intent.putExtra("language", event.getLanguageName());
+        setResult(RESULT_OK, intent);
+        finish();
     }
 
 }

@@ -22,6 +22,7 @@ import com.ddscanner.R;
 import com.ddscanner.databinding.EditDcProfileViewBinding;
 import com.ddscanner.entities.DiveCenterProfile;
 import com.ddscanner.entities.DiveSpotShort;
+import com.ddscanner.entities.Language;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.activities.PickLanguageActivity;
@@ -29,7 +30,6 @@ import com.ddscanner.ui.activities.SearchSpotOrLocationActivity;
 import com.ddscanner.ui.adapters.DiveSpotsListForEditDcAdapter;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
-import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogHelpers;
 import com.ddscanner.utils.Helpers;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -68,6 +68,7 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
     private String locationLongitude = null;
     private RequestBody countryRequestBody = null, addressRequestBody = null, nameRequestBody = null;
     private DiveSpotsListForEditDcAdapter diveSpotsListForEditDcAdapter = new DiveSpotsListForEditDcAdapter();
+    private DiveSpotsListForEditDcAdapter languagesListAdapter = new DiveSpotsListForEditDcAdapter();
     private String country;
     private MaterialDialog materialDialog;
 
@@ -110,12 +111,20 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
         setupUi();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+    }
+
     private void setupUi() {
         materialDialog = Helpers.getMaterialDialog(this);
         binding.diveSpotList.setLayoutManager(new LinearLayoutManager(this));
         binding.diveSpotList.setAdapter(diveSpotsListForEditDcAdapter);
+        binding.languagesList.setLayoutManager(new LinearLayoutManager(this));
+        binding.languagesList.setAdapter(languagesListAdapter);
         if (binding.getDcViewModel().getDiveCenterProfile().getWorkingSpots() != null) {
-            diveSpotsListForEditDcAdapter.addAll(binding.getDcViewModel().getDiveCenterProfile().getWorkingSpots());
+            diveSpotsListForEditDcAdapter.addAllDiveSpots(binding.getDcViewModel().getDiveCenterProfile().getWorkingSpots());
         }
         if (binding.getDcViewModel().getDiveCenterProfile().getPhones() == null) {
             addPhoneClicked(null);
@@ -211,7 +220,7 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
         switch (requestCode) {
             case ActivitiesRequestCodes.EDIT_DIVE_CENTER_ACTIVITY_ADD_SPOT:
                 if (resultCode == RESULT_OK) {
-                    diveSpotsListForEditDcAdapter.add((DiveSpotShort) data.getSerializableExtra("divespot"));
+                    diveSpotsListForEditDcAdapter.addDiveSpot((DiveSpotShort) data.getSerializableExtra("divespot"));
                 }
                 break;
             case ActivitiesRequestCodes.EDIT_DIVE_CENTER_ACTIVITY_PICK_LOCATION:
@@ -234,11 +243,17 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
                     }
                 }
                 break;
+            case ActivitiesRequestCodes.EDIT_DIVE_CENTER_ACTIVITY_ADD_LANGUAGE:
+                if (resultCode == RESULT_OK) {
+                    languagesListAdapter.addLanguage((Language) data.getSerializableExtra("language"));
+                }
+                break;
+
         }
     }
 
     public void addLanguageClicked(View view) {
-        PickLanguageActivity.showForResult(this, 1);
+        PickLanguageActivity.showForResult(this, ActivitiesRequestCodes.EDIT_DIVE_CENTER_ACTIVITY_ADD_LANGUAGE);
     }
 
     private void addAddressesView(String address, String country) {
@@ -274,11 +289,11 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
             }
         }
 
-        if (diveSpotsListForEditDcAdapter.getDiveSpots().size() > 0) {
+        if (diveSpotsListForEditDcAdapter.getObjects().size() > 0) {
             diveSpots = new ArrayList<>();
-            for (DiveSpotShort diveSpotShort : diveSpotsListForEditDcAdapter.getDiveSpots()) {
-                diveSpots.add(MultipartBody.Part.createFormData("dive_spots[]", String.valueOf(diveSpotShort.getId())));
-            }
+//            for (DiveSpotShort diveSpotShort : diveSpotsListForEditDcAdapter.getObjects()) {
+//                diveSpots.add(MultipartBody.Part.createFormData("dive_spots[]", String.valueOf(diveSpotShort.getId())));
+//            }
         }
 
         if (locationLatitude != null && locationLongitude != null && addressEditText != null && !addressEditText.getText().toString().isEmpty()) {
