@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.entities.Language;
 import com.ddscanner.events.LanguageChangedEvent;
 import com.ddscanner.events.LanguageChosedEvent;
 
@@ -19,10 +20,10 @@ import java.util.zip.Inflater;
 public class LanguageSearchAdapter extends RecyclerView.Adapter<LanguageSearchAdapter.LanguageSearchViewHolder> {
 
     private final LayoutInflater layoutInflater;
-    private ArrayList<String> languages;
+    private ArrayList<Language> languages;
     private Context context;
 
-    public LanguageSearchAdapter(Context context, ArrayList<String> languages) {
+    public LanguageSearchAdapter(Context context, ArrayList<Language> languages) {
         this.layoutInflater = LayoutInflater.from(context);
         this.context = context;
         this.languages = languages;
@@ -44,33 +45,33 @@ public class LanguageSearchAdapter extends RecyclerView.Adapter<LanguageSearchAd
         return languages.size();
     }
 
-    public void animateTo(List<String> models) {
+    public void animateTo(List<Language> models) {
         applyAndAnimateRemovals(models);
         applyAndAnimateAdditions(models);
         applyAndAnimateMovedItems(models);
     }
 
-    private void applyAndAnimateRemovals(List<String> newModels) {
+    private void applyAndAnimateRemovals(List<Language> newModels) {
         for (int i = languages.size() - 1; i >= 0; i--) {
-            final String model = languages.get(i);
+            final Language model = languages.get(i);
             if (!newModels.contains(model)) {
                 removeItem(i);
             }
         }
     }
 
-    private void applyAndAnimateAdditions(List<String> newModels) {
+    private void applyAndAnimateAdditions(List<Language> newModels) {
         for (int i = 0, count = newModels.size(); i < count; i++) {
-            final String model = newModels.get(i);
+            final Language model = newModels.get(i);
             if (!languages.contains(model)) {
                 addItem(i, model);
             }
         }
     }
 
-    private void applyAndAnimateMovedItems(List<String> newModels) {
+    private void applyAndAnimateMovedItems(List<Language> newModels) {
         for (int toPosition = newModels.size() - 1; toPosition >= 0; toPosition--) {
-            final String model = newModels.get(toPosition);
+            final Language model = newModels.get(toPosition);
             final int fromPosition = languages.indexOf(model);
             if (fromPosition >= 0 && fromPosition != toPosition) {
                 moveItem(fromPosition, toPosition);
@@ -78,19 +79,19 @@ public class LanguageSearchAdapter extends RecyclerView.Adapter<LanguageSearchAd
         }
     }
     
-    public String removeItem(int position) {
-        final String model = languages.remove(position);
+    public Language removeItem(int position) {
+        final Language model = languages.remove(position);
         notifyItemRemoved(position);
         return model;
     }
 
-    public void addItem(int position, String model) {
+    public void addItem(int position, Language model) {
         languages.add(position, model);
         notifyItemInserted(position);
     }
 
     public void moveItem(int fromPosition, int toPosition) {
-        final String model = languages.remove(fromPosition);
+        final Language model = languages.remove(fromPosition);
         languages.add(toPosition, model);
         notifyItemMoved(fromPosition, toPosition);
     }
@@ -105,8 +106,8 @@ public class LanguageSearchAdapter extends RecyclerView.Adapter<LanguageSearchAd
             languageName = (TextView) view.findViewById(R.id.language_name);
         }
 
-        public void bind(String name) {
-            languageName.setText(name);
+        public void bind(Language name) {
+            languageName.setText(name.getName());
         }
 
         @Override

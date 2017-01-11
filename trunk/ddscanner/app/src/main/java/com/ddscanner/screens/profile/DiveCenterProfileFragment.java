@@ -131,12 +131,14 @@ public class DiveCenterProfileFragment extends BaseFragment implements LoginView
     public void onStart() {
         super.onStart();
         DDScannerApplication.bus.register(this);
+        userResultListener.setCancelled(false);
     }
 
     @Override
     public void onStop() {
         super.onStop();
         DDScannerApplication.bus.unregister(this);
+        userResultListener.setCancelled(true);
     }
 
     @Subscribe

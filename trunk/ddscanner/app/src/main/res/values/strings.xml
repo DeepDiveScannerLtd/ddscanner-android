@@ -396,4 +396,7 @@
     <string name="instructors">Instructors</string>
     <string name="name_register">Name</string>
     <string name="chose_country">Choose country</string>
+    <string name="provide_your_address_to_be_shown_on_the_map">Provide your address to be shown on the map</string>
+    <string name="languages">Languages</string>
+    <string name="add_lang">Add language</string>
 </resources>

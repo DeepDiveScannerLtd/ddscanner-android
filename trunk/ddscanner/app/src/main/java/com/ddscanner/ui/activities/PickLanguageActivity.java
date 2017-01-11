@@ -26,29 +26,28 @@ import com.ddscanner.ui.adapters.LanguageSearchAdapter;
 import com.rey.material.widget.ProgressView;
 import com.squareup.otto.Subscribe;
 
+import org.apache.commons.codec.language.bm.Lang;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class PickLanguageActivity extends AppCompatActivity implements SearchView.OnQueryTextListener{
+public class PickLanguageActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
     private static final String TAG = PickLanguageActivity.class.getSimpleName();
 
     private Toolbar toolbar;
     private RecyclerView recyclerView;
-    private Map<String, String> languagesMap;
-    private ArrayList<String> languagesList;
+    private ArrayList<Language> languagesList;
     private Menu menu;
     private ProgressView progressView;
     private LanguageSearchAdapter languageSearchAdapter;
     private boolean isPickLanguage;
 
-    private DDScannerRestClient.ResultListener<Map<String, String>> resultListener = new DDScannerRestClient.ResultListener<Map<String, String>>() {
+    private DDScannerRestClient.ResultListener<ArrayList<Language>> resultListener = new DDScannerRestClient.ResultListener<ArrayList<Language>>() {
         @Override
-        public void onSuccess(Map<String, String> result) {
-            languagesMap = result;
-            languagesList = new ArrayList<>(result.values());
-            languageSearchAdapter = new LanguageSearchAdapter(PickLanguageActivity.this, languagesList);
+        public void onSuccess(ArrayList<Language> result) {
+            languageSearchAdapter = new LanguageSearchAdapter(PickLanguageActivity.this, result);
             recyclerView.setAdapter(languageSearchAdapter);
             progressView.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
@@ -117,14 +116,14 @@ public class PickLanguageActivity extends AppCompatActivity implements SearchVie
         return true;
     }
 
-    private List<String> filter(List<String> models, String query) {
+    private List<Language> filter(List<Language> models, String query) {
         query = query.toLowerCase();
         if (query.isEmpty()) {
             return models;
         }
-        final List<String> filteredModelList = new ArrayList<>();
-        for (String model : models) {
-            final String text = model.toLowerCase();
+        final List<Language> filteredModelList = new ArrayList<>();
+        for (Language model : models) {
+            final String text = model.getName().toLowerCase();
             if (text.contains(query)) {
                 filteredModelList.add(model);
             }
@@ -134,7 +133,7 @@ public class PickLanguageActivity extends AppCompatActivity implements SearchVie
 
     @Override
     public boolean onQueryTextChange(String query) {
-        final List<String> filteredModelList = filter(languagesList, query);
+        final List<Language> filteredModelList = filter(languagesList, query);
         languageSearchAdapter.animateTo(filteredModelList);
         recyclerView.scrollToPosition(0);
         return true;
@@ -149,22 +148,14 @@ public class PickLanguageActivity extends AppCompatActivity implements SearchVie
     public void languageChosed(LanguageChosedEvent event) {
         Language language;
         DiveCenterCountry diveCenterCountry;
-        for (Map.Entry<String, String> entry : languagesMap.entrySet()) {
-            if (entry.getValue().equals(event.getLanguageName())) {
-                Intent intent = new Intent();
-                if (isPickLanguage) {
-                    language = new Language(entry.getKey(), entry.getValue());
-                    intent.putExtra("language", language);
-                    setResult(RESULT_OK, intent);
-                    finish();
-                    return;
-                }
-                diveCenterCountry = new DiveCenterCountry(entry.getKey(), entry.getValue());
-                intent.putExtra("country", diveCenterCountry);
-                setResult(RESULT_OK, intent);
-                finish();
-                return;
-            }
+        Intent intent = new Intent();
+        if (isPickLanguage) {
+            intent.putExtra("language", event.getLanguageName());
+            setResult(RESULT_OK, intent);
+            finish();
+            return;
         }
+        return;
     }
+
 }

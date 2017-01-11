@@ -296,7 +296,7 @@ public interface DDScannerRestService {
             @Part List<MultipartBody.Part> sealife
     );
 
-    @GET("v2_0/divespot.languages.get")
+    @GET("v2_0/languages.get")
     Call<ResponseBody> getDivespotLanguages();
 
     @POST("v2_0/divecenter.divespot.add")

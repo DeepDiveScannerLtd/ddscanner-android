@@ -24,6 +24,7 @@ import com.ddscanner.entities.DiveCenterProfile;
 import com.ddscanner.entities.DiveSpotShort;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
+import com.ddscanner.ui.activities.PickLanguageActivity;
 import com.ddscanner.ui.activities.SearchSpotOrLocationActivity;
 import com.ddscanner.ui.adapters.DiveSpotsListForEditDcAdapter;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
@@ -234,6 +235,10 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
                 }
                 break;
         }
+    }
+
+    public void addLanguageClicked(View view) {
+        PickLanguageActivity.showForResult(this, 1);
     }
 
     private void addAddressesView(String address, String country) {

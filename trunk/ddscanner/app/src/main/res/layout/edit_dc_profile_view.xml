@@ -143,13 +143,24 @@
                         android:id="@+id/pick_address_button"
                         android:layout_width="match_parent"
                         android:layout_height="45dp"
-                        android:layout_margin="20dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="12dp"
                         android:background="@drawable/border_button_blue_2px"
                         android:text="@string/choose_address"
                         android:textColor="#c4ceee"
                         android:onClick="@{handlers::chooseAddressClicked}"/>
-
-                    <ImageView style="@style/DividerStyleFull" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/provide_your_address_to_be_shown_on_the_map"
+                        android:textSize="12sp"
+                        android:textColor="#bbbbbb"
+                        android:layout_marginLeft="20dp"/>
+                    <ImageView
+                        android:layout_marginTop="12dp"
+                        style="@style/DividerStyleFull" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -192,6 +203,48 @@
                             android:textColor="#a9a9a9" />
                     </LinearLayout>
 
+                    <ImageView
+                        android:layout_marginTop="20dp"
+                        style="@style/DividerStyleFull" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:paddingLeft="20dp"
+                        android:text="@string/languages"
+                        android:textColor="#bbbbbb"
+                        android:textSize="15sp" />
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/languages_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="3dp" />
+
+                    <LinearLayout
+                        android:id="@+id/add_language_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/add_photo_background"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:onClick="@{handlers::addLanguageClicked}">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_addds_plus_sl" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="3dp"
+                            android:text="@string/add_lang"
+                            android:textColor="#a9a9a9" />
+                    </LinearLayout>
                     <ImageView
                         android:layout_marginTop="20dp"
                         style="@style/DividerStyleFull" />

@@ -23,6 +23,7 @@ import com.ddscanner.entities.ForeignUserDislikesWrapper;
 import com.ddscanner.entities.ForeignUserLikeWrapper;
 import com.ddscanner.entities.GoogleMapsGeocodeResponseEntity;
 import com.ddscanner.entities.Instructor;
+import com.ddscanner.entities.Language;
 import com.ddscanner.entities.ProfileResponseEntity;
 import com.ddscanner.entities.RegisterResponse;
 import com.ddscanner.entities.Sealife;
@@ -458,13 +459,13 @@ public class DDScannerRestClient {
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 
-    public void getDiveSpotLanguages(ResultListener<Map<String, String>> resultListener) {
+    public void getDiveSpotLanguages(ResultListener<ArrayList<Language>> resultListener) {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDivespotLanguages();
-        call.enqueue(new ResponseEntityCallback<Map<String, String>>(gson, resultListener) {
+        call.enqueue(new ResponseEntityCallback<ArrayList<Language>>(gson, resultListener) {
             @Override
-            void handleResponseString(ResultListener<Map<String, String>> resultListener, String responseString) throws JSONException {
-                Map<String, String> result = new HashMap<String, String>();
-                result = gson.fromJson(responseString, result.getClass());
+            void handleResponseString(ResultListener<ArrayList<Language>> resultListener, String responseString) throws JSONException {
+                Type listType = new TypeToken<ArrayList<Language>>(){}.getType();
+                ArrayList<Language> result = gson.fromJson(responseString, listType);
                 resultListener.onSuccess(result);
             }
         });
