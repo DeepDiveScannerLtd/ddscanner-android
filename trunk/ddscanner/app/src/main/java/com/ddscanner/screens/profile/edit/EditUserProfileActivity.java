@@ -262,6 +262,10 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
             case android.R.id.home:
                 finish();
                 return true;
+            case R.id.logout:
+                setResult(RESULT_CODE_PROFILE_LOGOUT);
+                finish();
+                return true;
         }
         return true;
     }

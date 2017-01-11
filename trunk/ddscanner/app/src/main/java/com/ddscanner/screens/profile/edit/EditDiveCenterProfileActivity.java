@@ -303,6 +303,10 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
             case android.R.id.home:
                 DialogHelpers.showDialogAfterChanging(R.string.dialog_leave_title, R.string.dialog_leave_review_message, this, this);
                 return true;
+            case R.id.logout:
+                setResult(RESULT_CODE_PROFILE_LOGOUT);
+                finish();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
