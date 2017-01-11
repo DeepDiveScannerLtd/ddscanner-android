@@ -71,8 +71,27 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
     private DiveSpotsListForEditDcAdapter languagesListAdapter = new DiveSpotsListForEditDcAdapter();
     private String country;
     private MaterialDialog materialDialog;
+    private boolean isHaveSpots;
 
     private EditDcProfileViewBinding binding;
+
+    private DDScannerRestClient.ResultListener<ArrayList<DiveSpotShort>> diveSpotsResultListener = new DDScannerRestClient.ResultListener<ArrayList<DiveSpotShort>>() {
+        @Override
+        public void onSuccess(ArrayList<DiveSpotShort> result) {
+            materialDialog.dismiss();
+            diveSpotsListForEditDcAdapter.addAllDiveSpots(result);
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            materialDialog.dismiss();
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            materialDialog.dismiss();
+        }
+    };
 
     private DDScannerRestClient.ResultListener<Void> resultListener = new DDScannerRestClient.ResultListener<Void>() {
         @Override
@@ -94,9 +113,10 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
         }
     };
 
-    public static void showForResult(Activity context, String diveCenterString, int requestCode) {
+    public static void showForResult(Activity context, String diveCenterString, int requestCode, boolean isHaveSpots) {
         Intent intent = new Intent(context, EditDiveCenterProfileActivity.class);
         intent.putExtra("divecenter", diveCenterString);
+        intent.putExtra("isspots", isHaveSpots);
         context.startActivityForResult(intent, requestCode);
     }
 
@@ -105,6 +125,7 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
         super.onCreate(savedInstanceState);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         binding = DataBindingUtil.setContentView(this, R.layout.edit_dc_profile_view);
+        isHaveSpots = getIntent().getBooleanExtra("isspots", false);
         binding.setHandlers(this);
         binding.setDcViewModel(new EditDiveCenterProfileActivityViewModel(new Gson().fromJson(getIntent().getStringExtra("divecenter"), DiveCenterProfile.class)));
         setupToolbar(R.string.edit_profile_activity, R.id.toolbar, R.menu.edit_profile_menu);
@@ -119,6 +140,10 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
 
     private void setupUi() {
         materialDialog = Helpers.getMaterialDialog(this);
+        if (isHaveSpots) {
+            materialDialog.show();
+            DDScannerApplication.getInstance().getDdScannerRestClient().getSelfDiveCenterDiveSpotsList(diveSpotsResultListener);
+        }
         binding.diveSpotList.setLayoutManager(new LinearLayoutManager(this));
         binding.diveSpotList.setAdapter(diveSpotsListForEditDcAdapter);
         binding.languagesList.setLayoutManager(new LinearLayoutManager(this));

@@ -29,7 +29,7 @@ public class DiveCenterProfile implements Serializable{
     private int editedSpotsCount;
     private String token;
     @SerializedName("where_working_count")
-    private int workingCount;
+    private Integer workingCount;
     @SerializedName("where_working_dive_spots")
     private ArrayList<DiveSpotShort> workingSpots;
     @SerializedName("new_instructors_exist")
@@ -51,11 +51,11 @@ public class DiveCenterProfile implements Serializable{
         this.workingSpots = workingSpots;
     }
 
-    public int getWorkingCount() {
+    public Integer getWorkingCount() {
         return workingCount;
     }
 
-    public void setWorkingCount(int workingCount) {
+    public void setWorkingCount(Integer workingCount) {
         this.workingCount = workingCount;
     }
 

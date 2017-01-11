@@ -41,6 +41,7 @@ public class DiveCenterProfileFragment extends BaseFragment implements LoginView
 
     private DiveCenterProfile diveCenterProfile;
     private ViewDivecenterProfileBinding binding;
+    private boolean isHaveSpots = false;
     private DDScannerRestClient.ResultListener<DiveCenterProfile> userResultListener = new DDScannerRestClient.ResultListener<DiveCenterProfile>() {
         @Override
         public void onSuccess(DiveCenterProfile result) {
@@ -53,6 +54,9 @@ public class DiveCenterProfileFragment extends BaseFragment implements LoginView
                     DDScannerApplication.getInstance().getSharedPreferenceHelper().setUserServerId(String.valueOf(diveCenterProfile.getId()));
                     DDScannerApplication.getInstance().getSharedPreferenceHelper().saveDiveCenter(diveCenterProfile);
                     binding.setDiveCenterViewModel(new DiveCenterProfileFragmentViewModel(diveCenterProfile));
+                    if (result.getWorkingCount() != null && result.getWorkingCount() > 0) {
+                        isHaveSpots = true;
+                    }
                     setUi();
                     break;
             }
@@ -159,7 +163,7 @@ public class DiveCenterProfileFragment extends BaseFragment implements LoginView
     }
 
     public void editProfileButtonClicked(View view) {
-        EditDiveCenterProfileActivity.showForResult(getActivity(), new Gson().toJson(diveCenterProfile), ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_SHOW_EDIT_DC_PROFILE_ACTIVITY);
+        EditDiveCenterProfileActivity.showForResult(getActivity(), new Gson().toJson(diveCenterProfile), ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_SHOW_EDIT_DC_PROFILE_ACTIVITY, isHaveSpots);
     }
 
     public void showInstructors(View view) {

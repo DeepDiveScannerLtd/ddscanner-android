@@ -269,6 +269,18 @@ public class DDScannerRestClient {
 
     /*Methods using in API v2_0*/
 
+    public void getSelfDiveCenterDiveSpotsList(ResultListener<ArrayList<DiveSpotShort>> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getSelfDiveSpotsForDiveCenter();
+        call.enqueue(new ResponseEntityCallback<ArrayList<DiveSpotShort>>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<ArrayList<DiveSpotShort>> resultListener, String responseString) throws JSONException {
+                Type listType = new TypeToken<ArrayList<DiveSpotShort>>(){}.getType();
+                ArrayList<DiveSpotShort> result = gson.fromJson(responseString, listType);
+                resultListener.onSuccess(result);
+            }
+        });
+    }
+
     public void postInstructorsSee(ResultListener<Void> resultListener, ArrayList<String> ids) {
         InstructorsSeeRequests instructorsSeeRequests = new InstructorsSeeRequests(ids);
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postInstructorsSees(instructorsSeeRequests);

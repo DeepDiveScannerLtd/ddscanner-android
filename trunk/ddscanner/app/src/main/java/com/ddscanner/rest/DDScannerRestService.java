@@ -413,6 +413,7 @@ public interface DDScannerRestService {
     @POST("v2_0/divecenter.instructors.see")
     Call<ResponseBody> postInstructorsSees(@Body InstructorsSeeRequests instructorsSeeRequests);
 
-
+    @GET("v2_0/divecenter.divespots.get")
+    Call<ResponseBody> getSelfDiveSpotsForDiveCenter();
 
 }
