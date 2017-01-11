@@ -200,7 +200,7 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
     }
 
     @Override
-    public void onPictureFromCameraTaken(String picture) {
+    public void onPictureFromCameraTaken(File picture) {
 
     }
 

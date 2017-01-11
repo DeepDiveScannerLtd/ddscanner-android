@@ -10,6 +10,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -23,6 +24,7 @@ import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.LocationHelper;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -37,8 +39,8 @@ public class BaseAppCompatActivity extends AppCompatActivity {
     private LocationHelper locationHelper;
     private HashSet<Integer> requestCodes = new HashSet<>();
     private int menuResourceId = -1;
-    private Uri capturedImageUri;
     private PictureTakenListener takedListener;
+    private File tempFile;
 
     /**
      * Call this method to get user location. Subscribe to LocationReadyEvent for result
@@ -151,19 +153,6 @@ public class BaseAppCompatActivity extends AppCompatActivity {
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), ActivitiesRequestCodes.BASE_PICK_PHOTOS_ACTIVITY_PICK_PHOTO_FROM_GALLERY);
     }
 
-    private void dispatchTakePictureIntent() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        File imagesFolder = new File(Environment.getExternalStorageDirectory(), "DDScanner");
-        imagesFolder.mkdirs();
-        File image = new File(imagesFolder, "DDS_" + timeStamp + ".png");
-        capturedImageUri = Uri.fromFile(image);
-        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, capturedImageUri);
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(takePictureIntent, ActivitiesRequestCodes.BASE_PICK_PHOTOS_ACTIVITY_PICK_PHOTO_FROM_CAMERA);
-        }
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -171,7 +160,7 @@ public class BaseAppCompatActivity extends AppCompatActivity {
             case ActivitiesRequestCodes.BASE_PICK_PHOTOS_ACTIVITY_PICK_PHOTO_FROM_CAMERA:
                 if (resultCode == RESULT_OK) {
                     takedListener = (PictureTakenListener) this;
-                    takedListener.onPictureFromCameraTaken(capturedImageUri.toString());
+                    takedListener.onPictureFromCameraTaken(tempFile);
                 }
 
                 break;
@@ -227,7 +216,34 @@ public class BaseAppCompatActivity extends AppCompatActivity {
 
     public interface PictureTakenListener {
         void onPicturesTaken(ArrayList<String> pictures);
-        void onPictureFromCameraTaken(String picture);
+        void onPictureFromCameraTaken(File picture);
+    }
+
+
+    private File createImageFile() throws IOException {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(imageFileName, ".jpg", storageDir);
+        return image;
+    }
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+                tempFile = photoFile;
+            } catch (IOException ex) {
+
+            }
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(this, "com.ddscanner.debug", photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, ActivitiesRequestCodes.BASE_PICK_PHOTOS_ACTIVITY_PICK_PHOTO_FROM_CAMERA);
+            }
+        }
     }
 
 }

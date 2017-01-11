@@ -28,6 +28,7 @@ import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.adapters.DiverLevelSpinnerAdapter;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
+import com.ddscanner.utils.DialogHelpers;
 import com.ddscanner.utils.Helpers;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
@@ -63,6 +64,8 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
     private AppCompatRadioButton insructorRadio;
     private RequestBody diveCenterId = null;
     private String dcId;
+    private File cameraPhotoToUpload = null;
+
 
     private DDScannerRestClient.ResultListener<Void> updateProfileInfoResultListener = new DDScannerRestClient.ResultListener<Void>() {
         @Override
@@ -219,8 +222,13 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
         if (dcId != null) {
             diveCenterId = Helpers.createRequestBodyForString(dcId);
         }
-        if (!pathToUploadedPhoto.isEmpty()) {
+        if (pathToUploadedPhoto != null) {
             File file = new File(pathToUploadedPhoto);
+            RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
+            image = MultipartBody.Part.createFormData("photo", file.getName(), requestFile);
+        }
+        if (cameraPhotoToUpload != null) {
+            File file = cameraPhotoToUpload;
             RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
             image = MultipartBody.Part.createFormData("photo", file.getName(), requestFile);
         }
@@ -259,8 +267,9 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
     }
 
     @Override
-    public void onPictureFromCameraTaken(String picture) {
-        pathToUploadedPhoto = picture;
+    public void onPictureFromCameraTaken(File picture) {
+        this.pathToUploadedPhoto = null;
+        this.cameraPhotoToUpload = picture;
         Picasso.with(this).load(picture)
                 .resize(Math.round(Helpers.convertDpToPixel(80, this)),
                         Math.round(Helpers.convertDpToPixel(80, this))).centerCrop()
@@ -269,6 +278,7 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
 
     @Override
     public void onPicturesTaken(ArrayList<String> pictures) {
+        this.cameraPhotoToUpload = null;
         pathToUploadedPhoto = pictures.get(0);
         Picasso.with(this).load("file://" + pictures.get(0))
                 .resize(Math.round(Helpers.convertDpToPixel(80, this)),
@@ -291,5 +301,11 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
                 }
                 break;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        DialogHelpers.showDialogAfterChanging(R.string.dialog_leave_title, R.string.dialog_leave_review_message, this, this);
     }
 }

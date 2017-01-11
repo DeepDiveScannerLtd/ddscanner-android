@@ -272,7 +272,7 @@ public class EditCommentActivity extends BaseAppCompatActivity implements InfoDi
     }
 
     @Override
-    public void onPictureFromCameraTaken(String picture) {
+    public void onPictureFromCameraTaken(File picture) {
 
     }
 

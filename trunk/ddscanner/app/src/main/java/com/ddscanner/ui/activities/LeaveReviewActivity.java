@@ -281,7 +281,7 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements BaseAp
     }
 
     @Override
-    public void onPictureFromCameraTaken(String picture) {
+    public void onPictureFromCameraTaken(File picture) {
 
     }
 }
