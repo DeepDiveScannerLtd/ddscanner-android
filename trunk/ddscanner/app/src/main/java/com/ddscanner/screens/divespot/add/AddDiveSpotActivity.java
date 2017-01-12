@@ -16,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -23,6 +24,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -88,7 +90,7 @@ import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
-public class AddDiveSpotActivity extends AppCompatActivity implements View.OnClickListener, DialogClosedListener, AdapterView.OnItemSelectedListener {
+public class AddDiveSpotActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener, View.OnClickListener, DialogClosedListener, AdapterView.OnItemSelectedListener {
 
     private static final String TAG = AddDiveSpotActivity.class.getSimpleName();
     private static final String DIVE_SPOT_NAME_PATTERN = "^[a-zA-Z0-9 ]*$";
@@ -133,6 +135,9 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     private RecyclerView mapsRecyclerView;
     private AppCompatSpinner languageAppCompatSpinner;
     private LatLngBounds diveSpotLatLngBounds;
+    private SwitchCompat isEditSwitch;
+    private SwitchCompat isWorkingSwitch;
+    private LinearLayout isEditLayout;
 
     private List<String> photoUris = new ArrayList<>();
     private List<String> mapsUris = new ArrayList<>();
@@ -143,7 +148,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     private boolean isShownMapsPhotos = false;
     private int previousPosition = -1;
 
-    private RequestBody translations, requestCoverNumber, requestLat, requestLng, requestDepth, requestCurrents, requestLevel, requestObject, requestMinVisibility, requestMaxVisibility, requsetCountryCode;
+    private RequestBody requestIsWorkingHere, requestIsEdit, translations, requestCoverNumber, requestLat, requestLng, requestDepth, requestCurrents, requestLevel, requestObject, requestMinVisibility, requestMaxVisibility, requsetCountryCode;
     private List<MultipartBody.Part> sealife = new ArrayList<>();
     private List<MultipartBody.Part> images = new ArrayList<>();
     private List<MultipartBody.Part> mapsList = new ArrayList<>();
@@ -152,6 +157,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     private ArrayList<String> languages = new ArrayList<>();
     private Translation currentTranslation;
     private Map<String, Translation> languagesMap = new HashMap<>();
+    private String lastCode;
 
     private DDScannerRestClient.ResultListener<String> resultListener = new DDScannerRestClient.ResultListener<String>() {
         @Override
@@ -163,12 +169,24 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
 
         @Override
         public void onConnectionFailure() {
-
+            progressDialogUpload.dismiss();
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             progressDialogUpload.dismiss();
+            switch (errorType) {
+                case UNAUTHORIZED_401:
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logout();
+                    LoginActivity.showForResult(AddDiveSpotActivity.this, ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_LOGIN_TO_SEND);
+                    break;
+                case BAD_REQUEST_ERROR_400:
+                    Helpers.errorHandling(errorsMap, errorMessage);
+                    break;
+                case SERVER_INTERNAL_ERROR_500:
+                default:
+                    Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);
+            }
         }
     };
 
@@ -194,8 +212,8 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
                     DDScannerApplication.getInstance().getSharedPreferenceHelper().logout();
                     LoginActivity.showForResult(AddDiveSpotActivity.this, ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_LOGIN_TO_SEND);
                     break;
-                case UNPROCESSABLE_ENTITY_ERROR_422:
-                    Helpers.errorHandling(errorsMap, (ValidationError) errorData);
+                case BAD_REQUEST_ERROR_400:
+//                    Helpers.errorHandling(errorsMap, (ValidationError) errorData);
                     break;
                 case SERVER_INTERNAL_ERROR_500:
                 default:
@@ -223,6 +241,11 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void findViews() {
+        isWorkingSwitch = (SwitchCompat) findViewById(R.id.switch_button_working);
+        isEditSwitch = (SwitchCompat) findViewById(R.id.switch_button_edit);
+        isEditSwitch.setOnCheckedChangeListener(this);
+        isWorkingSwitch.setOnCheckedChangeListener(this);
+        isEditLayout = (LinearLayout) findViewById(R.id.edit_layout);
         name = (EditText) findViewById(R.id.name);
         depth = (EditText) findViewById(R.id.depth);
         description = (EditText) findViewById(R.id.description);
@@ -405,7 +428,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
     private void makeAddDiveSpotRequest() {
         progressDialogUpload.show();
      //   DDScannerApplication.getInstance().getDdScannerRestClient().postAddDiveSpot(addDiveSpotResultListener, sealife, images, requestName, requestLat, requestLng, requestDepth, requestMinVisibility, requestMaxVisibility, requestCurrents, requestLevel, requestObject, requestDescription, requestToken, requestSocial, requestSecret);
-        DDScannerApplication.getInstance().getDdScannerRestClient().postAddDiveSpot(resultListener, sealife, images, mapsList, requestLat, requestLng, requsetCountryCode, requestDepth, requestLevel, requestCurrents, requestMinVisibility, requestMaxVisibility, requestCoverNumber, translations, requestObject);
+        DDScannerApplication.getInstance().getDdScannerRestClient().postAddDiveSpot(resultListener, sealife, images, mapsList, requestLat, requestLng, requsetCountryCode, requestDepth, requestLevel, requestCurrents, requestMinVisibility, requestMaxVisibility, requestCoverNumber, translations, requestObject, requestIsEdit, requestIsWorkingHere);
     }
 
     private void pickPhotoFromGallery() {
@@ -491,6 +514,18 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
             requestLng = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
                     String.valueOf(diveSpotLocation.longitude));
         }
+        if (lastCode != null && !lastCode.isEmpty()) {
+            languagesMap.get(lastCode).setCode(lastCode);
+            languagesMap.get(lastCode).setName(name.getText().toString());
+            languagesMap.get(lastCode).setDescription(description.getText().toString());
+        }
+        if (isWorkingSwitch.isChecked()) {
+            requestIsWorkingHere = Helpers.createRequestBodyForString("true");
+            requestIsEdit = Helpers.createRequestBodyForString(String.valueOf(isEditSwitch.isChecked()));
+        } else {
+            requestIsWorkingHere = Helpers.createRequestBodyForString("false");
+            requestIsEdit = Helpers.createRequestBodyForString("false");
+        }
         translations = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), new Gson().toJson(languagesMap.values()));
         requestCoverNumber = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), String.valueOf(1));
         requestObject = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), String.valueOf(Helpers.getDiveSpotTypes().indexOf(objectAppCompatSpinner.getSelectedItem().toString()) + 1));
@@ -556,10 +591,10 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
         errorsMap.put("name", error_name);
         errorsMap.put("description", error_description);
         errorsMap.put("location", error_location);
-        errorsMap.put("images", error_images);
+        errorsMap.put("photos", error_images);
         errorsMap.put("sealife", error_sealife);
-        errorsMap.put("visibilityMin", error_visibility_min);
-        errorsMap.put("visibilityMax", error_visibility_max);
+        errorsMap.put("visibility_min", error_visibility_min);
+        errorsMap.put("visibility_max", error_visibility_max);
     }
 
     @Override
@@ -726,6 +761,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
             if (languagesMap.get(languagesList.get(i-1).getCode()).getDescription() != null) {
                 description.setText(languagesMap.get(languagesList.get(i-1).getCode()).getDescription());
             }
+            lastCode = languagesList.get(i-1).getCode();
             previousPosition = i-1;
         }
     }
@@ -735,4 +771,18 @@ public class AddDiveSpotActivity extends AppCompatActivity implements View.OnCli
 
     }
 
+    @Override
+    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+        switch (compoundButton.getId()) {
+            case R.id.switch_button_edit:
+                break;
+            case R.id.switch_button_working:
+                if (b) {
+                    isEditLayout.setVisibility(View.VISIBLE);
+                    break;
+                }
+                isEditLayout.setVisibility(View.GONE);
+                break;
+        }
+    }
 }

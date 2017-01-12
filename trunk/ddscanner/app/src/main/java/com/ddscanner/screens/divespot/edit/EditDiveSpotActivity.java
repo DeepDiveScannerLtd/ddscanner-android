@@ -237,7 +237,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
                     Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage, R.string.error_server_error_title, R.string.error_no_rights_to_edit_dive_spot);
                     break;
                 case UNPROCESSABLE_ENTITY_ERROR_422:
-                    Helpers.errorHandling(errorsMap, (ValidationError) errorData);
+//                    Helpers.errorHandling(errorsMap, (ValidationError) errorData);
                     break;
                 default:
                     Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage, R.string.error_server_error_title, R.string.error_unexpected_error);

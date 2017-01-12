@@ -440,11 +440,34 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:src="@drawable/ic_ds_divecenter"
+                    android:layout_marginLeft="21dp"/>
+                <android.support.v7.widget.SwitchCompat
+                    android:paddingLeft="23dp"
+                    android:id="@+id/switch_button_working"
+                    android:layout_width="match_parent"
+                    android:textSize="15sp"
+                    android:layout_height="match_parent"
+                    android:text="@string/i_am_working_here"
+                    android:paddingRight="20dp"
+                    app:theme="@style/ColorSwitchStyle"
+                    />
+            </LinearLayout>
+            <LinearLayout
+                android:visibility="gone"
+                android:id="@+id/edit_layout"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:background="@color/white"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
                     android:src="@drawable/ic_edit"
                     android:layout_marginLeft="21dp"/>
                 <android.support.v7.widget.SwitchCompat
                     android:paddingLeft="23dp"
-                    android:id="@+id/switchButton"
+                    android:id="@+id/switch_button_edit"
                     android:layout_width="match_parent"
                     android:textSize="15sp"
                     android:layout_height="match_parent"

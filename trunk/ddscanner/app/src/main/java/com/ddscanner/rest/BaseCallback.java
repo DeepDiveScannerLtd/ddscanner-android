@@ -63,7 +63,7 @@ abstract class BaseCallback<T> implements Callback<ResponseBody> {
                 // bad request. for example event already happened or event preconditions are not held
                 try {
                     generalError = gson.fromJson(json, GeneralError.class);
-                    resultListener.onError(DDScannerRestClient.ErrorType.BAD_REQUEST_ERROR_400, generalError, call.request().url().toString(), generalError.getMessage());
+                    resultListener.onError(DDScannerRestClient.ErrorType.BAD_REQUEST_ERROR_400, generalError, call.request().url().toString(), json);
                 } catch (JsonSyntaxException e) {
                     resultListener.onError(DDScannerRestClient.ErrorType.JSON_SYNTAX_EXCEPTION, null, call.request().url().toString(), e.getMessage());
                 }

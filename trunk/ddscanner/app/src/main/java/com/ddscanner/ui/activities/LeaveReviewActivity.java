@@ -97,7 +97,7 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements BaseAp
                     LoginActivity.showForResult(LeaveReviewActivity.this, ActivitiesRequestCodes.REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_LOGIN);
                     break;
                 case UNPROCESSABLE_ENTITY_ERROR_422:
-                    Helpers.errorHandling(errorsMap, (ValidationError) errorData);
+//                    Helpers.errorHandling(errorsMap, (ValidationError) errorData);
                     break;
                 default:
                     Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);

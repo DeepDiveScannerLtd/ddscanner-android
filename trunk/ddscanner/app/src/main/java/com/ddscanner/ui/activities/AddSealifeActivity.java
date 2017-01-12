@@ -114,7 +114,7 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
                     LoginActivity.showForResult(AddSealifeActivity.this, ActivitiesRequestCodes.REQUEST_CODE_ADD_SEALIFE_ACTIVITY_LOGIN_TO_SEND);
                     break;
                 case UNPROCESSABLE_ENTITY_ERROR_422:
-                    Helpers.errorHandling(errorsMap, (ValidationError) errorData);
+//                    Helpers.errorHandling(errorsMap, (ValidationError) errorData);
                     break;
                 default:
                     Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);

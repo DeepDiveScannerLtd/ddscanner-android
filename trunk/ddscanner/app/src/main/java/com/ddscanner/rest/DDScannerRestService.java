@@ -268,6 +268,8 @@ public interface DDScannerRestService {
             @Part("cover_number") RequestBody cover_number,
             @Part("translations") RequestBody translations,
             @Part("dive_spot_type") RequestBody type,
+            @Part("is_editable") RequestBody isEditable,
+            @Part("is_working_here") RequestBody isWorkingHere,
             @Part List<MultipartBody.Part> photos,
             @Part List<MultipartBody.Part> maps,
             @Part List<MultipartBody.Part> sealife

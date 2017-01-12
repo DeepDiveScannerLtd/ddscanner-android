@@ -33,10 +33,12 @@ import com.ddscanner.entities.errors.Field;
 import com.ddscanner.entities.errors.ValidationError;
 import com.ddscanner.entities.request.RegisterRequest;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
+import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
 
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
@@ -46,6 +48,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -201,19 +204,13 @@ public class Helpers {
      * @param errorsMap
      * @param validationError
      */
-    public static void errorHandling(Map<String, TextView> errorsMap, ValidationError validationError) {
-        for (Field field : validationError.getFields()) {
-            if ("token".equals(field.getName())) {
-                return;
-            }
-            if ("lat".equals(field.getName()) || "lng".equals(field.getName())) {
-                errorsMap.get("location").setVisibility(View.VISIBLE);
-                errorsMap.get("location").setText("Please choose location");
-            }
-            if (errorsMap.get(field.getName()) != null) {
-                String key = field.getName();
-                errorsMap.get(key).setVisibility(View.VISIBLE);
-                errorsMap.get(key).setText(field.getErrors().toString().replace("[", "").replace("]", ""));
+    public static void errorHandling(Map<String, TextView> errorsMap, String validationError) {
+        Map<String, ArrayList<String>> fields = new HashMap<>();
+        fields = new Gson().fromJson(validationError, fields.getClass());
+        for (Map.Entry<String, ArrayList<String>> entry : fields.entrySet()) {
+            if (errorsMap.get(entry.getKey()) != null) {
+                errorsMap.get(entry.getKey()).setText(entry.getValue().get(0));
+                errorsMap.get(entry.getKey()).setVisibility(View.VISIBLE);
             }
         }
     }
