@@ -36,6 +36,19 @@ public class DiveSpotDetailsEntity extends DiveSpotShort {
     private int mapsPhotosCount;
     @SerializedName("country_code")
     private String countryCode;
+    @SerializedName("is_edit")
+    private Boolean isEdit;
+
+    public boolean isEdit() {
+        if (isEdit == null) {
+            return false;
+        }
+        return isEdit;
+    }
+
+    public void setEdit(boolean edit) {
+        isEdit = edit;
+    }
 
     public String getCountryCode() {
         return countryCode;

@@ -433,6 +433,8 @@
                 android:layout_marginTop="@dimen/base_block_margin_top"
                 style="@style/DividerStyleFull" />
             <LinearLayout
+                android:id="@+id/working_layout"
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
                 android:background="@color/white"

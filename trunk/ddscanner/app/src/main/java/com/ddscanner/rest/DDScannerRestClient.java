@@ -235,7 +235,7 @@ public class DDScannerRestClient {
     }
 
     public void postUpdateDiveSpot(ResultListener<Void> resultListener, List<MultipartBody.Part> sealifes, List<MultipartBody.Part> newPhotos, List<MultipartBody.Part> deletedPhotos, List<MultipartBody.Part> new_maps, List<MultipartBody.Part> deleted_maps, RequestBody... requestBodies) {
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postUpdateDiveSpot(requestBodies[0], requestBodies[1], requestBodies[2], requestBodies[3], requestBodies[4], requestBodies[5], requestBodies[6], requestBodies[7], requestBodies[8], requestBodies[9], requestBodies[10], requestBodies[11], newPhotos, deletedPhotos, new_maps, deleted_maps, sealifes);
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postUpdateDiveSpot(requestBodies[0], requestBodies[1], requestBodies[2], requestBodies[3], requestBodies[4], requestBodies[5], requestBodies[6], requestBodies[7], requestBodies[8], requestBodies[9], requestBodies[10], requestBodies[11], requestBodies[12], requestBodies[13], newPhotos, deletedPhotos, new_maps, deleted_maps, sealifes);
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 

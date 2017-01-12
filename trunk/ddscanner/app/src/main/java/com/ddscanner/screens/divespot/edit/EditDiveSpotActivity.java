@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -21,6 +22,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -81,7 +83,7 @@ import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
-public class EditDiveSpotActivity extends AppCompatActivity implements View.OnClickListener, InfoDialogFragment.DialogClosedListener, AdapterView.OnItemSelectedListener {
+public class EditDiveSpotActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener, View.OnClickListener, InfoDialogFragment.DialogClosedListener, AdapterView.OnItemSelectedListener {
 
     private static final String TAG = EditDiveSpotActivity.class.getSimpleName();
 
@@ -128,6 +130,10 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
     private TextView maps;
     private RecyclerView mapsRecyclerView;
     private AppCompatSpinner languageAppCompatSpinner;
+    private SwitchCompat isEditSwitch;
+    private SwitchCompat isWorkingSwitch;
+    private LinearLayout isEditLayout;
+    private LinearLayout workingLayout;
 
     private List<String> photoUris = new ArrayList<>();
     private List<String> mapsUris = new ArrayList<>();
@@ -137,8 +143,9 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
     private FiltersResponseEntity filters;
     private boolean isShownMapsPhotos = false;
     private int previousPosition = -1;
+    private String lastCode;
 
-    private RequestBody translations, requestCoverNumber, requestLat, requestLng, requestDepth, requestCurrents, requestLevel, requestObject, requestMinVisibility, requestMaxVisibility, requsetCountryCode, requestId;
+    private RequestBody requestIsWorkingHere, requestIsEdit, translations, requestCoverNumber, requestLat, requestLng, requestDepth, requestCurrents, requestLevel, requestObject, requestMinVisibility, requestMaxVisibility, requsetCountryCode, requestId;
     private List<MultipartBody.Part> sealife = new ArrayList<>();
     private List<MultipartBody.Part> newImages = new ArrayList<>();
     private List<MultipartBody.Part> deletedImages = new ArrayList<>();
@@ -304,6 +311,10 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
     }
 
     private void findViewsAndSetupCurrentData(DiveSpotDetailsEntity diveSpot) {
+        isWorkingSwitch = (SwitchCompat) findViewById(R.id.switch_button_working);
+        isEditSwitch = (SwitchCompat) findViewById(R.id.switch_button_edit);
+        workingLayout = (LinearLayout) findViewById(R.id.working_layout);
+        isEditLayout = (LinearLayout) findViewById(R.id.edit_layout);
         name = (EditText) findViewById(R.id.name);
         depth = (EditText) findViewById(R.id.depth);
         depth.setText(diveSpot.getDepth());
@@ -343,6 +354,18 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
     }
 
     private void setUi() {
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == 0) {
+            workingLayout.setVisibility(View.VISIBLE);
+            if (diveSpotDetailsEntity.getFlags().isWorkingHere()) {
+                isWorkingSwitch.setChecked(true);
+                isEditLayout.setVisibility(View.VISIBLE);
+                if (diveSpotDetailsEntity.isEdit()) {
+                    isEditSwitch.setChecked(true);
+                }
+            }
+        }
+        isEditSwitch.setOnCheckedChangeListener(this);
+        isWorkingSwitch.setOnCheckedChangeListener(this);
         diveSpotDetailsEntity.setPhotos(userPhotosIds);
         diveSpotDetailsEntity.setMaps(userMapsIds);
         requsetCountryCode = Helpers.createRequestBodyForString(diveSpotDetailsEntity.getCountryCode());
@@ -487,7 +510,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
         progressDialogUpload.show();
         //   DDScannerApplication.getInstance().getDdScannerRestClient().postAddDiveSpot(addDiveSpotResultListener, sealife, images, requestName, requestLat, requestLng, requestDepth, requestMinVisibility, requestMaxVisibility, requestCurrents, requestLevel, requestObject, requestDescription, requestToken, requestSocial, requestSecret);
 //        DDScannerApplication.getInstance().getDdScannerRestClient().postAddDiveSpot(resultListener, sealife, images, mapsList, requestLat, requestLng, requsetCountryCode, requestDepth, requestLevel, requestCurrents, requestMinVisibility, requestMaxVisibility, requestCoverNumber, translations, requestObject);
-        DDScannerApplication.getInstance().getDdScannerRestClient().postUpdateDiveSpot(updateDiveSpotResultListener, sealife, newImages, deletedImages, newMaps, deletedMaps, requestId, requestLat, requestLng, requsetCountryCode, requestDepth, requestLevel, requestCurrents, requestMinVisibility, requestMaxVisibility, requestCoverNumber,translations, requestObject);
+        DDScannerApplication.getInstance().getDdScannerRestClient().postUpdateDiveSpot(updateDiveSpotResultListener, sealife, newImages, deletedImages, newMaps, deletedMaps, requestId, requestLat, requestLng, requsetCountryCode, requestDepth, requestLevel, requestCurrents, requestMinVisibility, requestMaxVisibility, requestCoverNumber,translations, requestObject, requestIsEdit, requestIsWorkingHere);
     }
 
     private void pickPhotoFromGallery() {
@@ -584,6 +607,20 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
                     String.valueOf(diveSpotLocation.latitude));
             requestLng = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
                     String.valueOf(diveSpotLocation.longitude));
+        }
+        if (lastCode != null && !lastCode.isEmpty()) {
+            languagesMap.get(lastCode).setCode(lastCode);
+            languagesMap.get(lastCode).setName(name.getText().toString());
+            languagesMap.get(lastCode).setDescription(description.getText().toString());
+        }
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == 0) {
+            if (isWorkingSwitch.isChecked()) {
+                requestIsWorkingHere = Helpers.createRequestBodyForString("true");
+                requestIsEdit = Helpers.createRequestBodyForString(String.valueOf(isEditSwitch.isChecked()));
+            } else {
+                requestIsWorkingHere = Helpers.createRequestBodyForString("false");
+                requestIsEdit = Helpers.createRequestBodyForString("false");
+            }
         }
         translations = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), new Gson().toJson(languagesMap.values()));
         requestCoverNumber = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), String.valueOf(1));
@@ -792,6 +829,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
             if (languagesMap.get(languagesList.get(i-1).getCode()).getDescription() != null) {
                 description.setText(languagesMap.get(languagesList.get(i-1).getCode()).getDescription());
             }
+            lastCode= languagesList.get(i-1).getCode();
             previousPosition = i-1;
         }
     }
@@ -799,6 +837,21 @@ public class EditDiveSpotActivity extends AppCompatActivity implements View.OnCl
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
 
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+        switch (compoundButton.getId()) {
+            case R.id.switch_button_edit:
+                break;
+            case R.id.switch_button_working:
+                if (b) {
+                    isEditLayout.setVisibility(View.VISIBLE);
+                    break;
+                }
+                isEditLayout.setVisibility(View.GONE);
+                break;
+        }
     }
 
 }
