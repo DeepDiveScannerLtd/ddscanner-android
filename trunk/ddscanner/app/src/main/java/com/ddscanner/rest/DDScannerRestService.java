@@ -420,4 +420,6 @@ public interface DDScannerRestService {
     @GET("v2_0/divecenter.divespots.get")
     Call<ResponseBody> getSelfDiveSpotsForDiveCenter();
 
+    @POST("v2_0/divecenter.instructor.remove")
+    Call<ResponseBody> postRemoveInstructorFromDIveCenter(@Query("id") String instructorId);
 }

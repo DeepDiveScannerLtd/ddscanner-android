@@ -269,6 +269,11 @@ public class DDScannerRestClient {
 
     /*Methods using in API v2_0*/
 
+    public void postRemoveInstructorFromDivecenter(ResultListener<Void> resultListener, String userId) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postRemoveInstructorFromDIveCenter(userId);
+        call.enqueue(new NoResponseEntityCallback(gson, resultListener));
+    }
+
     public void getSelfDiveCenterDiveSpotsList(ResultListener<ArrayList<DiveSpotShort>> resultListener) {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getSelfDiveSpotsForDiveCenter();
         call.enqueue(new ResponseEntityCallback<ArrayList<DiveSpotShort>>(gson, resultListener) {

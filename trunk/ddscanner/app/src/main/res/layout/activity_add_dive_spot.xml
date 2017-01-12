@@ -290,6 +290,10 @@
 
                 <ImageView style="@style/DividerStyle" />
 
+                <TextView
+                    android:id="@+id/error_current"
+                    style="@style/ValidationErrorTextView" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
@@ -312,6 +316,10 @@
 
                 <ImageView style="@style/DividerStyle" />
 
+                <TextView
+                    android:id="@+id/error_level"
+                    style="@style/ValidationErrorTextView" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
@@ -333,6 +341,10 @@
                 </LinearLayout>
 
                 <ImageView style="@style/DividerStyle" />
+
+                <TextView
+                    android:id="@+id/error_object"
+                    style="@style/ValidationErrorTextView" />
 
                 <LinearLayout
                     android:layout_width="match_parent"

@@ -12,6 +12,7 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.Instructor;
 import com.ddscanner.events.IsCommentLikedEvent;
+import com.ddscanner.events.RemoveInstructorEvent;
 import com.ddscanner.screens.user.profile.UserProfileActivity;
 import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;
@@ -47,7 +48,7 @@ public class InstructorListAdapter extends RecyclerView.Adapter<InstructorListAd
                 showedInstructors.add(instructors.get(position).getId());
             }
         }
-        Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, instructors.get(position).getPhoto(), "1")).placeholder(R.drawable.review_default_avatar).error(R.drawable.review_default_avatar).resize(Math.round(Helpers.convertDpToPixel(60, context)),Math.round(Helpers.convertDpToPixel(60, context))).centerCrop().transform(new CropCircleTransformation()).into(holder.avatar);
+        Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, instructors.get(position).getPhoto(), "1")).placeholder(R.drawable.review_default_avatar).error(R.drawable.review_default_avatar).resize(Math.round(Helpers.convertDpToPixel(35, context)),Math.round(Helpers.convertDpToPixel(35, context))).centerCrop().transform(new CropCircleTransformation()).into(holder.avatar);
     }
 
     @Override
@@ -75,18 +76,30 @@ public class InstructorListAdapter extends RecyclerView.Adapter<InstructorListAd
         private TextView isNew;
         private TextView name;
         private ImageView avatar;
+        private ImageView removeButton;
 
         InstructorListViewHolder(View view) {
             super(view);
-            view.setOnClickListener(this);
             isNew = (TextView) view.findViewById(R.id.is_new);
             avatar = (ImageView) view.findViewById(R.id.avatar);
             name = (TextView) view.findViewById(R.id.name);
+            removeButton = (ImageView) view.findViewById(R.id.remove);
+            removeButton.setOnClickListener(this);
+            avatar.setOnClickListener(this);
+            name.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
-            UserProfileActivity.show(context, instructors.get(getAdapterPosition()).getId(), instructors.get(getAdapterPosition()).getType());
+            switch (view.getId()) {
+                case R.id.avatar:
+                case R.id.name:
+                    UserProfileActivity.show(context, instructors.get(getAdapterPosition()).getId(), instructors.get(getAdapterPosition()).getType());
+                    break;
+                case R.id.remove:
+                    DDScannerApplication.bus.post(new RemoveInstructorEvent(instructors.get(getAdapterPosition()).getId(), getAdapterPosition()));
+                    break;
+            }
         }
     }
 

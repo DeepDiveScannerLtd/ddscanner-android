@@ -129,6 +129,9 @@ public class AddDiveSpotActivity extends AppCompatActivity implements CompoundBu
     private TextView error_images;
     private TextView error_visibility_min;
     private TextView error_visibility_max;
+    private TextView error_current;
+    private TextView error_level;
+    private TextView error_object;
     private int maxPhotos = 3;
     private TextView photos;
     private TextView maps;
@@ -138,6 +141,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements CompoundBu
     private SwitchCompat isEditSwitch;
     private SwitchCompat isWorkingSwitch;
     private LinearLayout isEditLayout;
+    private LinearLayout isWorkingLayout;
 
     private List<String> photoUris = new ArrayList<>();
     private List<String> mapsUris = new ArrayList<>();
@@ -241,6 +245,10 @@ public class AddDiveSpotActivity extends AppCompatActivity implements CompoundBu
     }
 
     private void findViews() {
+        isWorkingLayout = (LinearLayout) findViewById(R.id.working_layout);
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == 0) {
+            isWorkingLayout.setVisibility(View.VISIBLE);
+        }
         isWorkingSwitch = (SwitchCompat) findViewById(R.id.switch_button_working);
         isEditSwitch = (SwitchCompat) findViewById(R.id.switch_button_edit);
         isEditSwitch.setOnCheckedChangeListener(this);
@@ -271,6 +279,9 @@ public class AddDiveSpotActivity extends AppCompatActivity implements CompoundBu
         error_sealife = (TextView) findViewById(R.id.error_sealife);
         error_visibility_max = (TextView) findViewById(R.id.error_visibility_max);
         error_visibility_min = (TextView) findViewById(R.id.error_visibility_min);
+        error_current = (TextView) findViewById(R.id.error_current);
+        error_level = (TextView) findViewById(R.id.error_level);
+        error_object = (TextView) findViewById(R.id.error_object);
         visibilityMax = (EditText) findViewById(R.id.maxVisibility);
         visibilityMin = (EditText) findViewById(R.id.minVisibility);
         photos = (TextView) findViewById(R.id.photos);
@@ -588,13 +599,14 @@ public class AddDiveSpotActivity extends AppCompatActivity implements CompoundBu
 
     private void makeErrorsMap() {
         errorsMap.put("depth", error_depth);
-        errorsMap.put("name", error_name);
-        errorsMap.put("description", error_description);
         errorsMap.put("location", error_location);
         errorsMap.put("photos", error_images);
         errorsMap.put("sealife", error_sealife);
         errorsMap.put("visibility_min", error_visibility_min);
         errorsMap.put("visibility_max", error_visibility_max);
+        errorsMap.put("diving_skill", error_level);
+        errorsMap.put("dive_spot_type", error_object);
+        errorsMap.put("currents", error_current);
     }
 
     @Override
