@@ -329,7 +329,7 @@ public interface DDScannerRestService {
     );
 
     @Multipart
-    @POST("v2_0/user.profile.update")
+    @POST("v2_0/divecenter.profile.update")
     Call<ResponseBody> postUpdateDiveCenterProfile(
             @Part MultipartBody.Part image,
             @Part("name") RequestBody name,
