@@ -9,7 +9,7 @@ public class Comment {
     private String id;
     private String review;
     private String rating;
-    private ArrayList<String> photos;
+    private ArrayList<DiveSpotPhoto> photos;
     private String likes;
     private String dislikes;
     private String date;
@@ -64,11 +64,11 @@ public class Comment {
         this.rating = rating;
     }
 
-    public ArrayList<String> getPhotos() {
+    public ArrayList<DiveSpotPhoto> getPhotos() {
         return photos;
     }
 
-    public void setPhotos(ArrayList<String> photos) {
+    public void setPhotos(ArrayList<DiveSpotPhoto> photos) {
         this.photos = photos;
     }
 

@@ -1,8 +1,11 @@
 package com.ddscanner.entities.request;
 
+import com.google.gson.annotations.SerializedName;
+
 public class ReportImageRequest {
 
     private String id;
+    @SerializedName("report_type")
     private int type;
     private String description;
 

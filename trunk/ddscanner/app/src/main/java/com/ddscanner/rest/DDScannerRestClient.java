@@ -373,7 +373,7 @@ public class DDScannerRestClient {
     }
 
     public void getCommentsForDiveSpot(ResultListener<ArrayList<CommentEntity>> resultListener, String diveSpotId) {
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getCommentsForDiveSpot(diveSpotId);
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getCommentsForDiveSpot(diveSpotId, 1);
         call.enqueue(new ResponseEntityCallback<ArrayList<CommentEntity>>(gson, resultListener) {
             @Override
             void handleResponseString(ResultListener<ArrayList<CommentEntity>> resultListener, String responseString) throws JSONException {

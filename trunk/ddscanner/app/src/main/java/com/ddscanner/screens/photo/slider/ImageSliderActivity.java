@@ -422,13 +422,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     private void reportImage(String imageName, int reportType, String reportDescription) {
         isChanged = true;
         materialDialog.show();
-        if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn() || DDScannerApplication.getInstance().getSharedPreferenceHelper().getToken().isEmpty() || DDScannerApplication.getInstance().getSharedPreferenceHelper().getSn().isEmpty()) {
-            LoginActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_REPORT);
-            return;
-        }
-
-       DDScannerApplication.getInstance().getDdScannerRestClient().postReportImage(reportImageRequestListener, new ReportImageRequest(imageName, reportType, reportDescription));
-
+        DDScannerApplication.getInstance().getDdScannerRestClient().postReportImage(reportImageRequestListener, new ReportImageRequest(imageName, reportType, reportDescription));
     }
 
 

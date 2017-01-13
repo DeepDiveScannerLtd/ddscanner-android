@@ -22,6 +22,7 @@ import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.Comment;
 import com.ddscanner.entities.CommentEntity;
+import com.ddscanner.entities.DiveSpotPhoto;
 import com.ddscanner.events.DeleteCommentEvent;
 import com.ddscanner.events.DislikeCommentEvent;
 import com.ddscanner.events.EditCommentEvent;
@@ -202,8 +203,8 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         popup.show();
     }
 
-    public void imageDeleted(int commentPosition, ArrayList<String> deletedImages) {
-        ArrayList<String> newImagesList =  comments.get(commentPosition).getComment().getPhotos();
+    public void imageDeleted(int commentPosition, ArrayList<DiveSpotPhoto> deletedImages) {
+        ArrayList<DiveSpotPhoto> newImagesList =  comments.get(commentPosition).getComment().getPhotos();
         newImagesList.removeAll(deletedImages);
         if (newImagesList.size() == 0) {
             newImagesList = null;

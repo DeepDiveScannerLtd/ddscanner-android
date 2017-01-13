@@ -19,7 +19,9 @@ import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.Comment;
 import com.ddscanner.entities.CommentEntity;
+import com.ddscanner.entities.DiveSpotPhoto;
 import com.ddscanner.entities.FiltersResponseEntity;
+import com.ddscanner.entities.PhotoOpenedSource;
 import com.ddscanner.entities.request.ReportRequest;
 import com.ddscanner.events.DeleteCommentEvent;
 import com.ddscanner.events.DislikeCommentEvent;
@@ -30,6 +32,7 @@ import com.ddscanner.events.ReportCommentEvent;
 import com.ddscanner.events.ShowLoginActivityIntent;
 import com.ddscanner.events.ShowSliderForReviewImagesEvent;
 import com.ddscanner.rest.DDScannerRestClient;
+import com.ddscanner.screens.photo.slider.ImageSliderActivity;
 import com.ddscanner.ui.adapters.ReviewsListAdapter;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
@@ -352,7 +355,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
             case ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_SHOW_SLIDER:
                 if (resultCode == RESULT_OK) {
                     if (data.getSerializableExtra("deletedImages") != null) {
-                        reviewsListAdapter.imageDeleted(commentPosition, (ArrayList<String>) data.getSerializableExtra("deletedImages"));
+                        reviewsListAdapter.imageDeleted(commentPosition, (ArrayList<DiveSpotPhoto>) data.getSerializableExtra("deletedImages"));
                     }
                 }
                 break;
@@ -516,7 +519,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     @Subscribe
     public void showSliderActivity(ShowSliderForReviewImagesEvent event) {
         this.commentPosition = event.getCommentPosition();
-    //    ReviewImageSliderActivity.showForResult(this, event.getPhotos(), event.getPosition(), event.isSelfReview(), true, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_SHOW_SLIDER);
+        ImageSliderActivity.showForResult(this, event.getPhotos(), event.getPosition(), ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_SHOW_SLIDER, PhotoOpenedSource.REVIEWS, false);
     }
 
     @Override

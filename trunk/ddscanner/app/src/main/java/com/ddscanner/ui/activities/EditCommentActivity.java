@@ -35,6 +35,7 @@ import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.Comment;
 import com.ddscanner.entities.CommentEntity;
 import com.ddscanner.entities.CommentOld;
+import com.ddscanner.entities.DiveSpotPhoto;
 import com.ddscanner.events.AddPhotoDoListEvent;
 import com.ddscanner.events.ImageDeletedEvent;
 import com.ddscanner.rest.DDScannerRestClient;
@@ -126,7 +127,11 @@ public class EditCommentActivity extends BaseAppCompatActivity implements InfoDi
         photosRecyclerView.setLayoutManager(layoutManager);
         photosRecyclerView.setAdapter(editSpotPhotosListAdapter);
         if (comment.getPhotos() != null) {
-            editSpotPhotosListAdapter.addServerPhoto(comment.getPhotos());
+            ArrayList<String> serverPhotos = new ArrayList<>();
+            for (DiveSpotPhoto diveSpotPhoto : comment.getPhotos()) {
+                serverPhotos.add(diveSpotPhoto.getId());
+            }
+            editSpotPhotosListAdapter.addServerPhoto(serverPhotos);
            // setRcSettings();
         }
         ratingBar.setRating(Integer.parseInt(comment.getRating()));
