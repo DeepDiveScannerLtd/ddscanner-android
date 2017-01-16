@@ -406,5 +406,6 @@
     <string name="activity_type_dive_spot_changed">%1$s changed</string>
     <string name="activity_type_review_liked">%1$s liked your review %2$s</string>
     <string name="activity_type_review_disliked">%1$s disliked your review %2$s</string>
+    <string name="diespors">Dive Spots</string>
 
 </resources>

@@ -168,7 +168,7 @@ public class DiveCenterProfileFragment extends BaseFragment implements LoginView
 
     public void showDiveSpots(View view) {
         if (binding.getDiveCenterViewModel().getDiveCenterProfile().getWorkingCount() > 0) {
-            DiveCenterSpotsActivity.show(getContext(), String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId()));
+            DiveCenterSpotsActivity.show(getContext(), String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId()), binding.getDiveCenterViewModel().getDiveCenterProfile().getAddresses().get(0).getPosition());
         }
     }
 

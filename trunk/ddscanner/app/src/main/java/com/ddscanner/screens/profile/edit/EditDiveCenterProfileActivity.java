@@ -207,8 +207,8 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
             }
         }
         if (binding.getDcViewModel().getDiveCenterProfile().getAddresses() != null) {
-            locationLatitude = binding.getDcViewModel().getDiveCenterProfile().getAddresses().get(0).getLat();
-            locationLongitude = binding.getDcViewModel().getDiveCenterProfile().getAddresses().get(0).getLng();
+            locationLatitude = String.valueOf(binding.getDcViewModel().getDiveCenterProfile().getAddresses().get(0).getLat());
+            locationLongitude = String.valueOf(binding.getDcViewModel().getDiveCenterProfile().getAddresses().get(0).getLng());
             addAddressesView(binding.getDcViewModel().getDiveCenterProfile().getAddresses().get(0).getName(), binding.getDcViewModel().getDiveCenterProfile().getContryName());
         }
     }
@@ -363,7 +363,7 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
         }
 
         if (locationLatitude != null && locationLongitude != null && addressEditText != null && !addressEditText.getText().toString().isEmpty()) {
-            com.ddscanner.entities.Address address = new com.ddscanner.entities.Address(addressEditText.getText().toString(), locationLatitude, locationLongitude);
+            com.ddscanner.entities.Address address = new com.ddscanner.entities.Address(addressEditText.getText().toString(), Double.valueOf(locationLatitude), Double.valueOf(locationLongitude));
             ArrayList<com.ddscanner.entities.Address> addresses = new ArrayList<>();
             addresses.add(address);
             addressRequestBody = Helpers.createRequestBodyForString(new Gson().toJson(addresses));

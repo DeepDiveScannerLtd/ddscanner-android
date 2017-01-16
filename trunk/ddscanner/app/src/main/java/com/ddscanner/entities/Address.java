@@ -1,5 +1,6 @@
 package com.ddscanner.entities;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
@@ -8,10 +9,10 @@ public class Address implements Serializable {
 
     @SerializedName("address")
     private String name;
-    private String lat;
-    private String lng;
+    private double lat;
+    private double lng;
 
-    public Address(String name, String lat, String lng) {
+    public Address(String name, double lat, double lng) {
         this.name = name;
         this.lat = lat;
         this.lng = lng;
@@ -21,11 +22,15 @@ public class Address implements Serializable {
         return name;
     }
 
-    public String getLat() {
+    public double getLat() {
         return lat;
     }
 
-    public String getLng() {
+    public double getLng() {
         return lng;
+    }
+
+    public LatLng getPosition() {
+        return new LatLng(lat, lng);
     }
 }

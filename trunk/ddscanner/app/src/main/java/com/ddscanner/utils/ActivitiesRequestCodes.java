@@ -186,4 +186,7 @@ public class ActivitiesRequestCodes {
     //Edit profile activity
     public static final int REQUEST_CODE_EDIT_PROFILE_ACTIVITY_CHOOSE_DIVE_CENTER = 4301;
 
+    //Dive center spots activity
+    public static final int REQUEST_CODE_DIVE_CENTER_SPOTS_ACTIVITY_GO_TO_MY_LOCATION = 4401;
+
 }
