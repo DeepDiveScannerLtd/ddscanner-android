@@ -269,6 +269,18 @@ public class DDScannerRestClient {
 
     /*Methods using in API v2_0*/
 
+    public void getDiveCenterLanguages(ResultListener<ArrayList<Language>> resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveCenterLanguages();
+        call.enqueue(new ResponseEntityCallback<ArrayList<Language>>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<ArrayList<Language>> resultListener, String responseString) throws JSONException {
+                Type listType = new TypeToken<ArrayList<Language>>(){}.getType();
+                ArrayList<Language> languages = gson.fromJson(responseString, listType);
+                resultListener.onSuccess(languages);
+            }
+        });
+    }
+
     public void postRemoveInstructorFromDivecenter(ResultListener<Void> resultListener, String userId) {
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postRemoveInstructorFromDIveCenter(userId);
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
@@ -321,8 +333,8 @@ public class DDScannerRestClient {
         });
     }
 
-    public void postUpdateDiveCenterProfile(ResultListener<Void> resultListener, MultipartBody.Part image, List<MultipartBody.Part> emails, List<MultipartBody.Part> phones, List<MultipartBody.Part> diveSpots, RequestBody... requestBodies) {
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postUpdateDiveCenterProfile(image, requestBodies[0], requestBodies[1], requestBodies[2], requestBodies[3], emails, phones, diveSpots);
+    public void postUpdateDiveCenterProfile(ResultListener<Void> resultListener, MultipartBody.Part image, List<MultipartBody.Part> emails, List<MultipartBody.Part> phones, List<MultipartBody.Part> diveSpots, List<MultipartBody.Part> languages, RequestBody... requestBodies) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postUpdateDiveCenterProfile(image, requestBodies[0], requestBodies[1], requestBodies[2], requestBodies[3], languages, emails, phones, diveSpots);
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 

@@ -27,6 +27,7 @@ import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.activities.PickLanguageActivity;
 import com.ddscanner.ui.activities.SearchSpotOrLocationActivity;
+import com.ddscanner.ui.adapters.DiveCenterLanguagesListAdapter;
 import com.ddscanner.ui.adapters.DiveSpotsListForEditDcAdapter;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
@@ -58,6 +59,7 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
     private ArrayList<EditText> addresses = new ArrayList<>();
     private List<MultipartBody.Part> emails =  new ArrayList<>();
     private List<MultipartBody.Part> phones = new ArrayList<>();
+    private List<MultipartBody.Part> languages = null;
     private List<MultipartBody.Part> diveSpots = null;
     private EditText countryEdiText;
     private EditText addressEditText;
@@ -68,28 +70,54 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
     private String locationLongitude = null;
     private RequestBody countryRequestBody = null, addressRequestBody = null, nameRequestBody = null;
     private DiveSpotsListForEditDcAdapter diveSpotsListForEditDcAdapter = new DiveSpotsListForEditDcAdapter();
-    private DiveSpotsListForEditDcAdapter languagesListAdapter = new DiveSpotsListForEditDcAdapter();
+    private DiveCenterLanguagesListAdapter languagesListAdapter = new DiveCenterLanguagesListAdapter();
     private String country;
     private MaterialDialog materialDialog;
     private boolean isHaveSpots;
+    private boolean isLanguagesDownloaded = false;
+    private boolean isDiveSpotsDownloaded = false;
 
     private EditDcProfileViewBinding binding;
 
     private DDScannerRestClient.ResultListener<ArrayList<DiveSpotShort>> diveSpotsResultListener = new DDScannerRestClient.ResultListener<ArrayList<DiveSpotShort>>() {
         @Override
         public void onSuccess(ArrayList<DiveSpotShort> result) {
-            materialDialog.dismiss();
             diveSpotsListForEditDcAdapter.addAllDiveSpots(result);
+            isDiveSpotsDownloaded = true;
+            dismissMaterialDiaog();
         }
 
         @Override
         public void onConnectionFailure() {
-            materialDialog.dismiss();
+            isDiveSpotsDownloaded = true;
+            dismissMaterialDiaog();
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-            materialDialog.dismiss();
+            isDiveSpotsDownloaded = true;
+            dismissMaterialDiaog();
+        }
+    };
+
+    private DDScannerRestClient.ResultListener<ArrayList<Language>> languagesResultListener = new DDScannerRestClient.ResultListener<ArrayList<Language>>() {
+        @Override
+        public void onSuccess(ArrayList<Language> result) {
+            languagesListAdapter.addAllLanguages(result);
+            isLanguagesDownloaded = true;
+            dismissMaterialDiaog();
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            isLanguagesDownloaded = true;
+            dismissMaterialDiaog();
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            isLanguagesDownloaded = true;
+            dismissMaterialDiaog();
         }
     };
 
@@ -112,6 +140,18 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
             materialDialog.dismiss();
         }
     };
+
+    private void dismissMaterialDiaog() {
+        if (isDiveSpotsDownloaded && isLanguagesDownloaded) {
+            materialDialog.dismiss();
+        }
+    }
+
+    private void cancelAllResultListenersAndCloseActivity() {
+        languagesResultListener.setCancelled(true);
+        diveSpotsResultListener.setCancelled(true);
+        finish();
+    }
 
     public static void showForResult(Activity context, String diveCenterString, int requestCode, boolean isHaveSpots) {
         Intent intent = new Intent(context, EditDiveCenterProfileActivity.class);
@@ -140,10 +180,11 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
 
     private void setupUi() {
         materialDialog = Helpers.getMaterialDialog(this);
+        materialDialog.show();
         if (isHaveSpots) {
-            materialDialog.show();
             DDScannerApplication.getInstance().getDdScannerRestClient().getSelfDiveCenterDiveSpotsList(diveSpotsResultListener);
         }
+        DDScannerApplication.getInstance().getDdScannerRestClient().getDiveCenterLanguages(languagesResultListener);
         binding.diveSpotList.setLayoutManager(new LinearLayoutManager(this));
         binding.diveSpotList.setAdapter(diveSpotsListForEditDcAdapter);
         binding.languagesList.setLayoutManager(new LinearLayoutManager(this));
@@ -328,6 +369,20 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
             addressRequestBody = Helpers.createRequestBodyForString(new Gson().toJson(addresses));
         }
 
+        if (languagesListAdapter.getObjects().size() > 0) {
+            languages = new ArrayList<>();
+            for (Language language : languagesListAdapter.getObjects()) {
+                languages.add(MultipartBody.Part.createFormData("content_lang[]", language.getCode()));
+            }
+        }
+
+        if (diveSpotsListForEditDcAdapter.getObjects().size() > 0) {
+            diveSpots = new ArrayList<>();
+            for (DiveSpotShort diveSpotShort : diveSpotsListForEditDcAdapter.getObjects()) {
+                diveSpots.add(MultipartBody.Part.createFormData("dive_spots[]", String.valueOf(diveSpotShort.getId())));
+            }
+        }
+
         if (countryCode != null) {
             countryRequestBody = Helpers.createRequestBodyForString(countryCode);
         }
@@ -338,7 +393,7 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
             photo = MultipartBody.Part.createFormData("photo", file.getName(), requestFile);
         }
 
-        DDScannerApplication.getInstance().getDdScannerRestClient().postUpdateDiveCenterProfile(resultListener, photo,  emails, phones, diveSpots, nameRequestBody, countryRequestBody, addressRequestBody, Helpers.createRequestBodyForString("1"));
+        DDScannerApplication.getInstance().getDdScannerRestClient().postUpdateDiveCenterProfile(resultListener, photo,  emails, phones, diveSpots, languages, nameRequestBody, countryRequestBody, addressRequestBody, Helpers.createRequestBodyForString("1"));
         materialDialog.show();
     }
 

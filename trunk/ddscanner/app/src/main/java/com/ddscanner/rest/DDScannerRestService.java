@@ -336,6 +336,7 @@ public interface DDScannerRestService {
             @Part("country") RequestBody country,
             @Part("addresses") RequestBody adresses,
             @Part("service") RequestBody service,
+            @Part List<MultipartBody.Part> languages,
             @Part List<MultipartBody.Part> emails,
             @Part List<MultipartBody.Part> phones,
             @Part List<MultipartBody.Part> divespots
@@ -422,4 +423,7 @@ public interface DDScannerRestService {
 
     @POST("v2_0/divecenter.instructor.remove")
     Call<ResponseBody> postRemoveInstructorFromDIveCenter(@Query("id") String instructorId);
+
+    @GET("v2_0/divecenter.languages.get")
+    Call<ResponseBody> getDiveCenterLanguages();
 }
