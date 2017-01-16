@@ -13,7 +13,7 @@
 
         <variable
             name="userProfileViewModel"
-            type="com.ddscanner.screens.profile.ProfileFragmentViewModel" />
+            type="com.ddscanner.screens.profile.user.ProfileFragmentViewModel" />
 
         <variable
             name="handlers"

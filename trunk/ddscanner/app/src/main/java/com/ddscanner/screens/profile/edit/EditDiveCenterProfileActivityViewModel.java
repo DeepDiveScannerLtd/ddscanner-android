@@ -6,7 +6,6 @@ import android.widget.ImageView;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.DiveCenterProfile;
-import com.ddscanner.screens.profile.DiveCenterProfileFragmentViewModel;
 import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;
 

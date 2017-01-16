@@ -1,4 +1,4 @@
-package com.ddscanner.screens.profile;
+package com.ddscanner.screens.profile.divecenter;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -7,9 +7,7 @@ import android.databinding.DataBindingUtil;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,8 +17,6 @@ import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.databinding.ViewDivecenterProfileBinding;
 import com.ddscanner.entities.DiveCenterProfile;
-import com.ddscanner.entities.ProfileResponseEntity;
-import com.ddscanner.entities.User;
 import com.ddscanner.events.ChangePageOfMainViewPagerEvent;
 import com.ddscanner.events.LoadUserProfileInfoEvent;
 import com.ddscanner.events.LoggedOutEvent;
@@ -168,6 +164,12 @@ public class DiveCenterProfileFragment extends BaseFragment implements LoginView
 
     public void showInstructors(View view) {
         InstructorsActivity.showForResult(getActivity(), ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_SHOW_INSTRUCTORS_ACTIVITY, String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId()));
+    }
+
+    public void showDiveSpots(View view) {
+        if (binding.getDiveCenterViewModel().getDiveCenterProfile().getWorkingCount() > 0) {
+            DiveCenterSpotsActivity.show(getContext(), String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId()));
+        }
     }
 
     @Override

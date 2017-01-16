@@ -1,17 +1,15 @@
 package com.ddscanner.ui.adapters;
 
-import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.Log;
 
 import com.ddscanner.DDScannerApplication;
-import com.ddscanner.screens.profile.DiveCenterProfileFragment;
-import com.ddscanner.screens.profile.ProfileFragment;
+import com.ddscanner.screens.profile.divecenter.DiveCenterProfileFragment;
+import com.ddscanner.screens.profile.user.ProfileFragment;
 import com.ddscanner.ui.fragments.ActivityNotificationsFragment;
 import com.ddscanner.ui.fragments.AllNotificationsFragment;
-import com.ddscanner.ui.fragments.BaseFragment;
 import com.ddscanner.ui.fragments.MapListFragment;
 import com.ddscanner.ui.fragments.NotificationsFragment;
 import com.ddscanner.ui.views.LoginView;

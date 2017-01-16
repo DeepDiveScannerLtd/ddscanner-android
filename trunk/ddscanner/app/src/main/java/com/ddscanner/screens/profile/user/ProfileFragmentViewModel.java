@@ -1,4 +1,4 @@
-package com.ddscanner.screens.profile;
+package com.ddscanner.screens.profile.user;
 
 import android.databinding.BindingAdapter;
 import android.widget.ImageView;
@@ -6,7 +6,6 @@ import android.widget.TextView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
-import com.ddscanner.entities.ProfileResponseEntity;
 import com.ddscanner.entities.User;
 import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;

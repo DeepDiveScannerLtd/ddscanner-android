@@ -12,7 +12,7 @@ import com.ddscanner.DDScannerTestApplication;
 import com.ddscanner.R;
 import com.ddscanner.TestSharedPreferenceHelper;
 import com.ddscanner.rest.DDScannerRestClient;
-import com.ddscanner.screens.profile.ProfileFragment;
+import com.ddscanner.screens.profile.user.ProfileFragment;
 import com.ddscanner.ui.activities.FragmentTestActivity;
 import com.ddscanner.utils.SharedPreferenceHelper;
 

@@ -1,4 +1,4 @@
-package com.ddscanner.screens.profile;
+package com.ddscanner.screens.profile.divecenter;
 
 import android.databinding.BindingAdapter;
 import android.view.View;

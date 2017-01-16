@@ -277,6 +277,9 @@
         <activity
             android:name=".ui.activities.PickCountryActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".screens.profile.divecenter.DiveCenterSpotsActivity"
+            android:screenOrientation="portrait" />
         <service
             android:name=".services.FirebaseMessagingService">
             <intent-filter>

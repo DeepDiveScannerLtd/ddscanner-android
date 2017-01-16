@@ -12,11 +12,11 @@
 
         <variable
             name="diveCenterViewModel"
-            type="com.ddscanner.screens.profile.DiveCenterProfileFragmentViewModel" />
+            type="com.ddscanner.screens.profile.divecenter.DiveCenterProfileFragmentViewModel" />
 
         <variable
             name="handlers"
-            type="com.ddscanner.screens.profile.DiveCenterProfileFragment" />
+            type="com.ddscanner.screens.profile.divecenter.DiveCenterProfileFragment" />
     </data>
 
     <ScrollView
@@ -396,7 +396,8 @@
                     android:textColor="#e3e9fb"
                     android:textSize="15sp"
                     android:visibility="gone"
-                    app:myDiveSpotsCount="@{diveCenterViewModel}" />
+                    app:myDiveSpotsCount="@{diveCenterViewModel}"
+                    android:onClick="@{handlers::showDiveSpots}"/>
             </LinearLayout>
 
             <ImageView style="@style/DividerStyleFull" />

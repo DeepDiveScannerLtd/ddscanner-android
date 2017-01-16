@@ -16,7 +16,7 @@ import com.ddscanner.entities.DiveSpotListSource;
 import com.ddscanner.entities.DiveSpotPhoto;
 import com.ddscanner.entities.ProfileAchievement;
 import com.ddscanner.entities.User;
-import com.ddscanner.screens.profile.ProfileFragmentViewModel;
+import com.ddscanner.screens.profile.user.ProfileFragmentViewModel;
 import com.ddscanner.ui.activities.DiveSpotsListActivity;
 import com.ddscanner.ui.adapters.AchievmentProfileListAdapter;
 import com.ddscanner.ui.adapters.UserPhotosListAdapter;

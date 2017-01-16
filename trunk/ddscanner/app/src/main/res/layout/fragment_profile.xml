@@ -9,11 +9,11 @@
 
         <variable
             name="profileFragmentViewModel"
-            type="com.ddscanner.screens.profile.ProfileFragmentViewModel" />
+            type="com.ddscanner.screens.profile.user.ProfileFragmentViewModel" />
 
         <variable
             name="handlers"
-            type="com.ddscanner.screens.profile.ProfileFragment" />
+            type="com.ddscanner.screens.profile.user.ProfileFragment" />
     </data>
 
     <com.ddscanner.ui.views.CustomSwipeRefreshLayout

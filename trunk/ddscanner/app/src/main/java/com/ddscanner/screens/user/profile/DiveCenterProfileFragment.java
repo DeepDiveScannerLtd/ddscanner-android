@@ -4,8 +4,6 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,15 +11,7 @@ import android.view.ViewGroup;
 import com.ddscanner.R;
 import com.ddscanner.databinding.FragmentDiveCenterProfileBinding;
 import com.ddscanner.entities.DiveCenterProfile;
-import com.ddscanner.entities.DiveSpotPhoto;
-import com.ddscanner.entities.ProfileAchievement;
-import com.ddscanner.entities.User;
-import com.ddscanner.screens.profile.DiveCenterProfileFragmentViewModel;
-import com.ddscanner.screens.profile.ProfileFragmentViewModel;
-import com.ddscanner.ui.adapters.AchievmentProfileListAdapter;
-import com.ddscanner.ui.adapters.UserPhotosListAdapter;
-
-import java.util.ArrayList;
+import com.ddscanner.screens.profile.divecenter.DiveCenterProfileFragmentViewModel;
 
 public class DiveCenterProfileFragment extends Fragment {
 
