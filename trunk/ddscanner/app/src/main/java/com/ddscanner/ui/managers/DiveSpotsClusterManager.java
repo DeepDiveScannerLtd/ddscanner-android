@@ -95,6 +95,12 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpotShort> imple
             hideProgressBar();
             Helpers.handleUnexpectedServerError(context.getSupportFragmentManager(), url, errorMessage, R.string.error_server_error_title, R.string.error_unexpected_error);
         }
+
+        @Override
+        public void onInternetConnectionClosed() {
+            InfoDialogFragment.show(context.getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
+        }
+
     };
 
     public DiveSpotsClusterManager(FragmentActivity context, GoogleMap googleMap, RelativeLayout toast, ProgressBar progressBar, MapListFragment parentFragment) {

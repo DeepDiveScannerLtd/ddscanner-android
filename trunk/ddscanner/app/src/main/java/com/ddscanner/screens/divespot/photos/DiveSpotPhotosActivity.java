@@ -92,8 +92,13 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
                     InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_DIVE_SPOT_PHOTOS_ACTIVITY_DIVE_SPOT_NOT_FOUND, false);
                     break;
             }
-
         }
+
+        @Override
+        public void onInternetConnectionClosed() {
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_DIVE_SPOT_PHOTOS_ACTIVITY_CONNECTION_FAILURE, false);
+        }
+
     };
 
     @Override

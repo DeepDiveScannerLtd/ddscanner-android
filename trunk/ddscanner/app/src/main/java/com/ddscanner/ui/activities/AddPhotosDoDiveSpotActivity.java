@@ -66,17 +66,20 @@ public class AddPhotosDoDiveSpotActivity extends AppCompatActivity implements Vi
             materialDialog.dismiss();
             switch (errorType) {
                 case UNAUTHORIZED_401:
-                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logout();
                     LoginActivity.showForResult(AddPhotosDoDiveSpotActivity.this, ActivitiesRequestCodes.REQUEST_CODE_ADD_PHOTOS_DO_DIVE_SPOT_ACTIVITY_LOGIN_TO_SEND);
                     break;
-                case DIVE_SPOT_NOT_FOUND_ERROR_C802:
-                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_message_dive_spot_not_found, DialogsRequestCodes.DRC_ADD_PHOTOS_ACTIVITY_DIVE_SPOT_NOT_FOUND, false);
-                    break;
                 default:
+                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_ADD_PHOTOS_ACTIVITY_DIVE_SPOT_NOT_FOUND, false);
                     Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);
                     break;
             }
         }
+
+        @Override
+        public void onInternetConnectionClosed() {
+            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
+        }
+
     };
 
     @Override
@@ -145,6 +148,7 @@ public class AddPhotosDoDiveSpotActivity extends AppCompatActivity implements Vi
             case ActivitiesRequestCodes.REQUEST_CODE_ADD_PHOTOS_DO_DIVE_SPOT_ACTIVITY_LOGIN_TO_SEND:
                 if (resultCode == RESULT_OK) {
                     sendRequest();
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsMustRefreshDiveSpotActivity(true);
                 }
                 if (resultCode == RESULT_CANCELED) {
                     finish();

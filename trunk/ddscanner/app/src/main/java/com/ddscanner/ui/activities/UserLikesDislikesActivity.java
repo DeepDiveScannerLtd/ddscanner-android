@@ -52,16 +52,15 @@ public class UserLikesDislikesActivity extends BaseAppCompatActivity implements 
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-            switch (errorType) {
-                case UNAUTHORIZED_401:
-                    LoginActivity.showForResult(UserLikesDislikesActivity.this, ActivitiesRequestCodes.REQUEST_CODE_USER_LIKES_DISLIKES_ACTIVITY_LOGIN);
-                    break;
-                default:
-                    EventsTracker.trackUnknownServerError(url, errorMessage);
-                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_USER_LIKES_DISLIKES_ACTIVITY_FAILED_TO_CONNECT, false);
-                    break;
-            }
+            EventsTracker.trackUnknownServerError(url, errorMessage);
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_USER_LIKES_DISLIKES_ACTIVITY_FAILED_TO_CONNECT, false);
         }
+
+        @Override
+        public void onInternetConnectionClosed() {
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_USER_LIKES_DISLIKES_ACTIVITY_FAILED_TO_CONNECT, false);
+        }
+
     };
 
     private DDScannerRestClient.ResultListener<ArrayList<UserLikeEntity>> dislikesResultListener = new DDScannerRestClient.ResultListener<ArrayList<UserLikeEntity>>() {
@@ -89,6 +88,12 @@ public class UserLikesDislikesActivity extends BaseAppCompatActivity implements 
                     break;
             }
         }
+
+        @Override
+        public void onInternetConnectionClosed() {
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_USER_LIKES_DISLIKES_ACTIVITY_FAILED_TO_CONNECT, false);
+        }
+
     };
 
     @Override

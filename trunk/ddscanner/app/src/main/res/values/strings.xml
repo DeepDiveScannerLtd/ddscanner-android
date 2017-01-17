@@ -358,8 +358,8 @@
     <string name="acievements_block_title">Achievements</string>
     <string name="photos_block_title">Photos</string>
     <string name="no_photos_yet">The user has not uploaded the photos yet</string>
-    <string name="pass_incorrect">Login or password is incorrect</string>
-    <string name="title_pass_incorrect">Error</string>
+    <string name="pass_incorrect">The email or password you entered is incorrect. Please, try again</string>
+    <string name="title_pass_incorrect">We couldn’t sign you in</string>
     <string name="offer">Offers</string>
     <string name="dc_address">Address</string>
     <string name="dc_email">E-mail</string>
@@ -407,5 +407,10 @@
     <string name="activity_type_review_liked">%1$s liked your review %2$s</string>
     <string name="activity_type_review_disliked">%1$s disliked your review %2$s</string>
     <string name="diespors">Dive Spots</string>
-
+    <string name="connection_error_title">Connection error</string>
+    <string name="connection_error_text"></string>
+    <string name="unexcepted_error_title">Error occurred</string>
+    <string name="unexcepted_error_text"></string>
+    <string name="error_internet_connection">Please, check it and try again</string>
+    <string name="error_internet_connection_title">No internet connection</string>
 </resources>

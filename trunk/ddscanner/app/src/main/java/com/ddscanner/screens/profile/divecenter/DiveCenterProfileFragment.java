@@ -76,6 +76,12 @@ public class DiveCenterProfileFragment extends BaseFragment implements LoginView
                     break;
             }
         }
+
+        @Override
+        public void onInternetConnectionClosed() {
+            InfoDialogFragment.showForFragmentResult(getChildFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_PROFILE_FRAGMENT_FAILED_TO_CONNECT, false);
+        }
+
     };
 
     @Nullable

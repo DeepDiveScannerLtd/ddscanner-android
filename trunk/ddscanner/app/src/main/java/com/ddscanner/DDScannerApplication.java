@@ -60,10 +60,10 @@ public class DDScannerApplication extends Application {
     }
 
     public static void showErrorActivity(Context context) {
-        Log.i(TAG, "showErrorActivity");
-        Intent error = new Intent(context, InternetClosedActivity.class);
-        error.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(error);
+//        Log.i(TAG, "showErrorActivity");
+//        Intent error = new Intent(context, InternetClosedActivity.class);
+//        error.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        context.startActivity(error);
     }
 
     public static boolean isActivityVisible() {

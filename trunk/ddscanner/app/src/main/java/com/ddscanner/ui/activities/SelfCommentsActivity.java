@@ -61,17 +61,15 @@ public class SelfCommentsActivity extends AppCompatActivity implements InfoDialo
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-            switch (errorType) {
-                case UNAUTHORIZED_401:
-                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logout();
-                    LoginActivity.showForResult(SelfCommentsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_SELF_REVIEWS_LOGIN_TO_VIEW_COMMENTS);
-                    break;
-                default:
-                    EventsTracker.trackUnknownServerError(url, errorMessage);
-                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_SELF_COMMENTS_ACTIVITY_UNKNOWN_ERROR, false);
-                    break;
-            }
+            EventsTracker.trackUnknownServerError(url, errorMessage);
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_SELF_COMMENTS_ACTIVITY_UNKNOWN_ERROR, false);
         }
+
+        @Override
+        public void onInternetConnectionClosed() {
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_SELF_COMMENTS_ACTIVITY_FAILED_TO_CONNECT, false);
+        }
+
     };
 
     private DDScannerRestClient.ResultListener<Void> deleteCommentResulListener = new DDScannerRestClient.ResultListener<Void>() {
@@ -87,19 +85,14 @@ public class SelfCommentsActivity extends AppCompatActivity implements InfoDialo
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-            switch (errorType) {
-                case COMMENT_NOT_FOUND_ERROR_C803:
-                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_message_comment_not_found, DialogsRequestCodes.DRC_SELF_COMMENTS_ACTIVITY_COMMENT_NOT_FOUND, false);
-                    break;
-                case UNAUTHORIZED_401:
-                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logout();
-                    LoginActivity.showForResult(SelfCommentsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_SELF_REVIEWS_LOGIN_TO_DELETE_COMMENTS);
-                    break;
-                default:
-                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_SELF_COMMENTS_ACTIVITY_UNKNOWN_ERROR, false);
-                    break;
-            }
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_SELF_COMMENTS_ACTIVITY_UNKNOWN_ERROR, false);
         }
+
+        @Override
+        public void onInternetConnectionClosed() {
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_SELF_COMMENTS_ACTIVITY_FAILED_TO_CONNECT, false);
+        }
+
     };
 
     @Override

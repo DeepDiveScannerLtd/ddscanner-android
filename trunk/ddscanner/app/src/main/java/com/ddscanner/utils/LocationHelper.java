@@ -50,6 +50,11 @@ public class LocationHelper implements LocationListener {
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
 
         }
+
+        @Override
+        public void onInternetConnectionClosed() {
+
+        }
     };
 
     public LocationHelper(Activity context) {

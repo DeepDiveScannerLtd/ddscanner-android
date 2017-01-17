@@ -38,14 +38,12 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
-import com.ddscanner.entities.AddDiveSpotResponseEntity;
 import com.ddscanner.entities.BaseIdNamePhotoEntity;
 import com.ddscanner.entities.DiveSpotShort;
 import com.ddscanner.entities.FiltersResponseEntity;
 import com.ddscanner.entities.Language;
 import com.ddscanner.entities.SealifeShort;
 import com.ddscanner.entities.Translation;
-import com.ddscanner.entities.errors.ValidationError;
 import com.ddscanner.events.AddPhotoDoListEvent;
 import com.ddscanner.events.AddTranslationClickedEvent;
 import com.ddscanner.events.ImageDeletedEvent;
@@ -54,7 +52,6 @@ import com.ddscanner.screens.divespot.details.DiveSpotDetailsActivity;
 import com.ddscanner.ui.activities.LoginActivity;
 import com.ddscanner.ui.activities.PickCountryActivity;
 import com.ddscanner.ui.activities.PickLanguageActivity;
-import com.ddscanner.ui.activities.PickLocationActivity;
 import com.ddscanner.ui.activities.SearchSealifeActivity;
 import com.ddscanner.ui.adapters.AddPhotoToDsListAdapter;
 import com.ddscanner.ui.adapters.CharacteristicSpinnerItemsAdapter;
@@ -79,12 +76,10 @@ import com.squareup.otto.Subscribe;
 
 import java.io.File;
 import java.lang.reflect.Method;
-import java.security.KeyPair;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -192,38 +187,12 @@ public class AddDiveSpotActivity extends AppCompatActivity implements CompoundBu
                     Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);
             }
         }
-    };
-
-    private DDScannerRestClient.ResultListener<DiveSpotShort> addDiveSpotResultListener = new DDScannerRestClient.ResultListener<DiveSpotShort>() {
-        @Override
-        public void onSuccess(DiveSpotShort diveSpotShort) {
-            progressDialogUpload.dismiss();
-            EventsTracker.trackDivespotCreated();
-            showSuccessDialog(String.valueOf(diveSpotShort.getId()));
-        }
 
         @Override
-        public void onConnectionFailure() {
-            progressDialogUpload.dismiss();
-            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
+        public void onInternetConnectionClosed() {
+            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
         }
 
-        @Override
-        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-            progressDialogUpload.dismiss();
-            switch (errorType) {
-                case UNAUTHORIZED_401:
-                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logout();
-                    LoginActivity.showForResult(AddDiveSpotActivity.this, ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_LOGIN_TO_SEND);
-                    break;
-                case BAD_REQUEST_ERROR_400:
-//                    Helpers.errorHandling(errorsMap, (ValidationError) errorData);
-                    break;
-                case SERVER_INTERNAL_ERROR_500:
-                default:
-                    Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);
-            }
-        }
     };
 
     public static void show(Context context) {

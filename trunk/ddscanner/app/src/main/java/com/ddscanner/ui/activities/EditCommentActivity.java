@@ -96,17 +96,20 @@ public class EditCommentActivity extends BaseAppCompatActivity implements InfoDi
             materialDialog.dismiss();
             switch (errorType) {
                 case UNAUTHORIZED_401:
-                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logout();
                     LoginActivity.showForResult(EditCommentActivity.this, ActivitiesRequestCodes.REQUEST_CODE_EDIT_COMMENT_ACTIVITY_LOGIN);
                     break;
-                case COMMENT_NOT_FOUND_ERROR_C803:
-                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_message_comment_not_found, DialogsRequestCodes.DRC_EDIT_COMMENT_ACTIVITY_COMMENT_NOT_FOUND, false);
-                    break;
                 default:
+                    InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, false);
                     Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);
                     break;
             }
         }
+
+        @Override
+        public void onInternetConnectionClosed() {
+            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
+        }
+
     };
 
     @Override

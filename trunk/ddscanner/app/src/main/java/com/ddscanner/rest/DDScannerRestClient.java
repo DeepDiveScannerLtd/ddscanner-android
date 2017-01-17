@@ -270,6 +270,10 @@ public class DDScannerRestClient {
     /*Methods using in API v2_0*/
 
     public void getDiveCenterLanguages(ResultListener<ArrayList<Language>> resultListener) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveCenterLanguages();
         call.enqueue(new ResponseEntityCallback<ArrayList<Language>>(gson, resultListener) {
             @Override
@@ -282,11 +286,19 @@ public class DDScannerRestClient {
     }
 
     public void postRemoveInstructorFromDivecenter(ResultListener<Void> resultListener, String userId) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postRemoveInstructorFromDIveCenter(userId);
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 
     public void getSelfDiveCenterDiveSpotsList(ResultListener<ArrayList<DiveSpotShort>> resultListener) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getSelfDiveSpotsForDiveCenter();
         call.enqueue(new ResponseEntityCallback<ArrayList<DiveSpotShort>>(gson, resultListener) {
             @Override
@@ -299,12 +311,20 @@ public class DDScannerRestClient {
     }
 
     public void postInstructorsSee(ResultListener<Void> resultListener, ArrayList<String> ids) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
         InstructorsSeeRequests instructorsSeeRequests = new InstructorsSeeRequests(ids);
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postInstructorsSees(instructorsSeeRequests);
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 
     public void getDiveCenterInstructorsList(ResultListener<ArrayList<Instructor>> resultListener, String diveCenterId) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getInstructorsList(diveCenterId);
         call.enqueue(new ResponseEntityCallback<ArrayList<Instructor>>(gson, resultListener) {
             @Override
@@ -317,11 +337,19 @@ public class DDScannerRestClient {
     }
 
     public void postAddInstructorToDiveCenter(ResultListener<Void> resultListener, String diveCenterId) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postAddIstructorToDiveCenter(diveCenterId);
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 
     public void getDiveCentersList(ResultListener<ArrayList<BaseIdNamePhotoEntity>> resultListener) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveCentersList("%", "10000");
         call.enqueue(new ResponseEntityCallback<ArrayList<BaseIdNamePhotoEntity>>(gson, resultListener) {
             @Override
@@ -334,11 +362,19 @@ public class DDScannerRestClient {
     }
 
     public void postUpdateDiveCenterProfile(ResultListener<Void> resultListener, MultipartBody.Part image, List<MultipartBody.Part> emails, List<MultipartBody.Part> phones, List<MultipartBody.Part> diveSpots, List<MultipartBody.Part> languages, RequestBody... requestBodies) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postUpdateDiveCenterProfile(image, requestBodies[0], requestBodies[1], requestBodies[2], requestBodies[3], languages, emails, phones, diveSpots);
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 
     public void getUsersSelfComments(ResultListener<ArrayList<SelfCommentEntity>> resultListener) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getSelfCommentsList();
         call.enqueue(new ResponseEntityCallback<ArrayList<SelfCommentEntity>>(gson, resultListener) {
             @Override
@@ -351,6 +387,10 @@ public class DDScannerRestClient {
     }
 
     public void getUserLikes(ResultListener<ArrayList<UserLikeEntity>> resultListener) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserLikes();
         call.enqueue(new ResponseEntityCallback<ArrayList<UserLikeEntity>>(gson, resultListener) {
             @Override
@@ -363,6 +403,10 @@ public class DDScannerRestClient {
     }
 
     public void getUserDislikes(ResultListener<ArrayList<UserLikeEntity>> resultListener) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserDislikes();
         call.enqueue(new ResponseEntityCallback<ArrayList<UserLikeEntity>>(gson, resultListener) {
             @Override
@@ -375,16 +419,28 @@ public class DDScannerRestClient {
     }
 
     public void postReportReview(ResultListener<Void> resultListener, ReportRequest reportRequest) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postReportReview(reportRequest);
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 
     public void postDeleteReview(ResultListener<Void> resultListener, String reviewId) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postDeleteReview(reviewId);
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 
     public void getCommentsForDiveSpot(ResultListener<ArrayList<CommentEntity>> resultListener, String diveSpotId) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getCommentsForDiveSpot(diveSpotId, 1);
         call.enqueue(new ResponseEntityCallback<ArrayList<CommentEntity>>(gson, resultListener) {
             @Override
@@ -397,16 +453,28 @@ public class DDScannerRestClient {
     }
 
     public void postUpdateReview(ResultListener<Void> resultListener, List<MultipartBody.Part> newPhotos, List<MultipartBody.Part> deletedPhotos, RequestBody... requestBodies) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postUpdateReview(newPhotos, deletedPhotos, requestBodies[0], requestBodies[1], requestBodies[2]);
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 
     public void postLeaveCommentForDiveSpot(ResultListener<Void> resultListener, List<MultipartBody.Part> images, RequestBody... requestBodies) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postLeaveComment(images, requestBodies[0], requestBodies[1], requestBodies[2]);
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 
     public void getUsersFavourites(@NonNull final ResultListener<ArrayList<DiveSpotShort>> resultListener, String id) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
         final Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserFavoritesSpots(id);
         call.enqueue(new ResponseEntityCallback<ArrayList<DiveSpotShort>>(gson, resultListener) {
             @Override
@@ -419,6 +487,10 @@ public class DDScannerRestClient {
     }
 
     public void getAddedDiveSpots(final ResultListener<ArrayList<DiveSpotShort>> resultListener, String id) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserAddedDiveSpots(id);
         call.enqueue(new ResponseEntityCallback<ArrayList<DiveSpotShort>>(gson, resultListener) {
             @Override
@@ -431,6 +503,10 @@ public class DDScannerRestClient {
     }
 
     public void getEditedDiveSpots(final ResultListener<ArrayList<DiveSpotShort>> resultListener, String id) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserEditedDiveSpots(id);
         call.enqueue(new ResponseEntityCallback<ArrayList<DiveSpotShort>>(gson, resultListener) {
             @Override
@@ -443,6 +519,10 @@ public class DDScannerRestClient {
     }
 
     public void getUsersCheckins(final ResultListener<ArrayList<DiveSpotShort>> resultListener, String id) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserCheckedInSpots(id);
         call.enqueue(new ResponseEntityCallback<ArrayList<DiveSpotShort>>(gson, resultListener) {
             @Override
@@ -455,11 +535,19 @@ public class DDScannerRestClient {
     }
 
     public void postReportImage(ResultListener<Void> resultListener, ReportImageRequest reportImageRequest) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postReportImage(reportImageRequest);
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 
     public void getDiveSpotEditors(ResultListener<ArrayList<User>> resultListener, String diveSpotId) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveSpotEditorsList(diveSpotId);
         call.enqueue(new ResponseEntityCallback<ArrayList<User>>(gson, resultListener) {
             @Override
@@ -472,6 +560,10 @@ public class DDScannerRestClient {
     }
 
     public void getDiveSpotsCheckedInUsers(ResultListener<ArrayList<User>> resultListener, String diveSpotId) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveSpotsCheckedInUsers(diveSpotId);
         call.enqueue(new ResponseEntityCallback<ArrayList<User>>(gson, resultListener) {
             @Override
@@ -484,11 +576,19 @@ public class DDScannerRestClient {
     }
 
     public void postUpdateUserLocation(ResultListener<Void> resultListener, UpdateLocationRequest updateLocationRequest) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postUpdateUserLocation(updateLocationRequest);
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 
     public void getDiveSpotLanguages(ResultListener<ArrayList<Language>> resultListener) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDivespotLanguages();
         call.enqueue(new ResponseEntityCallback<ArrayList<Language>>(gson, resultListener) {
             @Override
@@ -501,6 +601,10 @@ public class DDScannerRestClient {
     }
 
     public void getListOfCountries(ResultListener<ArrayList<BaseIdNamePhotoEntity>> resultListener) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getListCountries();
         call.enqueue(new ResponseEntityCallback<ArrayList<BaseIdNamePhotoEntity>>(gson,resultListener) {
             @Override
@@ -513,6 +617,10 @@ public class DDScannerRestClient {
     }
 
     public void getDivespotsByName(String query, ResultListener<ArrayList<DiveSpotShort>> resultListener) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDivespotsByName(query);
         call.enqueue(new ResponseEntityCallback<ArrayList<DiveSpotShort>>(gson, resultListener) {
             @Override
@@ -525,6 +633,10 @@ public class DDScannerRestClient {
     }
 
     public void getSealifesByQuery(ResultListener<ArrayList<SealifeShort>> resultListener) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getSealifesByLimit(100000);
         call.enqueue(new ResponseEntityCallback<ArrayList<SealifeShort>>(gson, resultListener) {
             @Override
@@ -539,6 +651,10 @@ public class DDScannerRestClient {
 
     public void postUserSignUp(String email, String password, String userType, String lat, String lng, String name, ResultListener<SignUpResponseEntity> resultListener) {
         // TODO Implement name setting and remove hardcode
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().signUpUser(getSignUpRequest(email, password, name, userType, lat, lng));
         call.enqueue(new ResponseEntityCallback<SignUpResponseEntity>(gson, resultListener) {
             @Override
@@ -550,6 +666,10 @@ public class DDScannerRestClient {
     }
 
     public void postUserLogin(String email, String password, String lat, String lng, SignInType signInType, String token, ResultListener<SignUpResponseEntity> resultListener) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().loginUser(getSignInRequest(email, password, lat, lng, signInType, token));
         call.enqueue(new ResponseEntityCallback<SignUpResponseEntity>(gson, resultListener) {
             @Override
@@ -561,6 +681,10 @@ public class DDScannerRestClient {
     }
 
     public void getUserSelfInformation(final ResultListener<User> resultListener) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getSelfProfileInformation(1);
         call.enqueue(new ResponseEntityCallback<User>(gson, resultListener) {
             @Override
@@ -572,6 +696,10 @@ public class DDScannerRestClient {
     }
 
     public void getDiveCenterSelfInformation(final ResultListener<DiveCenterProfile> resultListener) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getSelfDiveCenterInformation(1);
         call.enqueue(new ResponseEntityCallback<DiveCenterProfile>(gson, resultListener) {
             @Override
@@ -583,16 +711,28 @@ public class DDScannerRestClient {
     }
 
     public void postAddDiveSpotToDiveCenter(String diveSpotId, ResultListener<Void> resultListener) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postAddDiveSpotToDiveCenter(diveSpotId);
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 
     public void postRemoveDiveSpotToDiveCenter(String diveSpotId, ResultListener<Void> resultListener) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postRemoveDiveSpotToDiveCenter(diveSpotId);
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 
     public void getUserProfileInformation(String id, final ResultListener<User> resultListener) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserInformation(id, 1);
         call.enqueue(new ResponseEntityCallback<User>(gson, resultListener) {
             @Override
@@ -604,6 +744,10 @@ public class DDScannerRestClient {
     }
 
     public void getDiveCenterInformation(String id, final ResultListener<DiveCenterProfile> resultListener) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveCenterInformation(id, 1);
         call.enqueue(new ResponseEntityCallback<DiveCenterProfile>(gson, resultListener) {
             @Override
@@ -615,6 +759,10 @@ public class DDScannerRestClient {
     }
 
     public void getUserAchivements(final ResultListener<AchievmentsResponseEntity> resultListener) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserAchievements();
         call.enqueue(new ResponseEntityCallback<AchievmentsResponseEntity>(gson, resultListener) {
 
@@ -627,11 +775,25 @@ public class DDScannerRestClient {
     }
 
     public void postApproveDiveSpot(String diveSpotId, boolean value, ResultListener<Void> resultListener) {
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postApproveDiveSpot(diveSpotId, value);
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
+        String result;
+        if (value) {
+            result = "1";
+        } else {
+            result = "0";
+        }
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postApproveDiveSpot(diveSpotId, result);
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 
     public void getDiveSpotsTranslations(String diveSpotId, ResultListener<ArrayList<Translation>> resultListener) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveSpotsTranslations(diveSpotId);
         call.enqueue(new ResponseEntityCallback<ArrayList<Translation>>(gson, resultListener) {
             @Override
@@ -644,11 +806,19 @@ public class DDScannerRestClient {
     }
 
     public void postCheckIn(String diveSpotId, @NonNull final ResultListener<Void> resultListener) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postCheckin(diveSpotId);
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 
     public void postMapsToDiveSpot(String id, ArrayList<String> images, final ResultListener<List<String>> resultListener) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
         List<MultipartBody.Part> imagesToSend = new ArrayList<>();
         for (int i = 0; i < images.size(); i++) {
             File image = new File(images.get(i));
@@ -669,6 +839,10 @@ public class DDScannerRestClient {
     }
 
     public void postPhotosToDiveSpot(String id, ArrayList<String> images, final ResultListener<List<String>> resultListener) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
         List<MultipartBody.Part> imagesToSend = new ArrayList<>();
         for (int i = 0; i < images.size(); i++) {
             File image = new File(images.get(i));
@@ -689,6 +863,10 @@ public class DDScannerRestClient {
     }
 
     public void getUserAddedPhotos(ResultListener<ArrayList<DiveSpotPhoto>> resultListener, String userId) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserPhotos(userId);
         call.enqueue(new ResponseEntityCallback<ArrayList<DiveSpotPhoto>>(gson, resultListener) {
             @Override
@@ -701,6 +879,10 @@ public class DDScannerRestClient {
     }
 
     public void getSealifeDetails(String id, ResultListener<Sealife> resultListener) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getSealifeDetails(id);
         call.enqueue(new ResponseEntityCallback<Sealife>(gson, resultListener) {
             @Override
@@ -712,6 +894,10 @@ public class DDScannerRestClient {
     }
 
     public void getDiveSpotPhotos(String id, ResultListener<DiveSpotPhotosResponseEntity> resultListener) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveSpotPhotos(id);
         call.enqueue(new ResponseEntityCallback<DiveSpotPhotosResponseEntity>(gson, resultListener) {
             @Override
@@ -728,22 +914,38 @@ public class DDScannerRestClient {
     }
 
     public void postDeleteImage(String id, ResultListener<Void> resultListener) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
         DeleteImageRequest deleteImageRequest = new DeleteImageRequest(id);
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postDeleteImage(deleteImageRequest);
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 
     public void postLikePhoto(String id, ResultListener<Void> resultListener) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postLikePhoto(id);
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 
     public void postDislikePhoto(String id, ResultListener<Void> resultListener) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postDislikePhoto(id);
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 
     public void getDiveSpotMaps(String id, ResultListener<ArrayList<DiveSpotPhoto>> resultListener) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveSpotMaps(id);
         call.enqueue(new ResponseEntityCallback<ArrayList<DiveSpotPhoto>>(gson, resultListener) {
             @Override
@@ -871,6 +1073,8 @@ public class DDScannerRestClient {
         public abstract void onConnectionFailure();
 
         public abstract void onError(ErrorType errorType, Object errorData, String url, String errorMessage);
+
+        public abstract void onInternetConnectionClosed();
 
         public boolean isCancelled() {
             return isCancelled;

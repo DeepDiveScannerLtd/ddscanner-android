@@ -20,7 +20,6 @@ import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.Notification;
 import com.ddscanner.events.ChangePageOfMainViewPagerEvent;
 import com.ddscanner.screens.divespot.details.DiveSpotDetailsActivity;
-import com.ddscanner.ui.activities.ForeignProfileActivity;
 import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;
 
@@ -192,7 +191,7 @@ public class NotificationsListAdapter
                 default:
                     if (isImage && (notification.getType().name().equalsIgnoreCase("like")
                             || notification.getType().name().equalsIgnoreCase("dislike"))) {
-                        ForeignProfileActivity.show(context, notification.getUserOld().getId());
+                        //TODO show user profile activity
                     }
 
                     if (!isImage) {

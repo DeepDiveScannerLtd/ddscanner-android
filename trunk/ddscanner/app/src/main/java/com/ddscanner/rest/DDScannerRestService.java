@@ -310,7 +310,7 @@ public interface DDScannerRestService {
     Call<ResponseBody> postRemoveDiveSpotToDiveCenter(@Query("id") String divespotId);
 
     @POST("v2_0/divespot.approve")
-    Call<ResponseBody> postApproveDiveSpot(@Query("id") String id, @Query("value") boolean value);
+    Call<ResponseBody> postApproveDiveSpot(@Query("id") String id, @Query("value") String value);
 
     @GET("v2_0/divespot.translations.get")
     Call<ResponseBody> getDiveSpotsTranslations(@Query("id") String id);

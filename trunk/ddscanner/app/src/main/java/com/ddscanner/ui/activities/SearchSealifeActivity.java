@@ -76,6 +76,12 @@ public class SearchSealifeActivity extends AppCompatActivity implements SearchVi
             EventsTracker.trackUnknownServerError(url, errorMessage);
             InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_SEARCH_SEALIFE_ACTIVITY_UNEXPECTED_ERROR, false);
         }
+
+        @Override
+        public void onInternetConnectionClosed() {
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_SEARCH_SEALIFE_ACTIVITY_FAILED_TO_CONNECT, false);
+        }
+
     };
 
     @Override

@@ -121,6 +121,11 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
                     break;
             }
         }
+
+        @Override
+        public void onInternetConnectionClosed() {
+            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
+        }
     };
 
     @Override

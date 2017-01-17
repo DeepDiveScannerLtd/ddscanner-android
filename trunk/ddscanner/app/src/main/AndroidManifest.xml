@@ -149,9 +149,6 @@
             android:name=".screens.divespot.add.AddDiveSpotActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activities.PickLocationActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".screens.divespot.photos.DiveSpotPhotosActivity"
             android:screenOrientation="portrait" />
         <activity
@@ -159,9 +156,6 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activities.EditorsListActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activities.ReviewImageSliderActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activities.CheckInPeoplesActivity"
@@ -207,12 +201,6 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activities.PrivacyPolicyActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activities.ForeignProfileActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activities.ForeignUserDiveSpotList"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activities.UserLikesDislikesActivity"

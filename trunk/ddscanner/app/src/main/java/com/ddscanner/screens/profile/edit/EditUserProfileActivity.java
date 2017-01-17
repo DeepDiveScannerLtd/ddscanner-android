@@ -89,6 +89,12 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
                     break;
             }
         }
+
+        @Override
+        public void onInternetConnectionClosed() {
+            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
+        }
+
     };
 
     public static void showForResult(Activity context, String userData, int requestCode) {

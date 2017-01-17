@@ -118,6 +118,12 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                     break;
             }
         }
+
+        @Override
+        public void onInternetConnectionClosed() {
+            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
+        }
+
     };
 
     public static void showForResult(Activity context, boolean isRegister, int requestCode) {

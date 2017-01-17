@@ -2,6 +2,7 @@ package com.ddscanner.ui.activities;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -134,6 +135,12 @@ public class MainActivity extends BaseAppCompatActivity
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
 
         }
+
+        @Override
+        public void onInternetConnectionClosed() {
+
+        }
+
     };
 
     private DDScannerRestClient.ResultListener<SignUpResponseEntity> signUpLoginResultListener = new DDScannerRestClient.ResultListener<SignUpResponseEntity>() {
@@ -174,6 +181,11 @@ public class MainActivity extends BaseAppCompatActivity
 
             }
         }
+
+        @Override
+        public void onInternetConnectionClosed() {
+            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
+        }
     };
 
     @Override
@@ -185,10 +197,10 @@ public class MainActivity extends BaseAppCompatActivity
         startActivity();
         Log.i(TAG, FirebaseInstanceId.getInstance().getToken());
        // DDScannerApplication.getInstance().getSharedPreferenceHelper().clear();
-        if (!isHasInternetConnection) {
-            Log.i(TAG, "internetConnectionClosed 2");
-            InternetClosedActivity.show(this);
-        }
+//        if (!isHasInternetConnection) {
+//            Log.i(TAG, "internetConnectionClosed 2");
+//            InternetClosedActivity.show(this);
+//        }
         loggedInDuringLastOnStart = DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn();
     }
 
@@ -268,12 +280,12 @@ public class MainActivity extends BaseAppCompatActivity
 
                     @Override
                     public void onCancel() {
-                        // TODO Implement
+
                     }
 
                     @Override
                     public void onError(FacebookException error) {
-                        // TODO Implement
+
                     }
                 });
     }

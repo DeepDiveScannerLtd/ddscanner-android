@@ -78,6 +78,12 @@ public class AchievementsActivity extends AppCompatActivity implements InfoDialo
                     break;
             }
         }
+
+        @Override
+        public void onInternetConnectionClosed() {
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_ACHIEVEMENTS_ACTIVITY_FAILED_TO_CONNECT, false);
+        }
+
     };
 
     public static void show(Context context) {

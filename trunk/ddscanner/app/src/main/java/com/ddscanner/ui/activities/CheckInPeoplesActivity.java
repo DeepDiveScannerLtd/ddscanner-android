@@ -16,6 +16,8 @@ import com.ddscanner.entities.User;
 import com.ddscanner.entities.UserOld;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.adapters.UserListAdapter;
+import com.ddscanner.ui.dialogs.InfoDialogFragment;
+import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
 
 import java.util.ArrayList;
@@ -23,13 +25,12 @@ import java.util.ArrayList;
 /**
  * Created by lashket on 28.4.16.
  */
-public class CheckInPeoplesActivity extends BaseAppCompatActivity {
+public class CheckInPeoplesActivity extends BaseAppCompatActivity implements InfoDialogFragment.DialogClosedListener {
 
     private RecyclerView usersRecyclerView;
-    private Toolbar toolbar;
-    private ArrayList<UserOld> userOlds;
 
     private DDScannerRestClient.ResultListener<ArrayList<User>> usersResultListener = new DDScannerRestClient.ResultListener<ArrayList<User>>() {
+
         @Override
         public void onSuccess(ArrayList<User> result) {
             setUi(result);
@@ -37,13 +38,20 @@ public class CheckInPeoplesActivity extends BaseAppCompatActivity {
 
         @Override
         public void onConnectionFailure() {
-
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_CHECKINS_ACTIVITY_HIDE_ACTIVITY, false);
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_CHECKINS_ACTIVITY_HIDE_ACTIVITY, false);
+            Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);
         }
+
+        @Override
+        public void onInternetConnectionClosed() {
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_CHECKINS_ACTIVITY_HIDE_ACTIVITY, false);
+        }
+
     };
 
     @Override
@@ -56,7 +64,6 @@ public class CheckInPeoplesActivity extends BaseAppCompatActivity {
     }
 
     private void findViews() {
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
         usersRecyclerView = (RecyclerView) findViewById(R.id.peoples_rc);
     }
 
@@ -109,4 +116,8 @@ public class CheckInPeoplesActivity extends BaseAppCompatActivity {
         }
     }
 
+    @Override
+    public void onDialogClosed(int requestCode) {
+        finish();
+    }
 }

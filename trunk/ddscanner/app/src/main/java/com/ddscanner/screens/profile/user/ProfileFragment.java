@@ -82,14 +82,13 @@ public class ProfileFragment extends BaseFragment implements LoginView.LoginStat
 
         @Override
         public void onConnectionFailure() {
-            InfoDialogFragment.show(getChildFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
+            InfoDialogFragment.showForFragmentResult(getChildFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_PROFILE_FRAGMENT_UNEXPECTED_ERROR, false);
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             switch (errorType) {
                 case UNAUTHORIZED_401:
-                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logout();
                     DDScannerApplication.bus.post(new LoggedOutEvent());
                     break;
                 default:
@@ -98,6 +97,12 @@ public class ProfileFragment extends BaseFragment implements LoginView.LoginStat
                     break;
             }
         }
+
+        @Override
+        public void onInternetConnectionClosed() {
+            InfoDialogFragment.showForFragmentResult(getChildFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_PROFILE_FRAGMENT_UNEXPECTED_ERROR, false);
+        }
+
     };
 
     @Override

@@ -115,7 +115,7 @@ public class ActivitiesRequestCodes {
     //    AddPhotosDoDiveSpotActivity
     public static final int REQUEST_CODE_ADD_PHOTOS_DO_DIVE_SPOT_ACTIVITY_LOGIN_TO_SEND = 2601;
 
-    //    ForeignUserDiveSpotList
+    //
     public static final int REQUEST_CODE_FOREIGN_USER_SPOT_LIST_LOGIN_TO_GET_CHECKINS = 2701;
     public static final int REQUEST_CODE_FOREIGN_USER_SPOT_LIST_LOGIN_TO_GET_ADDED = 2702;
     public static final int REQUEST_CODE_FOREIGN_USER_SPOT_LIST_LOGIN_TO_GET_EDITED = 2703;

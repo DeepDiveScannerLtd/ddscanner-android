@@ -59,43 +59,6 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
     private ArrayList<SealifeShort> sealifes = new ArrayList<>();
     private SealifeListAddingDiveSpotAdapter sealifeListAddingDiveSpotAdapter;
 
-    private DDScannerRestClient.ResultListener<FiltersResponseEntity> getFiltersResultListener = new DDScannerRestClient.ResultListener<FiltersResponseEntity>() {
-        @Override
-        public void onSuccess(FiltersResponseEntity result) {
-            progressView.setVisibility(View.GONE);
-            mainLayout.setVisibility(View.VISIBLE);
-
-            filters = result;
-
-            if (filters.getObject() != null) {
-                objectsMap = filters.getObject();
-                setFilerGroup(objectSpinner, filters.getObject());
-            }
-            if (filters.getLevel() != null) {
-                levelsMap = filters.getLevel();
-                setFilerGroup(levelSpinner, filters.getLevel());
-            }
-
-            if (filters.getObject() == null || filters.getLevel() == null) {
-                Toast.makeText(FilterActivity.this, R.string.toast_server_error, Toast.LENGTH_SHORT).show();
-                onBackPressed();
-            } else {
-                save.setVisibility(View.VISIBLE);
-            }
-        }
-
-        @Override
-        public void onConnectionFailure() {
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_FILTER_ACTIVITY_FAILED_TO_CONNECT, false);
-        }
-
-        @Override
-        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-            EventsTracker.trackUnknownServerError(url, errorMessage);
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_FILTER_ACTIVITY_UNEXPECTED_ERROR, false);
-        }
-    };
-
     @Override
     protected void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);

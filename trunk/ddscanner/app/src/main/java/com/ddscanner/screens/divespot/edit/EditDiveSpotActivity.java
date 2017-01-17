@@ -177,13 +177,19 @@ public class EditDiveSpotActivity extends AppCompatActivity implements CompoundB
 
         @Override
         public void onConnectionFailure() {
-
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_EDIT_SPOT_ACTIVITY_HIDE, false);
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_EDIT_SPOT_ACTIVITY_HIDE, false);
         }
+
+        @Override
+        public void onInternetConnectionClosed() {
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_EDIT_SPOT_ACTIVITY_HIDE, false);
+        }
+
     };
 
     private DDScannerRestClient.ResultListener<DiveSpotPhotosResponseEntity> photosResultListener = new DDScannerRestClient.ResultListener<DiveSpotPhotosResponseEntity>() {
@@ -202,13 +208,19 @@ public class EditDiveSpotActivity extends AppCompatActivity implements CompoundB
 
         @Override
         public void onConnectionFailure() {
-
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_EDIT_SPOT_ACTIVITY_HIDE, false);
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_EDIT_SPOT_ACTIVITY_HIDE, false);
         }
+
+        @Override
+        public void onInternetConnectionClosed() {
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_EDIT_SPOT_ACTIVITY_HIDE, false);
+        }
+
     };
 
     private DDScannerRestClient.ResultListener<Void> updateDiveSpotResultListener = new DDScannerRestClient.ResultListener<Void>() {
@@ -251,6 +263,12 @@ public class EditDiveSpotActivity extends AppCompatActivity implements CompoundB
                     break;
             }
         }
+
+        @Override
+        public void onInternetConnectionClosed() {
+            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
+        }
+
     };
 
     private DDScannerRestClient.ResultListener<ArrayList<Translation>> translationsResultListener = new DDScannerRestClient.ResultListener<ArrayList<Translation>>() {
@@ -267,13 +285,19 @@ public class EditDiveSpotActivity extends AppCompatActivity implements CompoundB
 
         @Override
         public void onConnectionFailure() {
-
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_EDIT_SPOT_ACTIVITY_HIDE, false);
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_EDIT_SPOT_ACTIVITY_HIDE, false);
         }
+
+        @Override
+        public void onInternetConnectionClosed() {
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_EDIT_SPOT_ACTIVITY_HIDE, false);
+        }
+
     };
 
     public static void showForResult(String diveSpotGson, Activity context, int requestCode) {
@@ -776,11 +800,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements CompoundB
 
     @Override
     public void onDialogClosed(int requestCode) {
-        switch (requestCode) {
-            case DialogsRequestCodes.DRC_ADD_DIVE_SPOT_ACTIVITY_CONNECTION_ERROR:
-            case DialogsRequestCodes.DRC_ADD_DIVE_SPOT_ACTIVITY_UNEXPECTED_ERROR:
-                finish();
-        }
+        finish();
     }
 
     @Subscribe

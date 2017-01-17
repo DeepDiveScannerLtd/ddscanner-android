@@ -81,7 +81,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         public void onSuccess(DiveSpotPhotosResponseEntity result) {
             switch (photoOpenedSource) {
                 case ALL:
-                    images =Helpers.compareObjectsArray(result.getDiveSpotPhotos(), result.getCommentPhotos());
+                    images = Helpers.compareObjectsArray(result.getDiveSpotPhotos(), result.getCommentPhotos());
                     break;
                 case DIVESPOT:
                     images = result.getDiveSpotPhotos();
@@ -103,6 +103,12 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
             EventsTracker.trackUnknownServerError(url, errorMessage);
             InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_IMAGE_SLIDER_ACTIVITY_FAILED_TO_CONNECT, false);
         }
+
+        @Override
+        public void onInternetConnectionClosed() {
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_IMAGE_SLIDER_ACTIVITY_FAILED_TO_CONNECT, false);
+        }
+
     };
 
     private DDScannerRestClient.ResultListener<Void> reportImageRequestListener = new DDScannerRestClient.ResultListener<Void>() {
@@ -117,16 +123,13 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         @Override
         public void onConnectionFailure() {
             materialDialog.dismiss();
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_IMAGE_SLIDER_ACTIVITY_FAILED_TO_CONNECT, false);
+            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             materialDialog.dismiss();
             switch (errorType) {
-                case BAD_REQUEST_ERROR_400:
-                     InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_message_you_cannot_report_self_photo, true);
-                    break;
                 case UNAUTHORIZED_401:
                     DDScannerApplication.getInstance().getSharedPreferenceHelper().logout();
                     LoginActivity.showForResult(ImageSliderActivity.this, ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_REPORT);
@@ -137,6 +140,12 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
                     break;
             }
         }
+
+        @Override
+        public void onInternetConnectionClosed() {
+            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
+        }
+
     };
 
     private DDScannerRestClient.ResultListener<Void> deleteImageRequestistener = new DDScannerRestClient.ResultListener<Void>() {
@@ -149,15 +158,13 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         @Override
         public void onConnectionFailure() {
             materialDialog.dismiss();
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_IMAGE_SLIDER_ACTIVITY_FAILED_TO_CONNECT, false);
+            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             materialDialog.dismiss();
             switch (errorType) {
-                case BAD_REQUEST_ERROR_400:
-                    break;
                 case UNAUTHORIZED_401:
                     DDScannerApplication.getInstance().getSharedPreferenceHelper().logout();
                     LoginActivity.showForResult(ImageSliderActivity.this, ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_DELETE);
@@ -168,6 +175,12 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
                     break;
             }
         }
+
+        @Override
+        public void onInternetConnectionClosed() {
+            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
+        }
+
     };
 
     @Override
@@ -405,7 +418,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
                 if (resultCode == RESULT_OK) {
                     setResult(RESULT_OK);
                     reportImage(reportName, reportType, reportDescription);
-//                    DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotPhotos(diveSpotId, imagesResulListener);
+//                    DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotPhotos(imagesResulListener);
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_DELETE:
@@ -513,6 +526,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         switch (requestCode) {
             case DialogsRequestCodes.DRC_IMAGE_SLIDER_ACTIVITY_FAILED_TO_CONNECT:
             case DialogsRequestCodes.DRC_IMAGE_SLIDER_ACTIVITY_CONNECTION_FAILURE_GET_REPORT_TYPES:
+                setResult(RESULT_OK);
                 finish();
                 break;
         }
@@ -542,12 +556,11 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
 
         @Override
         public void onSuccess(Void result) {
-
         }
 
         @Override
         public void onConnectionFailure() {
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_IMAGE_SLIDER_ACTIVITY_FAILED_TO_CONNECT, false);
+            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
             if (isLike) {
                 dislikeUi();
                 return;
@@ -564,6 +577,12 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
             }
             InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, false);
         }
+
+        @Override
+        public void onInternetConnectionClosed() {
+            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
+        }
+
     }
 
 

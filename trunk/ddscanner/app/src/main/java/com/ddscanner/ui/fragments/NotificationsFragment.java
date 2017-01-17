@@ -56,35 +56,35 @@ public class NotificationsFragment extends BaseFragment implements ViewPager.OnP
     private boolean isViewNull = true;
     private SwipeRefreshLayout swipeRefreshLayout;
 
-    private DDScannerRestClient.ResultListener<Notifications> notificationsResultListener = new DDScannerRestClient.ResultListener<Notifications>() {
-        @Override
-        public void onSuccess(Notifications result) {
-            notifications = result;
-            progressView.setVisibility(View.GONE);
-            notificationsViewPager.setVisibility(View.VISIBLE);
-            setData();
-            swipeRefreshLayout.setRefreshing(false);
-        }
-
-        @Override
-        public void onConnectionFailure() {
-            InfoDialogFragment.showForFragmentResult(getChildFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_NOTIFICATIONS_FRAGMENT_FAILED_TO_CONNECT, false);
-        }
-
-        @Override
-        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-            switch (errorType) {
-                case UNAUTHORIZED_401:
-                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logout();
-                    DDScannerApplication.bus.post(new LoggedOutEvent());
-                    break;
-                default:
-                    EventsTracker.trackUnknownServerError(url, errorMessage);
-                    InfoDialogFragment.showForFragmentResult(getChildFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_NOTIFICATIONS_FRAGMENT_UNEXPECTED_ERROR, false);
-                    break;
-            }
-        }
-    };
+//    private DDScannerRestClient.ResultListener<Notifications> notificationsResultListener = new DDScannerRestClient.ResultListener<Notifications>() {
+//        @Override
+//        public void onSuccess(Notifications result) {
+//            notifications = result;
+//            progressView.setVisibility(View.GONE);
+//            notificationsViewPager.setVisibility(View.VISIBLE);
+//            setData();
+//            swipeRefreshLayout.setRefreshing(false);
+//        }
+//
+//        @Override
+//        public void onConnectionFailure() {
+//            InfoDialogFragment.showForFragmentResult(getChildFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_NOTIFICATIONS_FRAGMENT_FAILED_TO_CONNECT, false);
+//        }
+//
+//        @Override
+//        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+//            switch (errorType) {
+//                case UNAUTHORIZED_401:
+//                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logout();
+//                    DDScannerApplication.bus.post(new LoggedOutEvent());
+//                    break;
+//                default:
+//                    EventsTracker.trackUnknownServerError(url, errorMessage);
+//                    InfoDialogFragment.showForFragmentResult(getChildFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_NOTIFICATIONS_FRAGMENT_UNEXPECTED_ERROR, false);
+//                    break;
+//            }
+//        }
+//    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -133,7 +133,7 @@ public class NotificationsFragment extends BaseFragment implements ViewPager.OnP
     public void onDestroy() {
         super.onDestroy();
 
-        notificationsResultListener.setCancelled(true);
+//        notificationsResultListener.setCancelled(true);
     }
 
     protected void onAttachToContext(Context context) {
@@ -199,14 +199,14 @@ public class NotificationsFragment extends BaseFragment implements ViewPager.OnP
     public void onStart() {
         super.onStart();
         DDScannerApplication.bus.register(this);
-        notificationsResultListener.setCancelled(false);
+//        notificationsResultListener.setCancelled(false);
     }
 
     @Override
     public void onStop() {
         super.onStop();
         DDScannerApplication.bus.unregister(this);
-        notificationsResultListener.setCancelled(true);
+//        notificationsResultListener.setCancelled(true);
     }
 
     @Override

@@ -19,7 +19,6 @@ import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.Activity;
 import com.ddscanner.screens.divespot.details.DiveSpotDetailsActivity;
-import com.ddscanner.ui.activities.ForeignProfileActivity;
 import com.ddscanner.ui.views.TransformationRoundImage;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
@@ -170,19 +169,17 @@ public class ActivitiesListAdapter
         public void onClick(View v) {
             if (sectionAdapter != null) {
                 if (activities.get(sectionAdapter.sectionedPositionToPosition(getAdapterPosition())).getType().equals(Activity.ActivityType.ACHIEVE)) {
-                    ForeignProfileActivity.show(context, activities.get(sectionAdapter.sectionedPositionToPosition(getAdapterPosition())).getUserOld().getId());
+                    //TODO show user activity
                     return;
                 }
-                DiveSpotDetailsActivity.show(context,
-                        String.valueOf(activities.get(sectionAdapter.sectionedPositionToPosition(getAdapterPosition())).getDiveSpotShort().getId()), EventsTracker.SpotViewSource.FROM_ACTIVITIES);
+                DiveSpotDetailsActivity.show(context, String.valueOf(activities.get(sectionAdapter.sectionedPositionToPosition(getAdapterPosition())).getDiveSpotShort().getId()), EventsTracker.SpotViewSource.FROM_ACTIVITIES);
                 return;
             }
             if (activities.get(getAdapterPosition()).getType().equals(Activity.ActivityType.ACHIEVE)) {
-                ForeignProfileActivity.show(context, activities.get(getAdapterPosition()).getUserOld().getId());
+                //TODO show user activity
                 return;
             }
-            DiveSpotDetailsActivity.show(context,
-                    String.valueOf(activities.get(getAdapterPosition()).getDiveSpotShort().getId()), EventsTracker.SpotViewSource.FROM_ACTIVITIES);
+            DiveSpotDetailsActivity.show(context, String.valueOf(activities.get(getAdapterPosition()).getDiveSpotShort().getId()), EventsTracker.SpotViewSource.FROM_ACTIVITIES);
         }
     }
 

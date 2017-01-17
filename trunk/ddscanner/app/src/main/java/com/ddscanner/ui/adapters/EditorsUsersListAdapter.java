@@ -11,7 +11,6 @@ import android.widget.TextView;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.User;
-import com.ddscanner.ui.activities.ForeignProfileActivity;
 import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;
 

@@ -39,12 +39,14 @@ import com.ddscanner.screens.divespot.details.DiveSpotDetailsActivity;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.activities.DiveCentersActivity;
 import com.ddscanner.ui.adapters.DiveSpotsListAdapter;
+import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.ui.fragments.MapListFragment;
 import com.ddscanner.ui.managers.DiveCenterSpotsClusterManager;
 import com.ddscanner.ui.managers.DiveCentersClusterManager;
 import com.ddscanner.ui.managers.DiveSpotsClusterManager;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
+import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -69,7 +71,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DiveCenterSpotsActivity extends BaseAppCompatActivity implements View.OnClickListener, GoogleMap.OnMapClickListener, GoogleMap.OnMarkerClickListener {
+public class DiveCenterSpotsActivity extends BaseAppCompatActivity implements View.OnClickListener, GoogleMap.OnMapClickListener, GoogleMap.OnMarkerClickListener, InfoDialogFragment.DialogClosedListener {
 
     private MaterialDialog materialDialog;
     private RelativeLayout toast;
@@ -125,12 +127,21 @@ public class DiveCenterSpotsActivity extends BaseAppCompatActivity implements Vi
         @Override
         public void onConnectionFailure() {
             materialDialog.dismiss();
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_DIVE_CENTER_SPOTS_ACTIVITY_HIDE, false);
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             materialDialog.dismiss();
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_DIVE_CENTER_SPOTS_ACTIVITY_HIDE, false);
+            Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);
         }
+
+        @Override
+        public void onInternetConnectionClosed() {
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_DIVE_CENTER_SPOTS_ACTIVITY_HIDE, false);
+        }
+
     };
 
     public static void show(Context context, String id, LatLng latLng) {
@@ -458,5 +469,10 @@ public class DiveCenterSpotsActivity extends BaseAppCompatActivity implements Vi
         marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds_selected));
         showDiveSpotInfo(diveSpotsMap.get(marker.getPosition()));
         return false;
+    }
+
+    @Override
+    public void onDialogClosed(int requestCode) {
+        finish();
     }
 }

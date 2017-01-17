@@ -41,9 +41,22 @@ public class SharedPreferenceHelper {
     private static final String IS_USER_LOGGED_IN = "IS_USER_LOGGED_IN";
     private static final String DC_TOKEN = "DC_TOKEN";
     private static final String USER_TOKEN= "USER_TOKEN";
+    private static final String IS_MUST_REFRESH_DIVE_SPOT_ACTIVITY = "IS_MUST_REFRESH_DIVE_SPOT_ACTIVITY";
 
 
     private static SharedPreferences prefs;
+
+    public void setIsMustRefreshDiveSpotActivity(boolean value) {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        Editor editor = prefs.edit();
+        editor.putBoolean(IS_MUST_REFRESH_DIVE_SPOT_ACTIVITY, value);
+        editor.commit();
+    }
+
+    public boolean getIsMustRefreshDiveSpotActivity() {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        return prefs.getBoolean(IS_MUST_REFRESH_DIVE_SPOT_ACTIVITY, false);
+    }
 
     public void setUserAppId(String appId) {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());

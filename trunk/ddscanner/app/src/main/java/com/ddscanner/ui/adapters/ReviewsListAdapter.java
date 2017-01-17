@@ -20,7 +20,6 @@ import android.widget.TextView;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
-import com.ddscanner.entities.Comment;
 import com.ddscanner.entities.CommentEntity;
 import com.ddscanner.entities.DiveSpotPhoto;
 import com.ddscanner.events.DeleteCommentEvent;
@@ -28,7 +27,6 @@ import com.ddscanner.events.DislikeCommentEvent;
 import com.ddscanner.events.EditCommentEvent;
 import com.ddscanner.events.LikeCommentEvent;
 import com.ddscanner.events.ReportCommentEvent;
-import com.ddscanner.ui.activities.ForeignProfileActivity;
 import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;
 
@@ -297,7 +295,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
             switch (v.getId()) {
                 case R.id.user_avatar:
                     EventsTracker.trackReviewerProfileView();
-                    ForeignProfileActivity.show(context, comments.get(getAdapterPosition()).getAuthor().getId());
+                    //TODO show user activity
                     break;
                 case R.id.like_layout:
                     if (!isLiked) {

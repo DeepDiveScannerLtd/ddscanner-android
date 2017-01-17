@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import com.ddscanner.R;
 import com.ddscanner.entities.UserOld;
-import com.ddscanner.ui.activities.ForeignProfileActivity;
 import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;
 
@@ -74,7 +73,7 @@ public class EditorsListAdapter extends RecyclerView.Adapter<EditorsListAdapter.
 
         @Override
         public void onClick(View v) {
-            ForeignProfileActivity.show(context, userOldArrayList.get(getAdapterPosition()).getId());
+            //TODO show user profile activity
         }
     }
 

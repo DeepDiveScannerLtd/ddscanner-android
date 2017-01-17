@@ -23,6 +23,9 @@ import com.ddscanner.entities.Language;
 import com.ddscanner.events.LanguageChosedEvent;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.adapters.LanguageSearchAdapter;
+import com.ddscanner.ui.dialogs.InfoDialogFragment;
+import com.ddscanner.utils.DialogsRequestCodes;
+import com.ddscanner.utils.Helpers;
 import com.rey.material.widget.ProgressView;
 import com.squareup.otto.Subscribe;
 
@@ -32,7 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class PickLanguageActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
+public class PickLanguageActivity extends AppCompatActivity implements SearchView.OnQueryTextListener, InfoDialogFragment.DialogClosedListener {
 
     private static final String TAG = PickLanguageActivity.class.getSimpleName();
 
@@ -55,13 +58,20 @@ public class PickLanguageActivity extends AppCompatActivity implements SearchVie
 
         @Override
         public void onConnectionFailure() {
-
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_PICK_LANG_ACTIVITY_HIDE, false);
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_PICK_LANG_ACTIVITY_HIDE, false);
+            Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);
         }
+
+        @Override
+        public void onInternetConnectionClosed() {
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_PICK_LANG_ACTIVITY_HIDE, false);
+        }
+
     };
 
     public static void showForResult(Activity activity, int requestCode) {
@@ -152,4 +162,8 @@ public class PickLanguageActivity extends AppCompatActivity implements SearchVie
         finish();
     }
 
+    @Override
+    public void onDialogClosed(int requestCode) {
+        finish();
+    }
 }

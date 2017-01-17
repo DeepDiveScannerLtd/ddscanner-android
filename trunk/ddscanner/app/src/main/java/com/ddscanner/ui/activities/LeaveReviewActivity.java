@@ -93,7 +93,6 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements BaseAp
             materialDialog.dismiss();
             switch (errorType) {
                 case UNAUTHORIZED_401:
-                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logout();
                     LoginActivity.showForResult(LeaveReviewActivity.this, ActivitiesRequestCodes.REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_LOGIN);
                     break;
                 case UNPROCESSABLE_ENTITY_ERROR_422:
@@ -104,6 +103,12 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements BaseAp
                     break;
             }
         }
+
+        @Override
+        public void onInternetConnectionClosed() {
+            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
+        }
+
     };
 
     @Override
@@ -122,7 +127,7 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements BaseAp
     private void findViews() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         text = (EditText) findViewById(R.id.review_text);
-        text.setTag("commentOld");
+        text.setTag("review");
         ratingBar = (RatingBar) findViewById(R.id.rating_bar);
         if (rating > 0) {
             ratingBar.setRating(rating);
@@ -132,7 +137,7 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements BaseAp
         symbolNumberLeft = (TextView) findViewById(R.id.left_number);
         photosRecyclerView = (RecyclerView) findViewById(R.id.photos_rc);
         errorText = (TextView) findViewById(R.id.comment_error);
-        errorsMap.put("commentOld", errorText);
+        errorsMap.put("review", errorText);
     }
 
     private void setRcSettings() {
@@ -225,10 +230,14 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements BaseAp
         switch (requestCode) {
             case ActivitiesRequestCodes.REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_LOGIN:
                 if (resultCode == RESULT_OK) {
-                    sendReview();
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsMustRefreshDiveSpotActivity(true);
+                    if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() != 0) {
+                        sendReview();
+                    } else {
+                        //TODO dive center try leave review, must handle this case
+                    }
                 }
                 if (resultCode == RESULT_CANCELED) {
-                    Log.i(TAG, "Error with login");
                     materialDialog.dismiss();
                 }
                 break;

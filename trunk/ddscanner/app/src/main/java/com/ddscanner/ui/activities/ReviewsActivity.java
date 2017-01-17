@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -92,24 +93,20 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             switch (errorType) {
                 case UNAUTHORIZED_401:
-                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logout();
                     LoginActivity.showForResult(ReviewsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_LIKE_REVIEW);
                     break;
-                case RIGHTS_NOT_FOUND_403:
-                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_self_comment_like_banned, DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_RIGHTS_NEED, false);
-                    break;
-                case COMMENT_NOT_FOUND_ERROR_C803:
-                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_message_comment_not_found, DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_DELETED_COMMENT_NOT_FOUND, false);
-                    break;
-                case BAD_REQUEST_ERROR_400:
-                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_message_comment_also_liked, DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_REPORTED_COMMENT_NOT_FOUND, false);
-                    break;
                 default:
-                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_server_error_title, DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_FAILED_TO_CONNECT, false);
+                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_FAILED_TO_CONNECT, false);
                     break;
 
             }
         }
+
+        @Override
+        public void onInternetConnectionClosed() {
+            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
+        }
+
     };
 
     private DDScannerRestClient.ResultListener<Void> dislikeCommentResultListener = new DDScannerRestClient.ResultListener<Void>() {
@@ -133,24 +130,20 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             switch (errorType) {
                 case UNAUTHORIZED_401:
-                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logout();
                     LoginActivity.showForResult(ReviewsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_DISLIKE_REVIEW);
                     break;
-                case RIGHTS_NOT_FOUND_403:
-                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_self_comment_dislike_banned, DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_RIGHTS_NEED, false);
-                    break;
-                case COMMENT_NOT_FOUND_ERROR_C803:
-                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_message_comment_not_found, DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_DELETED_COMMENT_NOT_FOUND, false);
-                    break;
-                case BAD_REQUEST_ERROR_400:
-                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_message_comment_also_disliked, DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_REPORTED_COMMENT_NOT_FOUND, false);
-                    break;
                 default:
-                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_server_error_title, DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_FAILED_TO_CONNECT, false);
+                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_FAILED_TO_CONNECT, false);
                     break;
 
             }
         }
+
+        @Override
+        public void onInternetConnectionClosed() {
+            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
+        }
+
     };
 
     private DDScannerRestClient.ResultListener<Void> reportCommentResultListener = new DDScannerRestClient.ResultListener<Void>() {
@@ -165,27 +158,26 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
 
         @Override
         public void onConnectionFailure() {
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_CONNECTION_FAILURE, false);
+            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             switch (errorType) {
                 case UNAUTHORIZED_401:
-                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logout();
                     LoginActivity.showForResult(ReviewsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_LEAVE_REPORT);
                     break;
-                case COMMENT_NOT_FOUND_ERROR_C803:
-                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_message_comment_not_found, DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_REPORTED_COMMENT_NOT_FOUND, false);
-                    break;
-                case BAD_REQUEST_ERROR_400:
-                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_message_you_cannot_report_self_review, DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_REPORTED_COMMENT_NOT_FOUND, false);
-                    break;
                 default:
-                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_server_error_title, DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_FAILED_TO_CONNECT, false);
+                    InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, false);
                     break;
             }
         }
+
+        @Override
+        public void onInternetConnectionClosed() {
+            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
+        }
+
     };
 
     private DDScannerRestClient.ResultListener<ArrayList<CommentEntity>> commentsResultListener = new DDScannerRestClient.ResultListener<ArrayList<CommentEntity>>() {
@@ -194,9 +186,9 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
             ReviewsActivity.this.comments = result;
             progressView.setVisibility(View.GONE);
             commentsRecyclerView.setVisibility(View.VISIBLE);
-            ArrayList<CommentEntity> List = new ArrayList<>();
-           List = result;
-            reviewsListAdapter = new ReviewsListAdapter(List, ReviewsActivity.this);
+            ArrayList<CommentEntity> commentsList = new ArrayList<>();
+            commentsList = result;
+            reviewsListAdapter = new ReviewsListAdapter(commentsList, ReviewsActivity.this);
             commentsRecyclerView.setAdapter(reviewsListAdapter);
         }
 
@@ -207,19 +199,14 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-
-            switch (errorType) {
-                case DIVE_SPOT_NOT_FOUND_ERROR_C802:
-                    // This is unexpected so track it
-                    EventsTracker.trackUnknownServerError(url, errorMessage);
-                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_message_dive_spot_not_found, DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_DIVE_SPOT_NOT_FOUND, false);
-                    break;
-                default:
-                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_server_error_title, DialogsRequestCodes.DRC_DIVE_SPOT_PHOTOS_ACTIVITY_DIVE_SPOT_NOT_FOUND, false);
-                    break;
-            }
-
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_DIVE_SPOT_PHOTOS_ACTIVITY_DIVE_SPOT_NOT_FOUND, false);
         }
+
+        @Override
+        public void onInternetConnectionClosed() {
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_CONNECTION_FAILURE, false);
+        }
+
     };
 
     private DDScannerRestClient.ResultListener<Void> deleteCommentResultListener = new DDScannerRestClient.ResultListener<Void>() {
@@ -230,7 +217,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
 
         @Override
         public void onConnectionFailure() {
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_CONNECTION_FAILURE, false);
+            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
         }
 
         @Override
@@ -240,14 +227,17 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
                     DDScannerApplication.getInstance().getSharedPreferenceHelper().logout();
                     LoginActivity.showForResult(ReviewsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_DELETE_COMMENT);
                     break;
-                case COMMENT_NOT_FOUND_ERROR_C803:
-                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_message_comment_not_found, DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_DELETED_COMMENT_NOT_FOUND, false);
-                    break;
                 default:
-                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_server_error_title, DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_FAILED_TO_CONNECT, false);
+                    InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_server_error_title, false);
                     break;
             }
         }
+
+        @Override
+        public void onInternetConnectionClosed() {
+            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
+        }
+
     };
 
     public static void showForResult(Activity context, String diveSpotId, int requestCode) {
@@ -261,7 +251,6 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reviews);
         Bundle bundle = getIntent().getExtras();
-       // comments = (ArrayList<CommentEntity>) bundle.getSerializable("");
         diveSpotId = bundle.getString(Constants.DIVESPOTID);
         findViews();
         toolbarSettings();
@@ -319,6 +308,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN:
                 if (resultCode == RESULT_OK) {
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsMustRefreshDiveSpotActivity(true);
                     getComments();
                 }
                 break;
@@ -328,28 +318,38 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_LEAVE_REPORT:
-                if (resultCode == RESULT_OK) {
-                    sendReportRequest(reportType, reportDescription);
-                }
-                if (resultCode == RESULT_CANCELED) {
+//                if (resultCode == RESULT_OK) {
+//                    sendReportRequest(reportType, reportDescription);
+//                }
+//                if (resultCode == RESULT_CANCELED) {
+//                    getComments();
+//                }
+                if (requestCode == RESULT_OK) {
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsMustRefreshDiveSpotActivity(true);
                     getComments();
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_DELETE_COMMENT:
                 if (resultCode == RESULT_OK) {
-                    deleteUsersComment(commentToDelete);
+//                    deleteUsersComment(commentToDelete);
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsMustRefreshDiveSpotActivity(true);
+                    getComments();
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_LIKE_REVIEW:
                 if (resultCode == RESULT_OK) {
-                    likeComment(comments.get(reviewPositionToRate).getComment().getId(), reviewPositionToRate);
-                    isNeedRefresh = true;
+//                    likeComment(comments.get(reviewPositionToRate).getComment().getId(), reviewPositionToRate);
+//                    isNeedRefresh = true;
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsMustRefreshDiveSpotActivity(true);
+                    getComments();
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_DISLIKE_REVIEW:
                 if (resultCode == RESULT_OK) {
-                    dislikeComment(comments.get(reviewPositionToRate).getComment().getId(), reviewPositionToRate);
-                    isNeedRefresh = true;
+//                    dislikeComment(comments.get(reviewPositionToRate).getComment().getId(), reviewPositionToRate);
+//                    isNeedRefresh = true;
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsMustRefreshDiveSpotActivity(true);
+                    getComments();
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_SHOW_SLIDER:
@@ -526,14 +526,8 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     public void onDialogClosed(int requestCode) {
         switch (requestCode) {
             case DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_CONNECTION_FAILURE:
-                finish();
-                break;
             case DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_FAILED_TO_CONNECT:
-                finish();
-                break;
             case DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_DIVE_SPOT_NOT_FOUND:
-                finish();
-                break;
             case DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_REPORTED_COMMENT_NOT_FOUND:
                 getComments();
                 break;

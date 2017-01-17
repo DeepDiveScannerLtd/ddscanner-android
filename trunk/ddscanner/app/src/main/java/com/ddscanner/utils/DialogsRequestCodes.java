@@ -120,4 +120,30 @@ public class DialogsRequestCodes {
     //PhotosGalleryActivity
     public static final int DRC_MAPS_ACTIVITY_FAILED = 4001;
 
+    //Checkin peoples activity
+    public static final int DRC_CHECKINS_ACTIVITY_HIDE_ACTIVITY = 4101;
+
+    //Editors list activity
+    public static final int DRC_EDITORS_ATIVITY_HIDE = 4201;
+
+    //Pick language activity
+    public static final int DRC_PICK_LANG_ACTIVITY_HIDE = 4301;
+
+    //Pick country activity
+    public static final int DRC_PICK_COUNTRY_ACTIVITY_HIDE = 4401;
+
+    //Edit dive spot activity
+    public static final int DRC_EDIT_SPOT_ACTIVITY_HIDE = 4501;
+
+    //Instructors acivity
+    public static final int DRC_INSTRUCTORS_ACTIVITY_HIDE = 4601;
+
+    //Edit dive center
+    public static final int DRC_EDIT_DC_ACTIVITY_HIDE = 4701;
+
+    //Search dive center activity
+    public static final int DRC_SEARCH_DIVE_CENTER_ACTIVITY = 4801;
+
+    //Dive center spots activity
+    public static final int DRC_DIVE_CENTER_SPOTS_ACTIVITY_HIDE = 4901;
 }

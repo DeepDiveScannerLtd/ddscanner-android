@@ -16,12 +16,14 @@ import com.ddscanner.entities.User;
 import com.ddscanner.entities.UserOld;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.adapters.EditorsUsersListAdapter;
+import com.ddscanner.ui.dialogs.InfoDialogFragment;
+import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
-public class EditorsListActivity extends BaseAppCompatActivity {
+public class EditorsListActivity extends BaseAppCompatActivity implements InfoDialogFragment.DialogClosedListener {
 
     private RecyclerView usersRecyclerView;
     private User creator;
@@ -36,13 +38,20 @@ public class EditorsListActivity extends BaseAppCompatActivity {
 
         @Override
         public void onConnectionFailure() {
-
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_EDITORS_ATIVITY_HIDE, false);
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_EDITORS_ATIVITY_HIDE, false);
+            Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);
         }
+
+        @Override
+        public void onInternetConnectionClosed() {
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_EDITORS_ATIVITY_HIDE, false);
+        }
+
     };
 
     @Override
@@ -111,4 +120,8 @@ public class EditorsListActivity extends BaseAppCompatActivity {
         }
     }
 
+    @Override
+    public void onDialogClosed(int requestCode) {
+        finish();
+    }
 }

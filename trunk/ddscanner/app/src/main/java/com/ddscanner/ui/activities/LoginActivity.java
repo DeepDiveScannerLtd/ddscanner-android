@@ -48,8 +48,7 @@ import org.json.JSONObject;
 
 import java.util.Arrays;
 
-public class LoginActivity extends AppCompatActivity
-        implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener, InfoDialogFragment.DialogClosedListener {
+public class LoginActivity extends BaseAppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
 
     private static final String TAG = "SOCIAL";
 
@@ -61,8 +60,6 @@ public class LoginActivity extends AppCompatActivity
 
     private Button login;
     private Button signUp;
-
-    private LoginResultListener loginResultListener = new LoginResultListener();
 
     public static void show(Context context) {
         Intent intent = new Intent(context, LoginActivity.class);
@@ -84,14 +81,7 @@ public class LoginActivity extends AppCompatActivity
         signUp.setOnClickListener(this);
         login.setOnClickListener(this);
 
-        setupToolbar();
-    }
-
-    private void setupToolbar() {
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(R.string.login_high);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_close);
+        setupToolbar(R.string.login_high, R.id.toolbar);
     }
 
     @Override
@@ -156,65 +146,6 @@ public class LoginActivity extends AppCompatActivity
             case R.id.sign_up:
                 SignUpActivity.showForResult(this, true, ActivitiesRequestCodes.REQUEST_CODE_SOCIAL_NETWORKS_SIGN_UP);
                 break;
-        }
-    }
-
-    @Override
-    public void onDialogClosed(int requestCode) {
-        switch (requestCode) {
-            case DialogsRequestCodes.DRC_LOGIN_ACTIVITY_FAILED_TO_CONNECT:
-            case DialogsRequestCodes.DRC_LOGIN_ACTIVITY_USER_NOT_FOUND:
-            case DialogsRequestCodes.DRC_LOGIN_ACTIVITY_UNEXPECTED_ERROR:
-            case DialogsRequestCodes.DRC_LOGIN_ACTIVITY_GOOGLE_SIGN_IN_FAIL:
-                setResult(Activity.RESULT_CANCELED);
-                finish();
-                break;
-        }
-    }
-
-    private class LoginResultListener extends DDScannerRestClient.ResultListener<RegisterResponse> {
-
-        private String token;
-        private SignInType socialNetwork;
-
-        public void setToken(String token) {
-            this.token = token;
-        }
-
-        void setSocialNetwork(SignInType socialNetwork) {
-            this.socialNetwork = socialNetwork;
-        }
-
-        @Override
-        public void onSuccess(RegisterResponse result) {
-            materialDialog.dismiss();
-            DDScannerApplication.getInstance().getSharedPreferenceHelper().setToken(token);
-            DDScannerApplication.getInstance().getSharedPreferenceHelper().setSn(socialNetwork.getName());
-            DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsUserSignedIn(true, socialNetwork);
-            DDScannerApplication.getInstance().getSharedPreferenceHelper().setUserServerId(result.getUserOld().getId());
-            DDScannerApplication.bus.post(new LoggedInEvent());
-            setResult(Activity.RESULT_OK);
-            finish();
-        }
-
-        @Override
-        public void onConnectionFailure() {
-            materialDialog.dismiss();
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_LOGIN_ACTIVITY_FAILED_TO_CONNECT, false);
-        }
-
-        @Override
-        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-            materialDialog.dismiss();
-            switch (errorType) {
-                case UNAUTHORIZED_401:
-                    Crashlytics.log("801 error on identify");
-                    EventsTracker.trackUnknownServerError(url, errorMessage);
-                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_message_user_not_found, DialogsRequestCodes.DRC_LOGIN_ACTIVITY_USER_NOT_FOUND, false);
-                default:
-                    EventsTracker.trackUnknownServerError(url, errorMessage);
-                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_LOGIN_ACTIVITY_UNEXPECTED_ERROR, false);
-            }
         }
     }
 

@@ -20,6 +20,8 @@ import com.ddscanner.events.ObjectChosedEvent;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.adapters.BaseSearchAdapter;
+import com.ddscanner.ui.dialogs.InfoDialogFragment;
+import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
 import com.rey.material.widget.ProgressView;
 import com.squareup.otto.Subscribe;
@@ -49,34 +51,20 @@ public class SearchDiveCenterActivity extends BaseAppCompatActivity implements S
 
         @Override
         public void onConnectionFailure() {
-
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_SEARCH_DIVE_CENTER_ACTIVITY, false);
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-
-        }
-    };
-
-    private DDScannerRestClient.ResultListener<Void> voidResultListener = new DDScannerRestClient.ResultListener<Void>() {
-        @Override
-        public void onSuccess(Void result) {
-            materialDialog.dismiss();
-            Intent intent = new Intent();
-            intent.putExtra("id", diveCenterId);
-            setResult(RESULT_OK, intent);
-            finish();
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_SEARCH_DIVE_CENTER_ACTIVITY, false);
+            Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);
         }
 
         @Override
-        public void onConnectionFailure() {
-
+        public void onInternetConnectionClosed() {
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_SEARCH_DIVE_CENTER_ACTIVITY, false);
         }
 
-        @Override
-        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-
-        }
     };
 
     public static void showForResult(Activity context, int requestCode) {
@@ -165,9 +153,11 @@ public class SearchDiveCenterActivity extends BaseAppCompatActivity implements S
     @Subscribe
     public void objectChsedEvent(ObjectChosedEvent event) {
         if (event.getBaseIdNamePhotoEntity().getId() != null) {
-            materialDialog.show();
             diveCenterId = event.getBaseIdNamePhotoEntity().getId();
-            DDScannerApplication.getInstance().getDdScannerRestClient().postAddInstructorToDiveCenter(voidResultListener, event.getBaseIdNamePhotoEntity().getId());
+            Intent intent = new Intent();
+            intent.putExtra("id", diveCenterId);
+            setResult(RESULT_OK);
+            finish();
         }
     }
 

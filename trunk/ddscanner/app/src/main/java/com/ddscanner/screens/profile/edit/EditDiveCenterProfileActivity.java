@@ -32,6 +32,7 @@ import com.ddscanner.ui.adapters.DiveSpotsListForEditDcAdapter;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogHelpers;
+import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -52,7 +53,7 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
 
-public class EditDiveCenterProfileActivity extends BaseAppCompatActivity implements BaseAppCompatActivity.PictureTakenListener {
+public class EditDiveCenterProfileActivity extends BaseAppCompatActivity implements BaseAppCompatActivity.PictureTakenListener, InfoDialogFragment.DialogClosedListener {
 
     private ArrayList<EditText> phonesEditTexts = new ArrayList<>();
     private ArrayList<EditText> emailsEditTexts = new ArrayList<>();
@@ -91,13 +92,24 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
         public void onConnectionFailure() {
             isDiveSpotsDownloaded = true;
             dismissMaterialDiaog();
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_EDIT_DC_ACTIVITY_HIDE, false);
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             isDiveSpotsDownloaded = true;
             dismissMaterialDiaog();
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_EDIT_DC_ACTIVITY_HIDE, false);
+            Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);
         }
+
+        @Override
+        public void onInternetConnectionClosed() {
+            isDiveSpotsDownloaded = true;
+            dismissMaterialDiaog();
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_EDIT_DC_ACTIVITY_HIDE, false);
+        }
+
     };
 
     private DDScannerRestClient.ResultListener<ArrayList<Language>> languagesResultListener = new DDScannerRestClient.ResultListener<ArrayList<Language>>() {
@@ -112,13 +124,24 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
         public void onConnectionFailure() {
             isLanguagesDownloaded = true;
             dismissMaterialDiaog();
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_EDIT_DC_ACTIVITY_HIDE, false);
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             isLanguagesDownloaded = true;
             dismissMaterialDiaog();
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_EDIT_DC_ACTIVITY_HIDE, false);
+            Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);
         }
+
+        @Override
+        public void onInternetConnectionClosed() {
+            isLanguagesDownloaded = true;
+            dismissMaterialDiaog();
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_EDIT_DC_ACTIVITY_HIDE, false);
+        }
+
     };
 
     private DDScannerRestClient.ResultListener<Void> resultListener = new DDScannerRestClient.ResultListener<Void>() {
@@ -138,7 +161,14 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             materialDialog.dismiss();
+            //TODO handle errors
         }
+
+        @Override
+        public void onInternetConnectionClosed() {
+            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
+        }
+
     };
 
     private void dismissMaterialDiaog() {
@@ -409,5 +439,17 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        diveSpotsResultListener.setCancelled(true);
+        languagesResultListener.setCancelled(true);
+    }
+
+    @Override
+    public void onDialogClosed(int requestCode) {
+        finish();
     }
 }

@@ -56,17 +56,15 @@ public class DiveSpotsListActivity extends AppCompatActivity implements InfoDial
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-            switch (errorType) {
-                case UNAUTHORIZED_401:
-                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logout();
-                    LoginActivity.showForResult(DiveSpotsListActivity.this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOTS_LIST_ACTIVITY_LOGIN);
-                    break;
-                default:
-                    EventsTracker.trackUnknownServerError(url, errorMessage);
-                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_DIVE_SPOTS_LIST_ACTIVITY_FAILED_TO_CONNECT, false);
-                    break;
-            }
+            EventsTracker.trackUnknownServerError(url, errorMessage);
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_DIVE_SPOTS_LIST_ACTIVITY_FAILED_TO_CONNECT, false);
         }
+
+        @Override
+        public void onInternetConnectionClosed() {
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_DIVE_SPOTS_LIST_ACTIVITY_FAILED_TO_CONNECT, false);
+        }
+
     };
 
 
