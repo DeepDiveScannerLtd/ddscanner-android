@@ -19,6 +19,7 @@ import com.ddscanner.entities.DiveSpotShort;
 import com.ddscanner.entities.DivespotsWrapper;
 import com.ddscanner.entities.EditDiveSpotWrapper;
 import com.ddscanner.entities.FiltersResponseEntity;
+import com.ddscanner.entities.FlagsEntity;
 import com.ddscanner.entities.ForeignUserDislikesWrapper;
 import com.ddscanner.entities.ForeignUserLikeWrapper;
 import com.ddscanner.entities.GoogleMapsGeocodeResponseEntity;
@@ -268,6 +269,32 @@ public class DDScannerRestClient {
     }
 
     /*Methods using in API v2_0*/
+
+    public void getDiveCenterStatusInDiveSpot(ResultListener<FlagsEntity> resultListener, String diveSpotId) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveCenterStatusInSpot(diveSpotId);
+        call.enqueue(new ResponseEntityCallback<FlagsEntity>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<FlagsEntity> resultListener, String responseString) throws JSONException {
+                FlagsEntity flagsEntity = gson.fromJson(responseString, FlagsEntity.class);
+                resultListener.onSuccess(flagsEntity);
+            }
+        });
+    }
+
+    public void getUserStatusInDiveSpot(ResultListener<FlagsEntity> resultListener, String diveSpotId) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserStatusInSpot(diveSpotId);
+        call.enqueue(new ResponseEntityCallback<FlagsEntity>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<FlagsEntity> resultListener, String responseString) throws JSONException {
+                FlagsEntity flagsEntity = gson.fromJson(responseString, FlagsEntity.class);
+                resultListener.onSuccess(flagsEntity);
+            }
+        });
+    }
 
     public void getDiveCenterLanguages(ResultListener<ArrayList<Language>> resultListener) {
         if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {

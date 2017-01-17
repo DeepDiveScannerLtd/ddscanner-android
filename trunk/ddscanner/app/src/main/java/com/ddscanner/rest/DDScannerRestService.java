@@ -426,4 +426,11 @@ public interface DDScannerRestService {
 
     @GET("v2_0/divecenter.languages.get")
     Call<ResponseBody> getDiveCenterLanguages();
+
+    @GET("v2_0/divecenter.status_in.divespot.get")
+    Call<ResponseBody> getDiveCenterStatusInSpot(@Query("id") String id);
+
+    @GET("v2_0/user.status_in.divespot.get")
+    Call<ResponseBody> getUserStatusInSpot(@Query("id") String id);
+
 }

@@ -586,15 +586,14 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
     @Override
     protected void onPause() {
         super.onPause();
-        DDScannerApplication.activityPaused();
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        DDScannerApplication.activityResumed();
-        if (!Helpers.hasConnection(this)) {
-            DDScannerApplication.showErrorActivity(this);
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsMustRefreshDiveSpotActivity()) {
+            
         }
     }
 
