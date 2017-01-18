@@ -97,7 +97,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         } else {
             reviewsListViewHolder.photos.setAdapter(null);
         }
-        if (!isLiked && !commentEntity.getAuthor().getId().equals(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId()) {
+        if (!isLiked && !commentEntity.getAuthor().getId().equals(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId())) {
             reviewsListViewHolder.like.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
