@@ -7,6 +7,7 @@ import android.databinding.DataBindingUtil;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,6 +20,7 @@ import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.databinding.FragmentProfileBinding;
 import com.ddscanner.entities.DiveSpotListSource;
+import com.ddscanner.entities.DiveSpotPhoto;
 import com.ddscanner.entities.ProfileAchievement;
 import com.ddscanner.entities.User;
 import com.ddscanner.events.LoadUserProfileInfoEvent;
@@ -33,6 +35,7 @@ import com.ddscanner.ui.activities.MainActivity;
 import com.ddscanner.ui.activities.SelfCommentsActivity;
 import com.ddscanner.ui.activities.UserLikesDislikesActivity;
 import com.ddscanner.ui.adapters.AchievmentProfileListAdapter;
+import com.ddscanner.ui.adapters.UserPhotosListAdapter;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.ui.fragments.BaseFragment;
 import com.ddscanner.ui.views.LoginView;
@@ -209,6 +212,12 @@ public class ProfileFragment extends BaseFragment implements LoginView.LoginStat
     private void changeUi() {
         if (getContext() == null) {
             return;
+        }
+        if (binding.getProfileFragmentViewModel().getUser().getPhotos() != null) {
+            binding.noPhotosView.setVisibility(View.GONE);
+            binding.photosList.setLayoutManager(new GridLayoutManager(getContext(), 4));
+            binding.photosList.setAdapter(new UserPhotosListAdapter((ArrayList<DiveSpotPhoto>) binding.getProfileFragmentViewModel().getUser().getPhotos(), binding.getProfileFragmentViewModel().getUser().getPhotosCount(), getActivity()));
+            binding.photosList.setVisibility(View.VISIBLE);
         }
         ArrayList<ProfileAchievement> achievmentProfiles = new ArrayList<>();
         if (binding.getProfileFragmentViewModel().getUser().getAchievements() != null && binding.getProfileFragmentViewModel().getUser().getAchievements().size() > 0) {

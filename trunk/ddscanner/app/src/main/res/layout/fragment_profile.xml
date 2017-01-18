@@ -305,7 +305,15 @@
                             android:text="@string/photos_block_title"
                             android:textColor="#afafaf"
                             android:textSize="15sp" />
-
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/photos_list"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingBottom="12dp"
+                            android:paddingLeft="20dp"
+                            android:paddingRight="20dp"
+                            android:paddingTop="12dp"
+                            android:visibility="gone"/>
                         <TextView
                             android:id="@+id/no_photos_view"
                             android:layout_width="match_parent"
