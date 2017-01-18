@@ -10,6 +10,7 @@ import com.crashlytics.android.Crashlytics;
 import com.ddscanner.analytics.AnalyticsSystemsManager;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.activities.InternetClosedActivity;
+import com.ddscanner.utils.DiveSpotPhotosContainer;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.facebook.FacebookSdk;
 import com.squareup.otto.Bus;
@@ -32,6 +33,7 @@ public class DDScannerApplication extends Application {
     // These are now application member fields, no static methods involved. This is done for mocking them during instrumentation tests
     private DDScannerRestClient ddScannerRestClient;
     private SharedPreferenceHelper sharedPreferenceHelper;
+    private DiveSpotPhotosContainer diveSpotPhotosContainer = new DiveSpotPhotosContainer();
 
     private static DDScannerApplication instance;
 
@@ -84,5 +86,9 @@ public class DDScannerApplication extends Application {
 
     public SharedPreferenceHelper getSharedPreferenceHelper() {
         return sharedPreferenceHelper;
+    }
+
+    public DiveSpotPhotosContainer getDiveSpotPhotosContainer() {
+        return diveSpotPhotosContainer;
     }
 }

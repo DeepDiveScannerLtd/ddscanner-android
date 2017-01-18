@@ -102,6 +102,7 @@ public class UserPhotosListAdapter extends RecyclerView.Adapter<UserPhotosListAd
                 DDScannerApplication.bus.post(new OpenPhotosActivityEvent());
                 return;
             }
+            DDScannerApplication.getInstance().getDiveSpotPhotosContainer().setPhotos(photos);
             ImageSliderActivity.showForResult(context, photos, getAdapterPosition(), 0, PhotoOpenedSource.PROFILE, false);
         }
     }

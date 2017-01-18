@@ -80,6 +80,7 @@ public class AllPhotosDiveSpotAdapter extends RecyclerView.Adapter<AllPhotosDive
         @Override
         public void onClick(View v) {
             EventsTracker.trackDiveSpotPhotosView();
+            DDScannerApplication.getInstance().getDiveSpotPhotosContainer().setPhotos(images);
             ImageSliderActivity.showForResult(context, images, getAdapterPosition(), ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_ACTIVITY_SLIDER, photoOpenedSource, isFromMaps);
         }
     }

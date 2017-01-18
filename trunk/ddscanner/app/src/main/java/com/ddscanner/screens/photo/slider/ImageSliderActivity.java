@@ -193,8 +193,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         }
         detector = new SimpleGestureFilter(this, this);
         materialDialog = Helpers.getMaterialDialog(this);
-        Bundle bundle = getIntent().getExtras();
-        images = bundle.getParcelableArrayList("IMAGES");
+        images = DDScannerApplication.getInstance().getDiveSpotPhotosContainer().getPhotos();
         position = getIntent().getIntExtra("position", 0);
         isFromMaps = getIntent().getBooleanExtra("ismap", false);
         photoOpenedSource = (PhotoOpenedSource) getIntent().getSerializableExtra("source");
@@ -409,6 +408,12 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
             finish();
             overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        DDScannerApplication.getInstance().getDiveSpotPhotosContainer().setPhotos(images);
     }
 
     @Override
