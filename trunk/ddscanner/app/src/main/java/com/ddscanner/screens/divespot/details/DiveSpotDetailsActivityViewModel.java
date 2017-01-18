@@ -53,8 +53,10 @@ public class DiveSpotDetailsActivityViewModel {
     @BindingAdapter("changeVisibilityAccording")
     public static void changeViewSate(RelativeLayout view, DiveSpotDetailsActivityViewModel viewModel) {
         if (viewModel != null) {
-            if (viewModel.getDiveSpotDetailsEntity().getIsNew() || DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() != 0) {
+            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() != 0) {
                 view.setVisibility(View.GONE);
+            } else {
+                view.setVisibility(View.VISIBLE);
             }
         }
     }

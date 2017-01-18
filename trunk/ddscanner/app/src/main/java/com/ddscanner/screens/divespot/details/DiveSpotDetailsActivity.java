@@ -35,6 +35,7 @@ import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.databinding.ActivityDiveSpotDetailsBinding;
 import com.ddscanner.entities.DiveSpotDetailsEntity;
+import com.ddscanner.entities.FlagsEntity;
 import com.ddscanner.entities.GalleryOpenedSource;
 import com.ddscanner.entities.SealifeShort;
 import com.ddscanner.events.OpenPhotosActivityEvent;
@@ -83,6 +84,8 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
     private boolean isNewDiveSpot = false;
     private boolean isMapsShown = false;
     private boolean isWorkingHere = false;
+    private boolean isClickedCkeckin = false;
+    private boolean isClickedFavorite = false;
     private DiveSpotPhotosAdapter mapsAdapter, photosAdapter;
     private CheckedInDialogFragment checkedInDialogFragment;
 
@@ -100,6 +103,30 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
     private WorkingHereResultListener removeWorkngResultListener = new WorkingHereResultListener(false);
     private ApproveResultListener trueApproveResultListener = new ApproveResultListener(true);
     private ApproveResultListener falseApproveResultListener = new ApproveResultListener(false);
+
+    private DDScannerRestClient.ResultListener<FlagsEntity> flagsResultListener = new DDScannerRestClient.ResultListener<FlagsEntity>() {
+        @Override
+        public void onSuccess(FlagsEntity result) {
+            binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().setFlags(result);
+            changeUiAccordingNewFlags(result);
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_DIVE_SPOT_DETAILS_ACTIVITY_FAILED_TO_CONNECT, false);
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            EventsTracker.trackUnknownServerError(url, errorMessage);
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_DIVE_SPOT_DETAILS_ACTIVITY_DIVE_SPOT_NOT_FOUND, false);
+        }
+
+        @Override
+        public void onInternetConnectionClosed() {
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_DIVE_SPOT_DETAILS_ACTIVITY_DIVE_SPOT_NOT_FOUND, false);
+        }
+    };
 
     private DDScannerRestClient.ResultListener<DiveSpotDetailsEntity> diveSpotDetailsResultListener = new DDScannerRestClient.ResultListener<DiveSpotDetailsEntity>() {
         @Override
@@ -152,6 +179,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsMustRefreshDiveSpotActivity(false);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_dive_spot_details);
         binding.setHandlers(this);
         findViews();
@@ -172,6 +200,44 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
         getSupportActionBar().setTitle("");
         binding.collapsingToolbar.setExpandedTitleColor(ContextCompat.getColor(this, android.R.color.transparent));
         binding.collapsingToolbar.setStatusBarScrimColor(ContextCompat.getColor(this, android.R.color.transparent));
+    }
+
+    private void changeUiAccordingNewFlags(FlagsEntity flagsEntity) {
+        switch (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType()) {
+            case 0:
+                menu.findItem(R.id.favorite).setVisible(false);
+                binding.fabCheckin.setVisibility(View.GONE);
+                binding.workinLayout.setVisibility(View.VISIBLE);
+                if (flagsEntity.isWorkingHere()) {
+                    binding.switchWorkingButton.setOnCheckedChangeListener(null);
+                    binding.switchWorkingButton.setChecked(true);
+                    binding.switchWorkingButton.setOnCheckedChangeListener(this);
+                }
+                if (binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getIsNew()) {
+                    binding.approveLayout.setVisibility(View.VISIBLE);
+                    binding.buttonShowDivecenters.setVisibility(View.GONE);
+                }
+                break;
+            case 2:
+                if (isClickedCkeckin) {
+                    if (flagsEntity.isCheckedIn()) {
+                        checkInUi();
+                    } else {
+                        checkIn();
+                    }
+                }
+                isClickedCkeckin = false;
+                if (isClickedFavorite) {
+                    if (flagsEntity.isFavorite()) {
+                        updateMenuItems(menu, true);
+                    } else {
+                        addDiveSpotToFavorites();
+                    }
+                }
+                isClickedFavorite = false;
+            case 1:
+                break;
+        }
     }
 
     private void setUi() {
@@ -251,20 +317,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
         } else {
             checkOutUi();
         }
-//        if (diveSpot.getValidation() != null) {
-//            if (!diveSpot.getValidation()) {
-//                isInfoValidLayout.post(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        isInfoValidLayout.setVisibility(View.VISIBLE);
-//                    }
-//                });
-//            } else {
-//                if (menu != null && menu.findItem(R.id.edit_dive_spot) != null) {
-//                    menu.findItem(R.id.edit_dive_spot).setVisible(false);
-//                }
-//            }
-//        }
         binding.progressBarFull.setVisibility(View.GONE);
         binding.informationLayout.setVisibility(View.VISIBLE);
         binding.buttonShowDivecenters.setVisibility(View.VISIBLE);
@@ -345,6 +397,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
         checkInUi();
         if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
             checkOutUi();
+            isClickedCkeckin = true;
             LoginActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_CHECK_IN);
             return;
         }
@@ -356,6 +409,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
                 DiveSpotDetailsActivity.this, R.drawable.ic_acb_pin_checked));
         binding.fabCheckin.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.white)));
         isCheckedIn = true;
+        isClickedCkeckin = false;
     }
 
     private void checkOutUi() {
@@ -410,6 +464,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
     }
 
     private void addDiveSpotToFavorites() {
+        isClickedFavorite = true;
         if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
             LoginActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_ADD_TO_FAVOURITES);
             return;
@@ -501,20 +556,25 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_CHECK_IN:
                 if (resultCode == RESULT_OK) {
+                    reloadFlags();
                     checkIn();
                 } else {
+                    isClickedCkeckin = false;
                     checkOutUi();
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_CHECK_OUT:
                 if (resultCode == RESULT_OK) {
+                    reloadFlags();
                     checkOut();
                 } else {
+                    isClickedFavorite = false;
                     checkInUi();
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_ADD_TO_FAVOURITES:
                 if (resultCode == RESULT_OK) {
+                    reloadFlags();
                     addDiveSpotToFavorites();
                 } else {
                     updateMenuItems(menu, false);
@@ -583,6 +643,12 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
         }
     }
 
+    private void updateMenuItemsAccordinUserType() {
+        if (!binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().isEdit()) {
+
+        }
+    }
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -593,7 +659,22 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
     protected void onResume() {
         super.onResume();
         if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsMustRefreshDiveSpotActivity()) {
-            
+            reloadFlags();
+        }
+    }
+
+    private void reloadFlags() {
+        DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsMustRefreshDiveSpotActivity(false);
+        switch (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType()) {
+            case 0:
+                isClickedCkeckin = false;
+                isClickedFavorite = false;
+                DDScannerApplication.getInstance().getDdScannerRestClient().getDiveCenterStatusInDiveSpot(flagsResultListener, diveSpotId);
+                break;
+            case 1:
+            case 2:
+                DDScannerApplication.getInstance().getDdScannerRestClient().getUserStatusInDiveSpot(flagsResultListener, diveSpotId);
+                break;
         }
     }
 

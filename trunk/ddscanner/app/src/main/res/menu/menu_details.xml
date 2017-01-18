@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/menu_three_dots"
         android:orderInCategory="100"
         android:title="Profile"
         android:icon="@drawable/ic_ac_more"

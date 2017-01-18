@@ -186,6 +186,7 @@
                             android:scaleType="centerCrop"
                             android:src="@drawable/divider" />
                         <RelativeLayout
+                            android:id="@+id/workin_layout"
                             android:layout_width="match_parent"
                             android:layout_height="58dp"
                             android:background="@color/white"
