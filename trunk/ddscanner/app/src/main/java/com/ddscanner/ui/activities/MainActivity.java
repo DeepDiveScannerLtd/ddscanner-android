@@ -2,7 +2,6 @@ package com.ddscanner.ui.activities;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -47,6 +46,7 @@ import com.ddscanner.events.ShowLoginActivityIntent;
 import com.ddscanner.events.SignupLoginButtonClicked;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.divespot.add.AddDiveSpotActivity;
+import com.ddscanner.screens.notifications.DiveCenterNotificationsFragment;
 import com.ddscanner.screens.profile.divecenter.DiveCenterProfileFragment;
 import com.ddscanner.ui.adapters.MainActivityPagerAdapter;
 import com.ddscanner.ui.dialogs.ActionSuccessDialogFragment;
@@ -54,7 +54,7 @@ import com.ddscanner.ui.dialogs.ChangeAccountBottomDialog;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.ui.fragments.ActivityNotificationsFragment;
 import com.ddscanner.ui.fragments.AllNotificationsFragment;
-import com.ddscanner.ui.fragments.NotificationsFragment;
+import com.ddscanner.screens.notifications.DiverNotificationsFragment;
 import com.ddscanner.screens.profile.user.ProfileFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
@@ -98,7 +98,8 @@ public class MainActivity extends BaseAppCompatActivity
     private ImageView changeAccountButton;
     private MainActivityPagerAdapter mainViewPagerAdapter;
     private ProfileFragment profileFragment;
-    private NotificationsFragment notificationsFragment;
+    private DiverNotificationsFragment diverNotificationsFragment;
+    private DiveCenterNotificationsFragment diveCenterNotificationsFragment;
     private ActivityNotificationsFragment activityNotificationsFragment;
     private AllNotificationsFragment allNotificationsFragment;
     private DiveCenterProfileFragment diveCenterProfileFragment;
@@ -299,8 +300,8 @@ public class MainActivity extends BaseAppCompatActivity
         if (profileFragment != null) {
             mainViewPagerAdapter.setProfileFragment(profileFragment);
         }
-        if (notificationsFragment != null) {
-            mainViewPagerAdapter.setNotificationsFragment(notificationsFragment);
+        if (diverNotificationsFragment != null) {
+            mainViewPagerAdapter.setDiverNotificationsFragment(diverNotificationsFragment);
         }
         if (activityNotificationsFragment != null) {
             mainViewPagerAdapter.setActivityNotificationsFragment(activityNotificationsFragment);
@@ -725,11 +726,11 @@ public class MainActivity extends BaseAppCompatActivity
         }
     }
 
-    public void setNotificationsFragment(NotificationsFragment notificationsFragment) {
+    public void setDiverNotificationsFragment(DiverNotificationsFragment diverNotificationsFragment) {
         if (mainViewPagerAdapter != null) {
-            mainViewPagerAdapter.setNotificationsFragment(notificationsFragment);
+            mainViewPagerAdapter.setDiverNotificationsFragment(diverNotificationsFragment);
         } else {
-            this.notificationsFragment = notificationsFragment;
+            this.diverNotificationsFragment = diverNotificationsFragment;
         }
     }
 
@@ -754,6 +755,14 @@ public class MainActivity extends BaseAppCompatActivity
             mainViewPagerAdapter.setDiveCenterProfileFragment(diveCenterProfileFragment);
         } else {
             this.diveCenterProfileFragment = diveCenterProfileFragment;
+        }
+    }
+
+    public void setDiveCenterNotificationsFragment(DiveCenterNotificationsFragment diveCenterNotificationsFragment) {
+        if (mainViewPagerAdapter != null) {
+            mainViewPagerAdapter.setDiveCenterNotificationsFragment(diveCenterNotificationsFragment);
+        } else {
+            this.diveCenterNotificationsFragment = diveCenterNotificationsFragment;
         }
     }
 

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -37,7 +38,6 @@ import com.ddscanner.ui.activities.UserLikesDislikesActivity;
 import com.ddscanner.ui.adapters.AchievmentProfileListAdapter;
 import com.ddscanner.ui.adapters.UserPhotosListAdapter;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
-import com.ddscanner.ui.fragments.BaseFragment;
 import com.ddscanner.ui.views.LoginView;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogsRequestCodes;
@@ -48,7 +48,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ProfileFragment extends BaseFragment implements LoginView.LoginStateChangeListener, InfoDialogFragment.DialogClosedListener, SwipeRefreshLayout.OnRefreshListener {
+public class ProfileFragment extends Fragment implements LoginView.LoginStateChangeListener, InfoDialogFragment.DialogClosedListener, SwipeRefreshLayout.OnRefreshListener {
 
     private static final String TAG = ProfileFragment.class.getName();
 

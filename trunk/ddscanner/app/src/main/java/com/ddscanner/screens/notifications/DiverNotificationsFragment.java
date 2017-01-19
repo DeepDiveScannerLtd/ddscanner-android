@@ -1,4 +1,4 @@
-package com.ddscanner.ui.fragments;
+package com.ddscanner.screens.notifications;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
@@ -19,12 +20,14 @@ import com.ddscanner.R;
 import com.ddscanner.entities.Activity;
 import com.ddscanner.entities.NotificationOld;
 import com.ddscanner.entities.Notifications;
+import com.ddscanner.events.ChangeLoginViewEvent;
 import com.ddscanner.events.ChangePageOfMainViewPagerEvent;
 import com.ddscanner.events.GetNotificationsEvent;
-import com.ddscanner.events.ChangeLoginViewEvent;
 import com.ddscanner.ui.activities.MainActivity;
 import com.ddscanner.ui.adapters.NotificationsPagerAdapter;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
+import com.ddscanner.ui.fragments.ActivityNotificationsFragment;
+import com.ddscanner.ui.fragments.AllNotificationsFragment;
 import com.ddscanner.ui.views.LoginView;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogsRequestCodes;
@@ -35,9 +38,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class NotificationsFragment extends BaseFragment implements ViewPager.OnPageChangeListener, LoginView.LoginStateChangeListener, InfoDialogFragment.DialogClosedListener, SwipeRefreshLayout.OnRefreshListener {
+public class DiverNotificationsFragment extends Fragment implements ViewPager.OnPageChangeListener, LoginView.LoginStateChangeListener, InfoDialogFragment.DialogClosedListener, SwipeRefreshLayout.OnRefreshListener {
 
-    private static final String TAG = NotificationsFragment.class.getName();
+    private static final String TAG = DiverNotificationsFragment.class.getName();
 
     private List<Activity> activities = new ArrayList<>();
     private List<NotificationOld> notificationOldList = new ArrayList<>();
@@ -96,7 +99,7 @@ public class NotificationsFragment extends BaseFragment implements ViewPager.OnP
         if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
             progressView.setVisibility(View.VISIBLE);
             notificationsViewPager.setVisibility(View.GONE);
-          //  getUserNotifications();
+            //  getUserNotifications();
         }
         if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
             onLoggedIn();
@@ -135,7 +138,7 @@ public class NotificationsFragment extends BaseFragment implements ViewPager.OnP
     protected void onAttachToContext(Context context) {
         try {
             MainActivity mainActivity = (MainActivity) context;
-            mainActivity.setNotificationsFragment(this);
+            mainActivity.setDiverNotificationsFragment(this);
         } catch (ClassCastException e) {
             // waaat?
             e.printStackTrace();
@@ -229,7 +232,7 @@ public class NotificationsFragment extends BaseFragment implements ViewPager.OnP
     }
 
     private void getUserNotifications() {
-       //DDScannerApplication.getInstance().getDdScannerRestClient().getUserNotifications(notificationsResultListener);
+        //DDScannerApplication.getInstance().getDdScannerRestClient().getUserNotifications(notificationsResultListener);
     }
 
     private void setData() {
@@ -341,7 +344,7 @@ public class NotificationsFragment extends BaseFragment implements ViewPager.OnP
 
     @Override
     public void onRefresh() {
-       // DDScannerApplication.getInstance().getDdScannerRestClient().getUserNotifications(notificationsResultListener);
+        // DDScannerApplication.getInstance().getDdScannerRestClient().getUserNotifications(notificationsResultListener);
     }
 
     @Subscribe

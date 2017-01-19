@@ -1,4 +1,4 @@
-package com.ddscanner.ui.adapters;
+package com.ddscanner.screens.notifications;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;

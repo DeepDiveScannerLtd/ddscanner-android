@@ -7,6 +7,7 @@ import android.databinding.DataBindingUtil;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,14 +27,13 @@ import com.ddscanner.screens.profile.edit.EditDiveCenterProfileActivity;
 import com.ddscanner.ui.activities.MainActivity;
 import com.ddscanner.ui.adapters.UserPhotosListAdapter;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
-import com.ddscanner.ui.fragments.BaseFragment;
 import com.ddscanner.ui.views.LoginView;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.google.gson.Gson;
 import com.squareup.otto.Subscribe;
 
-public class DiveCenterProfileFragment extends BaseFragment implements LoginView.LoginStateChangeListener, InfoDialogFragment.DialogClosedListener{
+public class DiveCenterProfileFragment extends Fragment implements LoginView.LoginStateChangeListener, InfoDialogFragment.DialogClosedListener{
 
     private DiveCenterProfile diveCenterProfile;
     private ViewDivecenterProfileBinding binding;

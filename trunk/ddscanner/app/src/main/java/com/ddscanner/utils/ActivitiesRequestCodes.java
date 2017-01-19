@@ -58,7 +58,6 @@ public class ActivitiesRequestCodes {
     //    DiveCentersActivity
     public static final int REQUEST_CODE_DIVE_CENTERS_MAP_GO_TO_CURRENT_LOCATION = 1701;
 
-    //    NotificationsFragment
     public static final int REQUEST_CODE_OPEN_LOGIN_SCREEN = 1801;
 
     //    ForeignProfileActivity

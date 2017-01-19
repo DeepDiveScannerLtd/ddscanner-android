@@ -6,12 +6,13 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.Log;
 
 import com.ddscanner.DDScannerApplication;
+import com.ddscanner.screens.notifications.DiveCenterNotificationsFragment;
 import com.ddscanner.screens.profile.divecenter.DiveCenterProfileFragment;
 import com.ddscanner.screens.profile.user.ProfileFragment;
 import com.ddscanner.ui.fragments.ActivityNotificationsFragment;
 import com.ddscanner.ui.fragments.AllNotificationsFragment;
+import com.ddscanner.screens.notifications.DiverNotificationsFragment;
 import com.ddscanner.ui.fragments.MapListFragment;
-import com.ddscanner.ui.fragments.NotificationsFragment;
 import com.ddscanner.ui.views.LoginView;
 
 import java.util.ArrayList;
@@ -26,7 +27,8 @@ public class MainActivityPagerAdapter extends FragmentStatePagerAdapter implemen
     private MapListFragment mapListFragment = new MapListFragment();
     private ProfileFragment profileFragment = new ProfileFragment();
     private DiveCenterProfileFragment diveCenterProfileFragment = new DiveCenterProfileFragment();
-    private NotificationsFragment notificationsFragment = new NotificationsFragment();
+    private DiverNotificationsFragment diverNotificationsFragment = new DiverNotificationsFragment();
+    private DiveCenterNotificationsFragment diveCenterNotificationsFragment = new DiveCenterNotificationsFragment();
 
     private ArrayList<String> titles = new ArrayList<>();
 
@@ -36,10 +38,10 @@ public class MainActivityPagerAdapter extends FragmentStatePagerAdapter implemen
         titles.add("2");
         titles.add("3");
         titles.add("4");
-        profileFragment.setTitle("3");
-        diveCenterProfileFragment.setTitle("4");
-        mapListFragment.setTitle("1");
-        notificationsFragment.setTitle("2");
+//        profileFragment.setTitle("3");
+//        diveCenterProfileFragment.setTitle("4");
+//        mapListFragment.setTitle("1");
+//        diverNotificationsFragment.setTitle("2");
 
     }
 
@@ -50,7 +52,15 @@ public class MainActivityPagerAdapter extends FragmentStatePagerAdapter implemen
             case 0:
                 return mapListFragment;
             case 1:
-                return notificationsFragment;
+                switch (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType()) {
+                    case 0:
+                        return diveCenterNotificationsFragment;
+                    case 1:
+                    case 2:
+                        return diverNotificationsFragment;
+                    case -1:
+                        return diverNotificationsFragment;
+                }
             case 2:
                 switch (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType()) {
                     case 0:
@@ -74,16 +84,6 @@ public class MainActivityPagerAdapter extends FragmentStatePagerAdapter implemen
     @Override
     public int getItemPosition(Object object) {
         Log.i(TAG, "getItemPosition");
-//        BaseFragment fragment = (BaseFragment) object;
-//        String title = fragment.getTitle();
-//        int position = titles.indexOf(title);
-//        Log.i(TAG, "getItemPosition position = " + position);
-//        if (position == 3) {
-//            return 2;
-//        }
-//        if (position >= 0) {
-//            return position;
-//        }
         return POSITION_NONE;
     }
 
@@ -95,32 +95,37 @@ public class MainActivityPagerAdapter extends FragmentStatePagerAdapter implemen
     @Override
     public void onLoggedIn() {
         profileFragment.onLoggedIn();
-        notificationsFragment.onLoggedIn();
+        diverNotificationsFragment.onLoggedIn();
     }
 
     @Override
     public void onLoggedOut() {
         profileFragment.onLoggedOut();
-        notificationsFragment.onLoggedOut();
+        diverNotificationsFragment.onLoggedOut();
     }
 
     public void setProfileFragment(ProfileFragment profileFragment) {
         this.profileFragment = profileFragment;
     }
 
-    public void setNotificationsFragment(NotificationsFragment notificationsFragment) {
-        this.notificationsFragment = notificationsFragment;
+    public void setDiverNotificationsFragment(DiverNotificationsFragment diverNotificationsFragment) {
+        this.diverNotificationsFragment = diverNotificationsFragment;
     }
 
     public void setActivityNotificationsFragment(ActivityNotificationsFragment activityNotificationsFragment) {
-        this.notificationsFragment.setActivityNotificationsFragment(activityNotificationsFragment);
+        this.diverNotificationsFragment.setActivityNotificationsFragment(activityNotificationsFragment);
     }
 
     public void setAllNotificationsFragment(AllNotificationsFragment allNotificationsFragment) {
-        this.notificationsFragment.setAllNotificationsFragment(allNotificationsFragment);
+        this.diverNotificationsFragment.setAllNotificationsFragment(allNotificationsFragment);
     }
 
     public void setDiveCenterProfileFragment(DiveCenterProfileFragment diveCenterProfileFragment) {
         this.diveCenterProfileFragment = diveCenterProfileFragment;
     }
+
+    public void setDiveCenterNotificationsFragment(DiveCenterNotificationsFragment diveCenterNotificationsFragment) {
+        this.diveCenterNotificationsFragment = diveCenterNotificationsFragment;
+    }
+
 }
