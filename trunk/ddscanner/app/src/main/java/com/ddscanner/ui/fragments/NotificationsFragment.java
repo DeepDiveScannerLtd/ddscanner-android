@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
@@ -17,14 +16,11 @@ import android.widget.RelativeLayout;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
-import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.Activity;
-import com.ddscanner.entities.Notification;
+import com.ddscanner.entities.NotificationOld;
 import com.ddscanner.entities.Notifications;
 import com.ddscanner.events.ChangePageOfMainViewPagerEvent;
 import com.ddscanner.events.GetNotificationsEvent;
-import com.ddscanner.events.LoggedOutEvent;
-import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.events.ChangeLoginViewEvent;
 import com.ddscanner.ui.activities.MainActivity;
 import com.ddscanner.ui.adapters.NotificationsPagerAdapter;
@@ -44,7 +40,7 @@ public class NotificationsFragment extends BaseFragment implements ViewPager.OnP
     private static final String TAG = NotificationsFragment.class.getName();
 
     private List<Activity> activities = new ArrayList<>();
-    private List<Notification> notificationList = new ArrayList<>();
+    private List<NotificationOld> notificationOldList = new ArrayList<>();
     private Notifications notifications = new Notifications();
     private TabLayout tabLayout;
     private ViewPager notificationsViewPager;
@@ -240,9 +236,9 @@ public class NotificationsFragment extends BaseFragment implements ViewPager.OnP
         Log.i(TAG, "asdf setData this = " + this);
         if (notificationsViewPager.getCurrentItem() == 0) {
             if (allNotificationsFragment != null) {
-                if (notifications.getNotifications() != null) {
-                    allNotificationsFragment.addList((ArrayList<Notification>)
-                            notifications.getNotifications());
+                if (notifications.getNotificationOlds() != null) {
+                    allNotificationsFragment.addList((ArrayList<NotificationOld>)
+                            notifications.getNotificationOlds());
                 } else {
                     allNotificationsFragment.addList(null);
                 }
@@ -264,8 +260,8 @@ public class NotificationsFragment extends BaseFragment implements ViewPager.OnP
     @Override
     public void onPageSelected(int position) {
         if (position == 0) {
-            if (notifications.getNotifications() != null) {
-                allNotificationsFragment.addList((ArrayList<Notification>) notifications.getNotifications());
+            if (notifications.getNotificationOlds() != null) {
+                allNotificationsFragment.addList((ArrayList<NotificationOld>) notifications.getNotificationOlds());
             }
         }
         if (position == 1) {

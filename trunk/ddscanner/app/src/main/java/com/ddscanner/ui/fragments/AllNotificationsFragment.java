@@ -17,9 +17,9 @@ import android.widget.LinearLayout;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
-import com.ddscanner.entities.Notification;
+import com.ddscanner.entities.NotificationOld;
 import com.ddscanner.ui.activities.MainActivity;
-import com.ddscanner.ui.adapters.NotificationsListAdapter;
+import com.ddscanner.ui.adapters.NotificationsListAdapterOld;
 import com.ddscanner.ui.adapters.SectionedRecyclerViewAdapter;
 import com.ddscanner.utils.Helpers;
 
@@ -36,10 +36,10 @@ public class AllNotificationsFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private FragmentActivity myContext;
-    private ArrayList<Notification> notifications = new ArrayList<>();
+    private ArrayList<NotificationOld> notificationOlds = new ArrayList<>();
     private LinearLayout noNotificationsLayout;
     private boolean isHasSections = false;
-    ArrayList<Notification> activities;
+    ArrayList<NotificationOld> activities;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -107,7 +107,7 @@ public class AllNotificationsFragment extends Fragment {
         Log.i("RES", "resumed");
     }
 
-    public void addList(ArrayList<Notification> activities) {
+    public void addList(ArrayList<NotificationOld> activities) {
         if (recyclerView == null) {
             // this means fragment have not yet been inited.
             this.activities = activities;
@@ -120,13 +120,13 @@ public class AllNotificationsFragment extends Fragment {
             noNotificationsLayout.setVisibility(View.GONE);
         }
         if (activities == null) {
-            recyclerView.setAdapter(new NotificationsListAdapter(activities, getContext(), getFragmentManager()));
+            recyclerView.setAdapter(new NotificationsListAdapterOld(activities, getContext(), getFragmentManager()));
             return;
         }
         this.activities = activities;
         if (Helpers.comparingTimes(DDScannerApplication.getInstance().getSharedPreferenceHelper().getLastShowingNotificationTime(),
                 activities.get(activities.size() -1).getDate()) || !Helpers.comparingTimes(DDScannerApplication.getInstance().getSharedPreferenceHelper().getLastShowingNotificationTime(), activities.get(0).getDate())) {
-            recyclerView.setAdapter(new NotificationsListAdapter(
+            recyclerView.setAdapter(new NotificationsListAdapterOld(
                     activities, getContext(), getFragmentManager()));
             Date date = new Date();
             long currentDateInMillis = date.getTime();
@@ -138,25 +138,25 @@ public class AllNotificationsFragment extends Fragment {
                 activities.get(i).getDate()) && i < activities.size() - 1) {
             i++;
         }
-        NotificationsListAdapter notificationsListAdapter = new NotificationsListAdapter(activities, getContext(), getFragmentManager());
+        NotificationsListAdapterOld notificationsListAdapterOld = new NotificationsListAdapterOld(activities, getContext(), getFragmentManager());
         List<SectionedRecyclerViewAdapter.Section> sections = new ArrayList<SectionedRecyclerViewAdapter.Section>();
         sections.add(new SectionedRecyclerViewAdapter.Section(0, "Newest"));
         sections.add(new SectionedRecyclerViewAdapter.Section(i, "Older"));
        // isHasSections = true;
         SectionedRecyclerViewAdapter.Section[] dummy = new SectionedRecyclerViewAdapter.Section[sections.size()];
-        SectionedRecyclerViewAdapter sectionedRecyclerViewAdapter = new SectionedRecyclerViewAdapter(getContext(), R.layout.section_layout, R.id.section_title, notificationsListAdapter);
+        SectionedRecyclerViewAdapter sectionedRecyclerViewAdapter = new SectionedRecyclerViewAdapter(getContext(), R.layout.section_layout, R.id.section_title, notificationsListAdapterOld);
         sectionedRecyclerViewAdapter.setSections(sections.toArray(dummy));
-        notificationsListAdapter.setSectionAdapter(sectionedRecyclerViewAdapter);
+        notificationsListAdapterOld.setSectionAdapter(sectionedRecyclerViewAdapter);
         recyclerView.setAdapter(sectionedRecyclerViewAdapter);
         Date date = new Date();
         long currentDateInMillis = date.getTime();
         DDScannerApplication.getInstance().getSharedPreferenceHelper().setLastShowingNotificationTime(currentDateInMillis);
     }
 
-    private boolean checkIsListDifferent( ArrayList<Notification> newNotifications, ArrayList<Notification> oldNotifications) {
-        for (Notification notification : oldNotifications) {
-            for (Notification notification1 : newNotifications) {
-                if (!notification.getType().equals(notification1.getType()) || !notification.getUserOld().getId().equals(notification1.getUserOld().getId()) || notification.getDiveSpotShort().getId() != notification1.getDiveSpotShort().getId()) {
+    private boolean checkIsListDifferent(ArrayList<NotificationOld> newNotificationOlds, ArrayList<NotificationOld> oldNotificationOlds) {
+        for (NotificationOld notificationOld : oldNotificationOlds) {
+            for (NotificationOld notificationOld1 : newNotificationOlds) {
+                if (!notificationOld.getType().equals(notificationOld1.getType()) || !notificationOld.getUserOld().getId().equals(notificationOld1.getUserOld().getId()) || notificationOld.getDiveSpotShort().getId() != notificationOld1.getDiveSpotShort().getId()) {
                     return true;
                 }
             }

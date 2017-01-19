@@ -1,204 +1,114 @@
 package com.ddscanner.ui.adapters;
 
 import android.content.Context;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.AppCompatDrawableManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
-import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.Notification;
-import com.ddscanner.events.ChangePageOfMainViewPagerEvent;
-import com.ddscanner.screens.divespot.details.DiveSpotDetailsActivity;
-import com.ddscanner.utils.Helpers;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import jp.wasabeef.picasso.transformations.CropCircleTransformation;
+public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-/**
- * Created by lashket on 25.5.16.
- */
-public class NotificationsListAdapter
-        extends RecyclerView.Adapter<NotificationsListAdapter.NotificationListViewHolder>{
+    private static final int VIEW_TYPE_AVATAR_TEXT = 0;
+    private static final int VIEW_TYPE_WITH_PHOTO = 1;
+    private static final int VIEW_TYPE_WITH_PHOTOS_LIST = 2;
 
-    private List<Notification> notifications;
     private Context context;
-    private FragmentManager mFragmentManager;
-    private SectionedRecyclerViewAdapter sectionAdapter;
+    private ArrayList<Notification> notifications = new ArrayList<>();
 
-    public NotificationsListAdapter(ArrayList<Notification> notifications, Context context,
-                                    FragmentManager fragmentManager) {
+    public NotificationsListAdapter(Context context) {
         this.context = context;
+    }
+
+    public void add(ArrayList<Notification> notifications) {
         this.notifications = notifications;
-        this.mFragmentManager = fragmentManager;
     }
 
     @Override
-    public void onBindViewHolder(NotificationListViewHolder holder, int position) {
-        if (notifications != null) {
-            Notification notification;
-            notification = notifications.get(position);
-            int color = ContextCompat.getColor(context, R.color.primary);
-            ForegroundColorSpan fcs = new ForegroundColorSpan(color);
-            String divespot = "";
-            String text = "";
-            SpannableString spannableString;
-            switch (notification.getType()) {
-                case ACCEPT:
-                    divespot = notification.getDiveSpotShort().getName();
-                    text = context.getResources().getString(R.string.your_changes_accepted,divespot);
-                    spannableString = new SpannableString(text);
-                    spannableString.setSpan(fcs, text.indexOf(divespot),
-                            text.indexOf(divespot) + divespot.length(), 0);
-                    holder.text.setText(spannableString);
-                    holder.timeAgo.setText(Helpers.getDate(notification.getDate()));
-                    break;
-                case LIKE:
-                    holder.likeDislikeImage.setImageDrawable(AppCompatDrawableManager.get()
-                            .getDrawable(context, R.drawable.icon_like));
-                    Picasso.with(context)
-                            .load(notification.getUserOld().getPicture())
-                            .resize(Math.round(Helpers.convertDpToPixel(64, context)),Math.round(Helpers.convertDpToPixel(64, context)))
-                            .centerCrop()
-                            .transform(new CropCircleTransformation())
-                            .into(holder.image);
-                    String name = notification.getUserOld().getName();
-                    divespot = notification.getDiveSpotShort().getName();
-                    // text = String.format(text, name, divespot);
-                    text = context.getResources().getString(R.string.user_liked_your_review, name, divespot);
-                    spannableString = new SpannableString(text);
-                    spannableString.setSpan(fcs, 0, name.length(), 0);
-                    spannableString.setSpan(fcs, text.indexOf(divespot), text.length(), 0);
-                    holder.text.setText(spannableString);
-                    holder.timeAgo.setText(Helpers.getDate(notification.getDate()));
-                    break;
-                case DISLIKE:
-                    holder.likeDislikeImage.setImageDrawable(AppCompatDrawableManager.get()
-                            .getDrawable(context, R.drawable.icon_dislike));
-                    Picasso.with(context)
-                            .load(notification.getUserOld().getPicture())
-                            .resize(Math.round(Helpers.convertDpToPixel(64, context)),Math.round(Helpers.convertDpToPixel(64, context)))
-                            .transform(new CropCircleTransformation())
-                            .into(holder.image);
-                    name = notification.getUserOld().getName();
-                    divespot = notification.getDiveSpotShort().getName();
-                    text = context.getResources().getString(R.string.user_dislike_your_review, name, divespot);
-                    spannableString = new SpannableString(text);
-                    spannableString.setSpan(fcs, 0, name.length(), 0);
-                    spannableString.setSpan(fcs, text.indexOf(divespot), text.length(), 0);
-                    holder.text.setText(spannableString);
-                    holder.timeAgo.setText(Helpers.getDate(notification.getDate()));
-                    break;
-                case ACHIEVE:
-                    holder.bottomDivider.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.orange_rectangle));
-                    holder.mainLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.orange));
-                    holder.image.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_fireworks));
-                    holder.text.setText(notification.getMessage());
-                    holder.timeAgo.setText(Helpers.getDate(notification.getDate()));
-                    break;
-            }
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        switch (viewType) {
+            case VIEW_TYPE_AVATAR_TEXT:
+                return new TextAndPhotoItemViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_notification_with_photo_and_text, parent, false));
+            case VIEW_TYPE_WITH_PHOTO:
+                return new SinglePhotoItemViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_notification_with_single_photo, parent, false));
+            case VIEW_TYPE_WITH_PHOTOS_LIST:
+                return new PhotosListItemViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_notification_with_photo_list, parent, false));
         }
-    }
-
-    public void setSectionAdapter(SectionedRecyclerViewAdapter sectionAdapter) {
-        this.sectionAdapter = sectionAdapter;
+        return null;
     }
 
     @Override
-    public NotificationListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.
-                from(parent.getContext()).
-                inflate(R.layout.item_notification, parent, false);
-        return new NotificationListViewHolder(itemView);
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+
     }
 
     @Override
     public int getItemCount() {
-        if (notifications == null) {
-            return 0;
-        }
-        return notifications.size();
+        return 0;
     }
 
-    public class NotificationListViewHolder extends RecyclerView.ViewHolder
-            implements View.OnClickListener {
+    @Override
+    public int getItemViewType(int position) {
+        switch (notifications.get(position).getActivityType()) {
+            case DIVE_SPOT_ADDED:
+            case DIVE_SPOT_CHANGED:
+            case DIVE_SPOT_CHECKIN:
+            case DIVE_SPOT_REVIEW_ADDED:
+            case ACHIEVEMENT_GETTED:
+            case DIVE_SPOT_REVIEW_DISLIKE:
+            case DIVE_SPOT_REVIEW_LIKE:
+            case DIVE_CENTER_INSTRUCTOR_ADD:
+            case DIVE_CENTER_INSTRUCTOR_REMOVE:
+                return VIEW_TYPE_AVATAR_TEXT;
+        }
+        return -1;
+    }
 
-        private ImageView image;
-        private TextView text;
-        private TextView timeAgo;
-        private RelativeLayout percentRelativeLayout;
-        private Context context;
-        private ImageView likeDislikeImage;
-        private RelativeLayout mainLayout;
-        private ImageView bottomDivider;
+    class TextAndPhotoItemViewHolder extends RecyclerView.ViewHolder {
 
-        public NotificationListViewHolder(View v) {
-            super(v);
-            context = v.getContext();
-            bottomDivider = (ImageView) v.findViewById(R.id.bottom_divider);
-            timeAgo = (TextView) v.findViewById(R.id.time_ago);
-            text = (TextView) v.findViewById(R.id.text);
-            percentRelativeLayout = (RelativeLayout) v.findViewById(R.id.content);
-            percentRelativeLayout.setOnClickListener(this);
-            image = (ImageView) v.findViewById(R.id.image);
-            mainLayout = (RelativeLayout) v.findViewById(R.id.main_layout);
-            timeAgo = (TextView) v.findViewById(R.id.time_ago);
-            likeDislikeImage = (ImageView) v.findViewById(R.id.like_dislike);
-            image.setOnClickListener(this);
-            percentRelativeLayout.setOnClickListener(this);
+        private ImageView userAvatar;
+        private TextView notificationText;
+
+        TextAndPhotoItemViewHolder(View view) {
+            super(view);
+            userAvatar = (ImageView) view.findViewById(R.id.user_avatar);
+            notificationText = (TextView) view.findViewById(R.id.notification_text);
         }
 
-        @Override
-        public void onClick(View v) {
+    }
 
-            switch (v.getId()) {
-                case R.id.content:
-                    if (sectionAdapter != null) {
-                        createAction(sectionAdapter.sectionedPositionToPosition(getAdapterPosition()), false);
-                    } else {
-                        createAction(getAdapterPosition(), false);
-                    }
-                    break;
-                case R.id.image:
-                    if (sectionAdapter != null) {
-                        createAction(sectionAdapter.sectionedPositionToPosition(getAdapterPosition()), true);
-                    } else {
-                        createAction(getAdapterPosition(), true);
-                    }
-                    break;
-            }
+    class SinglePhotoItemViewHolder extends RecyclerView.ViewHolder {
+
+        private ImageView userAvatar;
+        private TextView notificationText;
+        private ImageView photo;
+
+        SinglePhotoItemViewHolder(View view) {
+            super(view);
+            userAvatar = (ImageView) view.findViewById(R.id.user_avatar);
+            notificationText = (TextView) view.findViewById(R.id.notification_text);
+            photo = (ImageView) view.findViewById(R.id.added_photo);
         }
 
-        private void createAction(int position, boolean isImage) {
-            Notification notification = notifications.get(position);
-            switch (notification.getType()) {
-                case ACHIEVE:
-                    DDScannerApplication.bus.post(new ChangePageOfMainViewPagerEvent(2));
-                    break;
-                default:
-                    if (isImage && (notification.getType().name().equalsIgnoreCase("like")
-                            || notification.getType().name().equalsIgnoreCase("dislike"))) {
-                        //TODO show user profile activity
-                    }
+    }
 
-                    if (!isImage) {
-                        DiveSpotDetailsActivity.show(context, String.valueOf(notification.getDiveSpotShort().getId()), EventsTracker.SpotViewSource.FROM_NOTIFICATIONS);
-                    }
-                    break;
-            }
+    class  PhotosListItemViewHolder extends RecyclerView.ViewHolder {
+
+        private ImageView userAvatar;
+        private TextView notificationText;
+        private RecyclerView photosList;
+
+        PhotosListItemViewHolder(View view) {
+            super(view);
+            userAvatar = (ImageView) view.findViewById(R.id.user_avatar);
+            notificationText = (TextView) view.findViewById(R.id.notification_text);
+            photosList = (RecyclerView) view.findViewById(R.id.photos_list);
         }
 
     }

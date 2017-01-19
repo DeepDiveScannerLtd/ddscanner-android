@@ -145,7 +145,7 @@
     <string name="you_must_login_to_add_divespot">You must login to add divespot</string>
     <string name="login_or_sign_up">Login or Sign Up</string>
     <string name="profile_need_to_login">Login to view profile</string>
-    <string name="notifications_need_to_login">Login to view notifications</string>
+    <string name="notifications_need_to_login">Login to view notificationOlds</string>
     <string name="e_mail">E-mail</string>
     <string name="search_sealife">Search sealife</string>
     <string name="favorites">Favorites</string>
@@ -181,8 +181,8 @@
     <string name="open_on_google_plus">Open on Google+</string>
     <string name="locatio_dialog_title">To work with ddscanner you must enable location service. Do you want to do this?</string>
     <string name="add_photos_toolbar_title">Add photos</string>
-    <string name="no_notifications">No notifications</string>
-    <string name="here_will_be_displayed_last_notifications">Last notifications will be displayed here</string>
+    <string name="no_notifications">No notificationOlds</string>
+    <string name="here_will_be_displayed_last_notifications">Last notificationOlds will be displayed here</string>
     <string name="profile">Profile</string>
     <string name="ed">Edited</string>
     <string name="toolbar_title_check_ins">Check Ins</string>
@@ -399,11 +399,15 @@
     <string name="provide_your_address_to_be_shown_on_the_map">Provide your address to be shown on the map</string>
     <string name="languages">Languages</string>
     <string name="add_lang">Add language</string>
-    <string name="activity_type_instructor_added">%1$s added as a new instructor</string>
-    <string name="activity_type_photo_liked">%1$s liked your photo %2$s</string>
-    <string name="activity_type_dive_spot_added">New spot %1$s added near you. Please, approve the information</string>
-    <string name="activity_type_review_added">New review of %1$s added</string>
-    <string name="activity_type_dive_spot_changed">%1$s changed</string>
+    <string name="activity_type_instructor_added">%1$s started working as an instructor at your dive center. %2$s</string>
+    <string name="activity_type_photo_liked">%1$s liked your photo of %2$s. %3$s</string>
+    <string name="activity_type_dive_spot_added">%1$s added the spot %2$s near you. Please, approve the information. %3$s</string>
+    <string name="activity_type_review_added">%1$s left a review on %2$s: %3$s %4$s</string>
+    <string name="activity_type_dive_spot_changed">%1$s changed the spot %2$s. %3$s</string>
+    <string name="activity_type_photo_added">%1$s added %2$s photos to %3$s. %4$s</string>
+    <string name="activity_type_checked_in">%1$s checked in at %2$s. %3$s</string>
+    <string name="activity_type_left_dive_center">%1$s left your dive center. %2$s</string>
+
     <string name="activity_type_review_liked">%1$s liked your review %2$s</string>
     <string name="activity_type_review_disliked">%1$s disliked your review %2$s</string>
     <string name="diespors">Dive Spots</string>

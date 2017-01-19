@@ -65,4 +65,6 @@
 
     <color name="tw__composer_red">#ffe81c4f</color>
 
+    <color name="notification_time_color">#bfbfbf</color>
+
 </resources>
