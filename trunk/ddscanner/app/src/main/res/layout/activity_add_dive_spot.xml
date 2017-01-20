@@ -22,37 +22,12 @@
         android:id="@+id/main_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:orientation="horizontal">
-
-                <ImageView
-                    style="@style/CharacteristicsDiveSpotListIcons"
-                    android:src="@drawable/ic_lang" />
-
-                <android.support.v7.widget.AppCompatSpinner
-                    android:id="@+id/language_spinner"
-                    android:layout_width="match_parent"
-                    android:dropDownWidth="200dp"
-                    android:layout_height="match_parent"
-                    android:dropDownVerticalOffset="15dp"
-                    android:dropDownHorizontalOffset="-15dp"/>
-
-            </LinearLayout>
-            <ImageView
-                style="@style/DividerStyleFull" />
-
-            <ImageView
-                android:layout_marginTop="@dimen/base_block_margin_top"
-                style="@style/DividerStyleFull" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -109,6 +84,64 @@
                 style="@style/ValidationErrorTextView" />
 
             <ImageView
+                android:layout_marginTop="@dimen/base_block_margin_top"
+                style="@style/DividerStyleFull" />
+
+            <LinearLayout
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/white">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/languages_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <RelativeLayout
+                    android:id="@+id/button_add_language"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp">
+
+                    <LinearLayout
+                        android:layout_centerVertical="true"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/black_text"
+                            android:text="@string/add_langueage"
+                            android:textSize="14sp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#8b8b8b"
+                            android:text="@string/add_langueage"
+                            android:textSize="12sp"/>
+
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_arrow"/>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <ImageView
+                style="@style/DividerStyleFull" />
+
+            <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/base_block_margin_top"
@@ -163,28 +196,6 @@
 
                 <TextView
                     android:id="@+id/error_location"
-                    style="@style/ValidationErrorTextView" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:background="@color/white"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        style="@style/CharacteristicsDiveSpotListIcons"
-                        android:src="@drawable/ic_addds_spotname" />
-
-                    <android.support.v7.widget.AppCompatEditText
-                        android:id="@+id/name"
-                        style="@style/AddDsCharTitleStyle"
-                        android:hint="@string/name" />
-                </LinearLayout>
-
-                <ImageView style="@style/DividerStyle" />
-
-                <TextView
-                    android:id="@+id/error_name"
                     style="@style/ValidationErrorTextView" />
 
                 <LinearLayout
@@ -340,37 +351,11 @@
                     
                 </LinearLayout>
 
-                <ImageView style="@style/DividerStyle" />
-
                 <TextView
                     android:id="@+id/error_object"
                     style="@style/ValidationErrorTextView" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/white"
-                    android:orientation="horizontal">
 
-                    <ImageView
-                        style="@style/CharacteristicsDiveSpotListIcons"
-                        android:layout_height="56dp"
-                        android:src="@drawable/ic_addds_desc" />
-
-                    <android.support.v7.widget.AppCompatEditText
-                        android:paddingRight="10dp"
-                        android:id="@+id/description"
-                        style="@style/AddDsCharTitleStyle"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="18dp"
-                        android:fontFamily="sans-serif"
-                        android:hint="@string/description_at_least_150_symbols"
-                        android:paddingBottom="7dp" />
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/error_description"
-                    style="@style/ValidationErrorTextView" />
             </LinearLayout>
 
             <ImageView

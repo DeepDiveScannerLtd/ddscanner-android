@@ -14,6 +14,7 @@ import android.support.v13.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatSpinner;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
@@ -28,6 +29,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -46,6 +48,7 @@ import com.ddscanner.entities.SealifeShort;
 import com.ddscanner.entities.Translation;
 import com.ddscanner.events.AddPhotoDoListEvent;
 import com.ddscanner.events.AddTranslationClickedEvent;
+import com.ddscanner.events.ChangeTranslationEvent;
 import com.ddscanner.events.ImageDeletedEvent;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.divespot.details.DiveSpotDetailsActivity;
@@ -57,6 +60,8 @@ import com.ddscanner.ui.adapters.AddPhotoToDsListAdapter;
 import com.ddscanner.ui.adapters.CharacteristicSpinnerItemsAdapter;
 import com.ddscanner.ui.adapters.LanguagesSpinnerAdapter;
 import com.ddscanner.ui.adapters.SealifeListAddingDiveSpotAdapter;
+import com.ddscanner.ui.adapters.TranslationsListAdapter;
+import com.ddscanner.ui.dialogs.AddTranslationDialogFragment;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.ui.dialogs.InfoDialogFragment.DialogClosedListener;
 import com.ddscanner.utils.ActivitiesRequestCodes;
@@ -85,12 +90,11 @@ import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
-public class AddDiveSpotActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener, View.OnClickListener, DialogClosedListener, AdapterView.OnItemSelectedListener {
+public class AddDiveSpotActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener, View.OnClickListener, DialogClosedListener, AddTranslationDialogFragment.TranslationChangedListener {
 
     private static final String TAG = AddDiveSpotActivity.class.getSimpleName();
     private static final String DIVE_SPOT_NAME_PATTERN = "^[a-zA-Z0-9 ]*$";
 
-    private ImageButton btnAddPhoto;
     private LinearLayout btnAddSealife;
 
     private Toolbar toolbar;
@@ -99,26 +103,21 @@ public class AddDiveSpotActivity extends AppCompatActivity implements CompoundBu
     private LinearLayout pickLocation;
     private LinearLayout pickCountry;
     private RecyclerView photos_rc;
-    private TextView addPhotoTitle;
     private TextView locationTitle;
     private TextView countryTitle;
     private AppCompatSpinner levelAppCompatSpinner;
     private AppCompatSpinner currentsAppCompatSpinner;
     private AppCompatSpinner objectAppCompatSpinner;
-    private EditText name;
     private EditText depth;
     private EditText visibilityMin;
     private EditText visibilityMax;
-    private EditText description;
     private Button btnSave;
     private RecyclerView sealifesRc;
     private SealifeListAddingDiveSpotAdapter sealifeListAddingDiveSpotAdapter = null;
     private ScrollView mainLayout;
     private ProgressView progressView;
     private MaterialDialog progressDialogUpload;
-    private TextView error_name;
     private TextView error_location;
-    private TextView error_description;
     private TextView error_depth;
     private TextView error_sealife;
     private TextView error_images;
@@ -131,12 +130,14 @@ public class AddDiveSpotActivity extends AppCompatActivity implements CompoundBu
     private TextView photos;
     private TextView maps;
     private RecyclerView mapsRecyclerView;
-    private AppCompatSpinner languageAppCompatSpinner;
     private LatLngBounds diveSpotLatLngBounds;
     private SwitchCompat isEditSwitch;
     private SwitchCompat isWorkingSwitch;
     private LinearLayout isEditLayout;
     private LinearLayout isWorkingLayout;
+    private RelativeLayout addTranslationButton;
+    private RecyclerView languagesRecyclerView;
+    private TranslationsListAdapter translationsListAdapter = new TranslationsListAdapter();
 
     private List<String> photoUris = new ArrayList<>();
     private List<String> mapsUris = new ArrayList<>();
@@ -223,16 +224,13 @@ public class AddDiveSpotActivity extends AppCompatActivity implements CompoundBu
         isEditSwitch.setOnCheckedChangeListener(this);
         isWorkingSwitch.setOnCheckedChangeListener(this);
         isEditLayout = (LinearLayout) findViewById(R.id.edit_layout);
-        name = (EditText) findViewById(R.id.name);
         depth = (EditText) findViewById(R.id.depth);
-        description = (EditText) findViewById(R.id.description);
         btnAddSealife = (LinearLayout) findViewById(R.id.btn_add_sealife);
         photos_rc = (RecyclerView) findViewById(R.id.photos_rc);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         levelAppCompatSpinner = (AppCompatSpinner) findViewById(R.id.level_spinner);
         objectAppCompatSpinner = (AppCompatSpinner) findViewById(R.id.object_spinner);
         currentsAppCompatSpinner = (AppCompatSpinner) findViewById(R.id.currents_spinner);
-        languageAppCompatSpinner = (AppCompatSpinner) findViewById(R.id.language_spinner);
         pickLocation = (LinearLayout) findViewById(R.id.location_layout);
         pickCountry = (LinearLayout) findViewById(R.id.country_layout);
         locationTitle = (TextView) findViewById(R.id.location);
@@ -241,9 +239,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements CompoundBu
         mainLayout = (ScrollView) findViewById(R.id.main_layout);
         progressView = (ProgressView) findViewById(R.id.progressBarFull);
         error_depth = (TextView) findViewById(R.id.error_depth);
-        error_description = (TextView) findViewById(R.id.error_description);
         error_location = (TextView) findViewById(R.id.error_location);
-        error_name = (TextView) findViewById(R.id.error_name);
         error_images = (TextView) findViewById(R.id.error_images);
         error_sealife = (TextView) findViewById(R.id.error_sealife);
         error_visibility_max = (TextView) findViewById(R.id.error_visibility_max);
@@ -257,17 +253,17 @@ public class AddDiveSpotActivity extends AppCompatActivity implements CompoundBu
         maps = (TextView) findViewById(R.id.maps);
         mapsRecyclerView = (RecyclerView) findViewById(R.id.maps_rc);
         countryTitle = (TextView) findViewById(R.id.country_title);
+        addTranslationButton = (RelativeLayout) findViewById(R.id.button_add_language);
+        languagesRecyclerView = (RecyclerView) findViewById(R.id.languages_list);
     }
 
     private void setUi() {
-        languages.add("Language");
-        languageAppCompatSpinner.setAdapter(new LanguagesSpinnerAdapter(this, R.layout.item_language_spinner, languages));
-        languageAppCompatSpinner.setOnItemSelectedListener(this);
         progressDialogUpload = Helpers.getMaterialDialog(this);
         pickCountry.setOnClickListener(this);
         ProgressDialog progressDialog = new ProgressDialog(this);
-        name.setEnabled(false);
-        description.setEnabled(false);
+        languagesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        languagesRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        languagesRecyclerView.setAdapter(translationsListAdapter);
         setAppCompatSpinnerValues(currentsAppCompatSpinner, Helpers.getListOfCurrentsTypes(), "Current");
         setAppCompatSpinnerValues(levelAppCompatSpinner, Helpers.getDiveLevelTypes(), "Diver level");
         setAppCompatSpinnerValues(objectAppCompatSpinner, Helpers.getDiveSpotTypes(), "Object");
@@ -275,6 +271,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements CompoundBu
         pickLocation.setOnClickListener(this);
         btnAddSealife.setOnClickListener(this);
         maps.setOnClickListener(this);
+        addTranslationButton.setOnClickListener(this);
         /* Recycler view with images settings*/
         LinearLayoutManager layoutManager = new LinearLayoutManager(AddDiveSpotActivity.this);
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -358,7 +355,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements CompoundBu
             case ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_LANGUAGE:
                 if (resultCode == RESULT_OK) {
                     Language language = (Language) data.getSerializableExtra("language");
-                    addLanguageToList(language);
+                    AddTranslationDialogFragment.show(getSupportFragmentManager(), language.getCode(), language.getName(), "", "");
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_COUNTRY:
@@ -465,6 +462,9 @@ public class AddDiveSpotActivity extends AppCompatActivity implements CompoundBu
             case R.id.country_layout:
                 PickCountryActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_COUNTRY);
                 break;
+            case R.id.button_add_language:
+                PickLanguageActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_LANGUAGE);
+                break;
         }
     }
 
@@ -480,12 +480,6 @@ public class AddDiveSpotActivity extends AppCompatActivity implements CompoundBu
 
     private void createRequestBodyies() {
         hideErrorsFields();
-        if (!name.getText().toString().matches(DIVE_SPOT_NAME_PATTERN)) {
-            error_name.setVisibility(View.VISIBLE);
-            error_name.setText(R.string.errr);
-            return;
-        }
-        error_name.setVisibility(View.GONE);
         requestDepth = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
                 depth.getText().toString().trim());
         if (diveSpotLocation != null) {
@@ -493,11 +487,6 @@ public class AddDiveSpotActivity extends AppCompatActivity implements CompoundBu
                     String.valueOf(diveSpotLocation.latitude));
             requestLng = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
                     String.valueOf(diveSpotLocation.longitude));
-        }
-        if (lastCode != null && !lastCode.isEmpty()) {
-            languagesMap.get(lastCode).setCode(lastCode);
-            languagesMap.get(lastCode).setName(name.getText().toString());
-            languagesMap.get(lastCode).setDescription(description.getText().toString());
         }
         if (isWorkingSwitch.isChecked()) {
             requestIsWorkingHere = Helpers.createRequestBodyForString("true");
@@ -686,72 +675,6 @@ public class AddDiveSpotActivity extends AppCompatActivity implements CompoundBu
         pickPhotoFromGallery();
     }
 
-    @Subscribe
-    public void addLanguageToList(AddTranslationClickedEvent event) {
-        PickLanguageActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_LANGUAGE);
-//        Random random = new Random();
-//        String randon = String.valueOf(random.nextInt(9000));
-//        languages.add(randon);
-//        languagesMap.put(randon, new Translation());
-//        languageAppCompatSpinner.setAdapter(new LanguagesSpinnerAdapter(this, R.layout.item_language_spinner, languages));
-//        languageAppCompatSpinner.setSelection(languages.size() - 1);
-//        try {
-//            Method method = Spinner.class.getDeclaredMethod("onDetachedFromWindow");
-//            method.setAccessible(true);
-//            method.invoke(languageAppCompatSpinner);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        name.setEnabled(true);
-//        description.setEnabled(true);
-    }
-
-    private void addLanguageToList(Language language) {
-        languagesList.add(language);
-        languages.add(language.getName());
-        languagesMap.put(language.getCode(), new Translation());
-        languageAppCompatSpinner.setAdapter(new LanguagesSpinnerAdapter(this, R.layout.item_language_spinner, languages));
-        languageAppCompatSpinner.setSelection(languages.size() - 1);
-        try {
-            Method method = Spinner.class.getDeclaredMethod("onDetachedFromWindow");
-            method.setAccessible(true);
-            method.invoke(languageAppCompatSpinner);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        name.setEnabled(true);
-        description.setEnabled(true);
-    }
-
-    @Override
-    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
-        if (i != 0) {
-            if (previousPosition != -1) {
-                Translation translation =  languagesMap.get(languagesList.get(previousPosition).getCode());
-                translation.setName(name.getText().toString());
-                translation.setDescription(description.getText().toString());
-                translation.setLanguage(languagesList.get(previousPosition).getCode());
-                languagesMap.put(languagesList.get(previousPosition).getCode(), translation);
-            }
-            description.setText("");
-            name.setText("");
-            if (languagesMap.get(languagesList.get(i-1).getCode()).getName() != null) {
-                name.setText(languagesMap.get(languagesList.get(i-1).getCode()).getName());
-            }
-            if (languagesMap.get(languagesList.get(i-1).getCode()).getDescription() != null) {
-                description.setText(languagesMap.get(languagesList.get(i-1).getCode()).getDescription());
-            }
-            lastCode = languagesList.get(i-1).getCode();
-            previousPosition = i-1;
-        }
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> adapterView) {
-
-    }
-
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
         switch (compoundButton.getId()) {
@@ -766,4 +689,15 @@ public class AddDiveSpotActivity extends AppCompatActivity implements CompoundBu
                 break;
         }
     }
+
+    @Override
+    public void onTranslationChanged(Translation translation) {
+        translationsListAdapter.add(translation);
+    }
+
+    @Subscribe
+    public void changeTranslation(ChangeTranslationEvent event) {
+        AddTranslationDialogFragment.show(getSupportFragmentManager(), event.getTranslation().getCode(), event.getTranslation().getLanguage(), event.getTranslation().getName(), event.getTranslation().getDescription());
+    }
+
 }

@@ -417,4 +417,9 @@
     <string name="unexcepted_error_text"></string>
     <string name="error_internet_connection">Please, check it and try again</string>
     <string name="error_internet_connection_title">No internet connection</string>
+    <string name="add_langueage">Add language</string>
+    <string name="name_error_text_small">Name should be at least 2 characters</string>
+    <string name="name_error_text_long">Name shouldn\'t be more than 128 characters</string>
+    <string name="description_error_text_short">Description should be at least 32 characters</string>
+    <string name="description_error_text_long">Description shouldn\'t be more than 2048 characters</string>
 </resources>

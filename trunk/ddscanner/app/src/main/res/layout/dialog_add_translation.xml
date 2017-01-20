@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="320dp"
+    android:layout_height="wrap_content"
+    android:background="@color/white">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="49dp"
+        android:background="@drawable/checked_in_background_header">
+
+        <TextView
+            android:id="@+id/language_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:fontFamily="sans-serif-medium"
+            tools:text="English"
+            android:textColor="#deffffff"
+            android:textSize="18sp" />
+
+        <ImageView
+            android:id="@+id/image_close"
+            android:layout_width="49dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:scaleType="center"
+            android:src="@drawable/ic_popup_close" />
+    </RelativeLayout>
+
+    <android.support.v7.widget.AppCompatEditText
+        android:layout_marginLeft="17dp"
+        android:layout_marginRight="17dp"
+        android:id="@+id/name"
+        style="@style/AddDsCharTitleStyle"
+        android:fontFamily="sans-serif"
+        android:hint="@string/name"
+        android:textSize="15sp"
+        android:lines="1"/>
+    <ImageView
+        android:layout_marginLeft="17dp"
+        style="@style/DividerStyleFull" />
+    <TextView
+        android:layout_marginLeft="17dp"
+        android:id="@+id/error_name"
+        style="@style/ValidationErrorTextView" />
+    <android.support.v7.widget.AppCompatEditText
+        android:id="@+id/description"
+        android:layout_width="match_parent"
+        android:layout_height="149dp"
+        android:background="@android:color/transparent"
+        android:gravity="top"
+        android:hint="@string/description"
+        android:paddingBottom="10dp"
+        android:paddingLeft="17dp"
+        android:paddingRight="17dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:textSize="15sp"
+        android:textColor="@color/black_text"
+        android:textColorHint="#a3a3a3" />
+    <TextView
+        android:layout_marginLeft="17dp"
+        android:id="@+id/error_description"
+        style="@style/ValidationErrorTextView" />
+
+    <Button
+        android:id="@+id/button_save"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/dialog_achievement_button_background"
+        android:text="@string/btn_save" />
+</LinearLayout>
