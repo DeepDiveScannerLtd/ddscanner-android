@@ -104,6 +104,7 @@
                             android:layout_alignParentLeft="true"
                             android:background="?attr/selectableItemBackground"
                             android:gravity="center"
+                            android:onClick="@{handlers::showComments}"
                             android:orientation="vertical"
                             app:layout_widthPercent="33%">
 
@@ -126,6 +127,7 @@
                             android:id="@+id/likeLayout"
                             android:layout_height="64dp"
                             android:layout_centerHorizontal="true"
+                            android:onClick="@{handlers::showLikes}"
                             android:background="?attr/selectableItemBackground"
                             app:layout_widthPercent="33%">
 
@@ -154,6 +156,7 @@
                         </RelativeLayout>
 
                         <LinearLayout
+                            android:onClick="@{handlers::showDislikes}"
                             android:id="@+id/dislikeLayout"
                             android:layout_height="64dp"
                             android:layout_alignParentRight="true"
@@ -374,44 +377,6 @@
                     </LinearLayout>
 
                     <ImageView style="@style/DividerStyle" />
-
-                    <LinearLayout
-                        android:id="@+id/favorites_activity"
-                        android:layout_width="match_parent"
-                        android:layout_height="66dp"
-                        android:background="?attr/selectableItemBackground"
-                        android:orientation="horizontal"
-                        android:paddingTop="10dp"
-                        android:onClick="@{handlers::showFavorites}">
-
-                        <ImageView
-                            style="@style/CharacteristicsDiveSpotListIcons"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/ic_profile_fav" />
-
-                        <LinearLayout
-                            android:layout_width="258dp"
-                            android:layout_height="match_parent"
-                            android:orientation="vertical">
-
-                            <TextView
-                                style="@style/CharacteristicsDiveSpotListTitle"
-                                android:text="@string/favourites" />
-
-                            <TextView
-                                android:id="@+id/favourites_count"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="3dp"
-                                app:countFavoriteFrom="@{userProfileViewModel}" />
-                        </LinearLayout>
-
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:scaleType="center"
-                            android:src="@drawable/ic_arrow" />
-                    </LinearLayout>
 
                 </LinearLayout>
 

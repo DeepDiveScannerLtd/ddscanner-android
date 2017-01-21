@@ -377,10 +377,10 @@ public interface DDScannerRestService {
     Call<ResponseBody> postLikeReview(@Query("id") String commentId);
 
     @GET("v2_0/user.dislikes.get")
-    Call<ResponseBody> getUserDislikes();
+    Call<ResponseBody> getUserDislikes(@Query("id") String userId);
 
     @GET("v2_0/user.likes.get")
-    Call<ResponseBody> getUserLikes();
+    Call<ResponseBody> getUserLikes(@Query("id") String userId);
 
     @GET("v2_0/user.photos_added.get")
     Call<ResponseBody> getUserPhotos(@Query("id") String userId);
@@ -407,7 +407,7 @@ public interface DDScannerRestService {
     Call<ResponseBody> getCommentsForDiveSpot(@Query("id") String diveSpotId, @Query("include_photo_details") int value);
 
     @GET("v2_0/user.reviews.get")
-    Call<ResponseBody> getSelfCommentsList();
+    Call<ResponseBody> getSelfCommentsList(@Query("id") String diveCenterId);
 
     @POST("v2_0/instructor.divecenter.add")
     Call<ResponseBody> postAddIstructorToDiveCenter(@Query("id") String diveCenterId);

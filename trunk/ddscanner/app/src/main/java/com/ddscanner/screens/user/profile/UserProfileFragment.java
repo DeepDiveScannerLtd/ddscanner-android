@@ -18,6 +18,8 @@ import com.ddscanner.entities.ProfileAchievement;
 import com.ddscanner.entities.User;
 import com.ddscanner.screens.profile.user.ProfileFragmentViewModel;
 import com.ddscanner.ui.activities.DiveSpotsListActivity;
+import com.ddscanner.ui.activities.SelfCommentsActivity;
+import com.ddscanner.ui.activities.UserLikesDislikesActivity;
 import com.ddscanner.ui.adapters.AchievmentProfileListAdapter;
 import com.ddscanner.ui.adapters.UserPhotosListAdapter;
 
@@ -78,5 +80,24 @@ public class UserProfileFragment extends Fragment {
             DiveSpotsListActivity.show(getContext(), DiveSpotListSource.FAVORITES, binding.getUserProfileViewModel().getUser().getId());
         }
     }
-    
+
+    public void showComments(View view) {
+        if (binding.getUserProfileViewModel().getUser().getCounters().getCommentsCount() > 0) {
+            SelfCommentsActivity.show(getContext());
+        }
+    }
+
+    public void showLikes(View view) {
+        if (binding.getUserProfileViewModel().getUser().getCounters().getLikesCount() > 0) {
+            UserLikesDislikesActivity.show(getActivity(), true, binding.getUserProfileViewModel().getUser().getId());
+        }
+    }
+
+    public void showDislikes(View view) {
+        if (binding.getUserProfileViewModel().getUser().getCounters().getDislikesCount() > 0) {
+            UserLikesDislikesActivity.show(getActivity(), false, binding.getUserProfileViewModel().getUser().getId());
+        }
+    }
+
+
 }

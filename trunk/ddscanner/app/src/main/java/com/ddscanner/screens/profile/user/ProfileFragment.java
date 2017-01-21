@@ -282,13 +282,13 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
 
     public void showLikes(View view) {
         if (binding.getProfileFragmentViewModel().getUser().getCounters().getLikesCount() > 0) {
-            UserLikesDislikesActivity.show(getActivity(), true);
+            UserLikesDislikesActivity.show(getActivity(), true, binding.getProfileFragmentViewModel().getUser().getId());
         }
     }
 
     public void showDislikes(View view) {
         if (binding.getProfileFragmentViewModel().getUser().getCounters().getDislikesCount() > 0) {
-            UserLikesDislikesActivity.show(getActivity(), false);
+            UserLikesDislikesActivity.show(getActivity(), false, binding.getProfileFragmentViewModel().getUser().getId());
         }
     }
 

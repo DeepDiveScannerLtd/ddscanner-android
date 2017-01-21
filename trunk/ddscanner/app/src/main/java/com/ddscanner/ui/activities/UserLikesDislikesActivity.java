@@ -101,13 +101,14 @@ public class UserLikesDislikesActivity extends BaseAppCompatActivity implements 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_foreign_user_likes_dislikes);
         isLikes = getIntent().getBooleanExtra(Constants.USER_LIKES_ACTIVITY_INTENT_IS_LIKE, false);
+        userId = getIntent().getStringExtra("id");
         findViews();
         if (isLikes) {
             setupToolbar(R.string.user_likes, R.id.toolbar);
-            DDScannerApplication.getInstance().getDdScannerRestClient().getUserLikes(likesResultListener);
+            DDScannerApplication.getInstance().getDdScannerRestClient().getUserLikes(likesResultListener, userId);
         } else {
             setupToolbar(R.string.user_dislikes, R.id.toolbar);
-            DDScannerApplication.getInstance().getDdScannerRestClient().getUserDislikes(dislikesResultListener);
+            DDScannerApplication.getInstance().getDdScannerRestClient().getUserDislikes(dislikesResultListener, userId);
         }
     }
 
@@ -126,9 +127,10 @@ public class UserLikesDislikesActivity extends BaseAppCompatActivity implements 
         context.startActivityForResult(intent, requestCode);
     }
 
-    public static void show(Activity context, boolean isLikes) {
+    public static void show(Activity context, boolean isLikes, String userId) {
         Intent intent = new Intent(context, UserLikesDislikesActivity.class);
         intent.putExtra(Constants.USER_LIKES_ACTIVITY_INTENT_IS_LIKE, isLikes);
+        intent.putExtra("id", userId);
         context.startActivity(intent);
     }
 
@@ -148,9 +150,9 @@ public class UserLikesDislikesActivity extends BaseAppCompatActivity implements 
             case ActivitiesRequestCodes.REQUEST_CODE_USER_LIKES_DISLIKES_ACTIVITY_LOGIN:
                 if (resultCode == RESULT_OK) {
                     if (isLikes) {
-                        DDScannerApplication.getInstance().getDdScannerRestClient().getUserLikes(likesResultListener);
+                        DDScannerApplication.getInstance().getDdScannerRestClient().getUserLikes(likesResultListener, userId);
                     } else {
-                        DDScannerApplication.getInstance().getDdScannerRestClient().getUserDislikes(dislikesResultListener);
+                        DDScannerApplication.getInstance().getDdScannerRestClient().getUserDislikes(dislikesResultListener, userId);
                     }
                 } else {
                     setResult(RESULT_CANCELED);

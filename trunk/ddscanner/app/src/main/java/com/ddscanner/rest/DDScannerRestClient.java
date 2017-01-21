@@ -397,12 +397,12 @@ public class DDScannerRestClient {
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 
-    public void getUsersSelfComments(ResultListener<ArrayList<SelfCommentEntity>> resultListener) {
+    public void getUsersSelfComments(ResultListener<ArrayList<SelfCommentEntity>> resultListener, String userId) {
         if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
             resultListener.onInternetConnectionClosed();
             return;
         }
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getSelfCommentsList();
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getSelfCommentsList(userId);
         call.enqueue(new ResponseEntityCallback<ArrayList<SelfCommentEntity>>(gson, resultListener) {
             @Override
             void handleResponseString(ResultListener<ArrayList<SelfCommentEntity>> resultListener, String responseString) throws JSONException {
@@ -413,12 +413,12 @@ public class DDScannerRestClient {
         });
     }
 
-    public void getUserLikes(ResultListener<ArrayList<UserLikeEntity>> resultListener) {
+    public void getUserLikes(ResultListener<ArrayList<UserLikeEntity>> resultListener, String userId) {
         if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
             resultListener.onInternetConnectionClosed();
             return;
         }
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserLikes();
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserLikes(userId);
         call.enqueue(new ResponseEntityCallback<ArrayList<UserLikeEntity>>(gson, resultListener) {
             @Override
             void handleResponseString(ResultListener<ArrayList<UserLikeEntity>> resultListener, String responseString) throws JSONException {
@@ -429,12 +429,12 @@ public class DDScannerRestClient {
         });
     }
 
-    public void getUserDislikes(ResultListener<ArrayList<UserLikeEntity>> resultListener) {
+    public void getUserDislikes(ResultListener<ArrayList<UserLikeEntity>> resultListener, String userId) {
         if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
             resultListener.onInternetConnectionClosed();
             return;
         }
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserDislikes();
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserDislikes(userId);
         call.enqueue(new ResponseEntityCallback<ArrayList<UserLikeEntity>>(gson, resultListener) {
             @Override
             void handleResponseString(ResultListener<ArrayList<UserLikeEntity>> resultListener, String responseString) throws JSONException {

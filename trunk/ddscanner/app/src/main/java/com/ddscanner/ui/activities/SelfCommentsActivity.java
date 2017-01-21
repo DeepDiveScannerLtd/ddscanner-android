@@ -43,6 +43,7 @@ public class SelfCommentsActivity extends AppCompatActivity implements InfoDialo
     private FloatingActionButton leaveReview;
 
     private String commentToDelete;
+    private String userId;
 
     private DDScannerRestClient.ResultListener<ArrayList<SelfCommentEntity>> commentsResultListener = new DDScannerRestClient.ResultListener<ArrayList<SelfCommentEntity>>() {
         @Override
@@ -99,6 +100,7 @@ public class SelfCommentsActivity extends AppCompatActivity implements InfoDialo
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reviews);
+        userId = getIntent().getStringExtra("id");
         findViews();
         getComments();
     }
@@ -122,11 +124,12 @@ public class SelfCommentsActivity extends AppCompatActivity implements InfoDialo
     private void getComments() {
         commentsRc.setVisibility(View.GONE);
         progressView.setVisibility(View.VISIBLE);
-        DDScannerApplication.getInstance().getDdScannerRestClient().getUsersSelfComments(commentsResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient().getUsersSelfComments(commentsResultListener, userId);
     }
 
-    public static void show(Context context) {
+    public static void show(Context context, String userId) {
         Intent intent = new Intent(context, SelfCommentsActivity.class);
+        intent.putExtra("id", userId);
         context.startActivity(intent);
     }
 
