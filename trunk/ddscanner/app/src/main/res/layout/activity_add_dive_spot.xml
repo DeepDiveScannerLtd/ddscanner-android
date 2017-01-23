@@ -180,6 +180,10 @@
 
                 <ImageView style="@style/DividerStyle" />
 
+                <TextView
+                    android:text="@string/select_country_error"
+                    android:id="@+id/error_country"
+                    style="@style/ValidationErrorTextView" />
                 <LinearLayout
                     android:id="@+id/location_layout"
                     android:layout_width="match_parent"
@@ -226,6 +230,7 @@
                 <ImageView style="@style/DividerStyle" />
 
                 <TextView
+                    android:text="@string/depth_required"
                     android:id="@+id/error_depth"
                     style="@style/ValidationErrorTextView" />
 
@@ -457,10 +462,6 @@
                     android:layout_marginRight="20dp"
                     android:orientation="horizontal"
                     android:gravity="center">
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_addds_plus"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -473,6 +474,7 @@
             <ImageView style="@style/DividerStyle" />
 
             <TextView
+                android:text="@string/one_sealife"
                 android:id="@+id/error_sealife"
                 style="@style/ValidationErrorTextView" />
 

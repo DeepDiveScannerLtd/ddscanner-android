@@ -121,6 +121,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements CompoundBu
     private TextView errorObject;
     private TextView errorTranslations;
     private TextView errorVisibility;
+    private TextView errorCountry;
     private TextView minVisibilityHint;
     private TextView maxVisibilityHint;
     private int maxPhotos = 3;
@@ -145,12 +146,13 @@ public class AddDiveSpotActivity extends AppCompatActivity implements CompoundBu
     private boolean isShownMapsPhotos = false;
     private int previousPosition = -1;
 
-    private RequestBody requestIsWorkingHere, requestIsEdit, translations, requestCoverNumber, requestLat, requestLng, requestDepth, requestCurrents, requestLevel, requestObject, requestMinVisibility, requestMaxVisibility, requsetCountryCode;
+    private RequestBody requestIsWorkingHere, requestIsEdit, translations, requestCoverNumber, requestLat, requestLng, requestDepth, requestCurrents, requestLevel, requestObject, requestMinVisibility, requestMaxVisibility, requsetCountryCode = null;
     private List<MultipartBody.Part> sealife = new ArrayList<>();
     private List<MultipartBody.Part> images = new ArrayList<>();
     private List<MultipartBody.Part> mapsList = new ArrayList<>();
     private List<MultipartBody.Part> translationsList = new ArrayList<>();
     private boolean isFromMap;
+    private boolean isCountryChosed = false;
     private ArrayList<String> languages = new ArrayList<>();
     private Translation currentTranslation;
     private Map<String, Translation> languagesMap = new HashMap<>();
@@ -240,6 +242,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements CompoundBu
         mainLayout = (ScrollView) findViewById(R.id.main_layout);
         progressView = (ProgressView) findViewById(R.id.progressBarFull);
         errorDepth = (TextView) findViewById(R.id.error_depth);
+        errorCountry = (TextView) findViewById(R.id.error_country);
         errorLocation = (TextView) findViewById(R.id.error_location);
         errorImages = (TextView) findViewById(R.id.error_images);
         errorSealife = (TextView) findViewById(R.id.error_sealife);
@@ -362,6 +365,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements CompoundBu
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_COUNTRY:
                 if (resultCode == RESULT_OK) {
+                    isCountryChosed = true;
                     countryTitle.setTextColor(ContextCompat.getColor(this, R.color.black_text));
                     BaseIdNamePhotoEntity baseIdNamePhotoEntity = (BaseIdNamePhotoEntity)data.getSerializableExtra("country");
                     countryTitle.setText(baseIdNamePhotoEntity.getName());
@@ -558,6 +562,10 @@ public class AddDiveSpotActivity extends AppCompatActivity implements CompoundBu
         for (Map.Entry<String, TextView> entry : errorsMap.entrySet()) {
             entry.getValue().setVisibility(View.GONE);
         }
+        errorDepth.setText(R.string.depth_required);
+        errorVisibility.setText(R.string.visibility_rquired);
+        minVisibilityHint.setVisibility(View.VISIBLE);
+        maxVisibilityHint.setVisibility(View.VISIBLE);
     }
 
     private void makeErrorsMap() {
@@ -570,6 +578,8 @@ public class AddDiveSpotActivity extends AppCompatActivity implements CompoundBu
         errorsMap.put("diving_skill", errorLevel);
         errorsMap.put("dive_spot_type", errorObject);
         errorsMap.put("currents", errorCurrent);
+        errorsMap.put("", errorVisibility);
+        errorsMap.put("", errorCountry);
     }
 
     private boolean validatefields() {
@@ -600,19 +610,24 @@ public class AddDiveSpotActivity extends AppCompatActivity implements CompoundBu
             errorImages.setVisibility(View.VISIBLE);
         }
 
-        if (sealifeListAddingDiveSpotAdapter != null && sealifeListAddingDiveSpotAdapter.getSealifes() != null && sealifeListAddingDiveSpotAdapter.getSealifes().size() < 1) {
+        if (sealifeListAddingDiveSpotAdapter == null || sealifeListAddingDiveSpotAdapter.getSealifes() == null || sealifeListAddingDiveSpotAdapter.getSealifes().size() < 1) {
             isSomethingWrong = true;
             errorSealife.setVisibility(View.VISIBLE);
         }
 
         if (visibilityMin.getText().toString().isEmpty() && visibilityMax.getText().toString().isEmpty()) {
+            isSomethingWrong = true;
             errorVisibility.setVisibility(View.VISIBLE);
             minVisibilityHint.setVisibility(View.GONE);
             maxVisibilityHint.setVisibility(View.GONE);
         } else {
             if (!visibilityMin.getText().toString().isEmpty() && !visibilityMax.getText().toString().isEmpty()) {
                 if (Integer.parseInt(visibilityMax.getText().toString()) < Integer.parseInt(visibilityMin.getText().toString())) {
-
+                    isSomethingWrong = true;
+                    errorVisibility.setVisibility(View.VISIBLE);
+                    errorVisibility.setText(R.string.error_visivibility_append);
+                    minVisibilityHint.setVisibility(View.GONE);
+                    maxVisibilityHint.setVisibility(View.GONE);
                 }
             } else {
                 if (visibilityMin.getText().toString().isEmpty() || Integer.parseInt(visibilityMin.getText().toString()) < 1 || Integer.parseInt(visibilityMin.getText().toString()) > 100) {
@@ -626,6 +641,28 @@ public class AddDiveSpotActivity extends AppCompatActivity implements CompoundBu
                     errorVisibilityMin.setVisibility(View.VISIBLE);
                     maxVisibilityHint.setVisibility(View.GONE);
                 }
+            }
+        }
+
+        if (diveSpotLocation == null) {
+            isSomethingWrong = true;
+            errorLocation.setVisibility(View.VISIBLE);
+        }
+
+        if (!isCountryChosed) {
+            isSomethingWrong = true;
+            errorCountry.setVisibility(View.VISIBLE);
+        }
+
+        if (depth.getText().toString().isEmpty()) {
+            isSomethingWrong = true;
+            errorDepth.setVisibility(View.VISIBLE);
+        } else {
+
+            if (Integer.parseInt(depth.getText().toString()) < 5 || Integer.parseInt(depth.getText().toString()) > 1092) {
+                isSomethingWrong = true;
+                errorDepth.setText(R.string.depth_vlue);
+                errorDepth.setVisibility(View.VISIBLE);
             }
         }
         return isSomethingWrong;

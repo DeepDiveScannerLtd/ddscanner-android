@@ -557,7 +557,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
             case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_CHECK_IN:
                 if (resultCode == RESULT_OK) {
                     reloadFlags();
-                    checkIn();
                 } else {
                     isClickedCkeckin = false;
                     checkOutUi();
