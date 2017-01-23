@@ -995,7 +995,7 @@ public class DDScannerRestClient {
 
     private Map<String, String> getUserQueryMapRequest() {
         Map<String, String> map = new HashMap<>();
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
             map.put("social", DDScannerApplication.getInstance().getSharedPreferenceHelper().getSn());
             map.put("token", DDScannerApplication.getInstance().getSharedPreferenceHelper().getToken());
             if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getSn().equals("tw")) {
@@ -1005,43 +1005,6 @@ public class DDScannerRestClient {
             return new HashMap<>();
         }
         return map;
-    }
-
-    private RegisterRequest getRegisterRequest() {
-        RegisterRequest registerRequest = new RegisterRequest();
-        if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
-            registerRequest.setAppId(FirebaseInstanceId.getInstance().getId());
-            registerRequest.setpush(FirebaseInstanceId.getInstance().getToken());
-            return registerRequest;
-        }
-
-        registerRequest.setSocial(DDScannerApplication.getInstance().getSharedPreferenceHelper().getSn());
-        registerRequest.setToken(DDScannerApplication.getInstance().getSharedPreferenceHelper().getToken());
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getSn().equals("tw")) {
-            registerRequest.setSecret(DDScannerApplication.getInstance().getSharedPreferenceHelper().getSecret());
-        }
-        registerRequest.setAppId(FirebaseInstanceId.getInstance().getId());
-        registerRequest.setpush(FirebaseInstanceId.getInstance().getToken());
-        return registerRequest;
-    }
-
-    private IdentifyRequest getUserIdentifyData(String lat, String lng) {
-        IdentifyRequest identifyRequest = new IdentifyRequest();
-        identifyRequest.setAppId(FirebaseInstanceId.getInstance().getId());
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
-            identifyRequest.setSocial(DDScannerApplication.getInstance().getSharedPreferenceHelper().getSn());
-            identifyRequest.setToken(DDScannerApplication.getInstance().getSharedPreferenceHelper().getToken());
-            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getSn().equals("tw")) {
-                identifyRequest.setSecret(DDScannerApplication.getInstance().getSharedPreferenceHelper().getSecret());
-            }
-        }
-        identifyRequest.setpush(FirebaseInstanceId.getInstance().getToken());
-        if (lat != null && lng != null) {
-            identifyRequest.setLat(lat);
-            identifyRequest.setLng(lng);
-        }
-        identifyRequest.setType("android");
-        return identifyRequest;
     }
 
     private RegisterRequest generateRegisterRequest(String appId, String socialNetworkName, String token) {

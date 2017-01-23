@@ -22,16 +22,13 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,13 +38,11 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.BaseIdNamePhotoEntity;
-import com.ddscanner.entities.DiveSpotShort;
 import com.ddscanner.entities.FiltersResponseEntity;
 import com.ddscanner.entities.Language;
 import com.ddscanner.entities.SealifeShort;
 import com.ddscanner.entities.Translation;
 import com.ddscanner.events.AddPhotoDoListEvent;
-import com.ddscanner.events.AddTranslationClickedEvent;
 import com.ddscanner.events.ChangeTranslationEvent;
 import com.ddscanner.events.ImageDeletedEvent;
 import com.ddscanner.rest.DDScannerRestClient;
@@ -58,7 +53,6 @@ import com.ddscanner.ui.activities.PickLanguageActivity;
 import com.ddscanner.ui.activities.SearchSealifeActivity;
 import com.ddscanner.ui.adapters.AddPhotoToDsListAdapter;
 import com.ddscanner.ui.adapters.CharacteristicSpinnerItemsAdapter;
-import com.ddscanner.ui.adapters.LanguagesSpinnerAdapter;
 import com.ddscanner.ui.adapters.SealifeListAddingDiveSpotAdapter;
 import com.ddscanner.ui.adapters.TranslationsListAdapter;
 import com.ddscanner.ui.dialogs.AddTranslationDialogFragment;
@@ -80,7 +74,6 @@ import com.rey.material.widget.ProgressView;
 import com.squareup.otto.Subscribe;
 
 import java.io.File;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -117,15 +110,19 @@ public class AddDiveSpotActivity extends AppCompatActivity implements CompoundBu
     private ScrollView mainLayout;
     private ProgressView progressView;
     private MaterialDialog progressDialogUpload;
-    private TextView error_location;
-    private TextView error_depth;
-    private TextView error_sealife;
-    private TextView error_images;
-    private TextView error_visibility_min;
-    private TextView error_visibility_max;
-    private TextView error_current;
-    private TextView error_level;
-    private TextView error_object;
+    private TextView errorLocation;
+    private TextView errorDepth;
+    private TextView errorSealife;
+    private TextView errorImages;
+    private TextView errorVisibilityMin;
+    private TextView errorVisibilityMax;
+    private TextView errorCurrent;
+    private TextView errorLevel;
+    private TextView errorObject;
+    private TextView errorTranslations;
+    private TextView errorVisibility;
+    private TextView minVisibilityHint;
+    private TextView maxVisibilityHint;
     private int maxPhotos = 3;
     private TextView photos;
     private TextView maps;
@@ -158,6 +155,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements CompoundBu
     private Translation currentTranslation;
     private Map<String, Translation> languagesMap = new HashMap<>();
     private String lastCode;
+
 
     private DDScannerRestClient.ResultListener<String> resultListener = new DDScannerRestClient.ResultListener<String>() {
         @Override
@@ -219,6 +217,9 @@ public class AddDiveSpotActivity extends AppCompatActivity implements CompoundBu
         if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == 0) {
             isWorkingLayout.setVisibility(View.VISIBLE);
         }
+        errorVisibility = (TextView) findViewById(R.id.error_visibility);
+        maxVisibilityHint = (TextView) findViewById(R.id.max_visibility_hint);
+        minVisibilityHint = (TextView) findViewById(R.id.min_visibility_hint);
         isWorkingSwitch = (SwitchCompat) findViewById(R.id.switch_button_working);
         isEditSwitch = (SwitchCompat) findViewById(R.id.switch_button_edit);
         isEditSwitch.setOnCheckedChangeListener(this);
@@ -238,15 +239,16 @@ public class AddDiveSpotActivity extends AppCompatActivity implements CompoundBu
         sealifesRc = (RecyclerView) findViewById(R.id.sealifes_rc);
         mainLayout = (ScrollView) findViewById(R.id.main_layout);
         progressView = (ProgressView) findViewById(R.id.progressBarFull);
-        error_depth = (TextView) findViewById(R.id.error_depth);
-        error_location = (TextView) findViewById(R.id.error_location);
-        error_images = (TextView) findViewById(R.id.error_images);
-        error_sealife = (TextView) findViewById(R.id.error_sealife);
-        error_visibility_max = (TextView) findViewById(R.id.error_visibility_max);
-        error_visibility_min = (TextView) findViewById(R.id.error_visibility_min);
-        error_current = (TextView) findViewById(R.id.error_current);
-        error_level = (TextView) findViewById(R.id.error_level);
-        error_object = (TextView) findViewById(R.id.error_object);
+        errorDepth = (TextView) findViewById(R.id.error_depth);
+        errorLocation = (TextView) findViewById(R.id.error_location);
+        errorImages = (TextView) findViewById(R.id.error_images);
+        errorSealife = (TextView) findViewById(R.id.error_sealife);
+        errorVisibilityMax = (TextView) findViewById(R.id.error_visibility_max);
+        errorVisibilityMin = (TextView) findViewById(R.id.error_visibility_min);
+        errorCurrent = (TextView) findViewById(R.id.error_current);
+        errorTranslations = (TextView) findViewById(R.id.error_translations);
+        errorLevel = (TextView) findViewById(R.id.error_level);
+        errorObject = (TextView) findViewById(R.id.error_object);
         visibilityMax = (EditText) findViewById(R.id.maxVisibility);
         visibilityMin = (EditText) findViewById(R.id.minVisibility);
         photos = (TextView) findViewById(R.id.photos);
@@ -442,7 +444,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements CompoundBu
                 startActivityForResult(sealifeIntent, ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_SEALIFE);
                 break;
             case R.id.button_create:
-//                if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
+//                if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
                 createRequestBodyies();
 //                } else {
 //                    Intent loginIntent = new Intent(this, SocialNetworks.class);
@@ -480,6 +482,9 @@ public class AddDiveSpotActivity extends AppCompatActivity implements CompoundBu
 
     private void createRequestBodyies() {
         hideErrorsFields();
+        if (validatefields()) {
+            return;
+        }
         requestDepth = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
                 depth.getText().toString().trim());
         if (diveSpotLocation != null) {
@@ -495,7 +500,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements CompoundBu
             requestIsWorkingHere = Helpers.createRequestBodyForString("false");
             requestIsEdit = Helpers.createRequestBodyForString("false");
         }
-        translations = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), new Gson().toJson(languagesMap.values()));
+        translations = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), new Gson().toJson(translationsListAdapter.getTranslations()));
         requestCoverNumber = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), String.valueOf(1));
         requestObject = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), String.valueOf(Helpers.getDiveSpotTypes().indexOf(objectAppCompatSpinner.getSelectedItem().toString()) + 1));
         requestCurrents = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), String.valueOf(Helpers.getListOfCurrentsTypes().indexOf(currentsAppCompatSpinner.getSelectedItem().toString()) + 1));
@@ -556,15 +561,75 @@ public class AddDiveSpotActivity extends AppCompatActivity implements CompoundBu
     }
 
     private void makeErrorsMap() {
-        errorsMap.put("depth", error_depth);
-        errorsMap.put("location", error_location);
-        errorsMap.put("photos", error_images);
-        errorsMap.put("sealife", error_sealife);
-        errorsMap.put("visibility_min", error_visibility_min);
-        errorsMap.put("visibility_max", error_visibility_max);
-        errorsMap.put("diving_skill", error_level);
-        errorsMap.put("dive_spot_type", error_object);
-        errorsMap.put("currents", error_current);
+        errorsMap.put("depth", errorDepth);
+        errorsMap.put("location", errorLocation);
+        errorsMap.put("photos", errorImages);
+        errorsMap.put("sealife", errorSealife);
+        errorsMap.put("visibility_min", errorVisibilityMin);
+        errorsMap.put("visibility_max", errorVisibilityMax);
+        errorsMap.put("diving_skill", errorLevel);
+        errorsMap.put("dive_spot_type", errorObject);
+        errorsMap.put("currents", errorCurrent);
+    }
+
+    private boolean validatefields() {
+        boolean isSomethingWrong = false;
+
+        if (levelAppCompatSpinner.getSelectedItemPosition() == 0) {
+            isSomethingWrong = true;
+            errorLevel.setVisibility(View.VISIBLE);
+        }
+
+        if (objectAppCompatSpinner.getSelectedItemPosition() == 0) {
+            isSomethingWrong = true;
+            errorObject.setVisibility(View.VISIBLE);
+        }
+
+        if (currentsAppCompatSpinner.getSelectedItemPosition() == 0) {
+            isSomethingWrong = true;
+            errorCurrent.setVisibility(View.VISIBLE);
+        }
+
+        if (translationsListAdapter.getTranslations().size() < 1) {
+            isSomethingWrong = true;
+            errorTranslations.setVisibility(View.VISIBLE);
+        }
+
+        if (photoUris.size() < 1) {
+            isSomethingWrong = true;
+            errorImages.setVisibility(View.VISIBLE);
+        }
+
+        if (sealifeListAddingDiveSpotAdapter != null && sealifeListAddingDiveSpotAdapter.getSealifes() != null && sealifeListAddingDiveSpotAdapter.getSealifes().size() < 1) {
+            isSomethingWrong = true;
+            errorSealife.setVisibility(View.VISIBLE);
+        }
+
+        if (visibilityMin.getText().toString().isEmpty() && visibilityMax.getText().toString().isEmpty()) {
+            errorVisibility.setVisibility(View.VISIBLE);
+            minVisibilityHint.setVisibility(View.GONE);
+            maxVisibilityHint.setVisibility(View.GONE);
+        } else {
+            if (!visibilityMin.getText().toString().isEmpty() && !visibilityMax.getText().toString().isEmpty()) {
+                if (Integer.parseInt(visibilityMax.getText().toString()) < Integer.parseInt(visibilityMin.getText().toString())) {
+
+                }
+            } else {
+                if (visibilityMin.getText().toString().isEmpty() || Integer.parseInt(visibilityMin.getText().toString()) < 1 || Integer.parseInt(visibilityMin.getText().toString()) > 100) {
+                    isSomethingWrong = true;
+                    errorVisibilityMin.setVisibility(View.VISIBLE);
+                    minVisibilityHint.setVisibility(View.GONE);
+                }
+
+                if (visibilityMax.getText().toString().isEmpty() || Integer.parseInt(visibilityMax.getText().toString()) < 1 || Integer.parseInt(visibilityMax.getText().toString()) > 100) {
+                    isSomethingWrong = true;
+                    errorVisibilityMin.setVisibility(View.VISIBLE);
+                    maxVisibilityHint.setVisibility(View.GONE);
+                }
+            }
+        }
+        return isSomethingWrong;
+
     }
 
     @Override

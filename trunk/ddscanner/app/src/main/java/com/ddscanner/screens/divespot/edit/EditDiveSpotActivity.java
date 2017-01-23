@@ -574,7 +574,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements CompoundB
                 startActivityForResult(sealifeIntent, ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_SEALIFE);
                 break;
             case R.id.button_create:
-//                if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
+//                if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
                 createRequestBodyies();
 //                } else {
 //                    Intent loginIntent = new Intent(this, SocialNetworks.class);
@@ -626,7 +626,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements CompoundB
                 requestIsEdit = Helpers.createRequestBodyForString("false");
             }
         }
-        translations = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), new Gson().toJson(languagesMap.values()));
+        translations = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), new Gson().toJson(translationsListAdapter.getTranslations()));
         requestCoverNumber = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), String.valueOf(1));
         requestObject = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), String.valueOf(Helpers.getDiveSpotTypes().indexOf(objectAppCompatSpinner.getSelectedItem().toString()) + 1));
         requestCurrents = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), String.valueOf(Helpers.getListOfCurrentsTypes().indexOf(currentsAppCompatSpinner.getSelectedItem().toString()) + 1));

@@ -148,19 +148,19 @@ public class MainActivity extends BaseAppCompatActivity
         @Override
         public void onSuccess(SignUpResponseEntity result) {
             materialDialog.dismiss();
-            DDScannerApplication.getInstance().getSharedPreferenceHelper().setUserServerId(result.getId());
-            switch (result.getType()) {
-                case 0:
-                    DDScannerApplication.getInstance().getSharedPreferenceHelper().diveCenterLoggedIn(result.getToken());
-                    DDScannerApplication.getInstance().getSharedPreferenceHelper().setActiveUserType(0);
-                    break;
-                case 1:
-                case 2:
-                    DDScannerApplication.getInstance().getSharedPreferenceHelper().userLoggedIn(result.getToken());
-                    DDScannerApplication.getInstance().getSharedPreferenceHelper().setActiveUserType(result.getType());
-                    break;
-            }
-            DDScannerApplication.bus.post(new LoggedInEvent());
+//            DDScannerApplication.getInstance().getSharedPreferenceHelper().setUserServerId(result.getId());
+//            switch (result.getType()) {
+//                case 0:
+//                    DDScannerApplication.getInstance().getSharedPreferenceHelper().diveCenterLoggedIn(result.getToken());
+//                    DDScannerApplication.getInstance().getSharedPreferenceHelper().setActiveUserType(0);
+//                    break;
+//                case 1:
+//                case 2:
+//                    DDScannerApplication.getInstance().getSharedPreferenceHelper().userLoggedIn(result.getToken());
+//                    DDScannerApplication.getInstance().getSharedPreferenceHelper().setActiveUserType(result.getType());
+//                    break;
+//            }
+//            DDScannerApplication.bus.post(new LoggedInEvent());
         }
 
         @Override
@@ -202,7 +202,7 @@ public class MainActivity extends BaseAppCompatActivity
 //            Log.i(TAG, "internetConnectionClosed 2");
 //            InternetClosedActivity.show(this);
 //        }
-        loggedInDuringLastOnStart = DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn();
+        loggedInDuringLastOnStart = DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn();
     }
 
     private void startActivity() {
@@ -385,7 +385,7 @@ public class MainActivity extends BaseAppCompatActivity
                     public void onAnimationEnd(Animator animation) {
                         super.onAnimationEnd(animation);
                         menuItemsLayout.setVisibility(View.GONE);
-                        if (mainViewPager.getCurrentItem() == 2 && DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
+                        if (mainViewPager.getCurrentItem() == 2 && DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
                             changeVisibilityChangeAccountLayout(View.VISIBLE);
                         }
                     }
@@ -451,40 +451,20 @@ public class MainActivity extends BaseAppCompatActivity
                     DDScannerApplication.bus.post(new LoadUserProfileInfoEvent());
                 }
                 if (resultCode == RESULT_CODE_PROFILE_LOGOUT) {
-                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logoutUser();
-                    if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsDcLoggedIn()) {
-                        DDScannerApplication.getInstance().getSharedPreferenceHelper().setActiveUserType(0);
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().removeUserFromList(data.getStringExtra("id"));
+                    if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
                         mainViewPagerAdapter.notifyDataSetChanged();
                         mainViewPager.destroyDrawingCache();
                         setupTabLayout();
-                        DDScannerApplication.bus.post(new LoadUserProfileInfoEvent());
                     } else {
-                        DDScannerApplication.getInstance().getSharedPreferenceHelper().setActiveUserType(1);
                         mainViewPagerAdapter.onLoggedOut();
+                        changeVisibilityChangeAccountLayout(View.GONE);
                     }
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_SHOW_INSTRUCTORS_ACTIVITY:
                 if (resultCode == RESULT_OK) {
                     DDScannerApplication.getInstance().getDdScannerRestClient().postInstructorsSee(instructorsResultListene, data.getStringArrayListExtra("ids"));
-                }
-                break;
-            case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_SHOW_EDIT_DC_PROFILE_ACTIVITY:
-                if (resultCode == RESULT_OK) {
-                    DDScannerApplication.bus.post(new LoadUserProfileInfoEvent());
-                }
-                if (resultCode == RESULT_CODE_PROFILE_LOGOUT) {
-                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logoutDiveCenter();
-                    if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserLoggedIn()) {
-                        DDScannerApplication.getInstance().getSharedPreferenceHelper().setActiveUserType(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUser().getType());
-                        mainViewPagerAdapter.notifyDataSetChanged();
-                        mainViewPager.destroyDrawingCache();
-                        setupTabLayout();
-                        DDScannerApplication.bus.post(new LoadUserProfileInfoEvent());
-                    } else {
-                        DDScannerApplication.getInstance().getSharedPreferenceHelper().setActiveUserType(1);
-                        mainViewPagerAdapter.onLoggedOut();
-                    }
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_LOGIN:
@@ -546,10 +526,10 @@ public class MainActivity extends BaseAppCompatActivity
         super.onStart();
         Log.i(TAG, "onStart");
         DDScannerApplication.bus.register(this);
-        if (loggedInDuringLastOnStart != DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
+        if (loggedInDuringLastOnStart != DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
             mainViewPagerAdapter.notifyDataSetChanged();
             setupTabLayout();
-            loggedInDuringLastOnStart = DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn();
+            loggedInDuringLastOnStart = DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn();
         }
     }
 
@@ -577,7 +557,7 @@ public class MainActivity extends BaseAppCompatActivity
         if (!Helpers.hasConnection(this)) {
             DDScannerApplication.showErrorActivity(this);
         }
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
             mainViewPagerAdapter.onLoggedIn();
         } else {
             mainViewPagerAdapter.onLoggedOut();
@@ -768,7 +748,7 @@ public class MainActivity extends BaseAppCompatActivity
 
     @Subscribe
     public void openAddDiveSpotActivity(OpenAddDiveSpotActivity event) {
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
             AddDiveSpotActivity.showForResult(this, Constants.MAIN_ACTIVITY_ACTVITY_REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY, true);
         } else {
             isTryToOpenAddDiveSpotActivity = true;
@@ -796,11 +776,7 @@ public class MainActivity extends BaseAppCompatActivity
 
     @Subscribe
     public void changeActiveAccount(ChangeAccountEvent event) {
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == 0) {
-            DDScannerApplication.getInstance().getSharedPreferenceHelper().setActiveUserType(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUser().getType());
-        } else {
-            DDScannerApplication.getInstance().getSharedPreferenceHelper().setActiveUserType(0);
-        }
+        DDScannerApplication.getInstance().getSharedPreferenceHelper().changeActiveUser(event.getId());
         mainViewPagerAdapter.notifyDataSetChanged();
         mainViewPager.destroyDrawingCache();
         setupTabLayout();

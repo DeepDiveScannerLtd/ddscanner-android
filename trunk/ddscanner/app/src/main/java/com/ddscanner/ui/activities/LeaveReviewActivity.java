@@ -170,7 +170,7 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements BaseAp
     }
 
     private void sendReview() {
-        if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
+        if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
             LoginActivity.showForResult(LeaveReviewActivity.this, ActivitiesRequestCodes.REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_LOGIN);
             return;
         }
@@ -199,7 +199,7 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements BaseAp
             requestComment = RequestBody.create(MediaType.parse("multipart/form-data"),
                     text.getText().toString().trim());
         }
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
             requestSocial = RequestBody.create(MediaType.parse("multipart/form-data"),
                     DDScannerApplication.getInstance().getSharedPreferenceHelper().getSn());
             requessToken = RequestBody.create(MediaType.parse("multipart/form-data"),

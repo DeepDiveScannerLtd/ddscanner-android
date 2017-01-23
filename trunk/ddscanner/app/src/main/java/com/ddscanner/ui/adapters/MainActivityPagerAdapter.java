@@ -47,7 +47,7 @@ public class MainActivityPagerAdapter extends FragmentStatePagerAdapter implemen
 
     @Override
     public Fragment getItem(int position) {
-        Log.i(TAG, "getItem position = " + position + " SharedPreferenceHelper.isUserLoggedIn() = " + DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn());
+        Log.i(TAG, "getItem position = " + position + " SharedPreferenceHelper.getIsUserSignedIn() = " + DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn());
         switch (position) {
             case 0:
                 return mapListFragment;

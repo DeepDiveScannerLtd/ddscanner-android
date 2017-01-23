@@ -83,7 +83,7 @@ public class UserProfileFragment extends Fragment {
 
     public void showComments(View view) {
         if (binding.getUserProfileViewModel().getUser().getCounters().getCommentsCount() > 0) {
-            SelfCommentsActivity.show(getContext());
+            SelfCommentsActivity.show(getContext(), binding.getUserProfileViewModel().getUser().getId());
         }
     }
 

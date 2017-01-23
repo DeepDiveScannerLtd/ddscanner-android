@@ -65,7 +65,7 @@ public class SplashActivity extends BaseAppCompatActivity implements InfoDialogF
         loginButton.setOnClickListener(this);
         signUpButton.setOnClickListener(this);
 
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
             skip.setVisibility(View.GONE);
             loginButton.setVisibility(View.GONE);
             signUpButton.setVisibility(View.GONE);

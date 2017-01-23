@@ -22,6 +22,7 @@ public class ChangeAccountBottomDialog extends BottomSheetDialogFragment impleme
 
     private RecyclerView accountsList;
     private TextView addAccountButton;
+    private static final int MAX_ACCOUNTS = 5;
 
     private BottomSheetBehavior.BottomSheetCallback bottomSheetBehaviorCallback = new BottomSheetBehavior.BottomSheetCallback() {
 
@@ -56,16 +57,11 @@ public class ChangeAccountBottomDialog extends BottomSheetDialogFragment impleme
     }
 
     private void setupRecyclerView() {
-        ArrayList<Object> users = new ArrayList<>();
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserLoggedIn()) {
-            users.add(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUser());
+        accountsList.setLayoutManager(new LinearLayoutManager(getContext()));
+        accountsList.setAdapter(new AccountsListAdapter(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUsersList()));
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getUsersList() != null || DDScannerApplication.getInstance().getSharedPreferenceHelper().getUsersList().size() > MAX_ACCOUNTS - 1) {
+            addAccountButton.setVisibility(View.GONE);
         }
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsDcLoggedIn()) {
-            users.add(DDScannerApplication.getInstance().getSharedPreferenceHelper().getLoggedDiveCenter());
-        }
-        LinearLayoutManager linearLayoutManager= new LinearLayoutManager(getContext());
-        accountsList.setLayoutManager(linearLayoutManager);
-        accountsList.setAdapter(new AccountsListAdapter(users));
     }
 
     @Override

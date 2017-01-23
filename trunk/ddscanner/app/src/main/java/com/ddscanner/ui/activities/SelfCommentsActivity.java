@@ -156,7 +156,7 @@ public class SelfCommentsActivity extends AppCompatActivity implements InfoDialo
                 if (resultCode == RESULT_OK) {
                     getComments();
                 }
-                if (resultCode == RESULT_CANCELED && !DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
+                if (resultCode == RESULT_CANCELED && !DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
                     finish();
                 }
 

@@ -25,6 +25,7 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.entities.BaseUser;
 import com.ddscanner.entities.SignInType;
 import com.ddscanner.entities.SignUpResponseEntity;
 import com.ddscanner.rest.DDScannerRestClient;
@@ -84,18 +85,12 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         public void onSuccess(SignUpResponseEntity result) {
             materialDialog.dismiss();
             Log.i(TAG, "onSuccess: ");
-            switch (result.getType()) {
-                case 0:
-                    DDScannerApplication.getInstance().getSharedPreferenceHelper().diveCenterLoggedIn(result.getToken());
-                    DDScannerApplication.getInstance().getSharedPreferenceHelper().setActiveUserType(0);
-                    break;
-                case 1:
-                case 2:
-                    DDScannerApplication.getInstance().getSharedPreferenceHelper().userLoggedIn(result.getToken());
-                    DDScannerApplication.getInstance().getSharedPreferenceHelper().setActiveUserType(result.getType());
-                    break;
-            }
-
+            BaseUser baseUser = new BaseUser();
+            baseUser.setActive(true);
+            baseUser.setType(result.getType());
+            baseUser.setToken(result.getToken());
+            baseUser.setId(result.getId());
+            DDScannerApplication.getInstance().getSharedPreferenceHelper().addUserToList(baseUser);
             setResult(RESULT_OK);
             finish();
         }

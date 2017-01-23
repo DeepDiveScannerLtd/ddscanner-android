@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.entities.BaseUser;
 import com.ddscanner.entities.DiveCenterProfile;
 import com.ddscanner.entities.User;
 import com.ddscanner.events.ChangeAccountEvent;
@@ -19,33 +20,20 @@ import java.util.ArrayList;
 
 public class AccountsListAdapter extends RecyclerView.Adapter<AccountsListAdapter.AccountsListViewHolder> {
 
-    private ArrayList<Object> users = new ArrayList<>();
+    private ArrayList<BaseUser> users = new ArrayList<>();
     private ArrayList<Integer> types = new ArrayList<>();
     private int activeUserType;
 
-    public AccountsListAdapter(ArrayList<Object> users) {
+    public AccountsListAdapter(ArrayList<BaseUser> users) {
         this.users = users;
     }
 
     @Override
     public void onBindViewHolder(AccountsListViewHolder holder, int position) {
-        if (users.get(position) instanceof User) {
-            User user = (User) users.get(position);
-            types.add(user.getType());
-            holder.userType.setText(Helpers.getUserType(user.getType()));
-            holder.userName.setText(user.getName());
-            if (user.getType() == DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType()) {
-                holder.icCheck.setVisibility(View.VISIBLE);
-            }
-        } else {
-            DiveCenterProfile user = (DiveCenterProfile) users.get(position);
-            holder.userType.setText(Helpers.getUserType(user.getType()));
-            holder.userName.setText(user.getName());
-            types.add(user.getType());
-            if (user.getType() == DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType()) {
-                holder.icCheck.setVisibility(View.VISIBLE);
-            }
+        if (users.get(position).isActive()) {
+            holder.icCheck.setVisibility(View.VISIBLE);
         }
+        holder.userName.setText(users.get(position).getName());
     }
 
     @Override
@@ -75,8 +63,8 @@ public class AccountsListAdapter extends RecyclerView.Adapter<AccountsListAdapte
 
         @Override
         public void onClick(View view) {
-            if (types.get(getAdapterPosition()) != DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType()) {
-                DDScannerApplication.bus.post(new ChangeAccountEvent());
+            if (!users.get(getAdapterPosition()).isActive()) {
+                DDScannerApplication.bus.post(new ChangeAccountEvent(users.get(getAdapterPosition()).getId()));
             }
         }
     }

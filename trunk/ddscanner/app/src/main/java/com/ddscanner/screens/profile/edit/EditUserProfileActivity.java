@@ -269,7 +269,9 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
                 finish();
                 return true;
             case R.id.logout:
-                setResult(RESULT_CODE_PROFILE_LOGOUT);
+                Intent intent = new Intent();
+                intent.putExtra("id", binding.getProfileViewModel().getUser().getId());
+                setResult(RESULT_CODE_PROFILE_LOGOUT, intent);
                 finish();
                 return true;
         }

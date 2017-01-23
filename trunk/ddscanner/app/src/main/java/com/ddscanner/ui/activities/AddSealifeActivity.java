@@ -299,7 +299,7 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
                 distribution.getText().toString());
         requestHabitat = RequestBody.create(MediaType.parse(MULTIPART_TYPE_TEXT),
                 habitat.getText().toString());
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
             requestSocial = RequestBody.create(MediaType.parse(MULTIPART_TYPE_TEXT),
                     DDScannerApplication.getInstance().getSharedPreferenceHelper().getSn());
             requestToken = RequestBody.create(MediaType.parse(MULTIPART_TYPE_TEXT),

@@ -434,7 +434,9 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
                 DialogHelpers.showDialogAfterChanging(R.string.dialog_leave_title, R.string.dialog_leave_review_message, this, this);
                 return true;
             case R.id.logout:
-                setResult(RESULT_CODE_PROFILE_LOGOUT);
+                Intent intent = new Intent();
+                intent.putExtra("id", String.valueOf(binding.getDcViewModel().getDiveCenterProfile().getId()));
+                setResult(RESULT_CODE_PROFILE_LOGOUT, intent);
                 finish();
                 break;
         }

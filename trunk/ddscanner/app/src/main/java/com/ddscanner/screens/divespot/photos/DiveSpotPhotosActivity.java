@@ -279,7 +279,7 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
     }
 
     private void addPhotosToDiveSpot() {
-        if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
+        if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
             LoginActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_LOGIN);
         } else {
             Intent intent = new Intent();

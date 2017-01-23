@@ -141,7 +141,7 @@ public class LocationHelper implements LocationListener {
     }
 
     private void sendUpdateLocationRequest(LatLng latLng) {
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
             DDScannerApplication.getInstance().getDdScannerRestClient().postUpdateUserLocation(updateLocationResultListener, new UpdateLocationRequest(FirebaseInstanceId.getInstance().getId(), String.valueOf(latLng.latitude), String.valueOf(latLng.longitude), 2));
         }
     }

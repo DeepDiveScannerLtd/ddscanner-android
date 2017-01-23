@@ -209,8 +209,8 @@
     <string name="terms_title_6">6. Site Terms of Use Modifications</string>
     <string name="terms_text_6">Deep Dive Scanner may revise these terms of use for its app at any time without notice. By using this app you are agreeing to be bound by the then current version of these Terms and Conditions of Use.</string>
     <string name="terms">Terms and Conditions of Use</string>
-    <string name="min">Min</string>
-    <string name="max">Max</string>
+    <string name="min">Min visibility</string>
+    <string name="max">Max visibility</string>
     <string name="guide_to_dds">Guide to DDScanner</string>
     <string name="terms_of_use">Terms of Use</string>
     <string name="privacy_policy">Privacy Policy</string>
@@ -422,4 +422,14 @@
     <string name="name_error_text_long">Name shouldn\'t be more than 128 characters</string>
     <string name="description_error_text_short">Description should be at least 32 characters</string>
     <string name="description_error_text_long">Description shouldn\'t be more than 2048 characters</string>
+    <string name="level_is_required">Level is required</string>
+    <string name="object_is_required">Object is required</string>
+    <string name="current_is_required">Current is required</string>
+    <string name="pick_the_dive_spot_location">Pick the dive spot location</string>
+    <string name="at_least_one_photo_should_be_added">At least one photo should be added</string>
+    <string name="add_nme_and_description">Add dive spot name and description</string>
+    <string name="incorrect_data">Incorrect data</string>
+    <string name="max_100">Max 100</string>
+    <string name="min_1">Min 1</string>
+    <string name="visibility_rquired">Visibility is required</string>
 </resources>

@@ -345,7 +345,7 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
                 DiveSpotDetailsActivity.show(getActivity(), String.valueOf(lastDiveSpotId), EventsTracker.SpotViewSource.FROM_MAP);
                 break;
             case R.id.add_ds_fab:
-//                if (SharedPreferenceHelper.isUserLoggedIn()) {
+//                if (SharedPreferenceHelper.getIsUserSignedIn()) {
 //                    AddDiveSpotActivity.showForResult(getActivity());
 //                } else {
 //                    DDScannerApplication.bus.post(new OpenAddDsActivityAfterLogin());

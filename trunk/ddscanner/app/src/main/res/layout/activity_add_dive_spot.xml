@@ -22,7 +22,7 @@
         android:id="@+id/main_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -80,6 +80,7 @@
                 android:src="@drawable/divider" />
 
             <TextView
+                android:text="@string/at_least_one_photo_should_be_added"
                 android:id="@+id/error_images"
                 style="@style/ValidationErrorTextView" />
 
@@ -138,6 +139,11 @@
 
             </LinearLayout>
 
+            <TextView
+                android:text="@string/add_nme_and_description"
+                android:id="@+id/error_translations"
+                style="@style/ValidationErrorTextView" />
+
             <ImageView
                 style="@style/DividerStyleFull" />
 
@@ -195,6 +201,7 @@
                 <ImageView style="@style/DividerStyle" />
 
                 <TextView
+                    android:text="@string/pick_the_dive_spot_location"
                     android:id="@+id/error_location"
                     style="@style/ValidationErrorTextView" />
 
@@ -213,7 +220,7 @@
                         style="@style/AddDsCharTitleStyle"
                         android:hint="@string/max_depth_meters"
                         android:inputType="number"
-                        android:maxLength="5" />
+                        android:maxLength="3" />
                 </LinearLayout>
 
                 <ImageView style="@style/DividerStyle" />
@@ -232,51 +239,91 @@
                         style="@style/CharacteristicsDiveSpotListIcons"
                         android:src="@drawable/ic_addds_visibility" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="56dp"
-                        android:gravity="center"
-                        android:text="@string/details_visibility"
-                        android:textColor="#B2B2B2"
-                        android:fontFamily="sans-serif-medium"
-                        android:textSize="16sp" />
+                    <android.support.percent.PercentRelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
-                    <EditText
-                        android:id="@+id/minVisibility"
-                        style="@style/AddDsCharTitleStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="56dp"
-                        android:layout_marginLeft="15dp"
-                        android:gravity="center"
-                        android:hint="@string/min"
-                        android:inputType="number"
-                        android:maxLength="5"
-                        android:paddingLeft="20dp"
-                        android:paddingRight="20dp" />
+                        <LinearLayout
+                            android:id="@+id/min_visibility_layout"
+                            app:layout_widthPercent="50%"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
 
-                    <EditText
-                        android:id="@+id/maxVisibility"
-                        style="@style/AddDsCharTitleStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="56dp"
-                        android:layout_marginLeft="15dp"
-                        android:gravity="center"
-                        android:hint="@string/max"
-                        android:inputType="number"
-                        android:maxLength="5"
-                        android:paddingLeft="20dp"
-                        android:paddingRight="20dp" />
+                            <EditText
+                                android:id="@+id/minVisibility"
+                                style="@style/AddDsCharTitleStyle"
+                                android:layout_width="match_parent"
+                                android:layout_marginRight="20dp"
+                                android:layout_height="56dp"
+                                android:hint="@string/min"
+                                android:inputType="number"
+                                android:maxLength="5" />
+
+                            <ImageView
+                                style="@style/DividerStyleFull" />
+
+                            <TextView
+                                android:id="@+id/min_visibility_hint"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="#a9a9a9"
+                                android:textSize="12sp"
+                                android:text="@string/min_1"/>
+
+                            <TextView
+                                android:text="@string/incorrect_data"
+                                android:layout_marginLeft="0dp"
+                                android:id="@+id/error_visibility_min"
+                                style="@style/ValidationErrorTextView" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_toRightOf="@+id/min_visibility_layout"
+                            android:id="@+id/max_visibility_layout"
+                            app:layout_widthPercent="50%"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                                <EditText
+                                    android:id="@+id/maxVisibility"
+                                    style="@style/AddDsCharTitleStyle"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="56dp"
+                                    android:layout_marginLeft="15dp"
+                                    android:hint="@string/max"
+                                    android:inputType="number"
+                                    android:maxLength="5" />
+
+                                <ImageView
+                                    android:layout_marginLeft="15dp"
+                                    style="@style/DividerStyleFull" />
+
+
+                            <TextView
+                                android:id="@+id/max_visibility_hint"
+                                android:layout_marginLeft="15dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="#a9a9a9"
+                                android:textSize="12sp"
+                                android:text="@string/max_100"/>
+
+                            <TextView
+                                android:text="@string/incorrect_data"
+                                android:layout_marginLeft="15dp"
+                                android:id="@+id/error_visibility_max"
+                                style="@style/ValidationErrorTextView" />
+
+                        </LinearLayout>
+
+                    </android.support.percent.PercentRelativeLayout>
 
                 </LinearLayout>
 
-                <ImageView style="@style/DividerStyle" />
-
                 <TextView
-                    android:id="@+id/error_visibility_min"
-                    style="@style/ValidationErrorTextView" />
-
-                <TextView
-                    android:id="@+id/error_visibility_max"
+                    android:text="@string/visibility_rquired"
+                    android:id="@+id/error_visibility"
                     style="@style/ValidationErrorTextView" />
 
                 <LinearLayout
@@ -302,6 +349,7 @@
                 <ImageView style="@style/DividerStyle" />
 
                 <TextView
+                    android:text="@string/current_is_required"
                     android:id="@+id/error_current"
                     style="@style/ValidationErrorTextView" />
 
@@ -328,6 +376,7 @@
                 <ImageView style="@style/DividerStyle" />
 
                 <TextView
+                    android:text="@string/level_is_required"
                     android:id="@+id/error_level"
                     style="@style/ValidationErrorTextView" />
 
@@ -352,6 +401,7 @@
                 </LinearLayout>
 
                 <TextView
+                    android:text="@string/object_is_required"
                     android:id="@+id/error_object"
                     style="@style/ValidationErrorTextView" />
 

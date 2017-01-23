@@ -17,6 +17,7 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.databinding.ViewDivecenterProfileBinding;
+import com.ddscanner.entities.BaseUser;
 import com.ddscanner.entities.DiveCenterProfile;
 import com.ddscanner.events.ChangePageOfMainViewPagerEvent;
 import com.ddscanner.events.LoadUserProfileInfoEvent;
@@ -47,8 +48,10 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
                     break;
                 case 0:
                     diveCenterProfile = result;
-                    DDScannerApplication.getInstance().getSharedPreferenceHelper().setUserServerId(String.valueOf(diveCenterProfile.getId()));
-                    DDScannerApplication.getInstance().getSharedPreferenceHelper().saveDiveCenter(diveCenterProfile);
+                    BaseUser baseUser = DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUser();
+                    baseUser.setName(diveCenterProfile.getName());
+                    baseUser.setPhoto(diveCenterProfile.getPhoto());
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().addUserToList(baseUser);
                     binding.setDiveCenterViewModel(new DiveCenterProfileFragmentViewModel(diveCenterProfile));
                     if (result.getWorkingCount() != null && result.getWorkingCount() > 0) {
                         isHaveSpots = true;
@@ -165,7 +168,7 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
     }
 
     public void editProfileButtonClicked(View view) {
-        EditDiveCenterProfileActivity.showForResult(getActivity(), new Gson().toJson(diveCenterProfile), ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_SHOW_EDIT_DC_PROFILE_ACTIVITY, isHaveSpots);
+        EditDiveCenterProfileActivity.showForResult(getActivity(), new Gson().toJson(diveCenterProfile), ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_SHOW_EDIT_PROFILE_ACTIVITY, isHaveSpots);
     }
 
     public void showInstructors(View view) {

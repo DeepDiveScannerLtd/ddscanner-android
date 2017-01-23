@@ -481,7 +481,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void sendReportRequest(String type, String description) {
-        if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
+        if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
             LoginActivity.showForResult(ReviewsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_LEAVE_REPORT);
             return;
         }
@@ -489,7 +489,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void likeComment(String id, final int position) {
-        if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
+        if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
             LoginActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_LIKE_REVIEW);
             return;
         }
@@ -497,7 +497,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void dislikeComment(String id, final int position) {
-        if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().isUserLoggedIn()) {
+        if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
             LoginActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_DISLIKE_REVIEW);
             return;
         }

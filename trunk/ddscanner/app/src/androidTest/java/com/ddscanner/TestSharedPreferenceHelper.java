@@ -5,7 +5,7 @@ import com.ddscanner.utils.SharedPreferenceHelper;
 
 public class TestSharedPreferenceHelper extends SharedPreferenceHelper {
     @Override
-    public boolean isUserLoggedIn() {
+    public boolean getIsUserSignedIn() {
         return true;
     }
 }
