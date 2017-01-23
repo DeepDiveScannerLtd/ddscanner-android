@@ -466,8 +466,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/add_sea_life"
-                        android:textColor="#a9a9a9"
-                        android:layout_marginLeft="7dp"/>
+                        android:textColor="#a9a9a9" />
                 </LinearLayout>
             </RelativeLayout>
 

@@ -358,4 +358,20 @@
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">@color/black_text</item>
     </style>
+
+    <style name="LeaveReviewBlockName">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">#a3a3a3</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="ContentBlockStyle">
+        <item name="android:background">@color/white</item>
+        <item name="android:paddingLeft">20dp</item>
+        <item name="android:paddingRight">20dp</item>
+        <item name="android:paddingBottom">20dp</item>
+        <item name="android:paddingTop">16dp</item>
+    </style>
+
 </resources>

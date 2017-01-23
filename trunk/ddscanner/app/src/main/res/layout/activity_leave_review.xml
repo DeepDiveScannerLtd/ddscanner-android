@@ -1,106 +1,149 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#f6f6f6">
+    android:background="#f6f6f6"
+    android:orientation="vertical">
+
     <include layout="@layout/view_toolbar" />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-    <RelativeLayout
-        android:id="@+id/add_photo_layout"
-        android:background="@color/white"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <android.support.v7.widget.RecyclerView
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="15dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
-            android:id="@+id/photos_rc"/>
 
-    </RelativeLayout>
-    <FrameLayout
-        android:layout_marginTop="@dimen/base_block_margin_top"
-        android:id="@+id/header"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="@color/white"
-        android:layout_marginBottom="@dimen/base_block_margin_top">
-        <RatingBar
-            android:id="@+id/rating_bar"
-            style="@style/CustomRatingBar"
-            android:rating="1"
-            android:layout_width="wrap_content"
-            android:layout_gravity="center"
-            android:layout_height="29dp"
-
-            android:stepSize="1.0"
-            android:numStars="5"/>
-    </FrameLayout>
-    <TextView
-        android:id="@+id/comment_error"
-        android:layout_marginLeft="15dp"
-        style="@style/ValidationErrorTextView"
-        android:layout_marginBottom="5dp"/>
-    <LinearLayout
-        android:id="@+id/message_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white"
-        android:layout_marginBottom="5dp">
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <TextView
-                android:visibility="gone"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="5dp"
-                android:layout_toLeftOf="@+id/left_text"
-                android:id="@+id/left_number"
-                android:gravity="center"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#9f9f9f"
-                tools:text="250"/>
-        <EditText
-            android:textSize="14sp"
-            android:gravity="top"
-            android:layout_below="@id/left_number"
-            android:layout_gravity="center"
-            android:cursorVisible="true"
-            android:id="@+id/review_text"
-            android:layout_width="match_parent"
-            android:minHeight="200dp"
             android:layout_height="match_parent"
-            android:hint="@string/write_a_review"
-            android:layout_marginTop="13dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:textColorHint="#9f9f9f"
-            android:background="@android:color/transparent"
-            android:scrollbars="vertical"
-            />
-        <TextView
-            android:visibility="gone"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="10dp"
-            android:id="@+id/left_text"
-            android:layout_alignParentRight="true"
-            android:gravity="right"
-            android:textColor="#9f9f9f"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/symbols_left"/>
-        </RelativeLayout>
-    </LinearLayout>
-    </LinearLayout>
+            android:orientation="vertical">
+
+            <LinearLayout
+                style="@style/ContentBlockStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/LeaveReviewBlockName"
+                    android:text="@string/rate_spot" />
+
+                <RatingBar
+                    android:id="@+id/rating_bar"
+                    style="@style/ModalRatingBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_marginTop="10dp"
+                    android:numStars="5"
+                    android:rating="1"
+                    android:stepSize="1.0" />
+            </LinearLayout>
+
+            <ImageView style="@style/DividerStyleFull" />
+
+            <ImageView
+                style="@style/DividerStyleFull"
+                android:layout_marginTop="@dimen/base_block_margin_top" />
+
+            <LinearLayout
+                style="@style/ContentBlockStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/LeaveReviewBlockName"
+                    android:text="@string/share_a_few_words" />
+
+                <EditText
+                    android:id="@+id/review_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="7dp"
+                    android:background="@android:color/transparent"
+                    android:cursorVisible="true"
+                    android:gravity="top"
+                    android:hint="@string/write_a_review"
+                    android:minHeight="80dp"
+                    android:textColorHint="#bbbbbb"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <ImageView style="@style/DividerStyleFull" />
+
+            <TextView
+                android:id="@+id/comment_error"
+                style="@style/ValidationErrorTextView"
+                android:layout_marginLeft="20dp"
+                android:text="@string/write_30_characters" />
+
+            <ImageView
+                style="@style/DividerStyleFull"
+                android:layout_marginTop="@dimen/base_block_margin_top" />
+
+            <LinearLayout
+                style="@style/ContentBlockStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/LeaveReviewBlockName"
+                    android:text="@string/add_sealife_review" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:layout_marginTop="12dp"
+                    android:id="@+id/sealife_list"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <LinearLayout
+                    android:id="@+id/btn_add_sealife"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="12dp"
+                    android:background="@drawable/gray_rectangle"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/add_sea_life"
+                        android:textColor="#a9a9a9" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <ImageView
+                style="@style/DividerStyleFull" />
+
+            <ImageView
+                android:layout_marginTop="@dimen/base_block_margin_top"
+                style="@style/DividerStyleFull" />
+
+            <LinearLayout
+                android:id="@+id/add_photo_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/ContentBlockStyle"
+                android:orientation="vertical">
+
+                <TextView
+                    android:text="@string/have_a_photo"
+                    style="@style/LeaveReviewBlockName" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/photos_rc"
+                    android:layout_marginTop="12dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+            <ImageView
+                style="@style/DividerStyleFull"
+                android:layout_marginBottom="@dimen/base_block_margin_top"/>
+
+        </LinearLayout>
     </ScrollView>
 </LinearLayout>

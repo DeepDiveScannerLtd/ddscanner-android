@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RatingBar;
@@ -134,7 +135,6 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements BaseAp
         } else {
             ratingBar.setRating(1);
         }
-        symbolNumberLeft = (TextView) findViewById(R.id.left_number);
         photosRecyclerView = (RecyclerView) findViewById(R.id.photos_rc);
         errorText = (TextView) findViewById(R.id.comment_error);
         errorsMap.put("review", errorText);
@@ -183,12 +183,8 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements BaseAp
                     requestFile);
             images.add(part);
         }
-        if (text.getText().toString().trim().isEmpty() && images.size() != 0) {
-            Toast.makeText(LeaveReviewActivity.this, R.string.please_write_a_review, Toast.LENGTH_SHORT).show();
-            return;
-        }
         if (text.getText().toString().trim().length() < 30) {
-            Toast.makeText(LeaveReviewActivity.this, R.string.review_error, Toast.LENGTH_SHORT).show();
+            errorText.setVisibility(View.VISIBLE);
             return;
         }
         materialDialog.show();
@@ -198,12 +194,6 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements BaseAp
         if (!text.getText().toString().trim().isEmpty()) {
             requestComment = RequestBody.create(MediaType.parse("multipart/form-data"),
                     text.getText().toString().trim());
-        }
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
-            requestSocial = RequestBody.create(MediaType.parse("multipart/form-data"),
-                    DDScannerApplication.getInstance().getSharedPreferenceHelper().getSn());
-            requessToken = RequestBody.create(MediaType.parse("multipart/form-data"),
-                    DDScannerApplication.getInstance().getSharedPreferenceHelper().getToken());
         }
         DDScannerApplication.getInstance().getDdScannerRestClient().postLeaveCommentForDiveSpot(commentAddedResultListener, images, requestId, requestRating, requestComment);
     }

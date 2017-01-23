@@ -148,29 +148,11 @@ public class EditCommentActivity extends BaseAppCompatActivity implements InfoDi
         text = (EditText) findViewById(R.id.review_text);
         text.setTag("comment");
         ratingBar = (RatingBar) findViewById(R.id.rating_bar);
-        symbolNumberLeft = (TextView) findViewById(R.id.left_number);
+//        symbolNumberLeft = (TextView) findViewById(R.id.left_number);
         photosRecyclerView = (RecyclerView) findViewById(R.id.photos_rc);
         errorText = (TextView) findViewById(R.id.comment_error);
         errorsMap.put("comment", errorText);
-        text.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (COMMENT_MAX_LENGTH - text.length() < 10) {
-                    symbolNumberLeft.setTextColor(ContextCompat.getColor(EditCommentActivity.this, R.color.tw__composer_red));
-                } else {
-                    symbolNumberLeft.setTextColor(Color.parseColor("#9f9f9f"));
-                }
-                symbolNumberLeft.setText(String.valueOf(COMMENT_MAX_LENGTH - text.length()));
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-        });
         setUi();
     }
 
