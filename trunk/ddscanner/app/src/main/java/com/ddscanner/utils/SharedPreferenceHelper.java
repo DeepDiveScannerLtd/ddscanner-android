@@ -237,8 +237,10 @@ public class SharedPreferenceHelper {
     }
 
     public String getUserServerId() {
-        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
-        return prefs.getString(USER_SERVER_ID, "");
+        if (getIsUserSignedIn()) {
+            return getActiveUser().getId();
+        }
+        return "";
     }
 
     public void setLastShowingNotificationTime(long time) {
