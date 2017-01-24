@@ -212,7 +212,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     private DDScannerRestClient.ResultListener<Void> deleteCommentResultListener = new DDScannerRestClient.ResultListener<Void>() {
         @Override
         public void onSuccess(Void result) {
-            getComments();
+            reviewsListAdapter.deleteComment(commentToDelete);
         }
 
         @Override

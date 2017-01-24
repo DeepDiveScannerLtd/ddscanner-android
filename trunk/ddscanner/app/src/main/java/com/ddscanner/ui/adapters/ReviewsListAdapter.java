@@ -183,6 +183,17 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         notifyItemChanged(position);
     }
 
+    public void deleteComment(String id) {
+        for (CommentEntity comment : comments) {
+            if (comment.getComment().getId().equals(id)) {
+                int i = comments.indexOf(comment);
+                comments.remove(i);
+                notifyItemRemoved(i);
+                return;
+            }
+        }
+    }
+
     private void showPopupMenu(View view, int commentId, CommentEntity CommentEntity) {
         PopupMenu popup = new PopupMenu(context, view);
         MenuInflater inflater = popup.getMenuInflater();
