@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ddscanner.R;
+import com.ddscanner.ui.activities.LeaveReviewActivity;
 import com.ddscanner.ui.adapters.CheckedInDialogPhotosAdapter;
 
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ public class CheckedInDialogFragment extends DialogFragment implements View.OnCl
     private RecyclerView recyclerView;
     private ImageView closeImage;
     private Button closeButton;
+    private String diveSpotId;
 
     public CheckedInDialogFragment() {
 
@@ -45,16 +47,15 @@ public class CheckedInDialogFragment extends DialogFragment implements View.OnCl
         View view = getActivity().getLayoutInflater().inflate(R.layout.dialog_checked_in, null);
         builder.setView(view);
         builder.setTitle(null);
+        diveSpotId = getArguments().getString("divespotid");
         checkedInDialogPhotosAdapter = new CheckedInDialogPhotosAdapter(getContext());
         findViews(view);
         return builder.create();
     }
 
     private void findViews(View view) {
-        recyclerView = (RecyclerView) view.findViewById(R.id.photos);
         closeButton = (Button) view.findViewById(R.id.button_close);
         closeImage = (ImageView) view.findViewById(R.id.image_close);
-        setupRecyclerView();
         setupUi();
 
     }
@@ -64,26 +65,19 @@ public class CheckedInDialogFragment extends DialogFragment implements View.OnCl
         closeImage.setOnClickListener(this);
     }
 
-    private void setupRecyclerView() {
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setAdapter(checkedInDialogPhotosAdapter);
-    }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.image_close:
+                this.dismiss();
+                break;
             case R.id.button_close:
                 this.dismiss();
+                LeaveReviewActivity.show(getContext(), diveSpotId, 1);
                 break;
         }
     }
 
-    public void addPhotoToList(ArrayList<String> photos, int photosCount) {
-        checkedInDialogPhotosAdapter.addPhotos(photos);
-        recyclerView.scrollToPosition(photosCount);
-    }
 
 }

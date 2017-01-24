@@ -2,12 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="320dp"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@drawable/checked_in_dialog_background">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="49dp"
-        android:background="@drawable/checked_in_background_header">
+        android:layout_height="59dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -15,8 +15,8 @@
             android:layout_centerInParent="true"
             android:fontFamily="sans-serif-medium"
             android:text="@string/checkd_in"
-            android:textColor="#deffffff"
-            android:textSize="18sp" />
+            android:textColor="@color/black_text"
+            android:textSize="20sp" />
 
         <ImageView
             android:id="@+id/image_close"
@@ -27,52 +27,21 @@
             android:src="@drawable/ic_popup_close" />
     </RelativeLayout>
 
-    <EditText
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:gravity="top"
-        android:hint="@string/write_review_dots"
-        android:lines="6"
-        android:minHeight="80dp"
-        android:paddingBottom="10dp"
-        android:paddingLeft="17dp"
-        android:paddingRight="17dp"
-        android:paddingTop="10dp"
         android:textColor="@color/black_text"
-        android:textColorHint="#a3a3a3" />
-
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="17dp">
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/photos"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp" />
-    </RelativeLayout>
-
-    <View
-        style="@style/FullWidthDivider"
-        android:layout_marginTop="7dp" />
-
-    <RatingBar
-        android:id="@+id/rating_bar"
-        style="@style/ModalRatingBar"
-        android:layout_width="wrap_content"
-        android:layout_height="24dp"
-        android:layout_marginLeft="17dp"
-        android:layout_marginTop="10dp"
-        android:numStars="5"
-        android:rating="1"
-        android:stepSize="1.0" />
+        android:textSize="16sp"
+        android:gravity="center"
+        android:paddingRight="28dp"
+        android:paddingLeft="28dp"
+        android:text="@string/checked_in_dialog_text"/>
 
     <Button
         android:id="@+id/button_close"
         android:layout_width="match_parent"
         android:layout_height="45dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="29dp"
         android:background="@drawable/dialog_achievement_button_background"
-        android:text="@string/post" />
+        android:text="@string/write_areview_dialog" />
 </LinearLayout>

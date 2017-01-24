@@ -515,12 +515,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
                     AddPhotosDoDiveSpotActivity.showForAddPhotos(false, DiveSpotDetailsActivity.this, (ArrayList<String>) urisList, String.valueOf(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getId()), ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_SHOW_FOR_ADD_PHOTOS);
                 }
                 break;
-            case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_PICK_PHOTO_FOR_DIALOG:
-                if (resultCode == RESULT_OK) {
-                    photosForReiew.addAll(Helpers.getPhotosFromIntent(data, this));
-                    checkedInDialogFragment.addPhotoToList(Helpers.getPhotosFromIntent(data, this), photosForReiew.size());
-                }
-                break;
             case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_ADD_PHOTOS_ACTIVITY:
                 if (resultCode == RESULT_OK) {
                     DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotDetails(String.valueOf(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getId()), diveSpotDetailsResultListener);

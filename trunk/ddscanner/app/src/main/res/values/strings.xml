@@ -443,4 +443,6 @@
     <string name="add_sealife_review">Don’t forget to add the sea life you saw</string>
     <string name="have_a_photo">Have a photo to add?</string>
     <string name="post_review">POST</string>
+    <string name="write_areview_dialog">write a review</string>
+    <string name="checked_in_dialog_text">Share a few words about your diving experience here</string>
 </resources>
