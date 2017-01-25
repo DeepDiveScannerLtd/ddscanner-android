@@ -66,11 +66,11 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     private String reportCommentId;
     private String reportType;
     private String reportDescription = null;
-    private MaterialDialog materialDialog;
     private ReviewsListAdapter reviewsListAdapter;
     private int reviewPositionToRate;
     private boolean isNeedRefresh;
     private int commentPosition;
+    private MaterialDialog materialDialog;
 
     private DDScannerRestClient.ResultListener<Void> likeCommentResultListener = new DDScannerRestClient.ResultListener<Void>() {
         @Override
@@ -212,16 +212,19 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     private DDScannerRestClient.ResultListener<Void> deleteCommentResultListener = new DDScannerRestClient.ResultListener<Void>() {
         @Override
         public void onSuccess(Void result) {
+            materialDialog.dismiss();
             reviewsListAdapter.deleteComment(commentToDelete);
         }
 
         @Override
         public void onConnectionFailure() {
+            materialDialog.dismiss();
             InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            materialDialog.dismiss();
             switch (errorType) {
                 case UNAUTHORIZED_401:
                     DDScannerApplication.getInstance().getSharedPreferenceHelper().logout();
@@ -235,6 +238,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
 
         @Override
         public void onInternetConnectionClosed() {
+            materialDialog.dismiss();
             InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
         }
 
@@ -437,6 +441,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void deleteUsersComment(String id) {
+        materialDialog.show();
         commentToDelete = id;
         DDScannerApplication.getInstance().getDdScannerRestClient().postDeleteReview(deleteCommentResultListener, id);
     }
@@ -507,12 +512,14 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     @Subscribe
     public void likeComment(LikeCommentEvent event) {
         this.reviewPositionToRate = event.getPosition();
+        comments = reviewsListAdapter.getCommentsList();
         likeComment(comments.get(event.getPosition()).getComment().getId(), event.getPosition());
     }
 
     @Subscribe
     public void dislikeComment(DislikeCommentEvent event) {
         this.reviewPositionToRate = event.getPosition();
+        comments = reviewsListAdapter.getCommentsList();
         dislikeComment(comments.get(event.getPosition()).getComment().getId(), event.getPosition());
     }
 

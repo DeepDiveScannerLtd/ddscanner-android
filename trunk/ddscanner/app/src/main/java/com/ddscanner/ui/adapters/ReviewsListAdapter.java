@@ -62,7 +62,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
     public void onBindViewHolder(final ReviewsListViewHolder reviewsListViewHolder, final int i) {
         boolean isLiked;
         boolean isDisliked;
-        final CommentEntity commentEntity = comments.get(i);
+        final CommentEntity commentEntity = comments.get(reviewsListViewHolder.getAdapterPosition());
         reviewsListViewHolder.rating.removeAllViews();
         reviewsListViewHolder.date.setText("");
         reviewsListViewHolder.dislikeImage.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_review_dislike_empty));
@@ -101,7 +101,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
             reviewsListViewHolder.like.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    DDScannerApplication.bus.post(new LikeCommentEvent(i));
+                    DDScannerApplication.bus.post(new LikeCommentEvent(reviewsListViewHolder.getAdapterPosition()));
                 }
             });
         }
@@ -109,7 +109,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
             reviewsListViewHolder.dislike.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    DDScannerApplication.bus.post(new DislikeCommentEvent(i));
+                    DDScannerApplication.bus.post(new DislikeCommentEvent(reviewsListViewHolder.getAdapterPosition()));
                 }
             });
         }
@@ -117,14 +117,14 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
             reviewsListViewHolder.menu.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    showPopupMenu(reviewsListViewHolder.menu, Integer.parseInt(commentEntity.getComment().getId()), comments.get(i));
+                    showPopupMenu(reviewsListViewHolder.menu, Integer.parseInt(commentEntity.getComment().getId()), comments.get(reviewsListViewHolder.getAdapterPosition()));
                 }
             });
         } else {
             reviewsListViewHolder.menu.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    showReportMenu(reviewsListViewHolder.menu, Integer.parseInt(commentEntity.getComment().getId()), comments.get(i));
+                    showReportMenu(reviewsListViewHolder.menu, Integer.parseInt(commentEntity.getComment().getId()), comments.get(reviewsListViewHolder.getAdapterPosition()));
                 }
             });
         }
@@ -192,6 +192,10 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
                 return;
             }
         }
+    }
+
+    public ArrayList<CommentEntity> getCommentsList() {
+        return comments;
     }
 
     private void showPopupMenu(View view, int commentId, CommentEntity CommentEntity) {
