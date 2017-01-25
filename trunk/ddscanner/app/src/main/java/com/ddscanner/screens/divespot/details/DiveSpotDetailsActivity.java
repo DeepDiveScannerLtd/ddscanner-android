@@ -88,6 +88,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
     private boolean isClickedFavorite = false;
     private DiveSpotPhotosAdapter mapsAdapter, photosAdapter;
     private CheckedInDialogFragment checkedInDialogFragment;
+    private boolean isClickedEdit = false;
 
     /*Ui*/
     private MapFragment mapFragment;
@@ -109,6 +110,13 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
         public void onSuccess(FlagsEntity result) {
             binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().setFlags(result);
             changeUiAccordingNewFlags(result);
+            if (isClickedEdit && DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() != 0) {
+                if (result.isEditable()) {
+                    Intent editDiveSpotIntent = new Intent(DiveSpotDetailsActivity.this, EditDiveSpotActivity.class);
+                    editDiveSpotIntent.putExtra(Constants.DIVESPOTID, String.valueOf(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getId()));
+                    startActivityForResult(editDiveSpotIntent, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_EDIT_DIVE_SPOT);
+                }
+            }
         }
 
         @Override
@@ -205,6 +213,9 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
     private void changeUiAccordingNewFlags(FlagsEntity flagsEntity) {
         switch (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType()) {
             case 0:
+                if (!flagsEntity.isEditable()) {
+                    menu.findItem(R.id.menu_three_dots).setVisible(false);
+                }
                 menu.findItem(R.id.favorite).setVisible(false);
                 binding.fabCheckin.setVisibility(View.GONE);
                 binding.workinLayout.setVisibility(View.VISIBLE);
@@ -212,6 +223,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
                     binding.switchWorkingButton.setOnCheckedChangeListener(null);
                     binding.switchWorkingButton.setChecked(true);
                     binding.switchWorkingButton.setOnCheckedChangeListener(this);
+
                 }
                 if (binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getIsNew()) {
                     binding.approveLayout.setVisibility(View.VISIBLE);
@@ -219,6 +231,11 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
                 }
                 break;
             case 2:
+                if (binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getIsNew()) {
+                    binding.approveLayout.setVisibility(View.VISIBLE);
+                    binding.buttonShowDivecenters.setVisibility(View.GONE);
+                }
+            case 1:
                 if (isClickedCkeckin) {
                     if (flagsEntity.isCheckedIn()) {
                         checkInUi();
@@ -235,7 +252,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
                     }
                 }
                 isClickedFavorite = false;
-            case 1:
                 break;
         }
     }
@@ -244,6 +260,10 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
         if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() != 0) {
             binding.fabCheckin.setVisibility(View.VISIBLE);
         }
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == 0 && binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getFlags().isWorkingHere()) {
+            binding.switchWorkingButton.setChecked(true);
+        }
+        binding.switchWorkingButton.setOnCheckedChangeListener(this);
         binding.appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             boolean isShow = false;
             int scrollRange = -1;
@@ -388,6 +408,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
         if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
             EditDiveSpotActivity.showForResult(new Gson().toJson(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity()), this,  ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_EDIT_DIVE_SPOT);
         } else {
+            isClickedEdit = true;
             LoginActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_EDIT_SPOT);
         }
     }
@@ -543,9 +564,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_EDIT_SPOT:
                 if (resultCode == RESULT_OK) {
-                    Intent editDiveSpotIntent = new Intent(DiveSpotDetailsActivity.this, EditDiveSpotActivity.class);
-                    editDiveSpotIntent.putExtra(Constants.DIVESPOTID, String.valueOf(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getId()));
-                    startActivityForResult(editDiveSpotIntent, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_EDIT_DIVE_SPOT);
+                    reloadFlags();
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_CHECK_IN:

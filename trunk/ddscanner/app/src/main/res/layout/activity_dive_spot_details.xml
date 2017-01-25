@@ -209,7 +209,6 @@
                                 android:fontFamily="sans-serif-medium"
                                 android:paddingRight="13dp"
                                 app:theme="@style/ColorSwitchStyle"
-                                android:checked="@{diveSpotViewModel.diveSpotDetailsEntity.flags.workingHere}"
                                 />
                         </RelativeLayout>
                         <RelativeLayout
