@@ -16,6 +16,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.BaseIdNamePhotoEntity;
+import com.ddscanner.entities.DialogClosedListener;
 import com.ddscanner.events.ObjectChosedEvent;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.profile.edit.divecenter.search.SearchDiveCenterActivity;
@@ -29,7 +30,7 @@ import com.squareup.otto.Subscribe;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PickCountryActivity extends BaseAppCompatActivity implements SearchView.OnQueryTextListener, InfoDialogFragment.DialogClosedListener {
+public class PickCountryActivity extends BaseAppCompatActivity implements SearchView.OnQueryTextListener, DialogClosedListener {
 
     private ArrayList<BaseIdNamePhotoEntity> objects;
     private ProgressView progressView;

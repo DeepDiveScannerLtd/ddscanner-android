@@ -18,6 +18,7 @@ import android.view.View;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
+import com.ddscanner.entities.DialogClosedListener;
 import com.ddscanner.entities.DiveSpotChosedFromSearch;
 import com.ddscanner.entities.DiveSpotShort;
 import com.ddscanner.events.GoToMyLocationButtonClickedEvent;
@@ -47,7 +48,7 @@ import com.squareup.otto.Subscribe;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchSpotOrLocationActivity extends AppCompatActivity implements SearchView.OnQueryTextListener, ViewPager.OnPageChangeListener, InfoDialogFragment.DialogClosedListener {
+public class SearchSpotOrLocationActivity extends AppCompatActivity implements SearchView.OnQueryTextListener, ViewPager.OnPageChangeListener, DialogClosedListener {
 
     private static final String TAG = SearchSpotOrLocationActivity.class.getName();
 

@@ -19,6 +19,7 @@ import android.view.View;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.entities.DialogClosedListener;
 import com.ddscanner.entities.Instructor;
 import com.ddscanner.events.RemoveInstructorEvent;
 import com.ddscanner.rest.DDScannerRestClient;
@@ -31,7 +32,7 @@ import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 
-public class InstructorsActivity extends BaseAppCompatActivity implements InfoDialogFragment.DialogClosedListener {
+public class InstructorsActivity extends BaseAppCompatActivity implements DialogClosedListener {
 
     private RecyclerView recyclerView;
     private ProgressView progressView;

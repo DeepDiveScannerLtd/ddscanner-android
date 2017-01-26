@@ -34,6 +34,7 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.databinding.ActivityDiveSpotDetailsBinding;
+import com.ddscanner.entities.DialogClosedListener;
 import com.ddscanner.entities.DiveSpotDetailsEntity;
 import com.ddscanner.entities.FlagsEntity;
 import com.ddscanner.entities.GalleryOpenedSource;
@@ -73,7 +74,7 @@ import com.squareup.otto.Subscribe;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DiveSpotDetailsActivity extends AppCompatActivity implements RatingBar.OnRatingBarChangeListener, InfoDialogFragment.DialogClosedListener, CompoundButton.OnCheckedChangeListener {
+public class DiveSpotDetailsActivity extends AppCompatActivity implements RatingBar.OnRatingBarChangeListener, DialogClosedListener, CompoundButton.OnCheckedChangeListener {
 
     private static final String TAG = DiveSpotDetailsActivity.class.getName();
 

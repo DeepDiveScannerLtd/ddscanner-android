@@ -14,12 +14,13 @@ import android.view.View;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.databinding.ActivitySealifeFullBinding;
+import com.ddscanner.entities.DialogClosedListener;
 import com.ddscanner.entities.Sealife;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.utils.DialogsRequestCodes;
 
-public class SealifeDetailsActivity extends AppCompatActivity implements InfoDialogFragment.DialogClosedListener{
+public class SealifeDetailsActivity extends AppCompatActivity implements DialogClosedListener {
 
     public static final String EXTRA_SEALIFE = "SEALIFE";
     public static final String EXTRA_PATH = "PATH";

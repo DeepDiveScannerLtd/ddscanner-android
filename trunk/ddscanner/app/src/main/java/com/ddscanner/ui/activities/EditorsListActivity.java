@@ -12,6 +12,7 @@ import android.view.MenuItem;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.entities.DialogClosedListener;
 import com.ddscanner.entities.User;
 import com.ddscanner.entities.UserOld;
 import com.ddscanner.rest.DDScannerRestClient;
@@ -23,7 +24,7 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
-public class EditorsListActivity extends BaseAppCompatActivity implements InfoDialogFragment.DialogClosedListener {
+public class EditorsListActivity extends BaseAppCompatActivity implements DialogClosedListener {
 
     private RecyclerView usersRecyclerView;
     private User creator;

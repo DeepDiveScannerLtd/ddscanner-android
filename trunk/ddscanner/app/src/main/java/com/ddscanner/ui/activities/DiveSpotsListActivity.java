@@ -14,6 +14,7 @@ import android.view.View;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
+import com.ddscanner.entities.DialogClosedListener;
 import com.ddscanner.entities.DiveSpotShort;
 import com.ddscanner.entities.DiveSpotListSource;
 import com.ddscanner.entities.DivespotsWrapper;
@@ -28,7 +29,7 @@ import com.rey.material.widget.ProgressView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DiveSpotsListActivity extends AppCompatActivity implements InfoDialogFragment.DialogClosedListener {
+public class DiveSpotsListActivity extends AppCompatActivity implements DialogClosedListener {
 
     private static final String BUNDLE_KEY_SPOT_VIEW_SOURCE = "BUNDLE_KEY_SPOT_VIEW_SOURCE";
     

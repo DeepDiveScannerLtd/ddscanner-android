@@ -18,6 +18,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
+import com.ddscanner.entities.DialogClosedListener;
 import com.ddscanner.entities.FiltersResponseEntity;
 import com.ddscanner.entities.SealifeShort;
 import com.ddscanner.events.FilterChosenEvent;
@@ -39,7 +40,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class FilterActivity extends AppCompatActivity implements View.OnClickListener, InfoDialogFragment.DialogClosedListener {
+public class FilterActivity extends AppCompatActivity implements View.OnClickListener, DialogClosedListener {
 
     private static final String TAG = FilterActivity.class.getSimpleName();
 

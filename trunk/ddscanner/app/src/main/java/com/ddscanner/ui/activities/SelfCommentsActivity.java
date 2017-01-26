@@ -17,6 +17,7 @@ import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.CommentOld;
 import com.ddscanner.entities.Comments;
+import com.ddscanner.entities.DialogClosedListener;
 import com.ddscanner.entities.SelfCommentEntity;
 import com.ddscanner.events.DeleteCommentEvent;
 import com.ddscanner.events.EditCommentEvent;
@@ -33,7 +34,7 @@ import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 
-public class SelfCommentsActivity extends AppCompatActivity implements InfoDialogFragment.DialogClosedListener {
+public class SelfCommentsActivity extends AppCompatActivity implements DialogClosedListener {
 
     private ArrayList<CommentOld> commentOlds;
     private RecyclerView commentsRc;

@@ -17,6 +17,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
+import com.ddscanner.entities.DialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.adapters.AddPhotoToDiveSpotAdapter;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
@@ -33,7 +34,7 @@ import okhttp3.RequestBody;
 /**
  * Created by lashket on 26.5.16.
  */
-public class AddPhotosDoDiveSpotActivity extends AppCompatActivity implements View.OnClickListener, InfoDialogFragment.DialogClosedListener{
+public class AddPhotosDoDiveSpotActivity extends AppCompatActivity implements View.OnClickListener, DialogClosedListener {
 
     private RecyclerView recyclerView;
     private Button button;

@@ -23,6 +23,7 @@ import android.widget.TextView;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
+import com.ddscanner.entities.DialogClosedListener;
 import com.ddscanner.entities.DiveCenter;
 import com.ddscanner.entities.DiveCentersResponseEntity;
 import com.ddscanner.events.DiveCenterMarkerClickEvent;
@@ -54,7 +55,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
-public class DiveCentersActivity extends BaseAppCompatActivity implements View.OnClickListener, InfoDialogFragment.DialogClosedListener, GoogleMap.OnMapClickListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
+public class DiveCentersActivity extends BaseAppCompatActivity implements View.OnClickListener, DialogClosedListener, GoogleMap.OnMapClickListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
     private static final String TAG = "DiveCentersActivity";
     private LatLng diveSpotLatLng;
     private String diveSpotName;

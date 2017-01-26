@@ -18,6 +18,7 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.BaseIdNamePhotoEntity;
 import com.ddscanner.entities.CountryEntity;
+import com.ddscanner.entities.DialogClosedListener;
 import com.ddscanner.entities.DiveCenterCountry;
 import com.ddscanner.entities.Language;
 import com.ddscanner.events.LanguageChosedEvent;
@@ -35,7 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class PickLanguageActivity extends AppCompatActivity implements SearchView.OnQueryTextListener, InfoDialogFragment.DialogClosedListener {
+public class PickLanguageActivity extends AppCompatActivity implements SearchView.OnQueryTextListener, DialogClosedListener {
 
     private static final String TAG = PickLanguageActivity.class.getSimpleName();
 

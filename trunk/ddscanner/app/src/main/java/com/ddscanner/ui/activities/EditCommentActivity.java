@@ -35,6 +35,7 @@ import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.Comment;
 import com.ddscanner.entities.CommentEntity;
 import com.ddscanner.entities.CommentOld;
+import com.ddscanner.entities.DialogClosedListener;
 import com.ddscanner.entities.DiveSpotPhoto;
 import com.ddscanner.events.AddPhotoDoListEvent;
 import com.ddscanner.events.ImageDeletedEvent;
@@ -59,7 +60,7 @@ import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
-public class EditCommentActivity extends BaseAppCompatActivity implements InfoDialogFragment.DialogClosedListener, BaseAppCompatActivity.PictureTakenListener {
+public class EditCommentActivity extends BaseAppCompatActivity implements DialogClosedListener, BaseAppCompatActivity.PictureTakenListener {
 
     private static final int COMMENT_MAX_LENGTH = 250;
 

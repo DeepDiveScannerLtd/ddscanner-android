@@ -14,6 +14,7 @@ import android.view.View;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
+import com.ddscanner.entities.DialogClosedListener;
 import com.ddscanner.entities.ForeignUserDislikesWrapper;
 import com.ddscanner.entities.ForeignUserLike;
 import com.ddscanner.entities.ForeignUserLikeWrapper;
@@ -29,7 +30,7 @@ import com.rey.material.widget.ProgressView;
 
 import java.util.ArrayList;
 
-public class UserLikesDislikesActivity extends BaseAppCompatActivity implements InfoDialogFragment.DialogClosedListener {
+public class UserLikesDislikesActivity extends BaseAppCompatActivity implements DialogClosedListener {
 
     private Toolbar toolbar;
     private RecyclerView recyclerView;

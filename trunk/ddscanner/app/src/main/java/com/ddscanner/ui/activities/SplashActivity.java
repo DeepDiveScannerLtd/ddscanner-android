@@ -16,6 +16,7 @@ import com.crashlytics.android.Crashlytics;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
+import com.ddscanner.entities.DialogClosedListener;
 import com.ddscanner.events.InstanceIDReceivedEvent;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
@@ -27,7 +28,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.squareup.otto.Subscribe;
 
-public class SplashActivity extends BaseAppCompatActivity implements InfoDialogFragment.DialogClosedListener, View.OnClickListener {
+public class SplashActivity extends BaseAppCompatActivity implements DialogClosedListener, View.OnClickListener {
 
     private static final String TAG = SplashActivity.class.getName();
 

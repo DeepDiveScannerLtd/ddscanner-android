@@ -23,6 +23,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
+import com.ddscanner.entities.DialogClosedListener;
 import com.ddscanner.entities.DiveSpotPhoto;
 import com.ddscanner.entities.DiveSpotPhotosResponseEntity;
 import com.ddscanner.entities.FiltersResponseEntity;
@@ -44,7 +45,7 @@ import java.util.Map;
 
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
-public class ImageSliderActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener, View.OnClickListener, SimpleGestureFilter.SimpleGestureListener, InfoDialogFragment.DialogClosedListener {
+public class ImageSliderActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener, View.OnClickListener, SimpleGestureFilter.SimpleGestureListener, DialogClosedListener {
 
     private SliderImagesAdapter sliderImagesAdapter;
     private FrameLayout baseLayout;

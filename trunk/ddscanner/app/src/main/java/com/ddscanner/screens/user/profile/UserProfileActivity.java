@@ -12,6 +12,7 @@ import android.view.View;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.entities.DialogClosedListener;
 import com.ddscanner.entities.DiveCenterProfile;
 import com.ddscanner.entities.GalleryOpenedSource;
 import com.ddscanner.entities.PhotoAuthor;
@@ -26,7 +27,7 @@ import com.google.gson.Gson;
 import com.rey.material.widget.ProgressView;
 import com.squareup.otto.Subscribe;
 
-public class UserProfileActivity extends AppCompatActivity implements InfoDialogFragment.DialogClosedListener{
+public class UserProfileActivity extends AppCompatActivity implements DialogClosedListener {
 
     private ProgressView progressView;
     private Toolbar toolbar;

@@ -12,6 +12,7 @@ import android.view.MenuItem;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.entities.DialogClosedListener;
 import com.ddscanner.entities.User;
 import com.ddscanner.entities.UserOld;
 import com.ddscanner.rest.DDScannerRestClient;
@@ -25,7 +26,7 @@ import java.util.ArrayList;
 /**
  * Created by lashket on 28.4.16.
  */
-public class CheckInPeoplesActivity extends BaseAppCompatActivity implements InfoDialogFragment.DialogClosedListener {
+public class CheckInPeoplesActivity extends BaseAppCompatActivity implements DialogClosedListener {
 
     private RecyclerView usersRecyclerView;
 

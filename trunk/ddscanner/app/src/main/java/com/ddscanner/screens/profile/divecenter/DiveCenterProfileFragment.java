@@ -18,6 +18,7 @@ import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.databinding.ViewDivecenterProfileBinding;
 import com.ddscanner.entities.BaseUser;
+import com.ddscanner.entities.DialogClosedListener;
 import com.ddscanner.entities.DiveCenterProfile;
 import com.ddscanner.events.ChangePageOfMainViewPagerEvent;
 import com.ddscanner.events.LoadUserProfileInfoEvent;
@@ -34,7 +35,7 @@ import com.ddscanner.utils.DialogsRequestCodes;
 import com.google.gson.Gson;
 import com.squareup.otto.Subscribe;
 
-public class DiveCenterProfileFragment extends Fragment implements LoginView.LoginStateChangeListener, InfoDialogFragment.DialogClosedListener{
+public class DiveCenterProfileFragment extends Fragment implements LoginView.LoginStateChangeListener, DialogClosedListener {
 
     private DiveCenterProfile diveCenterProfile;
     private ViewDivecenterProfileBinding binding;

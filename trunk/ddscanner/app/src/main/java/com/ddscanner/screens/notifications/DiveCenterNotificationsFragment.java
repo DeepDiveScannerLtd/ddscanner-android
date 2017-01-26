@@ -13,11 +13,12 @@ import android.view.ViewGroup;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.entities.DialogClosedListener;
 import com.ddscanner.ui.activities.MainActivity;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.ui.views.LoginView;
 
-public class DiveCenterNotificationsFragment extends Fragment implements LoginView.LoginStateChangeListener, InfoDialogFragment.DialogClosedListener{
+public class DiveCenterNotificationsFragment extends Fragment implements LoginView.LoginStateChangeListener, DialogClosedListener {
 
     @Nullable
     @Override

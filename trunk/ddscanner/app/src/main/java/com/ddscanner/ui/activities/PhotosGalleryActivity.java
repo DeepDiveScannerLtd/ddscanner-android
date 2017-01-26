@@ -13,6 +13,7 @@ import android.view.View;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.entities.DialogClosedListener;
 import com.ddscanner.entities.DiveSpotPhoto;
 import com.ddscanner.entities.GalleryOpenedSource;
 import com.ddscanner.entities.PhotoAuthor;
@@ -26,7 +27,7 @@ import com.rey.material.widget.ProgressView;
 
 import java.util.ArrayList;
 
-public class PhotosGalleryActivity extends BaseAppCompatActivity implements InfoDialogFragment.DialogClosedListener {
+public class PhotosGalleryActivity extends BaseAppCompatActivity implements DialogClosedListener {
 
     private RecyclerView mapsRecyclerView;
     private Toolbar toolbar;

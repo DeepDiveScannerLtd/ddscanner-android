@@ -27,6 +27,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
+import com.ddscanner.entities.DialogClosedListener;
 import com.ddscanner.entities.DiveCenter;
 import com.ddscanner.entities.DiveSpotShort;
 import com.ddscanner.events.InfowWindowOpenedEvent;
@@ -71,7 +72,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DiveCenterSpotsActivity extends BaseAppCompatActivity implements View.OnClickListener, GoogleMap.OnMapClickListener, GoogleMap.OnMarkerClickListener, InfoDialogFragment.DialogClosedListener {
+public class DiveCenterSpotsActivity extends BaseAppCompatActivity implements View.OnClickListener, GoogleMap.OnMapClickListener, GoogleMap.OnMarkerClickListener, DialogClosedListener {
 
     private MaterialDialog materialDialog;
     private RelativeLayout toast;

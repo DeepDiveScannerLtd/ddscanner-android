@@ -18,6 +18,7 @@ import android.widget.RelativeLayout;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.Activity;
+import com.ddscanner.entities.DialogClosedListener;
 import com.ddscanner.entities.NotificationOld;
 import com.ddscanner.entities.Notifications;
 import com.ddscanner.events.ChangeLoginViewEvent;
@@ -38,7 +39,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class DiverNotificationsFragment extends Fragment implements ViewPager.OnPageChangeListener, LoginView.LoginStateChangeListener, InfoDialogFragment.DialogClosedListener, SwipeRefreshLayout.OnRefreshListener {
+public class DiverNotificationsFragment extends Fragment implements ViewPager.OnPageChangeListener, LoginView.LoginStateChangeListener, DialogClosedListener, SwipeRefreshLayout.OnRefreshListener {
 
     private static final String TAG = DiverNotificationsFragment.class.getName();
 

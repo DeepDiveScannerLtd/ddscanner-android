@@ -18,6 +18,7 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.CommentEntity;
+import com.ddscanner.entities.DialogClosedListener;
 import com.ddscanner.entities.DiveSpotPhoto;
 import com.ddscanner.entities.PhotoOpenedSource;
 import com.ddscanner.entities.request.ReportRequest;
@@ -44,7 +45,7 @@ import com.squareup.otto.Subscribe;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReviewsActivity extends AppCompatActivity implements View.OnClickListener, InfoDialogFragment.DialogClosedListener {
+public class ReviewsActivity extends AppCompatActivity implements View.OnClickListener, DialogClosedListener {
 
     private ArrayList<CommentEntity> comments;
     private RecyclerView commentsRecyclerView;
