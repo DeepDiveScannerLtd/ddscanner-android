@@ -21,15 +21,18 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.CommentOld;
+import com.ddscanner.entities.DialogClosedListener;
 import com.ddscanner.entities.errors.ValidationError;
 import com.ddscanner.events.AddPhotoDoListEvent;
 import com.ddscanner.events.ImageDeletedEvent;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.adapters.AddPhotoToDsListAdapter;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
+import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogHelpers;
+import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
 import com.squareup.otto.Subscribe;
 
@@ -43,7 +46,7 @@ import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
-public class LeaveReviewActivity extends BaseAppCompatActivity implements BaseAppCompatActivity.PictureTakenListener {
+public class LeaveReviewActivity extends BaseAppCompatActivity implements BaseAppCompatActivity.PictureTakenListener, DialogClosedListener {
 
     private static final String TAG = LeaveReviewActivity.class.getSimpleName();
     private static final String ID = "ID";
@@ -97,7 +100,7 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements BaseAp
                     LoginActivity.showForResult(LeaveReviewActivity.this, ActivitiesRequestCodes.REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_LOGIN);
                     break;
                 case RIGHTS_NOT_FOUND_403:
-
+                    UserActionInfoDialogFragment.showForActivityResult(LeaveReviewActivity.this, R.string.sorry, R.string.dive_centers_cannot_leave_review, DialogsRequestCodes.DRC_LEAVE_REVIEW_ACTIVITY_CLOSE);
                     break;
                 default:
                     Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);
@@ -281,6 +284,11 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements BaseAp
 
     @Override
     public void onPictureFromCameraTaken(File picture) {
+
+    }
+
+    @Override
+    public void onDialogClosed(int requestCode) {
 
     }
 }

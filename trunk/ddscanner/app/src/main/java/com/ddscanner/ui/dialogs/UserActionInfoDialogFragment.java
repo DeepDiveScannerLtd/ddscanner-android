@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.entities.DialogClosedListener;
 
 public class UserActionInfoDialogFragment extends DialogFragment {
 
@@ -31,7 +32,7 @@ public class UserActionInfoDialogFragment extends DialogFragment {
 
     }
 
-    public static void show(FragmentActivity activity, int titleResId, int messageResId, int requestCode, int callbackType) {
+    private static void show(FragmentActivity activity, int titleResId, int messageResId, int requestCode, int callbackType) {
         UserActionInfoDialogFragment userActionInfoDialogFragment = new UserActionInfoDialogFragment();
         Bundle args = new Bundle();
         args.putString(ARG_TITLE, DDScannerApplication.getInstance().getString(titleResId));
@@ -59,6 +60,7 @@ public class UserActionInfoDialogFragment extends DialogFragment {
         Bundle args = getArguments();
         final int requestCode = args.getInt(ARG_REQUEST_CODE);
         final int callbackType = args.getInt(ARG_CALLBACK_TYPE);
+        final DialogClosedListener dialogClosedListener = (DialogClosedListener) getActivity();
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         View view = getActivity().getLayoutInflater().inflate(R.layout.dialog_achievemnt_achieved, null);
         title = (TextView) view.findViewById(R.id.title);
@@ -71,11 +73,12 @@ public class UserActionInfoDialogFragment extends DialogFragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                dismiss();
                 switch (callbackType) {
                     case CALLBACK_TYPE_NONE:
-                        dismiss();
                         break;
                     case CALLBACK_TYPE_ACTIVITY:
+                        dialogClosedListener.onDialogClosed(requestCode);
                         break;
                 }
 
@@ -84,6 +87,6 @@ public class UserActionInfoDialogFragment extends DialogFragment {
         return builder.create();
     }
 
-    
+
 
 }
