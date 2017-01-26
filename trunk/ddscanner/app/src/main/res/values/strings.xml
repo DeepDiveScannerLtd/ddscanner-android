@@ -445,4 +445,6 @@
     <string name="post_review">POST</string>
     <string name="write_areview_dialog">write a review</string>
     <string name="checked_in_dialog_text">Share a few words about your diving experience here</string>
+    <string name="dive_centers_cannot_leave_review">Dive centers are not allowed to write reviews</string>
+    <string name="sorry">Sorry</string>
 </resources>

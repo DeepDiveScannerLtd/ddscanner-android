@@ -11,6 +11,8 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
+import com.ddscanner.entities.DialogClosedListener;
+
 public class InfoDialogFragment extends DialogFragment {
 
     private static final String TAG = InfoDialogFragment.class.getName();
@@ -94,7 +96,4 @@ public class InfoDialogFragment extends DialogFragment {
         infoDialogFragment.show(fragmentManager, TAG);
     }
 
-    public interface DialogClosedListener {
-        void onDialogClosed(int requestCode);
-    }
 }

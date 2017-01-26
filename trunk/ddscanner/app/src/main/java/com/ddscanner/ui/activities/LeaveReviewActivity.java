@@ -96,8 +96,8 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements BaseAp
                 case UNAUTHORIZED_401:
                     LoginActivity.showForResult(LeaveReviewActivity.this, ActivitiesRequestCodes.REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_LOGIN);
                     break;
-                case UNPROCESSABLE_ENTITY_ERROR_422:
-//                    Helpers.errorHandling(errorsMap, (ValidationError) errorData);
+                case RIGHTS_NOT_FOUND_403:
+
                     break;
                 default:
                     Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);
@@ -175,7 +175,7 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements BaseAp
             return;
         }
         List<MultipartBody.Part> images = new ArrayList<>();
-        //  imageUris = addPhotoToDsListAdapter.getNewFilesUrisList();
+        imageUris = addPhotoToDsListAdapter.getNewFilesUrisList();
         for (int i = 0; i < imageUris.size(); i++) {
             File image = new File(imageUris.get(i));
             RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), image);

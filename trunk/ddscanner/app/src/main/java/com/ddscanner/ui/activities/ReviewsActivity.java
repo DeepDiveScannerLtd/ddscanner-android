@@ -11,17 +11,14 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
-import com.ddscanner.entities.Comment;
 import com.ddscanner.entities.CommentEntity;
 import com.ddscanner.entities.DiveSpotPhoto;
-import com.ddscanner.entities.FiltersResponseEntity;
 import com.ddscanner.entities.PhotoOpenedSource;
 import com.ddscanner.entities.request.ReportRequest;
 import com.ddscanner.events.DeleteCommentEvent;
@@ -35,6 +32,7 @@ import com.ddscanner.events.ShowSliderForReviewImagesEvent;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.photo.slider.ImageSliderActivity;
 import com.ddscanner.ui.adapters.ReviewsListAdapter;
+import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
@@ -45,7 +43,6 @@ import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class ReviewsActivity extends AppCompatActivity implements View.OnClickListener, InfoDialogFragment.DialogClosedListener {
 
@@ -199,7 +196,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_DIVE_SPOT_PHOTOS_ACTIVITY_DIVE_SPOT_NOT_FOUND, false);
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_CONNECTION_FAILURE, false);
         }
 
         @Override
@@ -306,9 +303,6 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
                 if (resultCode == Activity.RESULT_OK) {
                     getComments();
                 }
-                if (resultCode == Activity.RESULT_CANCELED) {
-                    //Write your code if there's no result
-                }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN:
                 if (resultCode == RESULT_OK) {
@@ -363,6 +357,17 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
                     }
                 }
                 break;
+            case ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_LEAVE_REVIEW:
+                if (resultCode == RESULT_OK) {
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsMustRefreshDiveSpotActivity(true);
+                    if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == 0) {
+                        UserActionInfoDialogFragment.show(this, R.string.sorry, R.string.dive_centers_cannot_leave_review);
+                        leaveReview.setVisibility(View.GONE);
+                    } else {
+                        LeaveReviewActivity.showForResult(this, diveSpotId, 1, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_WRITE_REVIEW);
+                    }
+                }
+                break;
         }
     }
 
@@ -377,7 +382,11 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.fab_write_review:
-                LeaveReviewActivity.showForResult(this, diveSpotId, 0f, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_WRITE_REVIEW);
+                if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+                    LeaveReviewActivity.showForResult(this, diveSpotId, 1, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_WRITE_REVIEW);
+                } else {
+                    LoginActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_LEAVE_REVIEW);
+                }
                 break;
         }
     }
@@ -402,7 +411,9 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onBackPressed() {
         Intent intent = new Intent();
-        intent.putExtra("count", String.valueOf(reviewsListAdapter.getItemCount()));
+        if (reviewsListAdapter != null) {
+            intent.putExtra("count", String.valueOf(reviewsListAdapter.getItemCount()));
+        }
         setResult(RESULT_OK, intent);
         finish();
     }
@@ -534,7 +545,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
             case DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_FAILED_TO_CONNECT:
             case DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_DIVE_SPOT_NOT_FOUND:
             case DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_REPORTED_COMMENT_NOT_FOUND:
-                getComments();
+                finish();
                 break;
         }
     }

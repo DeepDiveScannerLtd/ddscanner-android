@@ -49,7 +49,7 @@ import com.ddscanner.screens.divespot.add.AddDiveSpotActivity;
 import com.ddscanner.screens.notifications.DiveCenterNotificationsFragment;
 import com.ddscanner.screens.profile.divecenter.DiveCenterProfileFragment;
 import com.ddscanner.ui.adapters.MainActivityPagerAdapter;
-import com.ddscanner.ui.dialogs.ActionSuccessDialogFragment;
+import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.ui.dialogs.ChangeAccountBottomDialog;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.ui.fragments.ActivityNotificationsFragment;
@@ -174,7 +174,7 @@ public class MainActivity extends BaseAppCompatActivity
             materialDialog.dismiss();
             switch (errorType) {
                 case ENTITY_NOT_FOUND_404:
-                    ActionSuccessDialogFragment.show(MainActivity.this, R.string.title_pass_incorrect, R.string.pass_incorrect);
+                    UserActionInfoDialogFragment.show(MainActivity.this, R.string.title_pass_incorrect, R.string.pass_incorrect);
                     break;
                 default:
                     InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);

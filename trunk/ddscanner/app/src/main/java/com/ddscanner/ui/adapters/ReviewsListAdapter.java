@@ -40,7 +40,7 @@ import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.ReviewsListViewHolder> {
 
     private static final String TAG = ReviewsListAdapter.class.getSimpleName();
-    private ArrayList<CommentEntity> comments;
+    private ArrayList<CommentEntity> comments = new ArrayList<>();
     private Context context;
     private boolean isAdapterSet = false;
 

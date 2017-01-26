@@ -52,6 +52,7 @@ import com.ddscanner.ui.activities.LoginActivity;
 import com.ddscanner.ui.activities.ReviewsActivity;
 import com.ddscanner.ui.activities.ShowDsLocationActivity;
 import com.ddscanner.ui.adapters.SealifeListAdapter;
+import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.ui.dialogs.CheckedInDialogFragment;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
@@ -89,6 +90,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
     private DiveSpotPhotosAdapter mapsAdapter, photosAdapter;
     private CheckedInDialogFragment checkedInDialogFragment;
     private boolean isClickedEdit = false;
+    private int lastChosedRating;
 
     /*Ui*/
     private MapFragment mapFragment;
@@ -453,7 +455,8 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
 
     @Override
     public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-        LeaveReviewActivity.showForResult(this, String.valueOf(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getId()), rating, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LEAVE_REVIEW);
+        lastChosedRating = Math.round(rating);
+        tryingToShowLeaveReviewActivity(lastChosedRating);
     }
 
     @Override
@@ -514,8 +517,10 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_REVIEWS:
                 if (resultCode == RESULT_OK) {
-                    binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().setReviewsCount(Integer.parseInt(data.getStringExtra("count")));
-                    DiveSpotDetailsActivityViewModel.setReviewsCount(binding.btnShowAllReviews, binding.getDiveSpotViewModel());
+                    if (data.getStringExtra("count") != null) {
+                        binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().setReviewsCount(Integer.parseInt(data.getStringExtra("count")));
+                        DiveSpotDetailsActivityViewModel.setReviewsCount(binding.btnShowAllReviews, binding.getDiveSpotViewModel());
+                    }
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_PHOTOS:
@@ -629,6 +634,18 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
                         return;
                     }
                     photosAdapter.addPhotos(data.getStringArrayListExtra("images"));
+                }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_LEAVE_REVIEW:
+                if (resultCode == RESULT_OK) {
+                    if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == 0) {
+                        UserActionInfoDialogFragment.show(this, R.string.sorry, R.string.dive_centers_cannot_leave_review);
+                        reloadFlags();
+                    } else {
+                        DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsMustRefreshDiveSpotActivity(true);
+                        tryingToShowLeaveReviewActivity(lastChosedRating);
+                    }
+
                 }
                 break;
         }
@@ -859,8 +876,16 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
     }
 
     public void writeReviewClicked(View view) {
+        tryingToShowLeaveReviewActivity(1);
+    }
+
+    private void tryingToShowLeaveReviewActivity(int rating) {
         if (binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getReviewsCount() < 1) {
-            LeaveReviewActivity.showForResult(this, diveSpotId, 1, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LEAVE_REVIEW);
+            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+                LeaveReviewActivity.showForResult(this, diveSpotId, rating, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LEAVE_REVIEW);
+            } else {
+                LoginActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_LEAVE_REVIEW);
+            }
         } else {
             ReviewsActivity.showForResult(this, diveSpotId, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_REVIEWS);
         }

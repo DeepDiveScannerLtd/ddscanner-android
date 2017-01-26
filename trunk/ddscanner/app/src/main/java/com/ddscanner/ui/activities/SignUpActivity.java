@@ -29,7 +29,7 @@ import com.ddscanner.entities.BaseUser;
 import com.ddscanner.entities.SignInType;
 import com.ddscanner.entities.SignUpResponseEntity;
 import com.ddscanner.rest.DDScannerRestClient;
-import com.ddscanner.ui.dialogs.ActionSuccessDialogFragment;
+import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
@@ -106,7 +106,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             materialDialog.dismiss();
             switch (errorType) {
                 case ENTITY_NOT_FOUND_404:
-                    ActionSuccessDialogFragment.show(SignUpActivity.this, R.string.title_pass_incorrect, R.string.pass_incorrect);
+                    UserActionInfoDialogFragment.show(SignUpActivity.this, R.string.title_pass_incorrect, R.string.pass_incorrect);
                     break;
                 default:
                     InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_unexpected_error, R.string.error_connection_failed, false);
