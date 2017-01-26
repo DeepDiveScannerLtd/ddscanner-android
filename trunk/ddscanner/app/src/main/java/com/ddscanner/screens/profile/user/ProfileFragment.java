@@ -68,6 +68,7 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
         public void onSuccess(User result) {
             if (binding != null) {
                 binding.about.setVisibility(View.VISIBLE);
+                binding.progressBar.setVisibility(View.GONE);
             }
             switch (result.getType()) {
                 case 2:
@@ -176,6 +177,10 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
     public void onResume() {
         super.onResume();
         userResultListener.setCancelled(false);
+        if (binding.getProfileFragmentViewModel() == null) {
+            binding.progressBar.setVisibility(View.VISIBLE);
+            binding.about.setVisibility(View.GONE);
+        }
     }
 
     @Subscribe
@@ -258,6 +263,8 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
             binding.swiperefresh.setEnabled(false);
             binding.loginView.setVisibility(View.VISIBLE);
             binding.about.setVisibility(View.GONE);
+            binding.progressBar.setVisibility(View.GONE);
+            binding.setProfileFragmentViewModel(null);
         }
     }
 

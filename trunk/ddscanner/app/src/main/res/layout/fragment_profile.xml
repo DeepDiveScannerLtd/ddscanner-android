@@ -26,8 +26,20 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <com.rey.material.widget.ProgressView
+                android:id="@+id/progress_bar"
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:layout_marginTop="50dp"
+                app:pv_autostart="true"
+                app:pv_circular="true"
+                app:pv_progressMode="indeterminate"
+                android:visibility="gone"
+                app:pv_progressStyle="@style/CircularProgress" />
+
             <ScrollView
                 android:id="@+id/about"
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 

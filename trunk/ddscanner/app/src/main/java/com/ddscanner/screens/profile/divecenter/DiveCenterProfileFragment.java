@@ -58,6 +58,8 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
                         isHaveSpots = true;
                     }
                     setUi();
+                    binding.progressBarLoading.setVisibility(View.GONE);
+                    binding.aboutLayout.setVisibility(View.VISIBLE);
                     break;
             }
         }
@@ -149,6 +151,16 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
         super.onStop();
         DDScannerApplication.bus.unregister(this);
         userResultListener.setCancelled(true);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        userResultListener.setCancelled(false);
+        if (binding.getDiveCenterViewModel() == null) {
+            binding.progressBarLoading.setVisibility(View.VISIBLE);
+            binding.aboutLayout.setVisibility(View.GONE);
+        }
     }
 
     @Subscribe

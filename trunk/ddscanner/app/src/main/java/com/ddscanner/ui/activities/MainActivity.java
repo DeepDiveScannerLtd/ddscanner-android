@@ -19,6 +19,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
+import com.ddscanner.entities.BaseUser;
 import com.ddscanner.entities.SignInType;
 import com.ddscanner.entities.SignUpResponseEntity;
 import com.ddscanner.events.ChangeAccountEvent;
@@ -148,19 +149,16 @@ public class MainActivity extends BaseAppCompatActivity
         @Override
         public void onSuccess(SignUpResponseEntity result) {
             materialDialog.dismiss();
-//            DDScannerApplication.getInstance().getSharedPreferenceHelper().setUserServerId(result.getId());
-//            switch (result.getType()) {
-//                case 0:
-//                    DDScannerApplication.getInstance().getSharedPreferenceHelper().diveCenterLoggedIn(result.getToken());
-//                    DDScannerApplication.getInstance().getSharedPreferenceHelper().setActiveUserType(0);
-//                    break;
-//                case 1:
-//                case 2:
-//                    DDScannerApplication.getInstance().getSharedPreferenceHelper().userLoggedIn(result.getToken());
-//                    DDScannerApplication.getInstance().getSharedPreferenceHelper().setActiveUserType(result.getType());
-//                    break;
-//            }
-//            DDScannerApplication.bus.post(new LoggedInEvent());
+            materialDialog.dismiss();
+            Log.i(TAG, "onSuccess: ");
+            BaseUser baseUser = new BaseUser();
+            baseUser.setActive(true);
+            baseUser.setType(result.getType());
+            baseUser.setToken(result.getToken());
+            baseUser.setId(result.getId());
+            DDScannerApplication.getInstance().getSharedPreferenceHelper().addUserToList(baseUser);
+            DDScannerApplication.bus.post(new LoggedInEvent());
+            DDScannerApplication.bus.post(new LoadUserProfileInfoEvent());
         }
 
         @Override
@@ -456,6 +454,7 @@ public class MainActivity extends BaseAppCompatActivity
                         mainViewPagerAdapter.notifyDataSetChanged();
                         mainViewPager.destroyDrawingCache();
                         setupTabLayout();
+                        DDScannerApplication.bus.post(new LoadUserProfileInfoEvent());
                     } else {
                         mainViewPagerAdapter.onLoggedOut();
                         changeVisibilityChangeAccountLayout(View.GONE);

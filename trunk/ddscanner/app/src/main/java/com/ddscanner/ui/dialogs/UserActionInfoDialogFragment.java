@@ -60,7 +60,6 @@ public class UserActionInfoDialogFragment extends DialogFragment {
         Bundle args = getArguments();
         final int requestCode = args.getInt(ARG_REQUEST_CODE);
         final int callbackType = args.getInt(ARG_CALLBACK_TYPE);
-        final DialogClosedListener dialogClosedListener = (DialogClosedListener) getActivity();
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         View view = getActivity().getLayoutInflater().inflate(R.layout.dialog_achievemnt_achieved, null);
         title = (TextView) view.findViewById(R.id.title);
@@ -74,10 +73,12 @@ public class UserActionInfoDialogFragment extends DialogFragment {
             @Override
             public void onClick(View view) {
                 dismiss();
+                DialogClosedListener dialogClosedListener;
                 switch (callbackType) {
                     case CALLBACK_TYPE_NONE:
                         break;
                     case CALLBACK_TYPE_ACTIVITY:
+                        dialogClosedListener = (DialogClosedListener) getActivity();
                         dialogClosedListener.onDialogClosed(requestCode);
                         break;
                 }

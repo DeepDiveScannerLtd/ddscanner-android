@@ -23,8 +23,23 @@
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
         <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <com.rey.material.widget.ProgressView
+                android:id="@+id/progress_bar_loading"
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:layout_marginTop="50dp"
+                app:pv_autostart="true"
+                app:pv_circular="true"
+                app:pv_progressMode="indeterminate"
+                android:visibility="gone"
+                app:pv_progressStyle="@style/CircularProgress" />
+        <LinearLayout
+            android:id="@+id/about_layout"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
@@ -428,6 +443,7 @@
                 style="@style/DividerStyleFull"
                 android:layout_marginBottom="@dimen/base_block_margin_top" />
 
+        </LinearLayout>
         </LinearLayout>
     </ScrollView>
 </layout>
