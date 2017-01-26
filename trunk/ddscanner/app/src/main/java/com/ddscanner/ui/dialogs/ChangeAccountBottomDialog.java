@@ -59,7 +59,7 @@ public class ChangeAccountBottomDialog extends BottomSheetDialogFragment impleme
     private void setupRecyclerView() {
         accountsList.setLayoutManager(new LinearLayoutManager(getContext()));
         accountsList.setAdapter(new AccountsListAdapter(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUsersList()));
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getUsersList() != null || DDScannerApplication.getInstance().getSharedPreferenceHelper().getUsersList().size() > MAX_ACCOUNTS - 1) {
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getUsersList() != null && DDScannerApplication.getInstance().getSharedPreferenceHelper().getUsersList().size() > MAX_ACCOUNTS - 1) {
             addAccountButton.setVisibility(View.GONE);
         }
     }

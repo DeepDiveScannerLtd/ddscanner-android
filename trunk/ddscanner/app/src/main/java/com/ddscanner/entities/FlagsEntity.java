@@ -14,6 +14,16 @@ public class FlagsEntity {
     private boolean isWorkingHere;
     @SerializedName("is_editable")
     private boolean isEditable;
+    @SerializedName("is_reviewed")
+    private boolean isReviewed;
+
+    public boolean isReviewed() {
+        return isReviewed;
+    }
+
+    public void setReviewed(boolean reviewed) {
+        isReviewed = reviewed;
+    }
 
     public boolean isEditable() {
         return isEditable;

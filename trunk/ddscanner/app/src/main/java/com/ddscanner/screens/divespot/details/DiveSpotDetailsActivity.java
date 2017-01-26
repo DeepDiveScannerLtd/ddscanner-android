@@ -110,7 +110,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
         public void onSuccess(FlagsEntity result) {
             binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().setFlags(result);
             changeUiAccordingNewFlags(result);
-            if (isClickedEdit && DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() != 0) {
+            if (isClickedEdit) {
                 if (result.isEditable()) {
                     Intent editDiveSpotIntent = new Intent(DiveSpotDetailsActivity.this, EditDiveSpotActivity.class);
                     editDiveSpotIntent.putExtra(Constants.DIVESPOTID, String.valueOf(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getId()));
@@ -211,6 +211,8 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
     }
 
     private void changeUiAccordingNewFlags(FlagsEntity flagsEntity) {
+        DiveSpotDetailsActivityViewModel.setVisibilityReviewsBlock(binding.reviewsRatingLayout, binding.getDiveSpotViewModel());
+        DiveSpotDetailsActivityViewModel.setVisibilityOfRatingLayout(binding.ratingLayout, binding.getDiveSpotViewModel());
         switch (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType()) {
             case 0:
                 if (!flagsEntity.isEditable()) {

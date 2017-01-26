@@ -148,6 +148,32 @@ public class DiveSpotDetailsActivityViewModel {
         }
     }
 
+    @BindingAdapter("reviewsRatingLayoutVisibilityFrom")
+    public static void setVisibilityReviewsBlock(LinearLayout view, DiveSpotDetailsActivityViewModel viewModel) {
+        if (viewModel != null) {
+            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn() && DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == 0 && viewModel.getDiveSpotDetailsEntity().getReviewsCount() == 0) {
+                view.setVisibility(View.GONE);
+            } else {
+                view.setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
+    @BindingAdapter("ratingLayoutVisibilityFrom")
+    public static void setVisibilityOfRatingLayout(LinearLayout layout, DiveSpotDetailsActivityViewModel viewModel) {
+        if (viewModel != null) {
+            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+                if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == 0) {
+                    layout.setVisibility(View.GONE);
+                } else if (viewModel.getDiveSpotDetailsEntity().getFlags().isReviewed()) {
+                    layout.setVisibility(View.GONE);
+                }
+            } else {
+                layout.setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
     private static class ImageLoadedCallback implements Callback {
         ProgressView progressBar;
 
