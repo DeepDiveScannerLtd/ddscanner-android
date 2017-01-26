@@ -512,7 +512,8 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_REVIEWS:
                 if (resultCode == RESULT_OK) {
-
+                    binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().setReviewsCount(Integer.parseInt(data.getStringExtra("count")));
+                    DiveSpotDetailsActivityViewModel.setReviewsCount(binding.btnShowAllReviews, binding.getDiveSpotViewModel());
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_PHOTOS:

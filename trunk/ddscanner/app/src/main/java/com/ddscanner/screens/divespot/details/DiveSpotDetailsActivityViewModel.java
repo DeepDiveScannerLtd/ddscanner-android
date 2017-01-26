@@ -131,7 +131,7 @@ public class DiveSpotDetailsActivityViewModel {
     }
 
     @BindingAdapter("setCountReviewsFrom")
-    public static void setReviewsCount(TextView view, DiveSpotDetailsActivityViewModel viewModel) {
+    public static void setReviewsCount(Button view, DiveSpotDetailsActivityViewModel viewModel) {
         if (viewModel != null) {
             if (viewModel.getDiveSpotDetailsEntity().getReviewsCount() == 0) {
                 view.setText(DDScannerApplication.getInstance().getString(R.string.write_review));

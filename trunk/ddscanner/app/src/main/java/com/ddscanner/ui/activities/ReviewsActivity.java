@@ -401,13 +401,10 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public void onBackPressed() {
-        if (isHasNewComment) {
-            setResult(RESULT_OK);
-            finish();
-        } else {
-            setResult(RESULT_CANCELED);
-            finish();
-        }
+        Intent intent = new Intent();
+        intent.putExtra("count", String.valueOf(reviewsListAdapter.getItemCount()));
+        setResult(RESULT_OK, intent);
+        finish();
     }
 
     @Override
