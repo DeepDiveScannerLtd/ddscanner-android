@@ -448,4 +448,6 @@
     <string name="dive_centers_cannot_leave_review">Dive centers are not allowed to write reviews</string>
     <string name="sorry">Sorry</string>
     <string name="name_is_required">Name is required</string>
+    <string name="enter_a_valid_phone_number">Enter a valid phone number</string>
+    <string name="enter_a_valid_email_address">Enter a valid email address</string>
 </resources>

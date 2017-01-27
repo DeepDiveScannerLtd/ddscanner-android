@@ -9,12 +9,16 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.telephony.PhoneNumberFormattingTextWatcher;
+import android.telephony.PhoneNumberUtils;
 import android.text.InputType;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
@@ -58,7 +62,8 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
 
     private ArrayList<EditText> phonesEditTexts = new ArrayList<>();
     private ArrayList<EditText> emailsEditTexts = new ArrayList<>();
-    private ArrayList<EditText> addresses = new ArrayList<>();
+    private ArrayList<TextView> phonesErrors = new ArrayList<>();
+    private ArrayList<TextView> emailsErrors = new ArrayList<>();
     private List<MultipartBody.Part> emails =  new ArrayList<>();
     private List<MultipartBody.Part> phones = new ArrayList<>();
     private List<MultipartBody.Part> languages = null;
@@ -246,33 +251,45 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
     }
 
     public void addEmailClicked(View view) {
-        EditText editText = (EditText) getLayoutInflater().inflate(R.layout.edit_dive_center_email_edit_text, null);
+        LinearLayout linearLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.edit_dive_center_email_edit_text, null);
+        EditText editText = (EditText) linearLayout.findViewById(R.id.email);
+        TextView textView = (TextView) linearLayout.findViewById(R.id.email_error);
+        emailsErrors.add(textView);
         editText.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
         emailsEditTexts.add(editText);
-        binding.emails.addView(editText);
+        binding.emails.addView(linearLayout);
     }
 
     public void addPhoneClicked(View view) {
-        EditText editText = (EditText) getLayoutInflater().inflate(R.layout.edit_dive_center_edit_text, null);
+        LinearLayout linearLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.edit_dive_center_edit_text, null);
+        EditText editText =(EditText) linearLayout.findViewById(R.id.phone);
+        TextView textView = (TextView) linearLayout.findViewById(R.id.phone_error);
+        phonesErrors.add(textView);
         editText.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
         phonesEditTexts.add(editText);
-        binding.phones.addView(editText);
+        binding.phones.addView(linearLayout);
     }
 
     private void addEmailView(String text) {
-        EditText editText = (EditText) getLayoutInflater().inflate(R.layout.edit_dive_center_email_edit_text, null);
+        LinearLayout linearLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.edit_dive_center_email_edit_text, null);
+        EditText editText = (EditText) linearLayout.findViewById(R.id.email);
+        TextView textView = (TextView) linearLayout.findViewById(R.id.email_error);
+        emailsErrors.add(textView);
         editText.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
         emailsEditTexts.add(editText);
         editText.setText(text);
-        binding.emails.addView(editText);
+        binding.emails.addView(linearLayout);
     }
 
     private void addPhoneView(String text) {
-        EditText editText = (EditText) getLayoutInflater().inflate(R.layout.edit_dive_center_edit_text, null);
+        LinearLayout linearLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.edit_dive_center_edit_text, null);
+        EditText editText =(EditText) linearLayout.findViewById(R.id.phone);
+        TextView textView = (TextView) linearLayout.findViewById(R.id.phone_error);
+        phonesErrors.add(textView);
         editText.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
         phonesEditTexts.add(editText);
         editText.setText(text);
-        binding.phones.addView(editText);
+        binding.phones.addView(linearLayout);
     }
 
     public void addDiveSpotClicked(View view) {
@@ -371,6 +388,9 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
 
     public void saveChangesClicked(View view) {
 
+        if (!isDataValid()) {
+            return;
+        }
         if (!binding.name.getText().toString().isEmpty()) {
             nameRequestBody = Helpers.createRequestBodyForString(binding.name.getText().toString());
         }
@@ -420,6 +440,37 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
 
         DDScannerApplication.getInstance().getDdScannerRestClient().postUpdateDiveCenterProfile(resultListener, photo,  emails, phones, diveSpots, languages, nameRequestBody, countryRequestBody, addressRequestBody, Helpers.createRequestBodyForString("1"));
         materialDialog.show();
+    }
+
+    private boolean isDataValid() {
+        for (TextView textView : phonesErrors) {
+            textView.setVisibility(View.GONE);
+        }
+        for (TextView textView : emailsErrors) {
+            textView.setVisibility(View.GONE);
+        }
+        boolean isDataValid = true;
+        for (EditText editText : phonesEditTexts) {
+            if (!validCellPhone(editText.getText().toString())) {
+                phonesErrors.get(phonesEditTexts.indexOf(editText)).setVisibility(View.VISIBLE);
+                isDataValid = false;
+            }
+        }
+        for (EditText editText : emailsEditTexts) {
+            if (!validEmail(editText.getText().toString())) {
+                emailsErrors.get(emailsEditTexts.indexOf(editText)).setVisibility(View.VISIBLE);
+                isDataValid = false;
+            }
+        }
+        return isDataValid;
+    }
+
+    private boolean validCellPhone(String number) {
+        return Patterns.PHONE.matcher(number).matches();
+    }
+
+    private boolean validEmail(String email) {
+        return Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
     @Override
