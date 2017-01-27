@@ -46,6 +46,7 @@ import com.ddscanner.entities.SealifeShort;
 import com.ddscanner.entities.Translation;
 import com.ddscanner.events.AddPhotoDoListEvent;
 import com.ddscanner.events.AddTranslationClickedEvent;
+import com.ddscanner.events.ChangeTranslationEvent;
 import com.ddscanner.events.ImageDeletedEvent;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.activities.LoginActivity;
@@ -56,6 +57,7 @@ import com.ddscanner.ui.adapters.AddPhotoToDsListAdapter;
 import com.ddscanner.ui.adapters.CharacteristicSpinnerItemsAdapter;
 import com.ddscanner.ui.adapters.SealifeListAddingDiveSpotAdapter;
 import com.ddscanner.ui.adapters.TranslationsListAdapter;
+import com.ddscanner.ui.dialogs.AddTranslationDialogFragment;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
@@ -82,7 +84,7 @@ import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
-public class EditDiveSpotActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener, View.OnClickListener, DialogClosedListener {
+public class EditDiveSpotActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener, View.OnClickListener, DialogClosedListener, AddTranslationDialogFragment.TranslationChangedListener {
 
     private static final String TAG = EditDiveSpotActivity.class.getSimpleName();
 
@@ -438,7 +440,8 @@ public class EditDiveSpotActivity extends AppCompatActivity implements CompoundB
         sealifesRc.setNestedScrollingEnabled(false);
         sealifesRc.setHasFixedSize(false);
         sealifesRc.setLayoutManager(sealifeLayoutManager);
-        sealifesRc.setAdapter(new SealifeListAddingDiveSpotAdapter(sealifes, this));
+        sealifeListAddingDiveSpotAdapter = new SealifeListAddingDiveSpotAdapter(sealifes, this);
+        sealifesRc.setAdapter(sealifeListAddingDiveSpotAdapter);
 
         /*Toolbar settings*/
         setSupportActionBar(toolbar);
@@ -733,10 +736,10 @@ public class EditDiveSpotActivity extends AppCompatActivity implements CompoundB
             errorTranslations.setVisibility(View.VISIBLE);
         }
 
-        if (photoUris.size() < 1) {
-            isSomethingWrong = true;
-            errorImages.setVisibility(View.VISIBLE);
-        }
+//        if (photosListAdapter. < 1) {
+//            isSomethingWrong = true;
+//            errorImages.setVisibility(View.VISIBLE);
+//        }
 
         if (sealifeListAddingDiveSpotAdapter == null || sealifeListAddingDiveSpotAdapter.getSealifes() == null || sealifeListAddingDiveSpotAdapter.getSealifes().size() < 1) {
             isSomethingWrong = true;
@@ -908,6 +911,16 @@ public class EditDiveSpotActivity extends AppCompatActivity implements CompoundB
                 isEditLayout.setVisibility(View.GONE);
                 break;
         }
+    }
+
+    @Override
+    public void onTranslationChanged(Translation translation) {
+        translationsListAdapter.add(translation);
+    }
+
+    @Subscribe
+    public void changeTranslation(ChangeTranslationEvent event) {
+        AddTranslationDialogFragment.show(getSupportFragmentManager(), event.getTranslation().getCode(), event.getTranslation().getLanguage(), event.getTranslation().getName(), event.getTranslation().getDescription());
     }
 
 }
