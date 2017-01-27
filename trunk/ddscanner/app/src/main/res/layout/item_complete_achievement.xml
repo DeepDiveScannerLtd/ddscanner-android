@@ -58,7 +58,7 @@
                     android:layout_below="@+id/type"
                     android:textColor="#959595"
                     android:textSize="11sp"
-                    tools:text="@{achievementViewModel.completeAchievement.country}" />
+                    tools:text="@{achievementViewModel.completeAchievement.countryName}" />
             </RelativeLayout>
 
             <TextView
