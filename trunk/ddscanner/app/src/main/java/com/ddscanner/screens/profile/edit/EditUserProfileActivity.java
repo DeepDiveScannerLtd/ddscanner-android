@@ -56,8 +56,8 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
     private RequestBody requestName, requestAbout, requestSkill;
     private MultipartBody.Part image;
     private Map<String, TextView> errorsMap = new HashMap<>();
-    private static final int MAX_LENGTH_NAME = 30;
-    private static final int MAX_LENGTH_ABOUT = 250;
+    private static final int MAX_LENGTH_NAME = 32;
+    private static final int MAX_LENGTH_ABOUT = 255;
     private boolean isAboutChanged = false;
     private boolean isNamChanged = false;
     private AppCompatRadioButton diverRadio;
@@ -84,6 +84,9 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             materialDialog.dismiss();
             switch (errorType) {
+                case BAD_REQUEST_ERROR_400:
+                    Helpers.errorHandling(errorsMap, errorMessage);
+                    break;
                 default:
                     Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);
                     break;
@@ -111,6 +114,8 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
         binding.setProfileViewModel(new EditProfileActivityViewModel(user));
         binding.setHandlers(this);
         setupToolbar(R.string.edit_profile_activity, R.id.toolbar, R.menu.edit_profile_menu);
+        binding.nameCount.setVisibility(View.GONE);
+        createErrorsMap();
         colorStateList = new ColorStateList(
                 new int[][]{
                         new int[]{-android.R.attr.state_checked},
@@ -134,7 +139,7 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (isAboutChanged) {
-                    binding.aboutCount.setVisibility(View.VISIBLE);
+//                    binding.aboutCount.setVisibility(View.VISIBLE);
                 }
                 if (MAX_LENGTH_ABOUT - binding.aboutEdit.length() < 10) {
                     binding.aboutCount.setTextColor(ContextCompat.getColor(EditUserProfileActivity.this, R.color.tw__composer_red));
@@ -160,7 +165,7 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (isNamChanged) {
-                    binding.nameCount.setVisibility(View.VISIBLE);
+//                    binding.nameCount.setVisibility(View.VISIBLE);
                 }
                 if (MAX_LENGTH_NAME - binding.fullName.length() < 10) {
                     binding.nameCount.setTextColor(ContextCompat.getColor(EditUserProfileActivity.this, R.color.tw__composer_red));
@@ -224,6 +229,10 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
     }
 
     private void sendUpdateRequest() {
+        createErrorsMap();
+        if (!isDataValid()) {
+            return;
+        }
         materialDialog.show();
         if (dcId != null) {
             diveCenterId = Helpers.createRequestBodyForString(dcId);
@@ -241,6 +250,20 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
         DDScannerApplication.getInstance().getDdScannerRestClient().potUpdateUserProfile(updateProfileInfoResultListener, image, Helpers.createRequestBodyForString(binding.fullName.getText().toString()), Helpers.createRequestBodyForString(binding.aboutEdit.getText().toString()), Helpers.createRequestBodyForString(String.valueOf(levels.indexOf(binding.levelSpinner.getSelectedItem()))), diveCenterId);
     }
 
+    private void hideErrorsMap() {
+        for (TextView textView : errorsMap.values()) {
+            textView.setVisibility(View.GONE);
+        }
+    }
+
+    private boolean isDataValid() {
+        boolean isDataValid = true;
+        if (binding.fullName.getText().toString().length() < 1) {
+            isDataValid = false;
+            binding.errorName.setVisibility(View.VISIBLE);
+        }
+        return isDataValid;
+    }
 
 
     /*Called when user clicked save changes button*/

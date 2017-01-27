@@ -13,7 +13,9 @@ public class DiveCenterProfile implements Serializable{
     private String about;
     private int type;
     @SerializedName("country_name")
-    private String contryName;
+    private String countryName;
+    @SerializedName("country_code")
+    private String countryCode;
     private ArrayList<Address> addresses;
     private ArrayList<String> emails;
     private ArrayList<String> phones;
@@ -34,6 +36,14 @@ public class DiveCenterProfile implements Serializable{
     private ArrayList<DiveSpotShort> workingSpots;
     @SerializedName("new_instructors_exist")
     private boolean isNewInstructors;
+
+    public String getCountryCode() {
+        return countryCode;
+    }
+
+    public void setCountryCode(String countryCode) {
+        this.countryCode = countryCode;
+    }
 
     public boolean isNewInstructors() {
         return isNewInstructors;
@@ -107,12 +117,12 @@ public class DiveCenterProfile implements Serializable{
         this.about = about;
     }
 
-    public String getContryName() {
-        return contryName;
+    public String getCountryName() {
+        return countryName;
     }
 
-    public void setContryName(String contryName) {
-        this.contryName = contryName;
+    public void setCountryName(String countryName) {
+        this.countryName = countryName;
     }
 
     public ArrayList<Address> getAddresses() {

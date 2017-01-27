@@ -1,5 +1,6 @@
 package com.ddscanner.screens.profile.divecenter;
 
+import android.content.Intent;
 import android.databinding.BindingAdapter;
 import android.view.View;
 import android.widget.Button;
@@ -89,6 +90,15 @@ public class DiveCenterProfileFragmentViewModel {
             }
         }
         view.setText(outString);
+    }
+
+    @BindingAdapter("arrowVisibilityFrom")
+    public static void setVisibilityForInstructorsArrow(ImageView view, DiveCenterProfileFragmentViewModel viewModel) {
+        if (viewModel != null) {
+            if (viewModel.getDiveCenterProfile().getInstructorsCount() != null && Integer.parseInt(viewModel.getDiveCenterProfile().getInstructorsCount()) > 0) {
+                view.setVisibility(View.VISIBLE);
+            }
+        }
     }
 
     private static String getDiveSpotString(int count) {

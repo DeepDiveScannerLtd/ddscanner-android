@@ -162,7 +162,7 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             materialDialog.dismiss();
-            //TODO handle errors
+
         }
 
         @Override
@@ -199,6 +199,7 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
         isHaveSpots = getIntent().getBooleanExtra("isspots", false);
         binding.setHandlers(this);
         binding.setDcViewModel(new EditDiveCenterProfileActivityViewModel(new Gson().fromJson(getIntent().getStringExtra("divecenter"), DiveCenterProfile.class)));
+        countryCode = binding.getDcViewModel().getDiveCenterProfile().getCountryCode();
         setupToolbar(R.string.edit_profile_activity, R.id.toolbar, R.menu.edit_profile_menu);
         setupUi();
     }
@@ -240,7 +241,7 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
         if (binding.getDcViewModel().getDiveCenterProfile().getAddresses() != null) {
             locationLatitude = String.valueOf(binding.getDcViewModel().getDiveCenterProfile().getAddresses().get(0).getLat());
             locationLongitude = String.valueOf(binding.getDcViewModel().getDiveCenterProfile().getAddresses().get(0).getLng());
-            addAddressesView(binding.getDcViewModel().getDiveCenterProfile().getAddresses().get(0).getName(), binding.getDcViewModel().getDiveCenterProfile().getContryName());
+            addAddressesView(binding.getDcViewModel().getDiveCenterProfile().getAddresses().get(0).getName(), binding.getDcViewModel().getDiveCenterProfile().getCountryName());
         }
     }
 
@@ -384,13 +385,6 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
             if (!editText.getText().toString().isEmpty()) {
                 emails.add(MultipartBody.Part.createFormData("emails[]", editText.getText().toString()));
             }
-        }
-
-        if (diveSpotsListForEditDcAdapter.getObjects().size() > 0) {
-            diveSpots = new ArrayList<>();
-//            for (DiveSpotShort diveSpotShort : diveSpotsListForEditDcAdapter.getObjects()) {
-//                diveSpots.add(MultipartBody.Part.createFormData("dive_spots[]", String.valueOf(diveSpotShort.getId())));
-//            }
         }
 
         if (locationLatitude != null && locationLongitude != null && addressEditText != null && !addressEditText.getText().toString().isEmpty()) {

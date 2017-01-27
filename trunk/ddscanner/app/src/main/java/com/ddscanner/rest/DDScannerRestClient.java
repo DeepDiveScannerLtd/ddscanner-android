@@ -251,7 +251,7 @@ public class DDScannerRestClient {
             @Override
             void handleResponseString(ResultListener<List<DiveSpotShort>> resultListener, String responseString) {
                 Type listType = new TypeToken<List<DiveSpotShort>>(){}.getType();
-                List<DiveSpotShort> diveSpots = (List<DiveSpotShort>) gson.fromJson(responseString, listType);
+                List<DiveSpotShort> diveSpots =gson.fromJson(responseString, listType);
                 resultListener.onSuccess(diveSpots);
             }
         });

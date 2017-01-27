@@ -447,4 +447,5 @@
     <string name="checked_in_dialog_text">Share a few words about your diving experience here</string>
     <string name="dive_centers_cannot_leave_review">Dive centers are not allowed to write reviews</string>
     <string name="sorry">Sorry</string>
+    <string name="name_is_required">Name is required</string>
 </resources>

@@ -149,7 +149,7 @@
                                 android:layout_marginRight="15dp"
                                 android:background="@android:color/transparent"
                                 android:hint="Full name"
-                                android:maxLength="30"
+                                android:maxLength="32"
                                 android:text="@{TextUtils.isEmpty(profileViewModel.user.name) ? null : profileViewModel.user.name}"
                                 android:textSize="16sp" />
                         </LinearLayout>
@@ -159,6 +159,7 @@
                     <ImageView style="@style/DividerStyle" />
 
                     <TextView
+                        android:text="@string/name_is_required"
                         android:id="@+id/error_name"
                         style="@style/ValidationErrorTextView" />
 
@@ -210,7 +211,7 @@
                                 android:layout_marginRight="15dp"
                                 android:background="@android:color/transparent"
                                 android:hint="About"
-                                android:maxLength="250"
+                                android:maxLength="255"
                                 android:text="@{profileViewModel.user.about == null ? null : profileViewModel.user.about}"
                                 android:textSize="16sp" />
                         </LinearLayout>
