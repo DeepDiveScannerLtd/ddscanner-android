@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.ddscanner.R;
+import com.ddscanner.ui.views.ScallingImageView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -28,14 +29,15 @@ public class SliderImagesFragment extends Fragment {
         String imageUrl = getArguments().getString(IMAGE_URL);
         View view = inflater.inflate(R.layout.slider_image_fragment, container, false);
 
-        ImageView imageView = (ImageView) view.findViewById(R.id.slider_image);
+        ScallingImageView imageView = (ScallingImageView) view.findViewById(R.id.slider_image);
         ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.GONE);
         Display display = getActivity().getWindowManager().getDefaultDisplay();
         DisplayMetrics outMetrics = new DisplayMetrics();
         display.getMetrics(outMetrics);
         float density = getResources().getDisplayMetrics().density;
         float dpWidth = outMetrics.widthPixels / density;
-        Picasso.with(getActivity()).load(imageUrl).into(imageView, new ImageLoadedCallback(progressBar));
+        Picasso.with(getActivity()).load(imageUrl).into(imageView);
 
         return view;
     }
