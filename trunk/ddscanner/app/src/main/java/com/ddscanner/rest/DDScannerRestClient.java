@@ -430,17 +430,17 @@ public class DDScannerRestClient {
         });
     }
 
-    public void getUserDislikes(ResultListener<ArrayList<UserLikeEntity>> resultListener, String userId) {
+    public void getUserDislikes(ResultListener<ArrayList<LikeEntity>> resultListener, String userId) {
         if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
             resultListener.onInternetConnectionClosed();
             return;
         }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserDislikes(userId);
-        call.enqueue(new ResponseEntityCallback<ArrayList<UserLikeEntity>>(gson, resultListener) {
+        call.enqueue(new ResponseEntityCallback<ArrayList<LikeEntity>>(gson, resultListener) {
             @Override
-            void handleResponseString(ResultListener<ArrayList<UserLikeEntity>> resultListener, String responseString) throws JSONException {
-                Type listType = new TypeToken<ArrayList<UserLikeEntity>>(){}.getType();
-                ArrayList<UserLikeEntity> dislikes = gson.fromJson(responseString, listType);
+            void handleResponseString(ResultListener<ArrayList<LikeEntity>> resultListener, String responseString) throws JSONException {
+                Type listType = new TypeToken<ArrayList<LikeEntity>>(){}.getType();
+                ArrayList<LikeEntity> dislikes = gson.fromJson(responseString, listType);
                 resultListener.onSuccess(dislikes);
             }
         });

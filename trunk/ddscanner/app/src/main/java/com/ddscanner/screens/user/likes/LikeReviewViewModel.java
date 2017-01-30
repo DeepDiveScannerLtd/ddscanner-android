@@ -64,7 +64,7 @@ public class LikeReviewViewModel {
         }
     }
 
-    private static String reformatString(String firstString) {
+    public static String reformatString(String firstString) {
         firstString = firstString.substring(0, 27);
         firstString = firstString + "...";
         return firstString;
