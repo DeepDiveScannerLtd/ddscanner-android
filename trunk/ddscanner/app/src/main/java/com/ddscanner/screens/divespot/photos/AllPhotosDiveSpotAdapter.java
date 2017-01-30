@@ -28,17 +28,16 @@ import java.util.ArrayList;
  */
 public class AllPhotosDiveSpotAdapter extends RecyclerView.Adapter<AllPhotosDiveSpotAdapter.AllPhotosDIveSpotViewHolder> {
 
-    private String path;
     private ArrayList<DiveSpotPhoto> images;
     private Activity context;
     private PhotoOpenedSource photoOpenedSource;
-    private boolean isFromMaps;
+    private String sourceId;
 
-    public AllPhotosDiveSpotAdapter(ArrayList<DiveSpotPhoto> photos, Activity context, PhotoOpenedSource photoOpenedSource, boolean isFromMaps) {
+    public AllPhotosDiveSpotAdapter(ArrayList<DiveSpotPhoto> photos, Activity context, PhotoOpenedSource photoOpenedSource, String sourceId) {
         images = photos;
         this.context = context;
         this.photoOpenedSource = photoOpenedSource;
-        this.isFromMaps = isFromMaps;
+        this.sourceId = sourceId;
     }
 
     @Override
@@ -81,7 +80,7 @@ public class AllPhotosDiveSpotAdapter extends RecyclerView.Adapter<AllPhotosDive
         public void onClick(View v) {
             EventsTracker.trackDiveSpotPhotosView();
             DDScannerApplication.getInstance().getDiveSpotPhotosContainer().setPhotos(images);
-            ImageSliderActivity.showForResult(context, images, getAdapterPosition(), ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_ACTIVITY_SLIDER, photoOpenedSource, isFromMaps);
+            ImageSliderActivity.showForResult(context, images, getAdapterPosition(), ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_ACTIVITY_SLIDER, photoOpenedSource, sourceId);
         }
     }
 

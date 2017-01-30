@@ -22,6 +22,7 @@ import java.util.ArrayList;
 public class DiveSpotReviewsPhotoFragment extends Fragment {
 
     private ArrayList<DiveSpotPhoto> images;
+    private String diveSpotId;
 
     private RecyclerView recyclerView;
 
@@ -37,15 +38,17 @@ public class DiveSpotReviewsPhotoFragment extends Fragment {
         recyclerView = (RecyclerView) view.findViewById(R.id.photos);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
         //recyclerView.addItemDecoration(new GridSpacingItemDecoration(3));
-        recyclerView.setAdapter(new AllPhotosDiveSpotAdapter(images, getActivity(), PhotoOpenedSource.REVIEWS, false));
+        recyclerView.setAdapter(new AllPhotosDiveSpotAdapter(images, getActivity(), PhotoOpenedSource.REVIEWS, diveSpotId));
         return view;
     }
 
-    public void setList(ArrayList<DiveSpotPhoto> images) {
+    public void setList(ArrayList<DiveSpotPhoto> images, String diveSpotId) {
         if (recyclerView == null) {
             this.images = images;
+            this.diveSpotId = diveSpotId;
             return;
         }
-        recyclerView.setAdapter(new AllPhotosDiveSpotAdapter(images, getActivity(), PhotoOpenedSource.REVIEWS, false));
+        this.diveSpotId = diveSpotId;
+        recyclerView.setAdapter(new AllPhotosDiveSpotAdapter(images, getActivity(), PhotoOpenedSource.REVIEWS, diveSpotId));
     }
 }

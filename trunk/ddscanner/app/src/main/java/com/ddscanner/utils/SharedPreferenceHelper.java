@@ -303,7 +303,7 @@ public class SharedPreferenceHelper {
         editor.commit();
     }
 
-    public static boolean getIsUserSignedIn() {
+    public boolean getIsUserSignedIn() {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         if (prefs.getString(USERS_LiST, "").equals("") || getUsersList().size() == 0) {
             return false;
@@ -311,7 +311,7 @@ public class SharedPreferenceHelper {
         return true;
     }
 
-    public static void addUserToList(BaseUser baseUser) {
+    public void addUserToList(BaseUser baseUser) {
         boolean isUserAlsoInList = false;
         ArrayList<BaseUser> users;
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());

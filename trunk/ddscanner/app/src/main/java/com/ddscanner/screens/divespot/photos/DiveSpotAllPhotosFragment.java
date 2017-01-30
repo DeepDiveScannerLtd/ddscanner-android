@@ -27,6 +27,8 @@ public class DiveSpotAllPhotosFragment extends Fragment {
 
     private RecyclerView recyclerView;
 
+    private String diveSpotId;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,7 +41,7 @@ public class DiveSpotAllPhotosFragment extends Fragment {
         recyclerView = (RecyclerView) view.findViewById(R.id.photos);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(),3));
        // recyclerView.addItemDecoration(new GridSpacingItemDecoration(3));
-        recyclerView.setAdapter(new AllPhotosDiveSpotAdapter(images, getActivity(), PhotoOpenedSource.ALL, false));
+        recyclerView.setAdapter(new AllPhotosDiveSpotAdapter(images, getActivity(), PhotoOpenedSource.ALL, diveSpotId));
         return view;
     }
 
@@ -60,11 +62,13 @@ public class DiveSpotAllPhotosFragment extends Fragment {
         }
     }
 
-    public void setList(ArrayList<DiveSpotPhoto> images) {
+    public void setList(ArrayList<DiveSpotPhoto> images, String diveSpotId) {
         if (recyclerView == null) {
+            this.diveSpotId = diveSpotId;
             this.images = images;
             return;
         }
-        recyclerView.setAdapter(new AllPhotosDiveSpotAdapter(images, getActivity(), PhotoOpenedSource.ALL, false));
+        this.diveSpotId = diveSpotId;
+        recyclerView.setAdapter(new AllPhotosDiveSpotAdapter(images, getActivity(), PhotoOpenedSource.ALL, diveSpotId));
     }
 }

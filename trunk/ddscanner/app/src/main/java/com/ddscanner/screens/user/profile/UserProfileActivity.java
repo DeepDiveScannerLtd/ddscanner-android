@@ -16,6 +16,7 @@ import com.ddscanner.entities.DialogClosedListener;
 import com.ddscanner.entities.DiveCenterProfile;
 import com.ddscanner.entities.GalleryOpenedSource;
 import com.ddscanner.entities.PhotoAuthor;
+import com.ddscanner.entities.PhotoOpenedSource;
 import com.ddscanner.entities.User;
 import com.ddscanner.entities.ProfileResponseEntity;
 import com.ddscanner.events.OpenPhotosActivityEvent;
@@ -161,7 +162,7 @@ public class UserProfileActivity extends AppCompatActivity implements DialogClos
 
     @Subscribe
     public void openPhotosActivity(OpenPhotosActivityEvent event) {
-        PhotosGalleryActivity.show(userId, this, GalleryOpenedSource.USER_PROFILE, new Gson().toJson(photoAuthor));
+        PhotosGalleryActivity.show(userId, this, PhotoOpenedSource.PROFILE, new Gson().toJson(photoAuthor));
     }
 
 }

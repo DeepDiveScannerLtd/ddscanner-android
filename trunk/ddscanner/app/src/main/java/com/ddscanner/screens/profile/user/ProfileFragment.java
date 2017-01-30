@@ -225,7 +225,7 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
         if (binding.getProfileFragmentViewModel().getUser().getPhotos() != null) {
             binding.noPhotosView.setVisibility(View.GONE);
             binding.photosList.setLayoutManager(new GridLayoutManager(getContext(), 4));
-            binding.photosList.setAdapter(new UserPhotosListAdapter((ArrayList<DiveSpotPhoto>) binding.getProfileFragmentViewModel().getUser().getPhotos(), binding.getProfileFragmentViewModel().getUser().getPhotosCount(), getActivity()));
+            binding.photosList.setAdapter(new UserPhotosListAdapter((ArrayList<DiveSpotPhoto>) binding.getProfileFragmentViewModel().getUser().getPhotos(), binding.getProfileFragmentViewModel().getUser().getPhotosCount(), getActivity(), binding.getProfileFragmentViewModel().getUser().getId()));
             binding.photosList.setVisibility(View.VISIBLE);
         }
         ArrayList<ProfileAchievement> achievmentProfiles = new ArrayList<>();

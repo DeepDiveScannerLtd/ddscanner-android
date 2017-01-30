@@ -180,12 +180,15 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements BaseAp
         }
         List<MultipartBody.Part> images = new ArrayList<>();
         imageUris = addPhotoToDsListAdapter.getNewFilesUrisList();
-        for (int i = 0; i < imageUris.size(); i++) {
-            File image = new File(imageUris.get(i));
-            RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), image);
-            MultipartBody.Part part = MultipartBody.Part.createFormData("photos[]", image.getName(),
-                    requestFile);
-            images.add(part);
+        //TODO
+        if (imageUris != null) {
+            for (int i = 0; i < imageUris.size(); i++) {
+                File image = new File(imageUris.get(i));
+                RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), image);
+                MultipartBody.Part part = MultipartBody.Part.createFormData("photos[]", image.getName(),
+                        requestFile);
+                images.add(part);
+            }
         }
         if (text.getText().toString().trim().length() < 30) {
             errorText.setVisibility(View.VISIBLE);

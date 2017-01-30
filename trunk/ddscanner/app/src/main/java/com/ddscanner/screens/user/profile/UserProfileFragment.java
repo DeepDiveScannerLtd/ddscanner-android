@@ -52,7 +52,7 @@ public class UserProfileFragment extends Fragment {
         }
         if (user.getPhotos() != null) {
             binding.photosList.setLayoutManager(new GridLayoutManager(getContext(), 4));
-            binding.photosList.setAdapter(new UserPhotosListAdapter((ArrayList<DiveSpotPhoto>) user.getPhotos(), user.getPhotosCount(), getActivity()));
+            binding.photosList.setAdapter(new UserPhotosListAdapter((ArrayList<DiveSpotPhoto>) user.getPhotos(), user.getPhotosCount(), getActivity(), binding.getUserProfileViewModel().getUser().getId()));
         }
         return v;
     }

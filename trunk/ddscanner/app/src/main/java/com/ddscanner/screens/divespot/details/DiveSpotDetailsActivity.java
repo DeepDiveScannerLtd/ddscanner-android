@@ -38,6 +38,7 @@ import com.ddscanner.entities.DialogClosedListener;
 import com.ddscanner.entities.DiveSpotDetailsEntity;
 import com.ddscanner.entities.FlagsEntity;
 import com.ddscanner.entities.GalleryOpenedSource;
+import com.ddscanner.entities.PhotoOpenedSource;
 import com.ddscanner.entities.SealifeShort;
 import com.ddscanner.events.OpenPhotosActivityEvent;
 import com.ddscanner.events.PickPhotoForCheckedInDialogEvent;
@@ -729,7 +730,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
             DiveSpotPhotosActivity.show(this, diveSpotId);
             return;
         }
-        PhotosGalleryActivity.show(diveSpotId, this, GalleryOpenedSource.MAPS, null);
+        PhotosGalleryActivity.show(diveSpotId, this, PhotoOpenedSource.MAPS, null);
     }
 
     @Override

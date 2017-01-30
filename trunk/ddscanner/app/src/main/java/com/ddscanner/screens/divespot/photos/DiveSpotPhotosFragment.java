@@ -48,7 +48,7 @@ public class DiveSpotPhotosFragment extends Fragment {
         Log.i(TAG, this.toString());
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(),3));
         //recyclerView.addItemDecoration(new GridSpacingItemDecoration(3));
-        recyclerView.setAdapter(new AllPhotosDiveSpotAdapter(images, getActivity(), PhotoOpenedSource.DIVESPOT, false));
+        recyclerView.setAdapter(new AllPhotosDiveSpotAdapter(images, getActivity(), PhotoOpenedSource.DIVESPOT, diveSpotId));
         return view;
     }
 
@@ -69,11 +69,13 @@ public class DiveSpotPhotosFragment extends Fragment {
         }
     }
 
-    public void setList(ArrayList<DiveSpotPhoto> images) {
+    public void setList(ArrayList<DiveSpotPhoto> images, String diveSpotId) {
         if (recyclerView == null) {
+            this.diveSpotId = diveSpotId;
             this.images = images;
             return;
         }
-        recyclerView.setAdapter(new AllPhotosDiveSpotAdapter(images, getActivity(), PhotoOpenedSource.DIVESPOT, false));
+        this.diveSpotId = diveSpotId;
+        recyclerView.setAdapter(new AllPhotosDiveSpotAdapter(images, getActivity(), PhotoOpenedSource.DIVESPOT, diveSpotId));
     }
 }
