@@ -33,6 +33,7 @@ public class LikeReviewViewModel {
                     .placeholder(R.drawable.avatar_profile_default)
                     .error(R.drawable.avatar_profile_default)
                     .resize(Math.round(Helpers.convertDpToPixel(40, view.getContext())), Math.round(Helpers.convertDpToPixel(40, view.getContext())))
+                    .centerCrop()
                     .transform(new CropCircleTransformation())
                     .into(view);
         }
@@ -53,6 +54,13 @@ public class LikeReviewViewModel {
     public static void setTimeAgoText(TextView view, LikeReviewViewModel viewModel) {
         if (viewModel != null) {
             view.setText(Helpers.getDate(viewModel.getLikeEntity().getDate()));
+        }
+    }
+
+    @BindingAdapter("likedTextFrom")
+    public static void setLikedText(TextView view, LikeReviewViewModel viewModel) {
+        if (viewModel != null) {
+            view.setText(DDScannerApplication.getInstance().getString(R.string.foreign_user_like_by, viewModel.getLikeEntity().getUser().getName()));
         }
     }
 

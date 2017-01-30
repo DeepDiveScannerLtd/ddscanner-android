@@ -25,6 +25,7 @@ import com.ddscanner.entities.ForeignUserLikeWrapper;
 import com.ddscanner.entities.GoogleMapsGeocodeResponseEntity;
 import com.ddscanner.entities.Instructor;
 import com.ddscanner.entities.Language;
+import com.ddscanner.entities.LikeEntity;
 import com.ddscanner.entities.ProfileResponseEntity;
 import com.ddscanner.entities.RegisterResponse;
 import com.ddscanner.entities.Sealife;
@@ -413,17 +414,17 @@ public class DDScannerRestClient {
         });
     }
 
-    public void getUserLikes(ResultListener<ArrayList<UserLikeEntity>> resultListener, String userId) {
+    public void getUserLikes(ResultListener<ArrayList<LikeEntity>> resultListener, String userId) {
         if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
             resultListener.onInternetConnectionClosed();
             return;
         }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserLikes(userId);
-        call.enqueue(new ResponseEntityCallback<ArrayList<UserLikeEntity>>(gson, resultListener) {
+        call.enqueue(new ResponseEntityCallback<ArrayList<LikeEntity>>(gson, resultListener) {
             @Override
-            void handleResponseString(ResultListener<ArrayList<UserLikeEntity>> resultListener, String responseString) throws JSONException {
-                Type listType = new TypeToken<ArrayList<UserLikeEntity>>(){}.getType();
-                ArrayList<UserLikeEntity> likes = gson.fromJson(responseString, listType);
+            void handleResponseString(ResultListener<ArrayList<LikeEntity>> resultListener, String responseString) throws JSONException {
+                Type listType = new TypeToken<ArrayList<LikeEntity>>(){}.getType();
+                ArrayList<LikeEntity> likes = gson.fromJson(responseString, listType);
                 resultListener.onSuccess(likes);
             }
         });

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class LikeEntity {
 
-    enum LikeType {
+    public enum LikeType {
         REVIEW, PHOTO
     }
 

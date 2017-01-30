@@ -18,8 +18,10 @@ import com.ddscanner.entities.DialogClosedListener;
 import com.ddscanner.entities.ForeignUserDislikesWrapper;
 import com.ddscanner.entities.ForeignUserLike;
 import com.ddscanner.entities.ForeignUserLikeWrapper;
+import com.ddscanner.entities.LikeEntity;
 import com.ddscanner.entities.UserLikeEntity;
 import com.ddscanner.rest.DDScannerRestClient;
+import com.ddscanner.screens.user.likes.LikesListAdapter;
 import com.ddscanner.ui.adapters.ForeignUserLikesAdapter;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
@@ -38,10 +40,10 @@ public class UserLikesDislikesActivity extends BaseAppCompatActivity implements 
     private String userId;
     private ProgressView progressView;
 
-    private DDScannerRestClient.ResultListener<ArrayList<UserLikeEntity>> likesResultListener = new DDScannerRestClient.ResultListener<ArrayList<UserLikeEntity>>() {
+    private DDScannerRestClient.ResultListener<ArrayList<LikeEntity>> likesResultListener = new DDScannerRestClient.ResultListener<ArrayList<LikeEntity>>() {
         @Override
-        public void onSuccess(ArrayList<UserLikeEntity> result) {
-            recyclerView.setAdapter(new ForeignUserLikesAdapter(UserLikesDislikesActivity.this, result, true));
+        public void onSuccess(ArrayList<LikeEntity> result) {
+            recyclerView.setAdapter(new LikesListAdapter(result));
             recyclerView.setVisibility(View.VISIBLE);
             progressView.setVisibility(View.GONE);
         }

@@ -40,7 +40,7 @@ public class AccountsListAdapter extends RecyclerView.Adapter<AccountsListAdapte
         }
         holder.userType.setText(Helpers.getUserType(users.get(position).getType()));
         holder.userName.setText(users.get(position).getName());
-        Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, users.get(position).getPhoto(), "1")).placeholder(R.drawable.avatar_changeacc).error(R.drawable.avatar_changeacc).resize(Math.round(Helpers.convertDpToPixel(36, context)),Math.round(Helpers.convertDpToPixel(36, context))).transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2, context)), 0, RoundedCornersTransformation.CornerType.ALL)).into(holder.avatar);
+        Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, users.get(position).getPhoto(), "1")).placeholder(R.drawable.avatar_changeacc).error(R.drawable.avatar_changeacc).resize(Math.round(Helpers.convertDpToPixel(36, context)),Math.round(Helpers.convertDpToPixel(36, context))).centerCrop().transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2, context)), 0, RoundedCornersTransformation.CornerType.ALL)).into(holder.avatar);
     }
 
     @Override
