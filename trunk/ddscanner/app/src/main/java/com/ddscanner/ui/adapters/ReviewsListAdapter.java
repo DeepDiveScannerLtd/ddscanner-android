@@ -161,6 +161,15 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         if (commentEntity.getComment().getDate() != null && !commentEntity.getComment().getDate().isEmpty()) {
             reviewsListViewHolder.date.setText(Helpers.getCommentDate(commentEntity.getComment().getDate()));
         }
+        if (commentEntity.getComment().getSealifes() != null) {
+            reviewsListViewHolder.sealifesLayout.setVisibility(View.VISIBLE);
+            LinearLayoutManager sealifeLayoutManager = new LinearLayoutManager(context);
+            sealifeLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+            reviewsListViewHolder.sealifesList.setLayoutManager(sealifeLayoutManager);
+            reviewsListViewHolder.sealifesList.setAdapter(new SealifeReviewListAdapter(commentEntity.getComment().getSealifes(), context));
+        } else {
+            reviewsListViewHolder.sealifesLayout.setVisibility(View.GONE);
+        }
     }
 
     public void commentLiked(int position) {
@@ -283,6 +292,8 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         private TextView expand;
         private boolean isLiked = false;
         private boolean isDisliked = false;
+        private LinearLayout sealifesLayout;
+        private RecyclerView sealifesList;
 
 
         public ReviewsListViewHolder(View v) {
@@ -301,7 +312,8 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
             dislikesCount = (TextView) v.findViewById(R.id.dislikes_count);
             likeImage = (ImageView) v.findViewById(R.id.likes_image);
             dislikeImage = (ImageView) v.findViewById(R.id.dislikes_image);
-
+            sealifesLayout = (LinearLayout) v.findViewById(R.id.sealifes_layout);
+            sealifesList = (RecyclerView) v.findViewById(R.id.sealifes_list);
             user_avatar.setOnClickListener(this);
         }
 

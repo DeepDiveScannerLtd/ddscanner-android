@@ -1,5 +1,6 @@
 package com.ddscanner.ui.activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
@@ -209,6 +210,11 @@ public class SearchSealifeActivity extends AppCompatActivity implements SearchVi
         intent.putExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_SEALIFE, event.getSealife());
         setResult(RESULT_OK, intent);
         finish();
+    }
+
+    public static void showForResult(Activity context, int requestCode) {
+        Intent intent = new Intent(context,SearchSealifeActivity.class);
+        context.startActivityForResult(intent, requestCode);
     }
 
     @Override

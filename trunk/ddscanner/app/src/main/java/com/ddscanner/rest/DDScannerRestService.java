@@ -351,7 +351,8 @@ public interface DDScannerRestService {
             @Part List<MultipartBody.Part> photos,
             @Part("id") RequestBody id,
             @Part("rating") RequestBody rating,
-            @Part("review") RequestBody review
+            @Part("review") RequestBody review,
+            @Part List<MultipartBody.Part> sealife
     );
 
     @Multipart

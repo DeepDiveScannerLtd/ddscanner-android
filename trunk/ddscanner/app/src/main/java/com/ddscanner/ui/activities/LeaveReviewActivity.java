@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,11 +23,13 @@ import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.CommentOld;
 import com.ddscanner.entities.DialogClosedListener;
+import com.ddscanner.entities.SealifeShort;
 import com.ddscanner.entities.errors.ValidationError;
 import com.ddscanner.events.AddPhotoDoListEvent;
 import com.ddscanner.events.ImageDeletedEvent;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.adapters.AddPhotoToDsListAdapter;
+import com.ddscanner.ui.adapters.SealifeListAddingDiveSpotAdapter;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
@@ -46,7 +49,7 @@ import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
-public class LeaveReviewActivity extends BaseAppCompatActivity implements BaseAppCompatActivity.PictureTakenListener, DialogClosedListener {
+public class LeaveReviewActivity extends BaseAppCompatActivity implements View.OnClickListener, BaseAppCompatActivity.PictureTakenListener, DialogClosedListener {
 
     private static final String TAG = LeaveReviewActivity.class.getSimpleName();
     private static final String ID = "ID";
@@ -54,30 +57,20 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements BaseAp
     private static final String SOURCE = "SOURCE";
     private static final int COMMENT_MAX_LENGTH = 250;
 
-    private Toolbar toolbar;
-    private CommentOld commentOld = new CommentOld();
     private String diveSpotId;
     private EditText text;
     private RatingBar ratingBar;
     private TextView errorText;
     private float rating;
+    private LinearLayout buttonAddSealife;
     private MaterialDialog materialDialog;
-    private TextView symbolNumberLeft;
-    private ImageButton btnAddPhoto;
     private RecyclerView photosRecyclerView;
     private List<String> imageUris = new ArrayList<String>();
-    private TextView addPhotoTitle;
     private AddPhotoToDsListAdapter addPhotoToDsListAdapter;
-    private List<String> imagesEncodedList = new ArrayList<>();
-    private String imageEncoded;
     private Map<String, TextView> errorsMap = new HashMap<>();
     private RequestBody requestId = null, requestComment = null, requestRating = null;
-    private RequestBody requessToken = null;
-    private RequestBody requestSocial = null;
-    private RequestBody requestSecret = null;
-    private int maxPhotos = 3;
-
-    private EventsTracker.SendReviewSource sendReviewSource;
+    private RecyclerView sealifeList;
+    private SealifeListAddingDiveSpotAdapter sealifesAdapter;
 
     private DDScannerRestClient.ResultListener<Void> commentAddedResultListener = new DDScannerRestClient.ResultListener<Void>() {
         @Override
@@ -130,10 +123,11 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements BaseAp
     }
 
     private void findViews() {
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
         text = (EditText) findViewById(R.id.review_text);
+        sealifeList= (RecyclerView) findViewById(R.id.sealife_list);
         text.setTag("review");
         ratingBar = (RatingBar) findViewById(R.id.rating_bar);
+        buttonAddSealife = (LinearLayout) findViewById(R.id.btn_add_sealife);
         if (rating > 0) {
             ratingBar.setRating(rating);
         } else {
@@ -142,9 +136,11 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements BaseAp
         photosRecyclerView = (RecyclerView) findViewById(R.id.photos_rc);
         errorText = (TextView) findViewById(R.id.comment_error);
         errorsMap.put("review", errorText);
+        buttonAddSealife.setOnClickListener(this);
     }
 
     private void setRcSettings() {
+        sealifesAdapter = new SealifeListAddingDiveSpotAdapter(new ArrayList<SealifeShort>(), LeaveReviewActivity.this);
         addPhotoToDsListAdapter = new AddPhotoToDsListAdapter(imageUris, LeaveReviewActivity.this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(LeaveReviewActivity.this);
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -152,6 +148,9 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements BaseAp
         photosRecyclerView.setHasFixedSize(false);
         photosRecyclerView.setLayoutManager(layoutManager);
         photosRecyclerView.setAdapter(addPhotoToDsListAdapter);
+        LinearLayoutManager sealifLayoutManager = new LinearLayoutManager(LeaveReviewActivity.this);
+        sealifeList.setLayoutManager(sealifLayoutManager);
+        sealifeList.setAdapter(sealifesAdapter);
     }
 
     private void setProgressDialog() {
@@ -178,17 +177,18 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements BaseAp
             LoginActivity.showForResult(LeaveReviewActivity.this, ActivitiesRequestCodes.REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_LOGIN);
             return;
         }
+        List<MultipartBody.Part> sealifes = new ArrayList<>();
+        for (SealifeShort sealife : sealifesAdapter.getSealifes()) {
+            sealifes.add(MultipartBody.Part.createFormData("sealifes[]", sealife.getId()));
+        }
         List<MultipartBody.Part> images = new ArrayList<>();
         imageUris = addPhotoToDsListAdapter.getNewFilesUrisList();
-        //TODO
-        if (imageUris != null) {
-            for (int i = 0; i < imageUris.size(); i++) {
+        for (int i = 0; i < imageUris.size(); i++) {
                 File image = new File(imageUris.get(i));
                 RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), image);
                 MultipartBody.Part part = MultipartBody.Part.createFormData("photos[]", image.getName(),
                         requestFile);
                 images.add(part);
-            }
         }
         if (text.getText().toString().trim().length() < 30) {
             errorText.setVisibility(View.VISIBLE);
@@ -202,7 +202,7 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements BaseAp
             requestComment = RequestBody.create(MediaType.parse("multipart/form-data"),
                     text.getText().toString().trim());
         }
-        DDScannerApplication.getInstance().getDdScannerRestClient().postLeaveCommentForDiveSpot(commentAddedResultListener, images, requestId, requestRating, requestComment);
+        DDScannerApplication.getInstance().getDdScannerRestClient().postLeaveCommentForDiveSpot(commentAddedResultListener, images, sealifes, requestId, requestRating, requestComment);
     }
 
 
@@ -211,13 +211,21 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements BaseAp
         switch (item.getItemId()) {
             case android.R.id.home:
                 DialogHelpers.showDialogAfterChanging(R.string.dialog_leave_title, R.string.dialog_leave_review_message, this, this);
-//                onBackPressed();
                 return true;
             case R.id.send_review:
                 sendReview();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.btn_add_sealife:
+                SearchSealifeActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_PICK_SEALIFE);
+                break;
         }
     }
 
@@ -236,6 +244,12 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements BaseAp
                 }
                 if (resultCode == RESULT_CANCELED) {
                     materialDialog.dismiss();
+                }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_PICK_SEALIFE:
+                if (resultCode == RESULT_OK) {
+                    SealifeShort sealifeShort = (SealifeShort) data.getSerializableExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_SEALIFE);
+                    sealifesAdapter.add(sealifeShort);
                 }
                 break;
         }
@@ -273,17 +287,10 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements BaseAp
         pickPhotosFromGallery();
     }
 
-    @Subscribe
-    public void deleteImage(ImageDeletedEvent event) {
-        imageUris.remove(event.getImageIndex());
-        photosRecyclerView.setAdapter(new AddPhotoToDsListAdapter(imageUris, LeaveReviewActivity.this));
-    }
-
     @Override
     public void onPicturesTaken(ArrayList<String> pictures) {
-        imageUris.addAll(pictures);
-        photosRecyclerView.setAdapter(new AddPhotoToDsListAdapter(imageUris, this));
-        photosRecyclerView.scrollToPosition(imageUris.size());
+        addPhotoToDsListAdapter.addPhotos(pictures);
+        photosRecyclerView.scrollToPosition(addPhotoToDsListAdapter.getNewFilesUrisList().size());
     }
 
     @Override

@@ -505,12 +505,12 @@ public class DDScannerRestClient {
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 
-    public void postLeaveCommentForDiveSpot(ResultListener<Void> resultListener, List<MultipartBody.Part> images, RequestBody... requestBodies) {
+    public void postLeaveCommentForDiveSpot(ResultListener<Void> resultListener, List<MultipartBody.Part> images,  List<MultipartBody.Part> sealifes, RequestBody... requestBodies) {
         if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
             resultListener.onInternetConnectionClosed();
             return;
         }
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postLeaveComment(images, requestBodies[0], requestBodies[1], requestBodies[2]);
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postLeaveComment(images, requestBodies[0], requestBodies[1], requestBodies[2], sealifes);
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 

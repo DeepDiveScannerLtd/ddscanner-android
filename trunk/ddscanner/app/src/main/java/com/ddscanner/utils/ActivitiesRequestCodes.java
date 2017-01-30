@@ -105,6 +105,7 @@ public class ActivitiesRequestCodes {
     public static final int REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_PERMISSION_READ_STORAGE = 2401;
     public static final int REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_LOGIN = 2402;
     public static final int REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_PICK_PHOTO = 2403;
+    public static final int REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_PICK_SEALIFE = 2404;
 
     //    AddSealifeActivity
     public static final int REQUEST_CODE_ADD_SEALIFE_ACTIVITY_PERMISSION_READ_STORAGE = 2501;

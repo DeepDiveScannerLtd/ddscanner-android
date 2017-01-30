@@ -32,18 +32,10 @@ public class AddPhotoToDsListAdapter extends RecyclerView.Adapter<RecyclerView.V
     private static final String TAG = AddPhotoToDsListAdapter.class.getSimpleName();
     private Context context;
     private List<String> uris;
-    private List<String> newImagesUriList = new ArrayList<>();
-    private List<String> deletedImages = new ArrayList<>();
 
     public AddPhotoToDsListAdapter(List<String> uris, Context context) {
         this.context = context;
         this.uris = uris;
-        this.deletedImages = new ArrayList<>();
-        for (String uri : uris) {
-            if (!uri.contains(Constants.images)) {
-                this.newImagesUriList.add(uri);
-            }
-        }
     }
 
     @Override
@@ -75,15 +67,6 @@ public class AddPhotoToDsListAdapter extends RecyclerView.Adapter<RecyclerView.V
                 path = "file://" + path;
             }
             Picasso.with(context).load(path).resize(Math.round(Helpers.convertDpToPixel(70, context)),Math.round(Helpers.convertDpToPixel(70, context))).centerCrop().transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2, context)), 0, RoundedCornersTransformation.CornerType.ALL)).into(photoListViewHolder.photo);
-            photoListViewHolder.icDelete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (uris.get(holder.getAdapterPosition()).contains(Constants.images)) {
-                        deletedImages.add(uris.get(holder.getAdapterPosition()));
-                    }
-                    DDScannerApplication.bus.post(new ImageDeletedEvent(position));
-                }
-            });
         }
     }
 
@@ -95,18 +78,21 @@ public class AddPhotoToDsListAdapter extends RecyclerView.Adapter<RecyclerView.V
         return VIEW_TYPE_PHOTO;
     }
 
-    public List<String> getListOfDeletedImages() {
-        if (this.deletedImages.size() == 0) {
-            return null;
-        }
-        return this.deletedImages;
+    public void addPhotos(ArrayList<String> photos) {
+        this.uris.addAll(photos);
+        notifyDataSetChanged();
+    }
+
+    public void deletePhoto(int position) {
+        this.uris.remove(position);
+        notifyItemRemoved(position);
     }
 
     public List<String> getNewFilesUrisList() {
-        if (this.newImagesUriList.size() == 0) {
-            return null;
+        if (this.uris == null) {
+            this.uris = new ArrayList<>();
         }
-        return this.newImagesUriList;
+        return this.uris;
     }
 
     @Override
@@ -126,11 +112,12 @@ public class AddPhotoToDsListAdapter extends RecyclerView.Adapter<RecyclerView.V
             super(v);
             photo = (ImageView) v.findViewById(R.id.add_ds_photo);
             icDelete = (ImageView) v.findViewById(R.id.add_ds_photo_delete);
+            icDelete.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
-
+            deletePhoto(getAdapterPosition());
         }
     }
 
