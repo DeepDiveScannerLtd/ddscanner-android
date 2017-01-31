@@ -55,6 +55,11 @@ public class SealifeListAddingDiveSpotAdapter extends RecyclerView.Adapter<Seali
         notifyDataSetChanged();
     }
 
+    public void addSealifesList(ArrayList<SealifeShort> sealifes) {
+        this.sealifes.addAll(sealifes);
+        notifyDataSetChanged();
+    }
+
     public void deleteSealife(int position) {
         this.sealifes.remove(position);
         notifyItemRemoved(position);

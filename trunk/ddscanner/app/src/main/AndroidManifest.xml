@@ -161,7 +161,7 @@
             android:name=".ui.activities.CheckInPeoplesActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activities.ReviewsActivity"
+            android:name=".screens.reiews.ReviewsActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activities.TermsOfServiceActivity"
@@ -182,10 +182,10 @@
             android:name=".screens.sealife.details.SealifeDetailsActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activities.EditCommentActivity"
+            android:name=".screens.reiews.edit.EditCommentActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activities.LeaveReviewActivity"
+            android:name=".screens.reiews.add.LeaveReviewActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activities.DiveCenterDetailsActivity"

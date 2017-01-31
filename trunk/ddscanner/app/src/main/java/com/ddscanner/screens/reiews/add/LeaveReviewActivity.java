@@ -1,4 +1,4 @@
-package com.ddscanner.ui.activities;
+package com.ddscanner.screens.reiews.add;
 
 import android.app.Activity;
 import android.content.Context;
@@ -6,28 +6,23 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
-import com.ddscanner.analytics.EventsTracker;
-import com.ddscanner.entities.CommentOld;
 import com.ddscanner.entities.DialogClosedListener;
 import com.ddscanner.entities.SealifeShort;
-import com.ddscanner.entities.errors.ValidationError;
 import com.ddscanner.events.AddPhotoDoListEvent;
-import com.ddscanner.events.ImageDeletedEvent;
 import com.ddscanner.rest.DDScannerRestClient;
+import com.ddscanner.ui.activities.BaseAppCompatActivity;
+import com.ddscanner.ui.activities.LoginActivity;
+import com.ddscanner.ui.activities.SearchSealifeActivity;
 import com.ddscanner.ui.adapters.AddPhotoToDsListAdapter;
 import com.ddscanner.ui.adapters.SealifeListAddingDiveSpotAdapter;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
@@ -177,6 +172,10 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements View.O
             LoginActivity.showForResult(LeaveReviewActivity.this, ActivitiesRequestCodes.REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_LOGIN);
             return;
         }
+        if (text.getText().toString().trim().length() < 30) {
+            errorText.setVisibility(View.VISIBLE);
+            return;
+        }
         List<MultipartBody.Part> sealifes = new ArrayList<>();
         for (SealifeShort sealife : sealifesAdapter.getSealifes()) {
             sealifes.add(MultipartBody.Part.createFormData("sealifes[]", sealife.getId()));
@@ -189,10 +188,6 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements View.O
                 MultipartBody.Part part = MultipartBody.Part.createFormData("photos[]", image.getName(),
                         requestFile);
                 images.add(part);
-        }
-        if (text.getText().toString().trim().length() < 30) {
-            errorText.setVisibility(View.VISIBLE);
-            return;
         }
         materialDialog.show();
         requestRating = RequestBody.create(MediaType.parse("multipart/form-data"),

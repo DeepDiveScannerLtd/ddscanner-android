@@ -362,7 +362,8 @@ public interface DDScannerRestService {
             @Part List<MultipartBody.Part> deletedPhotos,
             @Part("id") RequestBody id,
             @Part("rating") RequestBody rating,
-            @Part("review") RequestBody review
+            @Part("review") RequestBody review,
+            @Part List<MultipartBody.Part> sealife
     );
 
     @POST("v2_0/divespot.review.delete")

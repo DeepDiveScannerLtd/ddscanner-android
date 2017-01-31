@@ -6,19 +6,14 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.ddscanner.R;
-import com.ddscanner.ui.activities.LeaveReviewActivity;
+import com.ddscanner.screens.reiews.add.LeaveReviewActivity;
 import com.ddscanner.ui.adapters.CheckedInDialogPhotosAdapter;
-
-import java.util.ArrayList;
 
 public class CheckedInDialogFragment extends DialogFragment implements View.OnClickListener {
 

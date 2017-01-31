@@ -1,4 +1,4 @@
-package com.ddscanner.ui.activities;
+package com.ddscanner.screens.reiews;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -32,6 +32,9 @@ import com.ddscanner.events.ShowLoginActivityIntent;
 import com.ddscanner.events.ShowSliderForReviewImagesEvent;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.photo.slider.ImageSliderActivity;
+import com.ddscanner.screens.reiews.edit.EditCommentActivity;
+import com.ddscanner.screens.reiews.add.LeaveReviewActivity;
+import com.ddscanner.ui.activities.LoginActivity;
 import com.ddscanner.ui.adapters.ReviewsListAdapter;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
