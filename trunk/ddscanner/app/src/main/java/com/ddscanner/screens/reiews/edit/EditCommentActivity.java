@@ -144,6 +144,7 @@ public class EditCommentActivity extends BaseAppCompatActivity implements View.O
     private void findViews() {
         sealifeList= (RecyclerView) findViewById(R.id.sealife_list);
         buttonAddSealife = (LinearLayout) findViewById(R.id.btn_add_sealife);
+        buttonAddSealife.setOnClickListener(this);
         materialDialog = Helpers.getMaterialDialog(this);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         text = (EditText) findViewById(R.id.review_text);
