@@ -858,7 +858,7 @@ public class DDScannerRestClient {
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 
-    public void postMapsToDiveSpot(String id, ArrayList<String> images, final ResultListener<List<String>> resultListener) {
+    public void postMapsToDiveSpot(String id, ArrayList<String> images, final ResultListener<Void> resultListener) {
         if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
             resultListener.onInternetConnectionClosed();
             return;
@@ -872,17 +872,10 @@ public class DDScannerRestClient {
             imagesToSend.add(part);
         }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().addMapsToDiveSpot(RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), id), imagesToSend );
-        call.enqueue(new ResponseEntityCallback<List<String>>(gson, resultListener) {
-            @Override
-            void handleResponseString(ResultListener<List<String>> resultListener, String responseString) throws JSONException {
-                Type listType = new TypeToken<List<String>>(){}.getType();
-                ArrayList<String> photos = gson.fromJson(responseString, listType);
-                resultListener.onSuccess(photos);
-            }
-        });
+        call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 
-    public void postPhotosToDiveSpot(String id, ArrayList<String> images, final ResultListener<List<String>> resultListener) {
+    public void postPhotosToDiveSpot(String id, ArrayList<String> images, final ResultListener<Void> resultListener) {
         if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
             resultListener.onInternetConnectionClosed();
             return;
@@ -896,14 +889,7 @@ public class DDScannerRestClient {
             imagesToSend.add(part);
         }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().addPhotosToDiveSpot(RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), id), imagesToSend );
-        call.enqueue(new ResponseEntityCallback<List<String>>(gson, resultListener) {
-            @Override
-            void handleResponseString(ResultListener<List<String>> resultListener, String responseString) throws JSONException {
-                Type listType = new TypeToken<List<String>>(){}.getType();
-                ArrayList<String> photos = gson.fromJson(responseString, listType);
-                resultListener.onSuccess(photos);
-            }
-        });
+        call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 
     public void getUserAddedPhotos(ResultListener<ArrayList<DiveSpotPhoto>> resultListener, String userId) {
