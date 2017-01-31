@@ -218,6 +218,10 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
         DDScannerApplication.getInstance().getDdScannerRestClient().getUserSelfInformation(userResultListener);
     }
 
+    public void reloadData() {
+        getUserDataRequest();
+    }
+
     private void changeUi() {
         if (getContext() == null) {
             return;

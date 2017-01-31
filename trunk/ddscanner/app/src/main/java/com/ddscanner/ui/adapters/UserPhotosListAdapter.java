@@ -19,6 +19,7 @@ import com.ddscanner.events.OpenPhotosActivityEvent;
 import com.ddscanner.screens.divespot.details.DiveSpotPhotosAdapter;
 import com.ddscanner.screens.photo.slider.ImageSliderActivity;
 import com.ddscanner.ui.views.TransformationRoundImage;
+import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.ImageLoadedCallback;
 import com.squareup.picasso.Picasso;
@@ -105,7 +106,7 @@ public class UserPhotosListAdapter extends RecyclerView.Adapter<UserPhotosListAd
                 return;
             }
             DDScannerApplication.getInstance().getDiveSpotPhotosContainer().setPhotos(photos);
-            ImageSliderActivity.showForResult(context, photos, getAdapterPosition(), 0, PhotoOpenedSource.PROFILE, userId);
+            ImageSliderActivity.showForResult(context, photos, getAdapterPosition(), ActivitiesRequestCodes.REQUEST_CODE_SHOW_USER_PROFILE_PHOTOS, PhotoOpenedSource.PROFILE, userId);
         }
     }
 

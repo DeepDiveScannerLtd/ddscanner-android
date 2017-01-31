@@ -73,6 +73,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     private String sourceId;
     private LikeDislikeResultListener likeResultListener = new LikeDislikeResultListener(true);
     private LikeDislikeResultListener dislikeResultListener = new LikeDislikeResultListener(false);
+    private ArrayList<DiveSpotPhoto> deletedPhotos = new ArrayList<>();
     float x1, x2;
     float y1, y2;
     PhotoOpenedSource photoOpenedSource;
@@ -110,6 +111,30 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
             InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_IMAGE_SLIDER_ACTIVITY_FAILED_TO_CONNECT, false);
         }
 
+    };
+
+    private DDScannerRestClient.ResultListener<ArrayList<DiveSpotPhoto>> photosResultListenr = new DDScannerRestClient.ResultListener<ArrayList<DiveSpotPhoto>>() {
+        @Override
+        public void onSuccess(ArrayList<DiveSpotPhoto> result) {
+            images = result;
+            changeUiAccrodingPosition(position);
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_IMAGE_SLIDER_ACTIVITY_FAILED_TO_CONNECT, false);
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            EventsTracker.trackUnknownServerError(url, errorMessage);
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_IMAGE_SLIDER_ACTIVITY_FAILED_TO_CONNECT, false);
+        }
+
+        @Override
+        public void onInternetConnectionClosed() {
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_IMAGE_SLIDER_ACTIVITY_FAILED_TO_CONNECT, false);
+        }
     };
 
     private DDScannerRestClient.ResultListener<Void> reportImageRequestListener = new DDScannerRestClient.ResultListener<Void>() {
@@ -292,6 +317,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     }
 
     private void imageDeleted(int position) {
+        deletedPhotos.add(images.get(position));
         images.remove(position);
         if (images.size() > 0) {
             sliderImagesAdapter = new SliderImagesAdapter(getFragmentManager(), images);
@@ -305,7 +331,9 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
             }
             setUi();
         } else {
-            setResult(RESULT_OK);
+            Intent intent = new Intent();
+            intent.putExtra("deletedImages", deletedPhotos);
+            setResult(RESULT_OK, intent);
             finish();
         }
     }
@@ -401,7 +429,9 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     @Override
     public void onBackPressed() {
         if (isChanged) {
-            setResult(RESULT_OK);
+            Intent intent = new Intent();
+            intent.putExtra("deletedImages", deletedPhotos);
+            setResult(RESULT_OK, intent);
             finish();
             overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
         } else {
@@ -425,16 +455,38 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
                     setResult(RESULT_OK);
                     reportImage(reportName, reportType, reportDescription);
                     switch (photoOpenedSource) {
-
+                        case DIVESPOT:
+                        case REVIEWS:
+                        case ALL:
+                            DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotPhotos(sourceId, imagesResulListener);
+                            break;
+                        case REVIEW:
+                            DDScannerApplication.getInstance().getDdScannerRestClient().getReviewPhotos(photosResultListenr, sourceId);
+                            break;
+                        case PROFILE:
+                            DDScannerApplication.getInstance().getDdScannerRestClient().getUserAddedPhotos(photosResultListenr, sourceId);
+                            break;
                     }
-//                    DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotPhotos(imagesResulListener);
+
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_DELETE:
                 if (resultCode == RESULT_OK) {
                     setResult(RESULT_OK);
                     deleteImage(deleteImageName);
-//                    DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotPhotos(diveSpotId, imagesResulListener);
+                    switch (photoOpenedSource) {
+                        case DIVESPOT:
+                        case REVIEWS:
+                        case ALL:
+                            DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotPhotos(sourceId, imagesResulListener);
+                            break;
+                        case REVIEW:
+                            DDScannerApplication.getInstance().getDdScannerRestClient().getReviewPhotos(photosResultListenr, sourceId);
+                            break;
+                        case PROFILE:
+                            DDScannerApplication.getInstance().getDdScannerRestClient().getUserAddedPhotos(photosResultListenr, sourceId);
+                            break;
+                    }
                 }
                 break;
         }

@@ -539,7 +539,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     public void showSliderActivity(ShowSliderForReviewImagesEvent event) {
         this.commentPosition = event.getCommentPosition();
         DDScannerApplication.getInstance().getDiveSpotPhotosContainer().setPhotos(event.getPhotos());
-        ImageSliderActivity.showForResult(this, event.getPhotos(), event.getPosition(), ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_SHOW_SLIDER, PhotoOpenedSource.REVIEWS, comments.get(commentPosition).getComment().getId());
+        ImageSliderActivity.showForResult(this, event.getPhotos(), event.getPosition(), ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_SHOW_SLIDER, PhotoOpenedSource.REVIEW, comments.get(commentPosition).getComment().getId());
     }
 
     @Override

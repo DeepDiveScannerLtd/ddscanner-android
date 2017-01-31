@@ -142,7 +142,6 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
     @Override
     public void onStart() {
         super.onStart();
-        DDScannerApplication.bus.register(this);
         userResultListener.setCancelled(false);
     }
 
@@ -156,6 +155,7 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
     @Override
     public void onResume() {
         super.onResume();
+        DDScannerApplication.bus.register(this);
         userResultListener.setCancelled(false);
         if (binding.getDiveCenterViewModel() == null) {
             binding.progressBarLoading.setVisibility(View.VISIBLE);
@@ -165,6 +165,12 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
 
     @Subscribe
     public void getUserProfileInfo(LoadUserProfileInfoEvent event) {
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == 0) {
+            DDScannerApplication.getInstance().getDdScannerRestClient().getDiveCenterSelfInformation(userResultListener);
+        }
+    }
+
+    public void reloadData() {
         if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == 0) {
             DDScannerApplication.getInstance().getDdScannerRestClient().getDiveCenterSelfInformation(userResultListener);
         }

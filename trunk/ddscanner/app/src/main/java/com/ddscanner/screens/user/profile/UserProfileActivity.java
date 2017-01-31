@@ -23,6 +23,7 @@ import com.ddscanner.events.OpenPhotosActivityEvent;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.activities.PhotosGalleryActivity;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
+import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.google.gson.Gson;
 import com.rey.material.widget.ProgressView;
@@ -162,7 +163,7 @@ public class UserProfileActivity extends AppCompatActivity implements DialogClos
 
     @Subscribe
     public void openPhotosActivity(OpenPhotosActivityEvent event) {
-        PhotosGalleryActivity.show(userId, this, PhotoOpenedSource.PROFILE, new Gson().toJson(photoAuthor));
+        PhotosGalleryActivity.showForResult(userId, this, PhotoOpenedSource.PROFILE, new Gson().toJson(photoAuthor), ActivitiesRequestCodes.REQUEST_CODE_SHOW_USER_PROFILE_PHOTOS);
     }
 
 }

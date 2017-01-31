@@ -190,4 +190,6 @@ public class ActivitiesRequestCodes {
     //Dive center spots activity
     public static final int REQUEST_CODE_DIVE_CENTER_SPOTS_ACTIVITY_GO_TO_MY_LOCATION = 4401;
 
+    public static final int REQUEST_CODE_SHOW_USER_PROFILE_PHOTOS = 4501;
+
 }

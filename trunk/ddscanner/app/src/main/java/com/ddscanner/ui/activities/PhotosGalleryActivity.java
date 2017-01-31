@@ -1,5 +1,6 @@
 package com.ddscanner.ui.activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import com.ddscanner.entities.PhotoOpenedSource;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.divespot.photos.AllPhotosDiveSpotAdapter;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
+import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.google.gson.Gson;
 import com.rey.material.widget.ProgressView;
@@ -34,6 +36,7 @@ public class PhotosGalleryActivity extends BaseAppCompatActivity implements Dial
     private String loadedInfoId;
     private PhotoOpenedSource source;
     private PhotoAuthor photoAuthor;
+    private boolean isDataChanged = false;
 
     private DDScannerRestClient.ResultListener<ArrayList<DiveSpotPhoto>> resultListener = new DDScannerRestClient.ResultListener<ArrayList<DiveSpotPhoto>>() {
         @Override
@@ -85,6 +88,16 @@ public class PhotosGalleryActivity extends BaseAppCompatActivity implements Dial
         context.startActivity(intent);
     }
 
+    public static void showForResult(String diveSpotId, Activity context, PhotoOpenedSource source, String author, int requestCode) {
+        Intent intent = new Intent(context, PhotosGalleryActivity.class);
+        intent.putExtra("id", diveSpotId);
+        intent.putExtra("source", source);
+        if (author != null) {
+            intent.putExtra("user", author);
+        }
+        context.startActivityForResult(intent, requestCode);
+    }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -126,7 +139,41 @@ public class PhotosGalleryActivity extends BaseAppCompatActivity implements Dial
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_ACTIVITY_SLIDER:
+                if (resultCode == RESULT_OK) {
+                    isDataChanged = true;
+                    switch (source) {
+                        case PROFILE:
+                            DDScannerApplication.getInstance().getDdScannerRestClient().getUserAddedPhotos(resultListener, loadedInfoId);
+                            break;
+                        case MAPS:
+                            DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotMaps(loadedInfoId, resultListener);
+                            break;
+                        case REVIEW:
+                            DDScannerApplication.getInstance().getDdScannerRestClient().getReviewPhotos(resultListener, loadedInfoId);
+                            break;
+                    }
+                }
+                break;
+        }
+    }
+
+    @Override
     public void onDialogClosed(int requestCode) {
         finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (isDataChanged) {
+            setResult(RESULT_OK);
+            finish();
+        } else {
+            setResult(RESULT_CANCELED);
+            finish();
+        }
     }
 }

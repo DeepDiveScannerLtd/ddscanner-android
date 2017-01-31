@@ -157,6 +157,14 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
         context.startActivity(intent);
     }
 
+    public static void showForResult(Activity context, String id, int requestCode) {
+        Intent intent = new Intent(context, DiveSpotPhotosActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("id", id);
+        intent.putExtras(bundle);
+        context.startActivityForResult(intent, requestCode);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -188,8 +196,7 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
         switch (requestCode) {
             case ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_ADD_PHOTOS:
                 if (resultCode == RESULT_OK) {
-                    Intent intent = new Intent();
-                    setResult(RESULT_OK, intent);
+                    setResult(RESULT_OK);
                     getDiveSpotPhotos();
                     //   finish();
                 }
