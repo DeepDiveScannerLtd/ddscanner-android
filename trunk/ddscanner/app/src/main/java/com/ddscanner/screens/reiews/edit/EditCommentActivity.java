@@ -131,7 +131,7 @@ public class EditCommentActivity extends BaseAppCompatActivity implements View.O
             editSpotPhotosListAdapter.addServerPhoto(serverPhotos);
            // setRcSettings();
         }
-        ratingBar.setRating(Integer.parseInt(comment.getRating()));
+        ratingBar.setRating(comment.getRating());
         text.setText(comment.getReview());
         LinearLayoutManager sealifLayoutManager = new LinearLayoutManager(this);
         sealifeList.setLayoutManager(sealifLayoutManager);

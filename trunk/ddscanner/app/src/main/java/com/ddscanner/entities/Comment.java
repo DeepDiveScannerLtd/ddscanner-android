@@ -8,7 +8,7 @@ public class Comment {
 
     private String id;
     private String review;
-    private String rating;
+    private int rating;
     private ArrayList<DiveSpotPhoto> photos;
     private String likes;
     private String dislikes;
@@ -65,11 +65,11 @@ public class Comment {
         this.review = review;
     }
 
-    public String getRating() {
+    public int getRating() {
         return rating;
     }
 
-    public void setRating(String rating) {
+    public void setRating(int rating) {
         this.rating = rating;
     }
 

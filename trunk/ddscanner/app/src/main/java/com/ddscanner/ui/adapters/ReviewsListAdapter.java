@@ -30,6 +30,7 @@ import com.ddscanner.events.ReportCommentEvent;
 import com.ddscanner.screens.user.profile.UserProfileActivity;
 import com.ddscanner.ui.views.DislikeView;
 import com.ddscanner.ui.views.LikeView;
+import com.ddscanner.ui.views.RatingView;
 import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;
 
@@ -66,7 +67,6 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         boolean isLiked;
         boolean isDisliked;
         final CommentEntity commentEntity = comments.get(reviewsListViewHolder.getAdapterPosition());
-        reviewsListViewHolder.likeView.setLikeValues(true, "14");
         reviewsListViewHolder.rating.removeAllViews();
         reviewsListViewHolder.date.setText("");
             // reviewsListViewHolder.photos.setVisibility(View.GONE);
@@ -138,18 +138,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         } else {
             reviewsListViewHolder.user_avatar.setImageResource(R.drawable.avatar_profile_default);
         }
-        for (int k = 0; k < Integer.parseInt(commentEntity.getComment().getRating()); k++) {
-            ImageView iv = new ImageView(context);
-            iv.setImageResource(R.drawable.ic_list_star_full);
-            iv.setPadding(0, 0, 5, 0);
-            reviewsListViewHolder.rating.addView(iv);
-        }
-        for (int k = 0; k < 5 - Integer.parseInt(commentEntity.getComment().getRating()); k++) {
-            ImageView iv = new ImageView(context);
-            iv.setImageResource(R.drawable.ic_list_star_empty);
-            iv.setPadding(0, 0, 5, 0);
-            reviewsListViewHolder.rating.addView(iv);
-        }
+        reviewsListViewHolder.rating.setRating(commentEntity.getComment().getRating(), R.drawable.ic_list_star_full, R.drawable.ic_list_star_empty);
         if (commentEntity.getComment().getDate() != null && !commentEntity.getComment().getDate().isEmpty()) {
             reviewsListViewHolder.date.setText(Helpers.getCommentDate(commentEntity.getComment().getDate()));
         }
@@ -268,11 +257,11 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
     public class ReviewsListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private ImageView user_avatar;
-        private LinearLayout rating;
+        private RatingView rating;
         private TextView user_name;
         private TextView user_review;
         private RecyclerView photos;
-        private LinearLayout stars;
+        private RatingView stars;
         private TextView date;
         private ImageView menu;
         private TextView expand;
@@ -289,7 +278,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
             expand = (TextView) v.findViewById(R.id.button_toggle);
             date = (TextView) v.findViewById(R.id.date);
             user_avatar = (ImageView) v.findViewById(R.id.user_avatar);
-            rating = (LinearLayout) v.findViewById(R.id.stars);
+            rating = (RatingView) v.findViewById(R.id.stars);
             user_name = (TextView) v.findViewById(R.id.user_name);
             user_review = (TextView) v.findViewById(R.id.review);
             photos = (RecyclerView) v.findViewById(R.id.review_photos_rc);
