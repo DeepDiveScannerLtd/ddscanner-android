@@ -419,7 +419,7 @@ public class DDScannerRestClient {
             resultListener.onInternetConnectionClosed();
             return;
         }
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getSelfCommentsList(userId);
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getSelfCommentsList(userId, 1);
         call.enqueue(new ResponseEntityCallback<ArrayList<SelfCommentEntity>>(gson, resultListener) {
             @Override
             void handleResponseString(ResultListener<ArrayList<SelfCommentEntity>> resultListener, String responseString) throws JSONException {

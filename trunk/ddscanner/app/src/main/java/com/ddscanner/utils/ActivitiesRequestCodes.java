@@ -192,4 +192,12 @@ public class ActivitiesRequestCodes {
 
     public static final int REQUEST_CODE_SHOW_USER_PROFILE_PHOTOS = 4501;
 
+    //Foreign user profile activity
+    public static final int REQUEST_CODE_FOREIGN_USER_LOGIN_TO_SHOW_CHECKINS = 4601;
+    public static final int REQUEST_CODE_FOREIGN_USER_LOGIN_TO_SHOW_EDITED = 4602;
+    public static final int REQUEST_CODE_FOREIGN_USER_LOGIN_TO_SHOW_CREATED = 4603;
+    public static final int REQUEST_CODE_FOREIGN_USER_LOGIN_TO_SHOW_LIKES = 4604;
+    public static final int REQUEST_CODE_FOREIGN_USER_LOGIN_TO_SHOW_DISLIKES = 4605;
+    public static final int REQUEST_CODE_FOREIGN_USER_LOGIN_TO_SHOW_REVIEWS = 4606;
+
 }

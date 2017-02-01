@@ -409,7 +409,7 @@ public interface DDScannerRestService {
     Call<ResponseBody> getCommentsForDiveSpot(@Query("id") String diveSpotId, @Query("include_photo_details") int value);
 
     @GET("v2_0/user.reviews.get")
-    Call<ResponseBody> getSelfCommentsList(@Query("id") String diveCenterId);
+    Call<ResponseBody> getSelfCommentsList(@Query("id") String diveCenterId, @Query("include_photo_details") int value);
 
     @POST("v2_0/instructor.divecenter.add")
     Call<ResponseBody> postAddIstructorToDiveCenter(@Query("id") String diveCenterId);

@@ -24,10 +24,12 @@ import com.ddscanner.entities.BaseUser;
 import com.ddscanner.entities.DialogClosedListener;
 import com.ddscanner.entities.DiveSpotListSource;
 import com.ddscanner.entities.DiveSpotPhoto;
+import com.ddscanner.entities.PhotoOpenedSource;
 import com.ddscanner.entities.ProfileAchievement;
 import com.ddscanner.entities.User;
 import com.ddscanner.events.LoadUserProfileInfoEvent;
 import com.ddscanner.events.LoggedOutEvent;
+import com.ddscanner.events.OpenPhotosActivityEvent;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.achievements.AchievementsActivity;
 import com.ddscanner.screens.profile.edit.EditUserProfileActivity;
@@ -35,6 +37,7 @@ import com.ddscanner.ui.activities.AboutActivity;
 import com.ddscanner.events.ChangeLoginViewEvent;
 import com.ddscanner.ui.activities.DiveSpotsListActivity;
 import com.ddscanner.ui.activities.MainActivity;
+import com.ddscanner.ui.activities.PhotosGalleryActivity;
 import com.ddscanner.ui.activities.SelfCommentsActivity;
 import com.ddscanner.ui.activities.UserLikesDislikesActivity;
 import com.ddscanner.ui.adapters.AchievmentProfileListAdapter;
@@ -343,6 +346,11 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
 
     public void showAchievementsDetails(View view) {
         AchievementsActivity.show(getContext());
+    }
+
+    @Subscribe
+    public void openPhotosActivity(OpenPhotosActivityEvent event) {
+        PhotosGalleryActivity.showForResult(binding.getProfileFragmentViewModel().getUser().getId(), getActivity(), PhotoOpenedSource.PROFILE, new Gson().toJson(binding.getProfileFragmentViewModel().getUser()), ActivitiesRequestCodes.REQUEST_CODE_SHOW_USER_PROFILE_PHOTOS);
     }
 
 }

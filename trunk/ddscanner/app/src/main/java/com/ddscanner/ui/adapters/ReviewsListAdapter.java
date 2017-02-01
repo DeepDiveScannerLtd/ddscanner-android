@@ -27,6 +27,7 @@ import com.ddscanner.events.DislikeCommentEvent;
 import com.ddscanner.events.EditCommentEvent;
 import com.ddscanner.events.LikeCommentEvent;
 import com.ddscanner.events.ReportCommentEvent;
+import com.ddscanner.screens.user.profile.UserProfileActivity;
 import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;
 
@@ -322,7 +323,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
             switch (v.getId()) {
                 case R.id.user_avatar:
                     EventsTracker.trackReviewerProfileView();
-                    //TODO show user activity
+                    UserProfileActivity.show(context, comments.get(getAdapterPosition()).getAuthor().getId(), comments.get(getAdapterPosition()).getAuthor().getType());
                     break;
                 case R.id.like_layout:
                     if (!isLiked) {
