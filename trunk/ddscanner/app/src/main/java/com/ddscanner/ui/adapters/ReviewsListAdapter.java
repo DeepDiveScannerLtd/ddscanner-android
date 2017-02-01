@@ -28,6 +28,9 @@ import com.ddscanner.events.EditCommentEvent;
 import com.ddscanner.events.LikeCommentEvent;
 import com.ddscanner.events.ReportCommentEvent;
 import com.ddscanner.screens.user.profile.UserProfileActivity;
+import com.ddscanner.ui.views.DislikeView;
+import com.ddscanner.ui.views.LikeView;
+import com.ddscanner.ui.views.RatingView;
 import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;
 
@@ -66,22 +69,12 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         final CommentEntity commentEntity = comments.get(reviewsListViewHolder.getAdapterPosition());
         reviewsListViewHolder.rating.removeAllViews();
         reviewsListViewHolder.date.setText("");
-        reviewsListViewHolder.dislikeImage.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_review_dislike_empty));
-        reviewsListViewHolder.likeImage.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_review_like_empty));
-       // reviewsListViewHolder.photos.setVisibility(View.GONE);
+            // reviewsListViewHolder.photos.setVisibility(View.GONE);
         reviewsListViewHolder.expand.setText("");
-        reviewsListViewHolder.dislikesCount.setText("");
-        reviewsListViewHolder.likesCount.setText("");
         isLiked = commentEntity.getComment().isLike();
         isDisliked = commentEntity.getComment().isDislike();
-        if (isLiked) {
-            reviewsListViewHolder.likeImage.setImageDrawable(AppCompatDrawableManager.get().getDrawable(
-                    context, R.drawable.ic_like_review));
-        }
-        if (isDisliked) {
-            reviewsListViewHolder.dislikeImage.setImageDrawable(AppCompatDrawableManager.get()
-                    .getDrawable(context, R.drawable.ic_review_dislike));
-        }
+        reviewsListViewHolder.likeView.setLikeValues(isLiked, commentEntity.getComment().getLikes());
+        reviewsListViewHolder.dislikeView.setDisikeValues(isDisliked, commentEntity.getComment().getDislikes());
         Log.i(TAG, reviewsListViewHolder.toString());
         if (commentEntity.getComment().getPhotos() != null) {
        //     reviewsListViewHolder.photos.setVisibility(View.VISIBLE);
@@ -99,7 +92,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
             reviewsListViewHolder.photos.setAdapter(null);
         }
         if (!isLiked && !commentEntity.getAuthor().getId().equals(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId())) {
-            reviewsListViewHolder.like.setOnClickListener(new View.OnClickListener() {
+            reviewsListViewHolder.likeView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     DDScannerApplication.bus.post(new LikeCommentEvent(reviewsListViewHolder.getAdapterPosition()));
@@ -107,7 +100,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
             });
         }
         if (!isDisliked && !commentEntity.getAuthor().getId().equals(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId())) {
-            reviewsListViewHolder.dislike.setOnClickListener(new View.OnClickListener() {
+            reviewsListViewHolder.dislikeView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     DDScannerApplication.bus.post(new DislikeCommentEvent(reviewsListViewHolder.getAdapterPosition()));
@@ -132,8 +125,6 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
 
         reviewsListViewHolder.user_name.setText(commentEntity.getAuthor().getName());
         reviewsListViewHolder.user_review.setText(commentEntity.getComment().getReview());
-        reviewsListViewHolder.likesCount.setText(Helpers.formatLikesCommentsCountNumber(commentEntity.getComment().getLikes()));
-        reviewsListViewHolder.dislikesCount.setText(Helpers.formatLikesCommentsCountNumber(commentEntity.getComment().getDislikes()));
         isAdapterSet = true;
 
         if (comments.get(reviewsListViewHolder.getAdapterPosition()).getAuthor().getPhoto() != null) {
@@ -147,18 +138,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         } else {
             reviewsListViewHolder.user_avatar.setImageResource(R.drawable.avatar_profile_default);
         }
-        for (int k = 0; k < Integer.parseInt(commentEntity.getComment().getRating()); k++) {
-            ImageView iv = new ImageView(context);
-            iv.setImageResource(R.drawable.ic_list_star_full);
-            iv.setPadding(0, 0, 5, 0);
-            reviewsListViewHolder.rating.addView(iv);
-        }
-        for (int k = 0; k < 5 - Integer.parseInt(commentEntity.getComment().getRating()); k++) {
-            ImageView iv = new ImageView(context);
-            iv.setImageResource(R.drawable.ic_list_star_empty);
-            iv.setPadding(0, 0, 5, 0);
-            reviewsListViewHolder.rating.addView(iv);
-        }
+        reviewsListViewHolder.rating.setRating(commentEntity.getComment().getRating(), R.drawable.ic_list_star_full, R.drawable.ic_list_star_empty);
         if (commentEntity.getComment().getDate() != null && !commentEntity.getComment().getDate().isEmpty()) {
             reviewsListViewHolder.date.setText(Helpers.getCommentDate(commentEntity.getComment().getDate()));
         }
@@ -277,17 +257,11 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
     public class ReviewsListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private ImageView user_avatar;
-        private LinearLayout rating;
+        private RatingView rating;
         private TextView user_name;
         private TextView user_review;
         private RecyclerView photos;
-        private LinearLayout like;
-        private LinearLayout dislike;
-        private TextView likesCount;
-        private TextView dislikesCount;
-        private ImageView likeImage;
-        private ImageView dislikeImage;
-        private LinearLayout stars;
+        private RatingView stars;
         private TextView date;
         private ImageView menu;
         private TextView expand;
@@ -295,7 +269,8 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         private boolean isDisliked = false;
         private LinearLayout sealifesLayout;
         private RecyclerView sealifesList;
-
+        private LikeView likeView;
+        private DislikeView dislikeView;
 
         public ReviewsListViewHolder(View v) {
             super(v);
@@ -303,18 +278,14 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
             expand = (TextView) v.findViewById(R.id.button_toggle);
             date = (TextView) v.findViewById(R.id.date);
             user_avatar = (ImageView) v.findViewById(R.id.user_avatar);
-            rating = (LinearLayout) v.findViewById(R.id.stars);
+            rating = (RatingView) v.findViewById(R.id.stars);
             user_name = (TextView) v.findViewById(R.id.user_name);
             user_review = (TextView) v.findViewById(R.id.review);
             photos = (RecyclerView) v.findViewById(R.id.review_photos_rc);
-            like = (LinearLayout) v.findViewById(R.id.like_layout);
-            dislike = (LinearLayout) v.findViewById(R.id.dislike_layout);
-            likesCount = (TextView) v.findViewById(R.id.likes_count);
-            dislikesCount = (TextView) v.findViewById(R.id.dislikes_count);
-            likeImage = (ImageView) v.findViewById(R.id.likes_image);
-            dislikeImage = (ImageView) v.findViewById(R.id.dislikes_image);
             sealifesLayout = (LinearLayout) v.findViewById(R.id.sealifes_layout);
             sealifesList = (RecyclerView) v.findViewById(R.id.sealifes_list);
+            likeView = (LikeView) v.findViewById(R.id.like_layout);
+            dislikeView = (DislikeView) v.findViewById(R.id.dislike_layout);
             user_avatar.setOnClickListener(this);
         }
 
