@@ -48,6 +48,10 @@ public class PhotosGalleryActivity extends BaseAppCompatActivity implements Dial
                         for (DiveSpotPhoto diveSpotPhoto : result) {
                             result.get(result.indexOf(diveSpotPhoto)).setAuthor(photoAuthor);
                         }
+                    } else {
+                        for (DiveSpotPhoto diveSpotPhoto : result) {
+                            result.get(result.indexOf(diveSpotPhoto)).setAuthor(photoAuthor);
+                        }
                     }
                 case MAPS:
                 case NOTIFICATION:

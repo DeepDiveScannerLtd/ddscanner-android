@@ -24,6 +24,7 @@ import com.ddscanner.entities.BaseUser;
 import com.ddscanner.entities.DialogClosedListener;
 import com.ddscanner.entities.DiveSpotListSource;
 import com.ddscanner.entities.DiveSpotPhoto;
+import com.ddscanner.entities.PhotoAuthor;
 import com.ddscanner.entities.PhotoOpenedSource;
 import com.ddscanner.entities.ProfileAchievement;
 import com.ddscanner.entities.User;
@@ -350,7 +351,7 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
 
     @Subscribe
     public void openPhotosActivity(OpenPhotosActivityEvent event) {
-        PhotosGalleryActivity.showForResult(binding.getProfileFragmentViewModel().getUser().getId(), getActivity(), PhotoOpenedSource.PROFILE, new Gson().toJson(binding.getProfileFragmentViewModel().getUser()), ActivitiesRequestCodes.REQUEST_CODE_SHOW_USER_PROFILE_PHOTOS);
+        PhotosGalleryActivity.showForResult(binding.getProfileFragmentViewModel().getUser().getId(), getActivity(), PhotoOpenedSource.PROFILE, new Gson().toJson(new PhotoAuthor(binding.getProfileFragmentViewModel().getUser().getId(), binding.getProfileFragmentViewModel().getUser().getName(), binding.getProfileFragmentViewModel().getUser().getPhoto(), binding.getProfileFragmentViewModel().getUser().getType())), ActivitiesRequestCodes.REQUEST_CODE_SHOW_USER_PROFILE_PHOTOS);
     }
 
 }
