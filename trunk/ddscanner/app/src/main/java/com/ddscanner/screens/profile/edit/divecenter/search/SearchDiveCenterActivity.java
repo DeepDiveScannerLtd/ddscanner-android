@@ -156,7 +156,7 @@ public class SearchDiveCenterActivity extends BaseAppCompatActivity implements S
             diveCenterId = event.getBaseIdNamePhotoEntity().getId();
             Intent intent = new Intent();
             intent.putExtra("id", diveCenterId);
-            setResult(RESULT_OK);
+            setResult(RESULT_OK, intent);
             finish();
         }
     }

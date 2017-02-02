@@ -20,13 +20,17 @@ import com.ddscanner.databinding.ViewDivecenterProfileBinding;
 import com.ddscanner.entities.BaseUser;
 import com.ddscanner.entities.DialogClosedListener;
 import com.ddscanner.entities.DiveCenterProfile;
+import com.ddscanner.entities.PhotoAuthor;
+import com.ddscanner.entities.PhotoOpenedSource;
 import com.ddscanner.events.ChangePageOfMainViewPagerEvent;
 import com.ddscanner.events.LoadUserProfileInfoEvent;
 import com.ddscanner.events.LoggedOutEvent;
+import com.ddscanner.events.OpenPhotosActivityEvent;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.instructors.InstructorsActivity;
 import com.ddscanner.screens.profile.edit.EditDiveCenterProfileActivity;
 import com.ddscanner.ui.activities.MainActivity;
+import com.ddscanner.ui.activities.PhotosGalleryActivity;
 import com.ddscanner.ui.adapters.UserPhotosListAdapter;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.ui.views.LoginView;
@@ -210,4 +214,10 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
                 break;
         }
     }
+
+    @Subscribe
+    public void openPhotosActivity(OpenPhotosActivityEvent event) {
+        PhotosGalleryActivity.showForResult(String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId()), getActivity(), PhotoOpenedSource.PROFILE, new Gson().toJson(new PhotoAuthor(String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId()), binding.getDiveCenterViewModel().getDiveCenterProfile().getName(), binding.getDiveCenterViewModel().getDiveCenterProfile().getPhoto(), binding.getDiveCenterViewModel().getDiveCenterProfile().getType())), ActivitiesRequestCodes.REQUEST_CODE_SHOW_USER_PROFILE_PHOTOS);
+    }
+
 }
