@@ -220,6 +220,8 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
         materialDialog.show();
         if (isHaveSpots) {
             DDScannerApplication.getInstance().getDdScannerRestClient().getSelfDiveCenterDiveSpotsList(diveSpotsResultListener);
+        } else {
+            isDiveSpotsDownloaded = true;
         }
         DDScannerApplication.getInstance().getDdScannerRestClient().getDiveCenterLanguages(languagesResultListener);
         binding.diveSpotList.setLayoutManager(new LinearLayoutManager(this));
