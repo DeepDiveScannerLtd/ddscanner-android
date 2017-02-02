@@ -91,21 +91,23 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         } else {
             reviewsListViewHolder.photos.setAdapter(null);
         }
-        if (!isLiked && !commentEntity.getAuthor().getId().equals(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId())) {
-            reviewsListViewHolder.likeView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    DDScannerApplication.bus.post(new LikeCommentEvent(reviewsListViewHolder.getAdapterPosition()));
-                }
-            });
-        }
-        if (!isDisliked && !commentEntity.getAuthor().getId().equals(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId())) {
-            reviewsListViewHolder.dislikeView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    DDScannerApplication.bus.post(new DislikeCommentEvent(reviewsListViewHolder.getAdapterPosition()));
-                }
-            });
+        if (!commentEntity.isRequestSent()) {
+            if (!isLiked && !commentEntity.getAuthor().getId().equals(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId())) {
+                reviewsListViewHolder.likeView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        DDScannerApplication.bus.post(new LikeCommentEvent(reviewsListViewHolder.getAdapterPosition()));
+                    }
+                });
+            }
+            if (!isDisliked && !commentEntity.getAuthor().getId().equals(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId())) {
+                reviewsListViewHolder.dislikeView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        DDScannerApplication.bus.post(new DislikeCommentEvent(reviewsListViewHolder.getAdapterPosition()));
+                    }
+                });
+            }
         }
         if (commentEntity.getAuthor().getId().equals(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId())) {
             reviewsListViewHolder.menu.setOnClickListener(new View.OnClickListener() {
@@ -160,6 +162,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         }
         comments.get(position).getComment().setLikes(String.valueOf(Integer.parseInt(comments.get(position).getComment().getLikes()) + 1));
         comments.get(position).getComment().setLike(true);
+        comments.get(position).setRequestSent(false);
         notifyItemChanged(position);
     }
 
@@ -170,6 +173,17 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         }
         comments.get(position).getComment().setDislikes(String.valueOf(Integer.parseInt(comments.get(position).getComment().getDislikes()) + 1));
         comments.get(position).getComment().setDislike(true);
+        comments.get(position).setRequestSent(false);
+        notifyItemChanged(position);
+    }
+
+    public void rateReviewRequestStarted(int position) {
+        comments.get(position).setRequestSent(true);
+        notifyItemChanged(position);
+    }
+
+    public void rateReviewFaled(int position) {
+        comments.get(position).setRequestSent(false);
         notifyItemChanged(position);
     }
 

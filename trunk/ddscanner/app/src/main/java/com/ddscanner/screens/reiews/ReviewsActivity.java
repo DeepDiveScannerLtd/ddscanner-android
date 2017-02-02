@@ -87,11 +87,13 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
 
         @Override
         public void onConnectionFailure() {
+            reviewsListAdapter.rateReviewFaled(reviewPositionToRate);
             InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_CONNECTION_FAILURE, false);
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            reviewsListAdapter.rateReviewFaled(reviewPositionToRate);
             switch (errorType) {
                 case UNAUTHORIZED_401:
                     LoginActivity.showForResult(ReviewsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_LIKE_REVIEW);
@@ -124,11 +126,13 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
 
         @Override
         public void onConnectionFailure() {
+            reviewsListAdapter.rateReviewFaled(reviewPositionToRate);
             InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_CONNECTION_FAILURE, false);
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            reviewsListAdapter.rateReviewFaled(reviewPositionToRate);
             switch (errorType) {
                 case UNAUTHORIZED_401:
                     LoginActivity.showForResult(ReviewsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_DISLIKE_REVIEW);
@@ -511,6 +515,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
             return;
         }
         DDScannerApplication.getInstance().getDdScannerRestClient().postLikeReview(id, likeCommentResultListener);
+        reviewsListAdapter.rateReviewRequestStarted(position);
     }
 
     private void dislikeComment(String id, final int position) {
@@ -519,6 +524,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
             return;
         }
         DDScannerApplication.getInstance().getDdScannerRestClient().postDislikeReview(id, dislikeCommentResultListener);
+        reviewsListAdapter.rateReviewRequestStarted(position);
     }
 
     @Subscribe
