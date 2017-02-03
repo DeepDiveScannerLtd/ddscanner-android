@@ -939,6 +939,10 @@ public class DDScannerRestClient {
     }
 
     public void postForgotPassword(String email, ResultListener<Void> resultListener) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postForgotPassword(email);
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }

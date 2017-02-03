@@ -147,7 +147,11 @@ public class DialogsRequestCodes {
     //Dive center spots activity
     public static final int DRC_DIVE_CENTER_SPOTS_ACTIVITY_HIDE = 4901;
 
-    //LeaveREviewActivity
+    //LeaveReviewActivity
     public static final int DRC_LEAVE_REVIEW_ACTIVITY_CLOSE = 5001;
+
+    //ForgotPasswordActivity
+    public static final int DRC_FORGOT_PASSWORD_ACTIVITY_CONNECTION_FAILURE = 5101;
+    public static final int DRC_FORGOT_PASSWORD_ACTIVITY_SUCCESS = 5102;
 
 }
