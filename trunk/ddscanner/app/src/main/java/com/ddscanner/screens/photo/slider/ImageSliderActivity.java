@@ -489,6 +489,24 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
                     }
                 }
                 break;
+            case ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_LIKE:
+                if (resultCode == RESULT_OK) {
+                    setResult(RESULT_OK);
+                    switch (photoOpenedSource) {
+                        case DIVESPOT:
+                        case REVIEWS:
+                        case ALL:
+                            DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotPhotos(sourceId, imagesResulListener);
+                            break;
+                        case REVIEW:
+                            DDScannerApplication.getInstance().getDdScannerRestClient().getReviewPhotos(photosResultListenr, sourceId);
+                            break;
+                        case PROFILE:
+                            DDScannerApplication.getInstance().getDdScannerRestClient().getUserAddedPhotos(photosResultListenr, sourceId);
+                            break;
+                    }
+                }
+                break;
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -635,6 +653,11 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
                 dislikeUi();
             } else {
                 likeUi();
+            }
+            switch (errorType) {
+                case UNAUTHORIZED_401:
+                    LoginActivity.showForResult(ImageSliderActivity.this, ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_LIKE);
+                    break;
             }
             InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, false);
         }

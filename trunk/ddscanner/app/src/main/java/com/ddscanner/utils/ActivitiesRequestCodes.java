@@ -68,6 +68,7 @@ public class ActivitiesRequestCodes {
     //    ImageSliderActivity
     public static final int REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_REPORT = 2001;
     public static final int REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_DELETE = 2002;
+    public static final int REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_LIKE = 2003;
 
     //    DiveSpotPhotosActivity
     public static final int REQUEST_CODE_PHOTOS_ACTIVITY_SLIDER = 2101;
