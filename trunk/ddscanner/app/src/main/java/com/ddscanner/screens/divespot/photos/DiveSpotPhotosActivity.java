@@ -198,6 +198,7 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
                 if (resultCode == RESULT_OK) {
                     setResult(RESULT_OK);
                     getDiveSpotPhotos();
+                    isDataChanged = true;
                     //   finish();
                 }
                 break;
@@ -212,6 +213,7 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
             case ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_ACTIVITY_SLIDER:
                 if (resultCode == RESULT_OK) {
                     getDiveSpotPhotos();
+                    isDataChanged = true;
                 }
                 break;
         }
@@ -309,7 +311,6 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
     }
 
     private void updateFragments(DiveSpotPhotosResponseEntity diveSpotPhotosResponseEntity) {
-        isDataChanged = true;
 
         reviewsImages = diveSpotPhotosResponseEntity.getCommentPhotos();
         diveSpotImages = diveSpotPhotosResponseEntity.getDiveSpotPhotos();
