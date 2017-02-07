@@ -453,13 +453,13 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
         }
         boolean isDataValid = true;
         for (EditText editText : phonesEditTexts) {
-            if (!validCellPhone(editText.getText().toString())) {
+            if (!validCellPhone(editText.getText().toString()) && !editText.getText().toString().isEmpty()) {
                 phonesErrors.get(phonesEditTexts.indexOf(editText)).setVisibility(View.VISIBLE);
                 isDataValid = false;
             }
         }
         for (EditText editText : emailsEditTexts) {
-            if (!validEmail(editText.getText().toString())) {
+            if (!validEmail(editText.getText().toString()) && !editText.getText().toString().isEmpty()) {
                 emailsErrors.get(emailsEditTexts.indexOf(editText)).setVisibility(View.VISIBLE);
                 isDataValid = false;
             }
