@@ -435,7 +435,10 @@ public interface DDScannerRestService {
     @GET("v2_0/user.status_in.divespot.get")
     Call<ResponseBody> getUserStatusInSpot(@Query("id") String id);
 
-    @GET("v2_0/divespot/review.photos.get")
+    @GET("v2_0/divespot.review.photos.get")
     Call<ResponseBody> getReviewPhotos(@Query("id") String id, @Query("include_photo_details") int value);
+
+    @GET("v2_0/divespot.review.sealifes.get")
+    Call<ResponseBody> getReviewSealifes(@Query("id") String reviewId);
 
 }

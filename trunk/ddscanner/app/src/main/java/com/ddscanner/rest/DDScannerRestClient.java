@@ -947,6 +947,22 @@ public class DDScannerRestClient {
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 
+    public void getReviewSealifes(ResultListener<ArrayList<SealifeShort>> resultListener, String reviewId) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getReviewSealifes(reviewId);
+        call.enqueue(new ResponseEntityCallback<ArrayList<SealifeShort>>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<ArrayList<SealifeShort>> resultListener, String responseString) throws JSONException {
+                Type listType = new TypeToken<ArrayList<SealifeShort>>(){}.getType();
+                ArrayList<SealifeShort> sealifes = gson.fromJson(responseString,listType);
+                resultListener.onSuccess(sealifes);
+            }
+        });
+    }
+
     public void postDeleteImage(String id, ResultListener<Void> resultListener) {
         if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
             resultListener.onInternetConnectionClosed();

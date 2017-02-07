@@ -70,6 +70,32 @@ public class EditCommentActivity extends BaseAppCompatActivity implements View.O
     private RecyclerView sealifeList;
     private SealifeListAddingDiveSpotAdapter sealifesAdapter;
 
+    private DDScannerRestClient.ResultListener<ArrayList<SealifeShort>> sealifeResultListener = new DDScannerRestClient.ResultListener<ArrayList<SealifeShort>>() {
+        @Override
+        public void onSuccess(ArrayList<SealifeShort> result) {
+            materialDialog.dismiss();
+            sealifesAdapter.addSealifesList(result);
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            materialDialog.dismiss();
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_LEAVE_REVIEW_ACTIVITY_FAILED_TO_CONNECT, false);
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            materialDialog.dismiss();
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_LEAVE_REVIEW_ACTIVITY_FAILED_TO_CONNECT, false);
+        }
+
+        @Override
+        public void onInternetConnectionClosed() {
+            materialDialog.dismiss();
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_LEAVE_REVIEW_ACTIVITY_FAILED_TO_CONNECT, false);
+        }
+    };
+
     private DDScannerRestClient.ResultListener<Void> editCommentResultListener = new DDScannerRestClient.ResultListener<Void>() {
         @Override
         public void onSuccess(Void result) {
@@ -137,7 +163,10 @@ public class EditCommentActivity extends BaseAppCompatActivity implements View.O
         sealifeList.setLayoutManager(sealifLayoutManager);
         sealifeList.setAdapter(sealifesAdapter);
         if (comment.getSealifes() != null) {
-            sealifesAdapter.addSealifesList(comment.getSealifes());
+            materialDialog.show();
+            DDScannerApplication.getInstance().getDdScannerRestClient().getReviewSealifes(sealifeResultListener, comment.getId());
+            //
+            //sealifesAdapter.addSealifesList(comment.getSealifes());
         }
     }
 
@@ -267,6 +296,7 @@ public class EditCommentActivity extends BaseAppCompatActivity implements View.O
     @Override
     public void onDialogClosed(int requestCode) {
         switch (requestCode) {
+            case DialogsRequestCodes.DRC_LEAVE_REVIEW_ACTIVITY_FAILED_TO_CONNECT:
             case DialogsRequestCodes.DRC_EDIT_COMMENT_ACTIVITY_COMMENT_NOT_FOUND:
                 finish();
                 break;
