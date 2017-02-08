@@ -7,6 +7,10 @@ import java.util.ArrayList;
 
 public class DiveCenterProfile implements Serializable{
 
+    public enum DiveCenterServiceType {
+        COMPANY, RESELLER
+    }
+
     private int id;
     private String name;
     private String photo;
@@ -36,6 +40,23 @@ public class DiveCenterProfile implements Serializable{
     private ArrayList<DiveSpotShort> workingSpots;
     @SerializedName("new_instructors_exist")
     private boolean isNewInstructors;
+    @SerializedName("service_type")
+    private int serviceType;
+
+    public DiveCenterServiceType getServiceType() {
+        switch (serviceType) {
+            case 1:
+                return DiveCenterServiceType.COMPANY;
+            case 2:
+                return DiveCenterServiceType.RESELLER;
+            default:
+                return null;
+        }
+    }
+
+    public void setServiceType(int serviceType) {
+        this.serviceType = serviceType;
+    }
 
     public String getCountryCode() {
         return countryCode;

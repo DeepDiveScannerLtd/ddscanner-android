@@ -189,7 +189,7 @@ public interface DDScannerRestService {
     @GET("v2_0/user.profile.get")
     Call<ResponseBody> getUserInformation(@Query("id") String id, @Query("include_photo_details") int value);
 
-    @GET("v2_0/divecenter.profile.get")
+    @GET("v2_0/user.divecenter.profile.get")
     Call<ResponseBody> getDiveCenterInformation(@Query("id") String id, @Query("include_photo_details") int value);
 
     @GET("v2_0/user.achievements.get")

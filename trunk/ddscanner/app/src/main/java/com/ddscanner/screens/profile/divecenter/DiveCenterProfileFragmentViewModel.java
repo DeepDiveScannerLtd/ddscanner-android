@@ -101,6 +101,20 @@ public class DiveCenterProfileFragmentViewModel {
         }
     }
 
+    @BindingAdapter({"loadServiceTypeFrom"})
+    public static void setServiceType(TextView view, DiveCenterProfileFragmentViewModel viewModel) {
+        if (viewModel != null) {
+            switch (viewModel.getDiveCenterProfile().getServiceType()) {
+                case COMPANY:
+                    view.setText(R.string.company);
+                    break;
+                case RESELLER:
+                    view.setText(R.string.reseller);
+                    break;
+            }
+        }
+    }
+
     private static String getDiveSpotString(int count) {
         if (count > 1 || count == 0) {
             return String.valueOf(count) + DDScannerApplication.getInstance().getString(R.string.dive_spos);

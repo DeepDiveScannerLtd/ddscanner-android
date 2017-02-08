@@ -2,11 +2,14 @@ package com.ddscanner.screens.profile.edit;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.databinding.DataBindingUtil;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.AppCompatRadioButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.telephony.PhoneNumberUtils;
@@ -60,6 +63,9 @@ import okhttp3.RequestBody;
 
 public class EditDiveCenterProfileActivity extends BaseAppCompatActivity implements BaseAppCompatActivity.PictureTakenListener, DialogClosedListener {
 
+    private static final String COMPANY_BUTTON_TAG= "company_button_tag";
+    private static final String RESELLER_BUTTON_TAG= "reseller_button_tag";
+
     private ArrayList<EditText> phonesEditTexts = new ArrayList<>();
     private ArrayList<EditText> emailsEditTexts = new ArrayList<>();
     private ArrayList<TextView> phonesErrors = new ArrayList<>();
@@ -83,6 +89,7 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
     private boolean isHaveSpots;
     private boolean isLanguagesDownloaded = false;
     private boolean isDiveSpotsDownloaded = false;
+    private ColorStateList colorStateList;
 
     private EditDcProfileViewBinding binding;
 
@@ -205,6 +212,16 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
         binding.setHandlers(this);
         binding.setDcViewModel(new EditDiveCenterProfileActivityViewModel(new Gson().fromJson(getIntent().getStringExtra("divecenter"), DiveCenterProfile.class)));
         countryCode = binding.getDcViewModel().getDiveCenterProfile().getCountryCode();
+        colorStateList = new ColorStateList(
+                new int[][]{
+                        new int[]{-android.R.attr.state_checked},
+                        new int[]{android.R.attr.state_checked}
+                },
+                new int[]{
+                        ContextCompat.getColor(this, R.color.radio_button_empty)
+                        , ContextCompat.getColor(this, R.color.radio_button_fill),
+                }
+        );
         setupToolbar(R.string.edit_profile_activity, R.id.toolbar, R.menu.edit_profile_menu);
         setupUi();
     }
@@ -440,7 +457,17 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
             photo = MultipartBody.Part.createFormData("photo", file.getName(), requestFile);
         }
 
-        DDScannerApplication.getInstance().getDdScannerRestClient().postUpdateDiveCenterProfile(resultListener, photo,  emails, phones, diveSpots, languages, nameRequestBody, countryRequestBody, addressRequestBody, Helpers.createRequestBodyForString("1"));
+        RequestBody serviceRequest = null;
+        switch (binding.radioGroup.getCheckedRadioButtonId()) {
+            case R.id.company_radio:
+                serviceRequest = Helpers.createRequestBodyForString("1");
+                break;
+            case R.id.reseller_radio:
+                serviceRequest = Helpers.createRequestBodyForString("2");
+                break;
+        }
+
+        DDScannerApplication.getInstance().getDdScannerRestClient().postUpdateDiveCenterProfile(resultListener, photo,  emails, phones, diveSpots, languages, nameRequestBody, countryRequestBody, addressRequestBody, serviceRequest);
         materialDialog.show();
     }
 

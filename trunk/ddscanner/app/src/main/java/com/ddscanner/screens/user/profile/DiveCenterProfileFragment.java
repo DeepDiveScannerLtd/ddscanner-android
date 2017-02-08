@@ -4,6 +4,7 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import com.ddscanner.R;
 import com.ddscanner.databinding.FragmentDiveCenterProfileBinding;
 import com.ddscanner.entities.DiveCenterProfile;
 import com.ddscanner.screens.profile.divecenter.DiveCenterProfileFragmentViewModel;
+import com.ddscanner.ui.adapters.UserPhotosListAdapter;
 
 public class DiveCenterProfileFragment extends Fragment {
 
@@ -35,7 +37,18 @@ public class DiveCenterProfileFragment extends Fragment {
         binding.setDiveCenterViewModel(new DiveCenterProfileFragmentViewModel(diveCenterProfile));
         View v = binding.getRoot();
         binding.setHandlers(this);
+        setupUi();
         return v;
     }
+
+    private void setupUi() {
+
+        if (binding.getDiveCenterViewModel().getDiveCenterProfile().getPhotos() != null) {
+            binding.photosList.setLayoutManager(new GridLayoutManager(getContext(), 4));
+            binding.photosList.setAdapter(new UserPhotosListAdapter(binding.getDiveCenterViewModel().getDiveCenterProfile().getPhotos(), binding.getDiveCenterViewModel().getDiveCenterProfile().getPhotosCount(), getActivity(), String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId())));
+        }
+    }
+
+
 
 }

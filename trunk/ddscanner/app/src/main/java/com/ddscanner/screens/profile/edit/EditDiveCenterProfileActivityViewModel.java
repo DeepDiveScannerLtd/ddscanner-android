@@ -1,6 +1,7 @@
 package com.ddscanner.screens.profile.edit;
 
 import android.databinding.BindingAdapter;
+import android.support.v7.widget.AppCompatRadioButton;
 import android.widget.ImageView;
 
 import com.ddscanner.DDScannerApplication;
@@ -30,6 +31,22 @@ public class EditDiveCenterProfileActivityViewModel {
         }
     }
 
+    @BindingAdapter({"checkCompanyRadioButton"})
+    public static void setCheckedCompany(AppCompatRadioButton radioButton, EditDiveCenterProfileActivityViewModel viewModel) {
+        if (viewModel != null) {
+            if (viewModel.getDiveCenterProfile().getServiceType().equals(DiveCenterProfile.DiveCenterServiceType.COMPANY)) {
+                radioButton.setChecked(true);
+            }
+        }
+    }
 
+    @BindingAdapter({"checkResellerRadioButton"})
+    public static void setCheckedReseller(AppCompatRadioButton radioButton, EditDiveCenterProfileActivityViewModel viewModel) {
+        if (viewModel != null) {
+            if (viewModel.getDiveCenterProfile().getServiceType().equals(DiveCenterProfile.DiveCenterServiceType.RESELLER)) {
+                radioButton.setChecked(true);
+            }
+        }
+    }
 
 }
