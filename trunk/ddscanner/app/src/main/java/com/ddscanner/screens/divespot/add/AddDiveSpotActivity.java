@@ -498,11 +498,16 @@ public class AddDiveSpotActivity extends AppCompatActivity implements CompoundBu
                     String.valueOf(diveSpotLocation.longitude));
         }
         if (isWorkingSwitch.isChecked()) {
-            requestIsWorkingHere = Helpers.createRequestBodyForString("true");
-            requestIsEdit = Helpers.createRequestBodyForString(String.valueOf(isEditSwitch.isChecked()));
+            requestIsWorkingHere = Helpers.createRequestBodyForString("1");
+            if (isEditSwitch.isChecked()) {
+                requestIsEdit = Helpers.createRequestBodyForString("1");
+            } else {
+                requestIsEdit = Helpers.createRequestBodyForString("0");
+            }
+
         } else {
-            requestIsWorkingHere = Helpers.createRequestBodyForString("false");
-            requestIsEdit = Helpers.createRequestBodyForString("false");
+            requestIsWorkingHere = Helpers.createRequestBodyForString("0");
+            requestIsEdit = Helpers.createRequestBodyForString("0");
         }
         translations = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), new Gson().toJson(translationsListAdapter.getTranslations()));
         requestCoverNumber = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), String.valueOf(1));
