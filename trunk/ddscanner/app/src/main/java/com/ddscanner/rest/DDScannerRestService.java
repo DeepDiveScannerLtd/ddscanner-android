@@ -441,4 +441,11 @@ public interface DDScannerRestService {
     @GET("v2_0/divespot.review.sealifes.get")
     Call<ResponseBody> getReviewSealifes(@Query("id") String reviewId);
 
+    @Multipart
+    @POST("v2_0/sealife.add")
+    Call<ResponseBody> postAddSealife(
+            @Part MultipartBody.Part image,
+            @Part("translations") RequestBody translations
+    );
+
 }
