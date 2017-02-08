@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ddscanner.DDScannerApplication;
@@ -57,21 +58,36 @@ public class TranslationsListAdapter extends RecyclerView.Adapter<TranslationsLi
         notifyDataSetChanged();
     }
 
+    private void removeTranslation(int position) {
+        translations.remove(position);
+        notifyItemRemoved(position);
+    }
+
     class TranslationListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         private TextView languageName;
         private TextView diveSpotName;
+        private ImageView removeTranslations;
 
         TranslationListViewHolder(View view) {
             super(view);
             view.setOnClickListener(this);
             languageName = (TextView) view.findViewById(R.id.language_name);
             diveSpotName = (TextView) view.findViewById(R.id.name);
+            removeTranslations = (ImageView) view.findViewById(R.id.remove);
+            removeTranslations.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
-            DDScannerApplication.bus.post(new ChangeTranslationEvent(translations.get(getAdapterPosition())));
+            switch (view.getId()) {
+                case R.id.remove:
+                    removeTranslation(getAdapterPosition());
+                    break;
+                default:
+                    DDScannerApplication.bus.post(new ChangeTranslationEvent(translations.get(getAdapterPosition())));
+                    break;
+            }
         }
     }
 
