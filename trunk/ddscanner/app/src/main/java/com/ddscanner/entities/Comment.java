@@ -8,7 +8,7 @@ public class Comment {
 
     private String id;
     private String review;
-    private String rating;
+    private int rating;
     private ArrayList<DiveSpotPhoto> photos;
     private String likes;
     private String dislikes;
@@ -17,6 +17,15 @@ public class Comment {
     private Boolean isLike;
     @SerializedName("is_disliked")
     private Boolean isDislike;
+    private ArrayList<SealifeShort> sealifes;
+
+    public ArrayList<SealifeShort> getSealifes() {
+        return sealifes;
+    }
+
+    public void setSealifes(ArrayList<SealifeShort> sealifes) {
+        this.sealifes = sealifes;
+    }
 
     public boolean isLike() {
         if (isLike == null) {
@@ -56,11 +65,11 @@ public class Comment {
         this.review = review;
     }
 
-    public String getRating() {
+    public int getRating() {
         return rating;
     }
 
-    public void setRating(String rating) {
+    public void setRating(int rating) {
         this.rating = rating;
     }
 

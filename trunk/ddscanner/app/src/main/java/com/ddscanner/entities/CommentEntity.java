@@ -7,6 +7,15 @@ public class CommentEntity {
     @SerializedName("review")
     private Comment comment;
     private User author;
+    private boolean isRequestSent = false;
+
+    public boolean isRequestSent() {
+        return isRequestSent;
+    }
+
+    public void setRequestSent(boolean requestSent) {
+        isRequestSent = requestSent;
+    }
 
     public Comment getComment() {
         return comment;

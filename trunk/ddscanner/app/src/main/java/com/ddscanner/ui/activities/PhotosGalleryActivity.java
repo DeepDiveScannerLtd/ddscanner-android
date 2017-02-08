@@ -1,10 +1,10 @@
 package com.ddscanner.ui.activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -21,6 +21,7 @@ import com.ddscanner.entities.PhotoOpenedSource;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.divespot.photos.AllPhotosDiveSpotAdapter;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
+import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.google.gson.Gson;
 import com.rey.material.widget.ProgressView;
@@ -29,26 +30,39 @@ import java.util.ArrayList;
 
 public class PhotosGalleryActivity extends BaseAppCompatActivity implements DialogClosedListener {
 
-    private RecyclerView mapsRecyclerView;
+    private RecyclerView photosRecyclerView;
     private Toolbar toolbar;
     private ProgressView progressView;
     private String loadedInfoId;
-    private GalleryOpenedSource source;
+    private PhotoOpenedSource source;
     private PhotoAuthor photoAuthor;
+    private boolean isDataChanged = false;
 
     private DDScannerRestClient.ResultListener<ArrayList<DiveSpotPhoto>> resultListener = new DDScannerRestClient.ResultListener<ArrayList<DiveSpotPhoto>>() {
         @Override
         public void onSuccess(ArrayList<DiveSpotPhoto> result) {
-            if (source.equals(GalleryOpenedSource.MAPS)) {
-                mapsRecyclerView.setAdapter(new AllPhotosDiveSpotAdapter(result, PhotosGalleryActivity.this, PhotoOpenedSource.DIVESPOT, true));
-            } else {
-                for (DiveSpotPhoto diveSpotPhoto : result) {
-                    result.get(result.indexOf(diveSpotPhoto)).setAuthor(photoAuthor);
-                }
-                mapsRecyclerView.setAdapter(new AllPhotosDiveSpotAdapter(result, PhotosGalleryActivity.this, PhotoOpenedSource.DIVESPOT, false));
+            AllPhotosDiveSpotAdapter photosDiveSpotAdapter;
+            switch (source) {
+                case PROFILE:
+                    if (photoAuthor.getId().equals(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId())) {
+                        for (DiveSpotPhoto diveSpotPhoto : result) {
+                            result.get(result.indexOf(diveSpotPhoto)).setAuthor(photoAuthor);
+                        }
+                    } else {
+                        for (DiveSpotPhoto diveSpotPhoto : result) {
+                            result.get(result.indexOf(diveSpotPhoto)).setAuthor(photoAuthor);
+                        }
+                    }
+                case MAPS:
+                case NOTIFICATION:
+                case REVIEW:
+                    photosDiveSpotAdapter = new AllPhotosDiveSpotAdapter(result, PhotosGalleryActivity.this, source, loadedInfoId);
+                    photosRecyclerView.setAdapter(photosDiveSpotAdapter);
+                    progressView.setVisibility(View.GONE);
+                    photosRecyclerView.setVisibility(View.VISIBLE);
+                    break;
             }
-            progressView.setVisibility(View.GONE);
-            mapsRecyclerView.setVisibility(View.VISIBLE);
+
         }
 
         @Override
@@ -68,7 +82,7 @@ public class PhotosGalleryActivity extends BaseAppCompatActivity implements Dial
 
     };
 
-    public static void show(String diveSpotId, Context context, GalleryOpenedSource source, String author) {
+    public static void show(String diveSpotId, Context context, PhotoOpenedSource source, String author) {
         Intent intent = new Intent(context, PhotosGalleryActivity.class);
         intent.putExtra("id", diveSpotId);
         intent.putExtra("source", source);
@@ -78,31 +92,44 @@ public class PhotosGalleryActivity extends BaseAppCompatActivity implements Dial
         context.startActivity(intent);
     }
 
+    public static void showForResult(String diveSpotId, Activity context, PhotoOpenedSource source, String author, int requestCode) {
+        Intent intent = new Intent(context, PhotosGalleryActivity.class);
+        intent.putExtra("id", diveSpotId);
+        intent.putExtra("source", source);
+        if (author != null) {
+            intent.putExtra("user", author);
+        }
+        context.startActivityForResult(intent, requestCode);
+    }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps_photos);
-        mapsRecyclerView = (RecyclerView) findViewById(R.id.maps_rv);
+        photosRecyclerView = (RecyclerView) findViewById(R.id.maps_rv);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         progressView = (ProgressView) findViewById(R.id.progress_view);
-        source = (GalleryOpenedSource) getIntent().getSerializableExtra("source");
+        source = (PhotoOpenedSource) getIntent().getSerializableExtra("source");
         loadedInfoId = getIntent().getStringExtra("id");
         setupToolbar(R.string.photos, R.id.toolbar);
         setupRecyclerView();
         switch (source) {
-            case USER_PROFILE:
+            case PROFILE:
                 photoAuthor = new Gson().fromJson(getIntent().getStringExtra("user"), PhotoAuthor.class);
                 DDScannerApplication.getInstance().getDdScannerRestClient().getUserAddedPhotos(resultListener, loadedInfoId);
                 break;
             case MAPS:
                 DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotMaps(loadedInfoId, resultListener);
                 break;
+            case REVIEW:
+                DDScannerApplication.getInstance().getDdScannerRestClient().getReviewPhotos(resultListener, loadedInfoId);
+                break;
         }
     }
 
     private void setupRecyclerView() {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
-        mapsRecyclerView.setLayoutManager(gridLayoutManager);
+        photosRecyclerView.setLayoutManager(gridLayoutManager);
     }
 
     @Override
@@ -116,7 +143,41 @@ public class PhotosGalleryActivity extends BaseAppCompatActivity implements Dial
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_ACTIVITY_SLIDER:
+                if (resultCode == RESULT_OK) {
+                    isDataChanged = true;
+                    switch (source) {
+                        case PROFILE:
+                            DDScannerApplication.getInstance().getDdScannerRestClient().getUserAddedPhotos(resultListener, loadedInfoId);
+                            break;
+                        case MAPS:
+                            DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotMaps(loadedInfoId, resultListener);
+                            break;
+                        case REVIEW:
+                            DDScannerApplication.getInstance().getDdScannerRestClient().getReviewPhotos(resultListener, loadedInfoId);
+                            break;
+                    }
+                }
+                break;
+        }
+    }
+
+    @Override
     public void onDialogClosed(int requestCode) {
         finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (isDataChanged) {
+            setResult(RESULT_OK);
+            finish();
+        } else {
+            setResult(RESULT_CANCELED);
+            finish();
+        }
     }
 }

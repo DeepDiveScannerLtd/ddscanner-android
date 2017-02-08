@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="likeViewModel"
+            type="com.ddscanner.screens.user.likes.LikePhotoItemViewModel" />
+
+        <variable
+            name="handlers"
+            type="com.ddscanner.screens.user.likes.LikesListAdapter.PhotoLikeItemViewHolder" />
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#fbfbfb"
+        android:orientation="vertical"
+        android:onClick="@{handlers::showDiveSpot}">
+
+        <LinearLayout
+            android:id="@+id/main_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?attr/selectableItemBackground"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/avatar"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_margin="14dp"
+                android:src="@color/black_text"
+                app:loadAvatarFrom="@{likeViewModel}"
+                android:onClick="@{handlers::avatarClicked}"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="12dp"
+                    android:layout_toLeftOf="@+id/photo_layout"
+                    android:id="@+id/text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black_text"
+                    android:textSize="15sp"
+                    app:setLikedPhotoTextFrom="@{likeViewModel}"
+                    tools:text="Alexand Korshin liked your photo Racha Yai Wreck" />
+                <LinearLayout
+                    android:gravity="center_vertical"
+                    android:layout_alignParentRight="true"
+                    android:id="@+id/photo_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="15dp"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/timeAgo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="8dp"
+                        android:textColor="#a3a3a3"
+                        android:textSize="12sp"
+                        tools:text="12w"
+                        app:loadTimeFrom="@{likeViewModel}"/>
+
+                    <ImageView
+                        android:onClick="@{handlers::photoClicked}"
+                        app:loadPhotoFrom="@{likeViewModel}"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@color/black_text"/>
+
+                </LinearLayout>
+            </RelativeLayout>
+        </LinearLayout>
+
+        <ImageView style="@style/DividerStyleFull" />
+    </LinearLayout>
+</layout>

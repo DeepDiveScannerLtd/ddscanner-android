@@ -24,10 +24,13 @@ import com.ddscanner.entities.BaseUser;
 import com.ddscanner.entities.DialogClosedListener;
 import com.ddscanner.entities.DiveSpotListSource;
 import com.ddscanner.entities.DiveSpotPhoto;
+import com.ddscanner.entities.PhotoAuthor;
+import com.ddscanner.entities.PhotoOpenedSource;
 import com.ddscanner.entities.ProfileAchievement;
 import com.ddscanner.entities.User;
 import com.ddscanner.events.LoadUserProfileInfoEvent;
 import com.ddscanner.events.LoggedOutEvent;
+import com.ddscanner.events.OpenPhotosActivityEvent;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.achievements.AchievementsActivity;
 import com.ddscanner.screens.profile.edit.EditUserProfileActivity;
@@ -35,6 +38,7 @@ import com.ddscanner.ui.activities.AboutActivity;
 import com.ddscanner.events.ChangeLoginViewEvent;
 import com.ddscanner.ui.activities.DiveSpotsListActivity;
 import com.ddscanner.ui.activities.MainActivity;
+import com.ddscanner.ui.activities.PhotosGalleryActivity;
 import com.ddscanner.ui.activities.SelfCommentsActivity;
 import com.ddscanner.ui.activities.UserLikesDislikesActivity;
 import com.ddscanner.ui.adapters.AchievmentProfileListAdapter;
@@ -218,6 +222,10 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
         DDScannerApplication.getInstance().getDdScannerRestClient().getUserSelfInformation(userResultListener);
     }
 
+    public void reloadData() {
+        getUserDataRequest();
+    }
+
     private void changeUi() {
         if (getContext() == null) {
             return;
@@ -225,7 +233,7 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
         if (binding.getProfileFragmentViewModel().getUser().getPhotos() != null) {
             binding.noPhotosView.setVisibility(View.GONE);
             binding.photosList.setLayoutManager(new GridLayoutManager(getContext(), 4));
-            binding.photosList.setAdapter(new UserPhotosListAdapter((ArrayList<DiveSpotPhoto>) binding.getProfileFragmentViewModel().getUser().getPhotos(), binding.getProfileFragmentViewModel().getUser().getPhotosCount(), getActivity()));
+            binding.photosList.setAdapter(new UserPhotosListAdapter((ArrayList<DiveSpotPhoto>) binding.getProfileFragmentViewModel().getUser().getPhotos(), binding.getProfileFragmentViewModel().getUser().getPhotosCount(), getActivity(), binding.getProfileFragmentViewModel().getUser().getId()));
             binding.photosList.setVisibility(View.VISIBLE);
         }
         ArrayList<ProfileAchievement> achievmentProfiles = new ArrayList<>();
@@ -339,6 +347,11 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
 
     public void showAchievementsDetails(View view) {
         AchievementsActivity.show(getContext());
+    }
+
+    @Subscribe
+    public void openPhotosActivity(OpenPhotosActivityEvent event) {
+        PhotosGalleryActivity.showForResult(binding.getProfileFragmentViewModel().getUser().getId(), getActivity(), PhotoOpenedSource.PROFILE, new Gson().toJson(new PhotoAuthor(binding.getProfileFragmentViewModel().getUser().getId(), binding.getProfileFragmentViewModel().getUser().getName(), binding.getProfileFragmentViewModel().getUser().getPhoto(), binding.getProfileFragmentViewModel().getUser().getType())), ActivitiesRequestCodes.REQUEST_CODE_SHOW_USER_PROFILE_PHOTOS);
     }
 
 }

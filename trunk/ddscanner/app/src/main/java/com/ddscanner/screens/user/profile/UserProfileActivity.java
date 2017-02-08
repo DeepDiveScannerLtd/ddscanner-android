@@ -14,20 +14,27 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.DialogClosedListener;
 import com.ddscanner.entities.DiveCenterProfile;
+import com.ddscanner.entities.DiveSpotListSource;
 import com.ddscanner.entities.GalleryOpenedSource;
 import com.ddscanner.entities.PhotoAuthor;
+import com.ddscanner.entities.PhotoOpenedSource;
 import com.ddscanner.entities.User;
 import com.ddscanner.entities.ProfileResponseEntity;
 import com.ddscanner.events.OpenPhotosActivityEvent;
 import com.ddscanner.rest.DDScannerRestClient;
+import com.ddscanner.ui.activities.BaseAppCompatActivity;
+import com.ddscanner.ui.activities.DiveSpotsListActivity;
 import com.ddscanner.ui.activities.PhotosGalleryActivity;
+import com.ddscanner.ui.activities.SelfCommentsActivity;
+import com.ddscanner.ui.activities.UserLikesDislikesActivity;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
+import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.google.gson.Gson;
 import com.rey.material.widget.ProgressView;
 import com.squareup.otto.Subscribe;
 
-public class UserProfileActivity extends AppCompatActivity implements DialogClosedListener {
+public class UserProfileActivity extends BaseAppCompatActivity implements DialogClosedListener {
 
     private ProgressView progressView;
     private Toolbar toolbar;
@@ -91,11 +98,7 @@ public class UserProfileActivity extends AppCompatActivity implements DialogClos
         userType = getIntent().getIntExtra("type", 0);
         setContentView(R.layout.activity_user_profile);
         progressView = (ProgressView) findViewById(R.id.progress_view);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);
-        getSupportActionBar().setTitle(R.string.profile);
+        setupToolbar(R.string.profile, R.id.toolbar);
         if (userType != 0) {
             DDScannerApplication.getInstance().getDdScannerRestClient().getUserProfileInformation(userId, resultListener);
         } else {
@@ -161,7 +164,43 @@ public class UserProfileActivity extends AppCompatActivity implements DialogClos
 
     @Subscribe
     public void openPhotosActivity(OpenPhotosActivityEvent event) {
-        PhotosGalleryActivity.show(userId, this, GalleryOpenedSource.USER_PROFILE, new Gson().toJson(photoAuthor));
+        PhotosGalleryActivity.showForResult(userId, this, PhotoOpenedSource.PROFILE, new Gson().toJson(photoAuthor), ActivitiesRequestCodes.REQUEST_CODE_SHOW_USER_PROFILE_PHOTOS);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_LOGIN_TO_SHOW_CHECKINS:
+                if (resultCode == RESULT_OK) {
+                    DiveSpotsListActivity.show(this, DiveSpotListSource.CHECKINS, userId);
+                }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_LOGIN_TO_SHOW_EDITED:
+                if (resultCode == RESULT_OK) {
+                    DiveSpotsListActivity.show(this, DiveSpotListSource.EDITED, userId);
+                }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_LOGIN_TO_SHOW_CREATED:
+                if (resultCode == RESULT_OK) {
+                    DiveSpotsListActivity.show(this, DiveSpotListSource.ADDED, userId);
+                }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_LOGIN_TO_SHOW_REVIEWS:
+                if (resultCode == RESULT_OK) {
+                    SelfCommentsActivity.show(this, userId);
+                }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_LOGIN_TO_SHOW_LIKES:
+                if (resultCode == RESULT_OK) {
+                    UserLikesDislikesActivity.show(this, true, userId);
+                }
+                break;
+            case ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_LOGIN_TO_SHOW_DISLIKES:
+                if (resultCode == RESULT_OK) {
+                    UserLikesDislikesActivity.show(this, false, userId);
+                }
+                break;
+        }
+    }
 }

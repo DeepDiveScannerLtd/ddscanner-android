@@ -20,13 +20,17 @@ import com.ddscanner.databinding.ViewDivecenterProfileBinding;
 import com.ddscanner.entities.BaseUser;
 import com.ddscanner.entities.DialogClosedListener;
 import com.ddscanner.entities.DiveCenterProfile;
+import com.ddscanner.entities.PhotoAuthor;
+import com.ddscanner.entities.PhotoOpenedSource;
 import com.ddscanner.events.ChangePageOfMainViewPagerEvent;
 import com.ddscanner.events.LoadUserProfileInfoEvent;
 import com.ddscanner.events.LoggedOutEvent;
+import com.ddscanner.events.OpenPhotosActivityEvent;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.instructors.InstructorsActivity;
 import com.ddscanner.screens.profile.edit.EditDiveCenterProfileActivity;
 import com.ddscanner.ui.activities.MainActivity;
+import com.ddscanner.ui.activities.PhotosGalleryActivity;
 import com.ddscanner.ui.adapters.UserPhotosListAdapter;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.ui.views.LoginView;
@@ -105,7 +109,7 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
     private void setUi() {
         if (binding.getDiveCenterViewModel().getDiveCenterProfile().getPhotos() != null) {
             binding.photosList.setLayoutManager(new GridLayoutManager(getContext(), 4));
-            binding.photosList.setAdapter(new UserPhotosListAdapter(binding.getDiveCenterViewModel().getDiveCenterProfile().getPhotos(), binding.getDiveCenterViewModel().getDiveCenterProfile().getPhotosCount(), getActivity()));
+            binding.photosList.setAdapter(new UserPhotosListAdapter(binding.getDiveCenterViewModel().getDiveCenterProfile().getPhotos(), binding.getDiveCenterViewModel().getDiveCenterProfile().getPhotosCount(), getActivity(), String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId())));
             binding.scrollView.scrollTo(0,0);
         }
     }
@@ -142,7 +146,6 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
     @Override
     public void onStart() {
         super.onStart();
-        DDScannerApplication.bus.register(this);
         userResultListener.setCancelled(false);
     }
 
@@ -156,6 +159,7 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
     @Override
     public void onResume() {
         super.onResume();
+        DDScannerApplication.bus.register(this);
         userResultListener.setCancelled(false);
         if (binding.getDiveCenterViewModel() == null) {
             binding.progressBarLoading.setVisibility(View.VISIBLE);
@@ -165,6 +169,12 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
 
     @Subscribe
     public void getUserProfileInfo(LoadUserProfileInfoEvent event) {
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == 0) {
+            DDScannerApplication.getInstance().getDdScannerRestClient().getDiveCenterSelfInformation(userResultListener);
+        }
+    }
+
+    public void reloadData() {
         if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == 0) {
             DDScannerApplication.getInstance().getDdScannerRestClient().getDiveCenterSelfInformation(userResultListener);
         }
@@ -204,4 +214,10 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
                 break;
         }
     }
+
+    @Subscribe
+    public void openPhotosActivity(OpenPhotosActivityEvent event) {
+        PhotosGalleryActivity.showForResult(String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId()), getActivity(), PhotoOpenedSource.PROFILE, new Gson().toJson(new PhotoAuthor(String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId()), binding.getDiveCenterViewModel().getDiveCenterProfile().getName(), binding.getDiveCenterViewModel().getDiveCenterProfile().getPhoto(), binding.getDiveCenterViewModel().getDiveCenterProfile().getType())), ActivitiesRequestCodes.REQUEST_CODE_SHOW_USER_PROFILE_PHOTOS);
+    }
+
 }

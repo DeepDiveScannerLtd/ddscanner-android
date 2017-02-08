@@ -37,7 +37,7 @@ import com.ddscanner.databinding.ActivityDiveSpotDetailsBinding;
 import com.ddscanner.entities.DialogClosedListener;
 import com.ddscanner.entities.DiveSpotDetailsEntity;
 import com.ddscanner.entities.FlagsEntity;
-import com.ddscanner.entities.GalleryOpenedSource;
+import com.ddscanner.entities.PhotoOpenedSource;
 import com.ddscanner.entities.SealifeShort;
 import com.ddscanner.events.OpenPhotosActivityEvent;
 import com.ddscanner.events.PickPhotoForCheckedInDialogEvent;
@@ -48,9 +48,9 @@ import com.ddscanner.ui.activities.CheckInPeoplesActivity;
 import com.ddscanner.ui.activities.DiveCentersActivity;
 import com.ddscanner.screens.divespot.photos.DiveSpotPhotosActivity;
 import com.ddscanner.screens.divespot.edit.EditDiveSpotActivity;
-import com.ddscanner.ui.activities.LeaveReviewActivity;
+import com.ddscanner.screens.reiews.add.LeaveReviewActivity;
 import com.ddscanner.ui.activities.LoginActivity;
-import com.ddscanner.ui.activities.ReviewsActivity;
+import com.ddscanner.screens.reiews.list.ReviewsActivity;
 import com.ddscanner.ui.activities.ShowDsLocationActivity;
 import com.ddscanner.ui.adapters.SealifeListAdapter;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
@@ -512,6 +512,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
         switch (requestCode) {
             case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LEAVE_REVIEW:
                 if (resultCode == RESULT_OK) {
+                    binding.ratingLayout.setVisibility(View.GONE);
                     binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().setReviewsCount(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getReviewsCount() + 1);
                     DiveSpotDetailsActivityViewModel.setReviewsCount(binding.btnShowAllReviews, binding.getDiveSpotViewModel());
                 }
@@ -610,31 +611,33 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_SHOW_FOR_ADD_MAPS:
                 if (resultCode == RESULT_OK) {
-                    if (mapsAdapter == null) {
-                        mapsAdapter = new DiveSpotPhotosAdapter(data.getStringArrayListExtra("images"), DiveSpotDetailsActivity.this, binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getMapsPhotosCount());
-                        binding.addPhotosLayout.setVisibility(View.GONE);
-                        binding.mapsRc.setVisibility(View.VISIBLE);
-                        binding.mapsRc.setLayoutManager(new GridLayoutManager(DiveSpotDetailsActivity.this, 4));
-                        binding.mapsRc.setAdapter(mapsAdapter);
-                        return;
-                    }
-                    mapsAdapter.addPhotos(data.getStringArrayListExtra("images"));
+//                    if (mapsAdapter == null) {
+//                        mapsAdapter = new DiveSpotPhotosAdapter(data.getStringArrayListExtra("images"), DiveSpotDetailsActivity.this, binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getMapsPhotosCount());
+//                        binding.addPhotosLayout.setVisibility(View.GONE);
+//                        binding.mapsRc.setVisibility(View.VISIBLE);
+//                        binding.mapsRc.setLayoutManager(new GridLayoutManager(DiveSpotDetailsActivity.this, 4));
+//                        binding.mapsRc.setAdapter(mapsAdapter);
+//                        return;
+//                    }
+//                    mapsAdapter.addPhotos(data.getStringArrayListExtra("images"));
+                    refreshActivity();
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_SHOW_FOR_ADD_PHOTOS:
                 if (resultCode == RESULT_OK) {
-                    if (photosAdapter == null) {
-                        photosAdapter = new DiveSpotPhotosAdapter(data.getStringArrayListExtra("images"), DiveSpotDetailsActivity.this, binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPhotosCount());
-                        binding.addPhotosLayout.setVisibility(View.GONE);
-                        binding.photosRc.setVisibility(View.VISIBLE);
-                        binding.photosRc.setLayoutManager(new GridLayoutManager(DiveSpotDetailsActivity.this, 4));
-                        binding.photosRc.setAdapter(photosAdapter);
-                        binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().setPhotos(data.getStringArrayListExtra("images"));
-                        binding.progressBar.setVisibility(View.VISIBLE);
-                        binding.getDiveSpotViewModel().loadMainImage(binding.mainPhoto, binding.getDiveSpotViewModel());
-                        return;
-                    }
-                    photosAdapter.addPhotos(data.getStringArrayListExtra("images"));
+//                    if (photosAdapter == null) {
+//                        photosAdapter = new DiveSpotPhotosAdapter(data.getStringArrayListExtra("images"), DiveSpotDetailsActivity.this, binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPhotosCount());
+//                        binding.addPhotosLayout.setVisibility(View.GONE);
+//                        binding.photosRc.setVisibility(View.VISIBLE);
+//                        binding.photosRc.setLayoutManager(new GridLayoutManager(DiveSpotDetailsActivity.this, 4));
+//                        binding.photosRc.setAdapter(photosAdapter);
+//                        binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().setPhotos(data.getStringArrayListExtra("images"));
+//                        binding.progressBar.setVisibility(View.VISIBLE);
+//                        binding.getDiveSpotViewModel().loadMainImage(binding.mainPhoto, binding.getDiveSpotViewModel());
+//                        return;
+//                    }
+//                    photosAdapter.addPhotos(data.getStringArrayListExtra("images"));
+                    refreshActivity();
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_LEAVE_REVIEW:
@@ -726,10 +729,10 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
     @Subscribe
     public void openImagesActivity(OpenPhotosActivityEvent event) {
         if (!isMapsShown) {
-            DiveSpotPhotosActivity.show(this, diveSpotId);
+            DiveSpotPhotosActivity.showForResult(this, diveSpotId, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_PHOTOS);
             return;
         }
-        PhotosGalleryActivity.show(diveSpotId, this, GalleryOpenedSource.MAPS, null);
+        PhotosGalleryActivity.showForResult(diveSpotId, this, PhotoOpenedSource.MAPS, null, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_PHOTOS);
     }
 
     @Override
@@ -1108,6 +1111,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
 
         @Override
         public void onSuccess(Void result) {
+
             materialDialog.dismiss();
             if (menu != null && menu.findItem(R.id.edit_dive_spot) != null) {
                 menu.findItem(R.id.edit_dive_spot).setVisible(false);
@@ -1116,6 +1120,11 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
                 EventsTracker.trackDiveSpotValid();
             } else {
                 EventsTracker.trackDiveSpotInvalid();
+            }
+            if (isValid) {
+                binding.approveLayout.setVisibility(View.GONE);
+            } else {
+                finish();
             }
         }
 

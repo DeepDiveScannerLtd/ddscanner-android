@@ -27,17 +27,22 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.Sealife;
+import com.ddscanner.entities.SealifeShort;
+import com.ddscanner.entities.SealifeTranslation;
 import com.ddscanner.entities.errors.ValidationError;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
+import com.google.gson.Gson;
 import com.rey.material.widget.EditText;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import okhttp3.MediaType;
@@ -46,11 +51,11 @@ import okhttp3.RequestBody;
 
 import static com.ddscanner.utils.Constants.MULTIPART_TYPE_TEXT;
 
-public class AddSealifeActivity extends AppCompatActivity implements View.OnClickListener {
+public class AddSealifeActivity extends BaseAppCompatActivity implements View.OnClickListener, BaseAppCompatActivity.PictureTakenListener {
 
     private static final String TAG = AddSealifeActivity.class.getSimpleName();
 
-    private Uri filePath;
+    private String filePath = null;
 
     private RelativeLayout addPhoto;
     private RelativeLayout centerLayout;
@@ -76,27 +81,13 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
 
     private Map<String, TextView> errorsMap = new HashMap<>();
 
-    private RequestBody requestName;
-    private RequestBody requestLength;
-    private RequestBody requestWeight;
-    private RequestBody requestDepth;
-    private RequestBody requestScname;
-    private RequestBody requestOrder;
-    private RequestBody requestClass;
-    private RequestBody requestDistribution;
-    private RequestBody requestHabitat;
-
-    private RequestBody requestSecret = null;
-    private RequestBody requestSocial = null;
-    private RequestBody requestToken = null;
-
-    private DDScannerRestClient.ResultListener<Sealife> sealifeResultListener = new DDScannerRestClient.ResultListener<Sealife>() {
+    private DDScannerRestClient.ResultListener<SealifeShort> sealifeResultListener = new DDScannerRestClient.ResultListener<SealifeShort>() {
         @Override
-        public void onSuccess(Sealife result) {
-            Intent intent = new Intent();
-            intent.putExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_SEALIFE, result);
-            setResult(RESULT_OK, intent);
-            finish();
+        public void onSuccess(SealifeShort result) {
+//            Intent intent = new Intent();
+//            intent.putExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_SEALIFE, result);
+//            setResult(RESULT_OK, intent);
+//            finish();
         }
 
         @Override
@@ -179,33 +170,6 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case ActivitiesRequestCodes.REQUEST_CODE_ADD_SEALIFE_ACTIVITY_PICK_PHOTO:
-                if (resultCode == RESULT_OK) {
-                    String filename = "DDScanner" + String.valueOf(System.currentTimeMillis() / 1232);
-                    Uri uri = Uri.parse("");
-                    try {
-                        uri = data.getData();
-                        String mimeType = getContentResolver().getType(uri);
-                        String sourcePath = getExternalFilesDir(null).toString();
-                        fileToSend = new File(sourcePath + "/" + filename);
-                        if (Helpers.isFileImage(uri.getPath()) || mimeType.contains("image")) {
-                            try {
-                                Helpers.copyFileStream(fileToSend, uri, this);
-                                Log.i(TAG, fileToSend.toString());
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-
-                            filePath = uri;
-                            setBackImage(fileToSend.getPath());
-                        } else {
-                            Toast.makeText(this, "You can choose only images", Toast.LENGTH_SHORT).show();
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-                break;
             case ActivitiesRequestCodes.REQUEST_CODE_ADD_SEALIFE_ACTIVITY_LOGIN_TO_SEND:
                 if (resultCode == RESULT_OK) {
                     createRequestBody();
@@ -239,7 +203,7 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.add_photo_layout:
-                pickPhotoFromGallery();
+                pickSinglePhotoFromGallery();
                 break;
             case R.id.delete_photo:
                 sealifePhoto.setImageDrawable(null);
@@ -254,25 +218,6 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-    private void pickPhotoFromGallery() {
-        if (checkReadStoragePermission()) {
-            Intent intent = new Intent();
-            intent.setType("image/*");
-            intent.setAction(Intent.ACTION_GET_CONTENT);
-            intent.addCategory(Intent.CATEGORY_OPENABLE);
-            startActivityForResult(Intent.createChooser(intent, "Select Picture"), ActivitiesRequestCodes.REQUEST_CODE_ADD_SEALIFE_ACTIVITY_PICK_PHOTO);
-        } else {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, ActivitiesRequestCodes.REQUEST_CODE_ADD_SEALIFE_ACTIVITY_PERMISSION_READ_STORAGE);
-        }
-    }
-
-    public boolean checkReadStoragePermission() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            return false;
-        }
-        return true;
-    }
-
 
     /**
      * Put data to request body
@@ -281,53 +226,29 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
      */
     private void createRequestBody() {
         progressDialogUpload.show();
-        requestName = RequestBody.create(MediaType.parse(MULTIPART_TYPE_TEXT),
-                name.getText().toString());
-        requestLength = RequestBody.create(MediaType.parse(MULTIPART_TYPE_TEXT),
-                length.getText().toString());
-        requestWeight = RequestBody.create(MediaType.parse(MULTIPART_TYPE_TEXT),
-                weight.getText().toString());
-        requestDepth = RequestBody.create(MediaType.parse(MULTIPART_TYPE_TEXT),
-                depth.getText().toString());
-        requestScname = RequestBody.create(MediaType.parse(MULTIPART_TYPE_TEXT),
-                scName.getText().toString());
-        requestOrder = RequestBody.create(MediaType.parse(MULTIPART_TYPE_TEXT),
-                order.getText().toString());
-        requestClass = RequestBody.create(MediaType.parse(MULTIPART_TYPE_TEXT),
-                scClass.getText().toString());
-        requestDistribution = RequestBody.create(MediaType.parse(MULTIPART_TYPE_TEXT),
-                distribution.getText().toString());
-        requestHabitat = RequestBody.create(MediaType.parse(MULTIPART_TYPE_TEXT),
-                habitat.getText().toString());
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
-            requestSocial = RequestBody.create(MediaType.parse(MULTIPART_TYPE_TEXT),
-                    DDScannerApplication.getInstance().getSharedPreferenceHelper().getSn());
-            requestToken = RequestBody.create(MediaType.parse(MULTIPART_TYPE_TEXT),
-                    DDScannerApplication.getInstance().getSharedPreferenceHelper().getToken());
-            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getSn().equals("tw")) {
-                requestSecret = RequestBody.create(MediaType.parse(MULTIPART_TYPE_TEXT),
-                        DDScannerApplication.getInstance().getSharedPreferenceHelper().getSecret());
-            }
-        }
+        ArrayList<SealifeTranslation> sealifeTranslations = new ArrayList<>();
+        SealifeTranslation sealifeTranslation = new SealifeTranslation();
+        sealifeTranslation.setLangCode("en");
+        sealifeTranslation.setDepth(depth.getText().toString().trim());
+        sealifeTranslation.setDistribution(distribution.getText().toString().trim());
+        sealifeTranslation.setLength(length.getText().toString().trim());
+        sealifeTranslation.setWeight(weight.getText().toString().trim());
+        sealifeTranslation.setScName(scName.getText().toString().trim());
+        sealifeTranslation.setOrder(order.getText().toString().trim());
+        sealifeTranslation.setSealifeClass(scClass.getText().toString().trim());
+        sealifeTranslation.setHabitat(habitat.getText().toString().trim());
+        sealifeTranslation.setName(name.getText().toString().trim());
+        sealifeTranslations.add(sealifeTranslation);
+        MultipartBody.Part body = null;
+        fileToSend = new File(filePath);
+        RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), fileToSend);
+        body = MultipartBody.Part.createFormData("photo", fileToSend.getName(), requestFile);
+        DDScannerApplication.getInstance().getDdScannerRestClient().postAddSealife(sealifeResultListener, body, Helpers.createRequestBodyForString(new Gson().toJson(sealifeTranslations)));
         hideErrorsFields();
-        sendRequestToAddSealife(filePath);
     }
 
-    /**
-     * Make request to server for adding sealife
-     * @author Andrei Lashkevich
-     */
-    private void sendRequestToAddSealife(Uri imageFileUri) {
-        MultipartBody.Part body = null;
-        if (imageFileUri != null) {
-           // File file = new File(Helpers.getRealPathFromURI(this, imageFileUri));
-            RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), fileToSend);
-            body = MultipartBody.Part.createFormData("image", fileToSend.getName(), requestFile);
-        }
-        DDScannerApplication.getInstance().getDdScannerRestClient().postAddSealife(
-                sealifeResultListener, body, requestName, requestDistribution, requestHabitat,
-                requestScname, requestLength, requestWeight, requestDepth, requestOrder, requestClass,
-                requestToken, requestSocial);
+    private boolean validateData() {
+        return true;
     }
 
     /**
@@ -366,24 +287,20 @@ public class AddSealifeActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case ActivitiesRequestCodes.REQUEST_CODE_ADD_SEALIFE_ACTIVITY_PERMISSION_READ_STORAGE: {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    pickPhotoFromGallery();
-                } else {
-                    Toast.makeText(AddSealifeActivity.this, "Grand permission to pick photo from gallery!", Toast.LENGTH_SHORT).show();
-                }
-                return;
-            }
-
-        }
-    }
-
     private void hideErrorsFields() {
         for (Map.Entry<String, TextView> entry : errorsMap.entrySet()) {
             entry.getValue().setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public void onPictureFromCameraTaken(File picture) {
+
+    }
+
+    @Override
+    public void onPicturesTaken(ArrayList<String> pictures) {
+        filePath = pictures.get(0);
+        setBackImage(filePath);
     }
 }

@@ -66,5 +66,7 @@
     <color name="tw__composer_red">#ffe81c4f</color>
 
     <color name="notification_time_color">#bfbfbf</color>
-
+    
+    <color name="empty_login_button_text">#66202020</color>
+    
 </resources>

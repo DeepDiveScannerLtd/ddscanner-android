@@ -96,6 +96,7 @@ public class LoginActivity extends BaseAppCompatActivity implements GoogleApiCli
             case ActivitiesRequestCodes.REQUEST_CODE_SOCIAL_NETWORKS_SIGN_IN:
             case ActivitiesRequestCodes.REQUEST_CODE_SOCIAL_NETWORKS_SIGN_UP:
                 if (resultCode == RESULT_OK) {
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsMustRefreshDiveSpotActivity(true);
                     setResult(RESULT_OK);
                     finish();
                 }

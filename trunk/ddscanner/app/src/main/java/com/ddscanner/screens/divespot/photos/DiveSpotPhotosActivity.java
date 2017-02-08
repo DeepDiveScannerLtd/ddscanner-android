@@ -157,6 +157,14 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
         context.startActivity(intent);
     }
 
+    public static void showForResult(Activity context, String id, int requestCode) {
+        Intent intent = new Intent(context, DiveSpotPhotosActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("id", id);
+        intent.putExtras(bundle);
+        context.startActivityForResult(intent, requestCode);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -188,9 +196,9 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
         switch (requestCode) {
             case ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_ADD_PHOTOS:
                 if (resultCode == RESULT_OK) {
-                    Intent intent = new Intent();
-                    setResult(RESULT_OK, intent);
+                    setResult(RESULT_OK);
                     getDiveSpotPhotos();
+                    isDataChanged = true;
                     //   finish();
                 }
                 break;
@@ -205,6 +213,7 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
             case ActivitiesRequestCodes.REQUEST_CODE_PHOTOS_ACTIVITY_SLIDER:
                 if (resultCode == RESULT_OK) {
                     getDiveSpotPhotos();
+                    isDataChanged = true;
                 }
                 break;
         }
@@ -302,16 +311,15 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
     }
 
     private void updateFragments(DiveSpotPhotosResponseEntity diveSpotPhotosResponseEntity) {
-        isDataChanged = true;
 
         reviewsImages = diveSpotPhotosResponseEntity.getCommentPhotos();
         diveSpotImages = diveSpotPhotosResponseEntity.getDiveSpotPhotos();
 
         allPhotos = new ArrayList<>();
         allPhotos = Helpers.compareObjectsArray(reviewsImages, diveSpotImages);
-        diveSpotReviewsPhotoFragment.setList(reviewsImages);
-        diveSpotAllPhotosFragment.setList(allPhotos);
-        diveSpotPhotosFragment.setList(diveSpotImages);
+        diveSpotReviewsPhotoFragment.setList(reviewsImages, dsId);
+        diveSpotAllPhotosFragment.setList(allPhotos, dsId);
+        diveSpotPhotosFragment.setList(diveSpotImages, dsId);
 
         progressView.setVisibility(View.GONE);
         photosViewPager.setVisibility(View.VISIBLE);

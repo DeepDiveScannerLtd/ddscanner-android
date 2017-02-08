@@ -4,12 +4,16 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.ContextCompat;
+import android.text.Editable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
+import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.util.AttributeSet;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -46,6 +50,72 @@ public class LoginView extends RelativeLayout implements View.OnClickListener {
     private EditText password;
     private boolean isSignUp;
     private String userType;
+    private boolean isNameEmpty = true;
+    private boolean isPasswordEmpty = true;
+    private boolean isEmailEmpty = true;
+    private TextWatcher nameTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            if (name.getText().length() > 0) {
+                isNameEmpty = false;
+            } else {
+                isNameEmpty = true;
+            }
+            changeButtonState();
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+
+        }
+    };
+    private TextWatcher passwordTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            if (password.getText().length() > 3) {
+                isPasswordEmpty = false;
+            } else {
+                isPasswordEmpty = true;
+            }
+            changeButtonState();
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+
+        }
+    };
+    private TextWatcher emailTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            if (Patterns.EMAIL_ADDRESS.matcher(email.getText().toString()).matches()) {
+                isEmailEmpty = false;
+            } else {
+                isEmailEmpty = true;
+            }
+            changeButtonState();
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+
+        }
+    };
 
     public LoginView(Context context) {
         super(context);
@@ -84,14 +154,15 @@ public class LoginView extends RelativeLayout implements View.OnClickListener {
         email = (EditText) findViewById(R.id.email);
         password = (EditText) findViewById(R.id.password);
         name = (EditText) findViewById(R.id.name);
-
+        name.addTextChangedListener(nameTextWatcher);
+        email.addTextChangedListener(emailTextWatcher);
+        password.addTextChangedListener(passwordTextWatcher);
         forgotPasswordView.setOnClickListener(this);
-        buttonSubmitData.setOnClickListener(this);
         signUpButton.setOnClickListener(this);
         loginButton.setOnClickListener(this);
         loginWithFacebook.setOnClickListener(this);
         loginWithGoogle.setOnClickListener(this);
-
+        changeButtonState();
         setupTabLayout();
         setPrivacyPolicyText();
 
@@ -166,6 +237,7 @@ public class LoginView extends RelativeLayout implements View.OnClickListener {
                 buttonSubmitData.setText(R.string.sign_up);
                 DDScannerApplication.bus.post(new SignupLoginButtonClicked(true));
                 isSignUp = true;
+                isNameEmpty = true;
                 break;
             case R.id.login:
                 tabLayout.setVisibility(GONE);
@@ -175,6 +247,7 @@ public class LoginView extends RelativeLayout implements View.OnClickListener {
                 buttonSubmitData.setText(R.string.login);
                 DDScannerApplication.bus.post(new SignupLoginButtonClicked(true));
                 isSignUp = false;
+                isNameEmpty = false;
                 break;
             case R.id.privacy_policy:
                 PrivacyPolicyActivity.show(getContext());
@@ -229,4 +302,16 @@ public class LoginView extends RelativeLayout implements View.OnClickListener {
             ds.setUnderlineText(false);
         }
     }
+
+    private void changeButtonState() {
+        if (!isEmailEmpty && !isNameEmpty && !isPasswordEmpty) {
+            buttonSubmitData.setTextColor(ContextCompat.getColor(getContext(), R.color.black_text));
+            buttonSubmitData.setOnClickListener(this);
+        } else {
+            buttonSubmitData.setTextColor(ContextCompat.getColor(getContext(), R.color.empty_login_button_text));
+            buttonSubmitData.setOnClickListener(null);
+        }
+
+    }
+    
 }

@@ -47,6 +47,7 @@ public class AchievementProgressView extends View {
     private Matrix sharkMatrix = new Matrix();
     Paint paintRect= new Paint();
     private float percents;
+    private float firstPointXAxis = 0;
     private Camera camera = new Camera();
 
     private Bitmap backgroundBitmap;
@@ -96,6 +97,8 @@ public class AchievementProgressView extends View {
 
         linePath.reset();
 
+        firstPointXAxis = 18 * koefX;
+
         linePath.moveTo(18 * koefX,40 * koefY);
         linePath.quadTo(61 * koefX, 14 * koefY, 105 * koefX, 26 * koefY);
         linePath.quadTo(146 * koefX, 34 * koefY, 165 * koefX, 22 * koefY);
@@ -108,10 +111,10 @@ public class AchievementProgressView extends View {
 
         linePathMeasure = new PathMeasure(linePath, false);
         this.animationLength = linePathMeasure.getLength() * percents;
-        valueAnimator =  new ValueAnimator().ofFloat(0, linePathMeasure.getLength() * percents);
-        valueAnimator.setDuration(animationDuration);
-        valueAnimator.setInterpolator(new DecelerateInterpolator());
-        valueAnimator.start();
+//        valueAnimator =  new ValueAnimator().ofFloat(0, linePathMeasure.getLength() * percents);
+//        valueAnimator.setDuration(animationDuration);
+//        valueAnimator.setInterpolator(new DecelerateInterpolator());
+//        valueAnimator.start();
     }
 
     @Override
@@ -122,15 +125,15 @@ public class AchievementProgressView extends View {
         tempPath.reset();
         matrix.reset();
         float[] points = new float[20];
-        linePathMeasure.getMatrix((Float)valueAnimator.getAnimatedValue(), matrix, PathMeasure.POSITION_MATRIX_FLAG);
-        linePathMeasure.getSegment(0, (Float) valueAnimator.getAnimatedValue(), tempPath, true);
+        linePathMeasure.getMatrix(animationLength, matrix, PathMeasure.POSITION_MATRIX_FLAG);
+        linePathMeasure.getSegment(0, animationLength, tempPath, true);
         canvas.drawPath(tempPath, linePaint);
         matrix.mapPoints(points);
         canvas.drawBitmap(sharkBitmap, points[0], (getMeasuredHeight() - sharkBitmap.getHeight()) / 2, null);
 
-        if(elapsedTime < animationDuration && points[0] < animationLength) {
-            this.postInvalidateDelayed(1000 / framesPerSecond);
-        }
+//        if(elapsedTime < animationDuration && points[0] < animationLength) {
+//            this.postInvalidateDelayed(1000 / framesPerSecond);
+//        }
     }
 
     public void setPercent(float percents) {

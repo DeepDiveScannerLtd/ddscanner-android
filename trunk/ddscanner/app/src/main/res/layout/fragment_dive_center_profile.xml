@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -42,28 +43,48 @@
                     android:layout_marginLeft="13dp"
                     android:layout_marginTop="13dp"
                     android:src="@drawable/avatar_dc_profile"
-                    app:loadImageFrom="@{diveCenterViewModel}"/>
+                    app:loadImageFrom="@{diveCenterViewModel}" />
 
-                <TextView
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="17dp"
-                    android:layout_marginRight="20dp"
-                    android:text="@{diveCenterViewModel.diveCenterProfile.name}"
-                    android:textColor="@color/black_text"
-                    android:textSize="18sp" />
+                    android:gravity="center_vertical"
+                    android:orientation="vertical"
+                    android:paddingLeft="17dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="20dp"
+                        android:ellipsize="end"
+                        android:lines="1"
+                        android:text="@{diveCenterViewModel.diveCenterProfile.name}"
+                        android:textColor="@color/black_text"
+                        android:textSize="18sp"
+                        tools:text="aquacenter thailand" />
+
+                    <TextView
+                        app:loadServiceTypeFrom="@{diveCenterViewModel}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:textColor="#a3a3a3"
+                        android:textSize="13sp"
+                        tools:text="Company" />
+                </LinearLayout>
             </LinearLayout>
 
             <ImageView style="@style/DividerStyleFull" />
+
             <LinearLayout
-                android:visibility="gone"
-                android:layout_marginTop="@dimen/base_block_margin_top"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/base_block_margin_top"
                 android:background="@color/white"
-                android:orientation="vertical">
-                <ImageView
-                    style="@style/DividerStyleFull" />
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <ImageView style="@style/DividerStyleFull" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -80,11 +101,14 @@
                     android:layout_marginBottom="18dp"
                     android:layout_marginLeft="20dp"
                     android:layout_marginTop="14dp" />
+
                 <ImageView style="@style/DividerStyleFull" />
             </LinearLayout>
 
-            <ImageView style="@style/DividerStyleFull"
-                android:layout_marginTop="@dimen/base_block_margin_top"/>
+            <ImageView
+                style="@style/DividerStyleFull"
+                android:layout_marginTop="@dimen/base_block_margin_top" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -95,6 +119,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
+
                     <ImageView
                         style="@style/DiveCenterProfileCharacteristicIcon"
                         android:src="@drawable/ic_dc_location" />
@@ -110,8 +135,8 @@
                             android:text="@string/dc_address" />
 
                         <TextView
-                            app:setAddressFrom="@{diveCenterViewModel}"
-                            style="@style/DiveCenterProfileCharacteristicDesciption" />
+                            style="@style/DiveCenterProfileCharacteristicDesciption"
+                            app:setAddressFrom="@{diveCenterViewModel}" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -136,7 +161,7 @@
 
                         <TextView
                             style="@style/DiveCenterProfileCharacteristicDesciption"
-                            app:setEmails="@{diveCenterViewModel}"/>
+                            app:setEmails="@{diveCenterViewModel}" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -193,15 +218,9 @@
                                 android:text="@{diveCenterViewModel.diveCenterProfile.instructorsCount}" />
                         </LinearLayout>
 
-                        <View
-                            android:layout_width="6dp"
-                            android:layout_height="6dp"
-                            android:layout_centerVertical="true"
-                            android:layout_marginRight="11dp"
-                            android:layout_toLeftOf="@+id/instructors_arrow"
-                            android:background="@drawable/red_oval" />
-
                         <ImageView
+                            android:visibility="gone"
+                            app:arrowVisibilityFrom="@{diveCenterViewModel}"
                             android:id="@+id/instructors_arrow"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -242,6 +261,7 @@
                         </LinearLayout>
 
                         <ImageView
+                            android:visibility="gone"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
@@ -275,6 +295,7 @@
                     android:textSize="15sp" />
 
                 <android.support.v7.widget.RecyclerView
+                    android:id="@+id/photos_list"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="18dp"

@@ -77,13 +77,13 @@ public class SelfReviewsListAdapter extends RecyclerView.Adapter<SelfReviewsList
                     .transform(new TransformationRoundImage(4,0))
                     .into(holder.user_avatar);
         }
-        for (int k = 0; k < Integer.parseInt(comment.getRating()); k++) {
+        for (int k = 0; k < comment.getRating(); k++) {
             ImageView iv = new ImageView(context);
             iv.setImageResource(R.drawable.ic_list_star_full);
             iv.setPadding(0, 0, 5, 0);
             holder.rating.addView(iv);
         }
-        for (int k = 0; k < 5 - Integer.parseInt(comment.getRating()); k++) {
+        for (int k = 0; k < 5 - comment.getRating(); k++) {
             ImageView iv = new ImageView(context);
             iv.setImageResource(R.drawable.ic_list_star_empty);
             iv.setPadding(0, 0, 5, 0);

@@ -481,6 +481,24 @@ public class MainActivity extends BaseAppCompatActivity
                     mainViewPager.setCurrentItem(0, false);
                 }
                 break;
+            case ActivitiesRequestCodes.REQUEST_CODE_SHOW_USER_PROFILE_PHOTOS:
+                if (resultCode == RESULT_OK) {
+                    switch (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType()) {
+                        case 0:
+                            if (mainViewPagerAdapter.getDiveCenterProfileFragment() != null) {
+                                mainViewPagerAdapter.getDiveCenterProfileFragment().reloadData();
+                            }
+                            break;
+                        case 1:
+                        case 2:
+                            if (mainViewPagerAdapter.getProfileFragment() != null) {
+                                mainViewPagerAdapter.getProfileFragment().reloadData();
+                            }
+                            break;
+                    }
+//                    DDScannerApplication.bus.post(new LoadUserProfileInfoEvent());
+                }
+                break;
             case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_CHOSE_GOOGLE_ACCOUNT:
                 GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
                 Log.d(TAG, "onActivityResult:GET_TOKEN:success:" + result.getStatus().isSuccess());

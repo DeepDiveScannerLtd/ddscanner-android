@@ -150,6 +150,7 @@
                                     android:textSize="11sp" />
 
                                 <TextView
+                                    android:layout_marginLeft="0dp"
                                     android:id="@+id/user_comments"
                                     style="@style/ProfileNumberDivespotsSrtyle"
                                     android:text="@{String.valueOf(profileFragmentViewModel.user.counters.commentsCount)}"
@@ -181,6 +182,7 @@
 
 
                                     <TextView
+                                        android:layout_marginLeft="0dp"
                                         android:id="@+id/user_likes"
                                         style="@style/ProfileNumberDivespotsSrtyle"
                                         android:text="@{String.valueOf(profileFragmentViewModel.user.counters.likesCount)}"
@@ -208,6 +210,7 @@
 
 
                                 <TextView
+                                    android:layout_marginLeft="0dp"
                                     android:id="@+id/user_dislikes"
                                     style="@style/ProfileNumberDivespotsSrtyle"
                                     android:text="@{String.valueOf(profileFragmentViewModel.user.counters.dislikesCount)}"

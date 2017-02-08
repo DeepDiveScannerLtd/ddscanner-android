@@ -1,4 +1,4 @@
-package com.ddscanner.ui.activities;
+package com.ddscanner.screens.reiews.list;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -32,6 +32,9 @@ import com.ddscanner.events.ShowLoginActivityIntent;
 import com.ddscanner.events.ShowSliderForReviewImagesEvent;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.photo.slider.ImageSliderActivity;
+import com.ddscanner.screens.reiews.edit.EditCommentActivity;
+import com.ddscanner.screens.reiews.add.LeaveReviewActivity;
+import com.ddscanner.ui.activities.LoginActivity;
 import com.ddscanner.ui.adapters.ReviewsListAdapter;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
@@ -69,6 +72,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     private boolean isNeedRefresh;
     private int commentPosition;
     private MaterialDialog materialDialog;
+    private int reportReviewPosition;
 
     private DDScannerRestClient.ResultListener<Void> likeCommentResultListener = new DDScannerRestClient.ResultListener<Void>() {
         @Override
@@ -84,11 +88,13 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
 
         @Override
         public void onConnectionFailure() {
+            reviewsListAdapter.rateReviewFaled(reviewPositionToRate);
             InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_CONNECTION_FAILURE, false);
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            reviewsListAdapter.rateReviewFaled(reviewPositionToRate);
             switch (errorType) {
                 case UNAUTHORIZED_401:
                     LoginActivity.showForResult(ReviewsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_LIKE_REVIEW);
@@ -121,11 +127,13 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
 
         @Override
         public void onConnectionFailure() {
+            reviewsListAdapter.rateReviewFaled(reviewPositionToRate);
             InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_CONNECTION_FAILURE, false);
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            reviewsListAdapter.rateReviewFaled(reviewPositionToRate);
             switch (errorType) {
                 case UNAUTHORIZED_401:
                     LoginActivity.showForResult(ReviewsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_DISLIKE_REVIEW);
@@ -150,17 +158,20 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
             EventsTracker.trackDiveSpotReviewReportSent();
             reportType = null;
             reportDescription = null;
-            getComments();
+            materialDialog.dismiss();
+            reviewsListAdapter.deleteComment(reportCommentId);
             Toast.makeText(ReviewsActivity.this, R.string.report_sent, Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void onConnectionFailure() {
+            materialDialog.dismiss();
             InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            materialDialog.dismiss();
             switch (errorType) {
                 case UNAUTHORIZED_401:
                     LoginActivity.showForResult(ReviewsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_LEAVE_REPORT);
@@ -173,6 +184,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
 
         @Override
         public void onInternetConnectionClosed() {
+            materialDialog.dismiss();
             InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
         }
 
@@ -499,6 +511,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
             LoginActivity.showForResult(ReviewsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_LEAVE_REPORT);
             return;
         }
+        materialDialog.show();
         DDScannerApplication.getInstance().getDdScannerRestClient().postReportReview(reportCommentResultListener, new ReportRequest(String.valueOf(reportType), description, reportCommentId));
     }
 
@@ -508,6 +521,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
             return;
         }
         DDScannerApplication.getInstance().getDdScannerRestClient().postLikeReview(id, likeCommentResultListener);
+        reviewsListAdapter.rateReviewRequestStarted(position);
     }
 
     private void dislikeComment(String id, final int position) {
@@ -516,6 +530,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
             return;
         }
         DDScannerApplication.getInstance().getDdScannerRestClient().postDislikeReview(id, dislikeCommentResultListener);
+        reviewsListAdapter.rateReviewRequestStarted(position);
     }
 
     @Subscribe
@@ -536,7 +551,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     public void showSliderActivity(ShowSliderForReviewImagesEvent event) {
         this.commentPosition = event.getCommentPosition();
         DDScannerApplication.getInstance().getDiveSpotPhotosContainer().setPhotos(event.getPhotos());
-        ImageSliderActivity.showForResult(this, event.getPhotos(), event.getPosition(), ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_SHOW_SLIDER, PhotoOpenedSource.REVIEWS, false);
+        ImageSliderActivity.showForResult(this, event.getPhotos(), event.getPosition(), ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_SHOW_SLIDER, PhotoOpenedSource.REVIEW, comments.get(commentPosition).getComment().getId());
     }
 
     @Override

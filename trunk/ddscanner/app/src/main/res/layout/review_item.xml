@@ -50,7 +50,7 @@
                         android:textColor="@color/black_text"
                         android:textSize="18sp" />
 
-                    <LinearLayout
+                    <com.ddscanner.ui.views.RatingView
                         android:id="@+id/stars"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -93,81 +93,62 @@
             android:id="@+id/review_photos_rc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="visible" />
-
-        <TextView
-            android:id="@+id/date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:layout_marginTop="5dp"
-            tools:text="1231332312"
-            android:textColor="#a3a3a3"
-            android:textSize="13sp" />
+            android:visibility="visible" />
     </LinearLayout>
-
+    <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/sealifes_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="#f6f6f6">
+        <ImageView
+            style="@style/DividerStyleFull" />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/sealifes_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            />
+    </LinearLayout>
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scaleType="centerCrop"
         android:src="@drawable/divider" />
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:orientation="horizontal"
         android:paddingRight="15dp">
 
-        <LinearLayout
+        <com.ddscanner.ui.views.LikeView
             android:id="@+id/like_layout"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:background="?attr/selectableItemBackground"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp">
+            android:layout_height="match_parent"/>
 
-            <ImageView
-                android:id="@+id/likes_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_review_like_empty" />
-
-            <TextView
-                android:id="@+id/likes_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                tools:text="9"
-                android:textColor="#a3a3a3"
-                android:textSize="14sp" />
-        </LinearLayout>
-
-        <LinearLayout
+        <com.ddscanner.ui.views.DislikeView
+            android:layout_toRightOf="@+id/like_layout"
             android:id="@+id/dislike_layout"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:background="?attr/selectableItemBackground"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp">
+            />
 
-            <ImageView
-                android:id="@+id/dislikes_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_review_dislike_empty" />
-
-            <TextView
-                android:id="@+id/dislikes_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                tools:text="9"
-                android:textColor="#a3a3a3"
-                android:textSize="14sp" />
-        </LinearLayout>
-    </LinearLayout>
+        <TextView
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:id="@+id/date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="5dp"
+            android:textColor="#a3a3a3"
+            android:layout_gravity="right"
+            android:textSize="13sp" />
+    </RelativeLayout>
 </LinearLayout>

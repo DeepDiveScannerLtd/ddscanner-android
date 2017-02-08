@@ -7,14 +7,18 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
+import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -71,7 +75,72 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     private EditText name;
     private MaterialDialog materialDialog;
     private String userType;
+    private boolean isNameEmpty = true;
+    private boolean isPasswordEmpty = true;
+    private boolean isEmailEmpty = true;
+    private TextWatcher nameTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            if (name.getText().length() > 0) {
+                isNameEmpty = false;
+            } else {
+                isNameEmpty = true;
+            }
+            changeButtonState();
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+
+        }
+    };
+    private TextWatcher passwordTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            if (password.getText().length() > 3) {
+                isPasswordEmpty = false;
+            } else {
+                isPasswordEmpty = true;
+            }
+            changeButtonState();
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+
+        }
+    };
+    private TextWatcher emailTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            if (Patterns.EMAIL_ADDRESS.matcher(email.getText().toString()).matches()) {
+                isEmailEmpty = false;
+            } else {
+                isEmailEmpty = true;
+            }
+            changeButtonState();
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+
+        }
+    };
     private boolean isSignUpScreen = true;
 
     private CallbackManager facebookCallbackManager;
@@ -148,6 +217,9 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         email = (EditText) findViewById(R.id.email);
         password = (EditText) findViewById(R.id.password);
         name = (EditText) findViewById(R.id.name);
+        name.addTextChangedListener(nameTextWatcher);
+        password.addTextChangedListener(passwordTextWatcher);
+        email.addTextChangedListener(emailTextWatcher);
         setUi();
     }
 
@@ -155,12 +227,15 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         if (!isRegister) {
             tabLayout.setVisibility(View.GONE);
             name.setVisibility(View.GONE);
+            isNameEmpty = false;
+        } else {
+            forgotPasswordView.setVisibility(View.GONE);
         }
+        changeButtonState();
         materialDialog = Helpers.getMaterialDialog(this);
         forgotPasswordView.setOnClickListener(this);
         googleLogin.setOnClickListener(this);
         fbLogin.setOnClickListener(this);
-        buttonSignUp.setOnClickListener(this);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);
@@ -400,4 +475,16 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 break;
         }
     }
+
+    private void changeButtonState() {
+        if (!isEmailEmpty && !isNameEmpty && !isPasswordEmpty) {
+            buttonSignUp.setTextColor(ContextCompat.getColor(this, R.color.black_text));
+            buttonSignUp.setOnClickListener(this);
+        } else {
+            buttonSignUp.setTextColor(ContextCompat.getColor(this, R.color.empty_login_button_text));
+            buttonSignUp.setOnClickListener(null);
+        }
+
+    }
+
 }

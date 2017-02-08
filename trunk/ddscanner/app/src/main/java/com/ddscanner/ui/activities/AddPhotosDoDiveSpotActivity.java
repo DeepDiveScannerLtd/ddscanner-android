@@ -45,14 +45,11 @@ public class AddPhotosDoDiveSpotActivity extends AppCompatActivity implements Vi
     private List<String> imagesToShow = new ArrayList<>();
     private boolean isMap;
 
-    private DDScannerRestClient.ResultListener<List<String>> photosAddedResultListener = new DDScannerRestClient.ResultListener<List<String>>() {
+    private DDScannerRestClient.ResultListener<Void> photosAddedResultListener = new DDScannerRestClient.ResultListener<Void>() {
         @Override
-        public void onSuccess(List<String> result) {
+        public void onSuccess(Void result) {
             materialDialog.dismiss();
-            EventsTracker.trackDiveSpotPhotoAdded();
-            Intent intent = new Intent();
-            intent.putStringArrayListExtra("images", (ArrayList<String>) result);
-            setResult(RESULT_OK, intent);
+            setResult(RESULT_OK);
             finish();
         }
 

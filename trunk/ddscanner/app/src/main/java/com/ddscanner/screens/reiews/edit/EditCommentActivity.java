@@ -1,49 +1,38 @@
-package com.ddscanner.ui.activities;
+package com.ddscanner.screens.reiews.edit;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v13.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.Comment;
-import com.ddscanner.entities.CommentEntity;
-import com.ddscanner.entities.CommentOld;
 import com.ddscanner.entities.DialogClosedListener;
 import com.ddscanner.entities.DiveSpotPhoto;
+import com.ddscanner.entities.SealifeShort;
 import com.ddscanner.events.AddPhotoDoListEvent;
-import com.ddscanner.events.ImageDeletedEvent;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.divespot.edit.EditSpotPhotosListAdapter;
-import com.ddscanner.ui.adapters.AddPhotoToDsListAdapter;
+import com.ddscanner.screens.reiews.add.LeaveReviewActivity;
+import com.ddscanner.ui.activities.BaseAppCompatActivity;
+import com.ddscanner.ui.activities.LoginActivity;
+import com.ddscanner.ui.activities.SearchSealifeActivity;
+import com.ddscanner.ui.adapters.SealifeListAddingDiveSpotAdapter;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
+import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogHelpers;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
@@ -60,7 +49,7 @@ import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
-public class EditCommentActivity extends BaseAppCompatActivity implements DialogClosedListener, BaseAppCompatActivity.PictureTakenListener {
+public class EditCommentActivity extends BaseAppCompatActivity implements View.OnClickListener, DialogClosedListener, BaseAppCompatActivity.PictureTakenListener {
 
     private static final int COMMENT_MAX_LENGTH = 250;
 
@@ -73,10 +62,39 @@ public class EditCommentActivity extends BaseAppCompatActivity implements Dialog
     private MaterialDialog materialDialog;
     private TextView symbolNumberLeft;
     private RecyclerView photosRecyclerView;
+    private LinearLayout buttonAddSealife;
     private EditSpotPhotosListAdapter editSpotPhotosListAdapter;
     private Map<String, TextView> errorsMap = new HashMap<>();
     private Comment comment;
     private ArrayList<String> deleted = new ArrayList<>();
+    private RecyclerView sealifeList;
+    private SealifeListAddingDiveSpotAdapter sealifesAdapter;
+
+    private DDScannerRestClient.ResultListener<ArrayList<SealifeShort>> sealifeResultListener = new DDScannerRestClient.ResultListener<ArrayList<SealifeShort>>() {
+        @Override
+        public void onSuccess(ArrayList<SealifeShort> result) {
+            materialDialog.dismiss();
+            sealifesAdapter.addSealifesList(result);
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            materialDialog.dismiss();
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_LEAVE_REVIEW_ACTIVITY_FAILED_TO_CONNECT, false);
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            materialDialog.dismiss();
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_LEAVE_REVIEW_ACTIVITY_FAILED_TO_CONNECT, false);
+        }
+
+        @Override
+        public void onInternetConnectionClosed() {
+            materialDialog.dismiss();
+            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_LEAVE_REVIEW_ACTIVITY_FAILED_TO_CONNECT, false);
+        }
+    };
 
     private DDScannerRestClient.ResultListener<Void> editCommentResultListener = new DDScannerRestClient.ResultListener<Void>() {
         @Override
@@ -125,6 +143,7 @@ public class EditCommentActivity extends BaseAppCompatActivity implements Dialog
 
     private void setUi() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(EditCommentActivity.this);
+        sealifesAdapter = new SealifeListAddingDiveSpotAdapter(new ArrayList<SealifeShort>(), this);
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         photosRecyclerView.setNestedScrollingEnabled(false);
         photosRecyclerView.setHasFixedSize(false);
@@ -138,12 +157,23 @@ public class EditCommentActivity extends BaseAppCompatActivity implements Dialog
             editSpotPhotosListAdapter.addServerPhoto(serverPhotos);
            // setRcSettings();
         }
-        ratingBar.setRating(Integer.parseInt(comment.getRating()));
+        ratingBar.setRating(comment.getRating());
         text.setText(comment.getReview());
-
+        LinearLayoutManager sealifLayoutManager = new LinearLayoutManager(this);
+        sealifeList.setLayoutManager(sealifLayoutManager);
+        sealifeList.setAdapter(sealifesAdapter);
+        if (comment.getSealifes() != null) {
+            materialDialog.show();
+            DDScannerApplication.getInstance().getDdScannerRestClient().getReviewSealifes(sealifeResultListener, comment.getId());
+            //
+            //sealifesAdapter.addSealifesList(comment.getSealifes());
+        }
     }
 
     private void findViews() {
+        sealifeList= (RecyclerView) findViewById(R.id.sealife_list);
+        buttonAddSealife = (LinearLayout) findViewById(R.id.btn_add_sealife);
+        buttonAddSealife.setOnClickListener(this);
         materialDialog = Helpers.getMaterialDialog(this);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         text = (EditText) findViewById(R.id.review_text);
@@ -218,10 +248,21 @@ public class EditCommentActivity extends BaseAppCompatActivity implements Dialog
                     finish();
                 }
                 break;
+            case ActivitiesRequestCodes.REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_PICK_SEALIFE:
+                if (resultCode == RESULT_OK) {
+                    SealifeShort sealifeShort = (SealifeShort) data.getSerializableExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_SEALIFE);
+                    sealifesAdapter.add(sealifeShort);
+                }
+                break;
         }
     }
 
     private void updateReview() {
+        errorText.setVisibility(View.GONE);
+        if (text.getText().toString().trim().length() < 30) {
+            errorText.setVisibility(View.VISIBLE);
+            return;
+        }
         materialDialog.show();
         List<String> newFilesUrisList = new ArrayList<>();
         newFilesUrisList = editSpotPhotosListAdapter.getNewPhotos();
@@ -245,12 +286,17 @@ public class EditCommentActivity extends BaseAppCompatActivity implements Dialog
                 deletedImages.add(MultipartBody.Part.createFormData("deleted_photos[]", deleted.get(i)));
             }
         }
-        DDScannerApplication.getInstance().getDdScannerRestClient().postUpdateReview(editCommentResultListener, newImages, deletedImages, Helpers.createRequestBodyForString(comment.getId()), Helpers.createRequestBodyForString(String.valueOf(Math.round(ratingBar.getRating()))), Helpers.createRequestBodyForString( text.getText().toString().trim()));
+        List<MultipartBody.Part> sealifes = new ArrayList<>();
+        for (SealifeShort sealife : sealifesAdapter.getSealifes()) {
+            sealifes.add(MultipartBody.Part.createFormData("sealifes[]", sealife.getId()));
+        }
+        DDScannerApplication.getInstance().getDdScannerRestClient().postUpdateReview(editCommentResultListener, newImages, deletedImages, sealifes, Helpers.createRequestBodyForString(comment.getId()), Helpers.createRequestBodyForString(String.valueOf(Math.round(ratingBar.getRating()))), Helpers.createRequestBodyForString( text.getText().toString().trim()));
     }
 
     @Override
     public void onDialogClosed(int requestCode) {
         switch (requestCode) {
+            case DialogsRequestCodes.DRC_LEAVE_REVIEW_ACTIVITY_FAILED_TO_CONNECT:
             case DialogsRequestCodes.DRC_EDIT_COMMENT_ACTIVITY_COMMENT_NOT_FOUND:
                 finish();
                 break;
@@ -270,5 +316,14 @@ public class EditCommentActivity extends BaseAppCompatActivity implements Dialog
     @Override
     public void onPicturesTaken(ArrayList<String> pictures) {
         editSpotPhotosListAdapter.addDevicePhotos(pictures);
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.btn_add_sealife:
+                SearchSealifeActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_PICK_SEALIFE);
+                break;
+        }
     }
 }

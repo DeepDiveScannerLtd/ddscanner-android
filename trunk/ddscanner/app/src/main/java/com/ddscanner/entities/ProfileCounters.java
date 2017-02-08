@@ -21,7 +21,7 @@ public class ProfileCounters implements Serializable{
     @SerializedName("changes")
     private int editedCount;
 
-    @SerializedName("comments")
+    @SerializedName("reviews")
     private int commentsCount;
 
     @SerializedName("favourites")

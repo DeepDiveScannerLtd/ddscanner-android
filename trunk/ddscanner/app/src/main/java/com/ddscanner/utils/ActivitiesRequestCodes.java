@@ -68,6 +68,7 @@ public class ActivitiesRequestCodes {
     //    ImageSliderActivity
     public static final int REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_REPORT = 2001;
     public static final int REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_DELETE = 2002;
+    public static final int REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_LIKE = 2003;
 
     //    DiveSpotPhotosActivity
     public static final int REQUEST_CODE_PHOTOS_ACTIVITY_SLIDER = 2101;
@@ -105,6 +106,7 @@ public class ActivitiesRequestCodes {
     public static final int REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_PERMISSION_READ_STORAGE = 2401;
     public static final int REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_LOGIN = 2402;
     public static final int REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_PICK_PHOTO = 2403;
+    public static final int REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_PICK_SEALIFE = 2404;
 
     //    AddSealifeActivity
     public static final int REQUEST_CODE_ADD_SEALIFE_ACTIVITY_PERMISSION_READ_STORAGE = 2501;
@@ -188,5 +190,15 @@ public class ActivitiesRequestCodes {
 
     //Dive center spots activity
     public static final int REQUEST_CODE_DIVE_CENTER_SPOTS_ACTIVITY_GO_TO_MY_LOCATION = 4401;
+
+    public static final int REQUEST_CODE_SHOW_USER_PROFILE_PHOTOS = 4501;
+
+    //Foreign user profile activity
+    public static final int REQUEST_CODE_FOREIGN_USER_LOGIN_TO_SHOW_CHECKINS = 4601;
+    public static final int REQUEST_CODE_FOREIGN_USER_LOGIN_TO_SHOW_EDITED = 4602;
+    public static final int REQUEST_CODE_FOREIGN_USER_LOGIN_TO_SHOW_CREATED = 4603;
+    public static final int REQUEST_CODE_FOREIGN_USER_LOGIN_TO_SHOW_LIKES = 4604;
+    public static final int REQUEST_CODE_FOREIGN_USER_LOGIN_TO_SHOW_DISLIKES = 4605;
+    public static final int REQUEST_CODE_FOREIGN_USER_LOGIN_TO_SHOW_REVIEWS = 4606;
 
 }

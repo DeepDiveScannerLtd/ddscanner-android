@@ -189,7 +189,7 @@ public interface DDScannerRestService {
     @GET("v2_0/user.profile.get")
     Call<ResponseBody> getUserInformation(@Query("id") String id, @Query("include_photo_details") int value);
 
-    @GET("v2_0/divecenter.profile.get")
+    @GET("v2_0/user.divecenter.profile.get")
     Call<ResponseBody> getDiveCenterInformation(@Query("id") String id, @Query("include_photo_details") int value);
 
     @GET("v2_0/user.achievements.get")
@@ -351,7 +351,8 @@ public interface DDScannerRestService {
             @Part List<MultipartBody.Part> photos,
             @Part("id") RequestBody id,
             @Part("rating") RequestBody rating,
-            @Part("review") RequestBody review
+            @Part("review") RequestBody review,
+            @Part List<MultipartBody.Part> sealife
     );
 
     @Multipart
@@ -361,7 +362,8 @@ public interface DDScannerRestService {
             @Part List<MultipartBody.Part> deletedPhotos,
             @Part("id") RequestBody id,
             @Part("rating") RequestBody rating,
-            @Part("review") RequestBody review
+            @Part("review") RequestBody review,
+            @Part List<MultipartBody.Part> sealife
     );
 
     @POST("v2_0/divespot.review.delete")
@@ -407,7 +409,7 @@ public interface DDScannerRestService {
     Call<ResponseBody> getCommentsForDiveSpot(@Query("id") String diveSpotId, @Query("include_photo_details") int value);
 
     @GET("v2_0/user.reviews.get")
-    Call<ResponseBody> getSelfCommentsList(@Query("id") String diveCenterId);
+    Call<ResponseBody> getSelfCommentsList(@Query("id") String diveCenterId, @Query("include_photo_details") int value);
 
     @POST("v2_0/instructor.divecenter.add")
     Call<ResponseBody> postAddIstructorToDiveCenter(@Query("id") String diveCenterId);
@@ -432,5 +434,18 @@ public interface DDScannerRestService {
 
     @GET("v2_0/user.status_in.divespot.get")
     Call<ResponseBody> getUserStatusInSpot(@Query("id") String id);
+
+    @GET("v2_0/divespot.review.photos.get")
+    Call<ResponseBody> getReviewPhotos(@Query("id") String id, @Query("include_photo_details") int value);
+
+    @GET("v2_0/divespot.review.sealifes.get")
+    Call<ResponseBody> getReviewSealifes(@Query("id") String reviewId);
+
+    @Multipart
+    @POST("v2_0/sealife.add")
+    Call<ResponseBody> postAddSealife(
+            @Part MultipartBody.Part image,
+            @Part("translations") RequestBody translations
+    );
 
 }

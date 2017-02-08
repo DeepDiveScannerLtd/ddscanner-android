@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.databinding.FragmentUserProfileBinding;
 import com.ddscanner.entities.DiveSpotListSource;
@@ -18,10 +19,12 @@ import com.ddscanner.entities.ProfileAchievement;
 import com.ddscanner.entities.User;
 import com.ddscanner.screens.profile.user.ProfileFragmentViewModel;
 import com.ddscanner.ui.activities.DiveSpotsListActivity;
+import com.ddscanner.ui.activities.LoginActivity;
 import com.ddscanner.ui.activities.SelfCommentsActivity;
 import com.ddscanner.ui.activities.UserLikesDislikesActivity;
 import com.ddscanner.ui.adapters.AchievmentProfileListAdapter;
 import com.ddscanner.ui.adapters.UserPhotosListAdapter;
+import com.ddscanner.utils.ActivitiesRequestCodes;
 
 import java.util.ArrayList;
 
@@ -52,50 +55,68 @@ public class UserProfileFragment extends Fragment {
         }
         if (user.getPhotos() != null) {
             binding.photosList.setLayoutManager(new GridLayoutManager(getContext(), 4));
-            binding.photosList.setAdapter(new UserPhotosListAdapter((ArrayList<DiveSpotPhoto>) user.getPhotos(), user.getPhotosCount(), getActivity()));
+            binding.photosList.setAdapter(new UserPhotosListAdapter((ArrayList<DiveSpotPhoto>) user.getPhotos(), user.getPhotosCount(), getActivity(), binding.getUserProfileViewModel().getUser().getId()));
         }
         return v;
     }
 
     public void showCheckinns(View view) {
         if (binding.getUserProfileViewModel().getUser().getCounters().getCheckinsCount() > 0) {
-            DiveSpotsListActivity.show(getContext(), DiveSpotListSource.CHECKINS, binding.getUserProfileViewModel().getUser().getId());
+            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+                DiveSpotsListActivity.show(getContext(), DiveSpotListSource.CHECKINS, binding.getUserProfileViewModel().getUser().getId());
+            } else {
+                LoginActivity.showForResult(getActivity(), ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_LOGIN_TO_SHOW_CHECKINS);
+            }
         }
     }
 
     public void showAdded(View view) {
         if (binding.getUserProfileViewModel().getUser().getCounters().getAddedCount() > 0) {
-            DiveSpotsListActivity.show(getContext(), DiveSpotListSource.ADDED, binding.getUserProfileViewModel().getUser().getId());
+            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+                DiveSpotsListActivity.show(getContext(), DiveSpotListSource.ADDED, binding.getUserProfileViewModel().getUser().getId());
+            } else {
+                LoginActivity.showForResult(getActivity(), ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_LOGIN_TO_SHOW_CREATED);
+            }
         }
     }
 
     public void showEdited(View view) {
         if (binding.getUserProfileViewModel().getUser().getCounters().getEditedCount() > 0) {
-            DiveSpotsListActivity.show(getContext(), DiveSpotListSource.EDITED, binding.getUserProfileViewModel().getUser().getId());
-        }
-    }
-
-    public void showFavorites(View view) {
-        if (binding.getUserProfileViewModel().getUser().getCounters().getFavoritesCount() > 0) {
-            DiveSpotsListActivity.show(getContext(), DiveSpotListSource.FAVORITES, binding.getUserProfileViewModel().getUser().getId());
+            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+                DiveSpotsListActivity.show(getContext(), DiveSpotListSource.EDITED, binding.getUserProfileViewModel().getUser().getId());
+            } else {
+                LoginActivity.showForResult(getActivity(), ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_LOGIN_TO_SHOW_EDITED);
+            }
         }
     }
 
     public void showComments(View view) {
         if (binding.getUserProfileViewModel().getUser().getCounters().getCommentsCount() > 0) {
-            SelfCommentsActivity.show(getContext(), binding.getUserProfileViewModel().getUser().getId());
+            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+                SelfCommentsActivity.show(getContext(), binding.getUserProfileViewModel().getUser().getId());
+            } else {
+                LoginActivity.showForResult(getActivity(), ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_LOGIN_TO_SHOW_REVIEWS);
+            }
         }
     }
 
     public void showLikes(View view) {
         if (binding.getUserProfileViewModel().getUser().getCounters().getLikesCount() > 0) {
-            UserLikesDislikesActivity.show(getActivity(), true, binding.getUserProfileViewModel().getUser().getId());
+            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+                UserLikesDislikesActivity.show(getActivity(), true, binding.getUserProfileViewModel().getUser().getId());
+            } else {
+                LoginActivity.showForResult(getActivity(), ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_LOGIN_TO_SHOW_LIKES);
+            }
         }
     }
 
     public void showDislikes(View view) {
         if (binding.getUserProfileViewModel().getUser().getCounters().getDislikesCount() > 0) {
-            UserLikesDislikesActivity.show(getActivity(), false, binding.getUserProfileViewModel().getUser().getId());
+            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+                UserLikesDislikesActivity.show(getActivity(), false, binding.getUserProfileViewModel().getUser().getId());
+            } else {
+                LoginActivity.showForResult(getActivity(), ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_LOGIN_TO_SHOW_DISLIKES);
+            }
         }
     }
 
