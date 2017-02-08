@@ -50,7 +50,7 @@ import com.ddscanner.screens.divespot.photos.DiveSpotPhotosActivity;
 import com.ddscanner.screens.divespot.edit.EditDiveSpotActivity;
 import com.ddscanner.screens.reiews.add.LeaveReviewActivity;
 import com.ddscanner.ui.activities.LoginActivity;
-import com.ddscanner.screens.reiews.ReviewsActivity;
+import com.ddscanner.screens.reiews.list.ReviewsActivity;
 import com.ddscanner.ui.activities.ShowDsLocationActivity;
 import com.ddscanner.ui.adapters.SealifeListAdapter;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;

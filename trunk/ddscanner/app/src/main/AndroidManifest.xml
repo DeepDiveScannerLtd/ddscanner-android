@@ -161,7 +161,7 @@
             android:name=".ui.activities.CheckInPeoplesActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".screens.reiews.ReviewsActivity"
+            android:name=".screens.reiews.list.ReviewsActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activities.TermsOfServiceActivity"

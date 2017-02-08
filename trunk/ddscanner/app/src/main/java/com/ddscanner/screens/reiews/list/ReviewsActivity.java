@@ -1,4 +1,4 @@
-package com.ddscanner.screens.reiews;
+package com.ddscanner.screens.reiews.list;
 
 import android.app.Activity;
 import android.content.Intent;

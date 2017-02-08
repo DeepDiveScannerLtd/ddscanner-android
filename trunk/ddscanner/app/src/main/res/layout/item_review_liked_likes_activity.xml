@@ -7,6 +7,9 @@
         <variable
             name="likeViewModel"
             type="com.ddscanner.screens.user.likes.LikeReviewViewModel" />
+        <variable
+            name="handlers"
+            type="com.ddscanner.screens.user.likes.LikesListAdapter.ReviewLikeItemViewHolder" />
     </data>
 
     <LinearLayout
@@ -23,6 +26,7 @@
             android:orientation="horizontal">
 
             <ImageView
+                android:onClick="@{handlers::avatarClicked}"
                 android:id="@+id/avatar"
                 android:layout_width="40dp"
                 android:layout_height="40dp"

@@ -1,14 +1,22 @@
 package com.ddscanner.screens.user.likes;
 
+import android.app.Activity;
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.ddscanner.DDScannerApplication;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.databinding.ItemPhotoLikedBinding;
 import com.ddscanner.databinding.ItemReviewLikedLikesActivityBinding;
+import com.ddscanner.entities.DiveSpotPhoto;
 import com.ddscanner.entities.LikeEntity;
+import com.ddscanner.entities.PhotoOpenedSource;
+import com.ddscanner.screens.divespot.details.DiveSpotDetailsActivity;
+import com.ddscanner.screens.photo.slider.ImageSliderActivity;
+import com.ddscanner.screens.user.profile.UserProfileActivity;
 
 import java.util.ArrayList;
 
@@ -17,10 +25,12 @@ public class LikesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private static final int TYPE_PHOTO = 0;
     private static final int TYPE_REVIEW = 1;
 
+    private Activity context;
     private ArrayList<LikeEntity> likes = new ArrayList<>();
 
-    public LikesListAdapter(ArrayList<LikeEntity> likes) {
+    public LikesListAdapter(ArrayList<LikeEntity> likes, Activity context) {
         this.likes = likes;
+        this.context = context;
     }
 
     @Override
@@ -69,24 +79,43 @@ public class LikesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
     }
 
-    class PhotoLikeItemViewHolder extends RecyclerView.ViewHolder {
+    public class PhotoLikeItemViewHolder extends RecyclerView.ViewHolder {
 
         ItemPhotoLikedBinding binding;
 
         PhotoLikeItemViewHolder(View view) {
             super(view);
             binding = DataBindingUtil.bind(view);
+            binding.setHandlers(this);
+        }
+
+        public void avatarClicked(View view) {
+            UserProfileActivity.show(view.getContext(), likes.get(getAdapterPosition()).getUser().getId(), likes.get(getAdapterPosition()).getUser().getType());
+        }
+
+        public void photoClicked(View view) {
+            DDScannerApplication.getInstance().getDiveSpotPhotosContainer().setPhotos(likes.get(getAdapterPosition()).getPhoto());
+            ImageSliderActivity.showForResult(context, new ArrayList<DiveSpotPhoto>(), 0, 0, PhotoOpenedSource.PROFILE, "0");
+        }
+
+        public void showDiveSpot(View view) {
+            DiveSpotDetailsActivity.show(view.getContext(), String.valueOf(likes.get(getAdapterPosition()).getDiveSpot().getId()), EventsTracker.SpotViewSource.FROM_PROFILE_CREATED);
         }
 
     }
 
-    class ReviewLikeItemViewHolder extends RecyclerView.ViewHolder {
+    public class ReviewLikeItemViewHolder extends RecyclerView.ViewHolder {
 
         ItemReviewLikedLikesActivityBinding binding;
 
         ReviewLikeItemViewHolder(View view) {
             super(view);
             binding = DataBindingUtil.bind(view);
+            binding.setHandlers(this);
+        }
+
+        public void avatarClicked(View view) {
+            UserProfileActivity.show(view.getContext(), likes.get(getAdapterPosition()).getUser().getId(), likes.get(getAdapterPosition()).getUser().getType());
         }
 
     }
