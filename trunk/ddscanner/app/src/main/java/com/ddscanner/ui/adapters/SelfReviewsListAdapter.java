@@ -15,10 +15,8 @@ import android.widget.TextView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
-import com.ddscanner.entities.CommentOld;
 import com.ddscanner.entities.SelfCommentEntity;
 import com.ddscanner.events.DeleteCommentEvent;
-import com.ddscanner.events.EditCommentEvent;
 import com.ddscanner.screens.divespot.details.DiveSpotDetailsActivity;
 import com.ddscanner.ui.views.TransformationRoundImage;
 import com.ddscanner.utils.Helpers;
@@ -44,7 +42,7 @@ public class SelfReviewsListAdapter extends RecyclerView.Adapter<SelfReviewsList
     public SelfReviewsListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.
                 from(parent.getContext()).
-                inflate(R.layout.review_item, parent, false);
+                inflate(R.layout.divespot_review_item, parent, false);
         return new SelfReviewsListViewHolder(view);
     }
 
@@ -130,7 +128,7 @@ public class SelfReviewsListAdapter extends RecyclerView.Adapter<SelfReviewsList
         public boolean onMenuItemClick(MenuItem menuItem) {
             switch (menuItem.getItemId()) {
                 case R.id.comment_edit:
-                    DDScannerApplication.bus.post(new EditCommentEvent(selfCommentEntity));
+//                    DDScannerApplication.bus.post(new EditCommentEvent(selfCommentEntity));
                     return true;
                 case R.id.comment_delete:
                     DDScannerApplication.bus.post(new DeleteCommentEvent(commentId));

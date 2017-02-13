@@ -69,6 +69,7 @@ public class EditCommentActivity extends BaseAppCompatActivity implements View.O
     private ArrayList<String> deleted = new ArrayList<>();
     private RecyclerView sealifeList;
     private SealifeListAddingDiveSpotAdapter sealifesAdapter;
+    private boolean isHaveSealifes;
 
     private DDScannerRestClient.ResultListener<ArrayList<SealifeShort>> sealifeResultListener = new DDScannerRestClient.ResultListener<ArrayList<SealifeShort>>() {
         @Override
@@ -136,6 +137,7 @@ public class EditCommentActivity extends BaseAppCompatActivity implements View.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_leave_review);
         comment = new Gson().fromJson(getIntent().getStringExtra("COMMENT"), Comment.class);
+        isHaveSealifes = getIntent().getBooleanExtra("ISSEALIFE", false);
         editSpotPhotosListAdapter = new EditSpotPhotosListAdapter(this);
         setupToolbar(R.string.edit_comment, R.id.toolbar, R.menu.menu_add_review);
         findViews();
@@ -162,7 +164,7 @@ public class EditCommentActivity extends BaseAppCompatActivity implements View.O
         LinearLayoutManager sealifLayoutManager = new LinearLayoutManager(this);
         sealifeList.setLayoutManager(sealifLayoutManager);
         sealifeList.setAdapter(sealifesAdapter);
-        if (comment.getSealifes() != null) {
+        if (isHaveSealifes) {
             materialDialog.show();
             DDScannerApplication.getInstance().getDdScannerRestClient().getReviewSealifes(sealifeResultListener, comment.getId());
             //
@@ -214,9 +216,10 @@ public class EditCommentActivity extends BaseAppCompatActivity implements View.O
         DDScannerApplication.bus.unregister(this);
     }
 
-    public static void showForResult(Activity context, Comment comment, int requestCode) {
+    public static void showForResult(Activity context, Comment comment, int requestCode, boolean isSealifes) {
         Intent intent = new Intent(context, EditCommentActivity.class);
         intent.putExtra("COMMENT", new Gson().toJson(comment));
+        intent.putExtra("ISSEALIFE", isSealifes);
         context.startActivityForResult(intent, requestCode);
     }
 

@@ -34,6 +34,7 @@ import com.ddscanner.events.OpenPhotosActivityEvent;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.achievements.AchievementsActivity;
 import com.ddscanner.screens.profile.edit.EditUserProfileActivity;
+import com.ddscanner.screens.reiews.list.ReviewsActivity;
 import com.ddscanner.ui.activities.AboutActivity;
 import com.ddscanner.events.ChangeLoginViewEvent;
 import com.ddscanner.ui.activities.DiveSpotsListActivity;
@@ -295,7 +296,7 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
 
     public void showComments(View view) {
         if (binding.getProfileFragmentViewModel().getUser().getCounters().getCommentsCount() > 0) {
-            SelfCommentsActivity.show(getContext(), binding.getProfileFragmentViewModel().getUser().getId());
+            ReviewsActivity.showForResult(getActivity(), binding.getProfileFragmentViewModel().getUser().getId(), -1, true);
         }
     }
 

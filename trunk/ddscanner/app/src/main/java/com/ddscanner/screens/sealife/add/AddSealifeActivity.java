@@ -1,18 +1,13 @@
-package com.ddscanner.ui.activities;
+package com.ddscanner.screens.sealife.add;
 
-import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.net.Uri;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v13.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Display;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,17 +15,18 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
+import com.ddscanner.databinding.ActivityAddSealifeBinding;
 import com.ddscanner.entities.Sealife;
 import com.ddscanner.entities.SealifeShort;
 import com.ddscanner.entities.SealifeTranslation;
-import com.ddscanner.entities.errors.ValidationError;
 import com.ddscanner.rest.DDScannerRestClient;
+import com.ddscanner.ui.activities.BaseAppCompatActivity;
+import com.ddscanner.ui.activities.LoginActivity;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
@@ -42,42 +38,23 @@ import com.squareup.picasso.Picasso;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
-import static com.ddscanner.utils.Constants.MULTIPART_TYPE_TEXT;
-
 public class AddSealifeActivity extends BaseAppCompatActivity implements View.OnClickListener, BaseAppCompatActivity.PictureTakenListener {
 
     private static final String TAG = AddSealifeActivity.class.getSimpleName();
-
+    private static final String ARG_SEALIFE = "seaife";
+    private static final String ARG_IS_EDIT = "is_edit";
     private String filePath = null;
 
-    private RelativeLayout addPhoto;
-    private RelativeLayout centerLayout;
-    private AppCompatImageButton btnDelete;
-    private Button btnSaveSealife;
-    private Toolbar toolbar;
-    private EditText name;
-    private EditText habitat;
-    private EditText distribution;
-    private EditText weight;
-    private EditText length;
-    private EditText scClass;
-    private EditText scName;
-    private EditText depth;
-    private EditText order;
-    private TextView name_error;
-    private TextView habitat_error;
-    private TextView distribution_error;
-    private TextView image_error;
-    private ImageView sealifePhoto;
+    private ActivityAddSealifeBinding binding;
     private MaterialDialog progressDialogUpload;
     private File fileToSend;
+    private boolean isForEdit;
 
     private Map<String, TextView> errorsMap = new HashMap<>();
 
@@ -119,51 +96,48 @@ public class AddSealifeActivity extends BaseAppCompatActivity implements View.On
         }
     };
 
+    private DDScannerRestClient.ResultListener<Void> updateResultListener = new DDScannerRestClient.ResultListener<Void>() {
+        @Override
+        public void onSuccess(Void result) {
+
+        }
+
+        @Override
+        public void onConnectionFailure() {
+
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+
+        }
+
+        @Override
+        public void onInternetConnectionClosed() {
+
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_sealife);
-        findViews();
-        setUi();
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_add_sealife);
+        binding.setHandlers(this);
+        isForEdit = getIntent().getBooleanExtra(ARG_IS_EDIT, false);
+        if (isForEdit) {
+            binding.setSealifeViewModel(new EditSealifeActivityViewModel(new Gson().fromJson(getIntent().getStringExtra(ARG_SEALIFE), Sealife.class)));
+        }
         makeErrorsMap();
+        setupToolbar(R.string.add_sealife, R.id.toolbar);
         EventsTracker.trackSealifeCreation();
-    }
-
-    private void findViews() {
-        btnDelete = (AppCompatImageButton) findViewById(R.id.delete_photo);
-        sealifePhoto = (ImageView) findViewById(R.id.sealife_photo);
-        centerLayout = (RelativeLayout) findViewById(R.id.add_photo_center_layout);
-        addPhoto = (RelativeLayout) findViewById(R.id.add_photo_layout);
-        btnSaveSealife = (Button) findViewById(R.id.btn_save_sealife);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        name = (EditText) findViewById(R.id.name);
-        habitat = (EditText) findViewById(R.id.habitat);
-        distribution = (EditText) findViewById(R.id.distribution);
-        weight = (EditText) findViewById(R.id.weight);
-        length = (EditText) findViewById(R.id.length);
-        scClass = (EditText) findViewById(R.id.scClass);
-        scName = (EditText) findViewById(R.id.scName);
-        depth = (EditText) findViewById(R.id.depth);
-        order = (EditText) findViewById(R.id.order);
-        name_error = (TextView) findViewById(R.id.name_error);
-        habitat_error = (TextView) findViewById(R.id.habitat_error);
-        distribution_error = (TextView) findViewById(R.id.distribution_error);
-        image_error = (TextView) findViewById(R.id.error_image);
-    }
-
-    /**
-     * Set UI settings
-     * @author Andrei Lashkevich
-     */
-    private void setUi() {
         progressDialogUpload = Helpers.getMaterialDialog(this);
-        btnSaveSealife.setOnClickListener(this);
-        addPhoto.setOnClickListener(this);
-        btnDelete.setOnClickListener(this);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(R.string.add_sealife);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    public static void showForEdit(Activity context, String sealife, int requestCode) {
+        Intent intent = new Intent(context, AddSealifeActivity.class);
+        intent.putExtra(ARG_IS_EDIT, true);
+        intent.putExtra(ARG_SEALIFE, sealife);
+        context.startActivityForResult(intent, requestCode);
     }
 
     @Override
@@ -178,12 +152,6 @@ public class AddSealifeActivity extends BaseAppCompatActivity implements View.On
         }
     }
 
-    /**
-     * Change background image in layout add photo
-     *
-     * @param path
-     * @author Andrei Lashkevich
-     */
     private void setBackImage(String path) {
         if (!path.contains(Constants.images) && !path.contains("file:")) {
             path = "file://" + path;
@@ -193,10 +161,9 @@ public class AddSealifeActivity extends BaseAppCompatActivity implements View.On
         display.getMetrics(outMetrics);
         float density = getResources().getDisplayMetrics().density;
         float dpWidth = outMetrics.widthPixels / density;
-        Picasso.with(this).load(path).resize(Math.round(Helpers.convertDpToPixel(dpWidth, this)), Math.round(Helpers.convertDpToPixel(230, this))).centerCrop().into(sealifePhoto);
-        centerLayout.setVisibility(View.GONE);
-        btnDelete.setVisibility(View.VISIBLE);
-        addPhoto.setOnClickListener(null);
+        Picasso.with(this).load(path).resize(Math.round(Helpers.convertDpToPixel(dpWidth, this)), Math.round(Helpers.convertDpToPixel(230, this))).centerCrop().into(binding.sealifePhoto);
+        binding.addPhotoCenterLayout.setVisibility(View.GONE);
+        binding.deletePhoto.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -206,11 +173,11 @@ public class AddSealifeActivity extends BaseAppCompatActivity implements View.On
                 pickSinglePhotoFromGallery();
                 break;
             case R.id.delete_photo:
-                sealifePhoto.setImageDrawable(null);
-                addPhoto.setBackgroundColor(ContextCompat.getColor(this, R.color.white));
-                btnDelete.setVisibility(View.GONE);
-                centerLayout.setVisibility(View.VISIBLE);
-                addPhoto.setOnClickListener(this);
+//                sealifePhoto.setImageDrawable(null);
+//                addPhoto.setBackgroundColor(ContextCompat.getColor(this, R.color.white));
+//                btnDelete.setVisibility(View.GONE);
+//                centerLayout.setVisibility(View.VISIBLE);
+//                addPhoto.setOnClickListener(this);
                 break;
             case R.id.btn_save_sealife:
                 createRequestBody();
@@ -218,26 +185,20 @@ public class AddSealifeActivity extends BaseAppCompatActivity implements View.On
         }
     }
 
-
-    /**
-     * Put data to request body
-     *
-     * @author Andrei Lashkevich
-     */
     private void createRequestBody() {
         progressDialogUpload.show();
         ArrayList<SealifeTranslation> sealifeTranslations = new ArrayList<>();
         SealifeTranslation sealifeTranslation = new SealifeTranslation();
         sealifeTranslation.setLangCode("en");
-        sealifeTranslation.setDepth(depth.getText().toString().trim());
-        sealifeTranslation.setDistribution(distribution.getText().toString().trim());
-        sealifeTranslation.setLength(length.getText().toString().trim());
-        sealifeTranslation.setWeight(weight.getText().toString().trim());
-        sealifeTranslation.setScName(scName.getText().toString().trim());
-        sealifeTranslation.setOrder(order.getText().toString().trim());
-        sealifeTranslation.setSealifeClass(scClass.getText().toString().trim());
-        sealifeTranslation.setHabitat(habitat.getText().toString().trim());
-        sealifeTranslation.setName(name.getText().toString().trim());
+        sealifeTranslation.setDepth(binding.depth.getText().toString().trim());
+        sealifeTranslation.setDistribution(binding.distribution.getText().toString().trim());
+        sealifeTranslation.setLength(binding.length.getText().toString().trim());
+        sealifeTranslation.setWeight(binding.weight.getText().toString().trim());
+        sealifeTranslation.setScName(binding.scName.getText().toString().trim());
+        sealifeTranslation.setOrder(binding.order.getText().toString().trim());
+        sealifeTranslation.setSealifeClass(binding.scClass.getText().toString().trim());
+        sealifeTranslation.setHabitat(binding.habitat.getText().toString().trim());
+        sealifeTranslation.setName(binding.name.getText().toString().trim());
         sealifeTranslations.add(sealifeTranslation);
         MultipartBody.Part body = null;
         fileToSend = new File(filePath);
@@ -251,15 +212,11 @@ public class AddSealifeActivity extends BaseAppCompatActivity implements View.On
         return true;
     }
 
-    /**
-     * Create map to store errors textViews with their keys
-     * @author Andrei Lashkevich
-     */
     private void makeErrorsMap() {
-        errorsMap.put("name", name_error);
-        errorsMap.put("distribution", distribution_error);
-        errorsMap.put("habitat", habitat_error);
-        errorsMap.put("image", image_error);
+        errorsMap.put("name", binding.nameError);
+        errorsMap.put("distribution", binding.distributionError);
+        errorsMap.put("habitat", binding.habitatError);
+        errorsMap.put("image", binding.errorImage);
     }
 
     @Override
@@ -303,4 +260,16 @@ public class AddSealifeActivity extends BaseAppCompatActivity implements View.On
         filePath = pictures.get(0);
         setBackImage(filePath);
     }
+
+    public void pickPhotoClicked(View view) {
+        pickSinglePhotoFromGallery();
+    }
+
+    public void deletePhotoClicked(View view) {
+        binding.sealifePhoto.setImageDrawable(null);
+        binding.addPhotoLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.white));
+        binding.deletePhoto.setVisibility(View.GONE);
+        binding.addPhotoCenterLayout.setVisibility(View.VISIBLE);
+    }
+
 }

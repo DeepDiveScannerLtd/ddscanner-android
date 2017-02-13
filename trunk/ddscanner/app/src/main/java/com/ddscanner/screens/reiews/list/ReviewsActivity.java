@@ -50,6 +50,8 @@ import java.util.List;
 
 public class ReviewsActivity extends AppCompatActivity implements View.OnClickListener, DialogClosedListener {
 
+    private static final String ARG_IS_USER = "isuser";
+
     private ArrayList<CommentEntity> comments;
     private RecyclerView commentsRecyclerView;
     private ProgressView progressView;
@@ -57,7 +59,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     private Toolbar toolbar;
     private FloatingActionButton leaveReview;
 
-    private String diveSpotId;
+    private String sourceId;
     private String commentToDelete;
 
     private boolean isHasNewComment = false;
@@ -73,6 +75,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     private int commentPosition;
     private MaterialDialog materialDialog;
     private int reportReviewPosition;
+    private boolean isUserReviews;
 
     private DDScannerRestClient.ResultListener<Void> likeCommentResultListener = new DDScannerRestClient.ResultListener<Void>() {
         @Override
@@ -198,7 +201,11 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
             commentsRecyclerView.setVisibility(View.VISIBLE);
             ArrayList<CommentEntity> commentsList = new ArrayList<>();
             commentsList = result;
-            reviewsListAdapter = new ReviewsListAdapter(commentsList, ReviewsActivity.this);
+            if (isUserReviews) {
+                reviewsListAdapter = new ReviewsListAdapter(commentsList, ReviewsActivity.this, sourceId);
+            } else {
+                reviewsListAdapter = new ReviewsListAdapter(commentsList, ReviewsActivity.this, null);
+            }
             commentsRecyclerView.setAdapter(reviewsListAdapter);
         }
 
@@ -254,9 +261,10 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
 
     };
 
-    public static void showForResult(Activity context, String diveSpotId, int requestCode) {
+    public static void showForResult(Activity context, String diveSpotId, int requestCode, boolean isUserReviews) {
         Intent intent = new Intent(context, ReviewsActivity.class);
         intent.putExtra(Constants.DIVESPOTID, diveSpotId);
+        intent.putExtra(ARG_IS_USER, isUserReviews);
         context.startActivityForResult(intent, requestCode);
     }
 
@@ -265,7 +273,8 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reviews);
         Bundle bundle = getIntent().getExtras();
-        diveSpotId = bundle.getString(Constants.DIVESPOTID);
+        sourceId = bundle.getString(Constants.DIVESPOTID);
+        isUserReviews = bundle.getBoolean(ARG_IS_USER, false);
         findViews();
         toolbarSettings();
         setContent();
@@ -278,10 +287,10 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         leaveReview = (FloatingActionButton) findViewById(R.id.fab_write_review);
         progressView = (ProgressView) findViewById(R.id.progressBarFull);
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == 0) {
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == 0 || isUserReviews) {
             leaveReview.setVisibility(View.GONE);
+            leaveReview.setOnClickListener(this);
         }
-        leaveReview.setOnClickListener(this);
     }
 
     private void toolbarSettings() {
@@ -377,7 +386,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
                         UserActionInfoDialogFragment.show(this, R.string.sorry, R.string.dive_centers_cannot_leave_review);
                         leaveReview.setVisibility(View.GONE);
                     } else {
-                        LeaveReviewActivity.showForResult(this, diveSpotId, 1, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_WRITE_REVIEW);
+                        LeaveReviewActivity.showForResult(this, sourceId, 1, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_WRITE_REVIEW);
                     }
                 }
                 break;
@@ -388,7 +397,11 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
         commentsRecyclerView.setVisibility(View.GONE);
         progressView.setVisibility(View.VISIBLE);
         isHasNewComment = true;
-        DDScannerApplication.getInstance().getDdScannerRestClient().getCommentsForDiveSpot(commentsResultListener, diveSpotId);
+        if (isUserReviews) {
+            DDScannerApplication.getInstance().getDdScannerRestClient().getUsersComments(sourceId, commentsResultListener);
+        } else {
+            DDScannerApplication.getInstance().getDdScannerRestClient().getCommentsForDiveSpot(commentsResultListener, sourceId);
+        }
     }
 
     @Override
@@ -396,7 +409,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
         switch (view.getId()) {
             case R.id.fab_write_review:
                 if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
-                    LeaveReviewActivity.showForResult(this, diveSpotId, 1, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_WRITE_REVIEW);
+                    LeaveReviewActivity.showForResult(this, sourceId, 1, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_WRITE_REVIEW);
                 } else {
                     LoginActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_LEAVE_REVIEW);
                 }
@@ -458,7 +471,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
 
     @Subscribe
     public void editComment(EditCommentEvent editCommentEvent) {
-        EditCommentActivity.showForResult(this, editCommentEvent.getComment(), ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_EDIT_MY_REVIEW);
+        EditCommentActivity.showForResult(this, editCommentEvent.getComment(), ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_EDIT_MY_REVIEW, editCommentEvent.isHaveSealife());
     }
 
     private void deleteUsersComment(String id) {

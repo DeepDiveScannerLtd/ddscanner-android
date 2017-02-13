@@ -17,15 +17,6 @@ public class Comment {
     private Boolean isLike;
     @SerializedName("is_disliked")
     private Boolean isDislike;
-    private ArrayList<SealifeShort> sealifes;
-
-    public ArrayList<SealifeShort> getSealifes() {
-        return sealifes;
-    }
-
-    public void setSealifes(ArrayList<SealifeShort> sealifes) {
-        this.sealifes = sealifes;
-    }
 
     public boolean isLike() {
         if (isLike == null) {

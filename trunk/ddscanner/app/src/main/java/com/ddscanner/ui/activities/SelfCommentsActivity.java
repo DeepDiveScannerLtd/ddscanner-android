@@ -124,7 +124,7 @@ public class SelfCommentsActivity extends AppCompatActivity implements DialogClo
     private void getComments() {
         commentsRc.setVisibility(View.GONE);
         progressView.setVisibility(View.VISIBLE);
-        DDScannerApplication.getInstance().getDdScannerRestClient().getUsersSelfComments(commentsResultListener, userId);
+        DDScannerApplication.getInstance().getDdScannerRestClient().getUserComments(commentsResultListener, userId);
     }
 
     public static void show(Context context, String userId) {
@@ -190,7 +190,7 @@ public class SelfCommentsActivity extends AppCompatActivity implements DialogClo
 
     @Subscribe
     public void editComment(EditCommentEvent editCommentEvent) {
-        EditCommentActivity.showForResult(this, editCommentEvent.getComment(), ActivitiesRequestCodes.REQUEST_CODE_SELF_REVIEWS_EDIT_MY_REVIEW);
+        EditCommentActivity.showForResult(this, editCommentEvent.getComment(), ActivitiesRequestCodes.REQUEST_CODE_SELF_REVIEWS_EDIT_MY_REVIEW, editCommentEvent.isHaveSealife());
     }
 
     @Override
