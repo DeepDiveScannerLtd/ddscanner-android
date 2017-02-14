@@ -22,7 +22,7 @@ public class DislikesListAdapter extends RecyclerView.Adapter<DislikesListAdapte
 
     public DislikesListAdapter(ArrayList<LikeEntity> likes, Activity context) {
         this.likes = likes;
-        this.context = context
+        this.context = context;
     }
 
     @Override
@@ -47,6 +47,7 @@ public class DislikesListAdapter extends RecyclerView.Adapter<DislikesListAdapte
 
         DislikedItemViewHolder(View view) {
             super(view);
+            binding.setHandlers(this);
             binding = DataBindingUtil.bind(view);
         }
 
@@ -55,7 +56,7 @@ public class DislikesListAdapter extends RecyclerView.Adapter<DislikesListAdapte
         }
 
         public void contentClicked(View view) {
-            ReviewsActivity.showForResult(binding, likes.get(getAdapterPosition()).getReview().getId(), -1, ReviewsOpenedSource.SINGLE);
+            ReviewsActivity.showForResult(context, likes.get(getAdapterPosition()).getReview().getId(), -1, ReviewsOpenedSource.SINGLE);
         }
 
     }

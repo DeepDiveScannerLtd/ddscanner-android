@@ -7,13 +7,17 @@
         <variable
             name="likeViewModel"
             type="com.ddscanner.screens.user.dislikes.DislikeReviewItemViewModel" />
+        <variable
+            name="handlers"
+            type="com.ddscanner.screens.user.dislikes.DislikesListAdapter.DislikedItemViewHolder" />
     </data>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#fbfbfb"
-        android:orientation="vertical">
+        android:background="?attr/selectableItemBackground"
+        android:orientation="vertical"
+        android:onClick="@{handlers::contentClicked}">
 
         <LinearLayout
             android:id="@+id/main_layout"
@@ -28,7 +32,8 @@
                 android:layout_height="40dp"
                 android:layout_margin="14dp"
                 android:src="@color/black_text"
-                app:loadAvatarFrom="@{likeViewModel}"/>
+                app:loadAvatarFrom="@{likeViewModel}"
+                android:onClick="@{handlers::avatarClicked}"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
