@@ -70,7 +70,7 @@ public class UserLikesDislikesActivity extends BaseAppCompatActivity implements 
     private DDScannerRestClient.ResultListener<ArrayList<LikeEntity>> dislikesResultListener = new DDScannerRestClient.ResultListener<ArrayList<LikeEntity>>() {
         @Override
         public void onSuccess(ArrayList<LikeEntity> result) {
-            recyclerView.setAdapter(new DislikesListAdapter(result));
+            recyclerView.setAdapter(new DislikesListAdapter(result, UserLikesDislikesActivity.this));
             recyclerView.setVisibility(View.VISIBLE);
             progressView.setVisibility(View.GONE);
         }
