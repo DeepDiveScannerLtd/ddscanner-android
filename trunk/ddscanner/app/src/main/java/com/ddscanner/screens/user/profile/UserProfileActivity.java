@@ -18,6 +18,7 @@ import com.ddscanner.entities.DiveSpotListSource;
 import com.ddscanner.entities.GalleryOpenedSource;
 import com.ddscanner.entities.PhotoAuthor;
 import com.ddscanner.entities.PhotoOpenedSource;
+import com.ddscanner.entities.ReviewsOpenedSource;
 import com.ddscanner.entities.User;
 import com.ddscanner.entities.ProfileResponseEntity;
 import com.ddscanner.events.OpenPhotosActivityEvent;
@@ -189,7 +190,7 @@ public class UserProfileActivity extends BaseAppCompatActivity implements Dialog
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_LOGIN_TO_SHOW_REVIEWS:
                 if (resultCode == RESULT_OK) {
-                    ReviewsActivity.showForResult(this, userId, -1, true);
+                    ReviewsActivity.showForResult(this, userId, -1, ReviewsOpenedSource.USER);
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_LOGIN_TO_SHOW_LIKES:

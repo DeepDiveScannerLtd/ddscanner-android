@@ -1,5 +1,6 @@
 package com.ddscanner.ui.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.LinearLayoutManager;
@@ -45,11 +46,11 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
 
     private static final String TAG = ReviewsListAdapter.class.getSimpleName();
     private ArrayList<CommentEntity> comments = new ArrayList<>();
-    private Context context;
+    private Activity context;
     private boolean isAdapterSet = false;
     private String commentAuthorId;
 
-    public ReviewsListAdapter(ArrayList<CommentEntity> comments, Context context, String userId) {
+    public ReviewsListAdapter(ArrayList<CommentEntity> comments, Activity context, String userId) {
         this.comments = comments;
         this.context = context;
         this.commentAuthorId = userId;
@@ -96,9 +97,9 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
             reviewsListViewHolder.photos.setHasFixedSize(false);
             reviewsListViewHolder.photos.setLayoutManager(layoutManager);
             if (userId.equals(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId())) {
-                reviewsListViewHolder.photos.setAdapter(new ReviewPhotosAdapter(commentEntity.getComment().getPhotos(), context, true, reviewsListViewHolder.getAdapterPosition()));
+                reviewsListViewHolder.photos.setAdapter(new ReviewPhotosAdapter(commentEntity.getComment().getPhotos(), context, true, reviewsListViewHolder.getAdapterPosition(), commentEntity.getComment().getPhotosCount(), commentEntity.getComment().getId()));
             } else {
-                reviewsListViewHolder.photos.setAdapter(new ReviewPhotosAdapter(commentEntity.getComment().getPhotos(), context, false, reviewsListViewHolder.getAdapterPosition()));
+                reviewsListViewHolder.photos.setAdapter(new ReviewPhotosAdapter(commentEntity.getComment().getPhotos(), context, false, reviewsListViewHolder.getAdapterPosition(), commentEntity.getComment().getPhotosCount(), commentEntity.getComment().getId()));
             }
         } else {
             reviewsListViewHolder.photos.setAdapter(null);

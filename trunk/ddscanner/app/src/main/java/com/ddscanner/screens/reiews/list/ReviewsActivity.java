@@ -21,6 +21,7 @@ import com.ddscanner.entities.CommentEntity;
 import com.ddscanner.entities.DialogClosedListener;
 import com.ddscanner.entities.DiveSpotPhoto;
 import com.ddscanner.entities.PhotoOpenedSource;
+import com.ddscanner.entities.ReviewsOpenedSource;
 import com.ddscanner.entities.request.ReportRequest;
 import com.ddscanner.events.DeleteCommentEvent;
 import com.ddscanner.events.DislikeCommentEvent;
@@ -50,7 +51,7 @@ import java.util.List;
 
 public class ReviewsActivity extends AppCompatActivity implements View.OnClickListener, DialogClosedListener {
 
-    private static final String ARG_IS_USER = "isuser";
+    private static final String ARG_OPENED_SOURCE = "isuser";
 
     private ArrayList<CommentEntity> comments;
     private RecyclerView commentsRecyclerView;
@@ -75,7 +76,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     private int commentPosition;
     private MaterialDialog materialDialog;
     private int reportReviewPosition;
-    private boolean isUserReviews;
+    private ReviewsOpenedSource openedSource;
 
     private DDScannerRestClient.ResultListener<Void> likeCommentResultListener = new DDScannerRestClient.ResultListener<Void>() {
         @Override
@@ -201,10 +202,14 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
             commentsRecyclerView.setVisibility(View.VISIBLE);
             ArrayList<CommentEntity> commentsList = new ArrayList<>();
             commentsList = result;
-            if (isUserReviews) {
-                reviewsListAdapter = new ReviewsListAdapter(commentsList, ReviewsActivity.this, sourceId);
-            } else {
-                reviewsListAdapter = new ReviewsListAdapter(commentsList, ReviewsActivity.this, null);
+            switch (openedSource) {
+                case DIVESPOT:
+                    reviewsListAdapter = new ReviewsListAdapter(commentsList, ReviewsActivity.this, null);
+                    break;
+                case USER:
+                case SINGLE:
+                    reviewsListAdapter = new ReviewsListAdapter(commentsList, ReviewsActivity.this, sourceId);
+                    break;
             }
             commentsRecyclerView.setAdapter(reviewsListAdapter);
         }
@@ -261,10 +266,10 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
 
     };
 
-    public static void showForResult(Activity context, String diveSpotId, int requestCode, boolean isUserReviews) {
+    public static void showForResult(Activity context, String diveSpotId, int requestCode, ReviewsOpenedSource isUserReviews) {
         Intent intent = new Intent(context, ReviewsActivity.class);
         intent.putExtra(Constants.DIVESPOTID, diveSpotId);
-        intent.putExtra(ARG_IS_USER, isUserReviews);
+        intent.putExtra(ARG_OPENED_SOURCE, isUserReviews);
         context.startActivityForResult(intent, requestCode);
     }
 
@@ -274,7 +279,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.activity_reviews);
         Bundle bundle = getIntent().getExtras();
         sourceId = bundle.getString(Constants.DIVESPOTID);
-        isUserReviews = bundle.getBoolean(ARG_IS_USER, false);
+        openedSource = (ReviewsOpenedSource) bundle.getSerializable(ARG_OPENED_SOURCE);
         findViews();
         toolbarSettings();
         setContent();
@@ -287,7 +292,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         leaveReview = (FloatingActionButton) findViewById(R.id.fab_write_review);
         progressView = (ProgressView) findViewById(R.id.progressBarFull);
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == 0 || isUserReviews) {
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == 0 || !openedSource.equals(ReviewsOpenedSource.DIVESPOT)) {
             leaveReview.setVisibility(View.GONE);
             leaveReview.setOnClickListener(this);
         }
@@ -397,10 +402,16 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
         commentsRecyclerView.setVisibility(View.GONE);
         progressView.setVisibility(View.VISIBLE);
         isHasNewComment = true;
-        if (isUserReviews) {
-            DDScannerApplication.getInstance().getDdScannerRestClient().getUsersComments(sourceId, commentsResultListener);
-        } else {
-            DDScannerApplication.getInstance().getDdScannerRestClient().getCommentsForDiveSpot(commentsResultListener, sourceId);
+        switch (openedSource) {
+            case USER:
+                DDScannerApplication.getInstance().getDdScannerRestClient().getUsersComments(sourceId, commentsResultListener);
+                break;
+            case DIVESPOT:
+                DDScannerApplication.getInstance().getDdScannerRestClient().getCommentsForDiveSpot(commentsResultListener, sourceId);
+                break;
+            case SINGLE:
+                DDScannerApplication.getInstance().getDdScannerRestClient().getSingleReview(sourceId, commentsResultListener);
+                break;
         }
     }
 

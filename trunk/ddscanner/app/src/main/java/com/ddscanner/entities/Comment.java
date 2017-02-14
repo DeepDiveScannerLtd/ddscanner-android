@@ -17,6 +17,16 @@ public class Comment {
     private Boolean isLike;
     @SerializedName("is_disliked")
     private Boolean isDislike;
+    @SerializedName("photos_count")
+    private int photosCount;
+
+    public int getPhotosCount() {
+        return photosCount;
+    }
+
+    public void setPhotosCount(int photosCount) {
+        this.photosCount = photosCount;
+    }
 
     public boolean isLike() {
         if (isLike == null) {

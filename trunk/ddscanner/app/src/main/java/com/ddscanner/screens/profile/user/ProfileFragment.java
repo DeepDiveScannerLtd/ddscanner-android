@@ -27,6 +27,7 @@ import com.ddscanner.entities.DiveSpotPhoto;
 import com.ddscanner.entities.PhotoAuthor;
 import com.ddscanner.entities.PhotoOpenedSource;
 import com.ddscanner.entities.ProfileAchievement;
+import com.ddscanner.entities.ReviewsOpenedSource;
 import com.ddscanner.entities.User;
 import com.ddscanner.events.LoadUserProfileInfoEvent;
 import com.ddscanner.events.LoggedOutEvent;
@@ -296,7 +297,7 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
 
     public void showComments(View view) {
         if (binding.getProfileFragmentViewModel().getUser().getCounters().getCommentsCount() > 0) {
-            ReviewsActivity.showForResult(getActivity(), binding.getProfileFragmentViewModel().getUser().getId(), -1, true);
+            ReviewsActivity.showForResult(getActivity(), binding.getProfileFragmentViewModel().getUser().getId(), -1, ReviewsOpenedSource.USER);
         }
     }
 

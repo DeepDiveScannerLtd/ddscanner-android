@@ -56,7 +56,7 @@ public class SelfReviewsListAdapter extends RecyclerView.Adapter<SelfReviewsList
             holder.photos.setNestedScrollingEnabled(false);
             holder.photos.setHasFixedSize(false);
             holder.photos.setLayoutManager(layoutManager);
-            holder.photos.setAdapter(new ReviewPhotosAdapter(comment.getPhotos(), context, false, holder.getAdapterPosition()));
+//            holder.photos.setAdapter(new ReviewPhotosAdapter(comment.getPhotos(), context, false, holder.getAdapterPosition()));
         } else {
             holder.photos.setAdapter(null);
         }

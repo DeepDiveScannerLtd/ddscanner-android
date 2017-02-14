@@ -16,6 +16,7 @@ import com.ddscanner.databinding.FragmentUserProfileBinding;
 import com.ddscanner.entities.DiveSpotListSource;
 import com.ddscanner.entities.DiveSpotPhoto;
 import com.ddscanner.entities.ProfileAchievement;
+import com.ddscanner.entities.ReviewsOpenedSource;
 import com.ddscanner.entities.User;
 import com.ddscanner.screens.profile.user.ProfileFragmentViewModel;
 import com.ddscanner.screens.reiews.list.ReviewsActivity;
@@ -94,7 +95,7 @@ public class UserProfileFragment extends Fragment {
     public void showComments(View view) {
         if (binding.getUserProfileViewModel().getUser().getCounters().getCommentsCount() > 0) {
             if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
-                ReviewsActivity.showForResult(getActivity(), binding.getUserProfileViewModel().getUser().getId(), -1, true);
+                ReviewsActivity.showForResult(getActivity(), binding.getUserProfileViewModel().getUser().getId(), -1, ReviewsOpenedSource.USER);
             } else {
                 LoginActivity.showForResult(getActivity(), ActivitiesRequestCodes.REQUEST_CODE_FOREIGN_USER_LOGIN_TO_SHOW_REVIEWS);
             }

@@ -8,6 +8,7 @@ import com.ddscanner.entities.AddressComponent;
 import com.ddscanner.entities.BaseIdNamePhotoEntity;
 import com.ddscanner.entities.CommentEntity;
 import com.ddscanner.entities.Comments;
+import com.ddscanner.entities.CountryEntity;
 import com.ddscanner.entities.DiveCenterProfile;
 import com.ddscanner.entities.DiveCentersResponseEntity;
 import com.ddscanner.entities.DiveSpotDetailsEntity;
@@ -141,7 +142,28 @@ public class DDScannerRestClient {
         });
     }
 
+    public void getSingleReview(String reviewId, ResultListener<ArrayList<CommentEntity>> resultListener) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getSingleReview(reviewId, 1);
+        call.enqueue(new ResponseEntityCallback<ArrayList<CommentEntity>>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<ArrayList<CommentEntity>> resultListener, String responseString) throws JSONException {
+                CommentEntity commentEntity = gson.fromJson(responseString, CommentEntity.class);
+                ArrayList<CommentEntity> result = new ArrayList<CommentEntity>();
+                result.add(commentEntity);
+                resultListener.onSuccess(result);
+            }
+        });
+    }
+
     public void getUsersComments(String userId, final ResultListener<ArrayList<CommentEntity>> resultListener) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserComments(userId, 1);
         call.enqueue(new ResponseEntityCallback<ArrayList<CommentEntity>>(gson, resultListener) {
             @Override

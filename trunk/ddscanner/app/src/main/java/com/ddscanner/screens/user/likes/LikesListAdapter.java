@@ -14,8 +14,10 @@ import com.ddscanner.databinding.ItemReviewLikedLikesActivityBinding;
 import com.ddscanner.entities.DiveSpotPhoto;
 import com.ddscanner.entities.LikeEntity;
 import com.ddscanner.entities.PhotoOpenedSource;
+import com.ddscanner.entities.ReviewsOpenedSource;
 import com.ddscanner.screens.divespot.details.DiveSpotDetailsActivity;
 import com.ddscanner.screens.photo.slider.ImageSliderActivity;
+import com.ddscanner.screens.reiews.list.ReviewsActivity;
 import com.ddscanner.screens.user.profile.UserProfileActivity;
 
 import java.util.ArrayList;
@@ -116,6 +118,10 @@ public class LikesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         public void avatarClicked(View view) {
             UserProfileActivity.show(view.getContext(), likes.get(getAdapterPosition()).getUser().getId(), likes.get(getAdapterPosition()).getUser().getType());
+        }
+
+        public void contentClicked(View view) {
+            ReviewsActivity.showForResult(context, likes.get(getAdapterPosition()).getReview().getId(), -1, ReviewsOpenedSource.SINGLE);
         }
 
     }

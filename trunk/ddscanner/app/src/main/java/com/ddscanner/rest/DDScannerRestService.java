@@ -445,4 +445,7 @@ public interface DDScannerRestService {
             @Part("translations") RequestBody translations
     );
 
+    @GET("v2_0/divespot.review.get")
+    Call<ResponseBody> getSingleReview(@Query("id") String id, @Query("include_photo_details") int value);
+
 }

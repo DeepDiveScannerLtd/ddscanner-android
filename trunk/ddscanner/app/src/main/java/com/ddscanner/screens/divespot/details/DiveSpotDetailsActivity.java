@@ -38,6 +38,7 @@ import com.ddscanner.entities.DialogClosedListener;
 import com.ddscanner.entities.DiveSpotDetailsEntity;
 import com.ddscanner.entities.FlagsEntity;
 import com.ddscanner.entities.PhotoOpenedSource;
+import com.ddscanner.entities.ReviewsOpenedSource;
 import com.ddscanner.entities.SealifeShort;
 import com.ddscanner.events.OpenPhotosActivityEvent;
 import com.ddscanner.events.PickPhotoForCheckedInDialogEvent;
@@ -891,7 +892,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
                 LoginActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_LEAVE_REVIEW);
             }
         } else {
-            ReviewsActivity.showForResult(this, diveSpotId, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_REVIEWS, false);
+            ReviewsActivity.showForResult(this, diveSpotId, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_REVIEWS, ReviewsOpenedSource.DIVESPOT);
         }
     }
 
