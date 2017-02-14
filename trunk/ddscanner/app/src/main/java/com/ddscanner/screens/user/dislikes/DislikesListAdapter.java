@@ -41,7 +41,7 @@ public class DislikesListAdapter extends RecyclerView.Adapter<DislikesListAdapte
         return likes.size();
     }
 
-    protected class DislikedItemViewHolder extends RecyclerView.ViewHolder {
+    public class DislikedItemViewHolder extends RecyclerView.ViewHolder {
 
         ItemDislikedReviewBinding binding;
 
