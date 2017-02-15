@@ -17,6 +17,7 @@ import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.DiveSpotShort;
 import com.ddscanner.screens.divespot.details.DiveSpotDetailsActivity;
+import com.ddscanner.ui.views.RatingView;
 import com.ddscanner.ui.views.TransformationRoundImage;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
@@ -61,7 +62,7 @@ public class DiveSpotsListAdapter
         divespot = divespots.get(i);
         if (divespot.getImage() != null) {
             String imageAddress = DDScannerApplication.getInstance().getString(R.string.base_photo_url, divespot.getImage(), "1");
-            Picasso.with(context).load(imageAddress).resize(Math.round(Helpers.convertDpToPixel(130, context)), Math.round(Helpers.convertDpToPixel(130, context))).centerCrop().placeholder(R.drawable.ds_list_photo_default).error(R.drawable.ds_list_photo_default).transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2, context)),0)).into(productListViewHolder.imageView);
+            Picasso.with(context).load(imageAddress).resize(Math.round(Helpers.convertDpToPixel(130, context)), Math.round(Helpers.convertDpToPixel(130, context))).centerCrop().transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2, context)), 0, RoundedCornersTransformation.CornerType.ALL)).placeholder(R.drawable.ds_list_photo_default).error(R.drawable.ds_list_photo_default).transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2, context)),0)).into(productListViewHolder.imageView);
         } else {
             productListViewHolder.imageView.setImageDrawable(ContextCompat.getDrawable(context,
                     R.drawable.list_photo_default));
@@ -70,18 +71,7 @@ public class DiveSpotsListAdapter
             productListViewHolder.title.setText(divespot.getName());
         }
         productListViewHolder.stars.removeAllViews();
-        for (int k = 0; k < divespot.getRating(); k++) {
-            ImageView iv = new ImageView(context);
-            iv.setImageResource(R.drawable.ic_list_star_full);
-            iv.setPadding(0, 0, 5, 0);
-            productListViewHolder.stars.addView(iv);
-        }
-        for (int k = 0; k < 5 - divespot.getRating(); k++) {
-            ImageView iv = new ImageView(context);
-            iv.setImageResource(R.drawable.ic_list_star_empty);
-            iv.setPadding(0, 0, 5, 0);
-            productListViewHolder.stars.addView(iv);
-        }
+        productListViewHolder.stars.setRating(Math.round(divespot.getRating()), R.drawable.ic_list_star_full, R.drawable.ic_list_star_empty);
         productListViewHolder.object.setText(divespot.getObject());
     }
 
@@ -96,7 +86,7 @@ public class DiveSpotsListAdapter
     public class ProductListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         protected ImageView imageView;
         protected TextView title;
-        protected LinearLayout stars;
+        protected RatingView stars;
         protected TextView object;
         private int position;
         private Context context;
@@ -108,7 +98,7 @@ public class DiveSpotsListAdapter
             v.setOnClickListener(this);
             imageView = (ImageView) v.findViewById(R.id.product_logo);
             title = (TextView) v.findViewById(R.id.product_title);
-            stars = (LinearLayout) v.findViewById(R.id.stars);
+            stars = (RatingView) v.findViewById(R.id.stars);
             object = (TextView) v.findViewById(R.id.object);
         }
 
