@@ -177,8 +177,11 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 case ENTITY_NOT_FOUND_404:
                     UserActionInfoDialogFragment.show(SignUpActivity.this, R.string.title_pass_incorrect, R.string.pass_incorrect);
                     break;
+                case DATA_ALREADY_EXIST_409:
+                    UserActionInfoDialogFragment.show(SignUpActivity.this, R.string.title_email_exist, R.string.message_email_exist);
+                    break;
                 default:
-                    InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_unexpected_error, R.string.error_connection_failed, false);
+                    InfoDialogFragment.show(getSupportFragmentManager(), R.string.unexcepted_error_title, R.string.unexcepted_error_text, false);
                     break;
             }
         }
