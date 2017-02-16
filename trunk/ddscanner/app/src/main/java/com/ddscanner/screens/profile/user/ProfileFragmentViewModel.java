@@ -1,6 +1,7 @@
 package com.ddscanner.screens.profile.user;
 
 import android.databinding.BindingAdapter;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -11,6 +12,7 @@ import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;
 
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
+import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
 public class ProfileFragmentViewModel {
 
@@ -68,6 +70,22 @@ public class ProfileFragmentViewModel {
                     .placeholder(R.drawable.avatar_profile_default)
                     .error(R.drawable.avatar_profile_default)
                     .transform(new CropCircleTransformation()).into(view);
+        }
+    }
+
+    @BindingAdapter({"loadDiveCenterImageFrom"})
+    public static void loadDIveCenterImage(ImageView view, ProfileFragmentViewModel viewModel) {
+        if (viewModel != null) {
+            if (viewModel.getUser().getDiveCenter() != null && viewModel.getUser().getDiveCenter().getPhoto() != null) {
+                view.setVisibility(View.VISIBLE);
+                Picasso.with(view.getContext()).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, viewModel.getUser().getDiveCenter().getPhoto(), "1"))
+                        .resize(Math.round(Helpers.convertDpToPixel(22, view.getContext())),
+                                Math.round(Helpers.convertDpToPixel(22, view.getContext()))).centerCrop()
+                        .placeholder(R.drawable.placeholder_photos_activity)
+                        .transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2, view.getContext())), 0, RoundedCornersTransformation.CornerType.ALL)).into(view);
+            } else {
+                view.setVisibility(View.GONE);
+            }
         }
     }
 

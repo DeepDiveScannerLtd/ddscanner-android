@@ -36,6 +36,7 @@ import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.achievements.AchievementsActivity;
 import com.ddscanner.screens.profile.edit.EditUserProfileActivity;
 import com.ddscanner.screens.reiews.list.ReviewsActivity;
+import com.ddscanner.screens.user.profile.UserProfileActivity;
 import com.ddscanner.ui.activities.AboutActivity;
 import com.ddscanner.events.ChangeLoginViewEvent;
 import com.ddscanner.ui.activities.DiveSpotsListActivity;
@@ -354,6 +355,10 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
     @Subscribe
     public void openPhotosActivity(OpenPhotosActivityEvent event) {
         PhotosGalleryActivity.showForResult(binding.getProfileFragmentViewModel().getUser().getId(), getActivity(), PhotoOpenedSource.PROFILE, new Gson().toJson(new PhotoAuthor(binding.getProfileFragmentViewModel().getUser().getId(), binding.getProfileFragmentViewModel().getUser().getName(), binding.getProfileFragmentViewModel().getUser().getPhoto(), binding.getProfileFragmentViewModel().getUser().getType())), ActivitiesRequestCodes.REQUEST_CODE_SHOW_USER_PROFILE_PHOTOS);
+    }
+
+    public void showDiveCenter(View view) {
+        UserProfileActivity.show(getContext(), String.valueOf(binding.getProfileFragmentViewModel().getUser().getDiveCenter().getId()), 0);
     }
 
 }

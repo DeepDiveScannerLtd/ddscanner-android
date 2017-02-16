@@ -54,9 +54,40 @@
                         android:background="@color/white"
                         android:orientation="vertical">
                         <RelativeLayout
+                            android:visibility="@{profileFragmentViewModel.user.type == 1 ? View.GONE : View.VISIBLE}"
                             android:layout_width="match_parent"
-                            android:layout_height="32dp">
-
+                            android:layout_height="32dp"
+                            android:background="#f9f9f9"
+                            android:onClick="@{handlers::showDiveCenter}">
+                            <LinearLayout
+                                android:layout_centerInParent="true"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:orientation="horizontal"
+                                android:gravity="center">
+                                
+                                    <ImageView
+                                        app:loadDiveCenterImageFrom="@{profileFragmentViewModel}"
+                                        android:layout_marginRight="8dp"
+                                        android:layout_width="22dp"
+                                        android:layout_height="22dp" />
+                                
+                                    <TextView
+                                        android:text="@{profileFragmentViewModel.user.diveCenter.name}"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textSize="13sp"
+                                        android:textColor="@color/black_text"/>
+                                
+                            </LinearLayout>
+                            <ImageView
+                                android:layout_centerVertical="true"
+                                android:layout_alignParentRight="true"
+                                android:layout_marginRight="10dp"
+                                android:layout_width="6dp"
+                                android:layout_height="10dp"
+                                android:src="@drawable/ic_arrow"
+                                android:scaleType="center"/>
                         </RelativeLayout>
                         <LinearLayout
                             android:layout_width="match_parent"
