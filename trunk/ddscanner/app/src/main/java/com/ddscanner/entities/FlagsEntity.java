@@ -6,7 +6,7 @@ public class FlagsEntity {
 
     @SerializedName("is_checked_in")
     private boolean isCheckedIn;
-    @SerializedName("is_favourite")
+    @SerializedName("is_favorite")
     private boolean isFavorite;
     @SerializedName("is_verified")
     private boolean isVerified;

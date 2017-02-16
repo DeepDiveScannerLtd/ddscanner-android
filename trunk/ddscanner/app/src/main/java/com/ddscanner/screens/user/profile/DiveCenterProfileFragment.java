@@ -12,7 +12,9 @@ import android.view.ViewGroup;
 import com.ddscanner.R;
 import com.ddscanner.databinding.FragmentDiveCenterProfileBinding;
 import com.ddscanner.entities.DiveCenterProfile;
+import com.ddscanner.entities.DiveSpotListSource;
 import com.ddscanner.screens.profile.divecenter.DiveCenterProfileFragmentViewModel;
+import com.ddscanner.ui.activities.DiveSpotsListActivity;
 import com.ddscanner.ui.adapters.UserPhotosListAdapter;
 
 public class DiveCenterProfileFragment extends Fragment {
@@ -42,13 +44,26 @@ public class DiveCenterProfileFragment extends Fragment {
     }
 
     private void setupUi() {
-
         if (binding.getDiveCenterViewModel().getDiveCenterProfile().getPhotos() != null) {
             binding.photosList.setLayoutManager(new GridLayoutManager(getContext(), 4));
             binding.photosList.setAdapter(new UserPhotosListAdapter(binding.getDiveCenterViewModel().getDiveCenterProfile().getPhotos(), binding.getDiveCenterViewModel().getDiveCenterProfile().getPhotosCount(), getActivity(), String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId())));
         }
     }
 
+    public void showDiveSpots(View view) {
 
+    }
+
+    public void showCreated(View view) {
+        if (binding.getDiveCenterViewModel().getDiveCenterProfile().getCreatedSpotsCount() > 0) {
+            DiveSpotsListActivity.show(getContext(), DiveSpotListSource.ADDED, String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId()));
+        }
+    }
+
+    public void showEdited(View view) {
+        if (binding.getDiveCenterViewModel().getDiveCenterProfile().getEditedSpotsCount() > 0) {
+            DiveSpotsListActivity.show(getContext(), DiveSpotListSource.EDITED, String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId()));
+        }
+    }
 
 }

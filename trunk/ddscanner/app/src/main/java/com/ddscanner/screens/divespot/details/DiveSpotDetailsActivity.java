@@ -147,6 +147,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
             if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
                 isCheckedIn = result.getFlags().isCheckedIn();
                 isWorkingHere = result.getFlags().isWorkingHere();
+                isFavorite = result.getFlags().isFavorite();
             }
             binding.setDiveSpotViewModel(new DiveSpotDetailsActivityViewModel(diveSpotDetailsEntity, binding.progressBar));
             setUi();
