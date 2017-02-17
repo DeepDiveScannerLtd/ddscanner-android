@@ -18,6 +18,7 @@ import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.databinding.ViewDivecenterProfileBinding;
 import com.ddscanner.entities.BaseUser;
+import com.ddscanner.entities.BusRegisteringListener;
 import com.ddscanner.entities.DialogClosedListener;
 import com.ddscanner.entities.DiveCenterProfile;
 import com.ddscanner.entities.PhotoAuthor;
@@ -44,6 +45,7 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
     private DiveCenterProfile diveCenterProfile;
     private ViewDivecenterProfileBinding binding;
     private boolean isHaveSpots = false;
+    private BusRegisteringListener busListener = new BusRegisteringListener();
     private DDScannerRestClient.ResultListener<DiveCenterProfile> userResultListener = new DDScannerRestClient.ResultListener<DiveCenterProfile>() {
         @Override
         public void onSuccess(DiveCenterProfile result) {
@@ -152,14 +154,20 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
     @Override
     public void onStop() {
         super.onStop();
-        DDScannerApplication.bus.unregister(this);
+        if (busListener.isRegistered()) {
+            DDScannerApplication.bus.unregister(this);
+            busListener.setRegistered(false);
+        }
         userResultListener.setCancelled(true);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        DDScannerApplication.bus.register(this);
+        if (!busListener.isRegistered()) {
+            DDScannerApplication.bus.register(this);
+            busListener.setRegistered(true);
+        }
         userResultListener.setCancelled(false);
         if (binding.getDiveCenterViewModel() == null) {
             binding.progressBarLoading.setVisibility(View.VISIBLE);
