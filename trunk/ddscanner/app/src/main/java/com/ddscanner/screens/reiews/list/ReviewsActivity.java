@@ -459,15 +459,22 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     protected void onPause() {
         super.onPause();
         DDScannerApplication.activityPaused();
+        commentsResultListener.setCancelled(true);
+        likeCommentResultListener.setCancelled(true);
+        dislikeCommentResultListener.setCancelled(true);
+        reportCommentResultListener.setCancelled(true);
+        deleteCommentResultListener.setCancelled(true);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         DDScannerApplication.activityResumed();
-        if (!Helpers.hasConnection(this)) {
-            DDScannerApplication.showErrorActivity(this);
-        }
+        commentsResultListener.setCancelled(false);
+        likeCommentResultListener.setCancelled(false);
+        dislikeCommentResultListener.setCancelled(false);
+        reportCommentResultListener.setCancelled(false);
+        deleteCommentResultListener.setCancelled(false);
     }
 
     @Subscribe
@@ -589,4 +596,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
                 break;
         }
     }
+
+
+
 }
