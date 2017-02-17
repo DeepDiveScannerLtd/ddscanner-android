@@ -43,6 +43,7 @@ import com.ddscanner.entities.SealifeShort;
 import com.ddscanner.events.OpenPhotosActivityEvent;
 import com.ddscanner.events.PickPhotoForCheckedInDialogEvent;
 import com.ddscanner.rest.DDScannerRestClient;
+import com.ddscanner.ui.activities.EditorsListActivity;
 import com.ddscanner.ui.activities.PhotosGalleryActivity;
 import com.ddscanner.ui.activities.AddPhotosDoDiveSpotActivity;
 import com.ddscanner.ui.activities.CheckInPeoplesActivity;
@@ -856,6 +857,10 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
 
     public void trueApproveDiveSpot(View view) {
         DDScannerApplication.getInstance().getDdScannerRestClient().postApproveDiveSpot(diveSpotId, true, trueApproveResultListener);
+    }
+
+    public void showCreatorsActivity(View view) {
+        EditorsListActivity.show(this, String.valueOf(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getId()), new Gson().toJson(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getAuthor()));
     }
 
     public void falseApproveDiveSpot(View view) {
