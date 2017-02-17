@@ -21,6 +21,7 @@ import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.databinding.FragmentProfileBinding;
 import com.ddscanner.entities.BaseUser;
+import com.ddscanner.entities.BusRegisteringListener;
 import com.ddscanner.entities.DialogClosedListener;
 import com.ddscanner.entities.DiveSpotListSource;
 import com.ddscanner.entities.DiveSpotPhoto;
@@ -61,10 +62,7 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
 
     private static final String TAG = ProfileFragment.class.getName();
 
-    private static final int MAX_LENGTH_NAME = 30;
-    private static final int MAX_LENGTH_ABOUT = 250;
-
-    private Map<String, TextView> errorsMap = new HashMap<>();
+    private BusRegisteringListener busListener = new BusRegisteringListener();
 
     private User user;
 
@@ -211,14 +209,20 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
     public void onStart() {
         super.onStart();
         Log.i(TAG, "ProfileFragment onStart, this = " + this);
-        DDScannerApplication.bus.register(this);
+        if (!busListener.isRegistered()) {
+            DDScannerApplication.bus.register(this);
+            busListener.setRegistered(true);
+        }
     }
 
     @Override
     public void onStop() {
         super.onStop();
         Log.i(TAG, "ProfileFragment onStop, this = " + this);
-        DDScannerApplication.bus.unregister(this);
+        if (busListener.isRegistered()) {
+            DDScannerApplication.bus.unregister(this);
+            busListener.setRegistered(false);
+        }
     }
 
     private void getUserDataRequest() {
