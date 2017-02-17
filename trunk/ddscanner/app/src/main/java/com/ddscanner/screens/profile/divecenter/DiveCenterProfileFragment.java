@@ -210,6 +210,10 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
 
     public void showDiveSpots(View view) {
         if (binding.getDiveCenterViewModel().getDiveCenterProfile().getWorkingCount() > 0) {
+            if (binding.getDiveCenterViewModel().getDiveCenterProfile().getAddresses() == null || binding.getDiveCenterViewModel().getDiveCenterProfile().getAddresses().get(0) == null) {
+                DiveCenterSpotsActivity.show(getContext(), String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId()), null);
+                return;
+            }
             DiveCenterSpotsActivity.show(getContext(), String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId()), binding.getDiveCenterViewModel().getDiveCenterProfile().getAddresses().get(0).getPosition());
         }
     }
