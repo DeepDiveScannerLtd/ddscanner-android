@@ -544,8 +544,8 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
             LoginActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_LIKE_REVIEW);
             return;
         }
-        DDScannerApplication.getInstance().getDdScannerRestClient().postLikeReview(id, likeCommentResultListener);
         reviewsListAdapter.rateReviewRequestStarted(position);
+        DDScannerApplication.getInstance().getDdScannerRestClient().postLikeReview(id, likeCommentResultListener);
     }
 
     private void dislikeComment(String id, final int position) {
@@ -553,8 +553,8 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
             LoginActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_DISLIKE_REVIEW);
             return;
         }
-        DDScannerApplication.getInstance().getDdScannerRestClient().postDislikeReview(id, dislikeCommentResultListener);
         reviewsListAdapter.rateReviewRequestStarted(position);
+        DDScannerApplication.getInstance().getDdScannerRestClient().postDislikeReview(id, dislikeCommentResultListener);
     }
 
     @Subscribe

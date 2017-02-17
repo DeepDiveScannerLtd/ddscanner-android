@@ -104,8 +104,11 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         } else {
             reviewsListViewHolder.photos.setAdapter(null);
         }
+        reviewsListViewHolder.likeView.setOnClickListener(null);
+        reviewsListViewHolder.dislikeView.setOnClickListener(null);
         if (!commentEntity.isRequestSent()) {
-            if (!isLiked && !userId.equals(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId())) {
+            Log.i(TAG, "------Trying for send request for position and values is  " + String.valueOf(reviewsListViewHolder.getAdapterPosition()) + " " + String.valueOf(commentEntity.isRequestSent()));
+            if (!comments.get(i).getComment().isLike() && !userId.equals(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId())) {
                 reviewsListViewHolder.likeView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -113,7 +116,8 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
                     }
                 });
             }
-            if (!isDisliked && !userId.equals(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId())) {
+            Log.i(TAG, " Position " + String.valueOf(i) + " value" + String.valueOf(comments.get(i).getComment().isDislike()));
+            if (!comments.get(i).getComment().isDislike() && !userId.equals(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId())) {
                 reviewsListViewHolder.dislikeView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -174,6 +178,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         comments.get(position).getComment().setLikes(String.valueOf(Integer.parseInt(comments.get(position).getComment().getLikes()) + 1));
         comments.get(position).getComment().setLike(true);
         comments.get(position).setRequestSent(false);
+        Log.i(TAG, "------Liked for position " + String.valueOf(position));
         notifyItemChanged(position);
     }
 
@@ -185,15 +190,18 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         comments.get(position).getComment().setDislikes(String.valueOf(Integer.parseInt(comments.get(position).getComment().getDislikes()) + 1));
         comments.get(position).getComment().setDislike(true);
         comments.get(position).setRequestSent(false);
+        Log.i(TAG, "------Disliked for position " + String.valueOf(position));
         notifyItemChanged(position);
     }
 
     public void rateReviewRequestStarted(int position) {
+        Log.i(TAG, "------Sending request start for position " + String.valueOf(position));
         comments.get(position).setRequestSent(true);
         notifyItemChanged(position);
     }
 
     public void rateReviewFaled(int position) {
+        Log.i(TAG, "------Sending request faled for position " + String.valueOf(position));
         comments.get(position).setRequestSent(false);
         notifyItemChanged(position);
     }
