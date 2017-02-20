@@ -137,12 +137,12 @@ public class ScallingImageView extends ImageView {
         fitImageToView();
     }
 
-    @Override
-    public void setImageDrawable(Drawable drawable) {
-        super.setImageDrawable(drawable);
-        savePreviousImageValues();
-        fitImageToView();
-    }
+//    @Override
+//    public void setImageDrawable(Drawable drawable) {
+//        super.setImageDrawable(drawable);
+//        savePreviousImageValues();
+//        fitImageToView();
+//    }
 
     @Override
     public void setImageURI(Uri uri) {
