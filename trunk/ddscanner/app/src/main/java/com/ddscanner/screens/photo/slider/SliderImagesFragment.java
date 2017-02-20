@@ -1,6 +1,9 @@
 package com.ddscanner.screens.photo.slider;
 
 import android.app.Fragment;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -12,8 +15,10 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.ddscanner.R;
+import com.ddscanner.ui.views.ScallingImageView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 /**
  * Created by lashket on 4.3.16.
@@ -28,8 +33,8 @@ public class SliderImagesFragment extends Fragment {
         String imageUrl = getArguments().getString(IMAGE_URL);
         View view = inflater.inflate(R.layout.slider_image_fragment, container, false);
 
-        ImageView imageView = (ImageView) view.findViewById(R.id.slider_image);
-        ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+        final ScallingImageView imageView = (ScallingImageView) view.findViewById(R.id.slider_image);
+        final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         Display display = getActivity().getWindowManager().getDefaultDisplay();
         DisplayMetrics outMetrics = new DisplayMetrics();
         display.getMetrics(outMetrics);
