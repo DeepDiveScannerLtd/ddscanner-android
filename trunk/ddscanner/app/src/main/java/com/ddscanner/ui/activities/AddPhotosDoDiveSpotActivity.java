@@ -114,10 +114,10 @@ public class AddPhotosDoDiveSpotActivity extends AppCompatActivity implements Vi
     private void sendRequest() {
         materialDialog.show();
         if (isMap) {
-            DDScannerApplication.getInstance().getDdScannerRestClient().postMapsToDiveSpot(dsId, images, photosAddedResultListener);
+            DDScannerApplication.getInstance().getDdScannerRestClient().postMapsToDiveSpot(dsId, images, photosAddedResultListener, this);
             return;
         }
-        DDScannerApplication.getInstance().getDdScannerRestClient().postPhotosToDiveSpot(dsId, images, photosAddedResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient().postPhotosToDiveSpot(dsId, images, photosAddedResultListener, this);
     }
 
     public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {

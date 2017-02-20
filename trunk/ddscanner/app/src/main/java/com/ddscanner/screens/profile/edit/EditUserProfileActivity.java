@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import id.zelory.compressor.Compressor;
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -239,6 +240,7 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
         }
         if (pathToUploadedPhoto != null) {
             File file = new File(pathToUploadedPhoto);
+            file = Helpers.compressFile(file, this);
             RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
             image = MultipartBody.Part.createFormData("photo", file.getName(), requestFile);
         }

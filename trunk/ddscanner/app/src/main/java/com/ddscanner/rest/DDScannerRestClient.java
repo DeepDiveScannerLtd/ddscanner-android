@@ -1,5 +1,6 @@
 package com.ddscanner.rest;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.ddscanner.DDScannerApplication;
@@ -875,7 +876,7 @@ public class DDScannerRestClient {
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 
-    public void postMapsToDiveSpot(String id, ArrayList<String> images, final ResultListener<Void> resultListener) {
+    public void postMapsToDiveSpot(String id, ArrayList<String> images, final ResultListener<Void> resultListener, Context context) {
         if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
             resultListener.onInternetConnectionClosed();
             return;
@@ -883,6 +884,7 @@ public class DDScannerRestClient {
         List<MultipartBody.Part> imagesToSend = new ArrayList<>();
         for (int i = 0; i < images.size(); i++) {
             File image = new File(images.get(i));
+            image = Helpers.compressFile(image, context);
             RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), image);
             MultipartBody.Part part = MultipartBody.Part.createFormData(Constants.ADD_DIVE_SPOT_ACTIVITY_IMAGES_ARRAY,
                     image.getName(), requestFile);
@@ -892,7 +894,7 @@ public class DDScannerRestClient {
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 
-    public void postPhotosToDiveSpot(String id, ArrayList<String> images, final ResultListener<Void> resultListener) {
+    public void postPhotosToDiveSpot(String id, ArrayList<String> images, final ResultListener<Void> resultListener, Context context) {
         if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
             resultListener.onInternetConnectionClosed();
             return;
@@ -900,6 +902,7 @@ public class DDScannerRestClient {
         List<MultipartBody.Part> imagesToSend = new ArrayList<>();
         for (int i = 0; i < images.size(); i++) {
             File image = new File(images.get(i));
+            image = Helpers.compressFile(image, context);
             RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), image);
             MultipartBody.Part part = MultipartBody.Part.createFormData("photos[]",
                     image.getName(), requestFile);

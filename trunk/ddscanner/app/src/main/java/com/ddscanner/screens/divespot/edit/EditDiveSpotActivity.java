@@ -690,6 +690,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements CompoundB
             deletedImages = new ArrayList<>();
             for (int i = 0; i < photosListAdapter.getNewPhotos().size(); i++) {
                 File image = new File(photosListAdapter.getNewPhotos().get(i));
+                image = Helpers.compressFile(image, this);
                 RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), image);
                 MultipartBody.Part part = MultipartBody.Part.createFormData("new_photos[]", image.getName(), requestFile);
                 newImages.add(part);
@@ -703,6 +704,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements CompoundB
             newMaps = new ArrayList<>();
             for (int i = 0; i < mapsListAdapter.getNewPhotos().size(); i++) {
                 File image = new File(mapsListAdapter.getNewPhotos().get(i));
+                image = Helpers.compressFile(image, this);
                 RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), image);
                 MultipartBody.Part part = MultipartBody.Part.createFormData("new_maps[]", image.getName(), requestFile);
                 newMaps.add(part);

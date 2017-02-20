@@ -59,6 +59,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
+import id.zelory.compressor.Compressor;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 
@@ -683,6 +684,12 @@ public class Helpers {
         reportTypes.add("Spam");
         reportTypes.add("Other");
         return reportTypes;
+    }
+
+    public static File compressFile(File inputFile, Context context) {
+        Compressor compressor = new Compressor.Builder(context).setMaxHeight(1080).setMaxHeight(1080).build();
+        File outputFile = compressor.compressToFile(inputFile);
+        return outputFile;
     }
 
 }

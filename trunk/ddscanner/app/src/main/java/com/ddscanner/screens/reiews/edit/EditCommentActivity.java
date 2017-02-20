@@ -275,6 +275,7 @@ public class EditCommentActivity extends BaseAppCompatActivity implements View.O
             newImages = new ArrayList<>();
             for (String newImageUri : newFilesUrisList) {
                 File image = new File(newImageUri);
+                image = Helpers.compressFile(image, this);
                 RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), image);
                 MultipartBody.Part part = MultipartBody.Part.createFormData("new_photos[]", image.getName(), requestFile);
                 newImages.add(part);

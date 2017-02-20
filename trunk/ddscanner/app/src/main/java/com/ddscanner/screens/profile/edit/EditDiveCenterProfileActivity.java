@@ -453,6 +453,7 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
 
         if (imagePath != null && !imagePath.isEmpty()) {
             File file = new File(imagePath);
+            file = Helpers.compressFile(file, this);
             RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
             photo = MultipartBody.Part.createFormData("photo", file.getName(), requestFile);
         }
