@@ -45,7 +45,7 @@ import java.util.Map;
 
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
-public class ImageSliderActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener, View.OnClickListener, SimpleGestureFilter.SimpleGestureListener, DialogClosedListener {
+public class ImageSliderActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener, View.OnClickListener, DialogClosedListener {
 
     private SliderImagesAdapter sliderImagesAdapter;
     private FrameLayout baseLayout;
@@ -217,7 +217,6 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         if (Build.VERSION.SDK_INT >= 21) {
             getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.black_text));
         }
-        detector = new SimpleGestureFilter(this, this);
         materialDialog = Helpers.getMaterialDialog(this);
         images = DDScannerApplication.getInstance().getDiveSpotPhotosContainer().getPhotos();
         position = getIntent().getIntExtra("position", 0);
@@ -556,49 +555,6 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
                 }).show();
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent touchevent) {
-        switch (touchevent.getAction()) {
-            case MotionEvent.ACTION_DOWN: {
-                x1 = touchevent.getX();
-                y1 = touchevent.getY();
-                break;
-            }
-            case MotionEvent.ACTION_UP: {
-                x2 = touchevent.getX();
-                y2 = touchevent.getY();
-                break;
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent me) {
-        // Call onTouchEvent of SimpleGestureFilter class
-        this.detector.onTouchEvent(me);
-        return super.dispatchTouchEvent(me);
-    }
-
-    @Override
-    public void onSwipe(int direction) {
-        String str = "";
-
-        switch (direction) {
-            case SimpleGestureFilter.SWIPE_DOWN:
-                // onBackPressed();
-                break;
-            case SimpleGestureFilter.SWIPE_UP:
-                onBackPressed();
-                break;
-
-        }
-    }
-
-    @Override
-    public void onDoubleTap() {
-
-    }
 
     @Override
     public void onDialogClosed(int requestCode) {
