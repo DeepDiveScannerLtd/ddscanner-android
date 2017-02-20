@@ -22,6 +22,16 @@ public class User implements Serializable {
     private String id;
     @SerializedName("photos_count")
     private int photosCount;
+    @SerializedName("dive_center")
+    private DiveCenterProfile diveCenter;
+
+    public DiveCenterProfile getDiveCenter() {
+        return diveCenter;
+    }
+
+    public void setDiveCenter(DiveCenterProfile diveCenter) {
+        this.diveCenter = diveCenter;
+    }
 
     public int getPhotosCount() {
         return photosCount;

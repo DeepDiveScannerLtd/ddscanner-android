@@ -1,5 +1,6 @@
 package com.ddscanner.ui.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,7 +13,9 @@ import android.widget.TextView;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.DiveSpotPhoto;
+import com.ddscanner.entities.PhotoOpenedSource;
 import com.ddscanner.events.ShowSliderForReviewImagesEvent;
+import com.ddscanner.ui.activities.PhotosGalleryActivity;
 import com.ddscanner.ui.views.TransformationRoundImage;
 import com.ddscanner.utils.ImageLoadedCallback;
 import com.squareup.picasso.Picasso;
@@ -25,16 +28,19 @@ public class ReviewPhotosAdapter extends RecyclerView.Adapter<ReviewPhotosAdapte
 
     public ArrayList<DiveSpotPhoto> photos;
     public String reviewId;
-    public Context context;
+    public Activity context;
     public boolean isSelfPhotos;
     public int commentPosition;
+    private int photosCount;
+    private String commentId;
 
-    public ReviewPhotosAdapter(ArrayList<DiveSpotPhoto> photos, Context context, boolean isSelfPhotos, int commentPosition) {
+    public ReviewPhotosAdapter(ArrayList<DiveSpotPhoto> photos, Activity context, boolean isSelfPhotos, int commentPosition, int photosCount, String commentId) {
         this.photos = photos;
         this.context = context;
         this.isSelfPhotos =  isSelfPhotos;
         this.commentPosition = commentPosition;
-
+        this.photosCount = photosCount;
+        this.commentId = commentId;
        // Helpers.appendImagesWithPath(photos, path);
     }
 
@@ -49,7 +55,7 @@ public class ReviewPhotosAdapter extends RecyclerView.Adapter<ReviewPhotosAdapte
     @Override
     public void onBindViewHolder(final ReviewPhotosAdapterViewHolder holder, int position) {
         if(position == 4) {
-            holder.morePhotos.setText("+" + String.valueOf(8 - 4));
+            holder.morePhotos.setText("+" + String.valueOf(photosCount - 4));
             holder.morePhotos.setVisibility(View.VISIBLE);
         }
         Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, photos.get(position).getId(), "1")).transform(new TransformationRoundImage(2,0)).resize(70,70).centerCrop().into(holder.photo,
@@ -88,7 +94,11 @@ public class ReviewPhotosAdapter extends RecyclerView.Adapter<ReviewPhotosAdapte
         @Override
         public void onClick(View v) {
           // ReviewImageSliderActivity.showForResult(context, photos, getAdapterPosition());
-            DDScannerApplication.bus.post(new ShowSliderForReviewImagesEvent(isSelfPhotos, photos, getAdapterPosition(), commentPosition));
+            if (photosCount > 5) {
+                PhotosGalleryActivity.showForResult(commentId, context, PhotoOpenedSource.REVIEW, null, -1);
+            } else {
+                DDScannerApplication.bus.post(new ShowSliderForReviewImagesEvent(isSelfPhotos, photos, getAdapterPosition(), commentPosition));
+            }
         }
     }
 

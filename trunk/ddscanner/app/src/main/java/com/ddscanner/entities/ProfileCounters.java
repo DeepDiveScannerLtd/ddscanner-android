@@ -24,7 +24,7 @@ public class ProfileCounters implements Serializable{
     @SerializedName("reviews")
     private int commentsCount;
 
-    @SerializedName("favourites")
+    @SerializedName("favorites")
     private int favoritesCount;
 
     public int getLikesCount() {

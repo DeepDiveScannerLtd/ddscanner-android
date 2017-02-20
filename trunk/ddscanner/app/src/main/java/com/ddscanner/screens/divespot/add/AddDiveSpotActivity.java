@@ -360,6 +360,12 @@ public class AddDiveSpotActivity extends AppCompatActivity implements CompoundBu
             case ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_LANGUAGE:
                 if (resultCode == RESULT_OK) {
                     Language language = (Language) data.getSerializableExtra("language");
+                    for (Translation temp : translationsListAdapter.getTranslations()) {
+                        if (temp.getCode().equals(language.getCode())) {
+                            //TODO pogovorit' s sanei po povody daloga
+                            return;
+                        }
+                    }
                     AddTranslationDialogFragment.show(getSupportFragmentManager(), language.getCode(), language.getName(), "", "");
                 }
                 break;
@@ -531,6 +537,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements CompoundBu
             images = new ArrayList<>();
             for (int i = 0; i < photoUris.size(); i++) {
                 File image = new File(photoUris.get(i));
+                image = Helpers.compressFile(image, this);
                 RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), image);
                 MultipartBody.Part part = MultipartBody.Part.createFormData(Constants.ADD_DIVE_SPOT_ACTIVITY_IMAGES_ARRAY, image.getName(), requestFile);
                 images.add(part);
@@ -542,6 +549,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements CompoundBu
             mapsList = new ArrayList<>();
             for (int i = 0; i < mapsUris.size(); i++) {
                 File image = new File(mapsUris.get(i));
+                image = Helpers.compressFile(image, this);
                 RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), image);
                 MultipartBody.Part part = MultipartBody.Part.createFormData(Constants.ADD_DIVE_SPOT_ACTIVITY_MAPS_ARRAY, image.getName(), requestFile);
                 mapsList.add(part);

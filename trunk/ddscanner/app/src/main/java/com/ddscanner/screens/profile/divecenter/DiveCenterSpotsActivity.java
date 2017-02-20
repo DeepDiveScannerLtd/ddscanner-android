@@ -157,7 +157,9 @@ public class DiveCenterSpotsActivity extends BaseAppCompatActivity implements Vi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dive_center_dive_spots);
         setupToolbar(R.string.diespors, R.id.toolbar);
-        diveCenterLatLng =  getIntent().getParcelableExtra("place");
+        if (getIntent().getParcelableExtra("place") != null) {
+            diveCenterLatLng = getIntent().getParcelableExtra("place");
+        }
         materialDialog = Helpers.getMaterialDialog(this);
         materialDialog.show();
         findViews();
@@ -362,7 +364,9 @@ public class DiveCenterSpotsActivity extends BaseAppCompatActivity implements Vi
                         diveCenterSpotsClusterManager = new DiveCenterSpotsClusterManager(DiveCenterSpotsActivity.this, googleMap);
                         googleMap.setOnMarkerClickListener(DiveCenterSpotsActivity.this);
                         googleMap.setOnMapClickListener(DiveCenterSpotsActivity.this);
-                        diveCenterMarker = googleMap.addMarker(new MarkerOptions().position(diveCenterLatLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_dc)));
+                        if (diveCenterLatLng != null) {
+                            diveCenterMarker = googleMap.addMarker(new MarkerOptions().position(diveCenterLatLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_dc)));
+                        }
                         DDScannerApplication.getInstance().getDdScannerRestClient().getSelfDiveCenterDiveSpotsList(diveSpotsResultListener);
                         //     diveSpotMarker = googleMap.addMarker(new MarkerOptions().position(diveSpotLatLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds)).title(diveSpotName));
                     }
@@ -380,7 +384,9 @@ public class DiveCenterSpotsActivity extends BaseAppCompatActivity implements Vi
     private void drawMarkers() {
         if (diveCenterSpotsClusterManager != null) {
             LatLngBounds.Builder builder = new LatLngBounds.Builder();
-            builder.include(diveCenterLatLng);
+            if (diveCenterLatLng != null) {
+                builder.include(diveCenterLatLng);
+            }
             for (DiveSpotShort diveSpotShort : diveSpots) {
                 diveCenterSpotsClusterManager.addItem(diveSpotShort);
                 builder.include(diveSpotShort.getPosition());

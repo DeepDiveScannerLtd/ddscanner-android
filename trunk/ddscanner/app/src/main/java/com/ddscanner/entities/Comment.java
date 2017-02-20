@@ -17,14 +17,15 @@ public class Comment {
     private Boolean isLike;
     @SerializedName("is_disliked")
     private Boolean isDislike;
-    private ArrayList<SealifeShort> sealifes;
+    @SerializedName("photos_count")
+    private int photosCount;
 
-    public ArrayList<SealifeShort> getSealifes() {
-        return sealifes;
+    public int getPhotosCount() {
+        return photosCount;
     }
 
-    public void setSealifes(ArrayList<SealifeShort> sealifes) {
-        this.sealifes = sealifes;
+    public void setPhotosCount(int photosCount) {
+        this.photosCount = photosCount;
     }
 
     public boolean isLike() {

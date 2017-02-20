@@ -134,7 +134,7 @@ public class DiveCenterSpotsClusterManager extends ClusterManager<DiveSpotShort>
         protected void onClusterItemRendered(DiveSpotShort diveSpot, final Marker marker) {
             super.onClusterItemRendered(diveSpot, marker);
             try {
-                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.pin_ds));
+                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds));
                 markers.add(marker);
             } catch (Exception e) {
                 e.printStackTrace();

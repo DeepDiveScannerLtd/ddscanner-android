@@ -316,6 +316,7 @@
                 android:orientation="vertical">
 
                 <LinearLayout
+                    android:onClick="@{handlers::showCreated}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="20dp"
@@ -355,6 +356,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:onClick="@{handlers::showEdited}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="20dp"

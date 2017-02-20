@@ -10,9 +10,15 @@ import com.ddscanner.entities.SelfCommentEntity;
 public class EditCommentEvent {
 
     private Comment comment;
+    private boolean isHaveSealife;
 
-    public EditCommentEvent(Comment commentOld) {
-        this.comment = commentOld;
+    public EditCommentEvent(Comment comment, boolean isHaveSealife) {
+        this.comment = comment;
+        this.isHaveSealife = isHaveSealife;
+    }
+
+    public boolean isHaveSealife() {
+        return isHaveSealife;
     }
 
     public Comment getComment() {

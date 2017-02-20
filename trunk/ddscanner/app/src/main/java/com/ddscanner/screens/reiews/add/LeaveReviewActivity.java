@@ -183,11 +183,11 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements View.O
         List<MultipartBody.Part> images = new ArrayList<>();
         imageUris = addPhotoToDsListAdapter.getNewFilesUrisList();
         for (int i = 0; i < imageUris.size(); i++) {
-                File image = new File(imageUris.get(i));
-                RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), image);
-                MultipartBody.Part part = MultipartBody.Part.createFormData("photos[]", image.getName(),
-                        requestFile);
-                images.add(part);
+            File image = new File(imageUris.get(i));
+            image = Helpers.compressFile(image, this);
+            RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), image);
+            MultipartBody.Part part = MultipartBody.Part.createFormData("photos[]", image.getName(), requestFile);
+            images.add(part);
         }
         materialDialog.show();
         requestRating = RequestBody.create(MediaType.parse("multipart/form-data"),

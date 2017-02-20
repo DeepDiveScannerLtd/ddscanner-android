@@ -252,6 +252,7 @@
                         </RelativeLayout>
 
                         <RelativeLayout
+                            android:onClick="@{handlers::showCreatorsActivity}"
                             android:id="@+id/creator"
                             android:layout_width="match_parent"
                             android:layout_height="58dp"

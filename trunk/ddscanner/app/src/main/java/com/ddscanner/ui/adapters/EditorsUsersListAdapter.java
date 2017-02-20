@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.User;
+import com.ddscanner.screens.user.profile.UserProfileActivity;
 import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;
 
@@ -68,7 +69,7 @@ public class EditorsUsersListAdapter extends RecyclerView.Adapter<EditorsUsersLi
 
         public EditorsUsersListViewHolder(View v) {
             super(v);
-//            v.setOnClickListener(this);
+            v.setOnClickListener(this);
             userAvatar = (ImageView) v.findViewById(R.id.user_avatar);
             userName = (TextView) v.findViewById(R.id.user_name);
             info = (TextView) v.findViewById(R.id.count);
@@ -76,9 +77,7 @@ public class EditorsUsersListAdapter extends RecyclerView.Adapter<EditorsUsersLi
 
         @Override
         public void onClick(View v) {
-//            if (users.get(getAdapterPosition()).getAuthor() != null && users.get(getAdapterPosition()).getAuthor().equals("social")) {
-//                ForeignProfileActivity.showForResult(context, users.get(getAdapterPosition()).getId());
-//            }
+            UserProfileActivity.show(context, users.get(getAdapterPosition()).getId(), users.get(getAdapterPosition()).getType());
         }
     }
 

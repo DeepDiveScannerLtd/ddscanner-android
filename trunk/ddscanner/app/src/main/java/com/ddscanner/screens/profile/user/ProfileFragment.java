@@ -21,12 +21,14 @@ import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.databinding.FragmentProfileBinding;
 import com.ddscanner.entities.BaseUser;
+import com.ddscanner.entities.BusRegisteringListener;
 import com.ddscanner.entities.DialogClosedListener;
 import com.ddscanner.entities.DiveSpotListSource;
 import com.ddscanner.entities.DiveSpotPhoto;
 import com.ddscanner.entities.PhotoAuthor;
 import com.ddscanner.entities.PhotoOpenedSource;
 import com.ddscanner.entities.ProfileAchievement;
+import com.ddscanner.entities.ReviewsOpenedSource;
 import com.ddscanner.entities.User;
 import com.ddscanner.events.LoadUserProfileInfoEvent;
 import com.ddscanner.events.LoggedOutEvent;
@@ -34,6 +36,8 @@ import com.ddscanner.events.OpenPhotosActivityEvent;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.achievements.AchievementsActivity;
 import com.ddscanner.screens.profile.edit.EditUserProfileActivity;
+import com.ddscanner.screens.reiews.list.ReviewsActivity;
+import com.ddscanner.screens.user.profile.UserProfileActivity;
 import com.ddscanner.ui.activities.AboutActivity;
 import com.ddscanner.events.ChangeLoginViewEvent;
 import com.ddscanner.ui.activities.DiveSpotsListActivity;
@@ -58,10 +62,7 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
 
     private static final String TAG = ProfileFragment.class.getName();
 
-    private static final int MAX_LENGTH_NAME = 30;
-    private static final int MAX_LENGTH_ABOUT = 250;
-
-    private Map<String, TextView> errorsMap = new HashMap<>();
+    private BusRegisteringListener busListener = new BusRegisteringListener();
 
     private User user;
 
@@ -208,14 +209,20 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
     public void onStart() {
         super.onStart();
         Log.i(TAG, "ProfileFragment onStart, this = " + this);
-        DDScannerApplication.bus.register(this);
+        if (!busListener.isRegistered()) {
+            DDScannerApplication.bus.register(this);
+            busListener.setRegistered(true);
+        }
     }
 
     @Override
     public void onStop() {
         super.onStop();
         Log.i(TAG, "ProfileFragment onStop, this = " + this);
-        DDScannerApplication.bus.unregister(this);
+        if (busListener.isRegistered()) {
+            DDScannerApplication.bus.unregister(this);
+            busListener.setRegistered(false);
+        }
     }
 
     private void getUserDataRequest() {
@@ -295,7 +302,7 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
 
     public void showComments(View view) {
         if (binding.getProfileFragmentViewModel().getUser().getCounters().getCommentsCount() > 0) {
-            SelfCommentsActivity.show(getContext(), binding.getProfileFragmentViewModel().getUser().getId());
+            ReviewsActivity.showForResult(getActivity(), binding.getProfileFragmentViewModel().getUser().getId(), -1, ReviewsOpenedSource.USER);
         }
     }
 
@@ -352,6 +359,10 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
     @Subscribe
     public void openPhotosActivity(OpenPhotosActivityEvent event) {
         PhotosGalleryActivity.showForResult(binding.getProfileFragmentViewModel().getUser().getId(), getActivity(), PhotoOpenedSource.PROFILE, new Gson().toJson(new PhotoAuthor(binding.getProfileFragmentViewModel().getUser().getId(), binding.getProfileFragmentViewModel().getUser().getName(), binding.getProfileFragmentViewModel().getUser().getPhoto(), binding.getProfileFragmentViewModel().getUser().getType())), ActivitiesRequestCodes.REQUEST_CODE_SHOW_USER_PROFILE_PHOTOS);
+    }
+
+    public void showDiveCenter(View view) {
+        UserProfileActivity.show(getContext(), String.valueOf(binding.getProfileFragmentViewModel().getUser().getDiveCenter().getId()), 0);
     }
 
 }

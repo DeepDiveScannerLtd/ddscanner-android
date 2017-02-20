@@ -360,6 +360,8 @@
     <string name="no_photos_yet">The user has not uploaded the photos yet</string>
     <string name="pass_incorrect">The email or password you entered is incorrect. Please, try again</string>
     <string name="title_pass_incorrect">We couldn’t sign you in</string>
+    <string name="title_email_exist">We couldn’t sign you up</string>
+    <string name="message_email_exist">This email has already exists</string>
     <string name="offer">Offers</string>
     <string name="dc_address">Address</string>
     <string name="dc_email">E-mail</string>

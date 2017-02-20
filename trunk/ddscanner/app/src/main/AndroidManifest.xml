@@ -173,7 +173,7 @@
             android:name=".ui.activities.DiveCentersActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activities.AddSealifeActivity"
+            android:name=".screens.sealife.add.AddSealifeActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".screens.divespot.edit.EditDiveSpotActivity"

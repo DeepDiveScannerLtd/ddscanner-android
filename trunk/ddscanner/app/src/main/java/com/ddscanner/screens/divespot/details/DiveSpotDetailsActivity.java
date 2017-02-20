@@ -38,10 +38,12 @@ import com.ddscanner.entities.DialogClosedListener;
 import com.ddscanner.entities.DiveSpotDetailsEntity;
 import com.ddscanner.entities.FlagsEntity;
 import com.ddscanner.entities.PhotoOpenedSource;
+import com.ddscanner.entities.ReviewsOpenedSource;
 import com.ddscanner.entities.SealifeShort;
 import com.ddscanner.events.OpenPhotosActivityEvent;
 import com.ddscanner.events.PickPhotoForCheckedInDialogEvent;
 import com.ddscanner.rest.DDScannerRestClient;
+import com.ddscanner.ui.activities.EditorsListActivity;
 import com.ddscanner.ui.activities.PhotosGalleryActivity;
 import com.ddscanner.ui.activities.AddPhotosDoDiveSpotActivity;
 import com.ddscanner.ui.activities.CheckInPeoplesActivity;
@@ -146,6 +148,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
             if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
                 isCheckedIn = result.getFlags().isCheckedIn();
                 isWorkingHere = result.getFlags().isWorkingHere();
+                isFavorite = result.getFlags().isFavorite();
             }
             binding.setDiveSpotViewModel(new DiveSpotDetailsActivityViewModel(diveSpotDetailsEntity, binding.progressBar));
             setUi();
@@ -856,6 +859,10 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
         DDScannerApplication.getInstance().getDdScannerRestClient().postApproveDiveSpot(diveSpotId, true, trueApproveResultListener);
     }
 
+    public void showCreatorsActivity(View view) {
+        EditorsListActivity.show(this, String.valueOf(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getId()), new Gson().toJson(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getAuthor()));
+    }
+
     public void falseApproveDiveSpot(View view) {
         MaterialDialog.Builder dialog =new MaterialDialog.Builder(this);
         dialog.title("What do you want")
@@ -891,7 +898,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
                 LoginActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_LEAVE_REVIEW);
             }
         } else {
-            ReviewsActivity.showForResult(this, diveSpotId, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_REVIEWS);
+            ReviewsActivity.showForResult(this, diveSpotId, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_REVIEWS, ReviewsOpenedSource.DIVESPOT);
         }
     }
 

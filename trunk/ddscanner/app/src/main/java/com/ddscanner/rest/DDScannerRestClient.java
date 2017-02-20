@@ -1,10 +1,10 @@
 package com.ddscanner.rest;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.entities.AchievmentsResponseEntity;
-import com.ddscanner.entities.AddDiveSpotResponseEntity;
 import com.ddscanner.entities.AddressComponent;
 import com.ddscanner.entities.BaseIdNamePhotoEntity;
 import com.ddscanner.entities.CommentEntity;
@@ -16,9 +16,6 @@ import com.ddscanner.entities.DiveSpotDetailsEntity;
 import com.ddscanner.entities.DiveSpotPhoto;
 import com.ddscanner.entities.DiveSpotPhotosResponseEntity;
 import com.ddscanner.entities.DiveSpotShort;
-import com.ddscanner.entities.DivespotsWrapper;
-import com.ddscanner.entities.EditDiveSpotWrapper;
-import com.ddscanner.entities.FiltersResponseEntity;
 import com.ddscanner.entities.FlagsEntity;
 import com.ddscanner.entities.ForeignUserDislikesWrapper;
 import com.ddscanner.entities.ForeignUserLikeWrapper;
@@ -26,8 +23,6 @@ import com.ddscanner.entities.GoogleMapsGeocodeResponseEntity;
 import com.ddscanner.entities.Instructor;
 import com.ddscanner.entities.Language;
 import com.ddscanner.entities.LikeEntity;
-import com.ddscanner.entities.ProfileResponseEntity;
-import com.ddscanner.entities.RegisterResponse;
 import com.ddscanner.entities.Sealife;
 import com.ddscanner.entities.SealifeShort;
 import com.ddscanner.entities.SelfCommentEntity;
@@ -35,10 +30,8 @@ import com.ddscanner.entities.SignInType;
 import com.ddscanner.entities.SignUpResponseEntity;
 import com.ddscanner.entities.Translation;
 import com.ddscanner.entities.User;
-import com.ddscanner.entities.UserLikeEntity;
 import com.ddscanner.entities.request.DeleteImageRequest;
 import com.ddscanner.entities.request.DiveSpotsRequestMap;
-import com.ddscanner.entities.request.IdentifyRequest;
 import com.ddscanner.entities.request.InstructorsSeeRequests;
 import com.ddscanner.entities.request.RegisterRequest;
 import com.ddscanner.entities.request.ReportImageRequest;
@@ -47,7 +40,6 @@ import com.ddscanner.entities.request.SignInRequest;
 import com.ddscanner.entities.request.SignUpRequest;
 import com.ddscanner.entities.request.UpdateLocationRequest;
 import com.ddscanner.entities.request.ValidationRequest;
-import com.ddscanner.screens.user.profile.DiveCenterProfileFragment;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
 import com.google.android.gms.maps.model.LatLng;
@@ -56,7 +48,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.lang.reflect.Type;
@@ -152,12 +143,34 @@ public class DDScannerRestClient {
         });
     }
 
-    public void getUsersComments(String userId, final ResultListener<Comments> resultListener) {
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserComments(userId, getUserQueryMapRequest());
-        call.enqueue(new ResponseEntityCallback<Comments>(gson, resultListener) {
+    public void getSingleReview(String reviewId, ResultListener<ArrayList<CommentEntity>> resultListener) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getSingleReview(reviewId, 1);
+        call.enqueue(new ResponseEntityCallback<ArrayList<CommentEntity>>(gson, resultListener) {
             @Override
-            void handleResponseString(ResultListener<Comments> resultListener, String responseString) throws JSONException {
-                Comments comments = new Gson().fromJson(responseString, Comments.class);
+            void handleResponseString(ResultListener<ArrayList<CommentEntity>> resultListener, String responseString) throws JSONException {
+                CommentEntity commentEntity = gson.fromJson(responseString, CommentEntity.class);
+                ArrayList<CommentEntity> result = new ArrayList<CommentEntity>();
+                result.add(commentEntity);
+                resultListener.onSuccess(result);
+            }
+        });
+    }
+
+    public void getUsersComments(String userId, final ResultListener<ArrayList<CommentEntity>> resultListener) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserComments(userId, 1);
+        call.enqueue(new ResponseEntityCallback<ArrayList<CommentEntity>>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<ArrayList<CommentEntity>> resultListener, String responseString) throws JSONException {
+                Type listType = new TypeToken<ArrayList<CommentEntity>>(){}.getType();
+                ArrayList<CommentEntity> comments = new Gson().fromJson(responseString, listType);
                 resultListener.onSuccess(comments);
             }
         });
@@ -420,12 +433,12 @@ public class DDScannerRestClient {
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 
-    public void getUsersSelfComments(ResultListener<ArrayList<SelfCommentEntity>> resultListener, String userId) {
+    public void getUserComments(ResultListener<ArrayList<SelfCommentEntity>> resultListener, String userId) {
         if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
             resultListener.onInternetConnectionClosed();
             return;
         }
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getSelfCommentsList(userId, 1);
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getUserComments(userId, 1);
         call.enqueue(new ResponseEntityCallback<ArrayList<SelfCommentEntity>>(gson, resultListener) {
             @Override
             void handleResponseString(ResultListener<ArrayList<SelfCommentEntity>> resultListener, String responseString) throws JSONException {
@@ -700,7 +713,6 @@ public class DDScannerRestClient {
     }
 
     public void postUserSignUp(String email, String password, String userType, String lat, String lng, String name, ResultListener<SignUpResponseEntity> resultListener) {
-        // TODO Implement name setting and remove hardcode
         if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
             resultListener.onInternetConnectionClosed();
             return;
@@ -864,7 +876,7 @@ public class DDScannerRestClient {
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 
-    public void postMapsToDiveSpot(String id, ArrayList<String> images, final ResultListener<Void> resultListener) {
+    public void postMapsToDiveSpot(String id, ArrayList<String> images, final ResultListener<Void> resultListener, Context context) {
         if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
             resultListener.onInternetConnectionClosed();
             return;
@@ -872,6 +884,7 @@ public class DDScannerRestClient {
         List<MultipartBody.Part> imagesToSend = new ArrayList<>();
         for (int i = 0; i < images.size(); i++) {
             File image = new File(images.get(i));
+            image = Helpers.compressFile(image, context);
             RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), image);
             MultipartBody.Part part = MultipartBody.Part.createFormData(Constants.ADD_DIVE_SPOT_ACTIVITY_IMAGES_ARRAY,
                     image.getName(), requestFile);
@@ -881,7 +894,7 @@ public class DDScannerRestClient {
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 
-    public void postPhotosToDiveSpot(String id, ArrayList<String> images, final ResultListener<Void> resultListener) {
+    public void postPhotosToDiveSpot(String id, ArrayList<String> images, final ResultListener<Void> resultListener, Context context) {
         if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
             resultListener.onInternetConnectionClosed();
             return;
@@ -889,6 +902,7 @@ public class DDScannerRestClient {
         List<MultipartBody.Part> imagesToSend = new ArrayList<>();
         for (int i = 0; i < images.size(); i++) {
             File image = new File(images.get(i));
+            image = Helpers.compressFile(image, context);
             RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), image);
             MultipartBody.Part part = MultipartBody.Part.createFormData("photos[]",
                     image.getName(), requestFile);
@@ -1105,6 +1119,6 @@ public class DDScannerRestClient {
     }
 
     public enum ErrorType {
-        BAD_REQUEST_ERROR_400, ENTITY_NOT_FOUND_404, RIGHTS_NOT_FOUND_403, UNAUTHORIZED_401, DIVE_SPOT_NOT_FOUND_ERROR_C802, COMMENT_NOT_FOUND_ERROR_C803, UNPROCESSABLE_ENTITY_ERROR_422, SERVER_INTERNAL_ERROR_500, IO_ERROR, JSON_SYNTAX_EXCEPTION, UNKNOWN_ERROR
+        BAD_REQUEST_ERROR_400, ENTITY_NOT_FOUND_404, RIGHTS_NOT_FOUND_403, UNAUTHORIZED_401, DATA_ALREADY_EXIST_409, DIVE_SPOT_NOT_FOUND_ERROR_C802, COMMENT_NOT_FOUND_ERROR_C803, UNPROCESSABLE_ENTITY_ERROR_422, SERVER_INTERNAL_ERROR_500, IO_ERROR, JSON_SYNTAX_EXCEPTION, UNKNOWN_ERROR
     }
 }
