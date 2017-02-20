@@ -28,7 +28,7 @@ public class EditorsListActivity extends BaseAppCompatActivity implements Dialog
 
     private RecyclerView usersRecyclerView;
     private User creator;
-    private ArrayList<User> users;
+    private ArrayList<User> users = new ArrayList<>();
 
     private DDScannerRestClient.ResultListener<ArrayList<User>> usersResultListener = new DDScannerRestClient.ResultListener<ArrayList<User>>() {
         @Override
