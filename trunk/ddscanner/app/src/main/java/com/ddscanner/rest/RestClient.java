@@ -48,8 +48,8 @@ public abstract class RestClient {
 
             OkHttpClient.Builder builder = new OkHttpClient.Builder();
             builder.interceptors().add(interceptor);
-            builder.connectTimeout(10, TimeUnit.SECONDS);
-            builder.readTimeout(10, TimeUnit.SECONDS);
+            builder.connectTimeout(30, TimeUnit.SECONDS);
+            builder.readTimeout(30, TimeUnit.SECONDS);
             builder.writeTimeout(10, TimeUnit.MINUTES);
             HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
             logging.setLevel(HttpLoggingInterceptor.Level.BODY);
