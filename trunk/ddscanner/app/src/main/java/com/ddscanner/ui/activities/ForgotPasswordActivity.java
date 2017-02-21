@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
@@ -20,6 +21,7 @@ import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.utils.DialogsRequestCodes;
+import com.ddscanner.utils.Helpers;
 
 import java.util.regex.Pattern;
 
@@ -28,21 +30,25 @@ public class ForgotPasswordActivity extends BaseAppCompatActivity implements Vie
     private Toolbar toolbar;
     private EditText email;
     private Button buttonSend;
+    private MaterialDialog materialDialog;
 
     private DDScannerRestClient.ResultListener<Void> resultListener = new DDScannerRestClient.ResultListener<Void>() {
         @Override
         public void onSuccess(Void result) {
             //TODO change text
+            materialDialog.dismiss();
             UserActionInfoDialogFragment.showForActivityResult(ForgotPasswordActivity.this, R.string.sorry, R.string.success_added, DialogsRequestCodes.DRC_FORGOT_PASSWORD_ACTIVITY_SUCCESS);
         }
 
         @Override
         public void onConnectionFailure() {
+            materialDialog.dismiss();
             InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            materialDialog.dismiss();
             switch (errorType) {
                 case BAD_REQUEST_ERROR_400:
                     UserActionInfoDialogFragment.show(ForgotPasswordActivity.this, R.string.sorry, R.string.success_added);
@@ -58,6 +64,7 @@ public class ForgotPasswordActivity extends BaseAppCompatActivity implements Vie
 
         @Override
         public void onInternetConnectionClosed() {
+            materialDialog.dismiss();
             InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
         }
     };
@@ -75,9 +82,11 @@ public class ForgotPasswordActivity extends BaseAppCompatActivity implements Vie
     }
 
     private void findViews() {
+        materialDialog = Helpers.getMaterialDialog(this);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         email = (EditText) findViewById(R.id.email);
         buttonSend = (Button) findViewById(R.id.send);
+        buttonSend.setOnClickListener(this);
         setupToolbar(R.string.forgot_password, R.id.toolbar);
     }
 
@@ -100,6 +109,7 @@ public class ForgotPasswordActivity extends BaseAppCompatActivity implements Vie
         switch (view.getId()) {
             case R.id.send:
                 if (isEmailValid(email.getText().toString())) {
+                    materialDialog.show();
                     DDScannerApplication.getInstance().getDdScannerRestClient().postForgotPassword(email.getText().toString(), resultListener);
                 } else {
                     //TODO change text
