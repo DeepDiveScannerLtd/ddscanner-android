@@ -455,4 +455,5 @@
     <string name="user_liked_your_photo">%1$s liked yout photo %2$s</string>
     <string name="company">Company</string>
     <string name="reseller">Reseller</string>
+    <string name="cover">COVER</string>
 </resources>

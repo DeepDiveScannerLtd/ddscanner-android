@@ -48,6 +48,8 @@ import com.ddscanner.events.ChangeTranslationEvent;
 import com.ddscanner.events.ImageDeletedEvent;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.divespot.details.DiveSpotDetailsActivity;
+import com.ddscanner.screens.divespot.edit.EditSpotPhotosListAdapter;
+import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.activities.LoginActivity;
 import com.ddscanner.ui.activities.PickCountryActivity;
 import com.ddscanner.ui.activities.PickLanguageActivity;
@@ -83,7 +85,7 @@ import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
-public class AddDiveSpotActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener, View.OnClickListener, DialogClosedListener, AddTranslationDialogFragment.TranslationChangedListener {
+public class AddDiveSpotActivity extends BaseAppCompatActivity implements CompoundButton.OnCheckedChangeListener, View.OnClickListener, DialogClosedListener, AddTranslationDialogFragment.TranslationChangedListener, BaseAppCompatActivity.PictureTakenListener {
 
     private static final String TAG = AddDiveSpotActivity.class.getSimpleName();
     private static final String DIVE_SPOT_NAME_PATTERN = "^[a-zA-Z0-9 ]*$";
@@ -136,6 +138,8 @@ public class AddDiveSpotActivity extends AppCompatActivity implements CompoundBu
     private RelativeLayout addTranslationButton;
     private RecyclerView languagesRecyclerView;
     private TranslationsListAdapter translationsListAdapter = new TranslationsListAdapter();
+    private EditSpotPhotosListAdapter photosListAdapter;
+    private EditSpotPhotosListAdapter mapsListAdapter;
 
     private List<String> photoUris = new ArrayList<>();
     private List<String> mapsUris = new ArrayList<>();
@@ -207,6 +211,8 @@ public class AddDiveSpotActivity extends AppCompatActivity implements CompoundBu
         setContentView(R.layout.activity_add_dive_spot);
         EventsTracker.trackDiveSpotCreation();
         isFromMap = getIntent().getBooleanExtra(Constants.ADD_DIVE_SPOT_INTENT_IS_FROM_MAP, false);
+        photosListAdapter = new EditSpotPhotosListAdapter(this);
+        mapsListAdapter = new EditSpotPhotosListAdapter(this);
         findViews();
         setUi();
         requsetCountryCode = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), "RU");
@@ -283,11 +289,11 @@ public class AddDiveSpotActivity extends AppCompatActivity implements CompoundBu
         photos_rc.setNestedScrollingEnabled(false);
         photos_rc.setHasFixedSize(false);
         photos_rc.setLayoutManager(layoutManager);
-        photos_rc.setAdapter(new AddPhotoToDsListAdapter(photoUris, this));
+        photos_rc.setAdapter(photosListAdapter);
         LinearLayoutManager mapsLayoutManager = new LinearLayoutManager(AddDiveSpotActivity.this);
         mapsLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         mapsRecyclerView.setLayoutManager(mapsLayoutManager);
-        mapsRecyclerView.setAdapter(new AddPhotoToDsListAdapter(mapsUris, this));
+        mapsRecyclerView.setAdapter(mapsListAdapter);
 
         /* Recycler view with sealifes settings*/
         LinearLayoutManager sealifeLayoutManager = new LinearLayoutManager(
@@ -321,21 +327,6 @@ public class AddDiveSpotActivity extends AppCompatActivity implements CompoundBu
                         locationTitle.setText(R.string.location);
                     }
                     locationTitle.setTextColor(ContextCompat.getColor(this, R.color.black_text));
-                }
-                break;
-            case ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_PHOTO:
-                if (resultCode == RESULT_OK) {
-                    if (photos_rc.getVisibility() == View.VISIBLE) {
-                        photoUris.addAll(Helpers.getPhotosFromIntent(data, this));
-                    } else {
-                        mapsUris.addAll(Helpers.getPhotosFromIntent(data, this));
-                    }
-                    if (photos_rc.getVisibility() == View.VISIBLE) {
-                        photos_rc.setAdapter(new AddPhotoToDsListAdapter(photoUris, AddDiveSpotActivity.this));
-                        photos_rc.scrollToPosition(photoUris.size());
-                        break;
-                    }
-                    mapsRecyclerView.setAdapter(new AddPhotoToDsListAdapter(mapsUris, AddDiveSpotActivity.this));
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_SEALIFE:
@@ -418,28 +409,6 @@ public class AddDiveSpotActivity extends AppCompatActivity implements CompoundBu
         progressDialogUpload.show();
      //   DDScannerApplication.getInstance().getDdScannerRestClient().postAddDiveSpot(addDiveSpotResultListener, sealife, images, requestName, requestLat, requestLng, requestDepth, requestMinVisibility, requestMaxVisibility, requestCurrents, requestLevel, requestObject, requestDescription, requestToken, requestSocial, requestSecret);
         DDScannerApplication.getInstance().getDdScannerRestClient().postAddDiveSpot(resultListener, sealife, images, mapsList, requestLat, requestLng, requsetCountryCode, requestDepth, requestLevel, requestCurrents, requestMinVisibility, requestMaxVisibility, requestCoverNumber, translations, requestObject, requestIsEdit, requestIsWorkingHere);
-    }
-
-    private void pickPhotoFromGallery() {
-        if (checkReadStoragePermission()) {
-            Intent intent = new Intent();
-            intent.setType("image/*");
-            if (Build.VERSION.SDK_INT >= 18) {
-                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-            }
-            intent.setAction(Intent.ACTION_GET_CONTENT);
-            intent.addCategory(Intent.CATEGORY_OPENABLE);
-            startActivityForResult(Intent.createChooser(intent, "Select Picture"), ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_PHOTO);
-        } else {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PERMISSION_READ_STORAGE);
-        }
-    }
-
-    public boolean checkReadStoragePermission() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            return false;
-        }
-        return true;
     }
 
     @Override
@@ -533,10 +502,10 @@ public class AddDiveSpotActivity extends AppCompatActivity implements CompoundBu
                 sealife.add(MultipartBody.Part.createFormData(Constants.ADD_DIVE_SPOT_ACTIVITY_SEALIFE_ARRAY, sealifes.get(i).getId()));
             }
         }
-        if (photoUris.size() > 0) {
+        if (photosListAdapter.getNewPhotos().size() > 0) {
             images = new ArrayList<>();
-            for (int i = 0; i < photoUris.size(); i++) {
-                File image = new File(photoUris.get(i));
+            for (int i = 0; i < photosListAdapter.getNewPhotos().size(); i++) {
+                File image = new File(photosListAdapter.getNewPhotos().get(i));
                 image = Helpers.compressFile(image, this);
                 RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), image);
                 MultipartBody.Part part = MultipartBody.Part.createFormData(Constants.ADD_DIVE_SPOT_ACTIVITY_IMAGES_ARRAY, image.getName(), requestFile);
@@ -545,10 +514,10 @@ public class AddDiveSpotActivity extends AppCompatActivity implements CompoundBu
         } else {
             images = null;
         }
-        if (mapsUris.size() > 0) {
+        if (mapsListAdapter.getNewPhotos().size() > 0) {
             mapsList = new ArrayList<>();
-            for (int i = 0; i < mapsUris.size(); i++) {
-                File image = new File(mapsUris.get(i));
+            for (int i = 0; i < mapsListAdapter.getNewPhotos().size(); i++) {
+                File image = new File(mapsListAdapter.getNewPhotos().get(i));
                 image = Helpers.compressFile(image, this);
                 RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), image);
                 MultipartBody.Part part = MultipartBody.Part.createFormData(Constants.ADD_DIVE_SPOT_ACTIVITY_MAPS_ARRAY, image.getName(), requestFile);
@@ -618,7 +587,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements CompoundBu
             errorTranslations.setVisibility(View.VISIBLE);
         }
 
-        if (photoUris.size() < 1) {
+        if (photosListAdapter.getNewPhotos().size() < 1) {
             isSomethingWrong = true;
             errorImages.setVisibility(View.VISIBLE);
         }
@@ -709,18 +678,6 @@ public class AddDiveSpotActivity extends AppCompatActivity implements CompoundBu
         DDScannerApplication.bus.unregister(this);
     }
 
-    @Subscribe
-    public void deleteImage(ImageDeletedEvent event) {
-        maxPhotos++;
-        if (photos_rc.getVisibility() == View.VISIBLE) {
-            photoUris.remove(event.getImageIndex());
-            photos_rc.setAdapter(new AddPhotoToDsListAdapter(photoUris, AddDiveSpotActivity.this));
-            return;
-        }
-        mapsUris.remove(event.getImageIndex());
-        mapsRecyclerView.setAdapter(new AddPhotoToDsListAdapter(mapsUris, AddDiveSpotActivity.this));
-    }
-
     private void showSuccessDialog(final String diveSpotId) {
         MaterialDialog.Builder dialog = new MaterialDialog.Builder(this)
                 .title(R.string.thank_you_title)
@@ -755,21 +712,6 @@ public class AddDiveSpotActivity extends AppCompatActivity implements CompoundBu
         dialog.show();
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PERMISSION_READ_STORAGE: {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    pickPhotoFromGallery();
-                } else {
-                    Toast.makeText(AddDiveSpotActivity.this, "Grand permission to pick photo from gallery!", Toast.LENGTH_SHORT).show();
-                }
-                return;
-            }
-
-        }
-    }
-
     public static void showForResult(Activity context, int requestCode, boolean isFromMap) {
         Intent intent = new Intent(context, AddDiveSpotActivity.class);
         intent.putExtra(Constants.ADD_DIVE_SPOT_INTENT_IS_FROM_MAP, isFromMap);
@@ -787,7 +729,7 @@ public class AddDiveSpotActivity extends AppCompatActivity implements CompoundBu
 
     @Subscribe
     public void pickPhotoFrom(AddPhotoDoListEvent event) {
-        pickPhotoFromGallery();
+        pickPhotosFromGallery();
     }
 
     @Override
@@ -815,4 +757,17 @@ public class AddDiveSpotActivity extends AppCompatActivity implements CompoundBu
         AddTranslationDialogFragment.show(getSupportFragmentManager(), event.getTranslation().getCode(), event.getTranslation().getLanguage(), event.getTranslation().getName(), event.getTranslation().getDescription());
     }
 
+    @Override
+    public void onPicturesTaken(ArrayList<String> pictures) {
+        if (photos_rc.getVisibility() == View.VISIBLE) {
+            photosListAdapter.addDevicePhotos(pictures);
+        } else {
+            mapsListAdapter.addDevicePhotos(pictures);
+        }
+    }
+
+    @Override
+    public void onPictureFromCameraTaken(File picture) {
+
+    }
 }

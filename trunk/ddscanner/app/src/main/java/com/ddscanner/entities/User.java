@@ -58,7 +58,15 @@ public class User implements Serializable {
     }
 
     public String getDiverLevelString() {
-        return Helpers.getDiverLevel(diverLevel);
+        switch (type) {
+            case 1:
+                return Helpers.getDiverLevel(diverLevel);
+            case 2:
+                return "Instructor";
+            default:
+                return "";
+        }
+
     }
 
     public String getToken() {

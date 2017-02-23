@@ -8,8 +8,8 @@ public class FlagsEntity {
     private boolean isCheckedIn;
     @SerializedName("is_favorite")
     private boolean isFavorite;
-    @SerializedName("is_verified")
-    private boolean isVerified;
+    @SerializedName("is_approved")
+    private boolean isApproved;
     @SerializedName("is_working_here")
     private boolean isWorkingHere;
     @SerializedName("is_editable")
@@ -57,11 +57,11 @@ public class FlagsEntity {
         isFavorite = favorite;
     }
 
-    public boolean isVerified() {
-        return isVerified;
+    public boolean isApproved() {
+        return isApproved;
     }
 
-    public void setVerified(boolean verified) {
-        isVerified = verified;
+    public void setApproved(boolean approved) {
+        isApproved = approved;
     }
 }

@@ -364,6 +364,8 @@ public class DiveCenterSpotsActivity extends BaseAppCompatActivity implements Vi
                         diveCenterSpotsClusterManager = new DiveCenterSpotsClusterManager(DiveCenterSpotsActivity.this, googleMap);
                         googleMap.setOnMarkerClickListener(DiveCenterSpotsActivity.this);
                         googleMap.setOnMapClickListener(DiveCenterSpotsActivity.this);
+                        googleMap.getUiSettings().setRotateGesturesEnabled(false);
+                        googleMap.getUiSettings().setTiltGesturesEnabled(false);
                         if (diveCenterLatLng != null) {
                             diveCenterMarker = googleMap.addMarker(new MarkerOptions().position(diveCenterLatLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_dc)));
                         }

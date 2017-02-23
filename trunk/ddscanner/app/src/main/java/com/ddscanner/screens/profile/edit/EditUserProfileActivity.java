@@ -131,57 +131,6 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
     }
 
     private void setupUi() {
-        binding.aboutEdit.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (isAboutChanged) {
-//                    binding.aboutCount.setVisibility(View.VISIBLE);
-                }
-                if (MAX_LENGTH_ABOUT - binding.aboutEdit.length() < 10) {
-                    binding.aboutCount.setTextColor(ContextCompat.getColor(EditUserProfileActivity.this, R.color.tw__composer_red));
-                } else {
-                    binding.aboutCount.setTextColor(Color.parseColor("#b2b2b2"));
-                }
-                binding.aboutCount.setText(String.valueOf(MAX_LENGTH_ABOUT - binding.aboutEdit.length()));
-                isAboutChanged = true;
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-
-        binding.fullName.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (isNamChanged) {
-//                    binding.nameCount.setVisibility(View.VISIBLE);
-                }
-                if (MAX_LENGTH_NAME - binding.fullName.length() < 10) {
-                    binding.nameCount.setTextColor(ContextCompat.getColor(EditUserProfileActivity.this, R.color.tw__composer_red));
-                } else {
-                    binding.nameCount.setTextColor(Color.parseColor("#b2b2b2"));
-                }
-                binding.nameCount.setText(String.valueOf(MAX_LENGTH_NAME - binding.fullName.length()));
-                isNamChanged = true;
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
         materialDialog = Helpers.getMaterialDialog(this);
         if (user.getUserTypeString().equals("Diver")) {
             setupRadioButtons("Diver", true, false);
@@ -223,6 +172,9 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
         binding.radiogroup.addView(button);
         if (isActive) {
             binding.radiogroup.check(button.getId());
+            if (!title.equals("Diver")) {
+                diveCenterId = Helpers.createRequestBodyForString(String.valueOf(binding.getProfileViewModel().getUser().getDiveCenter().getId()));
+            }
         }
         if (isShowChoseDiveCenter) {
             binding.chooseDiveCenterBtn.setVisibility(View.VISIBLE);

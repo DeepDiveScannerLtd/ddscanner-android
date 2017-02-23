@@ -446,7 +446,15 @@ public class MainActivity extends BaseAppCompatActivity
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_SHOW_EDIT_PROFILE_ACTIVITY:
                 if (resultCode == RESULT_OK) {
-                    DDScannerApplication.bus.post(new LoadUserProfileInfoEvent());
+                    switch (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType()) {
+                        case 0:
+                            mainViewPagerAdapter.getDiveCenterProfileFragment().reloadData();
+                            break;
+                        case 1:
+                        case 2:
+                            mainViewPagerAdapter.getProfileFragment().reloadData();
+                            break;
+                    }
                 }
                 if (resultCode == RESULT_CODE_PROFILE_LOGOUT) {
                     DDScannerApplication.getInstance().getSharedPreferenceHelper().removeUserFromList(data.getStringExtra("id"));

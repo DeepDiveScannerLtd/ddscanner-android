@@ -83,6 +83,7 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
                     BaseUser baseUser = DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUser();
                     baseUser.setName(result.getName());
                     baseUser.setPhoto(result.getPhoto());
+                    baseUser.setType(result.getType());
                     DDScannerApplication.getInstance().getSharedPreferenceHelper().addUserToList(baseUser);
                     break;
                 case 0:
@@ -227,6 +228,7 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
 
     private void getUserDataRequest() {
         DDScannerApplication.getInstance().getDdScannerRestClient().getUserSelfInformation(userResultListener);
+        binding.about.scrollTo(0,0);
     }
 
     public void reloadData() {

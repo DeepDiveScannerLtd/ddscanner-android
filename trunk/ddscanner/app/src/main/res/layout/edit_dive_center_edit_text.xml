@@ -12,6 +12,7 @@
         android:hint="@string/phone"
         android:inputType="phone"
         android:lines="1"
+        android:maxLength="32"
         android:paddingTop="10dp" />
 
     <TextView

@@ -185,6 +185,7 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
     public void reloadData() {
         if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == 0) {
             DDScannerApplication.getInstance().getDdScannerRestClient().getDiveCenterSelfInformation(userResultListener);
+            binding.scrollView.scrollTo(0,0);
         }
     }
 
