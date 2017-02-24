@@ -47,8 +47,8 @@ public class DislikesListAdapter extends RecyclerView.Adapter<DislikesListAdapte
 
         DislikedItemViewHolder(View view) {
             super(view);
-            binding.setHandlers(this);
             binding = DataBindingUtil.bind(view);
+            binding.setHandlers(this);
         }
 
         public void avatarClicked(View view) {
