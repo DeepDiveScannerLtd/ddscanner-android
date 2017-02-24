@@ -74,6 +74,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     private LikeDislikeResultListener likeResultListener = new LikeDislikeResultListener(true);
     private LikeDislikeResultListener dislikeResultListener = new LikeDislikeResultListener(false);
     private ArrayList<DiveSpotPhoto> deletedPhotos = new ArrayList<>();
+
     float x1, x2;
     float y1, y2;
     PhotoOpenedSource photoOpenedSource;
@@ -296,13 +297,15 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
                 onBackPressed();
                 break;
             case R.id.likes_layout:
-                if (!images.get(position).isLiked()) {
-                    likeUi();
-                    DDScannerApplication.getInstance().getDdScannerRestClient().postLikePhoto(images.get(position).getId(), likeResultListener);
-                    break;
+                if (!images.get(position).getAuthor().getId().equals(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId())) {
+                    if (!images.get(position).isLiked()) {
+                        likeUi();
+                        DDScannerApplication.getInstance().getDdScannerRestClient().postLikePhoto(images.get(position).getId(), likeResultListener);
+                        break;
+                    }
+                    dislikeUi();
+                    DDScannerApplication.getInstance().getDdScannerRestClient().postDislikePhoto(images.get(position).getId(), dislikeResultListener);
                 }
-                dislikeUi();
-                DDScannerApplication.getInstance().getDdScannerRestClient().postDislikePhoto(images.get(position).getId(), dislikeResultListener);
                 break;
             case R.id.user_avatar:
                 UserProfileActivity.show(this, images.get(position).getAuthor().getId(), images.get(position).getAuthor().getType());
