@@ -65,7 +65,11 @@ public class PhotosListAdapterWithCover extends RecyclerView.Adapter<RecyclerVie
         if (getItemViewType(position) != VIEW_TYPE_ADD_PHOTO) {
             EditSpotListPhotoViewHolder viewHolder = (EditSpotListPhotoViewHolder) holder;
             viewHolder.coverLabel.setVisibility(View.GONE);
-            if (allPhotos.get(holder.getAdapterPosition()).isCover()) {
+            viewHolder.icDelete.setVisibility(View.GONE);
+            if (allPhotos.get(viewHolder.getAdapterPosition()).getAuthorId().equals(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId())) {
+                viewHolder.icDelete.setVisibility(View.VISIBLE);
+            }
+            if (allPhotos.get(viewHolder.getAdapterPosition()).isCover()) {
                 viewHolder.coverLabel.setVisibility(View.VISIBLE);
             }
             if (position < serverPhotos.size()) {
@@ -93,6 +97,30 @@ public class PhotosListAdapterWithCover extends RecyclerView.Adapter<RecyclerVie
     public void addServerPhoto(ArrayList<SpotPhotoEditScreenEntity> photos) {
         serverPhotos.addAll(photos);
         photosAdded(false);
+    }
+
+    public Integer getDevicePhotoCoverNumber() {
+        if (devicePhotos.size() == 0) {
+            return null;
+        }
+        for (SpotPhotoEditScreenEntity photo : devicePhotos) {
+            if (photo.isCover()) {
+                return devicePhotos.indexOf(photo) + 1;
+            }
+        }
+        return null;
+    }
+
+    public String getServerPhotoCoverId() {
+        if (serverPhotos.size() == 0) {
+            return null;
+        }
+        for (SpotPhotoEditScreenEntity photo : serverPhotos) {
+            if (photo.isCover()) {
+                return photo.getPhotoPath();
+            }
+        }
+        return null;
     }
 
     private void photosAdded(boolean isCoverDeleted) {

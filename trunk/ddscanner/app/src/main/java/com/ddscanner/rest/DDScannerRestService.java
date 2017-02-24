@@ -290,6 +290,7 @@ public interface DDScannerRestService {
             @Part("dive_spot_type") RequestBody type,
             @Part("is_editable") RequestBody isEditable,
             @Part("is_working_here") RequestBody isWorkingHere,
+            @Part("cover_id") RequestBody cover_id,
             @Part List<MultipartBody.Part> new_photos,
             @Part List<MultipartBody.Part> deleted_photos,
             @Part List<MultipartBody.Part> new_maps,

@@ -42,6 +42,7 @@ import com.ddscanner.entities.DiveSpotPhotosResponseEntity;
 import com.ddscanner.entities.FiltersResponseEntity;
 import com.ddscanner.entities.Language;
 import com.ddscanner.entities.SealifeShort;
+import com.ddscanner.entities.SpotPhotoEditScreenEntity;
 import com.ddscanner.entities.Translation;
 import com.ddscanner.events.AddPhotoDoListEvent;
 import com.ddscanner.events.AddTranslationClickedEvent;
@@ -152,7 +153,7 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
     private FiltersResponseEntity filters;
     private boolean isShownMapsPhotos = false;
 
-    private RequestBody requestIsWorkingHere, requestIsEdit, translations, requestCoverNumber, requestLat, requestLng, requestDepth, requestCurrents, requestLevel, requestObject, requestMinVisibility, requestMaxVisibility, requsetCountryCode, requestId;
+    private RequestBody requestIsWorkingHere, requestIsEdit, translations, requestCoverNumber, requestCoverId, requestLat, requestLng, requestDepth, requestCurrents, requestLevel, requestObject, requestMinVisibility, requestMaxVisibility, requsetCountryCode, requestId;
     private List<MultipartBody.Part> sealife = new ArrayList<>();
     private List<MultipartBody.Part> newImages = new ArrayList<>();
     private List<MultipartBody.Part> deletedImages = new ArrayList<>();
@@ -161,7 +162,7 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
     private boolean isFromMap;
     private ArrayList<String> languages = new ArrayList<>();
     private Map<String, Translation> languagesMap = new HashMap<>();
-    private ArrayList<String> userPhotosIds = new ArrayList<>();
+    private ArrayList<SpotPhotoEditScreenEntity> userPhotosIds = new ArrayList<>();
     private ArrayList<String> userMapsIds = new ArrayList<>();
     private DiveSpotDetailsEntity diveSpotDetailsEntity;
     private boolean isPhotosRequestEnd = false;
@@ -173,6 +174,7 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
         @Override
         public void onSuccess(ArrayList<DiveSpotPhoto> result) {
             isMapsRequestEnd = true;
+            SpotPhotoEditScreenEntity photo;
             if (result != null) {
                 for (DiveSpotPhoto diveSpotPhoto : result) {
                     if (diveSpotPhoto.getAuthor().getId().equals(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId())) {
@@ -204,11 +206,20 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
         @Override
         public void onSuccess(DiveSpotPhotosResponseEntity result) {
             isPhotosRequestEnd = true;
+            SpotPhotoEditScreenEntity photo;
+            String coverId = diveSpotDetailsEntity.getCoverPhotoId();
             if (result.getDiveSpotPhotos() != null) {
                 for (DiveSpotPhoto diveSpotPhoto : result.getDiveSpotPhotos()) {
-                    if (diveSpotPhoto.getAuthor().getId().equals(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId())) {
-                        userPhotosIds.add(diveSpotPhoto.getId());
+                    photo = new SpotPhotoEditScreenEntity();
+                    photo.setAuthorId(diveSpotPhoto.getAuthor().getId());
+                    photo.setCover(coverId.equals(diveSpotPhoto.getId()));
+                    photo.setPhotoPath(diveSpotPhoto.getId());
+                    if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId().equals(diveSpotPhoto.getAuthor().getId())) {
+                        userPhotosIds.add(0, photo);
+                    } else {
+                        userPhotosIds.add(photo);
                     }
+
                 }
             }
             setupUiAfterRequests();
@@ -403,14 +414,13 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
         addTranslationButton.setOnClickListener(this);
         isEditSwitch.setOnCheckedChangeListener(this);
         isWorkingSwitch.setOnCheckedChangeListener(this);
-        diveSpotDetailsEntity.setPhotos(userPhotosIds);
-        diveSpotDetailsEntity.setMaps(userMapsIds);
+//        diveSpotDetailsEntity.setPhotos(userPhotosIds);
+//        diveSpotDetailsEntity.setMaps(userMapsIds);
         requsetCountryCode = Helpers.createRequestBodyForString(diveSpotDetailsEntity.getCountryCode());
         countryTitle.setTextColor(ContextCompat.getColor(this, R.color.black_text));
         countryTitle.setText(diveSpotDetailsEntity.getCountryName());
-        if (diveSpotDetailsEntity.getPhotos() != null) {
-//            photosListAdapter.addServerPhoto((ArrayList<String>) diveSpotDetailsEntity.getPhotos());
-        }
+        photosListAdapter.addServerPhoto(userPhotosIds);
+        mapsListAdapter.addServerPhoto(userMapsIds);
         if (diveSpotDetailsEntity.getMaps() != null) {
 //            mapsListAdapter.addServerPhoto((ArrayList<String>) diveSpotDetailsEntity.getMaps());
         }
@@ -530,29 +540,7 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
         progressDialogUpload.show();
         //   DDScannerApplication.getInstance().getDdScannerRestClient().postAddDiveSpot(addDiveSpotResultListener, sealife, images, requestName, requestLat, requestLng, requestDepth, requestMinVisibility, requestMaxVisibility, requestCurrents, requestLevel, requestObject, requestDescription, requestToken, requestSocial, requestSecret);
 //        DDScannerApplication.getInstance().getDdScannerRestClient().postAddDiveSpot(resultListener, sealife, images, mapsList, requestLat, requestLng, requsetCountryCode, requestDepth, requestLevel, requestCurrents, requestMinVisibility, requestMaxVisibility, requestCoverNumber, translations, requestObject);
-        DDScannerApplication.getInstance().getDdScannerRestClient().postUpdateDiveSpot(updateDiveSpotResultListener, sealife, newImages, deletedImages, newMaps, deletedMaps, requestId, requestLat, requestLng, requsetCountryCode, requestDepth, requestLevel, requestCurrents, requestMinVisibility, requestMaxVisibility, requestCoverNumber,translations, requestObject, requestIsEdit, requestIsWorkingHere);
-    }
-
-    private void pickPhotoFromGallery() {
-        if (checkReadStoragePermission()) {
-            Intent intent = new Intent();
-            intent.setType("image/*");
-            if (Build.VERSION.SDK_INT >= 18) {
-                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-            }
-            intent.setAction(Intent.ACTION_GET_CONTENT);
-            intent.addCategory(Intent.CATEGORY_OPENABLE);
-            startActivityForResult(Intent.createChooser(intent, "Select Picture"), ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_PHOTO);
-        } else {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PERMISSION_READ_STORAGE);
-        }
-    }
-
-    public boolean checkReadStoragePermission() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            return false;
-        }
-        return true;
+        DDScannerApplication.getInstance().getDdScannerRestClient().postUpdateDiveSpot(updateDiveSpotResultListener, sealife, newImages, deletedImages, newMaps, deletedMaps, requestId, requestLat, requestLng, requsetCountryCode, requestDepth, requestLevel, requestCurrents, requestMinVisibility, requestMaxVisibility, requestCoverNumber,translations, requestObject, requestIsEdit, requestIsWorkingHere, requestCoverId);
     }
 
     private void showPlacePikerIntent() {
@@ -634,8 +622,13 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
                 requestIsEdit = Helpers.createRequestBodyForString("false");
             }
         }
+        if (photosListAdapter.getServerPhotoCoverId() != null) {
+            requestCoverId = Helpers.createRequestBodyForString(String.valueOf(photosListAdapter.getServerPhotoCoverId()));
+        }
+        if (photosListAdapter.getDevicePhotoCoverNumber() != null) {
+            requestCoverNumber = Helpers.createRequestBodyForString(String.valueOf(photosListAdapter.getDevicePhotoCoverNumber()));
+        }
         translations = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), new Gson().toJson(translationsListAdapter.getTranslations()));
-        requestCoverNumber = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), String.valueOf(1));
         requestObject = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), String.valueOf(Helpers.getDiveSpotTypes().indexOf(objectAppCompatSpinner.getSelectedItem().toString()) + 1));
         requestCurrents = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), String.valueOf(Helpers.getListOfCurrentsTypes().indexOf(currentsAppCompatSpinner.getSelectedItem().toString()) + 1));
         requestLevel = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), String.valueOf(Helpers.getDiveLevelTypes().indexOf(levelAppCompatSpinner.getSelectedItem().toString()) + 1));
@@ -862,28 +855,13 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PERMISSION_READ_STORAGE: {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    pickPhotoFromGallery();
-                } else {
-                    Toast.makeText(EditDiveSpotActivity.this, "Grand permission to pick photo from gallery!", Toast.LENGTH_SHORT).show();
-                }
-                return;
-            }
-
-        }
-    }
-
-    @Override
     public void onDialogClosed(int requestCode) {
         finish();
     }
 
     @Subscribe
     public void pickPhotoFrom(AddPhotoDoListEvent event) {
-        pickPhotoFromGallery();
+        pickPhotosFromGallery();
     }
 
     @Subscribe
@@ -923,6 +901,19 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
 
     @Override
     public void onPicturesTaken(ArrayList<String> pictures) {
-
+        ArrayList<SpotPhotoEditScreenEntity> photos = new ArrayList<>();
+        SpotPhotoEditScreenEntity photo;
+        for (String path : pictures) {
+            photo = new SpotPhotoEditScreenEntity();
+            photo.setCover(false);
+            photo.setAuthorId(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId());
+            photo.setPhotoPath(path);
+            photos.add(photo);
+        }
+        if (diveSpotPhotosRecyclrView.getVisibility() == View.VISIBLE) {
+            photosListAdapter.addDevicePhotos(photos);
+        } else {
+            mapsListAdapter.addDevicePhotos(pictures);
+        }
     }
 }

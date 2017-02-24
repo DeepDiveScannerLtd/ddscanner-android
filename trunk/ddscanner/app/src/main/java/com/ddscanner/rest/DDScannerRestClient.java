@@ -244,7 +244,7 @@ public class DDScannerRestClient {
             resultListener.onInternetConnectionClosed();
             return;
         }
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postUpdateDiveSpot(requestBodies[0], requestBodies[1], requestBodies[2], requestBodies[3], requestBodies[4], requestBodies[5], requestBodies[6], requestBodies[7], requestBodies[8], requestBodies[9], requestBodies[10], requestBodies[11], requestBodies[12], requestBodies[13], newPhotos, deletedPhotos, new_maps, deleted_maps, sealifes);
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postUpdateDiveSpot(requestBodies[0], requestBodies[1], requestBodies[2], requestBodies[3], requestBodies[4], requestBodies[5], requestBodies[6], requestBodies[7], requestBodies[8], requestBodies[9], requestBodies[10], requestBodies[11], requestBodies[12], requestBodies[13], requestBodies[14], newPhotos, deletedPhotos, new_maps, deleted_maps, sealifes);
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 
@@ -886,7 +886,7 @@ public class DDScannerRestClient {
             File image = new File(images.get(i));
             image = Helpers.compressFile(image, context);
             RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), image);
-            MultipartBody.Part part = MultipartBody.Part.createFormData(Constants.ADD_DIVE_SPOT_ACTIVITY_IMAGES_ARRAY,
+            MultipartBody.Part part = MultipartBody.Part.createFormData("maps[]",
                     image.getName(), requestFile);
             imagesToSend.add(part);
         }

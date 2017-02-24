@@ -71,9 +71,6 @@ public class PhotosListAdapterWithoutCover extends RecyclerView.Adapter<Recycler
                 }
                 Picasso.with(context).load(path).resize(Math.round(Helpers.convertDpToPixel(70, context)),Math.round(Helpers.convertDpToPixel(70, context))).centerCrop().transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2, context)), 0, RoundedCornersTransformation.CornerType.ALL)).into(viewHolder.photo);
             }
-            if (position == coverPhotoPosition) {
-                viewHolder.coverLabel.setVisibility(View.VISIBLE);
-            }
         }
     }
 
