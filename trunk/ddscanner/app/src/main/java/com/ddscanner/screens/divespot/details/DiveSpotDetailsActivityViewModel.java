@@ -56,7 +56,7 @@ public class DiveSpotDetailsActivityViewModel {
             if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() != 0) {
                 view.setVisibility(View.GONE);
             } else {
-                if (viewModel.getDiveSpotDetailsEntity().getFlags().isApproved()) {
+                if (!viewModel.getDiveSpotDetailsEntity().getFlags().isApproved()) {
                     view.setVisibility(View.VISIBLE);
                 } else {
                     view.setVisibility(View.GONE);

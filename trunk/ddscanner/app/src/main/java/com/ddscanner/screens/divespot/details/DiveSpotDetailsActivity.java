@@ -233,15 +233,21 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
                     binding.switchWorkingButton.setOnCheckedChangeListener(this);
 
                 }
-                if (flagsEntity.isApproved()) {
+                if (!flagsEntity.isApproved()) {
                     binding.approveLayout.setVisibility(View.VISIBLE);
                     binding.buttonShowDivecenters.setVisibility(View.GONE);
+                } else {
+                    binding.approveLayout.setVisibility(View.GONE);
+                    binding.buttonShowDivecenters.setVisibility(View.VISIBLE);
                 }
                 break;
             case 2:
-                if (flagsEntity.isApproved()) {
+                if (!flagsEntity.isApproved()) {
                     binding.approveLayout.setVisibility(View.VISIBLE);
                     binding.buttonShowDivecenters.setVisibility(View.GONE);
+                } else {
+                    binding.approveLayout.setVisibility(View.GONE);
+                    binding.buttonShowDivecenters.setVisibility(View.VISIBLE);
                 }
             case 1:
                 if (isClickedCkeckin) {
