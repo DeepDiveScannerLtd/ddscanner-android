@@ -1,22 +1,18 @@
 package com.ddscanner.entities;
 
-public class SpotPhotoEditScreen {
+public class SpotPhotoEditScreenEntity {
 
-    private int authorId;
+    private String authorId;
     private String photoPath;
     private boolean isCover;
 
-    public SpotPhotoEditScreen(int authorId, String photoPath, boolean isCover) {
-        this.authorId = authorId;
-        this.photoPath = photoPath;
-        this.isCover = isCover;
-    }
 
-    public int getAuthorId() {
+
+    public String getAuthorId() {
         return authorId;
     }
 
-    public void setAuthorId(int authorId) {
+    public void setAuthorId(String authorId) {
         this.authorId = authorId;
     }
 

@@ -38,6 +38,16 @@ public class DiveSpotDetailsEntity extends DiveSpotShort {
     private String countryCode;
     @SerializedName("is_edit")
     private Boolean isEdit;
+    @SerializedName("cover_id")
+    private String coverPhotoId;
+
+    public String getCoverPhotoId() {
+        return coverPhotoId;
+    }
+
+    public void setCoverPhotoId(String coverPhotoId) {
+        this.coverPhotoId = coverPhotoId;
+    }
 
     public boolean isEdit() {
         if (isEdit == null) {

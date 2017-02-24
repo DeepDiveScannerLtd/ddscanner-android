@@ -42,7 +42,7 @@ public class DiveSpotDetailsActivityViewModel {
     public static void loadMainImage(ImageView view, final DiveSpotDetailsActivityViewModel viewModel) {
         if (viewModel != null) {
             if (viewModel.getDiveSpotDetailsEntity().getPhotos() != null) {
-                Picasso.with(view.getContext()).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url,viewModel.getDiveSpotDetailsEntity().getPhotos().get(0), "2")).into(view, new ImageLoadedCallback(viewModel.getProgressView()));
+                Picasso.with(view.getContext()).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url,viewModel.getDiveSpotDetailsEntity().getCoverPhotoId(), "2")).into(view, new ImageLoadedCallback(viewModel.getProgressView()));
                 return;
             }
             viewModel.getProgressView().setVisibility(View.GONE);

@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v13.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -49,12 +48,15 @@ import com.ddscanner.events.AddTranslationClickedEvent;
 import com.ddscanner.events.ChangeTranslationEvent;
 import com.ddscanner.events.ImageDeletedEvent;
 import com.ddscanner.rest.DDScannerRestClient;
+import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.activities.LoginActivity;
 import com.ddscanner.ui.activities.PickCountryActivity;
 import com.ddscanner.ui.activities.PickLanguageActivity;
 import com.ddscanner.ui.activities.SearchSealifeActivity;
 import com.ddscanner.ui.adapters.AddPhotoToDsListAdapter;
 import com.ddscanner.ui.adapters.CharacteristicSpinnerItemsAdapter;
+import com.ddscanner.ui.adapters.PhotosListAdapterWithCover;
+import com.ddscanner.ui.adapters.PhotosListAdapterWithoutCover;
 import com.ddscanner.ui.adapters.SealifeListAddingDiveSpotAdapter;
 import com.ddscanner.ui.adapters.TranslationsListAdapter;
 import com.ddscanner.ui.dialogs.AddTranslationDialogFragment;
@@ -84,13 +86,13 @@ import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
-public class EditDiveSpotActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener, View.OnClickListener, DialogClosedListener, AddTranslationDialogFragment.TranslationChangedListener {
+public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseAppCompatActivity.PictureTakenListener, CompoundButton.OnCheckedChangeListener, View.OnClickListener, DialogClosedListener, AddTranslationDialogFragment.TranslationChangedListener {
 
     private static final String TAG = EditDiveSpotActivity.class.getSimpleName();
 
     private static final String DIVE_SPOT_NAME_PATTERN = "^[a-zA-Z0-9 ]*$";
-    private EditSpotPhotosListAdapter photosListAdapter = new EditSpotPhotosListAdapter(EditDiveSpotActivity.this);
-    private EditSpotPhotosListAdapter mapsListAdapter = new EditSpotPhotosListAdapter(EditDiveSpotActivity.this);
+    private PhotosListAdapterWithCover photosListAdapter = new PhotosListAdapterWithCover(EditDiveSpotActivity.this);
+    private PhotosListAdapterWithoutCover mapsListAdapter = new PhotosListAdapterWithoutCover(EditDiveSpotActivity.this);
     private ImageButton btnAddPhoto;
     private LinearLayout btnAddSealife;
 
@@ -407,10 +409,10 @@ public class EditDiveSpotActivity extends AppCompatActivity implements CompoundB
         countryTitle.setTextColor(ContextCompat.getColor(this, R.color.black_text));
         countryTitle.setText(diveSpotDetailsEntity.getCountryName());
         if (diveSpotDetailsEntity.getPhotos() != null) {
-            photosListAdapter.addServerPhoto((ArrayList<String>) diveSpotDetailsEntity.getPhotos());
+//            photosListAdapter.addServerPhoto((ArrayList<String>) diveSpotDetailsEntity.getPhotos());
         }
         if (diveSpotDetailsEntity.getMaps() != null) {
-            mapsListAdapter.addServerPhoto((ArrayList<String>) diveSpotDetailsEntity.getMaps());
+//            mapsListAdapter.addServerPhoto((ArrayList<String>) diveSpotDetailsEntity.getMaps());
         }
         locationTitle.setTextColor(ContextCompat.getColor(this, R.color.black_text));
         progressDialogUpload = Helpers.getMaterialDialog(this);
@@ -467,17 +469,6 @@ public class EditDiveSpotActivity extends AppCompatActivity implements CompoundB
                         locationTitle.setText(R.string.location);
                     }
                     locationTitle.setTextColor(ContextCompat.getColor(this, R.color.black_text));
-                }
-                break;
-            case ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_PHOTO:
-                if (resultCode == RESULT_OK) {
-                    if (diveSpotPhotosRecyclrView.getVisibility() == View.VISIBLE) {
-                        photosListAdapter.addDevicePhotos(Helpers.getPhotosFromIntent(data, this));
-                        diveSpotPhotosRecyclrView.scrollToPosition(photosListAdapter.getItemCount());
-                        break;
-                    }
-                    mapsListAdapter.addDevicePhotos(Helpers.getPhotosFromIntent(data, this));
-                    mapsRecyclerView.scrollToPosition(photosListAdapter.getItemCount());
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_SEALIFE:
@@ -670,7 +661,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements CompoundB
         //create deleted photos list of part's
         if (photosListAdapter.getDeletedPhotos().size() > 0) {
             for (int i = 0; i < photosListAdapter.getDeletedPhotos().size(); i++) {
-                deletedImages.add(MultipartBody.Part.createFormData("deleted_photos[]", photosListAdapter.getDeletedPhotos().get(i)));
+                deletedImages.add(MultipartBody.Part.createFormData("deleted_photos[]", photosListAdapter.getDeletedPhotos().get(i).getPhotoPath()));
             }
         } else {
             deletedImages = null;
@@ -689,7 +680,7 @@ public class EditDiveSpotActivity extends AppCompatActivity implements CompoundB
         if (photosListAdapter.getNewPhotos().size() > 0) {
             deletedImages = new ArrayList<>();
             for (int i = 0; i < photosListAdapter.getNewPhotos().size(); i++) {
-                File image = new File(photosListAdapter.getNewPhotos().get(i));
+                File image = new File(photosListAdapter.getNewPhotos().get(i).getPhotoPath());
                 image = Helpers.compressFile(image, this);
                 RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), image);
                 MultipartBody.Part part = MultipartBody.Part.createFormData("new_photos[]", image.getName(), requestFile);
@@ -925,4 +916,13 @@ public class EditDiveSpotActivity extends AppCompatActivity implements CompoundB
         AddTranslationDialogFragment.show(getSupportFragmentManager(), event.getTranslation().getCode(), event.getTranslation().getLanguage(), event.getTranslation().getName(), event.getTranslation().getDescription());
     }
 
+    @Override
+    public void onPictureFromCameraTaken(File picture) {
+
+    }
+
+    @Override
+    public void onPicturesTaken(ArrayList<String> pictures) {
+
+    }
 }

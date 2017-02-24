@@ -1,18 +1,13 @@
 package com.ddscanner.screens.divespot.add;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v13.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -30,7 +25,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -42,20 +36,20 @@ import com.ddscanner.entities.DialogClosedListener;
 import com.ddscanner.entities.FiltersResponseEntity;
 import com.ddscanner.entities.Language;
 import com.ddscanner.entities.SealifeShort;
+import com.ddscanner.entities.SpotPhotoEditScreenEntity;
 import com.ddscanner.entities.Translation;
 import com.ddscanner.events.AddPhotoDoListEvent;
 import com.ddscanner.events.ChangeTranslationEvent;
-import com.ddscanner.events.ImageDeletedEvent;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.divespot.details.DiveSpotDetailsActivity;
-import com.ddscanner.screens.divespot.edit.EditSpotPhotosListAdapter;
+import com.ddscanner.ui.adapters.PhotosListAdapterWithCover;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.activities.LoginActivity;
 import com.ddscanner.ui.activities.PickCountryActivity;
 import com.ddscanner.ui.activities.PickLanguageActivity;
 import com.ddscanner.ui.activities.SearchSealifeActivity;
-import com.ddscanner.ui.adapters.AddPhotoToDsListAdapter;
 import com.ddscanner.ui.adapters.CharacteristicSpinnerItemsAdapter;
+import com.ddscanner.ui.adapters.PhotosListAdapterWithoutCover;
 import com.ddscanner.ui.adapters.SealifeListAddingDiveSpotAdapter;
 import com.ddscanner.ui.adapters.TranslationsListAdapter;
 import com.ddscanner.ui.dialogs.AddTranslationDialogFragment;
@@ -138,8 +132,8 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
     private RelativeLayout addTranslationButton;
     private RecyclerView languagesRecyclerView;
     private TranslationsListAdapter translationsListAdapter = new TranslationsListAdapter();
-    private EditSpotPhotosListAdapter photosListAdapter;
-    private EditSpotPhotosListAdapter mapsListAdapter;
+    private PhotosListAdapterWithCover photosListAdapter;
+    private PhotosListAdapterWithoutCover mapsListAdapter;
 
     private List<String> photoUris = new ArrayList<>();
     private List<String> mapsUris = new ArrayList<>();
@@ -211,8 +205,8 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
         setContentView(R.layout.activity_add_dive_spot);
         EventsTracker.trackDiveSpotCreation();
         isFromMap = getIntent().getBooleanExtra(Constants.ADD_DIVE_SPOT_INTENT_IS_FROM_MAP, false);
-        photosListAdapter = new EditSpotPhotosListAdapter(this);
-        mapsListAdapter = new EditSpotPhotosListAdapter(this);
+        photosListAdapter = new PhotosListAdapterWithCover(this);
+        mapsListAdapter = new PhotosListAdapterWithoutCover(this);
         findViews();
         setUi();
         requsetCountryCode = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), "RU");
@@ -485,7 +479,7 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
             requestIsEdit = Helpers.createRequestBodyForString("0");
         }
         translations = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), new Gson().toJson(translationsListAdapter.getTranslations()));
-        requestCoverNumber = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), String.valueOf(1));
+        requestCoverNumber = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), String.valueOf(photosListAdapter.getCoverPhotoPositionForAddDiveSpot()));
         requestObject = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), String.valueOf(Helpers.getDiveSpotTypes().indexOf(objectAppCompatSpinner.getSelectedItem().toString()) + 1));
         requestCurrents = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), String.valueOf(Helpers.getListOfCurrentsTypes().indexOf(currentsAppCompatSpinner.getSelectedItem().toString()) + 1));
         requestLevel = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), String.valueOf(Helpers.getDiveLevelTypes().indexOf(levelAppCompatSpinner.getSelectedItem().toString()) + 1));
@@ -505,7 +499,7 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
         if (photosListAdapter.getNewPhotos().size() > 0) {
             images = new ArrayList<>();
             for (int i = 0; i < photosListAdapter.getNewPhotos().size(); i++) {
-                File image = new File(photosListAdapter.getNewPhotos().get(i));
+                File image = new File(photosListAdapter.getNewPhotos().get(i).getPhotoPath());
                 image = Helpers.compressFile(image, this);
                 RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), image);
                 MultipartBody.Part part = MultipartBody.Part.createFormData(Constants.ADD_DIVE_SPOT_ACTIVITY_IMAGES_ARRAY, image.getName(), requestFile);
@@ -759,8 +753,17 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
 
     @Override
     public void onPicturesTaken(ArrayList<String> pictures) {
+        ArrayList<SpotPhotoEditScreenEntity> photos = new ArrayList<>();
+        SpotPhotoEditScreenEntity photo;
+        for (String path : pictures) {
+            photo = new SpotPhotoEditScreenEntity();
+            photo.setCover(false);
+            photo.setAuthorId(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId());
+            photo.setPhotoPath(path);
+            photos.add(photo);
+        }
         if (photos_rc.getVisibility() == View.VISIBLE) {
-            photosListAdapter.addDevicePhotos(pictures);
+            photosListAdapter.addDevicePhotos(photos);
         } else {
             mapsListAdapter.addDevicePhotos(pictures);
         }

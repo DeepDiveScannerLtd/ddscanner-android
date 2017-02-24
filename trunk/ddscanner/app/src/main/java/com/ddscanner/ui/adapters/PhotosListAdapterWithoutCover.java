@@ -1,4 +1,4 @@
-package com.ddscanner.screens.divespot.edit;
+package com.ddscanner.ui.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -11,8 +11,6 @@ import android.widget.TextView;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.events.AddPhotoDoListEvent;
-import com.ddscanner.ui.adapters.AddPhotoToDsListAdapter;
-import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;
 
@@ -21,24 +19,22 @@ import java.util.List;
 
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
-public class EditSpotPhotosListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class PhotosListAdapterWithoutCover extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 
     private static final int VIEW_TYPE_ADD_PHOTO = 1;
     private static final int VIEW_TYPE_PHOTO = 2;
 
-    private static final String TAG = EditSpotPhotosListAdapter.class.getSimpleName();
+
     private Context context;
     private List<String> serverPhotos = new ArrayList<>();
     private List<String> devicePhotos = new ArrayList<>();
     private List<String> allPhotos = new ArrayList<>();
     private List<String> deletedPhotos = new ArrayList<>();
     private int coverPhotoPosition = 0;
-    private int previousCoverPhotoPosition;
 
-    public EditSpotPhotosListAdapter(Context context) {
+    public PhotosListAdapterWithoutCover(Context context) {
         this.context = context;
-        this.coverPhotoPosition = -1;
     }
 
     @Override
@@ -49,13 +45,13 @@ public class EditSpotPhotosListAdapter extends RecyclerView.Adapter<RecyclerView
                 itemView = LayoutInflater.
                         from(parent.getContext()).
                         inflate(R.layout.list_images_item, parent, false);
-                return new EditSpotPhotosListAdapter.EditSpotListPhotoViewHolder(itemView);
+                return new EditReviewPhotoListViewHolder(itemView);
 
             case VIEW_TYPE_ADD_PHOTO:
                 itemView = LayoutInflater.
                         from(parent.getContext()).
                         inflate(R.layout.item_add_photo_to_dive_spot, parent, false);
-                return new EditSpotPhotosListAdapter.AddPhotoButtonViewHolder(itemView);
+                return new AddPhotoButtonViewHolder(itemView);
             default:
                 return null;
         }
@@ -64,7 +60,7 @@ public class EditSpotPhotosListAdapter extends RecyclerView.Adapter<RecyclerView
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (getItemViewType(position) != VIEW_TYPE_ADD_PHOTO) {
-            EditSpotListPhotoViewHolder viewHolder = (EditSpotListPhotoViewHolder) holder;
+            EditReviewPhotoListViewHolder viewHolder = (EditReviewPhotoListViewHolder) holder;
             viewHolder.coverLabel.setVisibility(View.GONE);
             if (position < serverPhotos.size()) {
                 Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, allPhotos.get(position), "1")).resize(Math.round(Helpers.convertDpToPixel(70, context)),Math.round(Helpers.convertDpToPixel(70, context))).centerCrop().transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2, context)), 0, RoundedCornersTransformation.CornerType.ALL)).into(viewHolder.photo);
@@ -133,13 +129,13 @@ public class EditSpotPhotosListAdapter extends RecyclerView.Adapter<RecyclerView
         return allPhotos.size() + 1;
     }
 
-    class EditSpotListPhotoViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class EditReviewPhotoListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         ImageView photo;
         ImageView icDelete;
         TextView coverLabel;
 
-        EditSpotListPhotoViewHolder(View v) {
+        EditReviewPhotoListViewHolder(View v) {
             super(v);
             coverLabel = (TextView) v.findViewById(R.id.cover_button);
             photo = (ImageView) v.findViewById(R.id.add_ds_photo);
@@ -160,7 +156,7 @@ public class EditSpotPhotosListAdapter extends RecyclerView.Adapter<RecyclerView
 
         }
     }
-    
+
     class AddPhotoButtonViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         public AddPhotoButtonViewHolder(View view) {
@@ -173,5 +169,5 @@ public class EditSpotPhotosListAdapter extends RecyclerView.Adapter<RecyclerView
             DDScannerApplication.bus.post(new AddPhotoDoListEvent());
         }
     }
-    
+
 }

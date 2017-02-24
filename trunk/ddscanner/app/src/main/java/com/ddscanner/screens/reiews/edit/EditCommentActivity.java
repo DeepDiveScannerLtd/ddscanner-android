@@ -24,9 +24,7 @@ import com.ddscanner.entities.DiveSpotPhoto;
 import com.ddscanner.entities.SealifeShort;
 import com.ddscanner.events.AddPhotoDoListEvent;
 import com.ddscanner.rest.DDScannerRestClient;
-import com.ddscanner.screens.divespot.edit.EditSpotPhotosListAdapter;
-import com.ddscanner.screens.reiews.ReviewPhotosListAdapter;
-import com.ddscanner.screens.reiews.add.LeaveReviewActivity;
+import com.ddscanner.ui.adapters.PhotosListAdapterWithoutCover;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.activities.LoginActivity;
 import com.ddscanner.ui.activities.SearchSealifeActivity;
@@ -64,7 +62,7 @@ public class EditCommentActivity extends BaseAppCompatActivity implements View.O
     private TextView symbolNumberLeft;
     private RecyclerView photosRecyclerView;
     private LinearLayout buttonAddSealife;
-    private ReviewPhotosListAdapter editSpotPhotosListAdapter;
+    private PhotosListAdapterWithoutCover editSpotPhotosListAdapter;
     private Map<String, TextView> errorsMap = new HashMap<>();
     private Comment comment;
     private ArrayList<String> deleted = new ArrayList<>();
@@ -139,7 +137,7 @@ public class EditCommentActivity extends BaseAppCompatActivity implements View.O
         setContentView(R.layout.activity_leave_review);
         comment = new Gson().fromJson(getIntent().getStringExtra("COMMENT"), Comment.class);
         isHaveSealifes = getIntent().getBooleanExtra("ISSEALIFE", false);
-        editSpotPhotosListAdapter = new ReviewPhotosListAdapter(this);
+        editSpotPhotosListAdapter = new PhotosListAdapterWithoutCover(this);
         setupToolbar(R.string.edit_comment, R.id.toolbar, R.menu.menu_add_review);
         findViews();
     }
