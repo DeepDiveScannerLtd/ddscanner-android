@@ -90,6 +90,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
     private boolean isWorkingHere = false;
     private boolean isClickedCkeckin = false;
     private boolean isClickedFavorite = false;
+    private boolean isCheckedInRequestStarted = false;
     private DiveSpotPhotosAdapter mapsAdapter, photosAdapter;
     private CheckedInDialogFragment checkedInDialogFragment;
     private boolean isClickedEdit = false;
@@ -436,6 +437,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
             LoginActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_CHECK_IN);
             return;
         }
+        isCheckedInRequestStarted = true;
         DDScannerApplication.getInstance().getDdScannerRestClient().postCheckIn(diveSpotId, checkInResultListener);
     }
 
@@ -460,6 +462,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
             LoginActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_CHECK_OUT);
             return;
         }
+        isCheckedInRequestStarted = true;
         DDScannerApplication.getInstance().getDdScannerRestClient().postCheckOut(diveSpotId, checkOutResultListener);
     }
 
@@ -827,11 +830,13 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
     }
 
     public void checkInClicked(View view) {
-        if (isCheckedIn) {
-            checkOut();
-            return;
+        if (!isCheckedInRequestStarted) {
+            if (isCheckedIn) {
+                checkOut();
+                return;
+            }
+            checkIn();
         }
-        checkIn();
     }
 
     public void openMapActivityClicked(View view) {
@@ -992,11 +997,13 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
         private boolean isCheckIn;
 
         CheckInCheckoutResultListener(boolean isCheckIn) {
+            isCheckedInRequestStarted = false;
             this.isCheckIn = isCheckIn;
         }
 
         @Override
         public void onSuccess(Void result) {
+            isCheckedInRequestStarted = false;
             if (isCheckIn) {
                 DiveSpotDetailsActivity.this.isCheckedIn = true;
                 binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().setCheckinCount(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getCheckinCount() + 1);
@@ -1014,6 +1021,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
 
         @Override
         public void onConnectionFailure() {
+            isCheckedInRequestStarted = false;
             if (isCheckIn) {
                 checkOutUi();
             } else {
@@ -1024,6 +1032,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            isCheckedInRequestStarted = false;
             switch (errorType) {
                 case DIVE_SPOT_NOT_FOUND_ERROR_C802:
                     if (isCheckIn) {
