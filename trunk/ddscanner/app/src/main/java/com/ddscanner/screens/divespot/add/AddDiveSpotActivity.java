@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatSpinner;
@@ -556,39 +557,37 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
         errorsMap.put("currents", errorCurrent);
         errorsMap.put("", errorVisibility);
         errorsMap.put("", errorCountry);
+        errorsMap.put("", errorTranslations);
+        errorsMap.put("", errorCountry);
     }
 
     private boolean validatefields() {
         boolean isSomethingWrong = false;
+        int downestCoordinate = 0;
 
-        if (levelAppCompatSpinner.getSelectedItemPosition() == 0) {
+
+        if (sealifeListAddingDiveSpotAdapter == null || sealifeListAddingDiveSpotAdapter.getSealifes() == null || sealifeListAddingDiveSpotAdapter.getSealifes().size() < 1) {
             isSomethingWrong = true;
-            errorLevel.setVisibility(View.VISIBLE);
+            errorSealife.setVisibility(View.VISIBLE);
+            downestCoordinate = sealifesRc.getBottom();
         }
 
         if (objectAppCompatSpinner.getSelectedItemPosition() == 0) {
             isSomethingWrong = true;
             errorObject.setVisibility(View.VISIBLE);
+            downestCoordinate = objectAppCompatSpinner.getBottom();
+        }
+
+        if (levelAppCompatSpinner.getSelectedItemPosition() == 0) {
+            isSomethingWrong = true;
+            errorLevel.setVisibility(View.VISIBLE);
+            downestCoordinate = levelAppCompatSpinner.getBottom();
         }
 
         if (currentsAppCompatSpinner.getSelectedItemPosition() == 0) {
             isSomethingWrong = true;
             errorCurrent.setVisibility(View.VISIBLE);
-        }
-
-        if (translationsListAdapter.getTranslations().size() < 1) {
-            isSomethingWrong = true;
-            errorTranslations.setVisibility(View.VISIBLE);
-        }
-
-        if (photosListAdapter.getNewPhotos().size() < 1) {
-            isSomethingWrong = true;
-            errorImages.setVisibility(View.VISIBLE);
-        }
-
-        if (sealifeListAddingDiveSpotAdapter == null || sealifeListAddingDiveSpotAdapter.getSealifes() == null || sealifeListAddingDiveSpotAdapter.getSealifes().size() < 1) {
-            isSomethingWrong = true;
-            errorSealife.setVisibility(View.VISIBLE);
+            downestCoordinate = currentsAppCompatSpinner.getBottom();
         }
 
         if (visibilityMin.getText().toString().isEmpty() && visibilityMax.getText().toString().isEmpty()) {
@@ -596,7 +595,9 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
             errorVisibility.setVisibility(View.VISIBLE);
             minVisibilityHint.setVisibility(View.GONE);
             maxVisibilityHint.setVisibility(View.GONE);
+            downestCoordinate = visibilityMax.getBottom();
         } else {
+            downestCoordinate = visibilityMax.getBottom();
             if (!visibilityMin.getText().toString().isEmpty() && !visibilityMax.getText().toString().isEmpty()) {
                 if (Integer.parseInt(visibilityMax.getText().toString()) < Integer.parseInt(visibilityMin.getText().toString())) {
                     isSomethingWrong = true;
@@ -620,29 +621,59 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
             }
         }
 
-        if (diveSpotLocation == null) {
-            isSomethingWrong = true;
-            errorLocation.setVisibility(View.VISIBLE);
-        }
-
-        if (!isCountryChosed) {
-            isSomethingWrong = true;
-            errorCountry.setVisibility(View.VISIBLE);
-        }
-
         if (depth.getText().toString().isEmpty()) {
             isSomethingWrong = true;
             errorDepth.setVisibility(View.VISIBLE);
+            downestCoordinate = depth.getBottom();
         } else {
-
+            downestCoordinate = depth.getBottom();
             if (Integer.parseInt(depth.getText().toString()) < 5 || Integer.parseInt(depth.getText().toString()) > 1092) {
                 isSomethingWrong = true;
                 errorDepth.setText(R.string.depth_vlue);
                 errorDepth.setVisibility(View.VISIBLE);
             }
         }
+
+
+        if (diveSpotLocation == null) {
+            isSomethingWrong = true;
+            errorLocation.setVisibility(View.VISIBLE);
+            downestCoordinate = locationTitle.getBottom();
+        }
+
+        if (!isCountryChosed) {
+            isSomethingWrong = true;
+            errorCountry.setVisibility(View.VISIBLE);
+            downestCoordinate = countryTitle.getBottom();
+        }
+
+        if (translationsListAdapter.getTranslations().size() < 1) {
+            isSomethingWrong = true;
+            errorTranslations.setVisibility(View.VISIBLE);
+            downestCoordinate = addTranslationButton.getBottom();
+        }
+
+        if (photosListAdapter.getNewPhotos().size() < 1) {
+            isSomethingWrong = true;
+            errorImages.setVisibility(View.VISIBLE);
+            downestCoordinate = errorImages.getBottom();
+        }
+
+        if (isSomethingWrong) {
+            scrollToError(downestCoordinate);
+        }
+
         return isSomethingWrong;
 
+    }
+
+    private void scrollToError(final int bottom) {
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                mainLayout.scrollTo(0, bottom);
+            }
+        });
     }
 
     @Override
