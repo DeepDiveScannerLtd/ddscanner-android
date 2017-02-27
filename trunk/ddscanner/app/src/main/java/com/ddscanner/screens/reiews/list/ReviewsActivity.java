@@ -294,6 +294,9 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
         progressView = (ProgressView) findViewById(R.id.progressBarFull);
         if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == 0 || !openedSource.equals(ReviewsOpenedSource.DIVESPOT)) {
             leaveReview.setVisibility(View.GONE);
+            leaveReview.setOnClickListener(null);
+        } else {
+            leaveReview.setVisibility(View.VISIBLE);
             leaveReview.setOnClickListener(this);
         }
     }
