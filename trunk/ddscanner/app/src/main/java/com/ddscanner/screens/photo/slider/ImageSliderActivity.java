@@ -34,6 +34,7 @@ import com.ddscanner.screens.user.profile.UserProfileActivity;
 import com.ddscanner.ui.activities.LoginActivity;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.ui.views.SimpleGestureFilter;
+import com.ddscanner.ui.views.SliderViewPager;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
@@ -49,7 +50,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
 
     private SliderImagesAdapter sliderImagesAdapter;
     private FrameLayout baseLayout;
-    private ViewPager viewPager;
+    private SliderViewPager viewPager;
     private ImageView close;
     private ArrayList<DiveSpotPhoto> images;
     private Drawable drawable;
@@ -74,6 +75,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     private LikeDislikeResultListener likeResultListener = new LikeDislikeResultListener(true);
     private LikeDislikeResultListener dislikeResultListener = new LikeDislikeResultListener(false);
     private ArrayList<DiveSpotPhoto> deletedPhotos = new ArrayList<>();
+    private boolean isLikeRequestStarted = false;
 
     float x1, x2;
     float y1, y2;
@@ -271,7 +273,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         likesLayout = (RelativeLayout) findViewById(R.id.likes_layout);
         likeIcon = (ImageView) findViewById(R.id.icon);
         likesCount = (TextView) findViewById(R.id.likes_count);
-        viewPager = (ViewPager) findViewById(R.id.image_slider);
+        viewPager = (SliderViewPager) findViewById(R.id.image_slider);
         close = (ImageView) findViewById(R.id.close_btn);
         baseLayout = (FrameLayout) findViewById(R.id.swipe_layout);
         avatar = (ImageView) findViewById(R.id.user_avatar);
@@ -297,14 +299,16 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
                 onBackPressed();
                 break;
             case R.id.likes_layout:
-                if (!images.get(position).getAuthor().getId().equals(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId())) {
-                    if (!images.get(position).isLiked()) {
-                        likeUi();
-                        DDScannerApplication.getInstance().getDdScannerRestClient().postLikePhoto(images.get(position).getId(), likeResultListener);
-                        break;
+                if (!isLikeRequestStarted) {
+                    if (!images.get(position).getAuthor().getId().equals(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId())) {
+                        if (!images.get(position).isLiked()) {
+                            likeUi();
+                            DDScannerApplication.getInstance().getDdScannerRestClient().postLikePhoto(images.get(position).getId(), likeResultListener);
+                            break;
+                        }
+                        dislikeUi();
+                        DDScannerApplication.getInstance().getDdScannerRestClient().postDislikePhoto(images.get(position).getId(), dislikeResultListener);
                     }
-                    dislikeUi();
-                    DDScannerApplication.getInstance().getDdScannerRestClient().postDislikePhoto(images.get(position).getId(), dislikeResultListener);
                 }
                 break;
             case R.id.user_avatar:
@@ -594,10 +598,12 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
 
         @Override
         public void onSuccess(Void result) {
+            isLikeRequestStarted = false;
         }
 
         @Override
         public void onConnectionFailure() {
+            isLikeRequestStarted = false;
             InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
             if (isLike) {
                 dislikeUi();
@@ -608,6 +614,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            isLikeRequestStarted = false;
             if (isLike) {
                 dislikeUi();
             } else {
@@ -617,12 +624,15 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
                 case UNAUTHORIZED_401:
                     LoginActivity.showForResult(ImageSliderActivity.this, ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_LIKE);
                     break;
+                default:
+                    InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, false);
+                    break;
             }
-            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, false);
         }
 
         @Override
         public void onInternetConnectionClosed() {
+            isLikeRequestStarted = false;
             InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
         }
 
