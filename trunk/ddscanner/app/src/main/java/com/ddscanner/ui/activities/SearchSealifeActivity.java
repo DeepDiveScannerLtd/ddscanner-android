@@ -50,6 +50,7 @@ public class SearchSealifeActivity extends AppCompatActivity implements SearchVi
     private Menu menu;
     private ProgressView progressView;
     private RelativeLayout contentLayout;
+    private MenuItem searchMenuItem;
 
     private List<SealifeShort> sealifes = new ArrayList<>();
     private SealifeResponseEntity sealifeResponseEntity = new SealifeResponseEntity();
@@ -63,6 +64,7 @@ public class SearchSealifeActivity extends AppCompatActivity implements SearchVi
             progressView.setVisibility(View.GONE);
             contentLayout.setVisibility(View.VISIBLE);
             mRecyclerView.setAdapter(mAdapter);
+            searchMenuItem.setVisible(true);
         }
 
         @Override
@@ -123,8 +125,9 @@ public class SearchSealifeActivity extends AppCompatActivity implements SearchVi
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_search_sealife, menu);
         this.menu = menu;
-        final MenuItem item = menu.findItem(R.id.action_search);
-        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
+        searchMenuItem = menu.findItem(R.id.action_search);
+        searchMenuItem.setVisible(false);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchMenuItem);
         searchView.setQueryHint(getString(R.string.search));
         searchView.setOnQueryTextListener(this);
         return true;
