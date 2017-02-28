@@ -458,4 +458,6 @@
     <string name="cover">COVER</string>
     <string name="name_is_required_sealife">Name is required</string>
     <string name="add_sealife_phtot">Add a photo of the sea life</string>
+    <string name="edit_sea_life">Edit sea life</string>
+    <string name="empty_string" />
 </resources>

@@ -17,10 +17,13 @@ import com.ddscanner.databinding.ActivitySealifeFullBinding;
 import com.ddscanner.entities.DialogClosedListener;
 import com.ddscanner.entities.Sealife;
 import com.ddscanner.rest.DDScannerRestClient;
+import com.ddscanner.screens.sealife.add.AddSealifeActivity;
+import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.utils.DialogsRequestCodes;
+import com.google.gson.Gson;
 
-public class SealifeDetailsActivity extends AppCompatActivity implements DialogClosedListener {
+public class SealifeDetailsActivity extends BaseAppCompatActivity implements DialogClosedListener {
 
     public static final String EXTRA_SEALIFE = "SEALIFE";
     public static final String EXTRA_PATH = "PATH";
@@ -89,19 +92,18 @@ public class SealifeDetailsActivity extends AppCompatActivity implements DialogC
             }
         });
 
-        setSupportActionBar(binding.toolbar);
-        //getSupportActionBar().setTitle(sealife.getName());
-        getSupportActionBar().setTitle("");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);
+        setupToolbar(R.string.empty_string, R.id.toolbar, R.menu.menu_sealife_details);
         DDScannerApplication.getInstance().getDdScannerRestClient().getSealifeDetails(id, resultListener);
     }
 
+
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        super.onOptionsItemSelected(item);
         switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
+            case R.id.edit_sealife:
+                AddSealifeActivity.showForEdit(this, new Gson().toJson(binding.getSealifeViewModel().getSealife()), -1);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

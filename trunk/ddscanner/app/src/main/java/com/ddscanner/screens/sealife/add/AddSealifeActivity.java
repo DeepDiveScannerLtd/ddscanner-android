@@ -126,6 +126,9 @@ public class AddSealifeActivity extends BaseAppCompatActivity implements View.On
         isForEdit = getIntent().getBooleanExtra(ARG_IS_EDIT, false);
         if (isForEdit) {
             binding.setSealifeViewModel(new EditSealifeActivityViewModel(new Gson().fromJson(getIntent().getStringExtra(ARG_SEALIFE), Sealife.class)));
+            if (binding.getSealifeViewModel().getSealife().getImage() != null) {
+                setBackImage(binding.getSealifeViewModel().getSealife().getImage(), true);
+            }
         }
         makeErrorsMap();
         setupToolbar(R.string.add_sealife, R.id.toolbar);
@@ -152,9 +155,13 @@ public class AddSealifeActivity extends BaseAppCompatActivity implements View.On
         }
     }
 
-    private void setBackImage(String path) {
-        if (!path.contains(Constants.images) && !path.contains("file:")) {
-            path = "file://" + path;
+    private void setBackImage(String path, boolean isServerPhoto) {
+        if (!isServerPhoto) {
+            if (!path.contains(Constants.images) && !path.contains("file:")) {
+                path = "file://" + path;
+            }
+        } else {
+            path = DDScannerApplication.getInstance().getString(R.string.base_photo_url, path, "2");
         }
         Display display = getWindowManager().getDefaultDisplay();
         DisplayMetrics outMetrics = new DisplayMetrics();
@@ -207,7 +214,9 @@ public class AddSealifeActivity extends BaseAppCompatActivity implements View.On
             fileToSend = Helpers.compressFile(fileToSend, this);
             RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), fileToSend);
             body = MultipartBody.Part.createFormData("photo", fileToSend.getName(), requestFile);
-            DDScannerApplication.getInstance().getDdScannerRestClient().postAddSealife(sealifeResultListener, body, Helpers.createRequestBodyForString(new Gson().toJson(sealifeTranslations)));
+            if (!isForEdit) {
+                DDScannerApplication.getInstance().getDdScannerRestClient().postAddSealife(sealifeResultListener, body, Helpers.createRequestBodyForString(new Gson().toJson(sealifeTranslations)));
+            }
         }
     }
 
@@ -277,7 +286,7 @@ public class AddSealifeActivity extends BaseAppCompatActivity implements View.On
     @Override
     public void onPicturesTaken(ArrayList<String> pictures) {
         filePath = pictures.get(0);
-        setBackImage(filePath);
+        setBackImage(filePath, false);
     }
 
     public void pickPhotoClicked(View view) {
