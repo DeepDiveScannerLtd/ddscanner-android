@@ -316,12 +316,12 @@ public class DDScannerRestClient {
         });
     }
 
-    public void getDiveCenterLanguages(ResultListener<ArrayList<Language>> resultListener) {
+    public void getDiveCenterLanguages(ResultListener<ArrayList<Language>> resultListener, String id) {
         if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
             resultListener.onInternetConnectionClosed();
             return;
         }
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveCenterLanguages();
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveCenterLanguages(id);
         call.enqueue(new ResponseEntityCallback<ArrayList<Language>>(gson, resultListener) {
             @Override
             void handleResponseString(ResultListener<ArrayList<Language>> resultListener, String responseString) throws JSONException {

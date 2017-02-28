@@ -97,6 +97,8 @@ public class DiveCenterProfileFragmentViewModel {
         if (viewModel != null) {
             if (viewModel.getDiveCenterProfile().getInstructorsCount() != null && Integer.parseInt(viewModel.getDiveCenterProfile().getInstructorsCount()) > 0) {
                 view.setVisibility(View.VISIBLE);
+            } else {
+                view.setVisibility(View.GONE);
             }
         }
     }

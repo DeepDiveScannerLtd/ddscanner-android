@@ -154,4 +154,7 @@ public class DialogsRequestCodes {
     public static final int DRC_FORGOT_PASSWORD_ACTIVITY_CONNECTION_FAILURE = 5101;
     public static final int DRC_FORGOT_PASSWORD_ACTIVITY_SUCCESS = 5102;
 
+    //Dive Center Languages Activity
+    public static final int DRC_LANGUAGES_ACTIVITY_FAILED_TO_CONNECT = 5201;
+
 }

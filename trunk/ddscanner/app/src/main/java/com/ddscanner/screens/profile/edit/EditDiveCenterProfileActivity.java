@@ -240,7 +240,7 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
         } else {
             isDiveSpotsDownloaded = true;
         }
-        DDScannerApplication.getInstance().getDdScannerRestClient().getDiveCenterLanguages(languagesResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient().getDiveCenterLanguages(languagesResultListener, String.valueOf(binding.getDcViewModel().getDiveCenterProfile().getId()));
         binding.diveSpotList.setLayoutManager(new LinearLayoutManager(this));
         binding.diveSpotList.setAdapter(diveSpotsListForEditDcAdapter);
         binding.languagesList.setLayoutManager(new LinearLayoutManager(this));

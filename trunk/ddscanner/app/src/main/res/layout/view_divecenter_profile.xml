@@ -242,7 +242,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="20dp"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:onClick="@{handlers::showLanguages}">
 
                     <ImageView
                         style="@style/DiveCenterProfileCharacteristicIcon"
@@ -264,10 +265,11 @@
 
                             <TextView
                                 style="@style/DiveCenterProfileCharacteristicDesciption"
-                                android:text="@{diveCenterViewModel.diveCenterProfile.languages.get(0)}" />
+                                android:text="@{diveCenterViewModel.diveCenterProfile.languages != null ? String.valueOf(diveCenterViewModel.diveCenterProfile.languages.size()) : String.valueOf(0)}" />
                         </LinearLayout>
 
                         <ImageView
+                            android:visibility="@{diveCenterViewModel.diveCenterProfile.languages != null ? View.VISIBLE : View.GONE}"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"

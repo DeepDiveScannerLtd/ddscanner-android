@@ -425,7 +425,7 @@ public interface DDScannerRestService {
     Call<ResponseBody> postRemoveInstructorFromDIveCenter(@Query("id") String instructorId);
 
     @GET("v2_0/divecenter.languages.get")
-    Call<ResponseBody> getDiveCenterLanguages();
+    Call<ResponseBody> getDiveCenterLanguages(@Query("id") String diveCenterId);
 
     @GET("v2_0/divecenter.status_in.divespot.get")
     Call<ResponseBody> getDiveCenterStatusInSpot(@Query("id") String id);
