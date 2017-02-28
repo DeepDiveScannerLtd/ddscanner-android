@@ -61,10 +61,10 @@ public class AddSealifeActivity extends BaseAppCompatActivity implements View.On
     private DDScannerRestClient.ResultListener<SealifeShort> sealifeResultListener = new DDScannerRestClient.ResultListener<SealifeShort>() {
         @Override
         public void onSuccess(SealifeShort result) {
-//            Intent intent = new Intent();
-//            intent.putExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_SEALIFE, result);
-//            setResult(RESULT_OK, intent);
-//            finish();
+            Intent intent = new Intent();
+            intent.putExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_SEALIFE, result);
+            setResult(RESULT_OK, intent);
+            finish();
         }
 
         @Override
@@ -81,8 +81,8 @@ public class AddSealifeActivity extends BaseAppCompatActivity implements View.On
                     DDScannerApplication.getInstance().getSharedPreferenceHelper().logout();
                     LoginActivity.showForResult(AddSealifeActivity.this, ActivitiesRequestCodes.REQUEST_CODE_ADD_SEALIFE_ACTIVITY_LOGIN_TO_SEND);
                     break;
-                case UNPROCESSABLE_ENTITY_ERROR_422:
-//                    Helpers.errorHandling(errorsMap, (ValidationError) errorData);
+                case BAD_REQUEST_ERROR_400:
+                    Helpers.errorHandling(errorsMap, errorMessage);
                     break;
                 default:
                     Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);
@@ -186,30 +186,49 @@ public class AddSealifeActivity extends BaseAppCompatActivity implements View.On
     }
 
     private void createRequestBody() {
-        progressDialogUpload.show();
-        ArrayList<SealifeTranslation> sealifeTranslations = new ArrayList<>();
-        SealifeTranslation sealifeTranslation = new SealifeTranslation();
-        sealifeTranslation.setLangCode("en");
-        sealifeTranslation.setDepth(binding.depth.getText().toString().trim());
-        sealifeTranslation.setDistribution(binding.distribution.getText().toString().trim());
-        sealifeTranslation.setLength(binding.length.getText().toString().trim());
-        sealifeTranslation.setWeight(binding.weight.getText().toString().trim());
-        sealifeTranslation.setScName(binding.scName.getText().toString().trim());
-        sealifeTranslation.setOrder(binding.order.getText().toString().trim());
-        sealifeTranslation.setSealifeClass(binding.scClass.getText().toString().trim());
-        sealifeTranslation.setHabitat(binding.habitat.getText().toString().trim());
-        sealifeTranslation.setName(binding.name.getText().toString().trim());
-        sealifeTranslations.add(sealifeTranslation);
-        MultipartBody.Part body = null;
-        fileToSend = new File(filePath);
-        RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), fileToSend);
-        body = MultipartBody.Part.createFormData("photo", fileToSend.getName(), requestFile);
-        DDScannerApplication.getInstance().getDdScannerRestClient().postAddSealife(sealifeResultListener, body, Helpers.createRequestBodyForString(new Gson().toJson(sealifeTranslations)));
         hideErrorsFields();
+        if (!validateData()) {
+            progressDialogUpload.show();
+            ArrayList<SealifeTranslation> sealifeTranslations = new ArrayList<>();
+            SealifeTranslation sealifeTranslation = new SealifeTranslation();
+            sealifeTranslation.setLangCode("en");
+            sealifeTranslation.setDepth(binding.depth.getText().toString().trim());
+            sealifeTranslation.setDistribution(binding.distribution.getText().toString().trim());
+            sealifeTranslation.setLength(binding.length.getText().toString().trim());
+            sealifeTranslation.setWeight(binding.weight.getText().toString().trim());
+            sealifeTranslation.setScName(binding.scName.getText().toString().trim());
+            sealifeTranslation.setOrder(binding.order.getText().toString().trim());
+            sealifeTranslation.setSealifeClass(binding.scClass.getText().toString().trim());
+            sealifeTranslation.setHabitat(binding.habitat.getText().toString().trim());
+            sealifeTranslation.setName(binding.name.getText().toString().trim());
+            sealifeTranslations.add(sealifeTranslation);
+            MultipartBody.Part body = null;
+            fileToSend = new File(filePath);
+            fileToSend = Helpers.compressFile(fileToSend, this);
+            RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), fileToSend);
+            body = MultipartBody.Part.createFormData("photo", fileToSend.getName(), requestFile);
+            DDScannerApplication.getInstance().getDdScannerRestClient().postAddSealife(sealifeResultListener, body, Helpers.createRequestBodyForString(new Gson().toJson(sealifeTranslations)));
+        }
     }
 
     private boolean validateData() {
-        return true;
+        boolean isSomethingWrong = false;
+
+        if (binding.name.length() < 2) {
+            isSomethingWrong = true;
+            binding.nameError.setVisibility(View.VISIBLE);
+        }
+
+        if (filePath == null) {
+            isSomethingWrong = true;
+            binding.errorImage.setVisibility(View.VISIBLE);
+        }
+
+        if (isSomethingWrong) {
+            binding.mainLayout.scrollTo(0,0);
+        }
+
+        return isSomethingWrong;
     }
 
     private void makeErrorsMap() {
@@ -266,10 +285,15 @@ public class AddSealifeActivity extends BaseAppCompatActivity implements View.On
     }
 
     public void deletePhotoClicked(View view) {
+        filePath = null;
         binding.sealifePhoto.setImageDrawable(null);
         binding.addPhotoLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.white));
         binding.deletePhoto.setVisibility(View.GONE);
         binding.addPhotoCenterLayout.setVisibility(View.VISIBLE);
+    }
+
+    public void saveSealifeClicked(View view) {
+        createRequestBody();
     }
 
 }

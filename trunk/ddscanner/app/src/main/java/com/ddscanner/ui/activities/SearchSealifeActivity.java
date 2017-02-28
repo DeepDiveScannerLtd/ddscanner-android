@@ -230,7 +230,7 @@ public class SearchSealifeActivity extends AppCompatActivity implements SearchVi
         switch (requestCode) {
             case ActivitiesRequestCodes.REQUEST_CODE_SEARCH_SEALIFE_ACTIVITY_ADD_SEALIFE:
                 if (resultCode == RESULT_OK) {
-                    Sealife sealife = (Sealife) data.getSerializableExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_SEALIFE);
+                    SealifeShort sealife = (SealifeShort) data.getSerializableExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_SEALIFE);
                     Intent intent = new Intent();
                     intent.putExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_SEALIFE, sealife);
                     setResult(RESULT_OK, intent);

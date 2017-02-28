@@ -17,6 +17,7 @@
         <include layout="@layout/view_toolbar" />
 
         <ScrollView
+            android:id="@+id/main_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -78,6 +79,8 @@
                     android:src="@drawable/divider" />
 
                 <TextView
+                    android:layout_marginLeft="20dp"
+                    android:text="@string/add_sealife_phtot"
                     android:id="@+id/error_image"
                     style="@style/ValidationErrorTextView" />
 
@@ -104,6 +107,7 @@
                         android:padding="10dp"
                         android:textColorHint="#b2b2b2"
                         android:textSize="15sp"
+                        android:maxLength="128"
                         app:et_dividerColor="@android:color/transparent"
                         app:et_dividerCompoundPadding="true"
                         app:et_dividerHeight="0dp"
@@ -119,6 +123,7 @@
                         android:src="@drawable/divider" />
 
                     <TextView
+                        android:text="@string/name_is_required_sealife"
                         android:id="@+id/name_error"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -137,6 +142,7 @@
                         android:padding="10dp"
                         android:textColorHint="#b2b2b2"
                         android:textSize="15sp"
+                        android:maxLength="256"
                         app:et_dividerColor="@android:color/transparent"
                         app:et_dividerCompoundPadding="true"
                         app:et_dividerHeight="0dp"
@@ -170,6 +176,7 @@
                         android:padding="10dp"
                         android:textColorHint="#b2b2b2"
                         android:textSize="15sp"
+                        android:maxLength="128"
                         app:et_dividerColor="@android:color/transparent"
                         app:et_dividerCompoundPadding="true"
                         app:et_dividerHeight="0dp"
@@ -203,6 +210,7 @@
                         android:padding="10dp"
                         android:textColorHint="#b2b2b2"
                         android:textSize="16sp"
+                        android:maxLength="128"
                         app:et_dividerColor="@android:color/transparent"
                         app:et_dividerCompoundPadding="true"
                         app:et_dividerHeight="0dp"
@@ -226,6 +234,7 @@
                         android:padding="10dp"
                         android:textColorHint="#b2b2b2"
                         android:textSize="15sp"
+                        android:maxLength="128"
                         app:et_dividerColor="@android:color/transparent"
                         app:et_dividerCompoundPadding="true"
                         app:et_dividerHeight="0dp"
@@ -249,6 +258,7 @@
                         android:padding="10dp"
                         android:textColorHint="#b2b2b2"
                         android:textSize="15sp"
+                        android:maxLength="128"
                         app:et_dividerColor="@android:color/transparent"
                         app:et_dividerCompoundPadding="true"
                         app:et_dividerHeight="0dp"
@@ -272,6 +282,7 @@
                         android:padding="10dp"
                         android:textColorHint="#b2b2b2"
                         android:textSize="15sp"
+                        android:maxLength="128"
                         app:et_dividerColor="@android:color/transparent"
                         app:et_dividerCompoundPadding="true"
                         app:et_dividerHeight="0dp"
@@ -295,6 +306,7 @@
                         android:padding="10dp"
                         android:textColorHint="#b2b2b2"
                         android:textSize="15sp"
+                        android:maxLength="64"
                         app:et_dividerColor="@android:color/transparent"
                         app:et_dividerCompoundPadding="true"
                         app:et_dividerHeight="0dp"
@@ -318,6 +330,7 @@
                         android:padding="10dp"
                         android:textColorHint="#b2b2b2"
                         android:textSize="15sp"
+                        android:maxLength="64"
                         app:et_dividerColor="@android:color/transparent"
                         app:et_dividerCompoundPadding="true"
                         app:et_dividerHeight="0dp"
@@ -338,7 +351,8 @@
                     android:background="@drawable/border_button_orange_2px"
                     android:text="@string/btn_save"
                     android:textColor="@color/black_text"
-                    android:textSize="15sp" />
+                    android:textSize="15sp"
+                    android:onClick="@{handlers::saveSealifeClicked}"/>
             </LinearLayout>
         </ScrollView>
     </LinearLayout>

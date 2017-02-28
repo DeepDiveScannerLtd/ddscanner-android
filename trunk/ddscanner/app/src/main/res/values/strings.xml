@@ -456,4 +456,6 @@
     <string name="company">Company</string>
     <string name="reseller">Reseller</string>
     <string name="cover">COVER</string>
+    <string name="name_is_required_sealife">Name is required</string>
+    <string name="add_sealife_phtot">Add a photo of the sea life</string>
 </resources>
