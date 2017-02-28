@@ -27,6 +27,7 @@
         <include layout="@layout/view_toolbar" />
 
         <ScrollView
+            android:id="@+id/main_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 

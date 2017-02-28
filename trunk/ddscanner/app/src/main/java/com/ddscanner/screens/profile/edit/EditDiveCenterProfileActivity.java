@@ -492,6 +492,10 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
                 isDataValid = false;
             }
         }
+        if (!isDataValid) {
+            binding.mainLayout.scrollTo(0,0);
+        }
+
         return isDataValid;
     }
 
