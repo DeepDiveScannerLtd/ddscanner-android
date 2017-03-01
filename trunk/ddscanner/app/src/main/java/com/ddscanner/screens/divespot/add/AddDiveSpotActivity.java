@@ -41,6 +41,7 @@ import com.ddscanner.entities.SpotPhotoEditScreenEntity;
 import com.ddscanner.entities.Translation;
 import com.ddscanner.events.AddPhotoDoListEvent;
 import com.ddscanner.events.ChangeTranslationEvent;
+import com.ddscanner.interfaces.ConfirmationDialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.divespot.details.DiveSpotDetailsActivity;
 import com.ddscanner.ui.adapters.PhotosListAdapterWithCover;
@@ -80,7 +81,7 @@ import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
-public class AddDiveSpotActivity extends BaseAppCompatActivity implements CompoundButton.OnCheckedChangeListener, View.OnClickListener, DialogClosedListener, AddTranslationDialogFragment.TranslationChangedListener, BaseAppCompatActivity.PictureTakenListener {
+public class AddDiveSpotActivity extends BaseAppCompatActivity implements CompoundButton.OnCheckedChangeListener, View.OnClickListener, DialogClosedListener, AddTranslationDialogFragment.TranslationChangedListener, BaseAppCompatActivity.PictureTakenListener, ConfirmationDialogClosedListener {
 
     private static final String TAG = AddDiveSpotActivity.class.getSimpleName();
     private static final String DIVE_SPOT_NAME_PATTERN = "^[a-zA-Z0-9 ]*$";
@@ -528,7 +529,7 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                DialogHelpers.showDialogAfterChanging(R.string.dialog_leave_title, R.string.dialog_leave_spot_message, this, this);
+                DialogHelpers.showDialogAfterChangesInActivity(getSupportFragmentManager());
                 // onBackPressed();
                 return true;
         }
@@ -804,4 +805,15 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
     public void onPictureFromCameraTaken(File picture) {
 
     }
+
+    @Override
+    public void onNegativeDialogClicked() {
+
+    }
+
+    @Override
+    public void onPositiveDialogClicked() {
+        finish();
+    }
+
 }

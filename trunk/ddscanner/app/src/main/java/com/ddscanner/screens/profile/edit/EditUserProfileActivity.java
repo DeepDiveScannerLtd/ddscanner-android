@@ -22,10 +22,12 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.databinding.ActivityEditProfileBinding;
 import com.ddscanner.entities.User;
+import com.ddscanner.interfaces.ConfirmationDialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.profile.edit.divecenter.search.SearchDiveCenterActivity;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.adapters.DiverLevelSpinnerAdapter;
+import com.ddscanner.ui.dialogs.ConfirmationDialogFragment;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogHelpers;
@@ -45,7 +47,7 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
 
-public class EditUserProfileActivity extends BaseAppCompatActivity implements BaseAppCompatActivity.PictureTakenListener {
+public class EditUserProfileActivity extends BaseAppCompatActivity implements BaseAppCompatActivity.PictureTakenListener, ConfirmationDialogClosedListener {
 
     private ActivityEditProfileBinding binding;
     private User user;
@@ -243,7 +245,7 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                finish();
+                onBackPressed();
                 return true;
             case R.id.logout:
                 Intent intent = new Intent();
@@ -294,7 +296,16 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        DialogHelpers.showDialogAfterChanging(R.string.dialog_leave_title, R.string.dialog_leave_review_message, this, this);
+        DialogHelpers.showDialogAfterChangesInActivity(getSupportFragmentManager());
+    }
+
+    @Override
+    public void onNegativeDialogClicked() {
+
+    }
+
+    @Override
+    public void onPositiveDialogClicked() {
+        finish();
     }
 }

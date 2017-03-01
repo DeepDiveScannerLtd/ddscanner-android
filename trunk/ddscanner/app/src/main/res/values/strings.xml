@@ -459,5 +459,8 @@
     <string name="name_is_required_sealife">Name is required</string>
     <string name="add_sealife_phtot">Add a photo of the sea life</string>
     <string name="edit_sea_life">Edit sea life</string>
-    <string name="empty_string" />
+    <string name="empty_string"></string>
+    <string name="exit_without_saving">Do you want to exit without saving?</string>
+    <string name="no">NO</string>
+    <string name="yes">YES</string>
 </resources>

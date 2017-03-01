@@ -23,6 +23,7 @@ import com.ddscanner.entities.DialogClosedListener;
 import com.ddscanner.entities.DiveSpotPhoto;
 import com.ddscanner.entities.SealifeShort;
 import com.ddscanner.events.AddPhotoDoListEvent;
+import com.ddscanner.interfaces.ConfirmationDialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.adapters.PhotosListAdapterWithoutCover;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
@@ -48,7 +49,7 @@ import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
-public class EditCommentActivity extends BaseAppCompatActivity implements View.OnClickListener, DialogClosedListener, BaseAppCompatActivity.PictureTakenListener {
+public class EditCommentActivity extends BaseAppCompatActivity implements View.OnClickListener, DialogClosedListener, BaseAppCompatActivity.PictureTakenListener, ConfirmationDialogClosedListener {
 
     private static final int COMMENT_MAX_LENGTH = 250;
 
@@ -226,7 +227,7 @@ public class EditCommentActivity extends BaseAppCompatActivity implements View.O
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                DialogHelpers.showDialogAfterChanging(R.string.dialog_leave_title, R.string.dialog_leave_review_message, this, this);
+                DialogHelpers.showDialogAfterChangesInActivity(getSupportFragmentManager());
 //                onBackPressed();
                 return true;
             case R.id.send_review:
@@ -329,4 +330,15 @@ public class EditCommentActivity extends BaseAppCompatActivity implements View.O
                 break;
         }
     }
+
+    @Override
+    public void onNegativeDialogClicked() {
+
+    }
+
+    @Override
+    public void onPositiveDialogClicked() {
+        finish();
+    }
+
 }

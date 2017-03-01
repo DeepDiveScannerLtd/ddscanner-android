@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 
 import com.afollestad.materialdialogs.DialogAction;
@@ -13,6 +14,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
+import com.ddscanner.ui.dialogs.ConfirmationDialogFragment;
 
 import java.lang.ref.WeakReference;
 
@@ -72,6 +74,10 @@ public class DialogHelpers {
                     }
                 });
         dialog.show();
+    }
+
+    public static void showDialogAfterChangesInActivity(FragmentManager fragmentManager) {
+        ConfirmationDialogFragment.showForActivity(fragmentManager, R.string.empty_string, R.string.exit_without_saving, R.string.yes, R.string.cancel);
     }
 
 }

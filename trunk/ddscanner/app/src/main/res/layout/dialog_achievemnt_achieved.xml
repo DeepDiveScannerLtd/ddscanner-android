@@ -9,7 +9,7 @@
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/gongrats"
+        tools:text="@string/gongrats"
         android:textColor="@color/black_text"
         android:gravity="center"
         android:layout_marginTop="20dp"

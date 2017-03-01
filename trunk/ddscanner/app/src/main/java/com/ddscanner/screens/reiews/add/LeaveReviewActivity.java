@@ -19,6 +19,7 @@ import com.ddscanner.R;
 import com.ddscanner.entities.DialogClosedListener;
 import com.ddscanner.entities.SealifeShort;
 import com.ddscanner.events.AddPhotoDoListEvent;
+import com.ddscanner.interfaces.ConfirmationDialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.activities.LoginActivity;
@@ -44,7 +45,7 @@ import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
-public class LeaveReviewActivity extends BaseAppCompatActivity implements View.OnClickListener, BaseAppCompatActivity.PictureTakenListener, DialogClosedListener {
+public class LeaveReviewActivity extends BaseAppCompatActivity implements View.OnClickListener, BaseAppCompatActivity.PictureTakenListener, DialogClosedListener, ConfirmationDialogClosedListener {
 
     private static final String TAG = LeaveReviewActivity.class.getSimpleName();
     private static final String ID = "ID";
@@ -205,7 +206,7 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements View.O
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                DialogHelpers.showDialogAfterChanging(R.string.dialog_leave_title, R.string.dialog_leave_review_message, this, this);
+                DialogHelpers.showDialogAfterChangesInActivity(getSupportFragmentManager());
                 return true;
             case R.id.send_review:
                 sendReview();
@@ -296,5 +297,15 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements View.O
     @Override
     public void onDialogClosed(int requestCode) {
 
+    }
+
+    @Override
+    public void onNegativeDialogClicked() {
+
+    }
+
+    @Override
+    public void onPositiveDialogClicked() {
+        finish();
     }
 }

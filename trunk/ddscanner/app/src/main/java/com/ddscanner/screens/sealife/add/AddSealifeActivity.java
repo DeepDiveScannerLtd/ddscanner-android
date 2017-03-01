@@ -24,12 +24,14 @@ import com.ddscanner.databinding.ActivityAddSealifeBinding;
 import com.ddscanner.entities.Sealife;
 import com.ddscanner.entities.SealifeShort;
 import com.ddscanner.entities.SealifeTranslation;
+import com.ddscanner.interfaces.ConfirmationDialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.activities.LoginActivity;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
+import com.ddscanner.utils.DialogHelpers;
 import com.ddscanner.utils.Helpers;
 import com.google.gson.Gson;
 import com.rey.material.widget.EditText;
@@ -44,7 +46,7 @@ import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
-public class AddSealifeActivity extends BaseAppCompatActivity implements View.OnClickListener, BaseAppCompatActivity.PictureTakenListener {
+public class AddSealifeActivity extends BaseAppCompatActivity implements View.OnClickListener, BaseAppCompatActivity.PictureTakenListener, ConfirmationDialogClosedListener {
 
     private static final String TAG = AddSealifeActivity.class.getSimpleName();
     private static final String ARG_SEALIFE = "seaife";
@@ -251,7 +253,7 @@ public class AddSealifeActivity extends BaseAppCompatActivity implements View.On
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                onBackPressed();
+                DialogHelpers.showDialogAfterChangesInActivity(getSupportFragmentManager());
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -303,6 +305,16 @@ public class AddSealifeActivity extends BaseAppCompatActivity implements View.On
 
     public void saveSealifeClicked(View view) {
         createRequestBody();
+    }
+
+    @Override
+    public void onNegativeDialogClicked() {
+
+    }
+
+    @Override
+    public void onPositiveDialogClicked() {
+        finish();
     }
 
 }

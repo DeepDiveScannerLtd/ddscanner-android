@@ -49,6 +49,7 @@ import com.ddscanner.events.AddPhotoDoListEvent;
 import com.ddscanner.events.AddTranslationClickedEvent;
 import com.ddscanner.events.ChangeTranslationEvent;
 import com.ddscanner.events.ImageDeletedEvent;
+import com.ddscanner.interfaces.ConfirmationDialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.activities.LoginActivity;
@@ -88,7 +89,7 @@ import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
-public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseAppCompatActivity.PictureTakenListener, CompoundButton.OnCheckedChangeListener, View.OnClickListener, DialogClosedListener, AddTranslationDialogFragment.TranslationChangedListener {
+public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseAppCompatActivity.PictureTakenListener, CompoundButton.OnCheckedChangeListener, View.OnClickListener, DialogClosedListener, AddTranslationDialogFragment.TranslationChangedListener, ConfirmationDialogClosedListener {
 
     private static final String TAG = EditDiveSpotActivity.class.getSimpleName();
 
@@ -813,7 +814,7 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                DialogHelpers.showDialogAfterChanging(R.string.dialog_leave_title, R.string.dialog_leave_spot_message, this, this);
+                DialogHelpers.showDialogAfterChangesInActivity(getSupportFragmentManager());
                 // onBackPressed();
                 return true;
         }
@@ -944,4 +945,15 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
             mapsListAdapter.addDevicePhotos(pictures);
         }
     }
+
+    @Override
+    public void onNegativeDialogClicked() {
+
+    }
+
+    @Override
+    public void onPositiveDialogClicked() {
+        finish();
+    }
+
 }
