@@ -195,6 +195,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:onClick="@{handlers::showInstructors}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
@@ -236,6 +237,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:onClick="@{handlers::showLanguages}"
                     android:visibility="@{diveCenterViewModel.diveCenterProfile.languages == null ? View.GONE : View.VISIBLE}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -401,6 +403,7 @@
                 </LinearLayout>
 
                 <Button
+                    android:onClick="@{handlers::showDiveSpots}"
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
                     android:layout_marginBottom="20dp"

@@ -32,6 +32,7 @@ public class InstructorsActivity extends BaseAppCompatActivity implements Dialog
     private InstructorListAdapter instructorListAdapter;
     private MaterialDialog materialDialog;
     private int removedInstructorId;
+    private String userId;
 
     private DDScannerRestClient.ResultListener<Void> removeResultListener = new DDScannerRestClient.ResultListener<Void>() {
         @Override
@@ -63,7 +64,7 @@ public class InstructorsActivity extends BaseAppCompatActivity implements Dialog
     private DDScannerRestClient.ResultListener<ArrayList<Instructor>> resultListener = new DDScannerRestClient.ResultListener<ArrayList<Instructor>>() {
         @Override
         public void onSuccess(ArrayList<Instructor> result) {
-            instructorListAdapter = new InstructorListAdapter(result, InstructorsActivity.this);
+            instructorListAdapter = new InstructorListAdapter(result, InstructorsActivity.this, DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId().equals(userId));
             recyclerView.setAdapter(instructorListAdapter);
 
             progressView.setVisibility(View.GONE);
@@ -103,8 +104,9 @@ public class InstructorsActivity extends BaseAppCompatActivity implements Dialog
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         progressView = (ProgressView) findViewById(R.id.progress_bar);
         materialDialog = Helpers.getMaterialDialog(this);
+        userId = getIntent().getStringExtra("id");
         setupToolbar(R.string.instructors, R.id.toolbar);
-        DDScannerApplication.getInstance().getDdScannerRestClient().getDiveCenterInstructorsList(resultListener, getIntent().getStringExtra("id"));
+        DDScannerApplication.getInstance().getDdScannerRestClient().getDiveCenterInstructorsList(resultListener, userId);
     }
 
     @Override

@@ -13,7 +13,10 @@ import com.ddscanner.R;
 import com.ddscanner.databinding.FragmentDiveCenterProfileBinding;
 import com.ddscanner.entities.DiveCenterProfile;
 import com.ddscanner.entities.DiveSpotListSource;
+import com.ddscanner.screens.divecemter.profile.languages.DiveCenterProfileLanguagesActivity;
+import com.ddscanner.screens.instructors.InstructorsActivity;
 import com.ddscanner.screens.profile.divecenter.DiveCenterProfileFragmentViewModel;
+import com.ddscanner.screens.profile.divecenter.DiveCenterSpotsActivity;
 import com.ddscanner.ui.activities.DiveSpotsListActivity;
 import com.ddscanner.ui.adapters.UserPhotosListAdapter;
 
@@ -51,7 +54,7 @@ public class DiveCenterProfileFragment extends Fragment {
     }
 
     public void showDiveSpots(View view) {
-
+        DiveCenterSpotsActivity.show(getContext(), String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId()), null);
     }
 
     public void showCreated(View view) {
@@ -64,6 +67,16 @@ public class DiveCenterProfileFragment extends Fragment {
         if (binding.getDiveCenterViewModel().getDiveCenterProfile().getEditedSpotsCount() > 0) {
             DiveSpotsListActivity.show(getContext(), DiveSpotListSource.EDITED, String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId()));
         }
+    }
+
+    public void showLanguages(View view) {
+        if (binding.getDiveCenterViewModel().getDiveCenterProfile().getLanguages() != null) {
+            DiveCenterProfileLanguagesActivity.show(String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId()), getContext());
+        }
+    }
+
+    public void showInstructors(View view) {
+        InstructorsActivity.showForResult(getActivity(), -1, String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId()));
     }
 
 }

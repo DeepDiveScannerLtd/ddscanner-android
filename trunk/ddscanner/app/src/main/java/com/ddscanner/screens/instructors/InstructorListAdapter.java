@@ -26,10 +26,12 @@ public class InstructorListAdapter extends RecyclerView.Adapter<InstructorListAd
     private ArrayList<Instructor> instructors;
     private Context context;
     private ArrayList<String> showedInstructors = new ArrayList<>();
+    private boolean isSelf;
 
-    public InstructorListAdapter(ArrayList<Instructor> instructors, Context context) {
+    public InstructorListAdapter(ArrayList<Instructor> instructors, Context context, boolean isSelf) {
         this.instructors = instructors;
         this.context = context;
+        this.isSelf = isSelf;
     }
 
     @Override
@@ -42,10 +44,14 @@ public class InstructorListAdapter extends RecyclerView.Adapter<InstructorListAd
     public void onBindViewHolder(InstructorListViewHolder holder, int position) {
         holder.name.setText(instructors.get(position).getName());
         holder.isNew.setVisibility(View.GONE);
-        if (instructors.get(position).getIsNew()) {
-            holder.isNew.setVisibility(View.VISIBLE);
-            if (showedInstructors.indexOf(instructors.get(position).getId()) == -1) {
-                showedInstructors.add(instructors.get(position).getId());
+        holder.removeButton.setVisibility(View.GONE);
+        if (isSelf) {
+            holder.removeButton.setVisibility(View.VISIBLE);
+            if (instructors.get(position).getIsNew()) {
+                holder.isNew.setVisibility(View.VISIBLE);
+                if (showedInstructors.indexOf(instructors.get(position).getId()) == -1) {
+                    showedInstructors.add(instructors.get(position).getId());
+                }
             }
         }
         Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, instructors.get(position).getPhoto(), "1")).placeholder(R.drawable.review_default_avatar).error(R.drawable.review_default_avatar).resize(Math.round(Helpers.convertDpToPixel(35, context)),Math.round(Helpers.convertDpToPixel(35, context))).centerCrop().transform(new CropCircleTransformation()).into(holder.avatar);
