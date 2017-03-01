@@ -34,7 +34,7 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.databinding.ActivityDiveSpotDetailsBinding;
-import com.ddscanner.entities.DialogClosedListener;
+import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.entities.DiveSpotDetailsEntity;
 import com.ddscanner.entities.FlagsEntity;
 import com.ddscanner.entities.PhotoOpenedSource;

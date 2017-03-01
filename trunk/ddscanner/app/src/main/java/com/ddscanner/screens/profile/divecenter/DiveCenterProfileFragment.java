@@ -19,7 +19,7 @@ import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.databinding.ViewDivecenterProfileBinding;
 import com.ddscanner.entities.BaseUser;
 import com.ddscanner.entities.BusRegisteringListener;
-import com.ddscanner.entities.DialogClosedListener;
+import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.entities.DiveCenterProfile;
 import com.ddscanner.entities.PhotoAuthor;
 import com.ddscanner.entities.PhotoOpenedSource;

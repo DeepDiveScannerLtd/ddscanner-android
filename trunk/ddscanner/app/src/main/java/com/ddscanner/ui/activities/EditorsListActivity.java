@@ -4,17 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
-import com.ddscanner.entities.DialogClosedListener;
+import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.entities.User;
-import com.ddscanner.entities.UserOld;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.adapters.EditorsUsersListAdapter;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;

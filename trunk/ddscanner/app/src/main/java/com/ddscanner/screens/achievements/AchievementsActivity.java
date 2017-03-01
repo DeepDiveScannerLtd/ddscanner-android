@@ -16,7 +16,7 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.AchievmentsResponseEntity;
 import com.ddscanner.entities.CompleteAchievement;
-import com.ddscanner.entities.DialogClosedListener;
+import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.entities.PendingAchievement;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.activities.LoginActivity;

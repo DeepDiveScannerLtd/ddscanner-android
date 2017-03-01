@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Patterns;
 import android.view.MenuItem;
@@ -15,15 +14,11 @@ import android.widget.EditText;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
-import com.ddscanner.analytics.EventsTracker;
-import com.ddscanner.entities.DialogClosedListener;
+import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
-import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
-
-import java.util.regex.Pattern;
 
 public class ForgotPasswordActivity extends BaseAppCompatActivity implements View.OnClickListener, DialogClosedListener{
 

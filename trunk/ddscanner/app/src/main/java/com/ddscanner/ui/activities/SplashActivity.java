@@ -12,20 +12,14 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.crashlytics.android.Crashlytics;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
-import com.ddscanner.analytics.EventsTracker;
-import com.ddscanner.entities.DialogClosedListener;
+import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.events.InstanceIDReceivedEvent;
-import com.ddscanner.rest.DDScannerRestClient;
-import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.ui.views.DDProgressBarView;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
 import com.squareup.otto.Subscribe;
 
 public class SplashActivity extends BaseAppCompatActivity implements DialogClosedListener, View.OnClickListener {

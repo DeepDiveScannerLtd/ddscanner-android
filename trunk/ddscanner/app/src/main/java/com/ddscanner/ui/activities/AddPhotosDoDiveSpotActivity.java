@@ -16,8 +16,7 @@ import android.widget.Button;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
-import com.ddscanner.analytics.EventsTracker;
-import com.ddscanner.entities.DialogClosedListener;
+import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.adapters.AddPhotoToDiveSpotAdapter;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
@@ -28,8 +27,6 @@ import com.ddscanner.utils.Helpers;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import okhttp3.RequestBody;
 
 /**
  * Created by lashket on 26.5.16.

@@ -14,7 +14,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
@@ -22,7 +21,7 @@ import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.databinding.FragmentProfileBinding;
 import com.ddscanner.entities.BaseUser;
 import com.ddscanner.entities.BusRegisteringListener;
-import com.ddscanner.entities.DialogClosedListener;
+import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.entities.DiveSpotListSource;
 import com.ddscanner.entities.DiveSpotPhoto;
 import com.ddscanner.entities.PhotoAuthor;
@@ -43,7 +42,6 @@ import com.ddscanner.events.ChangeLoginViewEvent;
 import com.ddscanner.ui.activities.DiveSpotsListActivity;
 import com.ddscanner.ui.activities.MainActivity;
 import com.ddscanner.ui.activities.PhotosGalleryActivity;
-import com.ddscanner.ui.activities.SelfCommentsActivity;
 import com.ddscanner.ui.activities.UserLikesDislikesActivity;
 import com.ddscanner.ui.adapters.AchievmentProfileListAdapter;
 import com.ddscanner.ui.adapters.UserPhotosListAdapter;
@@ -55,8 +53,6 @@ import com.google.gson.Gson;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ProfileFragment extends Fragment implements LoginView.LoginStateChangeListener, DialogClosedListener, SwipeRefreshLayout.OnRefreshListener {
 

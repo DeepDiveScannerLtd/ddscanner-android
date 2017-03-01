@@ -23,7 +23,7 @@ import android.widget.Toast;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
-import com.ddscanner.entities.DialogClosedListener;
+import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.entities.DiveSpotPhoto;
 import com.ddscanner.entities.DiveSpotPhotosResponseEntity;
 import com.ddscanner.rest.DDScannerRestClient;
@@ -40,8 +40,6 @@ import com.rey.material.widget.ProgressView;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
-import me.nereo.multi_image_selector.MultiImageSelector;
 
 public class DiveSpotPhotosActivity extends AppCompatActivity implements View.OnClickListener, DialogClosedListener, ViewPager.OnPageChangeListener {
 

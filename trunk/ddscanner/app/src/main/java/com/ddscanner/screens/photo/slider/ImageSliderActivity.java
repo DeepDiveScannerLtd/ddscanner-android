@@ -11,7 +11,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -23,7 +22,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
-import com.ddscanner.entities.DialogClosedListener;
+import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.entities.DiveSpotPhoto;
 import com.ddscanner.entities.DiveSpotPhotosResponseEntity;
 import com.ddscanner.entities.FiltersResponseEntity;
@@ -41,8 +40,6 @@ import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
