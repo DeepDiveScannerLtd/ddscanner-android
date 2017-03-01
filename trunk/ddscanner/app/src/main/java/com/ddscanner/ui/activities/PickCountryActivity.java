@@ -21,7 +21,7 @@ import com.ddscanner.events.ObjectChosedEvent;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.profile.edit.divecenter.search.SearchDiveCenterActivity;
 import com.ddscanner.ui.adapters.BaseSearchAdapter;
-import com.ddscanner.ui.dialogs.InfoDialogFragment;
+import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
 import com.rey.material.widget.ProgressView;
@@ -51,18 +51,18 @@ public class PickCountryActivity extends BaseAppCompatActivity implements Search
 
         @Override
         public void onConnectionFailure() {
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_PICK_COUNTRY_ACTIVITY_HIDE, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_PICK_COUNTRY_ACTIVITY_HIDE, false);
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_PICK_COUNTRY_ACTIVITY_HIDE, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_PICK_COUNTRY_ACTIVITY_HIDE, false);
             Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);
         }
 
         @Override
         public void onInternetConnectionClosed() {
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_PICK_COUNTRY_ACTIVITY_HIDE, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_PICK_COUNTRY_ACTIVITY_HIDE, false);
         }
 
     };

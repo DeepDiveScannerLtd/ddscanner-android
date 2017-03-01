@@ -47,7 +47,7 @@ import com.ddscanner.ui.activities.SelfCommentsActivity;
 import com.ddscanner.ui.activities.UserLikesDislikesActivity;
 import com.ddscanner.ui.adapters.AchievmentProfileListAdapter;
 import com.ddscanner.ui.adapters.UserPhotosListAdapter;
-import com.ddscanner.ui.dialogs.InfoDialogFragment;
+import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.ui.views.LoginView;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogsRequestCodes;
@@ -96,7 +96,7 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
 
         @Override
         public void onConnectionFailure() {
-            InfoDialogFragment.showForFragmentResult(getChildFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_PROFILE_FRAGMENT_UNEXPECTED_ERROR, false);
+            UserActionInfoDialogFragment.showForFragmentResult(getChildFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_PROFILE_FRAGMENT_UNEXPECTED_ERROR, false);
         }
 
         @Override
@@ -107,14 +107,14 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
                     break;
                 default:
                     EventsTracker.trackUnknownServerError(url, errorMessage);
-                    InfoDialogFragment.showForFragmentResult(getChildFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_PROFILE_FRAGMENT_UNEXPECTED_ERROR, false);
+                    UserActionInfoDialogFragment.showForFragmentResult(getChildFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_PROFILE_FRAGMENT_UNEXPECTED_ERROR, false);
                     break;
             }
         }
 
         @Override
         public void onInternetConnectionClosed() {
-            InfoDialogFragment.showForFragmentResult(getChildFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_PROFILE_FRAGMENT_UNEXPECTED_ERROR, false);
+            UserActionInfoDialogFragment.showForFragmentResult(getChildFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_PROFILE_FRAGMENT_UNEXPECTED_ERROR, false);
         }
 
     };

@@ -17,7 +17,7 @@ import com.ddscanner.entities.User;
 import com.ddscanner.entities.UserOld;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.adapters.UserListAdapter;
-import com.ddscanner.ui.dialogs.InfoDialogFragment;
+import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
 
@@ -39,18 +39,18 @@ public class CheckInPeoplesActivity extends BaseAppCompatActivity implements Dia
 
         @Override
         public void onConnectionFailure() {
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_CHECKINS_ACTIVITY_HIDE_ACTIVITY, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_CHECKINS_ACTIVITY_HIDE_ACTIVITY, false);
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_CHECKINS_ACTIVITY_HIDE_ACTIVITY, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_CHECKINS_ACTIVITY_HIDE_ACTIVITY, false);
             Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);
         }
 
         @Override
         public void onInternetConnectionClosed() {
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_CHECKINS_ACTIVITY_HIDE_ACTIVITY, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_CHECKINS_ACTIVITY_HIDE_ACTIVITY, false);
         }
 
     };

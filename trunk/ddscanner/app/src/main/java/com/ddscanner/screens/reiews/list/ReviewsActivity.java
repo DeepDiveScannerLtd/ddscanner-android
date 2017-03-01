@@ -38,7 +38,7 @@ import com.ddscanner.screens.reiews.add.LeaveReviewActivity;
 import com.ddscanner.ui.activities.LoginActivity;
 import com.ddscanner.ui.adapters.ReviewsListAdapter;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
-import com.ddscanner.ui.dialogs.InfoDialogFragment;
+import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogsRequestCodes;
@@ -93,7 +93,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
         @Override
         public void onConnectionFailure() {
             reviewsListAdapter.rateReviewFaled(reviewPositionToRate);
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_CONNECTION_FAILURE, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_CONNECTION_FAILURE, false);
         }
 
         @Override
@@ -104,7 +104,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
                     LoginActivity.showForResult(ReviewsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_LIKE_REVIEW);
                     break;
                 default:
-                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_FAILED_TO_CONNECT, false);
+                    UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_FAILED_TO_CONNECT, false);
                     break;
 
             }
@@ -112,7 +112,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
 
         @Override
         public void onInternetConnectionClosed() {
-            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
+            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
         }
 
     };
@@ -132,7 +132,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
         @Override
         public void onConnectionFailure() {
             reviewsListAdapter.rateReviewFaled(reviewPositionToRate);
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_CONNECTION_FAILURE, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_CONNECTION_FAILURE, false);
         }
 
         @Override
@@ -143,7 +143,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
                     LoginActivity.showForResult(ReviewsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_DISLIKE_REVIEW);
                     break;
                 default:
-                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_FAILED_TO_CONNECT, false);
+                    UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_FAILED_TO_CONNECT, false);
                     break;
 
             }
@@ -151,7 +151,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
 
         @Override
         public void onInternetConnectionClosed() {
-            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
+            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
         }
 
     };
@@ -170,7 +170,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
         @Override
         public void onConnectionFailure() {
             materialDialog.dismiss();
-            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
+            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
         }
 
         @Override
@@ -181,7 +181,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
                     LoginActivity.showForResult(ReviewsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_LEAVE_REPORT);
                     break;
                 default:
-                    InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, false);
+                    UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, false);
                     break;
             }
         }
@@ -189,7 +189,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
         @Override
         public void onInternetConnectionClosed() {
             materialDialog.dismiss();
-            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
+            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
         }
 
     };
@@ -216,17 +216,17 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
 
         @Override
         public void onConnectionFailure() {
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_CONNECTION_FAILURE, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_CONNECTION_FAILURE, false);
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_CONNECTION_FAILURE, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_CONNECTION_FAILURE, false);
         }
 
         @Override
         public void onInternetConnectionClosed() {
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_CONNECTION_FAILURE, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_REVIEWS_ACTIVITY_CONNECTION_FAILURE, false);
         }
 
     };
@@ -241,7 +241,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
         @Override
         public void onConnectionFailure() {
             materialDialog.dismiss();
-            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
+            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
         }
 
         @Override
@@ -253,7 +253,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
                     LoginActivity.showForResult(ReviewsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_DELETE_COMMENT);
                     break;
                 default:
-                    InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_server_error_title, false);
+                    UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_server_error_title, false);
                     break;
             }
         }
@@ -261,7 +261,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
         @Override
         public void onInternetConnectionClosed() {
             materialDialog.dismiss();
-            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
+            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
         }
 
     };
@@ -391,7 +391,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
                 if (resultCode == RESULT_OK) {
                     DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsMustRefreshDiveSpotActivity(true);
                     if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == 0) {
-                        UserActionInfoDialogFragment.show(this, R.string.sorry, R.string.dive_centers_cannot_leave_review);
+                        UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.sorry, R.string.dive_centers_cannot_leave_review, false);
                         leaveReview.setVisibility(View.GONE);
                     } else {
                         LeaveReviewActivity.showForResult(this, sourceId, 1, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_WRITE_REVIEW);

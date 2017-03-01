@@ -27,7 +27,7 @@ import com.ddscanner.events.SealifeChoosedEvent;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.sealife.add.AddSealifeActivity;
 import com.ddscanner.ui.adapters.SealifeSearchAdapter;
-import com.ddscanner.ui.dialogs.InfoDialogFragment;
+import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogsRequestCodes;
@@ -69,18 +69,18 @@ public class SearchSealifeActivity extends AppCompatActivity implements SearchVi
 
         @Override
         public void onConnectionFailure() {
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_SEARCH_SEALIFE_ACTIVITY_FAILED_TO_CONNECT, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_SEARCH_SEALIFE_ACTIVITY_FAILED_TO_CONNECT, false);
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             EventsTracker.trackUnknownServerError(url, errorMessage);
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_SEARCH_SEALIFE_ACTIVITY_UNEXPECTED_ERROR, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_SEARCH_SEALIFE_ACTIVITY_UNEXPECTED_ERROR, false);
         }
 
         @Override
         public void onInternetConnectionClosed() {
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_SEARCH_SEALIFE_ACTIVITY_FAILED_TO_CONNECT, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_SEARCH_SEALIFE_ACTIVITY_FAILED_TO_CONNECT, false);
         }
 
     };

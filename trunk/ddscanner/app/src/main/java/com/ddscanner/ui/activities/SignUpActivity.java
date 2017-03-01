@@ -34,7 +34,7 @@ import com.ddscanner.entities.SignInType;
 import com.ddscanner.entities.SignUpResponseEntity;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
-import com.ddscanner.ui.dialogs.InfoDialogFragment;
+import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
@@ -167,7 +167,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         @Override
         public void onConnectionFailure() {
             materialDialog.dismiss();
-            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
+            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
         }
 
         @Override
@@ -175,20 +175,20 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             materialDialog.dismiss();
             switch (errorType) {
                 case ENTITY_NOT_FOUND_404:
-                    UserActionInfoDialogFragment.show(SignUpActivity.this, R.string.title_pass_incorrect, R.string.pass_incorrect);
+                    UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.title_pass_incorrect, R.string.pass_incorrect, false);
                     break;
                 case DATA_ALREADY_EXIST_409:
-                    UserActionInfoDialogFragment.show(SignUpActivity.this, R.string.title_email_exist, R.string.message_email_exist);
+                    UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.title_email_exist, R.string.message_email_exist, false);
                     break;
                 default:
-                    InfoDialogFragment.show(getSupportFragmentManager(), R.string.unexcepted_error_title, R.string.unexcepted_error_text, false);
+                    UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.unexcepted_error_title, R.string.unexcepted_error_text, false);
                     break;
             }
         }
 
         @Override
         public void onInternetConnectionClosed() {
-            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
+            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
         }
 
     };

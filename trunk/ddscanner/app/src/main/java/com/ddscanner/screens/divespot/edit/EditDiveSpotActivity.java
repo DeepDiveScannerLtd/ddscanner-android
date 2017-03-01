@@ -62,7 +62,7 @@ import com.ddscanner.ui.adapters.PhotosListAdapterWithoutCover;
 import com.ddscanner.ui.adapters.SealifeListAddingDiveSpotAdapter;
 import com.ddscanner.ui.adapters.TranslationsListAdapter;
 import com.ddscanner.ui.dialogs.AddTranslationDialogFragment;
-import com.ddscanner.ui.dialogs.InfoDialogFragment;
+import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogHelpers;
@@ -188,17 +188,17 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
 
         @Override
         public void onConnectionFailure() {
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_EDIT_SPOT_ACTIVITY_HIDE, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_EDIT_SPOT_ACTIVITY_HIDE, false);
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_EDIT_SPOT_ACTIVITY_HIDE, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_EDIT_SPOT_ACTIVITY_HIDE, false);
         }
 
         @Override
         public void onInternetConnectionClosed() {
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_EDIT_SPOT_ACTIVITY_HIDE, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_EDIT_SPOT_ACTIVITY_HIDE, false);
         }
 
     };
@@ -228,17 +228,17 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
 
         @Override
         public void onConnectionFailure() {
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_EDIT_SPOT_ACTIVITY_HIDE, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_EDIT_SPOT_ACTIVITY_HIDE, false);
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_EDIT_SPOT_ACTIVITY_HIDE, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_EDIT_SPOT_ACTIVITY_HIDE, false);
         }
 
         @Override
         public void onInternetConnectionClosed() {
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_EDIT_SPOT_ACTIVITY_HIDE, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_EDIT_SPOT_ACTIVITY_HIDE, false);
         }
 
     };
@@ -256,7 +256,7 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
         @Override
         public void onConnectionFailure() {
             progressDialogUpload.dismiss();
-            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
+            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
         }
 
         @Override
@@ -286,7 +286,7 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
 
         @Override
         public void onInternetConnectionClosed() {
-            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
+            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
         }
 
     };
@@ -301,17 +301,17 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
 
         @Override
         public void onConnectionFailure() {
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_EDIT_SPOT_ACTIVITY_HIDE, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_EDIT_SPOT_ACTIVITY_HIDE, false);
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_EDIT_SPOT_ACTIVITY_HIDE, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_EDIT_SPOT_ACTIVITY_HIDE, false);
         }
 
         @Override
         public void onInternetConnectionClosed() {
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_EDIT_SPOT_ACTIVITY_HIDE, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_EDIT_SPOT_ACTIVITY_HIDE, false);
         }
 
     };

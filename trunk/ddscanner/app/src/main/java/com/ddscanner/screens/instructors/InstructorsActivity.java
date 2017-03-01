@@ -24,7 +24,7 @@ import com.ddscanner.entities.Instructor;
 import com.ddscanner.events.RemoveInstructorEvent;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
-import com.ddscanner.ui.dialogs.InfoDialogFragment;
+import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
 import com.rey.material.widget.ProgressView;
@@ -50,19 +50,19 @@ public class InstructorsActivity extends BaseAppCompatActivity implements Dialog
         @Override
         public void onConnectionFailure() {
             materialDialog.dismiss();
-            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
+            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             materialDialog.dismiss();
-            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, false);
+            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, false);
             Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);
         }
 
         @Override
         public void onInternetConnectionClosed() {
-            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
+            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
         }
 
     };
@@ -79,18 +79,18 @@ public class InstructorsActivity extends BaseAppCompatActivity implements Dialog
 
         @Override
         public void onConnectionFailure() {
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_INSTRUCTORS_ACTIVITY_HIDE, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_INSTRUCTORS_ACTIVITY_HIDE, false);
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_INSTRUCTORS_ACTIVITY_HIDE, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_INSTRUCTORS_ACTIVITY_HIDE, false);
             Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);
         }
 
         @Override
         public void onInternetConnectionClosed() {
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_INSTRUCTORS_ACTIVITY_HIDE, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_INSTRUCTORS_ACTIVITY_HIDE, false);
         }
 
 

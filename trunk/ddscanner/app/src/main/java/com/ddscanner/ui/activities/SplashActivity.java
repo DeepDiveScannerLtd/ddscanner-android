@@ -19,7 +19,7 @@ import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.DialogClosedListener;
 import com.ddscanner.events.InstanceIDReceivedEvent;
 import com.ddscanner.rest.DDScannerRestClient;
-import com.ddscanner.ui.dialogs.InfoDialogFragment;
+import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.ui.views.DDProgressBarView;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogsRequestCodes;

@@ -24,7 +24,7 @@ import com.ddscanner.entities.RegisterResponse;
 import com.ddscanner.entities.SignInType;
 import com.ddscanner.events.LoggedInEvent;
 import com.ddscanner.rest.DDScannerRestClient;
-import com.ddscanner.ui.dialogs.InfoDialogFragment;
+import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;

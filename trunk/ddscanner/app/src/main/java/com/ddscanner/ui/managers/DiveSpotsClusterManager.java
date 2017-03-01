@@ -22,7 +22,7 @@ import com.ddscanner.events.NewDiveSpotAddedEvent;
 import com.ddscanner.events.OnMapClickEvent;
 import com.ddscanner.events.PlaceChoosedEvent;
 import com.ddscanner.rest.DDScannerRestClient;
-import com.ddscanner.ui.dialogs.InfoDialogFragment;
+import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.ui.fragments.MapListFragment;
 import com.ddscanner.utils.Helpers;
 import com.google.android.gms.maps.CameraUpdate;
@@ -87,7 +87,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpotShort> imple
         @Override
         public void onConnectionFailure() {
             hideProgressBar();
-            InfoDialogFragment.show(context.getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed_while_getting_dive_spots, false);
+            UserActionInfoDialogFragment.show(context.getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed_while_getting_dive_spots, false);
         }
 
         @Override
@@ -98,7 +98,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpotShort> imple
 
         @Override
         public void onInternetConnectionClosed() {
-            InfoDialogFragment.show(context.getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
+            UserActionInfoDialogFragment.show(context.getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
         }
 
     };

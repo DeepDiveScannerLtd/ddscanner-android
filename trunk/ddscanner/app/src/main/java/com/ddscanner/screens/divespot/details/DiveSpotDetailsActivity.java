@@ -57,7 +57,6 @@ import com.ddscanner.ui.activities.ShowDsLocationActivity;
 import com.ddscanner.ui.adapters.SealifeListAdapter;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.ui.dialogs.CheckedInDialogFragment;
-import com.ddscanner.ui.dialogs.InfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogsRequestCodes;
@@ -127,18 +126,18 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
 
         @Override
         public void onConnectionFailure() {
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_DIVE_SPOT_DETAILS_ACTIVITY_FAILED_TO_CONNECT, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_DIVE_SPOT_DETAILS_ACTIVITY_FAILED_TO_CONNECT, false);
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             EventsTracker.trackUnknownServerError(url, errorMessage);
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_DIVE_SPOT_DETAILS_ACTIVITY_DIVE_SPOT_NOT_FOUND, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_DIVE_SPOT_DETAILS_ACTIVITY_DIVE_SPOT_NOT_FOUND, false);
         }
 
         @Override
         public void onInternetConnectionClosed() {
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_DIVE_SPOT_DETAILS_ACTIVITY_DIVE_SPOT_NOT_FOUND, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_DIVE_SPOT_DETAILS_ACTIVITY_DIVE_SPOT_NOT_FOUND, false);
         }
     };
 
@@ -157,19 +156,19 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
 
         @Override
         public void onConnectionFailure() {
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_DIVE_SPOT_DETAILS_ACTIVITY_FAILED_TO_CONNECT, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_DIVE_SPOT_DETAILS_ACTIVITY_FAILED_TO_CONNECT, false);
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             EventsTracker.trackUnknownServerError(url, errorMessage);
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_DIVE_SPOT_DETAILS_ACTIVITY_DIVE_SPOT_NOT_FOUND, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_DIVE_SPOT_DETAILS_ACTIVITY_DIVE_SPOT_NOT_FOUND, false);
 
         }
 
         @Override
         public void onInternetConnectionClosed() {
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_DIVE_SPOT_DETAILS_ACTIVITY_DIVE_SPOT_NOT_FOUND, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_DIVE_SPOT_DETAILS_ACTIVITY_DIVE_SPOT_NOT_FOUND, false);
         }
 
     };
@@ -655,7 +654,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
             case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_LEAVE_REVIEW:
                 if (resultCode == RESULT_OK) {
                     if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == 0) {
-                        UserActionInfoDialogFragment.show(this, R.string.sorry, R.string.dive_centers_cannot_leave_review);
+                        UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.sorry, R.string.dive_centers_cannot_leave_review, false);
                         reloadFlags();
                     } else {
                         DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsMustRefreshDiveSpotActivity(true);
@@ -932,19 +931,19 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
 
         @Override
         public void onConnectionFailure() {
-            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
+            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             EventsTracker.trackUnknownServerError(url, errorMessage);
-            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, false);
+            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, false);
 
         }
 
         @Override
         public void onInternetConnectionClosed() {
-            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
+            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
         }
     }
 
@@ -972,7 +971,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
                 return;
             }
             binding.switchWorkingButton.setChecked(true);
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_ADD_PHOTOS_ACTIVITY_DIVE_SPOT_NOT_FOUND, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_ADD_PHOTOS_ACTIVITY_DIVE_SPOT_NOT_FOUND, false);
             Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);
         }
 
@@ -983,12 +982,12 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
                 return;
             }
             binding.switchWorkingButton.setChecked(true);
-            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
+            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
         }
 
         @Override
         public void onInternetConnectionClosed() {
-            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
+            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
         }
 
     }
@@ -1027,7 +1026,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
             } else {
                 checkInUi();
             }
-            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
+            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
         }
 
         @Override
@@ -1065,7 +1064,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
 
         @Override
         public void onInternetConnectionClosed() {
-            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
+            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
         }
 
     }
@@ -1088,7 +1087,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
         @Override
         public void onConnectionFailure() {
             updateMenuItems(menu, isFavorite);
-            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
+            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
         }
 
         @Override
@@ -1108,7 +1107,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
                     break;
                 case BAD_REQUEST_ERROR_400:
                     isFavorite = isAddToFavourites;
-                    InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, isAddToFavourites ? R.string.error_message_already_added_to_favourites : R.string.error_message_already_removed_from_favourites, false);
+                    UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, isAddToFavourites ? R.string.error_message_already_added_to_favourites : R.string.error_message_already_removed_from_favourites, false);
                     break;
                 case UNPROCESSABLE_ENTITY_ERROR_422:
                 default:
@@ -1119,7 +1118,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
 
         @Override
         public void onInternetConnectionClosed() {
-            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
+            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
         }
 
     }
@@ -1153,7 +1152,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
         @Override
         public void onConnectionFailure() {
             materialDialog.dismiss();
-            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
+            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
         }
 
         @Override
@@ -1173,7 +1172,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
                         menu.findItem(R.id.edit_dive_spot).setVisible(false);
                     }
 //                    isInfoValidLayout.setVisibility(View.GONE);
-                    InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_message_already_validated_dive_spot_data, false);
+                    UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_message_already_validated_dive_spot_data, false);
                     break;
                 case UNPROCESSABLE_ENTITY_ERROR_422:
                 default:
@@ -1183,7 +1182,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
 
         @Override
         public void onInternetConnectionClosed() {
-            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
+            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
         }
 
     }

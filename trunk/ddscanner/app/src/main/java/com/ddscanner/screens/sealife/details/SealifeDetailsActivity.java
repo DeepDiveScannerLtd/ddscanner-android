@@ -19,7 +19,7 @@ import com.ddscanner.entities.Sealife;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.sealife.add.AddSealifeActivity;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
-import com.ddscanner.ui.dialogs.InfoDialogFragment;
+import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.google.gson.Gson;
 
@@ -42,17 +42,17 @@ public class SealifeDetailsActivity extends BaseAppCompatActivity implements Dia
 
         @Override
         public void onConnectionFailure() {
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_SEALIFE_ACTIVITY_FAILEED_TO_CONNECT, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_SEALIFE_ACTIVITY_FAILEED_TO_CONNECT, false);
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_SEALIFE_ACTIVITY_FAILEED_TO_CONNECT, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_SEALIFE_ACTIVITY_FAILEED_TO_CONNECT, false);
         }
 
         @Override
         public void onInternetConnectionClosed() {
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_SEALIFE_ACTIVITY_FAILEED_TO_CONNECT, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_SEALIFE_ACTIVITY_FAILEED_TO_CONNECT, false);
         }
 
     };

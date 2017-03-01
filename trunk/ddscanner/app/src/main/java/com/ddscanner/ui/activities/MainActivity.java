@@ -52,7 +52,7 @@ import com.ddscanner.screens.profile.divecenter.DiveCenterProfileFragment;
 import com.ddscanner.ui.adapters.MainActivityPagerAdapter;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.ui.dialogs.ChangeAccountBottomDialog;
-import com.ddscanner.ui.dialogs.InfoDialogFragment;
+import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.ui.fragments.ActivityNotificationsFragment;
 import com.ddscanner.ui.fragments.AllNotificationsFragment;
 import com.ddscanner.screens.notifications.DiverNotificationsFragment;
@@ -164,7 +164,7 @@ public class MainActivity extends BaseAppCompatActivity
         @Override
         public void onConnectionFailure() {
             materialDialog.dismiss();
-            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
+            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
         }
 
         @Override
@@ -172,10 +172,10 @@ public class MainActivity extends BaseAppCompatActivity
             materialDialog.dismiss();
             switch (errorType) {
                 case ENTITY_NOT_FOUND_404:
-                    UserActionInfoDialogFragment.show(MainActivity.this, R.string.title_pass_incorrect, R.string.pass_incorrect);
+                    UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.title_pass_incorrect, R.string.pass_incorrect, false);
                     break;
                 default:
-                    InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
+                    UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
                     Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);
 
             }
@@ -183,7 +183,7 @@ public class MainActivity extends BaseAppCompatActivity
 
         @Override
         public void onInternetConnectionClosed() {
-            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
+            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
         }
     };
 

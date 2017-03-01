@@ -20,7 +20,7 @@ import com.ddscanner.entities.PhotoAuthor;
 import com.ddscanner.entities.PhotoOpenedSource;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.divespot.photos.AllPhotosDiveSpotAdapter;
-import com.ddscanner.ui.dialogs.InfoDialogFragment;
+import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.google.gson.Gson;
@@ -67,17 +67,17 @@ public class PhotosGalleryActivity extends BaseAppCompatActivity implements Dial
 
         @Override
         public void onConnectionFailure() {
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_MAPS_ACTIVITY_FAILED, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_MAPS_ACTIVITY_FAILED, false);
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_MAPS_ACTIVITY_FAILED, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_MAPS_ACTIVITY_FAILED, false);
         }
 
         @Override
         public void onInternetConnectionClosed() {
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_MAPS_ACTIVITY_FAILED, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_MAPS_ACTIVITY_FAILED, false);
         }
 
     };

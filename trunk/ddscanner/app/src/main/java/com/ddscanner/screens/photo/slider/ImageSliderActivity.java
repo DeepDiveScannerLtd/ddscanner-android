@@ -32,7 +32,7 @@ import com.ddscanner.entities.request.ReportImageRequest;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.user.profile.UserProfileActivity;
 import com.ddscanner.ui.activities.LoginActivity;
-import com.ddscanner.ui.dialogs.InfoDialogFragment;
+import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.ui.views.SimpleGestureFilter;
 import com.ddscanner.ui.views.SliderViewPager;
 import com.ddscanner.utils.ActivitiesRequestCodes;
@@ -100,18 +100,18 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
 
         @Override
         public void onConnectionFailure() {
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_IMAGE_SLIDER_ACTIVITY_FAILED_TO_CONNECT, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_IMAGE_SLIDER_ACTIVITY_FAILED_TO_CONNECT, false);
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             EventsTracker.trackUnknownServerError(url, errorMessage);
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_IMAGE_SLIDER_ACTIVITY_FAILED_TO_CONNECT, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_IMAGE_SLIDER_ACTIVITY_FAILED_TO_CONNECT, false);
         }
 
         @Override
         public void onInternetConnectionClosed() {
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_IMAGE_SLIDER_ACTIVITY_FAILED_TO_CONNECT, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_IMAGE_SLIDER_ACTIVITY_FAILED_TO_CONNECT, false);
         }
 
     };
@@ -125,18 +125,18 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
 
         @Override
         public void onConnectionFailure() {
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_IMAGE_SLIDER_ACTIVITY_FAILED_TO_CONNECT, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_IMAGE_SLIDER_ACTIVITY_FAILED_TO_CONNECT, false);
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             EventsTracker.trackUnknownServerError(url, errorMessage);
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_IMAGE_SLIDER_ACTIVITY_FAILED_TO_CONNECT, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_IMAGE_SLIDER_ACTIVITY_FAILED_TO_CONNECT, false);
         }
 
         @Override
         public void onInternetConnectionClosed() {
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_IMAGE_SLIDER_ACTIVITY_FAILED_TO_CONNECT, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_IMAGE_SLIDER_ACTIVITY_FAILED_TO_CONNECT, false);
         }
     };
 
@@ -152,7 +152,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         @Override
         public void onConnectionFailure() {
             materialDialog.dismiss();
-            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
+            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
         }
 
         @Override
@@ -165,14 +165,14 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
                     break;
                 default:
                     EventsTracker.trackUnknownServerError(url, errorMessage);
-                    InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, true);
+                    UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, true);
                     break;
             }
         }
 
         @Override
         public void onInternetConnectionClosed() {
-            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
+            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
         }
 
     };
@@ -187,7 +187,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         @Override
         public void onConnectionFailure() {
             materialDialog.dismiss();
-            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
+            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
         }
 
         @Override
@@ -200,14 +200,14 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
                     break;
                 default:
                     EventsTracker.trackUnknownServerError(url, errorMessage);
-                    InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, true);
+                    UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, true);
                     break;
             }
         }
 
         @Override
         public void onInternetConnectionClosed() {
-            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
+            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
         }
 
     };
@@ -604,7 +604,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         @Override
         public void onConnectionFailure() {
             isLikeRequestStarted = false;
-            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
+            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
             if (isLike) {
                 dislikeUi();
                 return;
@@ -625,7 +625,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
                     LoginActivity.showForResult(ImageSliderActivity.this, ActivitiesRequestCodes.REQUEST_CODE_SLIDER_ACTIVITY_LOGIN_FOR_LIKE);
                     break;
                 default:
-                    InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, false);
+                    UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, false);
                     break;
             }
         }
@@ -633,7 +633,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         @Override
         public void onInternetConnectionClosed() {
             isLikeRequestStarted = false;
-            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
+            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
         }
 
     }

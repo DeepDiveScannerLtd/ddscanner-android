@@ -20,7 +20,7 @@ import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.activities.LoginActivity;
 import com.ddscanner.ui.adapters.*;
 import com.ddscanner.ui.adapters.DiveCenterLanguagesListAdapter;
-import com.ddscanner.ui.dialogs.InfoDialogFragment;
+import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogsRequestCodes;
 
@@ -42,7 +42,7 @@ public class DiveCenterProfileLanguagesActivity extends BaseAppCompatActivity im
 
         @Override
         public void onConnectionFailure() {
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_LANGUAGES_ACTIVITY_FAILED_TO_CONNECT, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_LANGUAGES_ACTIVITY_FAILED_TO_CONNECT, false);
         }
 
         @Override
@@ -52,14 +52,14 @@ public class DiveCenterProfileLanguagesActivity extends BaseAppCompatActivity im
                     LoginActivity.showForResult(DiveCenterProfileLanguagesActivity.this, ActivitiesRequestCodes.REQUEST_CODE_LANGUAGES_ACTIVITY_LOGIN);
                     break;
                 default:
-                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_LANGUAGES_ACTIVITY_FAILED_TO_CONNECT, false);
+                    UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_LANGUAGES_ACTIVITY_FAILED_TO_CONNECT, false);
                     break;
             }
         }
 
         @Override
         public void onInternetConnectionClosed() {
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_LANGUAGES_ACTIVITY_FAILED_TO_CONNECT, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_LANGUAGES_ACTIVITY_FAILED_TO_CONNECT, false);
         }
     };
 

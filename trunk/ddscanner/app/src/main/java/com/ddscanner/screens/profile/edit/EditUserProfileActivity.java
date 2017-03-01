@@ -26,7 +26,7 @@ import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.profile.edit.divecenter.search.SearchDiveCenterActivity;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.adapters.DiverLevelSpinnerAdapter;
-import com.ddscanner.ui.dialogs.InfoDialogFragment;
+import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogHelpers;
 import com.ddscanner.utils.Helpers;
@@ -78,7 +78,7 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
         @Override
         public void onConnectionFailure() {
             materialDialog.dismiss();
-            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
+            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
         }
 
         @Override
@@ -96,7 +96,7 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
 
         @Override
         public void onInternetConnectionClosed() {
-            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
+            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
         }
 
     };

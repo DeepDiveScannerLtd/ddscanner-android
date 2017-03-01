@@ -29,7 +29,7 @@ import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.activities.LoginActivity;
 import com.ddscanner.ui.activities.SearchSealifeActivity;
 import com.ddscanner.ui.adapters.SealifeListAddingDiveSpotAdapter;
-import com.ddscanner.ui.dialogs.InfoDialogFragment;
+import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogHelpers;
@@ -80,19 +80,19 @@ public class EditCommentActivity extends BaseAppCompatActivity implements View.O
         @Override
         public void onConnectionFailure() {
             materialDialog.dismiss();
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_LEAVE_REVIEW_ACTIVITY_FAILED_TO_CONNECT, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_LEAVE_REVIEW_ACTIVITY_FAILED_TO_CONNECT, false);
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             materialDialog.dismiss();
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_LEAVE_REVIEW_ACTIVITY_FAILED_TO_CONNECT, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_LEAVE_REVIEW_ACTIVITY_FAILED_TO_CONNECT, false);
         }
 
         @Override
         public void onInternetConnectionClosed() {
             materialDialog.dismiss();
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_LEAVE_REVIEW_ACTIVITY_FAILED_TO_CONNECT, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_LEAVE_REVIEW_ACTIVITY_FAILED_TO_CONNECT, false);
         }
     };
 
@@ -107,7 +107,7 @@ public class EditCommentActivity extends BaseAppCompatActivity implements View.O
         @Override
         public void onConnectionFailure() {
             materialDialog.dismiss();
-            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
+            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
         }
 
         @Override
@@ -118,7 +118,7 @@ public class EditCommentActivity extends BaseAppCompatActivity implements View.O
                     LoginActivity.showForResult(EditCommentActivity.this, ActivitiesRequestCodes.REQUEST_CODE_EDIT_COMMENT_ACTIVITY_LOGIN);
                     break;
                 default:
-                    InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, false);
+                    UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, false);
                     Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);
                     break;
             }
@@ -126,7 +126,7 @@ public class EditCommentActivity extends BaseAppCompatActivity implements View.O
 
         @Override
         public void onInternetConnectionClosed() {
-            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
+            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
         }
 
     };

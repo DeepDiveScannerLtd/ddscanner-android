@@ -34,7 +34,7 @@ import com.ddscanner.screens.profile.edit.EditDiveCenterProfileActivity;
 import com.ddscanner.ui.activities.MainActivity;
 import com.ddscanner.ui.activities.PhotosGalleryActivity;
 import com.ddscanner.ui.adapters.UserPhotosListAdapter;
-import com.ddscanner.ui.dialogs.InfoDialogFragment;
+import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.ui.views.LoginView;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogsRequestCodes;
@@ -73,7 +73,7 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
 
         @Override
         public void onConnectionFailure() {
-            InfoDialogFragment.showForFragmentResult(getChildFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_PROFILE_FRAGMENT_FAILED_TO_CONNECT, false);
+            UserActionInfoDialogFragment.showForFragmentResult(getChildFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_PROFILE_FRAGMENT_FAILED_TO_CONNECT, false);
         }
 
         @Override
@@ -92,7 +92,7 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
 
         @Override
         public void onInternetConnectionClosed() {
-            InfoDialogFragment.showForFragmentResult(getChildFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_PROFILE_FRAGMENT_FAILED_TO_CONNECT, false);
+            UserActionInfoDialogFragment.showForFragmentResult(getChildFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_PROFILE_FRAGMENT_FAILED_TO_CONNECT, false);
         }
 
     };

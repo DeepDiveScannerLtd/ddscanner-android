@@ -18,7 +18,7 @@ import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.DialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
-import com.ddscanner.ui.dialogs.InfoDialogFragment;
+import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
@@ -37,13 +37,13 @@ public class ForgotPasswordActivity extends BaseAppCompatActivity implements Vie
         public void onSuccess(Void result) {
             //TODO change text
             materialDialog.dismiss();
-            UserActionInfoDialogFragment.showForActivityResult(ForgotPasswordActivity.this, R.string.sorry, R.string.success_added, DialogsRequestCodes.DRC_FORGOT_PASSWORD_ACTIVITY_SUCCESS);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.sorry, R.string.success_added, DialogsRequestCodes.DRC_FORGOT_PASSWORD_ACTIVITY_SUCCESS, false);
         }
 
         @Override
         public void onConnectionFailure() {
             materialDialog.dismiss();
-            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
+            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
         }
 
         @Override
@@ -51,13 +51,13 @@ public class ForgotPasswordActivity extends BaseAppCompatActivity implements Vie
             materialDialog.dismiss();
             switch (errorType) {
                 case BAD_REQUEST_ERROR_400:
-                    UserActionInfoDialogFragment.show(ForgotPasswordActivity.this, R.string.sorry, R.string.success_added);
+                    UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.sorry, R.string.success_added, false);
                     break;
                 case ENTITY_NOT_FOUND_404:
-                    UserActionInfoDialogFragment.show(ForgotPasswordActivity.this, R.string.sorry, R.string.success_added);
+                    UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.sorry, R.string.success_added, false);
                     break;
                 default:
-                    InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, false);
+                    UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, false);
                     break;
             }
         }
@@ -65,7 +65,7 @@ public class ForgotPasswordActivity extends BaseAppCompatActivity implements Vie
         @Override
         public void onInternetConnectionClosed() {
             materialDialog.dismiss();
-            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
+            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
         }
     };
 
@@ -113,7 +113,7 @@ public class ForgotPasswordActivity extends BaseAppCompatActivity implements Vie
                     DDScannerApplication.getInstance().getDdScannerRestClient().postForgotPassword(email.getText().toString(), resultListener);
                 } else {
                     //TODO change text
-                    UserActionInfoDialogFragment.show(this, R.string.sorry, R.string.sc_name);
+                    UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.sorry, R.string.sc_name, false);
                 }
                 break;
         }

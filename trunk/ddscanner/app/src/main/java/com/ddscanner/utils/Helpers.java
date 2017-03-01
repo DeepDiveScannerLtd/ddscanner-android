@@ -32,7 +32,7 @@ import com.ddscanner.entities.SealifeShort;
 import com.ddscanner.entities.errors.Field;
 import com.ddscanner.entities.errors.ValidationError;
 import com.ddscanner.entities.request.RegisterRequest;
-import com.ddscanner.ui.dialogs.InfoDialogFragment;
+import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;

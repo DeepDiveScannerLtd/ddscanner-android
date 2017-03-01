@@ -30,7 +30,7 @@ import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.activities.AddPhotosDoDiveSpotActivity;
 import com.ddscanner.ui.activities.LoginActivity;
 import com.ddscanner.ui.adapters.PhotosActivityPagerAdapter;
-import com.ddscanner.ui.dialogs.InfoDialogFragment;
+import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogsRequestCodes;
@@ -77,7 +77,7 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
 
         @Override
         public void onConnectionFailure() {
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_DIVE_SPOT_PHOTOS_ACTIVITY_CONNECTION_FAILURE, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_DIVE_SPOT_PHOTOS_ACTIVITY_CONNECTION_FAILURE, false);
         }
 
         @Override
@@ -86,18 +86,18 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
             switch (errorType) {
                 case DIVE_SPOT_NOT_FOUND_ERROR_C802:
                     EventsTracker.trackUnknownServerError(url, errorMessage);
-                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_message_dive_spot_not_found, DialogsRequestCodes.DRC_DIVE_SPOT_PHOTOS_ACTIVITY_DIVE_SPOT_NOT_FOUND, false);
+                    UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_message_dive_spot_not_found, DialogsRequestCodes.DRC_DIVE_SPOT_PHOTOS_ACTIVITY_DIVE_SPOT_NOT_FOUND, false);
                     break;
                 default:
                     EventsTracker.trackUnknownServerError(url, errorMessage);
-                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_DIVE_SPOT_PHOTOS_ACTIVITY_DIVE_SPOT_NOT_FOUND, false);
+                    UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_DIVE_SPOT_PHOTOS_ACTIVITY_DIVE_SPOT_NOT_FOUND, false);
                     break;
             }
         }
 
         @Override
         public void onInternetConnectionClosed() {
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_DIVE_SPOT_PHOTOS_ACTIVITY_CONNECTION_FAILURE, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_DIVE_SPOT_PHOTOS_ACTIVITY_CONNECTION_FAILURE, false);
         }
 
     };

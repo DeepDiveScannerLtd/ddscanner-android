@@ -28,7 +28,7 @@ import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.divespot.add.AddDiveSpotActivity;
 import com.ddscanner.screens.divespot.details.DiveSpotDetailsActivity;
 import com.ddscanner.ui.adapters.CustomPagerAdapter;
-import com.ddscanner.ui.dialogs.InfoDialogFragment;
+import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.ui.fragments.SearchDiveSpotsFragment;
 import com.ddscanner.ui.fragments.SearchLocationFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
@@ -76,18 +76,18 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
 
         @Override
         public void onConnectionFailure() {
-            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
+            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             EventsTracker.trackUnknownServerError(url, errorMessage);
-            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, false);
+            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, false);
         }
 
         @Override
         public void onInternetConnectionClosed() {
-            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
+            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
         }
 
     };

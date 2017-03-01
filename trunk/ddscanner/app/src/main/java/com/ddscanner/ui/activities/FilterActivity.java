@@ -26,7 +26,7 @@ import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.divespot.add.AddDiveSpotActivity;
 import com.ddscanner.ui.adapters.SealifeListAddingDiveSpotAdapter;
 import com.ddscanner.ui.adapters.SpinnerItemsAdapter;
-import com.ddscanner.ui.dialogs.InfoDialogFragment;
+import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogsRequestCodes;

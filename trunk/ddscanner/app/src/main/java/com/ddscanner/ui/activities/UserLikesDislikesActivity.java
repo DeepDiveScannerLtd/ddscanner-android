@@ -24,7 +24,7 @@ import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.user.dislikes.DislikesListAdapter;
 import com.ddscanner.screens.user.likes.LikesListAdapter;
 import com.ddscanner.ui.adapters.ForeignUserLikesAdapter;
-import com.ddscanner.ui.dialogs.InfoDialogFragment;
+import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogsRequestCodes;
@@ -51,18 +51,18 @@ public class UserLikesDislikesActivity extends BaseAppCompatActivity implements 
 
         @Override
         public void onConnectionFailure() {
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_USER_LIKES_DISLIKES_ACTIVITY_FAILED_TO_CONNECT, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_USER_LIKES_DISLIKES_ACTIVITY_FAILED_TO_CONNECT, false);
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             EventsTracker.trackUnknownServerError(url, errorMessage);
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_USER_LIKES_DISLIKES_ACTIVITY_FAILED_TO_CONNECT, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_USER_LIKES_DISLIKES_ACTIVITY_FAILED_TO_CONNECT, false);
         }
 
         @Override
         public void onInternetConnectionClosed() {
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_USER_LIKES_DISLIKES_ACTIVITY_FAILED_TO_CONNECT, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_USER_LIKES_DISLIKES_ACTIVITY_FAILED_TO_CONNECT, false);
         }
 
     };
@@ -77,7 +77,7 @@ public class UserLikesDislikesActivity extends BaseAppCompatActivity implements 
 
         @Override
         public void onConnectionFailure() {
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_USER_LIKES_DISLIKES_ACTIVITY_FAILED_TO_CONNECT, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_USER_LIKES_DISLIKES_ACTIVITY_FAILED_TO_CONNECT, false);
         }
 
         @Override
@@ -88,14 +88,14 @@ public class UserLikesDislikesActivity extends BaseAppCompatActivity implements 
                     break;
                 default:
                     EventsTracker.trackUnknownServerError(url, errorMessage);
-                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_USER_LIKES_DISLIKES_ACTIVITY_FAILED_TO_CONNECT, false);
+                    UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_USER_LIKES_DISLIKES_ACTIVITY_FAILED_TO_CONNECT, false);
                     break;
             }
         }
 
         @Override
         public void onInternetConnectionClosed() {
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_USER_LIKES_DISLIKES_ACTIVITY_FAILED_TO_CONNECT, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_USER_LIKES_DISLIKES_ACTIVITY_FAILED_TO_CONNECT, false);
         }
 
     };

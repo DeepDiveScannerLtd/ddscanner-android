@@ -37,7 +37,7 @@ import com.ddscanner.ui.activities.PickLanguageActivity;
 import com.ddscanner.ui.activities.SearchSpotOrLocationActivity;
 import com.ddscanner.ui.adapters.DiveCenterLanguagesListAdapter;
 import com.ddscanner.ui.adapters.DiveSpotsListForEditDcAdapter;
-import com.ddscanner.ui.dialogs.InfoDialogFragment;
+import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogHelpers;
 import com.ddscanner.utils.DialogsRequestCodes;
@@ -105,14 +105,14 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
         public void onConnectionFailure() {
             isDiveSpotsDownloaded = true;
             dismissMaterialDiaog();
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_EDIT_DC_ACTIVITY_HIDE, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_EDIT_DC_ACTIVITY_HIDE, false);
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             isDiveSpotsDownloaded = true;
             dismissMaterialDiaog();
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_EDIT_DC_ACTIVITY_HIDE, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_EDIT_DC_ACTIVITY_HIDE, false);
             Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);
         }
 
@@ -120,7 +120,7 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
         public void onInternetConnectionClosed() {
             isDiveSpotsDownloaded = true;
             dismissMaterialDiaog();
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_EDIT_DC_ACTIVITY_HIDE, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_EDIT_DC_ACTIVITY_HIDE, false);
         }
 
     };
@@ -137,14 +137,14 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
         public void onConnectionFailure() {
             isLanguagesDownloaded = true;
             dismissMaterialDiaog();
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_EDIT_DC_ACTIVITY_HIDE, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_EDIT_DC_ACTIVITY_HIDE, false);
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
             isLanguagesDownloaded = true;
             dismissMaterialDiaog();
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_EDIT_DC_ACTIVITY_HIDE, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_EDIT_DC_ACTIVITY_HIDE, false);
             Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);
         }
 
@@ -152,7 +152,7 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
         public void onInternetConnectionClosed() {
             isLanguagesDownloaded = true;
             dismissMaterialDiaog();
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_EDIT_DC_ACTIVITY_HIDE, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_EDIT_DC_ACTIVITY_HIDE, false);
         }
 
     };
@@ -168,7 +168,7 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
         @Override
         public void onConnectionFailure() {
             materialDialog.dismiss();
-            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
+            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
         }
 
         @Override
@@ -179,7 +179,7 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
 
         @Override
         public void onInternetConnectionClosed() {
-            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
+            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
         }
 
     };

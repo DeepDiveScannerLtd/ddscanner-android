@@ -25,7 +25,7 @@ import com.ddscanner.ui.activities.LoginActivity;
 import com.ddscanner.ui.activities.SearchSealifeActivity;
 import com.ddscanner.ui.adapters.AddPhotoToDsListAdapter;
 import com.ddscanner.ui.adapters.SealifeListAddingDiveSpotAdapter;
-import com.ddscanner.ui.dialogs.InfoDialogFragment;
+import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
@@ -77,7 +77,7 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements View.O
         @Override
         public void onConnectionFailure() {
             materialDialog.dismiss();
-            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
+            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
         }
 
         @Override
@@ -89,7 +89,7 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements View.O
                     break;
                 case RIGHTS_NOT_FOUND_403:
                     DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsMustRefreshDiveSpotActivity(true);
-                    UserActionInfoDialogFragment.showForActivityResult(LeaveReviewActivity.this, R.string.sorry, R.string.dive_centers_cannot_leave_review, DialogsRequestCodes.DRC_LEAVE_REVIEW_ACTIVITY_CLOSE);
+                    UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.sorry, R.string.dive_centers_cannot_leave_review, DialogsRequestCodes.DRC_LEAVE_REVIEW_ACTIVITY_CLOSE, false);
                     break;
                 default:
                     Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);
@@ -99,7 +99,7 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements View.O
 
         @Override
         public void onInternetConnectionClosed() {
-            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
+            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
         }
 
     };

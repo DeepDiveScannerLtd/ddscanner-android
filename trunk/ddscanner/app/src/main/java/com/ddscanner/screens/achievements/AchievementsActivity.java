@@ -20,7 +20,7 @@ import com.ddscanner.entities.DialogClosedListener;
 import com.ddscanner.entities.PendingAchievement;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.activities.LoginActivity;
-import com.ddscanner.ui.dialogs.InfoDialogFragment;
+import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.rey.material.widget.ProgressView;
@@ -65,7 +65,7 @@ public class AchievementsActivity extends AppCompatActivity implements DialogClo
 
         @Override
         public void onConnectionFailure() {
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_ACHIEVEMENTS_ACTIVITY_FAILED_TO_CONNECT, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_ACHIEVEMENTS_ACTIVITY_FAILED_TO_CONNECT, false);
         }
 
         @Override
@@ -75,14 +75,14 @@ public class AchievementsActivity extends AppCompatActivity implements DialogClo
                     LoginActivity.showForResult(AchievementsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_ACHIEVEMENTS_ACTIVITY_LOGIN_TO_ACHIEVEMNTS);
                     break;
                 default:
-                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_ACHIEVEMENTS_ACTIVITY_UNEXPECTED_ERROR, false);
+                    UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_ACHIEVEMENTS_ACTIVITY_UNEXPECTED_ERROR, false);
                     break;
             }
         }
 
         @Override
         public void onInternetConnectionClosed() {
-            InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_ACHIEVEMENTS_ACTIVITY_FAILED_TO_CONNECT, false);
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_ACHIEVEMENTS_ACTIVITY_FAILED_TO_CONNECT, false);
         }
 
     };

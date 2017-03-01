@@ -20,7 +20,7 @@ import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.DialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.adapters.AddPhotoToDiveSpotAdapter;
-import com.ddscanner.ui.dialogs.InfoDialogFragment;
+import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogsRequestCodes;
@@ -56,7 +56,7 @@ public class AddPhotosDoDiveSpotActivity extends AppCompatActivity implements Vi
         @Override
         public void onConnectionFailure() {
             materialDialog.dismiss();
-            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
+            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
         }
 
         @Override
@@ -67,7 +67,7 @@ public class AddPhotosDoDiveSpotActivity extends AppCompatActivity implements Vi
                     LoginActivity.showForResult(AddPhotosDoDiveSpotActivity.this, ActivitiesRequestCodes.REQUEST_CODE_ADD_PHOTOS_DO_DIVE_SPOT_ACTIVITY_LOGIN_TO_SEND);
                     break;
                 default:
-                    InfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_ADD_PHOTOS_ACTIVITY_DIVE_SPOT_NOT_FOUND, false);
+                    UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_ADD_PHOTOS_ACTIVITY_DIVE_SPOT_NOT_FOUND, false);
                     Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);
                     break;
             }
@@ -75,7 +75,7 @@ public class AddPhotosDoDiveSpotActivity extends AppCompatActivity implements Vi
 
         @Override
         public void onInternetConnectionClosed() {
-            InfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
+            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
         }
 
     };
