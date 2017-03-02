@@ -458,7 +458,7 @@ public class EventsTracker {
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_CHECK_OUT, null);
     }
 
-    public static void trackReviewSending(SendReviewSource sendReviewSource) {
+    public static void trackSendReview(SendReviewSource sendReviewSource) {
         if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
             return;
         }
@@ -1091,6 +1091,8 @@ public class EventsTracker {
                     return FROM_PROFILE_CHECKINS;
                 case "profile_favourites":
                     return FROM_PROFILE_FAVOURITES;
+                case "profile_reviews":
+                    return FROM_PROFILE_REVIEWS;
                 default:
                     return UNKNOWN;
             }

@@ -471,6 +471,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
     public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
         lastChosedRating = Math.round(rating);
         tryingToShowLeaveReviewActivity(lastChosedRating);
+        EventsTracker.trackSendReview(EventsTracker.SendReviewSource.FROM_RATING_BAR);
     }
 
     @Override
@@ -899,6 +900,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
     }
 
     public void writeReviewClicked(View view) {
+        EventsTracker.trackSendReview(EventsTracker.SendReviewSource.FROM_EMPTY_REVIEWS_LIST);
         tryingToShowLeaveReviewActivity(1);
     }
 
