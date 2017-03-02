@@ -14,6 +14,7 @@ import android.widget.RelativeLayout;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.AchievmentsResponseEntity;
 import com.ddscanner.entities.CompleteAchievement;
 import com.ddscanner.interfaces.DialogClosedListener;
@@ -95,6 +96,7 @@ public class AchievementsActivity extends AppCompatActivity implements DialogClo
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventsTracker.trackUserAchievementsView();
         setContentView(R.layout.activity_ahievments);
         findViews();
         DDScannerApplication.getInstance().getDdScannerRestClient().getUserAchivements(responseEntityResultListener);

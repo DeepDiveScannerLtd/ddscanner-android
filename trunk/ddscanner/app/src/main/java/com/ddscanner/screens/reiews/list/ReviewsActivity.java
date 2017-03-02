@@ -119,7 +119,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     private DDScannerRestClient.ResultListener<Void> dislikeCommentResultListener = new DDScannerRestClient.ResultListener<Void>() {
         @Override
         public void onSuccess(Void result) {
-            EventsTracker.trackCommentLiked();
+            EventsTracker.trackCommentDisliked();
             isHasNewComment = true;
             reviewsListAdapter.commentDisliked(reviewPositionToRate);
             if (isNeedRefresh) {
@@ -233,6 +233,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     private DDScannerRestClient.ResultListener<Void> deleteCommentResultListener = new DDScannerRestClient.ResultListener<Void>() {
         @Override
         public void onSuccess(Void result) {
+            EventsTracker.trackReviewDeleted();
             materialDialog.dismiss();
             reviewsListAdapter.deleteComment(commentToDelete);
         }
@@ -279,6 +280,14 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
         Bundle bundle = getIntent().getExtras();
         sourceId = bundle.getString(Constants.DIVESPOTID);
         openedSource = (ReviewsOpenedSource) bundle.getSerializable(ARG_OPENED_SOURCE);
+        switch (openedSource) {
+            case USER:
+
+                break;
+            case DIVESPOT:
+                EventsTracker.trackDeviSpotReviewsView();
+                break;
+        }
         findViews();
         toolbarSettings();
         setContent();
@@ -491,10 +500,12 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
 
     @Subscribe
     public void editComment(EditCommentEvent editCommentEvent) {
+        EventsTracker.trackEditReview();
         EditCommentActivity.showForResult(this, editCommentEvent.getComment(), ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_EDIT_MY_REVIEW, editCommentEvent.isHaveSealife());
     }
 
     private void deleteUsersComment(String id) {
+        EventsTracker.trackDeleteReview();
         materialDialog.show();
         commentToDelete = id;
         DDScannerApplication.getInstance().getDdScannerRestClient().postDeleteReview(deleteCommentResultListener, id);
@@ -540,6 +551,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void sendReportRequest(String type, String description) {
+        EventsTracker.trackReviewReport();
         if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
             LoginActivity.showForResult(ReviewsActivity.this, ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_LEAVE_REPORT);
             return;

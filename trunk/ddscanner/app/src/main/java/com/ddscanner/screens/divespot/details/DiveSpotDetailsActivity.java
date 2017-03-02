@@ -117,6 +117,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
             changeUiAccordingNewFlags(result);
             if (isClickedEdit) {
                 if (result.isEditable()) {
+                    EventsTracker.trackDiveSpotEdit();
                     Intent editDiveSpotIntent = new Intent(DiveSpotDetailsActivity.this, EditDiveSpotActivity.class);
                     editDiveSpotIntent.putExtra(Constants.DIVESPOTID, String.valueOf(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getId()));
                     startActivityForResult(editDiveSpotIntent, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_EDIT_DIVE_SPOT);
@@ -419,6 +420,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
     }
 
     private void tryToCallEditDiveSpotActivity() {
+        EventsTracker.trackDiveSpotEdit();
         if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
             EditDiveSpotActivity.showForResult(new Gson().toJson(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity()), this,  ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_EDIT_DIVE_SPOT);
         } else {
@@ -908,6 +910,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
                 LoginActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_LEAVE_REVIEW);
             }
         } else {
+            EventsTracker.trackReviewShowAll();
             ReviewsActivity.showForResult(this, diveSpotId, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_REVIEWS, ReviewsOpenedSource.DIVESPOT);
         }
     }

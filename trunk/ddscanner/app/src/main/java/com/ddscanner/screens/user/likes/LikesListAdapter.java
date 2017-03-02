@@ -101,7 +101,7 @@ public class LikesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
 
         public void showDiveSpot(View view) {
-            DiveSpotDetailsActivity.show(view.getContext(), String.valueOf(likes.get(getAdapterPosition()).getDiveSpot().getId()), EventsTracker.SpotViewSource.FROM_PROFILE_CREATED);
+            DiveSpotDetailsActivity.show(view.getContext(), String.valueOf(likes.get(getAdapterPosition()).getDiveSpot().getId()), EventsTracker.SpotViewSource.UNKNOWN);
         }
 
     }

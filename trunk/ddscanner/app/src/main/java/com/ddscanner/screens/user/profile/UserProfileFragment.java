@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.databinding.FragmentUserProfileBinding;
 import com.ddscanner.entities.DiveSpotListSource;
 import com.ddscanner.entities.DiveSpotPhoto;
@@ -64,6 +65,7 @@ public class UserProfileFragment extends Fragment {
 
     public void showCheckinns(View view) {
         if (binding.getUserProfileViewModel().getUser().getCounters().getCheckinsCount() > 0) {
+            EventsTracker.trackReviewerCheckInsView();
             if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
                 DiveSpotsListActivity.show(getContext(), DiveSpotListSource.CHECKINS, binding.getUserProfileViewModel().getUser().getId());
             } else {
@@ -74,6 +76,7 @@ public class UserProfileFragment extends Fragment {
 
     public void showAdded(View view) {
         if (binding.getUserProfileViewModel().getUser().getCounters().getAddedCount() > 0) {
+            EventsTracker.trackReviewerCreatedView();
             if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
                 DiveSpotsListActivity.show(getContext(), DiveSpotListSource.ADDED, binding.getUserProfileViewModel().getUser().getId());
             } else {
@@ -84,6 +87,7 @@ public class UserProfileFragment extends Fragment {
 
     public void showEdited(View view) {
         if (binding.getUserProfileViewModel().getUser().getCounters().getEditedCount() > 0) {
+            EventsTracker.trackReviewerEditedView();
             if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
                 DiveSpotsListActivity.show(getContext(), DiveSpotListSource.EDITED, binding.getUserProfileViewModel().getUser().getId());
             } else {
@@ -94,6 +98,7 @@ public class UserProfileFragment extends Fragment {
 
     public void showComments(View view) {
         if (binding.getUserProfileViewModel().getUser().getCounters().getCommentsCount() > 0) {
+            EventsTracker.trackReviewerReviewsView();
             if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
                 ReviewsActivity.showForResult(getActivity(), binding.getUserProfileViewModel().getUser().getId(), -1, ReviewsOpenedSource.USER);
             } else {

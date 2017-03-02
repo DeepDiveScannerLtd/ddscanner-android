@@ -722,7 +722,7 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
                     public void onClick(@NonNull MaterialDialog dialog,
                                         @NonNull DialogAction which) {
                         if (!isFromMap) {
-                            DiveSpotDetailsActivity.show(AddDiveSpotActivity.this, diveSpotId, null);
+                            DiveSpotDetailsActivity.show(AddDiveSpotActivity.this, diveSpotId, EventsTracker.SpotViewSource.UNKNOWN);
                             finish();
                         } else {
                             Intent intent = new Intent();

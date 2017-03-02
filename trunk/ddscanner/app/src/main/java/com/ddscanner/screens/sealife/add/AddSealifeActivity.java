@@ -66,6 +66,7 @@ public class AddSealifeActivity extends BaseAppCompatActivity implements View.On
             Intent intent = new Intent();
             intent.putExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_SEALIFE, result);
             setResult(RESULT_OK, intent);
+            EventsTracker.trackSealifeCreated();
             finish();
         }
 

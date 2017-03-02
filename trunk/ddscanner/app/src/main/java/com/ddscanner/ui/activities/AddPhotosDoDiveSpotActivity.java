@@ -16,6 +16,7 @@ import android.widget.Button;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.adapters.AddPhotoToDiveSpotAdapter;
@@ -45,6 +46,7 @@ public class AddPhotosDoDiveSpotActivity extends AppCompatActivity implements Vi
     private DDScannerRestClient.ResultListener<Void> photosAddedResultListener = new DDScannerRestClient.ResultListener<Void>() {
         @Override
         public void onSuccess(Void result) {
+            EventsTracker.trackDiveSpotPhotoAdded();
             materialDialog.dismiss();
             setResult(RESULT_OK);
             finish();

@@ -10,6 +10,7 @@ import android.view.MenuItem;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.entities.User;
 import com.ddscanner.rest.DDScannerRestClient;
@@ -55,6 +56,7 @@ public class CheckInPeoplesActivity extends BaseAppCompatActivity implements Dia
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventsTracker.trackDiveSpotCheckinsView();
         setContentView(R.layout.activity_peoples_checkin);
         findViews();
         setupToolbar(R.string.people, R.id.toolbar);

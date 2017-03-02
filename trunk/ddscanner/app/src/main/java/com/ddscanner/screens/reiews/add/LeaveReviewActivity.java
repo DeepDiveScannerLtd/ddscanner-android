@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.entities.SealifeShort;
 import com.ddscanner.events.AddPhotoDoListEvent;
@@ -219,6 +220,7 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements View.O
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_add_sealife:
+                EventsTracker.trackSearchSeaLife();
                 SearchSealifeActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_PICK_SEALIFE);
                 break;
         }

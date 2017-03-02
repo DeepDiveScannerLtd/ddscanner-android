@@ -13,6 +13,7 @@ import android.widget.ScrollView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.DiveSpotShort;
 import com.ddscanner.events.OpenAddDsActivityAfterLogin;
 import com.ddscanner.screens.divespot.add.AddDiveSpotActivity;
@@ -67,6 +68,7 @@ public class SearchDiveSpotsFragment extends Fragment implements View.OnClickLis
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.add_spot:
+                EventsTracker.trackDiveSpotCreation();
                 if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
                     AddDiveSpotActivity.show(getContext());
                 } else {

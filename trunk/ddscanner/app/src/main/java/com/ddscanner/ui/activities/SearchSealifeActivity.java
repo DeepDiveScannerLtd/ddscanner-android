@@ -170,6 +170,7 @@ public class SearchSealifeActivity extends AppCompatActivity implements SearchVi
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.add_manualy:
+                EventsTracker.trackSealifeCreation();
                 Intent i = new Intent(SearchSealifeActivity.this, AddSealifeActivity.class);
                 startActivityForResult(i, ActivitiesRequestCodes.REQUEST_CODE_SEARCH_SEALIFE_ACTIVITY_ADD_SEALIFE);
                 break;

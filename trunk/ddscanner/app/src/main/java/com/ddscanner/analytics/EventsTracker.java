@@ -44,6 +44,9 @@ public class EventsTracker {
     private static final String EVENT_NAME_REVIEWER_CREATED_VIEW = "reviewer_created_view";
     private static final String EVENT_NAME_REVIEWER_EDITED_VIEW = "reviewer_edited_view";
     private static final String EVENT_NAME_REVIEWER_CHECK_INS_VIEW = "reviewer_check_ins_view";
+    private static final String EVENT_NAME_REVIEWER_REVIEWS_VIEW = "reviewer_reviews_view";
+    private static final String EVENT_NAME_USER_ACHIEVEMENTS_VIEW = "user_achievements_view";
+    private static final String EVENT_NAME_USER_REVIEWS_VIEW = "user_reviews_view";
 
     private static final String EVENT_NAME_DIVE_SPOT_VIEW = "dive_spot_view";
     private static final String EVENT_NAME_DIVE_CENTER_VIEW = "dive_center_view";
@@ -69,6 +72,7 @@ public class EventsTracker {
     private static final String EVENT_NAME_SEALIFE_CREATED = "sea_life_created";
     private static final String EVENT_NAME_REPORT_REVIEW = "reviewer_review_report";
     private static final String EVENT_NAME_DELETE_REVIEW = "user_review_delete";
+    private static final String EVENT_NAME_DELETED_REVIEW = "user_review_deleted";
     private static final String EVENT_NAME_EDIT_REVIEW = "user_review_edit";
     private static final String EVENT_NAME_EDITED_REVIEW = "user_review_edited";
     private static final String EVENT_NAME_REVIEWER_FACEBOOK_OPENED = "reviewer_facebook_open";
@@ -871,6 +875,21 @@ public class EventsTracker {
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_DELETE_REVIEW, null);
     }
 
+    public static void trackReviewDeleted() {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+
+        // Google Firebase
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_DELETED_REVIEW, null);
+
+        // Flurry
+        FlurryAgent.logEvent(EVENT_NAME_DELETED_REVIEW);
+
+        // Appsflyer
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_DELETED_REVIEW, null);
+    }
+
     public static void trackEditReview() {
         if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
             return;
@@ -914,6 +933,51 @@ public class EventsTracker {
 
         // Appsflyer
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_USER_DISLIKES_VIEW, null);
+    }
+
+    public static void trackUserAchievementsView() {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+
+        // Google Firebase
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_USER_ACHIEVEMENTS_VIEW, null);
+
+        // Flurry
+        FlurryAgent.logEvent(EVENT_NAME_USER_ACHIEVEMENTS_VIEW);
+
+        // Appsflyer
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_USER_ACHIEVEMENTS_VIEW, null);
+    }
+
+    public static void trackUserReviewsView() {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+
+        // Google Firebase
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_USER_REVIEWS_VIEW, null);
+
+        // Flurry
+        FlurryAgent.logEvent(EVENT_NAME_USER_REVIEWS_VIEW);
+
+        // Appsflyer
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_USER_REVIEWS_VIEW, null);
+    }
+
+    public static void trackReviewerReviewsView() {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+
+        // Google Firebase
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_REVIEWER_REVIEWS_VIEW, null);
+
+        // Flurry
+        FlurryAgent.logEvent(EVENT_NAME_REVIEWER_REVIEWS_VIEW);
+
+        // Appsflyer
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_REVIEWER_REVIEWS_VIEW, null);
     }
 
     public static void trackReviewerCreatedView() {
@@ -994,6 +1058,7 @@ public class EventsTracker {
         FROM_PROFILE_CREATED("profile_created"),
         FROM_PROFILE_EDITED("profile_edited"),
         FROM_PROFILE_FAVOURITES("profile_favourites"),
+        FROM_PROFILE_REVIEWS("profile_reviews"),
         UNKNOWN("unknown");
 
         private String name;

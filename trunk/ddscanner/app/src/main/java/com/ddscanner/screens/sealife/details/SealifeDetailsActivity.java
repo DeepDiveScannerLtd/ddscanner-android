@@ -12,6 +12,7 @@ import android.view.View;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.databinding.ActivitySealifeFullBinding;
 import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.entities.Sealife;
@@ -91,6 +92,7 @@ public class SealifeDetailsActivity extends BaseAppCompatActivity implements Dia
             }
         });
 
+        EventsTracker.trackDiveSpotSealifeView();
         setupToolbar(R.string.empty_string, R.id.toolbar, R.menu.menu_sealife_details);
         DDScannerApplication.getInstance().getDdScannerRestClient().getSealifeDetails(id, resultListener);
     }

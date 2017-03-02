@@ -255,7 +255,6 @@ public class DiveCenterSpotsActivity extends BaseAppCompatActivity implements Vi
                     if (diveSpotInfo.getVisibility() == View.VISIBLE) {
                         mapListFAB.setY(mapListFAB.getY() - diveSpotInfo.getHeight());
                     }
-                    EventsTracker.trackDiveSpotMapView();
                     diveSpotsMapView.setVisibility(View.VISIBLE);
                     diveSpotsListView.setVisibility(View.GONE);
                     mapListFAB.setImageResource(R.drawable.ic_acb_list);
@@ -272,7 +271,7 @@ public class DiveCenterSpotsActivity extends BaseAppCompatActivity implements Vi
                 getLocation(ActivitiesRequestCodes.REQUEST_CODE_DIVE_CENTER_SPOTS_ACTIVITY_GO_TO_MY_LOCATION);
                 break;
             case R.id.dive_spot_info_layout:
-                DiveSpotDetailsActivity.show(this, String.valueOf(lastDiveSpotId), EventsTracker.SpotViewSource.FROM_PROFILE_CREATED);
+                DiveSpotDetailsActivity.show(this, String.valueOf(lastDiveSpotId), EventsTracker.SpotViewSource.UNKNOWN);
                 break;
         }
     }

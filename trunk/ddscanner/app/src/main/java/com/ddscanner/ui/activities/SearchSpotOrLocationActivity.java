@@ -318,6 +318,7 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
                 if (resultCode == RESULT_OK) {
                     if (isTryToOpenAddDiveSpotActivity) {
                         isTryToOpenAddDiveSpotActivity = false;
+                        EventsTracker.trackDiveSpotCreation();
                         AddDiveSpotActivity.show(SearchSpotOrLocationActivity.this);
                     }
                 }

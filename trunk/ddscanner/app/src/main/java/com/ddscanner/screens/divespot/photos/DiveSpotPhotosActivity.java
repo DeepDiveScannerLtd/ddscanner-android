@@ -108,7 +108,7 @@ public class DiveSpotPhotosActivity extends AppCompatActivity implements View.On
         photosActivityPagerAdapter = new PhotosActivityPagerAdapter(getSupportFragmentManager());
         Bundle bundle = getIntent().getExtras();
         dsId = getIntent().getStringExtra("id");
-
+        EventsTracker.trackDiveSpotPhotosView();
         setupViewPager();
         setUi();
         setUpTabLayout();
