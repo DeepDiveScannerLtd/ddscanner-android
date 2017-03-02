@@ -94,36 +94,40 @@
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
                             android:paddingTop="15dp">
+
                             <RelativeLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="85dp">
+
                                 <ImageView
-                                android:id="@+id/user_avatar"
-                                android:layout_width="80dp"
-                                android:layout_height="80dp"
-                                android:layout_marginLeft="20dp"
-                                android:layout_marginRight="20dp"
-                                android:src="@drawable/avatar_profile_default"
-                                app:loadImageFrom="@{profileFragmentViewModel}" />
-                            <LinearLayout
-                                android:visibility="@{profileFragmentViewModel.user.diverLevel != null ? View.VISIBLE : View.GONE}"
-                                android:paddingLeft="5dp"
-                                android:paddingRight="5dp"
-                                android:paddingTop="1dp"
-                                android:paddingBottom="1dp"
-                                android:layout_alignParentBottom="true"
-                                android:layout_centerHorizontal="true"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:background="@drawable/user_level_label">
-                                <TextView
+                                    android:id="@+id/user_avatar"
+                                    android:layout_width="80dp"
+                                    android:layout_height="80dp"
+                                    android:layout_marginLeft="20dp"
+                                    android:layout_marginRight="20dp"
+                                    android:src="@drawable/avatar_profile_default"
+                                    app:loadImageFrom="@{profileFragmentViewModel}" />
+
+                                <LinearLayout
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:textSize="11sp"
-                                    android:textStyle="bold"
-                                    android:textColor="@color/black_text"
-                                    app:diverLevelFrom="@{profileFragmentViewModel}"/>
-                            </LinearLayout>
+                                    android:layout_alignParentBottom="true"
+                                    android:layout_centerHorizontal="true"
+                                    android:background="@drawable/user_level_label"
+                                    android:paddingBottom="1dp"
+                                    android:paddingLeft="5dp"
+                                    android:paddingRight="5dp"
+                                    android:paddingTop="1dp"
+                                    android:visibility="@{profileFragmentViewModel.user.diverLevel != null ? View.VISIBLE : View.GONE}">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="@color/black_text"
+                                        android:textSize="11sp"
+                                        android:textStyle="bold"
+                                        app:diverLevelFrom="@{profileFragmentViewModel}" />
+                                </LinearLayout>
                             </RelativeLayout>
                             <LinearLayout
                                 android:layout_width="match_parent"

@@ -42,20 +42,85 @@
                     android:background="@color/white"
                     android:orientation="vertical">
 
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="32dp"
+                        android:background="#f9f9f9"
+                        android:onClick="@{handlers::showDiveCenter}"
+                        android:visibility="@{userProfileViewModel.user.type == 1 ? View.GONE : View.VISIBLE}">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_centerInParent="true"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:layout_marginRight="8dp"
+                                app:loadDiveCenterImageFrom="@{userProfileViewModel}" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@{userProfileViewModel.user.diveCenter.name}"
+                                android:textColor="@color/black_text"
+                                android:textSize="13sp" />
+
+                        </LinearLayout>
+
+                        <ImageView
+                            android:layout_width="6dp"
+                            android:layout_height="10dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="10dp"
+                            android:scaleType="center"
+                            android:src="@drawable/ic_arrow" />
+                    </RelativeLayout>
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:paddingTop="15dp">
 
-                        <ImageView
-                            android:id="@+id/user_avatar"
-                            android:layout_width="80dp"
-                            android:layout_height="80dp"
-                            android:layout_marginLeft="20dp"
-                            android:layout_marginRight="20dp"
-                            android:src="@drawable/avatar_profile_default"
-                            app:loadImageFrom="@{userProfileViewModel}" />
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="85dp">
+
+                            <ImageView
+                                android:id="@+id/user_avatar"
+                                android:layout_width="80dp"
+                                android:layout_height="80dp"
+                                android:layout_marginLeft="20dp"
+                                android:layout_marginRight="20dp"
+                                android:src="@drawable/avatar_profile_default"
+                                app:loadImageFrom="@{userProfileViewModel}" />
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentBottom="true"
+                                android:layout_centerHorizontal="true"
+                                android:background="@drawable/user_level_label"
+                                android:paddingBottom="1dp"
+                                android:paddingLeft="5dp"
+                                android:paddingRight="5dp"
+                                android:paddingTop="1dp"
+                                android:visibility="@{userProfileViewModel.user.diverLevel != null ? View.VISIBLE : View.GONE}">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/black_text"
+                                    android:textSize="11sp"
+                                    android:textStyle="bold"
+                                    app:diverLevelFrom="@{userProfileViewModel}" />
+                            </LinearLayout>
+                        </RelativeLayout>
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -117,9 +182,9 @@
                                 android:textSize="11sp" />
 
                             <TextView
-                                android:layout_marginLeft="0dp"
                                 android:id="@+id/user_comments"
                                 style="@style/ProfileNumberDivespotsSrtyle"
+                                android:layout_marginLeft="0dp"
                                 android:text="@{String.valueOf(userProfileViewModel.user.counters.commentsCount)}"
                                 tools:text="321" />
                         </LinearLayout>
@@ -128,8 +193,8 @@
                             android:id="@+id/likeLayout"
                             android:layout_height="64dp"
                             android:layout_centerHorizontal="true"
-                            android:onClick="@{handlers::showLikes}"
                             android:background="?attr/selectableItemBackground"
+                            android:onClick="@{handlers::showLikes}"
                             app:layout_widthPercent="33%">
 
                             <LinearLayout
@@ -149,21 +214,21 @@
 
 
                                 <TextView
-                                    android:layout_marginLeft="0dp"
                                     android:id="@+id/user_likes"
                                     style="@style/ProfileNumberDivespotsSrtyle"
+                                    android:layout_marginLeft="0dp"
                                     android:text="@{String.valueOf(userProfileViewModel.user.counters.likesCount)}"
                                     tools:text="321" />
                             </LinearLayout>
                         </RelativeLayout>
 
                         <LinearLayout
-                            android:onClick="@{handlers::showDislikes}"
                             android:id="@+id/dislikeLayout"
                             android:layout_height="64dp"
                             android:layout_alignParentRight="true"
                             android:background="?attr/selectableItemBackground"
                             android:gravity="center"
+                            android:onClick="@{handlers::showDislikes}"
                             android:orientation="vertical"
                             app:layout_widthPercent="33%">
 
@@ -177,9 +242,9 @@
 
 
                             <TextView
-                                android:layout_marginLeft="0dp"
                                 android:id="@+id/user_dislikes"
                                 style="@style/ProfileNumberDivespotsSrtyle"
+                                android:layout_marginLeft="0dp"
                                 android:text="@{String.valueOf(userProfileViewModel.user.counters.dislikesCount)}"
                                 tools:text="321" />
                         </LinearLayout>
@@ -266,9 +331,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="66dp"
                         android:background="?attr/selectableItemBackground"
+                        android:onClick="@{handlers::showCheckinns}"
                         android:orientation="horizontal"
-                        android:paddingTop="10dp"
-                        android:onClick="@{handlers::showCheckinns}">
+                        android:paddingTop="10dp">
 
                         <ImageView
                             style="@style/CharacteristicsDiveSpotListIcons"
@@ -306,9 +371,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="66dp"
                         android:background="?attr/selectableItemBackground"
+                        android:onClick="@{handlers::showAdded}"
                         android:orientation="horizontal"
-                        android:paddingTop="10dp"
-                        android:onClick="@{handlers::showAdded}">
+                        android:paddingTop="10dp">
 
                         <ImageView
                             style="@style/CharacteristicsDiveSpotListIcons"
@@ -346,9 +411,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="66dp"
                         android:background="?attr/selectableItemBackground"
+                        android:onClick="@{handlers::showEdited}"
                         android:orientation="horizontal"
-                        android:paddingTop="10dp"
-                        android:onClick="@{handlers::showEdited}">
+                        android:paddingTop="10dp">
 
                         <ImageView
                             style="@style/CharacteristicsDiveSpotListIcons"

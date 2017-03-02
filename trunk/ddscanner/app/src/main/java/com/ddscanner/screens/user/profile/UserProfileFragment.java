@@ -127,5 +127,8 @@ public class UserProfileFragment extends Fragment {
         }
     }
 
+    public void showDiveCenter(View view) {
+        UserProfileActivity.show(getContext(), String.valueOf(binding.getUserProfileViewModel().getUser().getDiveCenter().getId()), 0);
+    }
 
 }
