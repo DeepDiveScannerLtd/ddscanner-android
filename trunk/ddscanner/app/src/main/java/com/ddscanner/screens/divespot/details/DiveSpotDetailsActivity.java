@@ -761,6 +761,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
 
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+        binding.switchWorkingButton.setClickable(false);
         if (!isWorkingHere) {
             DDScannerApplication.getInstance().getDdScannerRestClient().postAddDiveSpotToDiveCenter(diveSpotId, addWorkingResultListener);
             return;
@@ -962,6 +963,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
 
         @Override
         public void onSuccess(Void result) {
+            binding.switchWorkingButton.setClickable(true);
             if (isAddToWorking) {
                 DiveSpotDetailsActivity.this.isWorkingHere = true;
                 return;
@@ -971,6 +973,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            binding.switchWorkingButton.setClickable(true);
             if (isAddToWorking) {
                 binding.switchWorkingButton.setChecked(false);
                 return;
@@ -982,6 +985,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
 
         @Override
         public void onConnectionFailure() {
+            binding.switchWorkingButton.setClickable(true);
             if (isAddToWorking) {
                 binding.switchWorkingButton.setChecked(false);
                 return;
@@ -992,6 +996,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
 
         @Override
         public void onInternetConnectionClosed() {
+            binding.switchWorkingButton.setClickable(true);
             UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
         }
 
