@@ -353,7 +353,16 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
         switch (requestCode) {
             case ActivitiesRequestCodes.EDIT_DIVE_CENTER_ACTIVITY_ADD_SPOT:
                 if (resultCode == RESULT_OK) {
-                    diveSpotsListForEditDcAdapter.addDiveSpot((DiveSpotShort) data.getSerializableExtra("divespot"));
+                    DiveSpotShort diveSpotShort = (DiveSpotShort) data.getSerializableExtra("divespot");
+                    if (diveSpotsListForEditDcAdapter.getObjects().size() > 0) {
+                        for (DiveSpotShort spot : diveSpotsListForEditDcAdapter.getObjects()) {
+                            if (spot.getId() == diveSpotShort.getId()) {
+                                //TODO show error
+                                return;
+                            }
+                        }
+                    }
+                    diveSpotsListForEditDcAdapter.addDiveSpot(diveSpotShort);
                 }
                 break;
             case ActivitiesRequestCodes.EDIT_DIVE_CENTER_ACTIVITY_PICK_LOCATION:
@@ -365,8 +374,6 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
                         addresses = geocoder.getFromLocation(place.getLatLng().latitude, place.getLatLng().longitude, 1);
                         locationLongitude = String.valueOf(place.getLatLng().longitude);
                         locationLatitude = String.valueOf(place.getLatLng().latitude);
-                        Log.i("Country name", addresses.get(0).getCountryName());
-                        Log.i("Country code", addresses.get(0).getCountryCode());
                         if (place.getAddress() != null) {
                             addAddressesView(place.getAddress().toString(), addresses.get(0).getCountryName());
                             countryCode = addresses.get(0).getCountryCode();
@@ -378,7 +385,16 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
                 break;
             case ActivitiesRequestCodes.EDIT_DIVE_CENTER_ACTIVITY_ADD_LANGUAGE:
                 if (resultCode == RESULT_OK) {
-                    languagesListAdapter.addLanguage((Language) data.getSerializableExtra("language"));
+                    Language language = (Language) data.getSerializableExtra("language");
+                    if (languagesListAdapter.getObjects().size() > 0) {
+                        for (Language current : languagesListAdapter.getObjects()) {
+                            if (current.getCode().equals(language.getCode())) {
+                                //TODO show error
+                                return;
+                            }
+                        }
+                    }
+                    languagesListAdapter.addLanguage(language);
                 }
                 break;
 
