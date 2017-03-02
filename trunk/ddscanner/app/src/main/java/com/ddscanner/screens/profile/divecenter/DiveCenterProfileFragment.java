@@ -19,6 +19,7 @@ import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.databinding.ViewDivecenterProfileBinding;
 import com.ddscanner.entities.BaseUser;
 import com.ddscanner.entities.BusRegisteringListener;
+import com.ddscanner.entities.DiveSpotListSource;
 import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.entities.DiveCenterProfile;
 import com.ddscanner.entities.PhotoAuthor;
@@ -31,6 +32,7 @@ import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.divecemter.profile.languages.DiveCenterProfileLanguagesActivity;
 import com.ddscanner.screens.instructors.InstructorsActivity;
 import com.ddscanner.screens.profile.edit.EditDiveCenterProfileActivity;
+import com.ddscanner.ui.activities.DiveSpotsListActivity;
 import com.ddscanner.ui.activities.MainActivity;
 import com.ddscanner.ui.activities.PhotosGalleryActivity;
 import com.ddscanner.ui.adapters.UserPhotosListAdapter;
@@ -237,6 +239,18 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
     public void showLanguages(View view) {
         if (binding.getDiveCenterViewModel().getDiveCenterProfile().getLanguages() != null) {
             DiveCenterProfileLanguagesActivity.show(String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId()), getContext());
+        }
+    }
+
+    public void showCreated(View view) {
+        if (binding.getDiveCenterViewModel().getDiveCenterProfile().getCreatedSpotsCount() > 0) {
+            DiveSpotsListActivity.show(getContext(), DiveSpotListSource.ADDED, binding.getDiveCenterViewModel().getDiveCenterProfile().getId().toString());
+        }
+    }
+
+    public void showEdited(View view) {
+        if (binding.getDiveCenterViewModel().getDiveCenterProfile().getEditedSpotsCount() > 0) {
+            DiveSpotsListActivity.show(getContext(), DiveSpotListSource.EDITED, binding.getDiveCenterViewModel().getDiveCenterProfile().getId().toString());
         }
     }
 

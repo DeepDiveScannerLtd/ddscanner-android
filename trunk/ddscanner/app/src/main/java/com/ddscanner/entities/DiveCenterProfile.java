@@ -11,7 +11,7 @@ public class DiveCenterProfile implements Serializable{
         COMPANY, RESELLER
     }
 
-    private int id;
+    private Integer id;
     private String name;
     private String photo;
     private String about;
@@ -106,11 +106,11 @@ public class DiveCenterProfile implements Serializable{
         this.token = token;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
