@@ -108,12 +108,14 @@
                 android:layout_marginTop="@dimen/base_block_margin_top" />
 
             <LinearLayout
+                android:paddingBottom="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:orientation="vertical">
 
                 <LinearLayout
+                    android:visibility="@{diveCenterViewModel.diveCenterProfile.addresses == null ? View.GONE : View.VISIBLE}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
@@ -139,6 +141,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:visibility="@{diveCenterViewModel.diveCenterProfile.emails == null ? View.GONE : View.VISIBLE}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
@@ -164,6 +167,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:visibility="@{diveCenterViewModel.diveCenterProfile.phones == null ? View.GONE : View.VISIBLE}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
@@ -239,9 +243,9 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:visibility="@{diveCenterViewModel.diveCenterProfile.languages == null ? View.GONE : View.VISIBLE}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
                     android:orientation="horizontal"
                     android:onClick="@{handlers::showLanguages}">
 
