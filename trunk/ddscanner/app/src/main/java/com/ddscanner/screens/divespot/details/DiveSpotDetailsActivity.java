@@ -151,6 +151,10 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
                 isWorkingHere = result.getFlags().isWorkingHere();
                 isFavorite = result.getFlags().isFavorite();
             }
+            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == 0) {
+                menu.findItem(R.id.favorite).setVisible(false);
+            }
+            menu.findItem(R.id.menu_three_dots).setVisible(true);
             binding.setDiveSpotViewModel(new DiveSpotDetailsActivityViewModel(diveSpotDetailsEntity, binding.progressBar));
             setUi();
         }

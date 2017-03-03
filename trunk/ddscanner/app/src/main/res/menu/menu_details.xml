@@ -6,6 +6,7 @@
         android:id="@+id/menu_three_dots"
         android:orderInCategory="100"
         android:title="Profile"
+        android:visible="false"
         android:icon="@drawable/ic_ac_more"
         app:showAsAction= "ifRoom">
         <menu>
