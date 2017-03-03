@@ -80,6 +80,7 @@
                 android:src="@drawable/divider" />
 
             <TextView
+                android:layout_marginLeft="20dp"
                 android:text="@string/at_least_one_photo_should_be_added"
                 android:id="@+id/error_images"
                 style="@style/ValidationErrorTextView" />

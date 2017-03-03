@@ -15,6 +15,7 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.databinding.DialogYesNoBinding;
 import com.ddscanner.interfaces.ConfirmationDialogClosedListener;
+import com.ddscanner.utils.Helpers;
 
 public class ConfirmationDialogFragment extends DialogFragment {
 
@@ -65,6 +66,8 @@ public class ConfirmationDialogFragment extends DialogFragment {
         if (!args.getString(ARG_TITLE).isEmpty()) {
             binding.title.setVisibility(View.VISIBLE);
             binding.title.setText(args.getString(ARG_TITLE));
+        } else {
+//            binding.message.setPadding(Math.round(Helpers.convertDpToPixel(24, getContext())), Math.round(Helpers.convertDpToPixel(30, getContext())), Math.round(Helpers.convertDpToPixel(24, getContext())), Math.round(Helpers.convertDpToPixel(30, getContext())));
         }
         return builder.create();
     }

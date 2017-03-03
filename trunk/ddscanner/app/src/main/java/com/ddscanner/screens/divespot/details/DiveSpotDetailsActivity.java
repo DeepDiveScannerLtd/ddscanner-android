@@ -691,6 +691,21 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
                 menu.findItem(R.id.favorite).setTitle(R.string.add_to_favorites);
             }
         }
+        if (menu != null) {
+            if (menu.findItem(R.id.edit_dive_spot) != null) {
+                if (!binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getFlags().isEditable()) {
+                    menu.findItem(R.id.edit_dive_spot).setVisible(false);
+                    if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == 0) {
+                        menu.findItem(R.id.menu_three_dots).setVisible(false);
+                    } else {
+                        menu.findItem(R.id.menu_three_dots).setVisible(true);
+                    }
+                } else {
+                    menu.findItem(R.id.edit_dive_spot).setVisible(true);
+                }
+            }
+        }
+
     }
 
     private void updateMenuItemsAccordinUserType() {

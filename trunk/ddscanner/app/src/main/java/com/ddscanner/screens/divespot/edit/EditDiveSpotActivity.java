@@ -611,11 +611,15 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
         }
         if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == 0) {
             if (isWorkingSwitch.isChecked()) {
-                requestIsWorkingHere = Helpers.createRequestBodyForString("true");
-                requestIsEdit = Helpers.createRequestBodyForString(String.valueOf(isEditSwitch.isChecked()));
+                requestIsWorkingHere = Helpers.createRequestBodyForString("1");
+                if (isEditSwitch.isChecked()) {
+                    requestIsEdit = Helpers.createRequestBodyForString("1");
+                } else {
+                    requestIsEdit = Helpers.createRequestBodyForString("0");
+                }
             } else {
-                requestIsWorkingHere = Helpers.createRequestBodyForString("false");
-                requestIsEdit = Helpers.createRequestBodyForString("false");
+                requestIsWorkingHere = Helpers.createRequestBodyForString("0");
+                requestIsEdit = Helpers.createRequestBodyForString("1");
             }
         }
         if (photosListAdapter.getServerPhotoCoverId() != null) {
@@ -781,7 +785,7 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
             downestCoordinate = addTranslationButton.getBottom();
         }
 
-        if (photosListAdapter.getNewPhotos().size() < 1) {
+        if (photosListAdapter.getItemCount() < 1) {
             isSomethingWrong = true;
             errorImages.setVisibility(View.VISIBLE);
             downestCoordinate = errorImages.getBottom();
