@@ -2,7 +2,6 @@ package com.ddscanner.events;
 
 import com.ddscanner.entities.Language;
 
-import org.apache.commons.codec.language.bm.Lang;
 
 public class LanguageChosedEvent {
 

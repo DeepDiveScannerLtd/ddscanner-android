@@ -251,6 +251,12 @@ public interface DDScannerRestService {
     @GET("v2_0/sealifes.get")
     Call<ResponseBody> getSealifesByLimit(@Query("limit") int limit);
 
+    @GET("v2_0/sealifes.get")
+    Call<ResponseBody> getAllSealifes();
+
+    @GET("v2_0/sealifes.get")
+    Call<ResponseBody> getAllSealifesByLocation(@Query("lat") double lat, @Query("lng") double lng);
+
     @Multipart
     @POST("v2_0/divespot.add")
     Call<ResponseBody> postAddDiveSpot(

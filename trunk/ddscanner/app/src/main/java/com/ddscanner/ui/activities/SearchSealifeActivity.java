@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
+import com.ddscanner.entities.SealifeListResponseEntity;
 import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.entities.SealifeResponseEntity;
 import com.ddscanner.entities.SealifeShort;
@@ -54,10 +55,10 @@ public class SearchSealifeActivity extends AppCompatActivity implements SearchVi
     private List<SealifeShort> sealifes = new ArrayList<>();
     private SealifeResponseEntity sealifeResponseEntity = new SealifeResponseEntity();
 
-    private DDScannerRestClient.ResultListener<ArrayList<SealifeShort>> sealifeResponseEntityResultListener = new DDScannerRestClient.ResultListener<ArrayList<SealifeShort>>() {
+    private DDScannerRestClient.ResultListener<SealifeListResponseEntity> sealifeResponseEntityResultListener = new DDScannerRestClient.ResultListener<SealifeListResponseEntity>() {
         @Override
-        public void onSuccess(ArrayList<SealifeShort> result) {
-            sealifes = result;
+        public void onSuccess(SealifeListResponseEntity result) {
+            sealifes = result.getAll();
             mRecyclerView.setVisibility(View.VISIBLE);
             mAdapter = new SealifeSearchAdapter(SearchSealifeActivity.this, sealifes);
             progressView.setVisibility(View.GONE);
@@ -101,7 +102,7 @@ public class SearchSealifeActivity extends AppCompatActivity implements SearchVi
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);
         getSupportActionBar().setTitle(R.string.search_sealife);
-        DDScannerApplication.getInstance().getDdScannerRestClient().getSealifesByQuery(sealifeResponseEntityResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient().getAllSealifes(sealifeResponseEntityResultListener);
         setupList();
     }
 

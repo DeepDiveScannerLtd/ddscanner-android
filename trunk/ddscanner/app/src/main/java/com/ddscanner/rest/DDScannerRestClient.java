@@ -24,6 +24,7 @@ import com.ddscanner.entities.Instructor;
 import com.ddscanner.entities.Language;
 import com.ddscanner.entities.LikeEntity;
 import com.ddscanner.entities.Sealife;
+import com.ddscanner.entities.SealifeListResponseEntity;
 import com.ddscanner.entities.SealifeShort;
 import com.ddscanner.entities.SelfCommentEntity;
 import com.ddscanner.entities.SignInType;
@@ -695,18 +696,17 @@ public class DDScannerRestClient {
         });
     }
 
-    public void getSealifesByQuery(ResultListener<ArrayList<SealifeShort>> resultListener) {
+    public void getAllSealifes(ResultListener<SealifeListResponseEntity> resultListener) {
         if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
             resultListener.onInternetConnectionClosed();
             return;
         }
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getSealifesByLimit(100000);
-        call.enqueue(new ResponseEntityCallback<ArrayList<SealifeShort>>(gson, resultListener) {
+        call.enqueue(new ResponseEntityCallback<SealifeListResponseEntity>(gson, resultListener) {
             @Override
-            void handleResponseString(ResultListener<ArrayList<SealifeShort>> resultListener, String responseString) throws JSONException {
-                Type listType = new TypeToken<ArrayList<SealifeShort>>(){}.getType();
-                ArrayList<SealifeShort> sealifeShorts = gson.fromJson(responseString, listType);
-                resultListener.onSuccess(sealifeShorts);
+            void handleResponseString(ResultListener<SealifeListResponseEntity> resultListener, String responseString) throws JSONException {
+                SealifeListResponseEntity sealifeListResponseEntity = gson.fromJson(responseString, SealifeListResponseEntity.class);
+                resultListener.onSuccess(sealifeListResponseEntity);
             }
         });
 
