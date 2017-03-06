@@ -106,6 +106,9 @@ public class SealifeDetailsActivity extends BaseAppCompatActivity implements Dia
             case R.id.edit_sealife:
                 AddSealifeActivity.showForEdit(this, new Gson().toJson(binding.getSealifeViewModel().getSealife()), -1);
                 return true;
+            case android.R.id.home:
+                finish();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

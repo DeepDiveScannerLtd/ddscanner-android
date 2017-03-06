@@ -12,7 +12,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.text.InputType;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -235,7 +234,7 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
         materialDialog = Helpers.getMaterialDialog(this);
         materialDialog.show();
         if (isHaveSpots) {
-            DDScannerApplication.getInstance().getDdScannerRestClient().getSelfDiveCenterDiveSpotsList(diveSpotsResultListener);
+            DDScannerApplication.getInstance().getDdScannerRestClient().getDiveCenterDiveSpotsList(diveSpotsResultListener, binding.getDcViewModel().getDiveCenterProfile().getId().toString());
         } else {
             isDiveSpotsDownloaded = true;
         }

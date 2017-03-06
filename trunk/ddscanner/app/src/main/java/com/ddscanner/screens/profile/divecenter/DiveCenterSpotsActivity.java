@@ -103,6 +103,7 @@ public class DiveCenterSpotsActivity extends BaseAppCompatActivity implements Vi
     private boolean isMapShown = true;
     private RelativeLayout please;
     private Marker lastClickeMarker;
+    private String id;
     
     private DDScannerRestClient.ResultListener<ArrayList<DiveSpotShort>> diveSpotsResultListener = new DDScannerRestClient.ResultListener<ArrayList<DiveSpotShort>>() {
         @Override
@@ -150,6 +151,7 @@ public class DiveCenterSpotsActivity extends BaseAppCompatActivity implements Vi
         }
         materialDialog = Helpers.getMaterialDialog(this);
         materialDialog.show();
+        id = getIntent().getStringExtra("id");
         findViews();
         setMapView(savedInstanceState);
     }
@@ -356,7 +358,7 @@ public class DiveCenterSpotsActivity extends BaseAppCompatActivity implements Vi
                         if (diveCenterLatLng != null) {
                             diveCenterMarker = googleMap.addMarker(new MarkerOptions().position(diveCenterLatLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_dc)));
                         }
-                        DDScannerApplication.getInstance().getDdScannerRestClient().getSelfDiveCenterDiveSpotsList(diveSpotsResultListener);
+                        DDScannerApplication.getInstance().getDdScannerRestClient().getDiveCenterDiveSpotsList(diveSpotsResultListener, id);
                         //     diveSpotMarker = googleMap.addMarker(new MarkerOptions().position(diveSpotLatLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds)).title(diveSpotName));
                     }
                 });
