@@ -425,7 +425,7 @@ public interface DDScannerRestService {
     Call<ResponseBody> postInstructorsSees(@Body InstructorsSeeRequests instructorsSeeRequests);
 
     @GET("v2_0/divecenter.divespots.get")
-    Call<ResponseBody> getSelfDiveSpotsForDiveCenter();
+    Call<ResponseBody> getDiveSpotsForDiveCenter(@Query("id") String id);
 
     @POST("v2_0/divecenter.instructor.remove")
     Call<ResponseBody> postRemoveInstructorFromDIveCenter(@Query("id") String instructorId);

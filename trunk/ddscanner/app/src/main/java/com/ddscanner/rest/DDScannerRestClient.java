@@ -9,7 +9,6 @@ import com.ddscanner.entities.AddressComponent;
 import com.ddscanner.entities.BaseIdNamePhotoEntity;
 import com.ddscanner.entities.CommentEntity;
 import com.ddscanner.entities.Comments;
-import com.ddscanner.entities.CountryEntity;
 import com.ddscanner.entities.DiveCenterProfile;
 import com.ddscanner.entities.DiveCentersResponseEntity;
 import com.ddscanner.entities.DiveSpotDetailsEntity;
@@ -342,12 +341,12 @@ public class DDScannerRestClient {
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 
-    public void getSelfDiveCenterDiveSpotsList(ResultListener<ArrayList<DiveSpotShort>> resultListener) {
+    public void getDiveCenterDiveSpotsList(ResultListener<ArrayList<DiveSpotShort>> resultListener, String id) {
         if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
             resultListener.onInternetConnectionClosed();
             return;
         }
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getSelfDiveSpotsForDiveCenter();
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveSpotsForDiveCenter(id);
         call.enqueue(new ResponseEntityCallback<ArrayList<DiveSpotShort>>(gson, resultListener) {
             @Override
             void handleResponseString(ResultListener<ArrayList<DiveSpotShort>> resultListener, String responseString) throws JSONException {
