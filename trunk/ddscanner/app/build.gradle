@@ -21,7 +21,7 @@ android {
         enabled = true
     }
     //TODO compileSdkVersion 25 buildToolsVersion "25"
-    compileSdkVersion 24
+    compileSdkVersion 25
     buildToolsVersion '25.0.0'
     defaultConfig {
         applicationId "com.ddscanner"
@@ -64,8 +64,8 @@ repositories {
     maven { url "https://jitpack.io" }
 }
 //TODO def playServicesVersion="9.8.0" def supportVersionVersion="25.0.0"
-def playServicesVersion="9.6.1"
-def supportVersionVersion="24.2.1"
+def playServicesVersion="9.8.0"
+def supportVersionVersion="25.0.0"
 
 dependencies {
     // tests
