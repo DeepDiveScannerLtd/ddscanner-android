@@ -45,8 +45,6 @@ public class AllPhotosDiveSpotAdapter extends RecyclerView.Adapter<AllPhotosDive
         Picasso.with(context)
                 .load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, images.get(position).getId(), "2"))
                 .placeholder(R.drawable.placeholder_photos_activity)
-                .resize(Math.round(Helpers.convertDpToPixel(115, context)), Math.round(Helpers.convertDpToPixel(115, context)))
-                .centerCrop()
                 .into(holder.image);
     }
 

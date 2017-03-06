@@ -50,8 +50,6 @@ public class DiveSpotPhotosAdapter extends RecyclerView.Adapter<DiveSpotPhotosAd
             Picasso.with(context)
                     .load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, photos.get(position), "1"))
                     .transform(new TransformationRoundImage(Math.round(Helpers.convertDpToPixel(2, context)),0))
-                    .resize(Math.round(Helpers.convertDpToPixel(photoSize, context)),Math.round(Helpers.convertDpToPixel(photoSize, context)))
-                    .centerCrop()
                     .into(holder.photo);
             holder.morePhotos.setText("+" + String.valueOf(photosCount - 7));
             holder.morePhotos.setVisibility(View.VISIBLE);
@@ -59,8 +57,6 @@ public class DiveSpotPhotosAdapter extends RecyclerView.Adapter<DiveSpotPhotosAd
             Picasso.with(context)
                     .load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, photos.get(position), "1"))
                     .transform(new TransformationRoundImage(Math.round(Helpers.convertDpToPixel(2, context)),0))
-                    .resize(Math.round(Helpers.convertDpToPixel(photoSize, context)),Math.round(Helpers.convertDpToPixel(photoSize, context)))
-                    .centerCrop()
                     .into(holder.photo, new ImageLoadedCallback(holder.progressBar){
                         @Override
                         public void onSuccess() {
