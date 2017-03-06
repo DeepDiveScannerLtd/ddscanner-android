@@ -701,7 +701,7 @@ public class DDScannerRestClient {
             resultListener.onInternetConnectionClosed();
             return;
         }
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getSealifesByLimit(100000);
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getAllSealifes();
         call.enqueue(new ResponseEntityCallback<SealifeListResponseEntity>(gson, resultListener) {
             @Override
             void handleResponseString(ResultListener<SealifeListResponseEntity> resultListener, String responseString) throws JSONException {
@@ -711,6 +711,24 @@ public class DDScannerRestClient {
         });
 
     }
+
+    public void getSealifesByLocation(ResultListener<SealifeListResponseEntity> resultListener, LatLng latLng) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getAllSealifesByLocation(latLng.latitude, latLng.longitude);
+        call.enqueue(new ResponseEntityCallback<SealifeListResponseEntity>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<SealifeListResponseEntity> resultListener, String responseString) throws JSONException {
+                SealifeListResponseEntity sealifeListResponseEntity = gson.fromJson(responseString, SealifeListResponseEntity.class);
+                resultListener.onSuccess(sealifeListResponseEntity);
+            }
+        });
+
+    }
+
+
 
     public void postUserSignUp(String email, String password, String userType, String lat, String lng, String name, ResultListener<SignUpResponseEntity> resultListener) {
         if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {

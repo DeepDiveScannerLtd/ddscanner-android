@@ -558,9 +558,7 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
                 showPlacePikerIntent();
                 break;
             case R.id.btn_add_sealife:
-                Intent sealifeIntent = new Intent(EditDiveSpotActivity.this,
-                        SearchSealifeActivity.class);
-                startActivityForResult(sealifeIntent, ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_SEALIFE);
+                SearchSealifeActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_SEALIFE, diveSpotLocation);
                 break;
             case R.id.button_create:
 //                if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {

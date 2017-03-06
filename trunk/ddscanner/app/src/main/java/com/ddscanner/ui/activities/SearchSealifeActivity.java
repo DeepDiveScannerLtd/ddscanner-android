@@ -27,11 +27,14 @@ import com.ddscanner.events.SealifeChoosedEvent;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.sealife.add.AddSealifeActivity;
 import com.ddscanner.ui.adapters.SealifeSearchAdapter;
+import com.ddscanner.ui.adapters.SealifeSectionedRecyclerViewAdapter;
+import com.ddscanner.ui.adapters.SearchSealifeListAdapter;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
+import com.google.android.gms.maps.model.LatLng;
 import com.rey.material.widget.ProgressView;
 import com.squareup.otto.Subscribe;
 
@@ -40,9 +43,10 @@ import java.util.List;
 
 public class SearchSealifeActivity extends AppCompatActivity implements SearchView.OnQueryTextListener, View.OnClickListener, DialogClosedListener {
 
+    private static final String ARG_LOCATION = "LATLNG";
+
     private Toolbar toolbar;
-    private RecyclerView mRecyclerView;
-    private SealifeSearchAdapter mAdapter;
+    private RecyclerView sealifeList;
     private TextView results;
     private RelativeLayout notFoundLayout;
     private TextView textNotFound;
@@ -51,6 +55,11 @@ public class SearchSealifeActivity extends AppCompatActivity implements SearchVi
     private ProgressView progressView;
     private RelativeLayout contentLayout;
     private MenuItem searchMenuItem;
+    private boolean isHasLocation = false;
+    private LatLng diveSpotLocation;
+    private SealifeSearchAdapter searchSealifeListAdapter;
+    private boolean isSectionable = false;
+    SealifeSectionedRecyclerViewAdapter sectionedRecyclerViewAdapter;
 
     private List<SealifeShort> sealifes = new ArrayList<>();
     private SealifeResponseEntity sealifeResponseEntity = new SealifeResponseEntity();
@@ -58,13 +67,12 @@ public class SearchSealifeActivity extends AppCompatActivity implements SearchVi
     private DDScannerRestClient.ResultListener<SealifeListResponseEntity> sealifeResponseEntityResultListener = new DDScannerRestClient.ResultListener<SealifeListResponseEntity>() {
         @Override
         public void onSuccess(SealifeListResponseEntity result) {
-            sealifes = result.getAll();
-            mRecyclerView.setVisibility(View.VISIBLE);
-            mAdapter = new SealifeSearchAdapter(SearchSealifeActivity.this, sealifes);
+            sealifeList.setVisibility(View.VISIBLE);
             progressView.setVisibility(View.GONE);
             contentLayout.setVisibility(View.VISIBLE);
-            mRecyclerView.setAdapter(mAdapter);
+            sealifeList.setAdapter(searchSealifeListAdapter);
             searchMenuItem.setVisible(true);
+            setupList(result);
         }
 
         @Override
@@ -91,34 +99,53 @@ public class SearchSealifeActivity extends AppCompatActivity implements SearchVi
         setContentView(R.layout.activity_search_sealife);
         EventsTracker.trackSearchSeaLife();
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        sealifeList = (RecyclerView) findViewById(R.id.recyclerView);
         notFoundLayout = (RelativeLayout) findViewById(R.id.not_found_layout);
         textNotFound = (TextView) findViewById(R.id.text_not_found);
         addManually = (Button) findViewById(R.id.add_manualy);
         progressView = (ProgressView) findViewById(R.id.progressBarFull);
         contentLayout = (RelativeLayout) findViewById(R.id.content_layout);
         addManually.setOnClickListener(this);
+        if (getIntent().getParcelableExtra(ARG_LOCATION) != null) {
+            isHasLocation = true;
+            diveSpotLocation = getIntent().getParcelableExtra(ARG_LOCATION);
+        }
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);
         getSupportActionBar().setTitle(R.string.search_sealife);
-        DDScannerApplication.getInstance().getDdScannerRestClient().getAllSealifes(sealifeResponseEntityResultListener);
-        setupList();
+        if (!isHasLocation) {
+            DDScannerApplication.getInstance().getDdScannerRestClient().getAllSealifes(sealifeResponseEntityResultListener);
+        } else {
+            DDScannerApplication.getInstance().getDdScannerRestClient().getSealifesByLocation(sealifeResponseEntityResultListener, diveSpotLocation);
+        }
     }
 
-    private void setupList() {
+    private void setupList(SealifeListResponseEntity sealifeListResponseEntity) {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
-        mRecyclerView.setLayoutManager(gridLayoutManager);
-        //TODO implement sectioned search
-//        List<SealifeSectionedRecyclerViewAdapter.Section> sections = new ArrayList<SealifeSectionedRecyclerViewAdapter.Section>();
-//        sections.add(new SealifeSectionedRecyclerViewAdapter.Section(0, "Newest"));
-//        sections.add(new SealifeSectionedRecyclerViewAdapter.Section(5, "Older"));
-//
-//        SealifeSectionedRecyclerViewAdapter.Section[] dummy = new SealifeSectionedRecyclerViewAdapter.Section[sections.size()];
-//        SealifeSectionedRecyclerViewAdapter sectionedRecyclerViewAdapter = new SealifeSectionedRecyclerViewAdapter(this, R.layout.section_layout, R.id.section_title, mRecyclerView, searchSealifeListAdapter);
-//        sectionedRecyclerViewAdapter.setSections(sections.toArray(dummy));
-//        searchSealifeListAdapter.setSectionAdapter(sectionedRecyclerViewAdapter);
-//        mRecyclerView.setAdapter(sectionedRecyclerViewAdapter);
+        sealifeList.setLayoutManager(gridLayoutManager);
+        if (isHasLocation) {
+            if (sealifeListResponseEntity.getNearby() != null) {
+                sealifes.addAll(sealifeListResponseEntity.getNearby());
+            }
+        }
+        sealifes.addAll(sealifeListResponseEntity.getAll());
+        searchSealifeListAdapter = new SealifeSearchAdapter(this, sealifes);
+        if (isHasLocation && sealifeListResponseEntity.getNearby() != null) {
+            //TODO implement sectioned search
+            isSectionable = true;
+            List<SealifeSectionedRecyclerViewAdapter.Section> sections = new ArrayList<SealifeSectionedRecyclerViewAdapter.Section>();
+            sections.add(new SealifeSectionedRecyclerViewAdapter.Section(0, "Nearby"));
+            sections.add(new SealifeSectionedRecyclerViewAdapter.Section(sealifeListResponseEntity.getNearby().size(), "All"));
+
+            SealifeSectionedRecyclerViewAdapter.Section[] dummy = new SealifeSectionedRecyclerViewAdapter.Section[sections.size()];
+            sectionedRecyclerViewAdapter = new SealifeSectionedRecyclerViewAdapter(this, R.layout.section_layout, R.id.section_title, sealifeList, searchSealifeListAdapter);
+            sectionedRecyclerViewAdapter.setSections(sections.toArray(dummy));
+            searchSealifeListAdapter.setSectionAdapter(sectionedRecyclerViewAdapter);
+            sealifeList.setAdapter(sectionedRecyclerViewAdapter);
+            return;
+        }
+        sealifeList.setAdapter(searchSealifeListAdapter);
     }
 
     @Override
@@ -136,8 +163,9 @@ public class SearchSealifeActivity extends AppCompatActivity implements SearchVi
     @Override
     public boolean onQueryTextChange(String query) {
         final List<SealifeShort> filteredModelList = filter(sealifes, query);
-        mAdapter.animateTo(filteredModelList);
-        mRecyclerView.scrollToPosition(0);
+        sealifeList.setAdapter(searchSealifeListAdapter);
+        searchSealifeListAdapter.animateTo(filteredModelList);
+        sealifeList.scrollToPosition(0);
         return true;
     }
 
@@ -157,11 +185,11 @@ public class SearchSealifeActivity extends AppCompatActivity implements SearchVi
             }
         }
         if (filteredModelList.isEmpty()) {
-            mRecyclerView.setVisibility(View.GONE);
+            sealifeList.setVisibility(View.GONE);
             notFoundLayout.setVisibility(View.VISIBLE);
             Helpers.hideKeyboard(this);
         } else {
-            mRecyclerView.setVisibility(View.VISIBLE);
+            sealifeList.setVisibility(View.VISIBLE);
             notFoundLayout.setVisibility(View.GONE);
         }
         return filteredModelList;
@@ -213,8 +241,9 @@ public class SearchSealifeActivity extends AppCompatActivity implements SearchVi
         finish();
     }
 
-    public static void showForResult(Activity context, int requestCode) {
+    public static void showForResult(Activity context, int requestCode, LatLng latLng) {
         Intent intent = new Intent(context,SearchSealifeActivity.class);
+        intent.putExtra(ARG_LOCATION, latLng);
         context.startActivityForResult(intent, requestCode);
     }
 

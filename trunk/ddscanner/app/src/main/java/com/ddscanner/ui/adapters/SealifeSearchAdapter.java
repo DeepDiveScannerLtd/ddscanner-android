@@ -32,6 +32,7 @@ public class SealifeSearchAdapter extends RecyclerView.Adapter<SealifeSearchAdap
     private RelativeLayout notFounLayout;
     private RecyclerView rcList;
     private static Context context;
+    private SealifeSectionedRecyclerViewAdapter sectionAdapter;
 
     public SealifeSearchAdapter(Context context, List<SealifeShort> models) {
         layoutInflater = LayoutInflater.from(context);
@@ -105,6 +106,10 @@ public class SealifeSearchAdapter extends RecyclerView.Adapter<SealifeSearchAdap
         final SealifeShort model = sealifes.remove(fromPosition);
         sealifes.add(toPosition, model);
         notifyItemMoved(fromPosition, toPosition);
+    }
+
+    public void setSectionAdapter(SealifeSectionedRecyclerViewAdapter sectionAdapter) {
+        this.sectionAdapter = sectionAdapter;
     }
 
     public class SearchListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{

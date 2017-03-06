@@ -327,7 +327,7 @@ public class EditCommentActivity extends BaseAppCompatActivity implements View.O
         switch (view.getId()) {
             case R.id.btn_add_sealife:
                 EventsTracker.trackSearchSeaLife();
-                SearchSealifeActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_PICK_SEALIFE);
+                SearchSealifeActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_PICK_SEALIFE, null);
                 break;
         }
     }
