@@ -3,6 +3,7 @@ package com.ddscanner.ui.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.support.v7.view.ContextThemeWrapper;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -70,6 +71,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         boolean isLiked;
         boolean isDisliked;
         String userId = "";
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 5);
         final CommentEntity commentEntity = comments.get(reviewsListViewHolder.getAdapterPosition());
         switch (commentEntity.getReviewType()) {
             case USER:
@@ -95,7 +97,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
             layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
             reviewsListViewHolder.photos.setNestedScrollingEnabled(false);
             reviewsListViewHolder.photos.setHasFixedSize(false);
-            reviewsListViewHolder.photos.setLayoutManager(layoutManager);
+            reviewsListViewHolder.photos.setLayoutManager(gridLayoutManager);
             if (userId.equals(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId())) {
                 reviewsListViewHolder.photos.setAdapter(new ReviewPhotosAdapter(commentEntity.getComment().getPhotos(), context, true, reviewsListViewHolder.getAdapterPosition(), commentEntity.getComment().getPhotosCount(), commentEntity.getComment().getId()));
             } else {
