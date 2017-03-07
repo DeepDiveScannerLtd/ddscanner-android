@@ -13,6 +13,7 @@ import com.ddscanner.R;
 import com.ddscanner.entities.DiveSpotDetailsEntity;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
+import com.ddscanner.utils.SharedPreferenceHelper;
 import com.rey.material.widget.FloatingActionButton;
 import com.rey.material.widget.ProgressView;
 import com.squareup.picasso.Callback;
@@ -53,7 +54,7 @@ public class DiveSpotDetailsActivityViewModel {
     @BindingAdapter("changeVisibilityAccording")
     public static void changeViewSate(RelativeLayout view, DiveSpotDetailsActivityViewModel viewModel) {
         if (viewModel != null) {
-            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() != 0) {
+            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() != SharedPreferenceHelper.UserType.DIVECENTER) {
                 view.setVisibility(View.GONE);
             } else {
                 if (!viewModel.getDiveSpotDetailsEntity().getFlags().isApproved()) {
@@ -67,7 +68,7 @@ public class DiveSpotDetailsActivityViewModel {
 
     @BindingAdapter("changeCheckinButtonVisibilityFrom")
     public static void changeVisibilityCheckinButton(FloatingActionButton button, DiveSpotDetailsActivityViewModel viewModel) {
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() != 0) {
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() != SharedPreferenceHelper.UserType.DIVECENTER) {
             button.setVisibility(View.VISIBLE);
         }
     }
@@ -75,7 +76,7 @@ public class DiveSpotDetailsActivityViewModel {
     @BindingAdapter("showWorkingLayoutFrom")
     public static void showLayout(RelativeLayout view, DiveSpotDetailsActivityViewModel viewModel) {
         if (viewModel != null) {
-            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == 0) {
+            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == SharedPreferenceHelper.UserType.DIVECENTER) {
                 view.setVisibility(View.VISIBLE);
             }
         }
@@ -147,7 +148,7 @@ public class DiveSpotDetailsActivityViewModel {
 
     @BindingAdapter("visibilityForBookButtonFrom")
     public static void setBookButtonVisibility(Button view, DiveSpotDetailsActivityViewModel viewModel) {
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == 0) {
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == SharedPreferenceHelper.UserType.DIVECENTER) {
             view.setVisibility(View.GONE);
         }
     }
@@ -155,7 +156,7 @@ public class DiveSpotDetailsActivityViewModel {
     @BindingAdapter("reviewsRatingLayoutVisibilityFrom")
     public static void setVisibilityReviewsBlock(LinearLayout view, DiveSpotDetailsActivityViewModel viewModel) {
         if (viewModel != null) {
-            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn() && DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == 0 && viewModel.getDiveSpotDetailsEntity().getReviewsCount() == 0) {
+            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn() && DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == SharedPreferenceHelper.UserType.DIVECENTER && viewModel.getDiveSpotDetailsEntity().getReviewsCount() == 0) {
                 view.setVisibility(View.GONE);
             } else {
                 view.setVisibility(View.VISIBLE);
@@ -167,7 +168,7 @@ public class DiveSpotDetailsActivityViewModel {
     public static void setVisibilityOfRatingLayout(LinearLayout layout, DiveSpotDetailsActivityViewModel viewModel) {
         if (viewModel != null) {
             if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
-                if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == 0) {
+                if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == SharedPreferenceHelper.UserType.DIVECENTER) {
                     layout.setVisibility(View.GONE);
                 } else if (viewModel.getDiveSpotDetailsEntity().getFlags().isReviewed()) {
                     layout.setVisibility(View.GONE);

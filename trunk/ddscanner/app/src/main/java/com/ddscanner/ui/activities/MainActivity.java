@@ -447,11 +447,11 @@ public class MainActivity extends BaseAppCompatActivity
             case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_SHOW_EDIT_PROFILE_ACTIVITY:
                 if (resultCode == RESULT_OK) {
                     switch (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType()) {
-                        case 0:
+                        case DIVECENTER:
                             mainViewPagerAdapter.getDiveCenterProfileFragment().reloadData();
                             break;
-                        case 1:
-                        case 2:
+                        case DIVER:
+                        case INSTRUCTOR:
                             mainViewPagerAdapter.getProfileFragment().reloadData();
                             break;
                     }
@@ -492,13 +492,13 @@ public class MainActivity extends BaseAppCompatActivity
             case ActivitiesRequestCodes.REQUEST_CODE_SHOW_USER_PROFILE_PHOTOS:
                 if (resultCode == RESULT_OK) {
                     switch (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType()) {
-                        case 0:
+                        case DIVECENTER:
                             if (mainViewPagerAdapter.getDiveCenterProfileFragment() != null) {
                                 mainViewPagerAdapter.getDiveCenterProfileFragment().reloadData();
                             }
                             break;
-                        case 1:
-                        case 2:
+                        case DIVER:
+                        case INSTRUCTOR:
                             if (mainViewPagerAdapter.getProfileFragment() != null) {
                                 mainViewPagerAdapter.getProfileFragment().reloadData();
                             }

@@ -278,11 +278,22 @@ public class SharedPreferenceHelper {
 
     /*Multi accounts mechanism*/
 
-    public int getActiveUserType() {
+    public enum UserType {
+        DIVECENTER, DIVER, INSTRUCTOR, NONE
+    }
+
+    public UserType getActiveUserType() {
         if (getIsUserSignedIn()) {
-            return getActiveUser().getType();
+            switch (getActiveUser().getType()) {
+                case 0:
+                    return UserType.DIVECENTER;
+                case 1:
+                    return UserType.DIVER;
+                case 2:
+                    return UserType.INSTRUCTOR;
+            }
         }
-        return -1;
+        return UserType.NONE;
     }
 
     public static String getActiveUserToken() {

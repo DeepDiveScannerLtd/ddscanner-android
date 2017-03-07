@@ -53,22 +53,22 @@ public class MainActivityPagerAdapter extends FragmentStatePagerAdapter implemen
                 return mapListFragment;
             case 1:
                 switch (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType()) {
-                    case 0:
+                    case DIVECENTER:
                         return diveCenterNotificationsFragment;
-                    case 1:
-                    case 2:
+                    case DIVER:
+                    case INSTRUCTOR:
                         return diverNotificationsFragment;
-                    case -1:
+                    case NONE:
                         return diverNotificationsFragment;
                 }
             case 2:
                 switch (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType()) {
-                    case 0:
+                    case DIVECENTER:
                         return diveCenterProfileFragment;
-                    case 1:
-                    case 2:
+                    case DIVER:
+                    case INSTRUCTOR:
                         return profileFragment;
-                    case -1:
+                    case NONE:
                         return profileFragment;
                 }
             default:

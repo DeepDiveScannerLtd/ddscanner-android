@@ -49,6 +49,7 @@ import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.ui.views.LoginView;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogsRequestCodes;
+import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.gson.Gson;
 import com.squareup.otto.Subscribe;
 
@@ -125,7 +126,7 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
         setupUi();
         binding.setHandlers(this);
 
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn() && DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == 1) {
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn() && (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == SharedPreferenceHelper.UserType.DIVER || DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == SharedPreferenceHelper.UserType.INSTRUCTOR)) {
             getUserDataRequest();
         }
         if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {

@@ -132,7 +132,13 @@ public class SealifeSearchAdapter extends RecyclerView.Adapter<SealifeSearchAdap
 
         @Override
         public void onClick(View v) {
-            DDScannerApplication.bus.post(new SealifeChoosedEvent(sealifes.get(getAdapterPosition())));
+            int position;
+            if (sectionAdapter != null) {
+                position = sectionAdapter.sectionedPositionToPosition(getAdapterPosition());
+            } else {
+                position = getAdapterPosition();
+            }
+            DDScannerApplication.bus.post(new SealifeChoosedEvent(sealifes.get(position)));
         }
     }
     

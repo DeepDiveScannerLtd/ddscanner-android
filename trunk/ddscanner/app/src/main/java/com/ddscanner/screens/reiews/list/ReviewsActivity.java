@@ -42,6 +42,7 @@ import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
+import com.ddscanner.utils.SharedPreferenceHelper;
 import com.rey.material.widget.ProgressView;
 import com.squareup.otto.Subscribe;
 
@@ -300,7 +301,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         leaveReview = (FloatingActionButton) findViewById(R.id.fab_write_review);
         progressView = (ProgressView) findViewById(R.id.progressBarFull);
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == 0 || !openedSource.equals(ReviewsOpenedSource.DIVESPOT)) {
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == SharedPreferenceHelper.UserType.DIVECENTER || !openedSource.equals(ReviewsOpenedSource.DIVESPOT)) {
             leaveReview.setVisibility(View.GONE);
             leaveReview.setOnClickListener(null);
         } else {
@@ -398,7 +399,7 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
             case ActivitiesRequestCodes.REQUEST_CODE_REVIEWS_ACTIVITY_LOGIN_TO_LEAVE_REVIEW:
                 if (resultCode == RESULT_OK) {
                     DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsMustRefreshDiveSpotActivity(true);
-                    if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == 0) {
+                    if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == SharedPreferenceHelper.UserType.DIVECENTER) {
                         UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.sorry, R.string.dive_centers_cannot_leave_review, false);
                         leaveReview.setVisibility(View.GONE);
                     } else {

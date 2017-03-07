@@ -33,6 +33,7 @@ import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogHelpers;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
+import com.ddscanner.utils.SharedPreferenceHelper;
 import com.squareup.otto.Subscribe;
 
 import java.io.File;
@@ -233,7 +234,7 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements View.O
             case ActivitiesRequestCodes.REQUEST_CODE_LEAVE_REVIEW_ACTIVITY_LOGIN:
                 if (resultCode == RESULT_OK) {
                     DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsMustRefreshDiveSpotActivity(true);
-                    if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() != 0) {
+                    if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() != SharedPreferenceHelper.UserType.DIVECENTER) {
                         sendReview();
                     } else {
                         //TODO dive center try leave review, must handle this case

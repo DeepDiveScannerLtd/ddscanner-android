@@ -61,6 +61,7 @@ import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogHelpers;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
+import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
@@ -218,7 +219,7 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
 
     private void findViews() {
         isWorkingLayout = (LinearLayout) findViewById(R.id.working_layout);
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == 0) {
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == SharedPreferenceHelper.UserType.DIVECENTER) {
             isWorkingLayout.setVisibility(View.VISIBLE);
         }
         errorVisibility = (TextView) findViewById(R.id.error_visibility);

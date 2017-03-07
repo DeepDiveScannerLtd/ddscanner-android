@@ -63,6 +63,7 @@ import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogHelpers;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
+import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
@@ -393,7 +394,7 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
     }
 
     private void setUi() {
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == 0) {
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == SharedPreferenceHelper.UserType.DIVECENTER) {
             workingLayout.setVisibility(View.VISIBLE);
             if (diveSpotDetailsEntity.getFlags().isWorkingHere()) {
                 isWorkingSwitch.setChecked(true);
@@ -607,7 +608,7 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
             requestLng = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT),
                     String.valueOf(diveSpotLocation.longitude));
         }
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == 0) {
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == SharedPreferenceHelper.UserType.DIVECENTER) {
             if (isWorkingSwitch.isChecked()) {
                 requestIsWorkingHere = Helpers.createRequestBodyForString("1");
                 if (isEditSwitch.isChecked()) {
