@@ -30,7 +30,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SearchDiveCenterActivity extends BaseAppCompatActivity implements SearchView.OnQueryTextListener{
-    
+
+    private static final String ARG_IS_AFTER_SIGN_UP = "isSignUp";
+
     private ArrayList<BaseIdNamePhotoEntity> objects;
     private ProgressView progressView;
     private RecyclerView recyclerView;
@@ -38,7 +40,37 @@ public class SearchDiveCenterActivity extends BaseAppCompatActivity implements S
     private Menu menu;
     private MaterialDialog materialDialog;
     private String diveCenterId;
-    
+    private boolean isAfterSignUp = false;
+
+    private DDScannerRestClient.ResultListener<Void> addInstructorResultListener = new DDScannerRestClient.ResultListener<Void>() {
+        @Override
+        public void onSuccess(Void result) {
+            materialDialog.dismiss();
+            //TODO show kakoi nibud' dialog
+            setResult(RESULT_OK);
+            finish();
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            materialDialog.dismiss();
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_SEARCH_DIVE_CENTER_ACTIVITY, false);
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            materialDialog.dismiss();
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_SEARCH_DIVE_CENTER_ACTIVITY, false);
+            Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);
+        }
+
+        @Override
+        public void onInternetConnectionClosed() {
+            materialDialog.dismiss();
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, DialogsRequestCodes.DRC_SEARCH_DIVE_CENTER_ACTIVITY, false);
+        }
+    };
+
     private DDScannerRestClient.ResultListener<ArrayList<BaseIdNamePhotoEntity>> resultListener = new DDScannerRestClient.ResultListener<ArrayList<BaseIdNamePhotoEntity>>() {
         @Override
         public void onSuccess(ArrayList<BaseIdNamePhotoEntity> result) {
@@ -67,8 +99,9 @@ public class SearchDiveCenterActivity extends BaseAppCompatActivity implements S
 
     };
 
-    public static void showForResult(Activity context, int requestCode) {
+    public static void showForResult(Activity context, int requestCode, boolean isAfterSignUp) {
         Intent intent = new Intent(context, SearchDiveCenterActivity.class);
+        intent.putExtra(ARG_IS_AFTER_SIGN_UP, isAfterSignUp);
         context.startActivityForResult(intent, requestCode);
     }
 
@@ -77,6 +110,7 @@ public class SearchDiveCenterActivity extends BaseAppCompatActivity implements S
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         setupToolbar(R.string.choose_dc, R.id.toolbar);
+        isAfterSignUp = getIntent().getBooleanExtra(ARG_IS_AFTER_SIGN_UP, false);
         findViews();
         DDScannerApplication.getInstance().getDdScannerRestClient().getDiveCentersList(resultListener);
     }
@@ -154,6 +188,10 @@ public class SearchDiveCenterActivity extends BaseAppCompatActivity implements S
     public void objectChsedEvent(ObjectChosedEvent event) {
         if (event.getBaseIdNamePhotoEntity().getId() != null) {
             diveCenterId = event.getBaseIdNamePhotoEntity().getId();
+            if (isAfterSignUp) {
+                materialDialog.show();
+                DDScannerApplication.getInstance().getDdScannerRestClient().postAddInstructorToDiveCenter(addInstructorResultListener, diveCenterId);
+            }
             Intent intent = new Intent();
             intent.putExtra("id", diveCenterId);
             setResult(RESULT_OK, intent);

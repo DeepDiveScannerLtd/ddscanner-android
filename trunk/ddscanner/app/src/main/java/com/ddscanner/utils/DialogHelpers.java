@@ -80,4 +80,8 @@ public class DialogHelpers {
         ConfirmationDialogFragment.showForActivity(fragmentManager, R.string.empty_string, R.string.exit_without_saving, R.string.yes, R.string.cancel);
     }
 
+    public static void showInstructorConfirmationDialog(FragmentManager fragmentManager) {
+        ConfirmationDialogFragment.showForActivity(fragmentManager, R.string.empty_string, R.string.are_you_an_instructor, R.string.yes, R.string.no);
+    }
+
 }

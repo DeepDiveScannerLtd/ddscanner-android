@@ -45,10 +45,12 @@ import com.ddscanner.events.PlaceChoosedEvent;
 import com.ddscanner.events.ShowLoginActivityForAddAccount;
 import com.ddscanner.events.ShowLoginActivityIntent;
 import com.ddscanner.events.SignupLoginButtonClicked;
+import com.ddscanner.interfaces.ConfirmationDialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.divespot.add.AddDiveSpotActivity;
 import com.ddscanner.screens.notifications.DiveCenterNotificationsFragment;
 import com.ddscanner.screens.profile.divecenter.DiveCenterProfileFragment;
+import com.ddscanner.screens.profile.edit.divecenter.search.SearchDiveCenterActivity;
 import com.ddscanner.ui.adapters.MainActivityPagerAdapter;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.ui.dialogs.ChangeAccountBottomDialog;
@@ -59,6 +61,7 @@ import com.ddscanner.screens.notifications.DiverNotificationsFragment;
 import com.ddscanner.screens.profile.user.ProfileFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
+import com.ddscanner.utils.DialogHelpers;
 import com.ddscanner.utils.Helpers;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -85,7 +88,7 @@ import org.json.JSONObject;
 import java.util.Arrays;
 
 public class MainActivity extends BaseAppCompatActivity
-        implements ViewPager.OnPageChangeListener, View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
+        implements ViewPager.OnPageChangeListener, View.OnClickListener, GoogleApiClient.OnConnectionFailedListener, ConfirmationDialogClosedListener{
 
     private static final String TAG = MainActivity.class.getName();
 
@@ -122,6 +125,9 @@ public class MainActivity extends BaseAppCompatActivity
     private boolean loggedInDuringLastOnStart;
     private boolean needToClearDefaultAccount;
 
+    private SigningUserResultListener signUpResultListener = new SigningUserResultListener(true);
+    private SigningUserResultListener signInResultListener = new SigningUserResultListener(false);
+
     private DDScannerRestClient.ResultListener<Void> instructorsResultListene = new DDScannerRestClient.ResultListener<Void>() {
         @Override
         public void onSuccess(Void result) {
@@ -143,48 +149,6 @@ public class MainActivity extends BaseAppCompatActivity
 
         }
 
-    };
-
-    private DDScannerRestClient.ResultListener<SignUpResponseEntity> signUpLoginResultListener = new DDScannerRestClient.ResultListener<SignUpResponseEntity>() {
-        @Override
-        public void onSuccess(SignUpResponseEntity result) {
-            materialDialog.dismiss();
-            materialDialog.dismiss();
-            Log.i(TAG, "onSuccess: ");
-            BaseUser baseUser = new BaseUser();
-            baseUser.setActive(true);
-            baseUser.setType(result.getType());
-            baseUser.setToken(result.getToken());
-            baseUser.setId(result.getId());
-            DDScannerApplication.getInstance().getSharedPreferenceHelper().addUserToList(baseUser);
-            DDScannerApplication.bus.post(new LoggedInEvent());
-            DDScannerApplication.bus.post(new LoadUserProfileInfoEvent());
-        }
-
-        @Override
-        public void onConnectionFailure() {
-            materialDialog.dismiss();
-            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
-        }
-
-        @Override
-        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-            materialDialog.dismiss();
-            switch (errorType) {
-                case ENTITY_NOT_FOUND_404:
-                    UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.title_pass_incorrect, R.string.pass_incorrect, false);
-                    break;
-                default:
-                    UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
-                    Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);
-
-            }
-        }
-
-        @Override
-        public void onInternetConnectionClosed() {
-            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
-        }
     };
 
     @Override
@@ -538,6 +502,11 @@ public class MainActivity extends BaseAppCompatActivity
                     changeAccountBottomDialog.dismiss();
                 }
                 break;
+            case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_PICK_DIVE_CENTER_FOR_INSTRUCTOR:
+                if (resultCode == RESULT_OK) {
+                    mainViewPagerAdapter.getProfileFragment().reloadData();
+                }
+                break;
             default:
                 if (facebookCallbackManager != null) {
                     facebookCallbackManager.onActivityResult(requestCode, resultCode, data);
@@ -592,7 +561,7 @@ public class MainActivity extends BaseAppCompatActivity
     private void sendLoginRequest(SignInType signInType, String token) {
         materialDialog.show();
         // TODO Debug: switch calls after tests
-        DDScannerApplication.getInstance().getDdScannerRestClient().postUserLogin(null, null, "21", "32", signInType, token, signUpLoginResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient().postUserLogin(null, null, "21", "32", signInType, token, signInResultListener);
 //        DDScannerApplication.getDdScannerRestClient().postLogin(FirebaseInstanceId.getInstance().getId(), signInType, token, loginResultListener);
     }
 
@@ -630,9 +599,9 @@ public class MainActivity extends BaseAppCompatActivity
         //TODO remove hardcoded coordinates
         materialDialog.show();
         if (event.isSignUp()) {
-            DDScannerApplication.getInstance().getDdScannerRestClient().postUserSignUp(event.getEmail(), event.getPassword(), event.getUserType(), "23", "22", event.getName(), signUpLoginResultListener);
+            DDScannerApplication.getInstance().getDdScannerRestClient().postUserSignUp(event.getEmail(), event.getPassword(), event.getUserType(), "23", "22", event.getName(), signUpResultListener);
         } else {
-            DDScannerApplication.getInstance().getDdScannerRestClient().postUserLogin(event.getEmail(), event.getPassword(), "24", "25", null, null, signUpLoginResultListener);
+            DDScannerApplication.getInstance().getDdScannerRestClient().postUserLogin(event.getEmail(), event.getPassword(), "24", "25", null, null, signInResultListener);
         }
     }
 
@@ -807,6 +776,68 @@ public class MainActivity extends BaseAppCompatActivity
         setupTabLayout();
         DDScannerApplication.bus.post(new LoadUserProfileInfoEvent());
         changeAccountBottomDialog.dismiss();
+    }
+
+    @Override
+    public void onNegativeDialogClicked() {
+
+    }
+
+    @Override
+    public void onPositiveDialogClicked() {
+        SearchDiveCenterActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_PICK_DIVE_CENTER_FOR_INSTRUCTOR, true);
+    }
+
+    class SigningUserResultListener extends DDScannerRestClient.ResultListener<SignUpResponseEntity> {
+
+        private boolean isSignUp;
+
+        SigningUserResultListener(boolean isSignUp) {
+            this.isSignUp = isSignUp;
+        }
+
+        @Override
+        public void onSuccess(SignUpResponseEntity result) {
+            materialDialog.dismiss();
+            materialDialog.dismiss();
+            Log.i(TAG, "onSuccess: ");
+            BaseUser baseUser = new BaseUser();
+            baseUser.setActive(true);
+            baseUser.setType(result.getType());
+            baseUser.setToken(result.getToken());
+            baseUser.setId(result.getId());
+            DDScannerApplication.getInstance().getSharedPreferenceHelper().addUserToList(baseUser);
+            DDScannerApplication.bus.post(new LoggedInEvent());
+            DDScannerApplication.bus.post(new LoadUserProfileInfoEvent());
+            if (isSignUp && result.getType() != 0) {
+                DialogHelpers.showInstructorConfirmationDialog(getSupportFragmentManager());
+            }
+        }
+
+        @Override
+        public void onConnectionFailure() {
+            materialDialog.dismiss();
+            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+            materialDialog.dismiss();
+            switch (errorType) {
+                case ENTITY_NOT_FOUND_404:
+                    UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.title_pass_incorrect, R.string.pass_incorrect, false);
+                    break;
+                default:
+                    UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
+                    Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);
+
+            }
+        }
+
+        @Override
+        public void onInternetConnectionClosed() {
+            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
+        }
     }
 
 }

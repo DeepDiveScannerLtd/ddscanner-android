@@ -463,4 +463,5 @@
     <string name="exit_without_saving">Do you want to exit without saving?</string>
     <string name="no">NO</string>
     <string name="yes">YES</string>
+    <string name="are_you_an_instructor">Are you an instructor?</string>
 </resources>

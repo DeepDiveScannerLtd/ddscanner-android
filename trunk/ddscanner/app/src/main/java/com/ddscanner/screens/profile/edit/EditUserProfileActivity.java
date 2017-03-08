@@ -238,7 +238,7 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
     }
 
     public void chooseDiveCenter(View view) {
-        SearchDiveCenterActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_EDIT_PROFILE_ACTIVITY_CHOOSE_DIVE_CENTER);
+        SearchDiveCenterActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_EDIT_PROFILE_ACTIVITY_CHOOSE_DIVE_CENTER, false);
     }
 
     @Override

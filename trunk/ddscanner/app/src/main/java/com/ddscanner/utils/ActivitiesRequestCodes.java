@@ -34,6 +34,7 @@ public class ActivitiesRequestCodes {
     public static final int REQUEST_CODE_MAIN_ACTIVITY_LOGIN_TO_ADD_ACCOUNT = 1311;
     public static final int REQUEST_CODE_MAIN_ACTIVITY_SHOW_EDIT_PROFILE_ACTIVITY = 1312;
     public static final int REQUEST_CODE_MAIN_ACTIVITY_SHOW_INSTRUCTORS_ACTIVITY = 1314;
+    public static final int REQUEST_CODE_MAIN_ACTIVITY_PICK_DIVE_CENTER_FOR_INSTRUCTOR = 1315;
 
     //    SearchActivity
     public static final int REQUEST_CODE_SEARCH_ACTIVITY_LOGIN = 1401;
@@ -203,5 +204,8 @@ public class ActivitiesRequestCodes {
 
     //Dive Center Languages Activity
     public static final int REQUEST_CODE_LANGUAGES_ACTIVITY_LOGIN = 4701;
+
+    //SignUpActivity
+    public static final int REQUEST_CODE_SIGN_UP_ACTIVITY_PICK_DIVECENTER = 4801;
 
 }
