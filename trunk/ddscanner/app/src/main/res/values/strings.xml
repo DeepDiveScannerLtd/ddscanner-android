@@ -38,8 +38,6 @@
     <string name="city">City</string>
     <string name="phone">Phone</string>
     <string name="email">Email</string>
-    <string name="serverNotResp">Server is not responsible, please try again later</string>
-
 
     <!-- Details layout -->
     <string name="sealifePlace">Sea life</string>
@@ -106,7 +104,6 @@
     <string name="write_review">Write review</string>
     <string name="show_all">Show all reviews (%1$s)</string>
     <string name="visibility_pattern">%1$s - %2$s meters</string>
-    <string name="skobka">)</string>
     <string name="peoples_checked_in_here"> people checked in here</string>
     <string name="title_activity_main2">Main2Activity</string>
     <string name="save_changes">SAVE CHANGES</string>

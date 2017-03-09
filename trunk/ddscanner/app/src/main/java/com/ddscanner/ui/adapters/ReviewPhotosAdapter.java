@@ -17,10 +17,13 @@ import com.ddscanner.entities.PhotoOpenedSource;
 import com.ddscanner.events.ShowSliderForReviewImagesEvent;
 import com.ddscanner.ui.activities.PhotosGalleryActivity;
 import com.ddscanner.ui.views.TransformationRoundImage;
+import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.ImageLoadedCallback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+
+import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
 public class ReviewPhotosAdapter extends RecyclerView.Adapter<ReviewPhotosAdapter.ReviewPhotosAdapterViewHolder> {
 
@@ -58,7 +61,7 @@ public class ReviewPhotosAdapter extends RecyclerView.Adapter<ReviewPhotosAdapte
             holder.morePhotos.setText("+" + String.valueOf(photosCount - 4));
             holder.morePhotos.setVisibility(View.VISIBLE);
         }
-        Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, photos.get(position).getId(), "1")).transform(new TransformationRoundImage(2,0)).into(holder.photo,
+        Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, photos.get(position).getId(), "1")).transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2, context)), 0, RoundedCornersTransformation.CornerType.ALL)).into(holder.photo,
                 new ImageLoadedCallback(holder.progressBar){
                     @Override
                     public void onSuccess() {
