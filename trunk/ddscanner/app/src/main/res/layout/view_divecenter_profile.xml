@@ -196,6 +196,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:onClick="@{handlers::showInstructors}"
+                    android:background="?attr/selectableItemBackground"
                     android:orientation="horizontal">
 
                     <ImageView
@@ -247,6 +248,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
+                    android:background="?attr/selectableItemBackground"
                     android:onClick="@{handlers::showLanguages}">
 
                     <ImageView
@@ -331,8 +333,9 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
+                    android:paddingBottom="20dp"
                     android:orientation="horizontal"
+                    android:background="?attr/selectableItemBackground"
                     android:onClick="@{handlers::showCreated}">
 
                     <ImageView
@@ -371,8 +374,9 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
+                    android:paddingBottom="20dp"
                     android:orientation="horizontal"
+                    android:background="?attr/selectableItemBackground"
                     android:onClick="@{handlers::showEdited}">
 
                     <ImageView

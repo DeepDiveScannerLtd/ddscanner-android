@@ -19,11 +19,13 @@ import com.ddscanner.screens.profile.divecenter.DiveCenterProfileFragmentViewMod
 import com.ddscanner.screens.profile.divecenter.DiveCenterSpotsActivity;
 import com.ddscanner.ui.activities.DiveSpotsListActivity;
 import com.ddscanner.ui.adapters.UserPhotosListAdapter;
+import com.google.android.gms.maps.model.LatLng;
 
 public class DiveCenterProfileFragment extends Fragment {
 
     private DiveCenterProfile diveCenterProfile;
     private FragmentDiveCenterProfileBinding binding;
+    private LatLng diveCenterLocation = null;
 
     public static DiveCenterProfileFragment newInstance(DiveCenterProfile diveCenterProfile) {
         DiveCenterProfileFragment diveCenterProfileFragment = new DiveCenterProfileFragment();
@@ -40,6 +42,9 @@ public class DiveCenterProfileFragment extends Fragment {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_dive_center_profile, container, false);
         diveCenterProfile = (DiveCenterProfile) getArguments().getSerializable("user");
         binding.setDiveCenterViewModel(new DiveCenterProfileFragmentViewModel(diveCenterProfile));
+        if (diveCenterProfile.getAddresses() != null && diveCenterProfile.getAddresses().get(0).getPosition() != null) {
+            diveCenterLocation = diveCenterProfile.getAddresses().get(0).getPosition();
+        }
         View v = binding.getRoot();
         binding.setHandlers(this);
         setupUi();
@@ -54,7 +59,7 @@ public class DiveCenterProfileFragment extends Fragment {
     }
 
     public void showDiveSpots(View view) {
-        DiveCenterSpotsActivity.show(getContext(), String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId()), null);
+        DiveCenterSpotsActivity.show(getContext(), String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId()), diveCenterLocation);
     }
 
     public void showCreated(View view) {

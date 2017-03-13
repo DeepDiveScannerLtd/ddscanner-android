@@ -11,6 +11,14 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/ic_list_check"/>
+
     <ImageView
         android:layout_alignParentBottom="true"
         style="@style/DividerStyleFull"

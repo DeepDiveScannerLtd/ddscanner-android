@@ -75,7 +75,7 @@ public class SearchDiveCenterActivity extends BaseAppCompatActivity implements S
         @Override
         public void onSuccess(ArrayList<BaseIdNamePhotoEntity> result) {
             objects = result;
-            diveCentersListAdapter = new BaseSearchAdapter(result);
+            diveCentersListAdapter = new BaseSearchAdapter(result, true);
             recyclerView.setAdapter(diveCentersListAdapter);
             progressView.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);

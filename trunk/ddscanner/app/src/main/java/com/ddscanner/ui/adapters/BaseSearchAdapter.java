@@ -17,9 +17,11 @@ import java.util.List;
 public class BaseSearchAdapter extends RecyclerView.Adapter<BaseSearchAdapter.DiveCentersViewHolder> {
     
     private ArrayList<BaseIdNamePhotoEntity> objectsList = new ArrayList<>();
+    private boolean isCheckable;
 
-    public BaseSearchAdapter(ArrayList<BaseIdNamePhotoEntity> objectsList) {
+    public BaseSearchAdapter(ArrayList<BaseIdNamePhotoEntity> objectsList, boolean isCheckable) {
         this.objectsList = objectsList;
+        this.isCheckable = isCheckable;
     }
 
     @Override

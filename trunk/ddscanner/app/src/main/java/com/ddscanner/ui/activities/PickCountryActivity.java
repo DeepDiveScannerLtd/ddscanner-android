@@ -42,7 +42,7 @@ public class PickCountryActivity extends BaseAppCompatActivity implements Search
         @Override
         public void onSuccess(ArrayList<BaseIdNamePhotoEntity> result) {
             objects = result;
-            diveCentersListAdapter = new BaseSearchAdapter(result);
+            diveCentersListAdapter = new BaseSearchAdapter(result, false);
             recyclerView.setAdapter(diveCentersListAdapter);
             progressView.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);

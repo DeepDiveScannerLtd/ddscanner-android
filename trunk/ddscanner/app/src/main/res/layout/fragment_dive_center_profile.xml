@@ -196,6 +196,7 @@
 
                 <LinearLayout
                     android:onClick="@{handlers::showInstructors}"
+                    android:background="?attr/selectableItemBackground"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
@@ -237,6 +238,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:background="?attr/selectableItemBackground"
                     android:onClick="@{handlers::showLanguages}"
                     android:visibility="@{diveCenterViewModel.diveCenterProfile.languages == null ? View.GONE : View.VISIBLE}"
                     android:layout_width="match_parent"
@@ -323,10 +325,11 @@
                 android:orientation="vertical">
 
                 <LinearLayout
+                    android:background="?attr/selectableItemBackground"
                     android:onClick="@{handlers::showCreated}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
+                    android:paddingBottom="20dp"
                     android:orientation="horizontal">
 
                     <ImageView
@@ -363,10 +366,11 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:background="?attr/selectableItemBackground"
                     android:onClick="@{handlers::showEdited}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
+                    android:paddingBottom="20dp"
                     android:orientation="horizontal">
 
                     <ImageView

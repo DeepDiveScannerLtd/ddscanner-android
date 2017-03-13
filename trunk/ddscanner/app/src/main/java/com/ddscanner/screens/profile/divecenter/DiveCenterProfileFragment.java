@@ -41,6 +41,7 @@ import com.ddscanner.ui.views.LoginView;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.SharedPreferenceHelper;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.squareup.otto.Subscribe;
 
@@ -49,6 +50,7 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
     private DiveCenterProfile diveCenterProfile;
     private ViewDivecenterProfileBinding binding;
     private boolean isHaveSpots = false;
+    private LatLng diveCenterLocation = null;
     private BusRegisteringListener busListener = new BusRegisteringListener();
     private DDScannerRestClient.ResultListener<DiveCenterProfile> userResultListener = new DDScannerRestClient.ResultListener<DiveCenterProfile>() {
         @Override
@@ -70,6 +72,9 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
                     setUi();
                     binding.progressBarLoading.setVisibility(View.GONE);
                     binding.aboutLayout.setVisibility(View.VISIBLE);
+                    if (diveCenterProfile.getAddresses() != null && diveCenterProfile.getAddresses().get(0).getPosition() != null) {
+                        diveCenterLocation = diveCenterProfile.getAddresses().get(0).getPosition();
+                    }
                     break;
             }
         }
@@ -216,7 +221,7 @@ public class DiveCenterProfileFragment extends Fragment implements LoginView.Log
     public void showDiveSpots(View view) {
         if (binding.getDiveCenterViewModel().getDiveCenterProfile().getWorkingCount() > 0) {
             if (binding.getDiveCenterViewModel().getDiveCenterProfile().getAddresses() == null || binding.getDiveCenterViewModel().getDiveCenterProfile().getAddresses().get(0) == null) {
-                DiveCenterSpotsActivity.show(getContext(), String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId()), null);
+                DiveCenterSpotsActivity.show(getContext(), String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId()), diveCenterLocation);
                 return;
             }
             DiveCenterSpotsActivity.show(getContext(), String.valueOf(binding.getDiveCenterViewModel().getDiveCenterProfile().getId()), binding.getDiveCenterViewModel().getDiveCenterProfile().getAddresses().get(0).getPosition());
