@@ -24,6 +24,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
+import com.ddscanner.events.MarkerClickedEvent;
 import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.entities.DiveSpotShort;
 import com.ddscanner.events.InfowWindowOpenedEvent;
@@ -338,8 +339,8 @@ public class DiveCenterSpotsActivity extends BaseAppCompatActivity implements Vi
         mapView.onCreate(new Bundle());
         mapView.getMapAsync(new OnMapReadyCallback() {
             @Override
-            public void onMapReady(GoogleMap map) {
-                googleMap = map;
+            public void onMapReady(final GoogleMap googleMap) {
+                DiveCenterSpotsActivity.this.googleMap = googleMap;
                 googleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
                     @Override
                     public void onMapLoaded() {
@@ -351,7 +352,8 @@ public class DiveCenterSpotsActivity extends BaseAppCompatActivity implements Vi
                      //   googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 2000, null);
                      //   googleMap.moveCamera(CameraUpdateFactory.newLatLng(diveCenterLatLng));
                         diveCenterSpotsClusterManager = new DiveCenterSpotsClusterManager(DiveCenterSpotsActivity.this, googleMap);
-                        googleMap.setOnMarkerClickListener(DiveCenterSpotsActivity.this);
+                        googleMap.setOnMarkerClickListener(diveCenterSpotsClusterManager);
+                        googleMap.setOnCameraChangeListener(diveCenterSpotsClusterManager);
                         googleMap.setOnMapClickListener(DiveCenterSpotsActivity.this);
                         googleMap.getUiSettings().setRotateGesturesEnabled(false);
                         googleMap.getUiSettings().setTiltGesturesEnabled(false);
@@ -388,6 +390,7 @@ public class DiveCenterSpotsActivity extends BaseAppCompatActivity implements Vi
             CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
             googleMap.moveCamera(cu);
             diveCenterSpotsClusterManager.cluster();
+            diveCenterSpotsClusterManager.setDiveSpotsMap(diveSpotsMap);
         }
 
     }
@@ -454,7 +457,13 @@ public class DiveCenterSpotsActivity extends BaseAppCompatActivity implements Vi
         hideDiveSpotInfo();
     }
 
-    @Override
+    @Subscribe
+    public void markerClicked(MarkerClickedEvent event) {
+        if (diveSpotsMap.get(event.getMarker().getPosition()) != null && diveSpotsMap.get(event.getMarker().getPosition()).getName() != null) {
+            onMarkerClick(event.getMarker());
+        }
+    }
+
     public boolean onMarkerClick(Marker marker) {
         if (marker.equals(diveCenterMarker) || marker.equals(myLocationMarker)) {
             return false;

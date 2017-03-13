@@ -62,7 +62,7 @@ public class DiveSpotShort implements Serializable, ClusterItem {
         this.reviews = reviews;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 

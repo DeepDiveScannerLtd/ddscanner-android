@@ -113,7 +113,7 @@ public class DiveCenter implements Parcelable, ClusterItem, Comparable<DiveCente
     }
 
     public float getRating() {
-        return rating;
+        return 2;
     }
 
     public void setRating(float rating) {

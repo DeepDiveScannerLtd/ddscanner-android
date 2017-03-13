@@ -5,13 +5,13 @@ import com.google.android.gms.maps.model.Marker;
 
 public class MarkerClickedEvent {
 
-    private LatLng position;
+    private Marker marker;
 
-    public MarkerClickedEvent(LatLng position) {
-        this.position = position;
+    public MarkerClickedEvent(Marker marker) {
+        this.marker = marker;
     }
 
-    public LatLng getPosition() {
-        return position;
+    public Marker getMarker() {
+        return marker;
     }
 }

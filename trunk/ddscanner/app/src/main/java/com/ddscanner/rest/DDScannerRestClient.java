@@ -9,6 +9,7 @@ import com.ddscanner.entities.AddressComponent;
 import com.ddscanner.entities.BaseIdNamePhotoEntity;
 import com.ddscanner.entities.CommentEntity;
 import com.ddscanner.entities.Comments;
+import com.ddscanner.entities.DiveCenter;
 import com.ddscanner.entities.DiveCenterProfile;
 import com.ddscanner.entities.DiveCentersResponseEntity;
 import com.ddscanner.entities.DiveSpotDetailsEntity;
@@ -273,17 +274,18 @@ public class DDScannerRestClient {
         });
     }
 
-    public void getDiveCenters(LatLng latLng, final ResultListener<DiveCentersResponseEntity> resultListener) {
+    public void getDiveCenters(String id, final ResultListener<ArrayList<DiveCenter>> resultListener) {
         if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
             resultListener.onInternetConnectionClosed();
             return;
         }
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveCenters(getDivecentersRequestmap(latLng));
-        call.enqueue(new ResponseEntityCallback<DiveCentersResponseEntity>(gson, resultListener) {
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveCentersForDiveSpot(id);
+        call.enqueue(new ResponseEntityCallback<ArrayList<DiveCenter>>(gson, resultListener) {
             @Override
-            void handleResponseString(ResultListener<DiveCentersResponseEntity> resultListener, String responseString) throws JSONException {
-                DiveCentersResponseEntity diveCentersResponseEntity = new Gson().fromJson(responseString, DiveCentersResponseEntity.class);
-                resultListener.onSuccess(diveCentersResponseEntity);
+            void handleResponseString(ResultListener<ArrayList<DiveCenter>> resultListener, String responseString) throws JSONException {
+                Type listType = new TypeToken<ArrayList<DiveCenter>>(){}.getType();
+                ArrayList<DiveCenter> diveCenters = new Gson().fromJson(responseString, listType);
+                resultListener.onSuccess(diveCenters);
             }
         });
     }

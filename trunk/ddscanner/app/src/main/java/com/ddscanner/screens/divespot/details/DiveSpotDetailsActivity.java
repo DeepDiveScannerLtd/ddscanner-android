@@ -866,7 +866,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
     }
 
     public void showDiveCentersButtonClicked(View view) {
-        DiveCentersActivity.show(this, binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPosition(), binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getName());
+        DiveCentersActivity.show(this, binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getPosition(), binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getName(), binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getId().toString());
     }
 
     private void changeViewState(TextView activeTextView, TextView disableTextView) {

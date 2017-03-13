@@ -2,17 +2,21 @@ package com.ddscanner.ui.managers;
 
 import android.content.Context;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.DiveSpotShort;
+import com.ddscanner.events.MarkerClickedEvent;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -24,8 +28,10 @@ import com.google.maps.android.ui.IconGenerator;
 import com.google.maps.android.ui.SquareTextView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
-public class DiveCenterSpotsClusterManager extends ClusterManager<DiveSpotShort> implements ClusterManager.OnClusterClickListener<DiveSpotShort> {
+public class DiveCenterSpotsClusterManager extends ClusterManager<DiveSpotShort> implements ClusterManager.OnClusterClickListener<DiveSpotShort>, GoogleMap.OnMarkerClickListener {
 
     private static final String TAG = DiveCentersClusterManager.class.getName();
     private static final int CAMERA_ANIMATION_DURATION = 300;
@@ -36,6 +42,7 @@ public class DiveCenterSpotsClusterManager extends ClusterManager<DiveSpotShort>
     private final IconGenerator clusterIconGenerator2Symbols;
     private final IconGenerator clusterIconGenerator3Symbols;
     private ArrayList<Marker> markers = new ArrayList<>();
+    private Map<LatLng, DiveSpotShort> diveSpotsMap = new HashMap<>();
 
     public DiveCenterSpotsClusterManager(FragmentActivity context, GoogleMap googleMap) {
         super(context, googleMap);
@@ -76,9 +83,18 @@ public class DiveCenterSpotsClusterManager extends ClusterManager<DiveSpotShort>
             builder.include(diveCenter.getPosition());
         }
         LatLngBounds bounds = builder.build();
-        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 0);
+        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 150);
         googleMap.animateCamera(cu, CAMERA_ANIMATION_DURATION, null);
         return true;
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        if (diveSpotsMap.get(marker.getPosition()) == null) {
+            return super.onMarkerClick(marker);
+        }
+        DDScannerApplication.bus.post(new MarkerClickedEvent(marker));
+        return false;
     }
 
     private SquareTextView makeSquareTextView(Context context) {
@@ -95,6 +111,10 @@ public class DiveCenterSpotsClusterManager extends ClusterManager<DiveSpotShort>
 
     public void mapZoomMinus() {
         googleMap.animateCamera(CameraUpdateFactory.zoomOut());
+    }
+
+    public void setDiveSpotsMap(Map<LatLng, DiveSpotShort> diveSpotsMap) {
+        this.diveSpotsMap = diveSpotsMap;
     }
 
     private class IconRenderer extends DefaultClusterRenderer<DiveSpotShort> {

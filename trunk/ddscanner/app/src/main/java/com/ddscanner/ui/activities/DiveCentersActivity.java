@@ -57,10 +57,11 @@ import java.util.HashMap;
 
 public class DiveCentersActivity extends BaseAppCompatActivity implements View.OnClickListener, DialogClosedListener, GoogleMap.OnMapClickListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
     private static final String TAG = "DiveCentersActivity";
+    private String diveSpotId;
     private LatLng diveSpotLatLng;
     private String diveSpotName;
     MapView mMapView;
-    private GoogleMap mGoogleMap;
+    private GoogleMap googleMap;
 
     private FloatingActionButton mapListFAB;
     private RelativeLayout diveCenterInfo;
@@ -93,11 +94,10 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
     private Marker diveSpotMarker;
     private String logoPath;
 
-    private DDScannerRestClient.ResultListener<DiveCentersResponseEntity> diveCentersResponseEntityResultListener = new DDScannerRestClient.ResultListener<DiveCentersResponseEntity>() {
+    private DDScannerRestClient.ResultListener<ArrayList<DiveCenter>> diveCentersResponseEntityResultListener = new DDScannerRestClient.ResultListener<ArrayList<DiveCenter>>() {
         @Override
-        public void onSuccess(DiveCentersResponseEntity result) {
-            logoPath = result.getLogoPath();
-            diveCenters = result.getDivecenters();
+        public void onSuccess(ArrayList<DiveCenter> result) {
+            diveCenters = result;
             drawMarkers();
             fillDiveSpotsList();
         }
@@ -127,11 +127,12 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
         findViews();
         setMapView();
         EventsTracker.trackDiveCentersMapView();
+        diveSpotId = getIntent().getStringExtra("id");
         diveSpotLatLng = getIntent().getParcelableExtra("LATLNG");
         diveSpotName = getIntent().getStringExtra("NAME");
         toggleMapListView();
 
-        DDScannerApplication.getInstance().getDdScannerRestClient().getDiveCenters(diveSpotLatLng, diveCentersResponseEntityResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient().getDiveCenters(diveSpotId, diveCentersResponseEntityResultListener);
     }
 
     private void findViews() {
@@ -166,10 +167,11 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
 
     }
 
-    public static void show(Context context, LatLng latLng, String name) {
+    public static void show(Context context, LatLng latLng, String name, String id) {
         Intent intent = new Intent(context, DiveCentersActivity.class);
         intent.putExtra("LATLNG", latLng);
         intent.putExtra("NAME", name);
+        intent.putExtra("id", id);
         context.startActivity(intent);
     }
 
@@ -219,10 +221,10 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
                 toggleMapListView();
                 break;
             case R.id.zoom_plus:
-                mGoogleMap.animateCamera(CameraUpdateFactory.zoomIn());
+                googleMap.animateCamera(CameraUpdateFactory.zoomIn());
                 break;
             case R.id.zoom_minus:
-                mGoogleMap.animateCamera(CameraUpdateFactory.zoomOut());
+                googleMap.animateCamera(CameraUpdateFactory.zoomOut());
                 break;
             case R.id.go_to_my_location:
                 goToMyLocation.setVisibility(View.INVISIBLE);
@@ -262,14 +264,12 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
     @Override
     public void onDestroy() {
         super.onDestroy();
-
         mMapView.onDestroy();
     }
 
     @Override
     public void onLowMemory() {
         super.onLowMemory();
-
         mMapView.onLowMemory();
     }
 
@@ -335,8 +335,8 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
             @Override
             public void onMapReady(final GoogleMap googleMap) {
                 Log.i(TAG, "onMapReady, googleMap = " + googleMap);
-                mGoogleMap = googleMap;
-                mGoogleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+                DiveCentersActivity.this.googleMap = googleMap;
+                googleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
                     @Override
                     public void onMapLoaded() {
                         Log.i(TAG, "onMapLoaded");
@@ -344,13 +344,13 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
                                 .target(diveSpotLatLng)
                                 .zoom(8)
                                 .build();
-                        mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 2000, null);
-                        diveCentersClusterManager = new DiveCentersClusterManager(DiveCentersActivity.this, mGoogleMap);
-                        mGoogleMap.setOnInfoWindowClickListener(DiveCentersActivity.this);
-                        mGoogleMap.setOnMarkerClickListener(DiveCentersActivity.this);
-                        mGoogleMap.setOnMapClickListener(DiveCentersActivity.this);
-                        mGoogleMap.setOnCameraChangeListener(diveCentersClusterManager);
-                        diveSpotMarker = mGoogleMap.addMarker(new MarkerOptions().position(diveSpotLatLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds)).title(diveSpotName));
+                        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 2000, null);
+                        diveCentersClusterManager = new DiveCentersClusterManager(DiveCentersActivity.this, googleMap);
+                        googleMap.setOnInfoWindowClickListener(DiveCentersActivity.this);
+                        googleMap.setOnMarkerClickListener(DiveCentersActivity.this);
+                        googleMap.setOnMapClickListener(DiveCentersActivity.this);
+                        googleMap.setOnCameraChangeListener(diveCentersClusterManager);
+                        diveSpotMarker = googleMap.addMarker(new MarkerOptions().position(diveSpotLatLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_ds)).title(diveSpotName));
                         if (diveCenters != null) {
                             // This means we have already received dive centers
                             drawMarkers();
@@ -471,16 +471,16 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
                             .target(myLocation)
                             .zoom(12)
                             .build();
-                    mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 2000, null);
+                    googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 2000, null);
                     goToMyLocation.setVisibility(View.VISIBLE);
                     progressBar.setVisibility(View.GONE);
                     if (circle == null) {
                         // TODO Change this after google fixes play services bug https://github.com/googlemaps/android-maps-utils/issues/276
-//                myLocationMarker = mGoogleMap.addMarker(new MarkerOptions()
+//                myLocationMarker = googleMap.addMarker(new MarkerOptions()
 //                        .position(myLocation)
 //                        .anchor(0.5f, 0.5f)
 //                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.pin_me)));
-                        myLocationMarker = mGoogleMap.addMarker(new MarkerOptions()
+                        myLocationMarker = googleMap.addMarker(new MarkerOptions()
                                 .position(myLocation)
                                 .anchor(0.5f, 0.5f)
                                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_me)));
@@ -489,7 +489,7 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
                                 .radius(200)
                                 .strokeColor(android.R.color.transparent)
                                 .fillColor(Color.parseColor("#1A0668a1"));
-                        circle = mGoogleMap.addCircle(circleOptions);
+                        circle = googleMap.addCircle(circleOptions);
                     } else {
                         circle.setCenter(myLocation);
                         myLocationMarker.setPosition(new LatLng(event.getLocation().getLatitude(), event.getLocation().getLongitude()));
@@ -503,7 +503,7 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
                         //   userLocationOnFragmentStart = event.getLocation();
                     } else {
                         // this means map has already been initialized.
-                        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(new LatLngBounds(
+                        googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(new LatLngBounds(
                                 new LatLng(event.getLocation().getLatitude() - 1, event.getLocation().getLongitude() - 1),
                                 new LatLng(event.getLocation().getLatitude() + 1, event.getLocation().getLongitude() + 1)
                         ), 0));
