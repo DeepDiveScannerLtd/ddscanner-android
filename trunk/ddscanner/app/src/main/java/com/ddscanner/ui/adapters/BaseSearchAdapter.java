@@ -4,11 +4,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.BaseIdNamePhotoEntity;
+import com.ddscanner.events.DiveCenterCheckedEvent;
 import com.ddscanner.events.ObjectChosedEvent;
 
 import java.util.ArrayList;
@@ -18,15 +20,22 @@ public class BaseSearchAdapter extends RecyclerView.Adapter<BaseSearchAdapter.Di
     
     private ArrayList<BaseIdNamePhotoEntity> objectsList = new ArrayList<>();
     private boolean isCheckable;
+    private int lastCheckedPosition = -1;
 
     public BaseSearchAdapter(ArrayList<BaseIdNamePhotoEntity> objectsList, boolean isCheckable) {
-        this.objectsList = objectsList;
         this.isCheckable = isCheckable;
+        this.objectsList = new ArrayList<>(objectsList);
     }
 
     @Override
     public void onBindViewHolder(DiveCentersViewHolder holder, int position) {
-        holder.bind(objectsList.get(position));
+        holder.textView.setText(objectsList.get(position).getName());
+        if (objectsList.get(position).isActive()) {
+            lastCheckedPosition = position;
+            holder.checkIcon.setVisibility(View.VISIBLE);
+        } else {
+            holder.checkIcon.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -44,15 +53,19 @@ public class BaseSearchAdapter extends RecyclerView.Adapter<BaseSearchAdapter.Di
     }
 
     public void animateTo(List<BaseIdNamePhotoEntity> models) {
+//        this.objectsList = new ArrayList<>();
+//        this.objectsList.addAll(models);
+//        notifyDataSetChanged();
         applyAndAnimateRemovals(models);
         applyAndAnimateAdditions(models);
         applyAndAnimateMovedItems(models);
+        notifyDataSetChanged();
     }
 
     private void applyAndAnimateRemovals(List<BaseIdNamePhotoEntity> newModels) {
         for (int i = objectsList.size() - 1; i >= 0; i--) {
             final BaseIdNamePhotoEntity model = objectsList.get(i);
-            if (!newModels.contains(model)) {
+            if (!newModels.contains(model) && !objectsList.get(i).isActive()) {
                 removeItem(i);
             }
         }
@@ -98,16 +111,25 @@ public class BaseSearchAdapter extends RecyclerView.Adapter<BaseSearchAdapter.Di
     class DiveCentersViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         private TextView textView;
+        private ImageView checkIcon;
 
         DiveCentersViewHolder(View view) {
             super(view);
             view.setOnClickListener(this);
-            textView =  (TextView) view.findViewById(R.id.language_name);
+            textView = (TextView) view.findViewById(R.id.language_name);
+            checkIcon = (ImageView) view.findViewById(R.id.checking_icon);
         }
 
         @Override
         public void onClick(View view) {
             DDScannerApplication.bus.post(new ObjectChosedEvent(objectsList.get(getAdapterPosition())));
+            if (lastCheckedPosition != -1) {
+                objectsList.get(lastCheckedPosition).setActive(false);
+                notifyItemChanged(lastCheckedPosition);
+            }
+            objectsList.get(getAdapterPosition()).setActive(true);
+            notifyItemChanged(getAdapterPosition());
+
         }
 
         public void bind(BaseIdNamePhotoEntity entity) {

@@ -4,10 +4,12 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,6 +18,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.BaseIdNamePhotoEntity;
+import com.ddscanner.events.DiveCenterCheckedEvent;
 import com.ddscanner.events.ObjectChosedEvent;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
@@ -29,9 +32,10 @@ import com.squareup.otto.Subscribe;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchDiveCenterActivity extends BaseAppCompatActivity implements SearchView.OnQueryTextListener{
+public class SearchDiveCenterActivity extends BaseAppCompatActivity implements SearchView.OnQueryTextListener, View.OnClickListener {
 
     private static final String ARG_IS_AFTER_SIGN_UP = "isSignUp";
+    private static final String TAG = SearchDiveCenterActivity.class.getSimpleName();
 
     private ArrayList<BaseIdNamePhotoEntity> objects;
     private ProgressView progressView;
@@ -41,6 +45,8 @@ public class SearchDiveCenterActivity extends BaseAppCompatActivity implements S
     private MaterialDialog materialDialog;
     private String diveCenterId;
     private boolean isAfterSignUp = false;
+    private FloatingActionButton checkedFab;
+    private MenuItem searchItem;
 
     private DDScannerRestClient.ResultListener<Void> addInstructorResultListener = new DDScannerRestClient.ResultListener<Void>() {
         @Override
@@ -79,6 +85,7 @@ public class SearchDiveCenterActivity extends BaseAppCompatActivity implements S
             recyclerView.setAdapter(diveCentersListAdapter);
             progressView.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
+            searchItem.setVisible(true);
         }
 
         @Override
@@ -120,6 +127,26 @@ public class SearchDiveCenterActivity extends BaseAppCompatActivity implements S
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         progressView = (ProgressView) findViewById(R.id.progress_bar);
+        checkedFab = (FloatingActionButton) findViewById(R.id.checked_fab);
+        checkedFab.setOnClickListener(this);
+        checkedFab.hide();
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.checked_fab:
+                if (isAfterSignUp) {
+                    materialDialog.show();
+                    DDScannerApplication.getInstance().getDdScannerRestClient().postAddInstructorToDiveCenter(addInstructorResultListener, diveCenterId);
+                    break;
+                }
+                Intent intent = new Intent();
+                intent.putExtra("id", diveCenterId);
+                setResult(RESULT_OK, intent);
+                finish();
+                break;
+        }
     }
 
     @Override
@@ -138,8 +165,8 @@ public class SearchDiveCenterActivity extends BaseAppCompatActivity implements S
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_search_sealife, menu);
         this.menu = menu;
-        final MenuItem item = menu.findItem(R.id.action_search);
-        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
+        searchItem = menu.findItem(R.id.action_search);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setQueryHint(getString(R.string.search));
         searchView.setOnQueryTextListener(this);
         return true;
@@ -187,16 +214,24 @@ public class SearchDiveCenterActivity extends BaseAppCompatActivity implements S
     @Subscribe
     public void objectChsedEvent(ObjectChosedEvent event) {
         if (event.getBaseIdNamePhotoEntity().getId() != null) {
-            diveCenterId = event.getBaseIdNamePhotoEntity().getId();
-            if (isAfterSignUp) {
-                materialDialog.show();
-                DDScannerApplication.getInstance().getDdScannerRestClient().postAddInstructorToDiveCenter(addInstructorResultListener, diveCenterId);
+            if (!checkedFab.isShown()) {
+                checkedFab.show();
             }
-            Intent intent = new Intent();
-            intent.putExtra("id", diveCenterId);
-            setResult(RESULT_OK, intent);
-            finish();
+            diveCenterId = event.getBaseIdNamePhotoEntity().getId();
+//            if (isAfterSignUp) {
+//                materialDialog.show();
+//                DDScannerApplication.getInstance().getDdScannerRestClient().postAddInstructorToDiveCenter(addInstructorResultListener, diveCenterId);
+//            }
+//            Intent intent = new Intent();
+//            intent.putExtra("id", diveCenterId);
+//            setResult(RESULT_OK, intent);
+//            finish();
         }
+    }
+
+    @Subscribe
+    public void diveCenterChosed(DiveCenterCheckedEvent event) {
+        checkedFab.show();
     }
 
 }

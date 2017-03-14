@@ -8,6 +8,15 @@ public class BaseIdNamePhotoEntity implements Serializable{
     private String name;
     private String photo;
     private String code;
+    private boolean isActive = false;
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
 
     public String getCode() {
         return code;
