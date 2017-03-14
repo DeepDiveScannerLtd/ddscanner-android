@@ -11,6 +11,7 @@ public class Sealife extends SealifeShort implements Serializable {
     private String length;
     private String weight;
     private String depth;
+    @SerializedName("sc_name")
     private String scName;
     private String order;
     private String distribution;
