@@ -42,16 +42,13 @@ public class EditorsUsersListAdapter extends RecyclerView.Adapter<EditorsUsersLi
 
     @Override
     public void onBindViewHolder(EditorsUsersListViewHolder holder, final int position) {
-        Picasso.with(context)
-                    .load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, users.get(position).getPhoto(), "1"))
-                    .resize(Math.round(Helpers.convertDpToPixel(58, context)), Math.round(Helpers.convertDpToPixel(58, context)))
-                    .centerCrop()
-                    .transform(new CropCircleTransformation())
-                    .into(holder.userAvatar);
+        Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, users.get(position).getPhoto(), "1")).resize(Math.round(Helpers.convertDpToPixel(58, context)), Math.round(Helpers.convertDpToPixel(58, context))).centerCrop().transform(new CropCircleTransformation()).into(holder.userAvatar);
         holder.userName.setText(users.get(position).getName());
         if (position == 0) {
+            holder.creatorLabel.setVisibility(View.VISIBLE);
             holder.info.setText(R.string.creator);
         } else {
+            holder.creatorLabel.setVisibility(View.GONE);
             holder.info.setText(R.string.editor);
         }
     }
@@ -66,6 +63,7 @@ public class EditorsUsersListAdapter extends RecyclerView.Adapter<EditorsUsersLi
         private ImageView userAvatar;
         private TextView userName;
         private TextView info;
+        private ImageView creatorLabel;
 
         public EditorsUsersListViewHolder(View v) {
             super(v);
@@ -73,6 +71,7 @@ public class EditorsUsersListAdapter extends RecyclerView.Adapter<EditorsUsersLi
             userAvatar = (ImageView) v.findViewById(R.id.user_avatar);
             userName = (TextView) v.findViewById(R.id.user_name);
             info = (TextView) v.findViewById(R.id.count);
+            creatorLabel = (ImageView) v.findViewById(R.id.creator_label);
         }
 
         @Override

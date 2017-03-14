@@ -48,25 +48,7 @@
             android:text="@string/login_to_continue"
             android:textColor="@color/black_text"
             android:textSize="20sp" />
-    <Button
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="133dp"
-        android:layout_below="@+id/need_to_login_message"
-        android:id="@+id/fb_custom"
-        android:layout_width="wrap_content"
-        style="?android:attr/borderlessButtonStyle"
-        android:layout_height="65dp"
-        android:background="@drawable/btn_fb"/>
-    <Button
-        android:layout_centerHorizontal="true"
-        android:id="@+id/custom_google"
-        android:layout_marginTop="5dp"
-        android:layout_below="@+id/fb_custom"
-        android:layout_width="wrap_content"
-        android:layout_height="65dp"
-        android:background="@drawable/btn_google"
-        style="?android:attr/borderlessButtonStyle"
-        />
+
         <TextView
             android:id="@+id/privacy_policy"
             android:gravity="center"
