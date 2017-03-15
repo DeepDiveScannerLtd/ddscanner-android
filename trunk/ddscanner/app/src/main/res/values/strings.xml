@@ -462,4 +462,5 @@
     <string name="yes">YES</string>
     <string name="are_you_an_instructor">Are you an instructor?</string>
     <string name="add_language_subtitle">It’s applied to name and description</string>
+    <string name="add_photo_sealife">Add photo</string>
 </resources>

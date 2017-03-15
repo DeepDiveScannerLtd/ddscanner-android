@@ -30,13 +30,14 @@
                     android:id="@+id/add_photo_layout"
                     android:onClick="@{handlers::pickPhotoClicked}"
                     android:layout_width="match_parent"
-                    android:layout_height="230dp"
+                    android:layout_height="wrap_content"
                     android:background="@color/white">
 
                     <ImageView
+                        android:visibility="gone"
                         android:id="@+id/sealife_photo"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
+                        android:layout_height="230dp" />
 
                     <android.support.v7.widget.AppCompatImageButton
                         android:id="@+id/delete_photo"
@@ -50,26 +51,25 @@
                         android:background="@drawable/ic_del_circle"
                         android:visibility="gone" />
 
-                    <RelativeLayout
+                    <LinearLayout
+                        android:onClick="@{handlers::pickPhotoClicked}"
                         android:id="@+id/add_photo_center_layout"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true">
-
-                        <ImageView
-                            android:id="@+id/ic_add"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerHorizontal="true"
-                            android:src="@drawable/ic_addds_plus" />
-
+                        android:layout_marginTop="11dp"
+                        android:layout_marginBottom="20dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:background="@drawable/gray_rectangle"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:orientation="horizontal"
+                        android:gravity="center">
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_below="@+id/ic_add"
-                            android:text="@string/add_photo"
-                            android:textSize="17sp" />
-                    </RelativeLayout>
+                            android:text="@string/add_photo_sealife"
+                            android:textColor="#a9a9a9" />
+                    </LinearLayout>
+
                 </RelativeLayout>
 
                 <ImageView

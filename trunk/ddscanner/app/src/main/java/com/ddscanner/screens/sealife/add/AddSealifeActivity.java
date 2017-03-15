@@ -171,6 +171,7 @@ public class AddSealifeActivity extends BaseAppCompatActivity implements View.On
         display.getMetrics(outMetrics);
         float density = getResources().getDisplayMetrics().density;
         float dpWidth = outMetrics.widthPixels / density;
+        binding.sealifePhoto.setVisibility(View.VISIBLE);
         Picasso.with(this).load(path).resize(Math.round(Helpers.convertDpToPixel(dpWidth, this)), Math.round(Helpers.convertDpToPixel(230, this))).centerCrop().into(binding.sealifePhoto);
         binding.addPhotoCenterLayout.setVisibility(View.GONE);
         binding.deletePhoto.setVisibility(View.VISIBLE);
@@ -299,9 +300,11 @@ public class AddSealifeActivity extends BaseAppCompatActivity implements View.On
     public void deletePhotoClicked(View view) {
         filePath = null;
         binding.sealifePhoto.setImageDrawable(null);
+        binding.sealifePhoto.setVisibility(View.GONE);
         binding.addPhotoLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.white));
         binding.deletePhoto.setVisibility(View.GONE);
         binding.addPhotoCenterLayout.setVisibility(View.VISIBLE);
+
     }
 
     public void saveSealifeClicked(View view) {
