@@ -218,6 +218,12 @@
 
                     </LinearLayout>
 
+                    <LinearLayout
+                        android:id="@+id/level_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
                     <ImageView
                         style="@style/DividerStyle"
                         android:layout_marginLeft="65dp" />
@@ -241,6 +247,7 @@
                             android:gravity="center_vertical"
                             android:popupBackground="@color/white" />
                     </LinearLayout>
+                </LinearLayout>
                 </LinearLayout>
 
                 <ImageView style="@style/DividerStyleFull" />

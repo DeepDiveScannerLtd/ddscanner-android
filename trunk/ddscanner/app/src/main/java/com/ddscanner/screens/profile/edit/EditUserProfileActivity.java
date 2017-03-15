@@ -154,8 +154,10 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
                 if (diverRadio.isChecked()) {
                     binding.chooseDiveCenterBtn.setVisibility(View.GONE);
+                    binding.levelLayout.setVisibility(View.VISIBLE);
                 } else {
                     binding.chooseDiveCenterBtn.setVisibility(View.VISIBLE);
+                    binding.levelLayout.setVisibility(View.GONE);
                 }
             }
         });
@@ -179,6 +181,7 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
             }
         }
         if (isShowChoseDiveCenter) {
+            binding.levelLayout.setVisibility(View.GONE);
             binding.chooseDiveCenterBtn.setVisibility(View.VISIBLE);
         }
     }
