@@ -281,7 +281,6 @@ public class SignUpActivity extends AppCompatActivity implements ConfirmationDia
                 ForgotPasswordActivity.show(this);
                 break;
             case R.id.fb_custom:
-                materialDialog.show();
                 if (AccessToken.getCurrentAccessToken() == null) {
                     fbLogin();
                 } else {
