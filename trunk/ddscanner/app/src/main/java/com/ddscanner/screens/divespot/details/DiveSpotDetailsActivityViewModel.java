@@ -123,7 +123,8 @@ public class DiveSpotDetailsActivityViewModel {
             Picasso.with(view.getContext()).load(DDScannerApplication.getInstance().getString(R.string.server_api_address) + Constants.USER_IMAGE_PATH_PREVIEW + viewModel.getDiveSpotDetailsEntity().getAuthor().getPhoto())
                     .resize(Math.round(Helpers.convertDpToPixel(20, view.getContext())), Math.round(Helpers.convertDpToPixel(20, view.getContext())))
                     .centerCrop()
-                    .placeholder(R.drawable.avatar_profile_default)
+                    .placeholder(R.drawable.gray_circle_placeholder)
+                    .error(R.drawable.avatar_profile_default)
                     .transform(new CropCircleTransformation()).into(view);
         }
     }

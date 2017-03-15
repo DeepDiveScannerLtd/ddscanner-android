@@ -37,6 +37,7 @@ public class PickCountryActivity extends BaseAppCompatActivity implements Search
     private BaseSearchAdapter diveCentersListAdapter;
     private Menu menu;
     private MaterialDialog materialDialog;
+    private MenuItem searchMenuItem;
 
     private DDScannerRestClient.ResultListener<ArrayList<BaseIdNamePhotoEntity>> resultListener = new DDScannerRestClient.ResultListener<ArrayList<BaseIdNamePhotoEntity>>() {
         @Override
@@ -46,6 +47,7 @@ public class PickCountryActivity extends BaseAppCompatActivity implements Search
             recyclerView.setAdapter(diveCentersListAdapter);
             progressView.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
+            searchMenuItem.setVisible(true);
         }
 
         @Override
@@ -104,8 +106,8 @@ public class PickCountryActivity extends BaseAppCompatActivity implements Search
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_search_sealife, menu);
         this.menu = menu;
-        final MenuItem item = menu.findItem(R.id.action_search);
-        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
+        searchMenuItem = menu.findItem(R.id.action_search);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchMenuItem);
         searchView.setQueryHint(getString(R.string.search));
         searchView.setOnQueryTextListener(this);
         return true;
