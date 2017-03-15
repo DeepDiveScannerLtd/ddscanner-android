@@ -70,7 +70,11 @@ public class UserActionInfoDialogFragment extends DialogFragment {
         title = (TextView) view.findViewById(R.id.title);
         message = (TextView) view.findViewById(R.id.message);
         button = (Button) view.findViewById(R.id.close_button);
-        title.setText(getArguments().getString(ARG_TITLE));
+        if (getArguments().getString(ARG_TITLE).isEmpty()) {
+            title.setVisibility(View.GONE);
+        } else {
+            title.setText(getArguments().getString(ARG_TITLE));
+        }
         message.setText(getArguments().getString(ARG_MESSAGE));
         builder.setView(view);
         builder.setTitle(null);

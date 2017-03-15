@@ -206,6 +206,9 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
             RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
             image = MultipartBody.Part.createFormData("photo", file.getName(), requestFile);
         }
+        if (diverRadio.isChecked()) {
+            diveCenterId = null;
+        }
         DDScannerApplication.getInstance().getDdScannerRestClient().potUpdateUserProfile(updateProfileInfoResultListener, image, Helpers.createRequestBodyForString(binding.fullName.getText().toString()), Helpers.createRequestBodyForString(binding.aboutEdit.getText().toString()), Helpers.createRequestBodyForString(String.valueOf(levels.indexOf(binding.levelSpinner.getSelectedItem()))), diveCenterId);
     }
 

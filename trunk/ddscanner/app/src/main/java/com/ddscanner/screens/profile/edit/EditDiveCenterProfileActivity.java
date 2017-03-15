@@ -379,6 +379,7 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
+                        UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.empty_string, R.string.please_choose_right_loction, false);
                     }
                 }
                 break;

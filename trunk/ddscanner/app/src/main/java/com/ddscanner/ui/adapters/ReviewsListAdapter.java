@@ -94,6 +94,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         if (commentEntity.getComment().getPhotos() != null) {
             reviewsListViewHolder.photos.setVisibility(View.VISIBLE);
             LinearLayoutManager layoutManager = new LinearLayoutManager(context);
+            layoutManager.setInitialPrefetchItemCount(5);
             layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
             reviewsListViewHolder.photos.setNestedScrollingEnabled(false);
             reviewsListViewHolder.photos.setHasFixedSize(false);
@@ -164,6 +165,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         if (commentEntity.getSealifes() != null) {
             reviewsListViewHolder.sealifesLayout.setVisibility(View.VISIBLE);
             LinearLayoutManager sealifeLayoutManager = new LinearLayoutManager(context);
+            sealifeLayoutManager.setInitialPrefetchItemCount(3);
             sealifeLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
             reviewsListViewHolder.sealifesList.setLayoutManager(sealifeLayoutManager);
             reviewsListViewHolder.sealifesList.setAdapter(new SealifeReviewListAdapter(commentEntity.getSealifes(), context));
