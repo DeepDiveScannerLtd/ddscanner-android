@@ -318,7 +318,7 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
             case ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_LOCATION:
                 if (resultCode == RESULT_OK) {
                     this.diveSpotLocation = data.getParcelableExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_LATLNG);
-                    if (data.getStringExtra(Constants.ADD_DIVE_SPOT_INTENT_LOCATION_NAME) != null) {
+                    if (data.getStringExtra(Constants.ADD_DIVE_SPOT_INTENT_LOCATION_NAME) != null && !data.getStringExtra(Constants.ADD_DIVE_SPOT_INTENT_LOCATION_NAME).isEmpty()) {
                         locationTitle.setText(data.getStringExtra(Constants.ADD_DIVE_SPOT_INTENT_LOCATION_NAME));
                     } else {
                         locationTitle.setText(R.string.location);

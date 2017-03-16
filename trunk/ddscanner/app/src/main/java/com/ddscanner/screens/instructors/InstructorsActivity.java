@@ -12,11 +12,13 @@ import android.view.View;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.interfaces.ConfirmationDialogClosedListener;
 import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.entities.Instructor;
 import com.ddscanner.events.RemoveInstructorEvent;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
+import com.ddscanner.ui.dialogs.ConfirmationDialogFragment;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
@@ -25,7 +27,7 @@ import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 
-public class InstructorsActivity extends BaseAppCompatActivity implements DialogClosedListener {
+public class InstructorsActivity extends BaseAppCompatActivity implements DialogClosedListener, ConfirmationDialogClosedListener {
 
     private RecyclerView recyclerView;
     private ProgressView progressView;
@@ -33,6 +35,7 @@ public class InstructorsActivity extends BaseAppCompatActivity implements Dialog
     private MaterialDialog materialDialog;
     private int removedInstructorId;
     private String userId;
+    private String instructorForRemoveId;
 
     private DDScannerRestClient.ResultListener<Void> removeResultListener = new DDScannerRestClient.ResultListener<Void>() {
         @Override
@@ -148,11 +151,23 @@ public class InstructorsActivity extends BaseAppCompatActivity implements Dialog
     public void removeInstructorClicked(RemoveInstructorEvent event) {
         materialDialog.show();
         removedInstructorId = event.getPosition();
-        DDScannerApplication.getInstance().getDdScannerRestClient().postRemoveInstructorFromDivecenter(removeResultListener, event.getId());
+        instructorForRemoveId = event.getId();
+        ConfirmationDialogFragment.showForActivity(getSupportFragmentManager(), R.string.empty_string, R.string.remove_instructor_confriamtion, R.string.yes, R.string.no);
     }
 
     @Override
     public void onDialogClosed(int requestCode) {
         finish();
+    }
+
+    @Override
+    public void onPositiveDialogClicked() {
+        DDScannerApplication.getInstance().getDdScannerRestClient().postRemoveInstructorFromDivecenter(removeResultListener, instructorForRemoveId);
+
+    }
+
+    @Override
+    public void onNegativeDialogClicked() {
+
     }
 }

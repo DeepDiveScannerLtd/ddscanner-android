@@ -48,5 +48,6 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="20dp"
         android:src="@drawable/ic_acb_plus"
-        app:backgroundTint="@color/orange" />
+        app:backgroundTint="@color/orange"
+        android:scaleType="center"/>
 </android.support.design.widget.CoordinatorLayout>

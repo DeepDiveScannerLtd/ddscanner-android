@@ -213,7 +213,8 @@
         android:layout_alignParentBottom="true"
         android:layout_margin="14dp"
         android:src="@drawable/ic_acb_list"
-        app:backgroundTint="@color/white" />
+        app:backgroundTint="@color/white"
+        android:scaleType="center"/>
 
 </RelativeLayout>
 </LinearLayout>

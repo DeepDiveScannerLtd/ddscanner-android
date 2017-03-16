@@ -223,7 +223,8 @@
         android:layout_alignParentBottom="true"
         android:layout_margin="14dp"
         android:src="@drawable/ic_acb_list"
-        app:backgroundTint="@color/white" />
+        app:backgroundTint="@color/white"
+        android:scaleType="center"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/add_ds_fab"
@@ -232,6 +233,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:layout_margin="14dp"
+        android:scaleType="center"
         android:src="@drawable/ic_acb_plus"
         app:backgroundTint="@color/orange" />
 

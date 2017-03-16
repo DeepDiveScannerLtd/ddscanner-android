@@ -464,4 +464,5 @@
     <string name="add_language_subtitle">It’s applied to name and description</string>
     <string name="add_photo_sealife">Add photo</string>
     <string name="please_choose_right_loction">Please, choose the right location of the dive center</string>
+    <string name="remove_instructor_confriamtion">Remove this instructor from your list?</string>
 </resources>
