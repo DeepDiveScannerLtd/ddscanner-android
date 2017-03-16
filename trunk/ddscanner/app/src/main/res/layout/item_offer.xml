@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <variable
+            name="offerViewModel"
+            type="com.ddscanner.screens.boocking.offers.OfferListItemViewModel" />
+    </data>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="178dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="4dp"
+            android:background="@drawable/offer_item_background"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="105dp">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="center"
+                    android:src="@drawable/ds_head_photo_default" />
+                
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/ShadowOfferTitleText"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="18dp"
+                    android:layout_marginBottom="13dp"
+                    android:layout_marginRight="18dp"
+                    android:lines="1"
+                    android:ellipsize="end"
+                    android:text="@{offerViewModel.offer.diveCenterName}" />
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="73dp"
+                android:orientation="vertical"
+                android:gravity="center_vertical"
+                android:paddingLeft="18dp"
+                android:paddingRight="18dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:lines="1"
+                    android:ellipsize="end"
+                    android:textSize="18sp"
+                    android:fontFamily="sans-serif-medium"
+                    android:textColor="@color/black_text"
+                    android:text="@{offerViewModel.offer.offerName}"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:lines="1"
+                    android:ellipsize="end"
+                    android:textSize="14sp"
+                    android:textColor="@color/gray"
+                    android:text="@{offerViewModel.offer.allSpotsAsString}"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/offer_price_background"
+            android:orientation="vertical"
+            android:paddingBottom="6dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="6dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/price_from"
+                android:textColor="@color/black_text"
+                android:textSize="10sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
+                android:text="@{offerViewModel.offer.price}"
+                android:textColor="@color/black_text"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+
+    </RelativeLayout>
+</layout>

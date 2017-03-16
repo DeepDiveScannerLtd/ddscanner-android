@@ -51,6 +51,15 @@
         <item name="android:shadowDx">2</item>
     </style>
 
+    <style name="ShadowOfferTitleText">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">#80ffffff</item>
+        <item name="android:shadowRadius">3</item>
+        <item name="android:shadowColor">#80000000</item>
+        <item name="android:shadowDy">2</item>
+        <item name="android:shadowDx">2</item>
+    </style>
+
     <style name="AddDsCharTitleStyle">
         <item name="android:textSize">@dimen/add_ds_char_title</item>
         <item name="android:textColor">@color/black_text</item>
