@@ -467,4 +467,5 @@
     <string name="remove_instructor_confriamtion">Remove this instructor from your list?</string>
     <string name="single_review_pattern">%1$s review</string>
     <string name="not_single_review_pattern">%1$s reviews</string>
+    <string name="pattern_more_countries">+ %1$S</string>
 </resources>

@@ -13,6 +13,16 @@
         android:layout_height="wrap_content"
         android:textColor="@color/black_text"
         tools:text="Diver"/>
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/more_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/countries"
+        android:textSize="14sp"
+        android:fontFamily="sans-serif-medium"
+        android:textColor="#a3a3a3" />
     <LinearLayout
         android:id="@+id/countries"
         android:layout_alignParentRight="true"

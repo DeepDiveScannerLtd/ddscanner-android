@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.AchievmentProfile;
 import com.ddscanner.entities.ProfileAchievement;
@@ -28,6 +29,7 @@ public class AchievmentProfileListAdapter extends RecyclerView.Adapter<Achievmen
 
     private ArrayList<ProfileAchievement> achievmentProfiles;
     private Context context;
+    private static final int MAX_FLAGS_COUNT = 6;
 
     public AchievmentProfileListAdapter(ArrayList<ProfileAchievement> achievmentProfiles, Context context) {
         this.achievmentProfiles = achievmentProfiles;
@@ -49,8 +51,15 @@ public class AchievmentProfileListAdapter extends RecyclerView.Adapter<Achievmen
             countries = achievmentProfile.getCountries();
             countries.removeAll(Arrays.asList("", null));
         }
-        if ( countries.size() > 0) {
+        if (countries.size() > 0) {
             for (int i = 0; i < countries.size(); i++) {
+                if (i == MAX_FLAGS_COUNT) {
+                    holder.moreCount.setText(DDScannerApplication.getInstance().getString(R.string.pattern_more_countries, String.valueOf(countries.size() - i)));
+                    holder.moreCount.setVisibility(View.VISIBLE);
+                    break;
+                } else {
+                    holder.moreCount.setVisibility(View.VISIBLE);
+                }
                 AchievementCountryFlagView imageView = new AchievementCountryFlagView(context);
                 int resiId;
                 try {
@@ -78,12 +87,13 @@ public class AchievmentProfileListAdapter extends RecyclerView.Adapter<Achievmen
 
         protected LinearLayout countries;
         protected TextView title;
+        protected TextView moreCount;
 
         public AchievmentProfileListViewHolder(View view) {
             super(view);
             countries = (LinearLayout) view.findViewById(R.id.countries);
             title = (TextView) view.findViewById(R.id.title);
-
+            moreCount = (TextView) view.findViewById(R.id.more_count);
         }
 
     }
