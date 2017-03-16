@@ -107,9 +107,7 @@
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="me.nereo.multi_image_selector.MultiImageSelectorActivity"
-            android:configChanges="orientation|screenSize" />
+
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
@@ -144,6 +142,9 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activities.SearchSpotOrLocationActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".screens.boocking.offers.OffersActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".screens.divespot.add.AddDiveSpotActivity"
