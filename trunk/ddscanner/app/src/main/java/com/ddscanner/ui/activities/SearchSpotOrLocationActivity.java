@@ -159,6 +159,7 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
         getMenuInflater().inflate(R.menu.menu_search_sealife, menu);
         this.menu = menu;
         MenuItem item = menu.findItem(R.id.action_search);
+        item.setVisible(true);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
         searchView.setIconified(false);
         searchView.setQueryHint(getString(R.string.search));

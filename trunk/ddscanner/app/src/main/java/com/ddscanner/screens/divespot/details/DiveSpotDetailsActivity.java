@@ -537,8 +537,12 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
             case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_REVIEWS:
                 if (resultCode == RESULT_OK) {
                     if (data.getStringExtra("count") != null) {
-                        binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().setReviewsCount(Integer.parseInt(data.getStringExtra("count")));
-                        DiveSpotDetailsActivityViewModel.setReviewsCount(binding.btnShowAllReviews, binding.getDiveSpotViewModel());
+                        try {
+                            binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().setReviewsCount(Integer.parseInt(data.getStringExtra("count")));
+                            DiveSpotDetailsActivityViewModel.setReviewsCount(binding.btnShowAllReviews, binding.getDiveSpotViewModel());
+                        } catch (NullPointerException e) {
+                            finish();
+                        }
                     }
                 }
                 break;

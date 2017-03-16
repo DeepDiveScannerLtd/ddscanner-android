@@ -116,6 +116,7 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
     private RecyclerView rc;
     private RelativeLayout please;
     private DiveSpotsListAdapter productListAdapter;
+    private int diveSpotInfoHeight;
 
     @Override
     public void onAttach(Context context) {
@@ -180,6 +181,7 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
         if (LocationHelper.isLocationProvidersAvailable(getContext()) && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             baseAppCompatActivity.getLocation(ActivitiesRequestCodes.REQUEST_CODE_MAP_LIST_FRAGMENT_GET_LOCATION_ON_FRAGMENT_START);
         }
+        diveSpotInfoHeight = Math.round(Helpers.convertDpToPixel(110, getContext()));
         return view;
     }
 
@@ -362,9 +364,9 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
     @Subscribe
     public void getDiveSpotInfow(MarkerClickEvent event) {
         DDScannerApplication.bus.post(new InfowWindowOpenedEvent(null));
-        mapControlLayout.animate().translationY(-diveSpotInfo.getHeight());
-        addDsFab.animate().translationY(-diveSpotInfo.getHeight());
-        mapListFAB.animate().translationY(-diveSpotInfo.getHeight());
+        mapControlLayout.animate().translationY(-diveSpotInfoHeight);
+        addDsFab.animate().translationY(-diveSpotInfoHeight);
+        mapListFAB.animate().translationY(-diveSpotInfoHeight);
         diveSpotInfo.animate()
                 .translationY(0)
                 .alpha(1.0f)
