@@ -89,6 +89,20 @@ public class ProfileFragmentViewModel {
         }
     }
 
+    @BindingAdapter({"countReviewsFrom"})
+    public static void setReviewsCount(TextView view, ProfileFragmentViewModel viewModel) {
+        if (viewModel != null) {
+            switch (viewModel.getUser().getCounters().getCommentsCount()) {
+                case 1:
+                    view.setText(DDScannerApplication.getInstance().getString(R.string.single_review_pattern, "1"));
+                    break;
+                default:
+                    view.setText(DDScannerApplication.getInstance().getString(R.string.not_single_review_pattern, String.valueOf(viewModel.getUser().getCounters().getCommentsCount())));
+                    break;
+            }
+        }
+    }
+
     private static String getDiveSpotString(int count) {
         if (count > 1 || count == 0) {
             return String.valueOf(count) + DDScannerApplication.getInstance().getString(R.string.dive_spos);

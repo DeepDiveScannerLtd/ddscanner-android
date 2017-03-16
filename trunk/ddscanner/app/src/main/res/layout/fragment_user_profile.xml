@@ -157,101 +157,7 @@
                         style="@style/DividerStyleFull"
                         android:layout_marginTop="15dp" />
 
-                    <android.support.percent.PercentRelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:orientation="horizontal">
-
-                        <LinearLayout
-                            android:id="@+id/comments_layout"
-                            android:layout_height="64dp"
-                            android:layout_alignParentLeft="true"
-                            android:background="?attr/selectableItemBackground"
-                            android:gravity="center"
-                            android:onClick="@{handlers::showComments}"
-                            android:orientation="vertical"
-                            app:layout_widthPercent="33%">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="sans-serif-medium"
-                                android:text="@string/reviews_profile"
-                                android:textColor="#a3a3a3"
-                                android:textSize="11sp" />
-
-                            <TextView
-                                android:id="@+id/user_comments"
-                                style="@style/ProfileNumberDivespotsSrtyle"
-                                android:layout_marginLeft="0dp"
-                                android:text="@{String.valueOf(userProfileViewModel.user.counters.commentsCount)}"
-                                tools:text="321" />
-                        </LinearLayout>
-
-                        <RelativeLayout
-                            android:id="@+id/likeLayout"
-                            android:layout_height="64dp"
-                            android:layout_centerHorizontal="true"
-                            android:background="?attr/selectableItemBackground"
-                            android:onClick="@{handlers::showLikes}"
-                            app:layout_widthPercent="33%">
-
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:layout_centerHorizontal="true"
-                                android:gravity="center"
-                                android:orientation="vertical">
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:fontFamily="sans-serif-medium"
-                                    android:text="@string/likes_profile"
-                                    android:textColor="#a3a3a3"
-                                    android:textSize="11sp" />
-
-
-                                <TextView
-                                    android:id="@+id/user_likes"
-                                    style="@style/ProfileNumberDivespotsSrtyle"
-                                    android:layout_marginLeft="0dp"
-                                    android:text="@{String.valueOf(userProfileViewModel.user.counters.likesCount)}"
-                                    tools:text="321" />
-                            </LinearLayout>
-                        </RelativeLayout>
-
-                        <LinearLayout
-                            android:id="@+id/dislikeLayout"
-                            android:layout_height="64dp"
-                            android:layout_alignParentRight="true"
-                            android:background="?attr/selectableItemBackground"
-                            android:gravity="center"
-                            android:onClick="@{handlers::showDislikes}"
-                            android:orientation="vertical"
-                            app:layout_widthPercent="33%">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="sans-serif-medium"
-                                android:text="@string/dislikes"
-                                android:textColor="#a3a3a3"
-                                android:textSize="11sp" />
-
-
-                            <TextView
-                                android:id="@+id/user_dislikes"
-                                style="@style/ProfileNumberDivespotsSrtyle"
-                                android:layout_marginLeft="0dp"
-                                android:text="@{String.valueOf(userProfileViewModel.user.counters.dislikesCount)}"
-                                tools:text="321" />
-                        </LinearLayout>
-                    </android.support.percent.PercentRelativeLayout>
                 </LinearLayout>
-
-                <ImageView style="@style/DividerStyleFull" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -325,6 +231,46 @@
                     android:layout_height="wrap_content"
                     android:background="@color/white"
                     android:orientation="vertical">
+
+                    <LinearLayout
+                        android:id="@+id/reviews_activity"
+                        android:layout_width="match_parent"
+                        android:layout_height="66dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:onClick="@{handlers::showComments}"
+                        android:orientation="horizontal"
+                        android:paddingTop="10dp">
+
+                        <ImageView
+                            style="@style/CharacteristicsDiveSpotListIcons"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_profile_reviews" />
+
+                        <LinearLayout
+                            android:layout_width="258dp"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+
+                            <TextView
+                                style="@style/CharacteristicsDiveSpotListTitle"
+                                android:text="@string/reviews" />
+
+                            <TextView
+                                android:id="@+id/reviews_count"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="3dp"
+                                app:countReviewsFrom="@{userProfileViewModel}" />
+                        </LinearLayout>
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="center"
+                            android:src="@drawable/ic_arrow" />
+                    </LinearLayout>
+
+                    <ImageView style="@style/DividerStyle" />
 
                     <LinearLayout
                         android:id="@+id/checkins_activity"

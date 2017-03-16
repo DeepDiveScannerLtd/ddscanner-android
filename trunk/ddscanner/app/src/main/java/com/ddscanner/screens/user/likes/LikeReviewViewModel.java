@@ -43,8 +43,10 @@ public class LikeReviewViewModel {
     public static void setMainText(TextView view, LikeReviewViewModel viewModel) {
         if (viewModel != null) {
             String text = viewModel.getLikeEntity().getReview().getReview();
-            if (text.length() > 30) {
-                text = reformatString(text);
+            if (text != null) {
+                if (text.length() > 30) {
+                    text = reformatString(text);
+                }
             }
             view.setText(DDScannerApplication.getInstance().getString(R.string.foreign_user_likes_main_text, viewModel.getLikeEntity().getDiveSpot().getName(), text));
         }
