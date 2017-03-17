@@ -9,7 +9,7 @@ public class DiveSpotPhotosResponseEntity {
     @SerializedName("photos")
     private ArrayList<DiveSpotPhoto> diveSpotPhotos;
 
-    @SerializedName("reviews")
+    @SerializedName("comments")
     private ArrayList<DiveSpotPhoto> commentPhotos;
 
     public ArrayList<DiveSpotPhoto> getDiveSpotPhotos() {
