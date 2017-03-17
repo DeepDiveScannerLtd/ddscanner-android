@@ -469,4 +469,5 @@
     <string name="not_single_review_pattern">%1$s reviews</string>
     <string name="pattern_more_countries">+ %1$S</string>
     <string name="price_from">From</string>
+    <string name="dive_centers_divider">Dive centers</string>
 </resources>
