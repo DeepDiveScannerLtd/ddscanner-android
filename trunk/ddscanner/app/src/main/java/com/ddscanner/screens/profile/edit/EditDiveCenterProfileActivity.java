@@ -63,6 +63,10 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
 
     private static final String COMPANY_BUTTON_TAG= "company_button_tag";
     private static final String RESELLER_BUTTON_TAG= "reseller_button_tag";
+    private static final String ARG_DIVECENTER = "divecenter";
+    private static final String ARG_ISSPOTS = "isspots";
+    private static final String ARG_ISLOGOUTABLE = "islogoutable";
+    private boolean isLogoutable;
 
     private ArrayList<EditText> phonesEditTexts = new ArrayList<>();
     private ArrayList<EditText> emailsEditTexts = new ArrayList<>();
@@ -194,10 +198,11 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
         finish();
     }
 
-    public static void showForResult(Activity context, String diveCenterString, int requestCode, boolean isHaveSpots) {
+    public static void showForResult(Activity context, String diveCenterString, int requestCode, boolean isHaveSpots, boolean isLogoutable) {
         Intent intent = new Intent(context, EditDiveCenterProfileActivity.class);
-        intent.putExtra("divecenter", diveCenterString);
-        intent.putExtra("isspots", isHaveSpots);
+        intent.putExtra(ARG_DIVECENTER, diveCenterString);
+        intent.putExtra(ARG_ISSPOTS, isHaveSpots);
+        intent.putExtra(ARG_ISLOGOUTABLE, isLogoutable);
         context.startActivityForResult(intent, requestCode);
     }
 
@@ -206,9 +211,10 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
         super.onCreate(savedInstanceState);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         binding = DataBindingUtil.setContentView(this, R.layout.edit_dc_profile_view);
-        isHaveSpots = getIntent().getBooleanExtra("isspots", false);
+        isHaveSpots = getIntent().getBooleanExtra(ARG_ISSPOTS, false);
+        isLogoutable = getIntent().getBooleanExtra(ARG_ISLOGOUTABLE, true);
         binding.setHandlers(this);
-        binding.setDcViewModel(new EditDiveCenterProfileActivityViewModel(new Gson().fromJson(getIntent().getStringExtra("divecenter"), DiveCenterProfile.class)));
+        binding.setDcViewModel(new EditDiveCenterProfileActivityViewModel(new Gson().fromJson(getIntent().getStringExtra(ARG_DIVECENTER), DiveCenterProfile.class)));
         countryCode = binding.getDcViewModel().getDiveCenterProfile().getCountryCode();
         colorStateList = new ColorStateList(
                 new int[][]{
@@ -220,7 +226,11 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
                         , ContextCompat.getColor(this, R.color.radio_button_fill),
                 }
         );
-        setupToolbar(R.string.edit_profile_activity, R.id.toolbar, R.menu.edit_profile_menu);
+        if (isLogoutable) {
+            setupToolbar(R.string.edit_profile_activity, R.id.toolbar, R.menu.edit_profile_menu);
+        } else {
+            setupToolbar(R.string.edit_profile_activity, R.id.toolbar);
+        }
         setupUi();
     }
 

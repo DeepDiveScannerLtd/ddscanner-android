@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -20,6 +21,8 @@ import com.ddscanner.entities.ReviewsOpenedSource;
 import com.ddscanner.entities.User;
 import com.ddscanner.events.OpenPhotosActivityEvent;
 import com.ddscanner.rest.DDScannerRestClient;
+import com.ddscanner.screens.profile.divecenter.DiveCenterProfileFragment;
+import com.ddscanner.screens.profile.user.ProfileFragment;
 import com.ddscanner.screens.reiews.list.ReviewsActivity;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.activities.DiveSpotsListActivity;
@@ -32,6 +35,8 @@ import com.google.gson.Gson;
 import com.rey.material.widget.ProgressView;
 import com.squareup.otto.Subscribe;
 
+import static com.ddscanner.utils.ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_SHOW_EDIT_PROFILE_ACTIVITY;
+
 public class UserProfileActivity extends BaseAppCompatActivity implements DialogClosedListener {
 
     private ProgressView progressView;
@@ -39,6 +44,7 @@ public class UserProfileActivity extends BaseAppCompatActivity implements Dialog
     private String userId;
     private PhotoAuthor photoAuthor;
     private int userType;
+    private ProfileFragment profileFragment;
 
     private DDScannerRestClient.ResultListener<User> resultListener = new DDScannerRestClient.ResultListener<User>() {
         @Override
@@ -121,21 +127,31 @@ public class UserProfileActivity extends BaseAppCompatActivity implements Dialog
             case 0:
                 DiveCenterProfile diveCenterProfile = (DiveCenterProfile) object;
                 photoAuthor = new PhotoAuthor(String.valueOf(diveCenterProfile.getId()), diveCenterProfile.getName(), diveCenterProfile.getPhoto(), diveCenterProfile.getType());
-                FragmentTransaction dcfragmentTransaction = getSupportFragmentManager().beginTransaction();
-                DiveCenterProfileFragment diveCenterProfileFragment = DiveCenterProfileFragment.newInstance(diveCenterProfile);
-                dcfragmentTransaction.replace(R.id.content, diveCenterProfileFragment);
-                dcfragmentTransaction.commit();
+                if (String.valueOf(diveCenterProfile.getId()).equals(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId())) {
+                    DiveCenterProfileFragment diveCenterProfileFragment = DiveCenterProfileFragment.newInstance(diveCenterProfile);
+                    setActiveFragment(diveCenterProfileFragment);
+                    break;
+                }
+                setActiveFragment(UserDiveCenterProfileFragment.newInstance(diveCenterProfile));
                 break;
             case 1:
             case 2:
                 User user = (User) object;
                 photoAuthor = new PhotoAuthor(user.getId(), user.getName(), user.getPhoto(), user.getType());
-                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                UserProfileFragment userProfileFragment = UserProfileFragment.newInstance(user);
-                fragmentTransaction.replace(R.id.content, userProfileFragment);
-                fragmentTransaction.commit();
+                if (user.getId().equals(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId())) {
+                    profileFragment = ProfileFragment.newInstance(user);
+                    setActiveFragment(profileFragment);
+                    break;
+                }
+                setActiveFragment(UserProfileFragment.newInstance(user));
                 break;
         }
+    }
+
+    private void setActiveFragment(Fragment fragment) {
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.content, fragment);
+        fragmentTransaction.commit();
     }
 
     @Override
@@ -199,6 +215,10 @@ public class UserProfileActivity extends BaseAppCompatActivity implements Dialog
                     UserLikesDislikesActivity.show(this, false, userId);
                 }
                 break;
+            case REQUEST_CODE_MAIN_ACTIVITY_SHOW_EDIT_PROFILE_ACTIVITY:
+                if (resultCode == RESULT_OK) {
+                    profileFragment.reloadData();
+                }
         }
     }
 }

@@ -17,7 +17,7 @@
 
         <variable
             name="handlers"
-            type="com.ddscanner.screens.user.profile.DiveCenterProfileFragment" />
+            type="com.ddscanner.screens.user.profile.UserDiveCenterProfileFragment" />
     </data>
 
     <ScrollView

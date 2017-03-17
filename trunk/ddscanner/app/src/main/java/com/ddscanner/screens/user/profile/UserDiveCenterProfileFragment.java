@@ -21,18 +21,18 @@ import com.ddscanner.ui.activities.DiveSpotsListActivity;
 import com.ddscanner.ui.adapters.UserPhotosListAdapter;
 import com.google.android.gms.maps.model.LatLng;
 
-public class DiveCenterProfileFragment extends Fragment {
+public class UserDiveCenterProfileFragment extends Fragment {
 
     private DiveCenterProfile diveCenterProfile;
     private FragmentDiveCenterProfileBinding binding;
     private LatLng diveCenterLocation = null;
 
-    public static DiveCenterProfileFragment newInstance(DiveCenterProfile diveCenterProfile) {
-        DiveCenterProfileFragment diveCenterProfileFragment = new DiveCenterProfileFragment();
+    public static UserDiveCenterProfileFragment newInstance(DiveCenterProfile diveCenterProfile) {
+        UserDiveCenterProfileFragment userDiveCenterProfileFragment = new UserDiveCenterProfileFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable("user", diveCenterProfile);
-        diveCenterProfileFragment.setArguments(bundle);
-        return diveCenterProfileFragment;
+        userDiveCenterProfileFragment.setArguments(bundle);
+        return userDiveCenterProfileFragment;
     }
 
 

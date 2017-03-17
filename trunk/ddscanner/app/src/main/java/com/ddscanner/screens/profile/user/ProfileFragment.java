@@ -61,9 +61,13 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
 
     private BusRegisteringListener busListener = new BusRegisteringListener();
 
+    private static final String ARG_USER = "ARG_USER";
+
     private User user;
 
     private FragmentProfileBinding binding;
+
+    private boolean isLogouting;
 
     private DDScannerRestClient.ResultListener<User> userResultListener = new DDScannerRestClient.ResultListener<User>() {
         @Override
@@ -117,22 +121,40 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
 
     };
 
+    public static ProfileFragment newInstance(User user) {
+        ProfileFragment userProfileFragment = new ProfileFragment();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(ARG_USER, new Gson().toJson(user));
+        userProfileFragment.setArguments(bundle);
+        return userProfileFragment;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.i(TAG, "ProfileFragment onCreateView, this = " + this);
+        Bundle bundle = new Bundle();
+        bundle = getArguments();
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_profile, container, false);
         View v = binding.getRoot();
         setupUi();
         binding.setHandlers(this);
-
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn() && (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == SharedPreferenceHelper.UserType.DIVER || DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == SharedPreferenceHelper.UserType.INSTRUCTOR)) {
-            getUserDataRequest();
-        }
-        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
-            onLoggedIn();
+        if (getArguments() != null && bundle.getString(ARG_USER) != null) {
+            isLogouting = false;
+            user = new Gson().fromJson(bundle.getString(ARG_USER), User.class);
+            binding.setProfileFragmentViewModel(new ProfileFragmentViewModel(user));
+            binding.about.setVisibility(View.VISIBLE);
+            binding.progressBar.setVisibility(View.GONE);
+            changeUi();
         } else {
-            onLoggedOut();
+            isLogouting = true;
+            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn() && (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == SharedPreferenceHelper.UserType.DIVER || DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == SharedPreferenceHelper.UserType.INSTRUCTOR)) {
+                getUserDataRequest();
+            }
+            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+                onLoggedIn();
+            } else {
+                onLoggedOut();
+            }
         }
         return v;
     }
@@ -351,7 +373,7 @@ public class ProfileFragment extends Fragment implements LoginView.LoginStateCha
 
     public void showEditLayout(View view) {
         if (user != null) {
-            EditUserProfileActivity.showForResult(getActivity(), new Gson().toJson(user), ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_SHOW_EDIT_PROFILE_ACTIVITY);
+            EditUserProfileActivity.showForResult(getActivity(), new Gson().toJson(user), isLogouting, ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_SHOW_EDIT_PROFILE_ACTIVITY);
         }
     }
 
