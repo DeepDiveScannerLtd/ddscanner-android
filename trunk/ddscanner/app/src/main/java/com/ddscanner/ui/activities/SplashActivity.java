@@ -16,6 +16,7 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.events.InstanceIDReceivedEvent;
+import com.ddscanner.screens.boocking.offers.OffersActivity;
 import com.ddscanner.ui.views.DDProgressBarView;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogsRequestCodes;
@@ -79,7 +80,8 @@ public class SplashActivity extends BaseAppCompatActivity implements DialogClose
         showMainActivityRunnable = new Runnable() {
             @Override
             public void run() {
-                MainActivity.show(SplashActivity.this, Helpers.hasConnection(SplashActivity.this));
+//                MainActivity.show(SplashActivity.this, Helpers.hasConnection(SplashActivity.this));
+                OffersActivity.show(SplashActivity.this);
                 SplashActivity.this.finish();
             }
         };

@@ -1,4 +1,4 @@
-package com.ddscanner.screens.boocking.offers;
+package com.ddscanner.screens.boocking.offers.dailytours;
 
 import android.databinding.BindingAdapter;
 import android.widget.ImageView;
@@ -9,11 +9,11 @@ import com.squareup.picasso.Picasso;
 
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
-public class OfferListItemViewModel {
+public class DailyToursListItemViewModel {
 
     private Offer offer;
 
-    public OfferListItemViewModel(Offer offer) {
+    public DailyToursListItemViewModel(Offer offer) {
         this.offer = offer;
     }
 
@@ -22,7 +22,7 @@ public class OfferListItemViewModel {
     }
 
     @BindingAdapter({"loadPhotoFrom"})
-    public static void loadOfferImage(ImageView view, OfferListItemViewModel viewModel) {
+    public static void loadOfferImage(ImageView view, DailyToursListItemViewModel viewModel) {
         if (viewModel != null) {
             Picasso.with(view.getContext()).load(viewModel.getOffer().getImage()).transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2, view.getContext())), 0, RoundedCornersTransformation.CornerType.TOP)).into(view);
         }

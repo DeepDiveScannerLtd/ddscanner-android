@@ -1,4 +1,4 @@
-package com.ddscanner.screens.boocking.offers;
+package com.ddscanner.screens.boocking.offers.dailytours;
 
 import android.databinding.BindingAdapter;
 import android.widget.ImageView;

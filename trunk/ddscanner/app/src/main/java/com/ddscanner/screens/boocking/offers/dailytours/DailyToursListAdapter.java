@@ -1,4 +1,4 @@
-package com.ddscanner.screens.boocking.offers;
+package com.ddscanner.screens.boocking.offers.dailytours;
 
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
@@ -9,13 +9,12 @@ import android.view.ViewGroup;
 import com.ddscanner.R;
 import com.ddscanner.databinding.ItemOfferBinding;
 import com.ddscanner.databinding.ItemOffersDivecenterBinding;
-import com.ddscanner.entities.DiveCenter;
 import com.ddscanner.entities.DiveCenterShort;
 import com.ddscanner.entities.Offer;
 
 import java.util.ArrayList;
 
-public class OffersListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class DailyToursListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final int OFFER_HOLDER_TYPE = 0;
     private static final int DIVIDER_HOLDER_TYPE = 1;
@@ -24,7 +23,7 @@ public class OffersListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private ArrayList<DiveCenterShort> diveCenters = new ArrayList<>();
 
 
-    public OffersListAdapter(ArrayList<Offer> offers, ArrayList<DiveCenterShort> diveCenters) {
+    public DailyToursListAdapter(ArrayList<Offer> offers, ArrayList<DiveCenterShort> diveCenters) {
         this.offers = offers;
         this.diveCenters = diveCenters;
     }
@@ -53,7 +52,7 @@ public class OffersListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 break;
             case OFFER_HOLDER_TYPE:
                 OffersListViewHolder offersListViewHolder = (OffersListViewHolder) holder;
-                offersListViewHolder.binding.setOfferViewModel(new OfferListItemViewModel(offers.get(position)));
+                offersListViewHolder.binding.setOfferViewModel(new DailyToursListItemViewModel(offers.get(position)));
                 break;
             case DIVECENTER_HOLDER_TYPE:
                 DiveCenterViewHolder diveCenterViewHolder = (DiveCenterViewHolder) holder;

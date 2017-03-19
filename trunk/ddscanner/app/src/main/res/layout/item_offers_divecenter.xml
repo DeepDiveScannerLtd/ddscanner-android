@@ -5,7 +5,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.ddscanner.screens.boocking.offers.DiveCenterListItemViewModel" />
+            type="com.ddscanner.screens.boocking.offers.dailytours.DiveCenterListItemViewModel" />
     </data>
 
     <RelativeLayout
