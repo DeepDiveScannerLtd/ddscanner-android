@@ -41,6 +41,7 @@ public class PickLanguageActivity extends AppCompatActivity implements SearchVie
     private ProgressView progressView;
     private LanguageSearchAdapter languageSearchAdapter;
     private boolean isPickLanguage;
+    private MenuItem searchItem;
 
     private DDScannerRestClient.ResultListener<ArrayList<Language>> resultListener = new DDScannerRestClient.ResultListener<ArrayList<Language>>() {
         @Override
@@ -49,6 +50,7 @@ public class PickLanguageActivity extends AppCompatActivity implements SearchVie
             recyclerView.setAdapter(languageSearchAdapter);
             progressView.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
+            searchItem.setVisible(true);
         }
 
         @Override
@@ -114,8 +116,8 @@ public class PickLanguageActivity extends AppCompatActivity implements SearchVie
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_search_sealife, menu);
         this.menu = menu;
-        final MenuItem item = menu.findItem(R.id.action_search);
-        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
+        searchItem = menu.findItem(R.id.action_search);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setQueryHint(getString(R.string.search));
         searchView.setOnQueryTextListener(this);
         return true;
@@ -160,5 +162,16 @@ public class PickLanguageActivity extends AppCompatActivity implements SearchVie
     @Override
     public void onDialogClosed(int requestCode) {
         finish();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                return true;
+        }
     }
 }
