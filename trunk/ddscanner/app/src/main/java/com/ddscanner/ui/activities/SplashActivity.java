@@ -16,7 +16,7 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.events.InstanceIDReceivedEvent;
-import com.ddscanner.screens.boocking.offers.OffersActivity;
+import com.ddscanner.screens.booking.offers.OffersActivity;
 import com.ddscanner.ui.views.DDProgressBarView;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogsRequestCodes;

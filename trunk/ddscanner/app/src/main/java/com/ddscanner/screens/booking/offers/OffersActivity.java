@@ -1,23 +1,17 @@
-package com.ddscanner.screens.boocking.offers;
+package com.ddscanner.screens.booking.offers;
 
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
 import android.view.MenuItem;
 
 import com.ddscanner.R;
 import com.ddscanner.databinding.ActivityOffersBinding;
-import com.ddscanner.entities.DiveCenterShort;
-import com.ddscanner.entities.Offer;
-import com.ddscanner.screens.boocking.offers.cources.CoursesListFragment;
-import com.ddscanner.screens.boocking.offers.dailytours.DailyToursListAdapter;
-import com.ddscanner.screens.boocking.offers.dailytours.DalyToursFragment;
+import com.ddscanner.screens.booking.offers.cources.CoursesListFragment;
+import com.ddscanner.screens.booking.offers.dailytours.DalyToursFragment;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
-
-import java.util.ArrayList;
 
 public class OffersActivity extends BaseAppCompatActivity {
 

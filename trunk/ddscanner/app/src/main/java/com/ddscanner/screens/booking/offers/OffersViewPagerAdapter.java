@@ -1,6 +1,5 @@
-package com.ddscanner.screens.boocking.offers;
+package com.ddscanner.screens.booking.offers;
 
-import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 

@@ -1,4 +1,4 @@
-package com.ddscanner.screens.boocking.offers.cources;
+package com.ddscanner.screens.booking.offers.cources;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;

@@ -1,10 +1,9 @@
-package com.ddscanner.screens.boocking.offers.cources;
+package com.ddscanner.screens.booking.offers.cources;
 
 import android.databinding.BindingAdapter;
 import android.widget.ImageView;
 
 import com.ddscanner.entities.Course;
-import com.ddscanner.screens.boocking.offers.dailytours.DailyToursListItemViewModel;
 import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;
 

@@ -1,4 +1,4 @@
-package com.ddscanner.screens.boocking.offers.dailytours;
+package com.ddscanner.screens.booking.offers.dailytours;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;

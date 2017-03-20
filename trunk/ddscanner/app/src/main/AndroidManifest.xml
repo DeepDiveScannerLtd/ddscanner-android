@@ -144,7 +144,7 @@
             android:name=".ui.activities.SearchSpotOrLocationActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".screens.boocking.offers.OffersActivity"
+            android:name=".screens.booking.offers.OffersActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".screens.divespot.add.AddDiveSpotActivity"
