@@ -12,6 +12,7 @@ import com.ddscanner.R;
 import com.ddscanner.databinding.ActivityOffersBinding;
 import com.ddscanner.entities.DiveCenterShort;
 import com.ddscanner.entities.Offer;
+import com.ddscanner.screens.boocking.offers.cources.CoursesListFragment;
 import com.ddscanner.screens.boocking.offers.dailytours.DailyToursListAdapter;
 import com.ddscanner.screens.boocking.offers.dailytours.DalyToursFragment;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
@@ -26,14 +27,13 @@ public class OffersActivity extends BaseAppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_offers);
-//        setupToolbar(R.id.toolbar, R.string.offers);
         setupTabs();
     }
 
     private void setupTabs() {
         OffersViewPagerAdapter offersViewPagerAdapter = new OffersViewPagerAdapter(getSupportFragmentManager());
         offersViewPagerAdapter.addFragment(new DalyToursFragment(), "Daily tours");
-        offersViewPagerAdapter.addFragment(new DalyToursFragment(), "Cources");
+        offersViewPagerAdapter.addFragment(new CoursesListFragment(), "Cources");
         binding.viewpager.setAdapter(offersViewPagerAdapter);
         binding.tabs.setupWithViewPager(binding.viewpager);
     }
