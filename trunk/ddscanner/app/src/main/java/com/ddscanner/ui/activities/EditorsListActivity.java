@@ -58,8 +58,6 @@ public class EditorsListActivity extends BaseAppCompatActivity implements Dialog
         setContentView(R.layout.activity_peoples_checkin);
         findViews();
         setupToolbar(R.string.people, R.id.toolbar);
-        creator = new Gson().fromJson(getIntent().getStringExtra("user"), User.class);
-        users.add(creator);
         DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotEditors(usersResultListener, getIntent().getStringExtra("id"));
 
     }
@@ -74,10 +72,9 @@ public class EditorsListActivity extends BaseAppCompatActivity implements Dialog
         usersRecyclerView.setAdapter(new EditorsUsersListAdapter(this, users));
     }
 
-    public static void show(Context context, String id, String creator) {
+    public static void show(Context context, String id) {
         Intent intent = new Intent(context, EditorsListActivity.class);
         intent.putExtra("id", id);
-        intent.putExtra("user", creator);
         context.startActivity(intent);
     }
 

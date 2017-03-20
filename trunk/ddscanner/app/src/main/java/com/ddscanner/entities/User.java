@@ -24,6 +24,16 @@ public class User implements Serializable {
     private int photosCount;
     @SerializedName("dive_center")
     private DiveCenterProfile diveCenter;
+    @SerializedName("is_creator")
+    private boolean isCreator;
+
+    public boolean isCreator() {
+        return isCreator;
+    }
+
+    public void setCreator(boolean creator) {
+        isCreator = creator;
+    }
 
     public DiveCenterProfile getDiveCenter() {
         return diveCenter;

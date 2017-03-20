@@ -895,7 +895,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
     }
 
     public void showCreatorsActivity(View view) {
-        EditorsListActivity.show(this, String.valueOf(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getId()), new Gson().toJson(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getAuthor()));
+        EditorsListActivity.show(this, String.valueOf(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getId()));
     }
 
     public void falseApproveDiveSpot(View view) {

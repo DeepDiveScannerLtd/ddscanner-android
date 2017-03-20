@@ -44,7 +44,7 @@ public class EditorsUsersListAdapter extends RecyclerView.Adapter<EditorsUsersLi
     public void onBindViewHolder(EditorsUsersListViewHolder holder, final int position) {
         Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, users.get(position).getPhoto(), "1")).resize(Math.round(Helpers.convertDpToPixel(58, context)), Math.round(Helpers.convertDpToPixel(58, context))).centerCrop().transform(new CropCircleTransformation()).into(holder.userAvatar);
         holder.userName.setText(users.get(position).getName());
-        if (position == 0) {
+        if (users.get(position).isCreator()) {
             holder.creatorLabel.setVisibility(View.VISIBLE);
             holder.info.setText(R.string.creator);
         } else {
