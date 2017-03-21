@@ -471,4 +471,5 @@
     <string name="price_from">From</string>
     <string name="dive_centers_divider">Dive centers</string>
     <string name="paid">PAID</string>
+    <string name="paid_reservation">Paid reservation</string>
 </resources>
