@@ -8,6 +8,9 @@ import android.view.ViewGroup;
 
 import com.ddscanner.databinding.ItemOrderBinding;
 import com.ddscanner.entities.Order;
+import com.ddscanner.entities.OrderDetails;
+import com.ddscanner.screens.booking.orders.details.OrderDetailsActivity;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
@@ -35,15 +38,20 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.Orde
         return orders.size();
     }
 
-    class OrderViewHolder extends RecyclerView.ViewHolder {
+    class OrderViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         ItemOrderBinding binding;
 
         OrderViewHolder(View view) {
             super(view);
+            view.setOnClickListener(this);
             binding = DataBindingUtil.bind(view);
         }
 
+        @Override
+        public void onClick(View view) {
+            OrderDetailsActivity.show(view.getContext(), new Gson().toJson(orders.get(getAdapterPosition())));
+        }
     }
 
 }

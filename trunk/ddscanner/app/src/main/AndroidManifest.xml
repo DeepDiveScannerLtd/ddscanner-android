@@ -177,6 +177,9 @@
             android:name=".screens.booking.orders.OrdersActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".screens.booking.orders.details.OrderDetailsActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".screens.sealife.add.AddSealifeActivity"
             android:screenOrientation="portrait" />
         <activity

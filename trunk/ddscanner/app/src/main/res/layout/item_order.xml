@@ -111,7 +111,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-medium"
                         android:text="@{orderViewModel.order.price}"
-                        android:textColor="@colo/black_text"
+                        android:textColor="@color/black_text"
                         android:textSize="16sp" />
                 </LinearLayout>
             </RelativeLayout>

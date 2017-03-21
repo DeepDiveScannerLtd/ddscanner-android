@@ -52,21 +52,179 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="14dp"
-                    android:text="Booking ID: 123123"
+                    app:loadBookingIdFrom="@{viewModel}"
                     android:textColor="@color/black_text"
                     android:textSize="15sp" />
             </LinearLayout>
         </android.support.percent.PercentRelativeLayout>
 
-        <ImageView style="@style/DividerStyleFull" />
+        <View
+            android:layout_height="1dp"
+            android:layout_width="match_parent"
+            android:background="@drawable/divider_shape"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
+            android:paddingTop="18dp"
             android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_o_date"/>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/OrderDetailsTitleStyle"
+                        android:text="@string/date_amp_time"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/OrderDetailsSubtitleStyle"
+                        android:text="@{viewModel.orderDetails.orderDate}"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginTop="18dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_o_people"/>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/OrderDetailsTitleStyle"
+                        android:text="@string/peoples"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/OrderDetailsSubtitleStyle"
+                        android:text="@{viewModel.orderDetails.peoples}"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginTop="18dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_o_cancel"/>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/OrderDetailsTitleStyle"
+                        android:text="@string/cancellation"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/OrderDetailsSubtitleStyle"
+                        android:text="@{viewModel.orderDetails.cancelation}"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginTop="18dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_o_pickup"/>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/OrderDetailsTitleStyle"
+                        android:text="@string/pickup_point"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/OrderDetailsSubtitleStyle"
+                        android:text="@{viewModel.orderDetails.pickupPoint}"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <View
+                android:layout_height="1dp"
+                android:layout_width="match_parent"
+                android:layout_marginTop="18dp"
+                android:layout_marginLeft="50dp"
+                android:background="@drawable/divider_shape"/>
+
+            <LinearLayout
+                android:paddingLeft="50dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:paddingBottom="20dp"
+                android:orientation="vertical">
+                <TextView
+                    android:textSize="20sp"
+                    android:textColor="@color/black_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:loadTotalPriceTextFrom="@{viewModel}"
+                    />
+                <TextView
+                    android:textSize="13sp"
+                    android:textColor="@color/gray"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:loadDiscountPriceFrom="@{viewModel}"
+                    />
+            </LinearLayout>
 
         </LinearLayout>
 
+        <View
+            android:layout_height="1dp"
+            android:layout_width="match_parent"
+            android:background="@drawable/divider_shape"/>
+        
+        <Button
+            android:layout_margin="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="@drawable/cancel_order_button_background"
+            android:text="@string/cancel_order"
+            android:textAllCaps="false"
+            android:textColor="#c4ceee"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            />
+        
     </LinearLayout>
 </layout>

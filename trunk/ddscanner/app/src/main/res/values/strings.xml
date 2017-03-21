@@ -472,4 +472,12 @@
     <string name="dive_centers_divider">Dive centers</string>
     <string name="paid">PAID</string>
     <string name="paid_reservation">Paid reservation</string>
+    <string name="date_amp_time"><![CDATA[DATE & TIME]]></string>
+    <string name="peoples">PEOPLE</string>
+    <string name="cancellation">CANCELLATION</string>
+    <string name="pickup_point">PICKUP POINT</string>
+    <string name="pattern_total_pice">TOTAL: %1$s</string>
+    <string name="pattern_booking_id">Booking ID: %1$s</string>
+    <string name="pattern_discount_price">Discount: %1$s</string>
+    <string name="cancel_order">Cancel</string>
 </resources>

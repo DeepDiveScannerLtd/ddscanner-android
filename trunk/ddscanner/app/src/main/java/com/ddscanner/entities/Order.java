@@ -8,6 +8,15 @@ public class Order {
     private String price;
     private String peoples;
     private String image;
+    private String discount;
+
+    public String getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(String discount) {
+        this.discount = discount;
+    }
 
     public String getImage() {
         return image;
