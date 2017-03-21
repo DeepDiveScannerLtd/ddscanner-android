@@ -23,6 +23,8 @@ import com.ddscanner.entities.GoogleMapsGeocodeResponseEntity;
 import com.ddscanner.entities.Instructor;
 import com.ddscanner.entities.Language;
 import com.ddscanner.entities.LikeEntity;
+import com.ddscanner.entities.NotificationEntity;
+import com.ddscanner.entities.NotificationsResonseEntity;
 import com.ddscanner.entities.Sealife;
 import com.ddscanner.entities.SealifeListResponseEntity;
 import com.ddscanner.entities.SealifeShort;
@@ -381,6 +383,21 @@ public class DDScannerRestClient {
                 Type listType = new TypeToken<ArrayList<Instructor>>(){}.getType();
                 ArrayList<Instructor> instructors = gson.fromJson(responseString, listType);
                 resultListener.onSuccess(instructors);
+            }
+        });
+    }
+
+    public void getNotifications(ResultListener<NotificationsResonseEntity> resultListener) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getNotifications();
+        call.enqueue(new ResponseEntityCallback<NotificationsResonseEntity>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<NotificationsResonseEntity> resultListener, String responseString) throws JSONException {
+                NotificationsResonseEntity notificationEntities = gson.fromJson(responseString, NotificationsResonseEntity.class);
+                resultListener.onSuccess(notificationEntities);
             }
         });
     }

@@ -27,6 +27,15 @@ public class NotificationEntity {
     private DiveSpotShort diveSpot;
     private ReviewShort review;
     private ArrayList<DiveSpotPhoto> photos;
+    private String message;
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
 
     public ArrayList<DiveSpotPhoto> getPhotos() {
         return photos;
@@ -128,9 +137,9 @@ public class NotificationEntity {
         String reviewText;
         switch (getActivityType()) {
             case DIVE_SPOT_ADDED:
-                returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_dive_spot_added, user.getName(), diveSpot.getName(), timeAgo);
+                returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_dive_spot_added, "bulbu", diveSpot.getName(), timeAgo);
                 finalString = new SpannableString(returnedString);
-                finalString.setSpan(blueColorSpan, 0, user.getName().length(), 0);
+                finalString.setSpan(blueColorSpan, 0, 5, 0);
                 finalString.setSpan(blueColorSpan, returnedString.indexOf(diveSpot.getName()), returnedString.indexOf(diveSpot.getName()) + diveSpot.getName().length(), 0);
                 finalString.setSpan(timeColorSpan, returnedString.indexOf(timeAgo), returnedString.indexOf(timeAgo) + timeAgo.length(), 0);
                 return finalString;
@@ -155,9 +164,9 @@ public class NotificationEntity {
                 finalString.setSpan(timeColorSpan, returnedString.indexOf(timeAgo), returnedString.indexOf(timeAgo) + timeAgo.length(), 0);
                 return finalString;
             case DIVE_SPOT_CHANGED:
-                returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_dive_spot_changed, user.getName(), diveSpot.getName(), timeAgo);
+                returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_dive_spot_changed, "bulbu", diveSpot.getName(), timeAgo);
                 finalString = new SpannableString(returnedString);
-                finalString.setSpan(blueColorSpan, 0, user.getName().length(), 0);
+                finalString.setSpan(blueColorSpan, 0, 5, 0);
                 finalString.setSpan(blueColorSpan, returnedString.indexOf(diveSpot.getName()), returnedString.indexOf(diveSpot.getName()) + diveSpot.getName().length(), 0);
                 finalString.setSpan(timeColorSpan, returnedString.indexOf(timeAgo), returnedString.indexOf(timeAgo) + timeAgo.length(), 0);
                 return finalString;

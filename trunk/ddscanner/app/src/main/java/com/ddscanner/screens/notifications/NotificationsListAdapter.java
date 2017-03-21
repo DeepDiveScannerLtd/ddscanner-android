@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.ddscanner.R;
 import com.ddscanner.entities.Notification;
+import com.ddscanner.entities.NotificationEntity;
 
 import java.util.ArrayList;
 
@@ -20,13 +21,14 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
     private static final int VIEW_TYPE_WITH_PHOTOS_LIST = 2;
 
     private Context context;
-    private ArrayList<Notification> notifications = new ArrayList<>();
+    private ArrayList<NotificationEntity> notifications = new ArrayList<>();
 
-    public NotificationsListAdapter(Context context) {
+    public NotificationsListAdapter(Context context, ArrayList<NotificationEntity> notifications) {
         this.context = context;
+        this.notifications = notifications;
     }
 
-    public void add(ArrayList<Notification> notifications) {
+    public void add(ArrayList<NotificationEntity> notifications) {
         this.notifications = notifications;
     }
 
@@ -39,18 +41,26 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
                 return new SinglePhotoItemViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_notification_with_single_photo, parent, false));
             case VIEW_TYPE_WITH_PHOTOS_LIST:
                 return new PhotosListItemViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_notification_with_photo_list, parent, false));
+            default:
+                return null;
         }
-        return null;
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        switch (getItemViewType(position)) {
+            case VIEW_TYPE_AVATAR_TEXT:
+                TextAndPhotoItemViewHolder textAndPhotoItemViewHolder = (TextAndPhotoItemViewHolder) holder;
+                textAndPhotoItemViewHolder.notificationText.setText(notifications.get(position).getText());
+                break;
+            case VIEW_TYPE_WITH_PHOTO:
 
+        }
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return notifications.size();
     }
 
     @Override
@@ -66,6 +76,10 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
             case DIVE_CENTER_INSTRUCTOR_ADD:
             case DIVE_CENTER_INSTRUCTOR_REMOVE:
                 return VIEW_TYPE_AVATAR_TEXT;
+            case DIVE_SPOT_PHOTO_LIKE:
+                return VIEW_TYPE_WITH_PHOTO;
+            case DIVE_SPOT_PHOTOS_ADDED:
+                return VIEW_TYPE_WITH_PHOTOS_LIST;
         }
         return -1;
     }

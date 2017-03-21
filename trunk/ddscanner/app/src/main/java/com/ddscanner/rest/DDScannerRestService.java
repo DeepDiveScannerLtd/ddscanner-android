@@ -457,4 +457,8 @@ public interface DDScannerRestService {
 
     @GET("v2_0/divecenters.filter")
     Call<ResponseBody> getDiveCentersForDiveSpot(@Query("dive_spot_id") String id);
+
+    @GET("v2_0/user.notifications.get")
+    Call<ResponseBody> getNotifications();
+
 }
