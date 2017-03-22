@@ -6,8 +6,10 @@ import android.text.style.ForegroundColorSpan;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.events.OpenUserProfileActivityFromNotifications;
 import com.ddscanner.utils.Helpers;
 import com.google.gson.annotations.SerializedName;
+import com.klinker.android.link_builder.Link;
 
 import java.util.ArrayList;
 
@@ -130,68 +132,113 @@ public class NotificationEntity {
         }
     }
 
-    public SpannableString getText() {
+    public String getText() {
+        String returnedString;
+        String timeAgo = Helpers.getDate(date);
+        switch (getActivityType()) {
+            case DIVE_SPOT_ADDED:
+                returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_dive_spot_added, "bulbu", diveSpot.getName(), timeAgo);
+                return returnedString;
+            case DIVE_CENTER_INSTRUCTOR_ADD:
+                returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_instructor_added, user.getName(), timeAgo);
+                return returnedString;
+            case DIVE_SPOT_PHOTO_LIKE:
+                returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_photo_liked, user.getName(), diveSpot.getName(), timeAgo);
+                return returnedString;
+            case DIVE_SPOT_REVIEW_ADDED:
+                returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_review_added, user.getName(), diveSpot.getName(), cropString(review.getReview()), timeAgo);
+                return returnedString;
+            case DIVE_SPOT_CHANGED:
+                returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_dive_spot_changed, "bulbu", diveSpot.getName(), timeAgo);
+                return returnedString;
+            case DIVE_SPOT_PHOTOS_ADDED:
+                returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_photo_added, user.getName(), String.valueOf(photos.size()), diveSpot.getName(), timeAgo);
+                return returnedString;
+            case DIVE_SPOT_CHECKIN:
+                returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_checked_in, user.getName(), diveSpot.getName(), timeAgo);
+                return returnedString;
+            case DIVE_CENTER_INSTRUCTOR_REMOVE:
+                returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_left_dive_center, user.getName(), timeAgo);
+                return returnedString;
+            default:
+                return "";
+        }
+    }
+
+    public ArrayList<Link> getLinks() {
+        ArrayList<Link> links = new ArrayList<>();
         SpannableString finalString;
         String returnedString;
         String timeAgo = Helpers.getDate(date);
         String reviewText;
+        Link timeLink = new Link(timeAgo);
+        timeLink.setTextColor(ContextCompat.getColor(DDScannerApplication.getInstance(), R.color.notification_time_color));
+        timeLink.setUnderlined(false);
+        links.add(timeLink);
         switch (getActivityType()) {
-            case DIVE_SPOT_ADDED:
-                returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_dive_spot_added, "bulbu", diveSpot.getName(), timeAgo);
-                finalString = new SpannableString(returnedString);
-                finalString.setSpan(blueColorSpan, 0, 5, 0);
-                finalString.setSpan(blueColorSpan, returnedString.indexOf(diveSpot.getName()), returnedString.indexOf(diveSpot.getName()) + diveSpot.getName().length(), 0);
-                finalString.setSpan(timeColorSpan, returnedString.indexOf(timeAgo), returnedString.indexOf(timeAgo) + timeAgo.length(), 0);
-                return finalString;
+//            case DIVE_SPOT_ADDED:
+//                returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_dive_spot_added, "bulbu", diveSpot.getName(), timeAgo);
+//                finalString = new SpannableString(returnedString);
+//                finalString.setSpan(blueColorSpan, 0, 5, 0);
+//                finalString.setSpan(blueColorSpan, returnedString.indexOf(diveSpot.getName()), returnedString.indexOf(diveSpot.getName()) + diveSpot.getName().length(), 0);
+//                finalString.setSpan(timeColorSpan, returnedString.indexOf(timeAgo), returnedString.indexOf(timeAgo) + timeAgo.length(), 0);
+//                return finalString;
             case DIVE_CENTER_INSTRUCTOR_ADD:
-                returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_instructor_added, user.getName(), timeAgo);
-                finalString = new SpannableString(returnedString);
-                finalString.setSpan(blueColorSpan, 0, user.getName().length(), 0);
-                finalString.setSpan(timeColorSpan, returnedString.indexOf(timeAgo), returnedString.indexOf(timeAgo) + timeAgo.length(), 0);
-                return finalString;
-            case DIVE_SPOT_PHOTO_LIKE:
-                returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_photo_liked, user.getName(), diveSpot.getName(), timeAgo);
-                finalString = new SpannableString(returnedString);
-                finalString.setSpan(blueColorSpan, 0, user.getName().length(), 0);
-                finalString.setSpan(blueColorSpan, returnedString.indexOf(diveSpot.getName()), returnedString.indexOf(diveSpot.getName()) + diveSpot.getName().length(), 0);
-                finalString.setSpan(timeColorSpan, returnedString.indexOf(timeAgo), returnedString.indexOf(timeAgo) + timeAgo.length(), 0);
-                return finalString;
-            case DIVE_SPOT_REVIEW_ADDED:
-                returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_review_added, user.getName(), diveSpot.getName(), cropString(review.getReview()), timeAgo);
-                finalString = new SpannableString(returnedString);
-                finalString.setSpan(blueColorSpan, 0, user.getName().length(), 0);
-                finalString.setSpan(blueColorSpan, returnedString.indexOf(diveSpot.getName()), returnedString.indexOf(diveSpot.getName()) + diveSpot.getName().length(), 0);
-                finalString.setSpan(timeColorSpan, returnedString.indexOf(timeAgo), returnedString.indexOf(timeAgo) + timeAgo.length(), 0);
-                return finalString;
-            case DIVE_SPOT_CHANGED:
-                returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_dive_spot_changed, "bulbu", diveSpot.getName(), timeAgo);
-                finalString = new SpannableString(returnedString);
-                finalString.setSpan(blueColorSpan, 0, 5, 0);
-                finalString.setSpan(blueColorSpan, returnedString.indexOf(diveSpot.getName()), returnedString.indexOf(diveSpot.getName()) + diveSpot.getName().length(), 0);
-                finalString.setSpan(timeColorSpan, returnedString.indexOf(timeAgo), returnedString.indexOf(timeAgo) + timeAgo.length(), 0);
-                return finalString;
-            case DIVE_SPOT_PHOTOS_ADDED:
-                returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_photo_added, user.getName(), String.valueOf(photos.size()), diveSpot.getName(), timeAgo);
-                finalString  = new SpannableString(returnedString);
-                finalString.setSpan(blueColorSpan, 0, user.getName().length(), 0);
-                finalString.setSpan(blueColorSpan, returnedString.indexOf(diveSpot.getName()), returnedString.indexOf(diveSpot.getName()) + diveSpot.getName().length(), 0);
-                finalString.setSpan(timeColorSpan, returnedString.indexOf(timeAgo), returnedString.indexOf(timeAgo) + timeAgo.length(), 0);
-                return finalString;
-            case DIVE_SPOT_CHECKIN:
-                returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_checked_in, user.getName(), diveSpot.getName(), timeAgo);
-                finalString  = new SpannableString(returnedString);
-                finalString.setSpan(blueColorSpan, 0, user.getName().length(), 0);
-                finalString.setSpan(blueColorSpan, returnedString.indexOf(diveSpot.getName()), returnedString.indexOf(diveSpot.getName()) + diveSpot.getName().length(), 0);
-                finalString.setSpan(timeColorSpan, returnedString.indexOf(timeAgo), returnedString.indexOf(timeAgo) + timeAgo.length(), 0);
-                return finalString;
-            case DIVE_CENTER_INSTRUCTOR_REMOVE:
-                returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_left_dive_center, user.getName(), timeAgo);
-                finalString  = new SpannableString(returnedString);
-                finalString.setSpan(blueColorSpan, 0, user.getName().length(), 0);
-                finalString.setSpan(timeColorSpan, returnedString.indexOf(timeAgo), returnedString.indexOf(timeAgo) + timeAgo.length(), 0);
-                return finalString;
+                Link link = new Link(user.getName());
+                link.setTextColor(ContextCompat.getColor(DDScannerApplication.getInstance(),R.color.notification_clickable_text_color));
+                link.setUnderlined(false);
+                link.setHighlightAlpha(0);
+                link.setOnClickListener(new Link.OnClickListener() {
+                    @Override
+                    public void onClick(String clickedText) {
+                        DDScannerApplication.bus.post(new OpenUserProfileActivityFromNotifications(user.getId(), user.getType()));
+                    }
+                });
+                links.add(link);
+                return links;
+//            case DIVE_SPOT_PHOTO_LIKE:
+//                returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_photo_liked, user.getName(), diveSpot.getName(), timeAgo);
+//                finalString = new SpannableString(returnedString);
+//                finalString.setSpan(blueColorSpan, 0, user.getName().length(), 0);
+//                finalString.setSpan(blueColorSpan, returnedString.indexOf(diveSpot.getName()), returnedString.indexOf(diveSpot.getName()) + diveSpot.getName().length(), 0);
+//                finalString.setSpan(timeColorSpan, returnedString.indexOf(timeAgo), returnedString.indexOf(timeAgo) + timeAgo.length(), 0);
+//                return finalString;
+//            case DIVE_SPOT_REVIEW_ADDED:
+//                returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_review_added, user.getName(), diveSpot.getName(), cropString(review.getReview()), timeAgo);
+//                finalString = new SpannableString(returnedString);
+//                finalString.setSpan(blueColorSpan, 0, user.getName().length(), 0);
+//                finalString.setSpan(blueColorSpan, returnedString.indexOf(diveSpot.getName()), returnedString.indexOf(diveSpot.getName()) + diveSpot.getName().length(), 0);
+//                finalString.setSpan(timeColorSpan, returnedString.indexOf(timeAgo), returnedString.indexOf(timeAgo) + timeAgo.length(), 0);
+//                return finalString;
+//            case DIVE_SPOT_CHANGED:
+//                returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_dive_spot_changed, "bulbu", diveSpot.getName(), timeAgo);
+//                finalString = new SpannableString(returnedString);
+//                finalString.setSpan(blueColorSpan, 0, 5, 0);
+//                finalString.setSpan(blueColorSpan, returnedString.indexOf(diveSpot.getName()), returnedString.indexOf(diveSpot.getName()) + diveSpot.getName().length(), 0);
+//                finalString.setSpan(timeColorSpan, returnedString.indexOf(timeAgo), returnedString.indexOf(timeAgo) + timeAgo.length(), 0);
+//                return finalString;
+//            case DIVE_SPOT_PHOTOS_ADDED:
+//                returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_photo_added, user.getName(), String.valueOf(photos.size()), diveSpot.getName(), timeAgo);
+//                finalString  = new SpannableString(returnedString);
+//                finalString.setSpan(blueColorSpan, 0, user.getName().length(), 0);
+//                finalString.setSpan(blueColorSpan, returnedString.indexOf(diveSpot.getName()), returnedString.indexOf(diveSpot.getName()) + diveSpot.getName().length(), 0);
+//                finalString.setSpan(timeColorSpan, returnedString.indexOf(timeAgo), returnedString.indexOf(timeAgo) + timeAgo.length(), 0);
+//                return finalString;
+//            case DIVE_SPOT_CHECKIN:
+//                returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_checked_in, user.getName(), diveSpot.getName(), timeAgo);
+//                finalString  = new SpannableString(returnedString);
+//                finalString.setSpan(blueColorSpan, 0, user.getName().length(), 0);
+//                finalString.setSpan(blueColorSpan, returnedString.indexOf(diveSpot.getName()), returnedString.indexOf(diveSpot.getName()) + diveSpot.getName().length(), 0);
+//                finalString.setSpan(timeColorSpan, returnedString.indexOf(timeAgo), returnedString.indexOf(timeAgo) + timeAgo.length(), 0);
+//                return finalString;
+//            case DIVE_CENTER_INSTRUCTOR_REMOVE:
+//                returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_left_dive_center, user.getName(), timeAgo);
+//                finalString  = new SpannableString(returnedString);
+//                finalString.setSpan(blueColorSpan, 0, user.getName().length(), 0);
+//                finalString.setSpan(timeColorSpan, returnedString.indexOf(timeAgo), returnedString.indexOf(timeAgo) + timeAgo.length(), 0);
+//                return finalString;
             default:
-                return new SpannableString("");
+                return null;
         }
     }
 
@@ -201,7 +248,7 @@ public class NotificationEntity {
         if (incomingString.length() < 30) {
             return incomingString;
         }
-        outgoingString = incomingString.substring(0,26) + "...";
+        outgoingString = incomingString.substring(0, 26) + "...";
         return outgoingString;
     }
 

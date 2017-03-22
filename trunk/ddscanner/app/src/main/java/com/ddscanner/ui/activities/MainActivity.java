@@ -41,6 +41,7 @@ import com.ddscanner.events.LoginViaGoogleClickEvent;
 import com.ddscanner.events.NewDiveSpotAddedEvent;
 import com.ddscanner.events.OpenAddDiveSpotActivity;
 import com.ddscanner.events.OpenAddDsActivityAfterLogin;
+import com.ddscanner.events.OpenUserProfileActivityFromNotifications;
 import com.ddscanner.events.PlaceChoosedEvent;
 import com.ddscanner.events.ShowLoginActivityForAddAccount;
 import com.ddscanner.events.ShowLoginActivityIntent;
@@ -51,6 +52,7 @@ import com.ddscanner.screens.divespot.add.AddDiveSpotActivity;
 import com.ddscanner.screens.notifications.DiveCenterNotificationsFragment;
 import com.ddscanner.screens.profile.divecenter.DiveCenterProfileFragment;
 import com.ddscanner.screens.profile.edit.divecenter.search.SearchDiveCenterActivity;
+import com.ddscanner.screens.user.profile.UserProfileActivity;
 import com.ddscanner.ui.adapters.MainActivityPagerAdapter;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.ui.dialogs.ChangeAccountBottomDialog;
@@ -786,6 +788,11 @@ public class MainActivity extends BaseAppCompatActivity
     @Override
     public void onPositiveDialogClicked() {
         SearchDiveCenterActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_PICK_DIVE_CENTER_FOR_INSTRUCTOR, true);
+    }
+
+    @Subscribe
+    public void openUserProfileActivity(OpenUserProfileActivityFromNotifications event) {
+        UserProfileActivity.show(this, event.getId(), event.getType());
     }
 
     class SigningUserResultListener extends DDScannerRestClient.ResultListener<SignUpResponseEntity> {

@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.ddscanner.R;
 import com.ddscanner.entities.Notification;
 import com.ddscanner.entities.NotificationEntity;
+import com.klinker.android.link_builder.LinkBuilder;
 
 import java.util.ArrayList;
 
@@ -52,6 +53,9 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
             case VIEW_TYPE_AVATAR_TEXT:
                 TextAndPhotoItemViewHolder textAndPhotoItemViewHolder = (TextAndPhotoItemViewHolder) holder;
                 textAndPhotoItemViewHolder.notificationText.setText(notifications.get(position).getText());
+                if (notifications.get(position).getLinks() != null) {
+                    LinkBuilder.on(textAndPhotoItemViewHolder.notificationText).addLinks(notifications.get(position).getLinks()).build();
+                }
                 break;
             case VIEW_TYPE_WITH_PHOTO:
 
