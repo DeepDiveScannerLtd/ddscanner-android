@@ -41,7 +41,7 @@
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/empty_view"
                 android:layout_centerHorizontal="true"
-                android:src="@drawable/ic_ds_pick" />
+                android:src="@drawable/ic_ds" />
 
             <View
                 android:id="@+id/empty_view"

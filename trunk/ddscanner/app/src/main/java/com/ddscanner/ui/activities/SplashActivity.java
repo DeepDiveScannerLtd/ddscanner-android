@@ -22,6 +22,8 @@ import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
 import com.squareup.otto.Subscribe;
 
+import java.util.Locale;
+
 public class SplashActivity extends BaseAppCompatActivity implements DialogClosedListener, View.OnClickListener {
 
     private static final String TAG = SplashActivity.class.getName();
@@ -50,6 +52,14 @@ public class SplashActivity extends BaseAppCompatActivity implements DialogClose
 
         setContentView(R.layout.activity_splash);
         activityShowTimestamp = System.currentTimeMillis();
+
+        Log.i(TAG, "Current ocale - " + Locale.getDefault().getISO3Language());
+        Log.i(TAG, "Current ocale - " + Locale.getDefault().getCountry());
+        Log.i(TAG, "Current ocale - " + Locale.getDefault().getLanguage());
+        Log.i(TAG, "Current ocale - " + Locale.getDefault().getDisplayLanguage());
+        Log.i(TAG, "Current ocale - " + Locale.getDefault().getDisplayName());
+        Log.i(TAG, "Current ocale - " + Locale.getDefault().toString());
+        Log.i(TAG, "Current ocale - " + Locale.getISOLanguages()[0]);
 
         progressMessage = (TextView) findViewById(R.id.message);
         skip = (TextView) findViewById(R.id.skip);
