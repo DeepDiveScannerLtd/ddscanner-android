@@ -461,7 +461,7 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
         if (languagesListAdapter.getObjects().size() > 0) {
             languages = new ArrayList<>();
             for (Language language : languagesListAdapter.getObjects()) {
-                languages.add(MultipartBody.Part.createFormData("content_lang[]", language.getCode()));
+                languages.add(MultipartBody.Part.createFormData("lang_codes[]", language.getCode()));
             }
         }
 
