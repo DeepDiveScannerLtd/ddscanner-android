@@ -32,7 +32,7 @@ public class DiveCenterNotificationsFragment extends Fragment implements LoginVi
     private DDScannerRestClient.ResultListener<NotificationsResonseEntity> resultListener = new DDScannerRestClient.ResultListener<NotificationsResonseEntity>() {
         @Override
         public void onSuccess(NotificationsResonseEntity result) {
-            binding.recyclerView.setAdapter(new NotificationsListAdapter(getContext(), result.getActivityNotifications()));
+//            binding.recyclerView.setAdapter(new NotificationsListAdapter(getContext(), result.getActivityNotifications()));
         }
 
         @Override

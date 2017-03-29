@@ -399,7 +399,7 @@
     <string name="languages">Languages</string>
     <string name="add_lang">Add language</string>
     <string name="activity_type_instructor_added">%1$s started working as an instructor at your dive center. %2$s</string>
-    <string name="activity_type_photo_liked">%1$s liked your photo of %2$s. %3$s</string>
+    <string name="activity_type_photo_liked">%1$s liked your photo. %2$s</string>
     <string name="activity_type_dive_spot_added">%1$s added the spot %2$s near you. Please, approve the information. %3$s</string>
     <string name="activity_type_review_added">%1$s left a review on %2$s: %3$s %4$s</string>
     <string name="activity_type_dive_spot_changed">%1$s changed the spot %2$s. %3$s</string>
@@ -408,6 +408,7 @@
     <string name="activity_type_left_dive_center">%1$s left your dive center. %2$s</string>
 
     <string name="activity_type_review_liked">%1$s liked your review %2$s</string>
+    <string name="activity_achievement_achieved">%1$s got the title of %2$s. %3$s</string>
     <string name="activity_type_review_disliked">%1$s disliked your review %2$s</string>
     <string name="diespors">Dive Spots</string>
     <string name="connection_error_title">Connection error</string>
@@ -468,4 +469,6 @@
     <string name="single_review_pattern">%1$s review</string>
     <string name="not_single_review_pattern">%1$s reviews</string>
     <string name="pattern_more_countries">+ %1$S</string>
+    <string name="latitude">Latitude</string>
+    <string name="longitude">Longitude</string>
 </resources>

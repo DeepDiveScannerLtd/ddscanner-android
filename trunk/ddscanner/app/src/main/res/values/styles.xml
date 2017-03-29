@@ -97,8 +97,8 @@
     </style>
 
     <style name="tabLayout" parent="Widget.Design.TabLayout">
-        <item name="tabSelectedTextColor">#2e80a0</item>
-        <item name="tabIndicatorColor">#2e80a0</item>
+        <item name="tabSelectedTextColor">#293e75</item>
+        <item name="tabIndicatorColor">#3b518b</item>
         <item name="tabTextAppearance">@style/customTabText</item>
     </style>
 

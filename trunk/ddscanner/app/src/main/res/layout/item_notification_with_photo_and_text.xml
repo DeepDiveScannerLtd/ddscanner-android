@@ -27,5 +27,8 @@
         android:textColor="@color/black_text"
         android:textSize="13sp"
         android:layout_toRightOf="@+id/user_avatar"/>
-
+    <ImageView
+        android:layout_toRightOf="@+id/user_avatar"
+        android:layout_alignParentBottom="true"
+        style="@style/DividerStyleFull" />
 </RelativeLayout>

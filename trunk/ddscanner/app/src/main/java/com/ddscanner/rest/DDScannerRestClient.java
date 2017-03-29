@@ -402,6 +402,38 @@ public class DDScannerRestClient {
         });
     }
 
+    public void getActivityNotifications(ResultListener<ArrayList<NotificationEntity>> resultListener) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getActivityNotifications(1);
+        call.enqueue(new ResponseEntityCallback<ArrayList<NotificationEntity>>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<ArrayList<NotificationEntity>> resultListener, String responseString) throws JSONException {
+                Type listType = new TypeToken<ArrayList<NotificationEntity>>(){}.getType();
+                ArrayList<NotificationEntity> notificationEntities = gson.fromJson(responseString, listType);
+                resultListener.onSuccess(notificationEntities);
+            }
+        });
+    }
+
+    public void getPersonalNotifications(ResultListener<ArrayList<NotificationEntity>> resultListener) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getPersonalNotifications(1);
+        call.enqueue(new ResponseEntityCallback<ArrayList<NotificationEntity>>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<ArrayList<NotificationEntity>> resultListener, String responseString) throws JSONException {
+                Type listType = new TypeToken<ArrayList<NotificationEntity>>(){}.getType();
+                ArrayList<NotificationEntity> notificationEntities = gson.fromJson(responseString, listType);
+                resultListener.onSuccess(notificationEntities);
+            }
+        });
+    }
+
     public void getReviewPhotos(ResultListener<ArrayList<DiveSpotPhoto>> resultListener, String id) {
         if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
             resultListener.onInternetConnectionClosed();

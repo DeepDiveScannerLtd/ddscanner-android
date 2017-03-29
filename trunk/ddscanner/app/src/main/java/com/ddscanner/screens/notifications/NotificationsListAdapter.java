@@ -1,5 +1,6 @@
 package com.ddscanner.screens.notifications;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,12 +9,23 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.Notification;
 import com.ddscanner.entities.NotificationEntity;
+import com.ddscanner.entities.PhotoOpenedSource;
+import com.ddscanner.entities.ReviewsOpenedSource;
+import com.ddscanner.screens.photo.slider.ImageSliderActivity;
+import com.ddscanner.screens.reiews.list.ReviewsActivity;
+import com.ddscanner.screens.user.profile.UserProfileActivity;
+import com.ddscanner.utils.Helpers;
 import com.klinker.android.link_builder.LinkBuilder;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+
+import jp.wasabeef.picasso.transformations.CropCircleTransformation;
+import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
 public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -21,10 +33,10 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
     private static final int VIEW_TYPE_WITH_PHOTO = 1;
     private static final int VIEW_TYPE_WITH_PHOTOS_LIST = 2;
 
-    private Context context;
+    private Activity context;
     private ArrayList<NotificationEntity> notifications = new ArrayList<>();
 
-    public NotificationsListAdapter(Context context, ArrayList<NotificationEntity> notifications) {
+    public NotificationsListAdapter(Activity context, ArrayList<NotificationEntity> notifications) {
         this.context = context;
         this.notifications = notifications;
     }
@@ -53,13 +65,25 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
             case VIEW_TYPE_AVATAR_TEXT:
                 TextAndPhotoItemViewHolder textAndPhotoItemViewHolder = (TextAndPhotoItemViewHolder) holder;
                 textAndPhotoItemViewHolder.notificationText.setText(notifications.get(position).getText());
+                loadUserPhoto(notifications.get(position).getUser().getPhoto(), textAndPhotoItemViewHolder.userAvatar);
                 if (notifications.get(position).getLinks() != null) {
                     LinkBuilder.on(textAndPhotoItemViewHolder.notificationText).addLinks(notifications.get(position).getLinks()).build();
                 }
                 break;
             case VIEW_TYPE_WITH_PHOTO:
-
+                SinglePhotoItemViewHolder singlePhotoItemViewHolder = (SinglePhotoItemViewHolder) holder;
+                singlePhotoItemViewHolder.notificationText.setText(notifications.get(position).getText());
+                if (notifications.get(position).getLinks() != null) {
+                    LinkBuilder.on(singlePhotoItemViewHolder.notificationText).addLinks(notifications.get(position).getLinks()).build();
+                }
+                loadUserPhoto(notifications.get(position).getUser().getPhoto(), singlePhotoItemViewHolder.userAvatar);
+                Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, notifications.get(position).getPhotos().get(0).getId(), "1")).resize(Math.round(Helpers.convertDpToPixel(36, context)), Math.round(Helpers.convertDpToPixel(36, context))).placeholder(R.drawable.placeholder_photo_wit_round_corners).transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2, context)), 0, RoundedCornersTransformation.CornerType.ALL)).centerCrop().into(singlePhotoItemViewHolder.photo);
+                break;
         }
+    }
+
+    private void loadUserPhoto(String photoId, ImageView view) {
+        Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, photoId, "1")).placeholder(R.drawable.gray_circle_placeholder).resize(Math.round(Helpers.convertDpToPixel(36, context)), Math.round(Helpers.convertDpToPixel(36, context))).centerCrop().transform(new CropCircleTransformation()).into(view);
     }
 
     @Override
@@ -88,20 +112,42 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
         return -1;
     }
 
-    class TextAndPhotoItemViewHolder extends RecyclerView.ViewHolder {
+    class TextAndPhotoItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private ImageView userAvatar;
         private TextView notificationText;
 
         TextAndPhotoItemViewHolder(View view) {
             super(view);
+            view.setOnClickListener(this);
             userAvatar = (ImageView) view.findViewById(R.id.user_avatar);
             notificationText = (TextView) view.findViewById(R.id.notification_text);
+
+            userAvatar.setOnClickListener(this);
+
+        }
+
+        @Override
+        public void onClick(View view) {
+            switch (view.getId()) {
+                case R.id.user_avatar:
+                    UserProfileActivity.show(context, notifications.get(getAdapterPosition()).getUser().getId(), notifications.get(getAdapterPosition()).getUser().getType());
+                    break;
+                default:
+                    switch (notifications.get(getAdapterPosition()).getActivityType()) {
+                        case DIVE_SPOT_REVIEW_ADDED:
+                        case DIVE_SPOT_REVIEW_LIKE:
+                        case DIVE_SPOT_REVIEW_DISLIKE:
+                            ReviewsActivity.showForResult(context, notifications.get(getAdapterPosition()).getReview().getId() ,-1, ReviewsOpenedSource.SINGLE);
+                            break;
+                    }
+                    break;
+            }
         }
 
     }
 
-    class SinglePhotoItemViewHolder extends RecyclerView.ViewHolder {
+    class SinglePhotoItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private ImageView userAvatar;
         private TextView notificationText;
@@ -112,8 +158,23 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
             userAvatar = (ImageView) view.findViewById(R.id.user_avatar);
             notificationText = (TextView) view.findViewById(R.id.notification_text);
             photo = (ImageView) view.findViewById(R.id.added_photo);
+
+            photo.setOnClickListener(this);
+            userAvatar.setOnClickListener(this);
         }
 
+        @Override
+        public void onClick(View view) {
+            switch (view.getId()) {
+                case R.id.user_avatar:
+                    UserProfileActivity.show(context, notifications.get(getAdapterPosition()).getUser().getId(), notifications.get(getAdapterPosition()).getUser().getType());
+                    break;
+                case R.id.added_photo:
+                    DDScannerApplication.getInstance().getDiveSpotPhotosContainer().setPhotos(notifications.get(getAdapterPosition()).getPhotos());
+                    ImageSliderActivity.showForResult(context, DDScannerApplication.getInstance().getDiveSpotPhotosContainer().getPhotos(), 0, 0, PhotoOpenedSource.NOTIFICATION, notifications.get(getAdapterPosition()).getId());
+                    break;
+            }
+        }
     }
 
     class  PhotosListItemViewHolder extends RecyclerView.ViewHolder {

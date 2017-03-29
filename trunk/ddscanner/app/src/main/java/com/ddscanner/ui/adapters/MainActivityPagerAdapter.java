@@ -9,8 +9,8 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.screens.notifications.DiveCenterNotificationsFragment;
 import com.ddscanner.screens.profile.divecenter.DiveCenterProfileFragment;
 import com.ddscanner.screens.profile.user.ProfileFragment;
-import com.ddscanner.ui.fragments.ActivityNotificationsFragment;
-import com.ddscanner.ui.fragments.AllNotificationsFragment;
+import com.ddscanner.screens.notifications.ActivityNotificationsFragment;
+import com.ddscanner.screens.notifications.PersonalNotificationsFragment;
 import com.ddscanner.screens.notifications.DiverNotificationsFragment;
 import com.ddscanner.ui.fragments.MapListFragment;
 import com.ddscanner.ui.views.LoginView;
@@ -28,7 +28,6 @@ public class MainActivityPagerAdapter extends FragmentStatePagerAdapter implemen
     private ProfileFragment profileFragment = new ProfileFragment();
     private DiveCenterProfileFragment diveCenterProfileFragment = new DiveCenterProfileFragment();
     private DiverNotificationsFragment diverNotificationsFragment = new DiverNotificationsFragment();
-    private DiveCenterNotificationsFragment diveCenterNotificationsFragment = new DiveCenterNotificationsFragment();
 
     private ArrayList<String> titles = new ArrayList<>();
 
@@ -52,15 +51,7 @@ public class MainActivityPagerAdapter extends FragmentStatePagerAdapter implemen
             case 0:
                 return mapListFragment;
             case 1:
-                switch (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType()) {
-                    case DIVECENTER:
-                        return diveCenterNotificationsFragment;
-                    case DIVER:
-                    case INSTRUCTOR:
-                        return diverNotificationsFragment;
-                    case NONE:
-                        return diverNotificationsFragment;
-                }
+                return diverNotificationsFragment;
             case 2:
                 switch (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType()) {
                     case DIVECENTER:
@@ -116,8 +107,8 @@ public class MainActivityPagerAdapter extends FragmentStatePagerAdapter implemen
         this.diverNotificationsFragment.setActivityNotificationsFragment(activityNotificationsFragment);
     }
 
-    public void setAllNotificationsFragment(AllNotificationsFragment allNotificationsFragment) {
-        this.diverNotificationsFragment.setAllNotificationsFragment(allNotificationsFragment);
+    public void setAllNotificationsFragment(PersonalNotificationsFragment allNotificationsFragment) {
+        this.diverNotificationsFragment.setPersonalNotificationsFragment(allNotificationsFragment);
     }
 
     public void setDiveCenterProfileFragment(DiveCenterProfileFragment diveCenterProfileFragment) {
@@ -125,7 +116,7 @@ public class MainActivityPagerAdapter extends FragmentStatePagerAdapter implemen
     }
 
     public void setDiveCenterNotificationsFragment(DiveCenterNotificationsFragment diveCenterNotificationsFragment) {
-        this.diveCenterNotificationsFragment = diveCenterNotificationsFragment;
+//        this.diveCenterNotificationsFragment = diveCenterNotificationsFragment;
     }
 
     public ProfileFragment getProfileFragment() {

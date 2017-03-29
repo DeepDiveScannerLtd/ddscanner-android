@@ -38,5 +38,8 @@
         android:src="@drawable/review_avatar"
         android:layout_alignParentRight="true"
         />
-
+    <ImageView
+        android:layout_toRightOf="@+id/user_avatar"
+        android:layout_alignParentBottom="true"
+        style="@style/DividerStyleFull" />
 </RelativeLayout>

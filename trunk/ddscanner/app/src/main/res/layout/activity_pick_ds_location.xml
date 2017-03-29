@@ -21,14 +21,52 @@
             android:transitionName="toolbar"
             app:titleTextColor="@color/white"
             auto:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-
             auto:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+        <android.support.percent.PercentRelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp">
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/input_layout_lat"
+                app:layout_widthPercent="50%"
+                android:layout_height="wrap_content"
+                android:paddingRight="20dp">
 
+                <EditText
+                    android:id="@+id/latitude"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black_text"
+                    android:background="@android:color/transparent"
+                    android:hint="@string/latitude" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_toRightOf="@+id/input_layout_lat"
+                android:id="@+id/input_layout_lng"
+                app:layout_widthPercent="50%"
+                android:layout_height="wrap_content"
+                android:paddingLeft="20dp">
+
+                <EditText
+                    android:id="@+id/longitude"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black_text"
+                    android:background="@android:color/transparent"
+                    android:hint="@string/longitude" />
+
+            </android.support.design.widget.TextInputLayout>
+        </android.support.percent.PercentRelativeLayout>
         <RelativeLayout
             android:id="@+id/mapFragmentLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="0.22">
+            android:layout_height="match_parent">
 
             <fragment
                 android:id="@+id/mapFragment"
@@ -49,70 +87,18 @@
                 android:layout_height="0dp"
                 android:layout_centerInParent="true" />
 
-            <TextView
-                android:layout_width="330dp"
-                android:layout_height="35dp"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/border_titile_pick_location_activity"
-                android:gravity="center"
-                android:text="@string/pick_location_on_the_map"
-                android:textColor="@color/black_text"
-                android:textSize="14sp" />
         </RelativeLayout>
 
-        <LinearLayout
-            android:id="@+id/viewB"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="0.85"
-            android:background="@color/white"
-            android:orientation="horizontal">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <ImageView
-                    android:id="@+id/icon_location"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="30dp"
-                    android:layout_marginTop="22dp"
-                    android:src="@drawable/ic_location_addds" />
-
-                <TextView
-                    android:id="@+id/place_name"
-                    android:layout_width="200dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="19dp"
-                    android:layout_toRightOf="@+id/icon_location"
-                    android:ellipsize="end"
-                    android:lines="1"
-                    android:textColor="@color/black_text"
-                    android:textSize="18sp" />
-
-                <TextView
-                    android:id="@+id/lat_lng"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/place_name"
-                    android:layout_marginRight="20dp"
-                    android:layout_toRightOf="@+id/icon_location"
-                    android:ellipsize="end"
-                    android:lines="1" />
-            </RelativeLayout>
-        </LinearLayout>
     </LinearLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/apply_location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="20dp"
+        android:layout_margin="14dp"
         android:src="@drawable/ic_acb_check"
+        android:scaleType="center"
         app:backgroundTint="@color/orange"
-        app:layout_anchor="@id/mapFragmentLayout"
-        app:layout_anchorGravity="bottom|right|end" />
+        android:layout_gravity="bottom|right"/>
 </android.support.design.widget.CoordinatorLayout>

@@ -140,6 +140,9 @@ public class User implements Serializable {
     }
 
     public String getPhoto() {
+        if (photo == null) {
+            return "";
+        }
         return photo;
     }
 

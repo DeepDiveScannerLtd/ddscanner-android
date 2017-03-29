@@ -39,4 +39,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
     </LinearLayout>
+    <ImageView
+        android:layout_toRightOf="@+id/user_avatar"
+        android:layout_alignParentBottom="true"
+        style="@style/DividerStyleFull" />
 </RelativeLayout>

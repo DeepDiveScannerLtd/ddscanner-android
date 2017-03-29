@@ -56,9 +56,8 @@ import com.ddscanner.screens.user.profile.UserProfileActivity;
 import com.ddscanner.ui.adapters.MainActivityPagerAdapter;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.ui.dialogs.ChangeAccountBottomDialog;
-import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
-import com.ddscanner.ui.fragments.ActivityNotificationsFragment;
-import com.ddscanner.ui.fragments.AllNotificationsFragment;
+import com.ddscanner.screens.notifications.ActivityNotificationsFragment;
+import com.ddscanner.screens.notifications.PersonalNotificationsFragment;
 import com.ddscanner.screens.notifications.DiverNotificationsFragment;
 import com.ddscanner.screens.profile.user.ProfileFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
@@ -107,7 +106,7 @@ public class MainActivity extends BaseAppCompatActivity
     private DiverNotificationsFragment diverNotificationsFragment;
     private DiveCenterNotificationsFragment diveCenterNotificationsFragment;
     private ActivityNotificationsFragment activityNotificationsFragment;
-    private AllNotificationsFragment allNotificationsFragment;
+    private PersonalNotificationsFragment allNotificationsFragment;
     private DiveCenterProfileFragment diveCenterProfileFragment;
     private ImageView imageView;
     private boolean isHasInternetConnection;
@@ -718,7 +717,7 @@ public class MainActivity extends BaseAppCompatActivity
         }
     }
 
-    public void setAllNotificationsFragment(AllNotificationsFragment allNotificationsFragment) {
+    public void setAllNotificationsFragment(PersonalNotificationsFragment allNotificationsFragment) {
         if (mainViewPagerAdapter != null) {
             mainViewPagerAdapter.setAllNotificationsFragment(allNotificationsFragment);
         } else {
