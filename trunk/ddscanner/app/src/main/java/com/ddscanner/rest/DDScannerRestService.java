@@ -462,7 +462,7 @@ public interface DDScannerRestService {
     Call<ResponseBody> getNotifications();
 
     @GET("v2_0/user.notifications.activity.get")
-    Call<ResponseBody> getActivityNotifications(@Query("include_photo_details") int value);
+    Call<ResponseBody> getActivityNotifications(@Query("limit") int limit, @Query("include_photo_details") int value);
 
     @GET("v2_0/user.notifications.personal.get")
     Call<ResponseBody> getPersonalNotifications(@Query("include_photo_details") int value);

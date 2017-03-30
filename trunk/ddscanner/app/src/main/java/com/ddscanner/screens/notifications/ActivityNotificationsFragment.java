@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -37,12 +38,16 @@ public class ActivityNotificationsFragment extends Fragment {
     private ArrayList<NotificationEntity> activities;
     private FragmnetActivityNotificationsBinding binding;
     private NotificationsListAdapter notificationsListAdapter;
+    private LinearLayoutManager linearLayoutManager;
+    private boolean isLoading = false;
 
 
     private DDScannerRestClient.ResultListener<ArrayList<NotificationEntity>> resultListener = new DDScannerRestClient.ResultListener<ArrayList<NotificationEntity>>() {
         @Override
         public void onSuccess(ArrayList<NotificationEntity> result) {
             activities = result;
+            isLoading = false;
+            binding.progressBarPagination.setVisibility(View.GONE);
             binding.progressBar.setVisibility(View.GONE);
             binding.activityRc.setVisibility(View.VISIBLE);
             if (activities == null || activities.size() == 0) {
@@ -74,13 +79,20 @@ public class ActivityNotificationsFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragmnet_activity_notifications, container, false);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        linearLayoutManager = new LinearLayoutManager(getContext());
         binding.activityRc.setHasFixedSize(true);
         binding.activityRc.setLayoutManager(linearLayoutManager);
+        binding.activityRc.setItemAnimator(new DefaultItemAnimator());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            binding.activityRc.setOnScrollChangeListener(listener);
+        } else {
+            binding.activityRc.setOnScrollListener(scrollListener);
+        }
         notificationsListAdapter = new NotificationsListAdapter(getActivity());
         binding.activityRc.setAdapter(notificationsListAdapter);
         return binding.getRoot();
@@ -121,6 +133,39 @@ public class ActivityNotificationsFragment extends Fragment {
 
     public void loadNotifications() {
         DDScannerApplication.getInstance().getDdScannerRestClient().getActivityNotifications(resultListener);
+    }
+
+    private RecyclerView.OnScrollChangeListener listener = new View.OnScrollChangeListener() {
+        @Override
+        public void onScrollChange(View view, int i, int i1, int i2, int i3) {
+            tryingToReloadData();
+        }
+    };
+
+    private RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener() {
+        @Override
+        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            super.onScrollStateChanged(recyclerView, newState);
+        }
+
+        @Override
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            super.onScrolled(recyclerView, dx, dy);
+            tryingToReloadData();
+        }
+    };
+
+    private void tryingToReloadData() {
+        int visibleItemsCount = linearLayoutManager.getChildCount();
+        int totalItemCount = linearLayoutManager.getItemCount();
+        int firstVisibleItemPosition = linearLayoutManager.findFirstVisibleItemPosition();
+        if (!isLoading) {
+            if ((visibleItemsCount + firstVisibleItemPosition) >= totalItemCount && firstVisibleItemPosition >= 0 && totalItemCount >= PAGE_SIZE) {
+                DDScannerApplication.getInstance().getDdScannerRestClient().getActivityNotifications(resultListener);
+                binding.progressBarPagination.setVisibility(View.VISIBLE);
+                isLoading = true;
+            }
+        }
     }
 
 }

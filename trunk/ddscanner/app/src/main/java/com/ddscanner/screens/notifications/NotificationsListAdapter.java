@@ -40,7 +40,7 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
     }
 
     public void add(ArrayList<NotificationEntity> notifications) {
-        this.notifications = notifications;
+        this.notifications.addAll(notifications);
         notifyDataSetChanged();
     }
 
@@ -60,33 +60,34 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        NotificationEntity notification = notifications.get(position);
         switch (getItemViewType(position)) {
             case VIEW_TYPE_AVATAR_TEXT:
                 TextAndPhotoItemViewHolder textAndPhotoItemViewHolder = (TextAndPhotoItemViewHolder) holder;
-                textAndPhotoItemViewHolder.notificationText.setText(notifications.get(position).getText());
-                loadUserPhoto(notifications.get(position).getUser().getPhoto(), textAndPhotoItemViewHolder.userAvatar);
+                textAndPhotoItemViewHolder.notificationText.setText(notification.getText());
+                loadUserPhoto(notification.getUser().getPhoto(), textAndPhotoItemViewHolder.userAvatar);
                 if (notifications.get(position).getLinks() != null) {
-                    LinkBuilder.on(textAndPhotoItemViewHolder.notificationText).addLinks(notifications.get(position).getLinks()).build();
+                    LinkBuilder.on(textAndPhotoItemViewHolder.notificationText).addLinks(notification.getLinks()).build();
                 }
                 break;
             case VIEW_TYPE_WITH_PHOTO:
                 SinglePhotoItemViewHolder singlePhotoItemViewHolder = (SinglePhotoItemViewHolder) holder;
-                singlePhotoItemViewHolder.notificationText.setText(notifications.get(position).getText());
-                if (notifications.get(position).getLinks() != null) {
-                    LinkBuilder.on(singlePhotoItemViewHolder.notificationText).addLinks(notifications.get(position).getLinks()).build();
+                singlePhotoItemViewHolder.notificationText.setText(notification.getText());
+                if (notification.getLinks() != null) {
+                    LinkBuilder.on(singlePhotoItemViewHolder.notificationText).addLinks(notification.getLinks()).build();
                 }
-                loadUserPhoto(notifications.get(position).getUser().getPhoto(), singlePhotoItemViewHolder.userAvatar);
-                Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, notifications.get(position).getPhotos().get(0).getId(), "1")).resize(Math.round(Helpers.convertDpToPixel(36, context)), Math.round(Helpers.convertDpToPixel(36, context))).placeholder(R.drawable.placeholder_photo_wit_round_corners).transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2, context)), 0, RoundedCornersTransformation.CornerType.ALL)).centerCrop().into(singlePhotoItemViewHolder.photo);
+                loadUserPhoto(notification.getUser().getPhoto(), singlePhotoItemViewHolder.userAvatar);
+                Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, notification.getPhotos().get(0).getId(), "1")).resize(Math.round(Helpers.convertDpToPixel(36, context)), Math.round(Helpers.convertDpToPixel(36, context))).placeholder(R.drawable.placeholder_photo_wit_round_corners).transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2, context)), 0, RoundedCornersTransformation.CornerType.ALL)).centerCrop().into(singlePhotoItemViewHolder.photo);
                 break;
             case VIEW_TYPE_WITH_PHOTOS_LIST:
                 PhotosListItemViewHolder photosListItemViewHolder = (PhotosListItemViewHolder) holder;
-                photosListItemViewHolder.notificationText.setText(notifications.get(position).getText());
-                if (notifications.get(position).getLinks() != null) {
-                    LinkBuilder.on(photosListItemViewHolder.notificationText).addLinks(notifications.get(position).getLinks()).build();
+                photosListItemViewHolder.notificationText.setText(notification.getText());
+                if (notification.getLinks() != null) {
+                    LinkBuilder.on(photosListItemViewHolder.notificationText).addLinks(notification.getLinks()).build();
                 }
-                loadUserPhoto(notifications.get(position).getUser().getPhoto(), photosListItemViewHolder.userAvatar);
-                photosListItemViewHolder.photosList.setLayoutManager(new GridLayoutManager(context, 6));
-                photosListItemViewHolder.photosList.setAdapter(new NotificationPhotosListAdapter(notifications.get(position).getPhotos(), context, notifications.get(position).getPhotosCount(), notifications.get(position).getId()));
+                loadUserPhoto(notification.getUser().getPhoto(), photosListItemViewHolder.userAvatar);
+                NotificationPhotosListAdapter adapter = (NotificationPhotosListAdapter) photosListItemViewHolder.photosList.getAdapter();
+                adapter.setData(notification.getPhotos(), notification.getPhotosCount(), notification.getId());
                 break;
         }
     }
@@ -200,6 +201,9 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
             userAvatar = (ImageView) view.findViewById(R.id.user_avatar);
             notificationText = (TextView) view.findViewById(R.id.notification_text);
             photosList = (RecyclerView) view.findViewById(R.id.photos_list);
+            photosList.setLayoutManager(new GridLayoutManager(context, 6));
+            photosList.setNestedScrollingEnabled(false);
+            photosList.setAdapter(new NotificationPhotosListAdapter(context));
         }
 
         @Override

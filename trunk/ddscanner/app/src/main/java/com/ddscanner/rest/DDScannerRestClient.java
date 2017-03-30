@@ -407,7 +407,7 @@ public class DDScannerRestClient {
             resultListener.onInternetConnectionClosed();
             return;
         }
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getActivityNotifications(1);
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getActivityNotifications(40, 1);
         call.enqueue(new ResponseEntityCallback<ArrayList<NotificationEntity>>(gson, resultListener) {
             @Override
             void handleResponseString(ResultListener<ArrayList<NotificationEntity>> resultListener, String responseString) throws JSONException {

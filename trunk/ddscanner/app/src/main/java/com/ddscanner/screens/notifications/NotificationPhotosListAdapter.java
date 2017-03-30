@@ -29,11 +29,15 @@ public class NotificationPhotosListAdapter extends RecyclerView.Adapter<Notifica
     private static final int MAX_PHOTOS = 6;
     private String sourceId;
 
-    public NotificationPhotosListAdapter(ArrayList<DiveSpotPhoto> photos, Activity context, int photosCount, String sourceId) {
-        this.photos = photos;
+    public NotificationPhotosListAdapter(Activity context) {
         this.context = context;
+    }
+
+    public void setData(ArrayList<DiveSpotPhoto> photos, int photosCount, String sourceId) {
+        this.photos = photos;
         this.photosCount = photosCount;
         this.sourceId = sourceId;
+        notifyDataSetChanged();
     }
 
     @Override

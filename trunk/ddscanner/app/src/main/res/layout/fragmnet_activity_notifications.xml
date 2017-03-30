@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
     </data>
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -26,9 +26,22 @@
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/activity_rc"
+            android:layout_above="@+id/progress_bar_pagination"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scrollbars="vertical"
             android:visibility="gone" />
-    </LinearLayout>
+        <com.rey.material.widget.ProgressView
+            android:id="@+id/progress_bar_pagination"
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_alignParentBottom="true"
+            app:pv_autostart="true"
+            app:pv_circular="true"
+            app:pv_progressMode="indeterminate"
+            android:visibility="gone"
+            app:pv_progressStyle="@style/CircularProgress" />
+    </RelativeLayout>
 </layout>
