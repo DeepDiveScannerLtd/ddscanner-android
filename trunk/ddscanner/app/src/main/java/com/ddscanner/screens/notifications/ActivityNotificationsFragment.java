@@ -32,13 +32,11 @@ import java.util.Date;
 public class ActivityNotificationsFragment extends Fragment {
 
     private static final String TAG = ActivityNotificationsFragment.class.getName();
+    private static final int PAGE_SIZE = 15;
 
-    private RecyclerView recyclerView;
     private ArrayList<NotificationEntity> activities;
-    private boolean isHasSections = false;
-    private LinearLayout noNotificationsLayout;
-    private boolean isViewCreated;
     private FragmnetActivityNotificationsBinding binding;
+    private NotificationsListAdapter notificationsListAdapter;
 
 
     private DDScannerRestClient.ResultListener<ArrayList<NotificationEntity>> resultListener = new DDScannerRestClient.ResultListener<ArrayList<NotificationEntity>>() {
@@ -47,11 +45,11 @@ public class ActivityNotificationsFragment extends Fragment {
             activities = result;
             binding.progressBar.setVisibility(View.GONE);
             binding.activityRc.setVisibility(View.VISIBLE);
-                if (activities == null || activities.size() == 0) {
-                    binding.noNotifsView.setVisibility(View.VISIBLE);
-                    return;
-                }
-                binding.activityRc.setAdapter(new NotificationsListAdapter(getActivity(), activities));
+            if (activities == null || activities.size() == 0) {
+                binding.noNotifsView.setVisibility(View.VISIBLE);
+                return;
+            }
+            notificationsListAdapter.add(result);
 
         }
 
@@ -83,9 +81,8 @@ public class ActivityNotificationsFragment extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         binding.activityRc.setHasFixedSize(true);
         binding.activityRc.setLayoutManager(linearLayoutManager);
-        if (activities != null) {
-            binding.activityRc.setAdapter(new NotificationsListAdapter(getActivity(), activities));
-        }
+        notificationsListAdapter = new NotificationsListAdapter(getActivity());
+        binding.activityRc.setAdapter(notificationsListAdapter);
         return binding.getRoot();
     }
 

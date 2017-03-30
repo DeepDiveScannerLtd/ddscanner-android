@@ -41,6 +41,7 @@ public class PersonalNotificationsFragment extends Fragment {
     private LinearLayout noNotificationsLayout;
     private boolean isHasSections = false;
     ArrayList<NotificationEntity> activities;
+    private NotificationsListAdapter notificationsListAdapter;
 
     private DDScannerRestClient.ResultListener<ArrayList<NotificationEntity>> resultListener = new DDScannerRestClient.ResultListener<ArrayList<NotificationEntity>>() {
         @Override
@@ -52,7 +53,7 @@ public class PersonalNotificationsFragment extends Fragment {
                 binding.noNotifsView.setVisibility(View.VISIBLE);
                 return;
             }
-            binding.activityRc.setAdapter(new NotificationsListAdapter(getActivity(), activities));
+            notificationsListAdapter.add(result);
 
         }
 
@@ -86,9 +87,8 @@ public class PersonalNotificationsFragment extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         binding.activityRc.setHasFixedSize(true);
         binding.activityRc.setLayoutManager(linearLayoutManager);
-        if (activities != null) {
-            binding.activityRc.setAdapter(new NotificationsListAdapter(getActivity(), activities));
-        }
+        notificationsListAdapter = new NotificationsListAdapter(getActivity());
+        binding.activityRc.setAdapter(notificationsListAdapter);
         return binding.getRoot();
     }
 

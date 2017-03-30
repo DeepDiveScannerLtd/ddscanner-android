@@ -35,13 +35,13 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
     private Activity context;
     private ArrayList<NotificationEntity> notifications = new ArrayList<>();
 
-    public NotificationsListAdapter(Activity context, ArrayList<NotificationEntity> notifications) {
+    public NotificationsListAdapter(Activity context) {
         this.context = context;
-        this.notifications = notifications;
     }
 
     public void add(ArrayList<NotificationEntity> notifications) {
         this.notifications = notifications;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -92,7 +92,7 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
     }
 
     private void loadUserPhoto(String photoId, ImageView view) {
-        Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, photoId, "1")).placeholder(R.drawable.gray_circle_placeholder).resize(Math.round(Helpers.convertDpToPixel(36, context)), Math.round(Helpers.convertDpToPixel(36, context))).centerCrop().transform(new CropCircleTransformation()).into(view);
+        Picasso.with(context).load(context.getString(R.string.base_photo_url, photoId, "1")).placeholder(R.drawable.gray_circle_placeholder).resize(Math.round(Helpers.convertDpToPixel(36, context)), Math.round(Helpers.convertDpToPixel(36, context))).centerCrop().transform(new CropCircleTransformation()).into(view);
     }
 
     @Override
