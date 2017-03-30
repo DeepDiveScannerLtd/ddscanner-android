@@ -123,6 +123,8 @@ public class PhotosGalleryActivity extends BaseAppCompatActivity implements Dial
             case REVIEW:
                 DDScannerApplication.getInstance().getDdScannerRestClient().getReviewPhotos(resultListener, loadedInfoId);
                 break;
+            case NOTIFICATION:
+                DDScannerApplication.getInstance().getDdScannerRestClient().getNotificationPhotos(resultListener, loadedInfoId);
         }
     }
 

@@ -41,6 +41,7 @@ import com.ddscanner.events.LoginViaGoogleClickEvent;
 import com.ddscanner.events.NewDiveSpotAddedEvent;
 import com.ddscanner.events.OpenAddDiveSpotActivity;
 import com.ddscanner.events.OpenAddDsActivityAfterLogin;
+import com.ddscanner.events.OpenDiveSpotDetailsActivityEvent;
 import com.ddscanner.events.OpenUserProfileActivityFromNotifications;
 import com.ddscanner.events.PlaceChoosedEvent;
 import com.ddscanner.events.ShowLoginActivityForAddAccount;
@@ -49,6 +50,7 @@ import com.ddscanner.events.SignupLoginButtonClicked;
 import com.ddscanner.interfaces.ConfirmationDialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.divespot.add.AddDiveSpotActivity;
+import com.ddscanner.screens.divespot.details.DiveSpotDetailsActivity;
 import com.ddscanner.screens.notifications.DiveCenterNotificationsFragment;
 import com.ddscanner.screens.profile.divecenter.DiveCenterProfileFragment;
 import com.ddscanner.screens.profile.edit.divecenter.search.SearchDiveCenterActivity;
@@ -845,6 +847,11 @@ public class MainActivity extends BaseAppCompatActivity
             materialDialog.dismiss();
             UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
         }
+    }
+
+    @Subscribe
+    public void openDiveSpotDetails(OpenDiveSpotDetailsActivityEvent event) {
+        DiveSpotDetailsActivity.show(this, event.getId(), EventsTracker.SpotViewSource.FROM_ACTIVITIES);
     }
 
 }

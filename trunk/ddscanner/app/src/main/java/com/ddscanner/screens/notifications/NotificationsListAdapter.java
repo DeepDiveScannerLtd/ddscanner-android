@@ -1,7 +1,7 @@
 package com.ddscanner.screens.notifications;
 
 import android.app.Activity;
-import android.content.Context;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
-import com.ddscanner.entities.Notification;
 import com.ddscanner.entities.NotificationEntity;
 import com.ddscanner.entities.PhotoOpenedSource;
 import com.ddscanner.entities.ReviewsOpenedSource;
@@ -79,6 +78,16 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
                 loadUserPhoto(notifications.get(position).getUser().getPhoto(), singlePhotoItemViewHolder.userAvatar);
                 Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, notifications.get(position).getPhotos().get(0).getId(), "1")).resize(Math.round(Helpers.convertDpToPixel(36, context)), Math.round(Helpers.convertDpToPixel(36, context))).placeholder(R.drawable.placeholder_photo_wit_round_corners).transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2, context)), 0, RoundedCornersTransformation.CornerType.ALL)).centerCrop().into(singlePhotoItemViewHolder.photo);
                 break;
+            case VIEW_TYPE_WITH_PHOTOS_LIST:
+                PhotosListItemViewHolder photosListItemViewHolder = (PhotosListItemViewHolder) holder;
+                photosListItemViewHolder.notificationText.setText(notifications.get(position).getText());
+                if (notifications.get(position).getLinks() != null) {
+                    LinkBuilder.on(photosListItemViewHolder.notificationText).addLinks(notifications.get(position).getLinks()).build();
+                }
+                loadUserPhoto(notifications.get(position).getUser().getPhoto(), photosListItemViewHolder.userAvatar);
+                photosListItemViewHolder.photosList.setLayoutManager(new GridLayoutManager(context, 6));
+                photosListItemViewHolder.photosList.setAdapter(new NotificationPhotosListAdapter(notifications.get(position).getPhotos(), context, notifications.get(position).getPhotosCount(), notifications.get(position).getId()));
+                break;
         }
     }
 
@@ -107,12 +116,15 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
             case DIVE_SPOT_PHOTO_LIKE:
                 return VIEW_TYPE_WITH_PHOTO;
             case DIVE_SPOT_PHOTOS_ADDED:
+                if (notifications.get(position).getPhotos().size() == 1) {
+                    return VIEW_TYPE_WITH_PHOTO;
+                }
                 return VIEW_TYPE_WITH_PHOTOS_LIST;
         }
         return -1;
     }
 
-    class TextAndPhotoItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    private class TextAndPhotoItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private ImageView userAvatar;
         private TextView notificationText;
@@ -147,7 +159,7 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
 
     }
 
-    class SinglePhotoItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    private class SinglePhotoItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private ImageView userAvatar;
         private TextView notificationText;
@@ -177,7 +189,7 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
         }
     }
 
-    class  PhotosListItemViewHolder extends RecyclerView.ViewHolder {
+    private class  PhotosListItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private ImageView userAvatar;
         private TextView notificationText;
@@ -190,6 +202,14 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
             photosList = (RecyclerView) view.findViewById(R.id.photos_list);
         }
 
+        @Override
+        public void onClick(View view) {
+            switch (view.getId()) {
+                case R.id.user_avatar:
+                    UserProfileActivity.show(context, notifications.get(getAdapterPosition()).getUser().getId(), notifications.get(getAdapterPosition()).getUser().getType());
+                    break;
+            }
+        }
     }
 
 }

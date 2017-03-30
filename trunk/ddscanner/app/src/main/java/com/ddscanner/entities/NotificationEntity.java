@@ -6,6 +6,7 @@ import android.text.style.ForegroundColorSpan;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.events.OpenDiveSpotDetailsActivityEvent;
 import com.ddscanner.events.OpenUserProfileActivityFromNotifications;
 import com.ddscanner.utils.Helpers;
 import com.google.gson.annotations.SerializedName;
@@ -27,6 +28,16 @@ public class NotificationEntity {
     private ArrayList<DiveSpotPhoto> photos;
     private String message;
     private AchievmentProfile achievement;
+    @SerializedName("photos_count")
+    private int photosCount;
+
+    public int getPhotosCount() {
+        return photosCount;
+    }
+
+    public void setPhotosCount(int photosCount) {
+        this.photosCount = photosCount;
+    }
 
     public AchievmentProfile getAchievement() {
         return achievement;
@@ -157,7 +168,11 @@ public class NotificationEntity {
                 returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_dive_spot_changed, user.getName(), diveSpot.getName(), timeAgo);
                 return returnedString;
             case DIVE_SPOT_PHOTOS_ADDED:
-                returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_photo_added, user.getName(), String.valueOf(photos.size()), diveSpot.getName(), timeAgo);
+                if (photos.size() == 1) {
+                    returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_single_photo_added, user.getName(), diveSpot.getName(), timeAgo);
+                } else {
+                    returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_photo_added, user.getName(), String.valueOf(photos.size()), diveSpot.getName(), timeAgo);
+                }
                 return returnedString;
             case DIVE_SPOT_CHECKIN:
                 returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_checked_in, user.getName(), diveSpot.getName(), timeAgo);
@@ -205,6 +220,12 @@ public class NotificationEntity {
             diveSpotLink.setTextColor(ContextCompat.getColor(DDScannerApplication.getInstance(),R.color.notification_clickable_text_color));
             diveSpotLink.setUnderlined(false);
             diveSpotLink.setHighlightAlpha(0);
+            diveSpotLink.setOnClickListener(new Link.OnClickListener() {
+                @Override
+                public void onClick(String clickedText) {
+                    DDScannerApplication.bus.post(new OpenDiveSpotDetailsActivityEvent(diveSpot.getId().toString()));
+                }
+            });
         }
         switch (getActivityType()) {
             case DIVE_CENTER_INSTRUCTOR_ADD:

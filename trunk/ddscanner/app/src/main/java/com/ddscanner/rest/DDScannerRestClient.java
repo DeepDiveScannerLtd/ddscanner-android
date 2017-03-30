@@ -434,6 +434,22 @@ public class DDScannerRestClient {
         });
     }
 
+    public void getNotificationPhotos(ResultListener<ArrayList<DiveSpotPhoto>> resultListener, String notificationId) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getNotificationPhotos(notificationId, 1);
+        call.enqueue(new ResponseEntityCallback<ArrayList<DiveSpotPhoto>>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<ArrayList<DiveSpotPhoto>> resultListener, String responseString) throws JSONException {
+                Type listType = new TypeToken<ArrayList<DiveSpotPhoto>>(){}.getType();
+                ArrayList<DiveSpotPhoto> photos = gson.fromJson(responseString, listType);
+                resultListener.onSuccess(photos);
+            }
+        });
+    }
+
     public void getReviewPhotos(ResultListener<ArrayList<DiveSpotPhoto>> resultListener, String id) {
         if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
             resultListener.onInternetConnectionClosed();

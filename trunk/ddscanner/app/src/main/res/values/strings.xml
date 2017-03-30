@@ -404,6 +404,7 @@
     <string name="activity_type_review_added">%1$s left a review on %2$s: %3$s %4$s</string>
     <string name="activity_type_dive_spot_changed">%1$s changed the spot %2$s. %3$s</string>
     <string name="activity_type_photo_added">%1$s added %2$s photos to %3$s. %4$s</string>
+    <string name="activity_type_single_photo_added">%1$s added a photo to %2$s. %3$s</string>
     <string name="activity_type_checked_in">%1$s checked in at %2$s. %3$s</string>
     <string name="activity_type_left_dive_center">%1$s left your dive center. %2$s</string>
 
@@ -471,4 +472,5 @@
     <string name="pattern_more_countries">+ %1$S</string>
     <string name="latitude">Latitude</string>
     <string name="longitude">Longitude</string>
+    <string name="plus_photos_pattern">+%1$s</string>
 </resources>
