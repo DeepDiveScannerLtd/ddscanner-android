@@ -100,7 +100,6 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         reviewsListViewHolder.likeView.setOnClickListener(null);
         reviewsListViewHolder.dislikeView.setOnClickListener(null);
         if (!commentEntity.isRequestSent()) {
-            Log.i(TAG, "------Trying for send request for position and values is  " + String.valueOf(reviewsListViewHolder.getAdapterPosition()) + " " + String.valueOf(commentEntity.isRequestSent()));
             if (!comments.get(i).getComment().isLike() && !userId.equals(userServerId)) {
                 reviewsListViewHolder.likeView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -109,7 +108,6 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
                     }
                 });
             }
-            Log.i(TAG, " Position " + String.valueOf(i) + " value" + String.valueOf(comments.get(i).getComment().isDislike()));
             if (!comments.get(i).getComment().isDislike() && !userId.equals(userServerId)) {
                 reviewsListViewHolder.dislikeView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -225,7 +223,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
     }
 
     public void imageDeleted(int commentPosition, ArrayList<DiveSpotPhoto> deletedImages) {
-        ArrayList<DiveSpotPhoto> newImagesList =  comments.get(commentPosition).getComment().getPhotos();
+        ArrayList<DiveSpotPhoto> newImagesList = comments.get(commentPosition).getComment().getPhotos();
         newImagesList.removeAll(deletedImages);
         if (newImagesList.size() == 0) {
             newImagesList = null;
@@ -276,6 +274,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
             return false;
         }
     }
+
     public class ReviewsListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private ImageView user_avatar;
