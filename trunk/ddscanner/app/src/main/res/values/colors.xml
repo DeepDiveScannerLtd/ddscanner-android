@@ -71,4 +71,6 @@
 
     <color name="notification_clickable_text_color">#3b528b</color>
 
+    <color name="photos_placeholder">#EFEFEF</color>
+
 </resources>

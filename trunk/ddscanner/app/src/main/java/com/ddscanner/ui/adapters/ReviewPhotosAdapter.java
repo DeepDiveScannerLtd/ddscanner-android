@@ -29,7 +29,7 @@ public class ReviewPhotosAdapter extends RecyclerView.Adapter<ReviewPhotosAdapte
 
     private static final String TAG = ReviewPhotosAdapter.class.getName();
 
-    public ArrayList<DiveSpotPhoto> photos;
+    public ArrayList<DiveSpotPhoto> photos = new ArrayList<>();
     public String reviewId;
     public Activity context;
     public boolean isSelfPhotos;
@@ -37,14 +37,17 @@ public class ReviewPhotosAdapter extends RecyclerView.Adapter<ReviewPhotosAdapte
     private int photosCount;
     private String commentId;
 
-    public ReviewPhotosAdapter(ArrayList<DiveSpotPhoto> photos, Activity context, boolean isSelfPhotos, int commentPosition, int photosCount, String commentId) {
+    public void setData(ArrayList<DiveSpotPhoto> photos, boolean isSelfPhotos, int commentPosition, int photosCount, String commentId) {
         this.photos = photos;
-        this.context = context;
         this.isSelfPhotos =  isSelfPhotos;
         this.commentPosition = commentPosition;
         this.photosCount = photosCount;
         this.commentId = commentId;
        // Helpers.appendImagesWithPath(photos, path);
+    }
+
+    public ReviewPhotosAdapter(Activity context) {
+        this.context = context;
     }
 
     @Override

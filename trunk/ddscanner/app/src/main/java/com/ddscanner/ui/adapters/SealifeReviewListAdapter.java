@@ -23,9 +23,12 @@ public class SealifeReviewListAdapter extends RecyclerView.Adapter<SealifeReview
     private ArrayList<SealifeShort> sealifes = new ArrayList<>();
     private Context context;
 
-    public SealifeReviewListAdapter(ArrayList<SealifeShort> sealifes, Context context) {
-        this.sealifes = sealifes;
+    public SealifeReviewListAdapter(Context context) {
         this.context = context;
+    }
+
+    public void setData(ArrayList<SealifeShort> sealifes) {
+        this.sealifes = sealifes;
     }
 
     @Override

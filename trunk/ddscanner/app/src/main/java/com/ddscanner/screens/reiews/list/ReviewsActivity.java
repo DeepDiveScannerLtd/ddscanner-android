@@ -204,11 +204,11 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
             commentsList = result;
             switch (openedSource) {
                 case DIVESPOT:
-                    reviewsListAdapter = new ReviewsListAdapter(commentsList, ReviewsActivity.this, null);
+                    reviewsListAdapter = new ReviewsListAdapter(commentsList, ReviewsActivity.this, null, DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId());
                     break;
                 case USER:
                 case SINGLE:
-                    reviewsListAdapter = new ReviewsListAdapter(commentsList, ReviewsActivity.this, sourceId);
+                    reviewsListAdapter = new ReviewsListAdapter(commentsList, ReviewsActivity.this, sourceId, DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId());
                     break;
             }
             commentsRecyclerView.setAdapter(reviewsListAdapter);
