@@ -87,7 +87,7 @@ public class PersonalNotificationsFragment extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         binding.activityRc.setHasFixedSize(true);
         binding.activityRc.setLayoutManager(linearLayoutManager);
-        notificationsListAdapter = new NotificationsListAdapter(getActivity());
+        notificationsListAdapter = new NotificationsListAdapter(getActivity(), true);
         binding.activityRc.setAdapter(notificationsListAdapter);
         return binding.getRoot();
     }

@@ -148,7 +148,7 @@ public class NotificationEntity {
         }
     }
 
-    public String getText() {
+    public String getText(boolean isSelf) {
         String returnedString;
         String timeAgo = Helpers.getDate(date);
         switch (getActivityType()) {
@@ -184,9 +184,13 @@ public class NotificationEntity {
                 returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_review_liked, user.getName(), cropString(review.getReview()));
                 return returnedString;
             case DIVE_SPOT_REVIEW_DISLIKE:
-                returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_review_disliked, user.getName(), cropString(review.getReview()));
+                returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_review_disliked, user.getName(), cropString(review.getReview()), timeAgo);
                 return returnedString;
             case ACHIEVEMENT_GETTED:
+                if (isSelf) {
+                    returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_self_achievement_achieved, achievement.getName(), timeAgo);
+                    return returnedString;
+                }
                 returnedString = DDScannerApplication.getInstance().getString(R.string.activity_achievement_achieved, user.getName(), achievement.getName(), timeAgo);
                 return  returnedString;
             default:

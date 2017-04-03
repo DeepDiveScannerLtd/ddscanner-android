@@ -12,7 +12,8 @@
         android:layout_width="36dp"
         android:layout_height="36dp"
         android:layout_margin="15dp"
-        android:src="@drawable/review_default_avatar"
+        android:src="@drawable/ic_star_title"
+        android:scaleType="center"
         />
 
     <TextView

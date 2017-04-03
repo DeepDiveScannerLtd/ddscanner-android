@@ -47,15 +47,16 @@ public class ActivityNotificationsFragment extends Fragment {
         public void onSuccess(ArrayList<NotificationEntity> result) {
             activities = result;
             isLoading = false;
-            binding.progressBarPagination.setVisibility(View.GONE);
-            binding.progressBar.setVisibility(View.GONE);
-            binding.activityRc.setVisibility(View.VISIBLE);
-            if (activities == null || activities.size() == 0) {
-                binding.noNotifsView.setVisibility(View.VISIBLE);
-                return;
+            if (binding != null) {
+                binding.progressBarPagination.setVisibility(View.GONE);
+                binding.progressBar.setVisibility(View.GONE);
+                binding.activityRc.setVisibility(View.VISIBLE);
+                if (activities == null || activities.size() == 0) {
+                    binding.noNotifsView.setVisibility(View.VISIBLE);
+                    return;
+                }
+                notificationsListAdapter.add(result);
             }
-            notificationsListAdapter.add(result);
-
         }
 
         @Override
@@ -93,7 +94,7 @@ public class ActivityNotificationsFragment extends Fragment {
         } else {
             binding.activityRc.setOnScrollListener(scrollListener);
         }
-        notificationsListAdapter = new NotificationsListAdapter(getActivity());
+        notificationsListAdapter = new NotificationsListAdapter(getActivity(), false);
         binding.activityRc.setAdapter(notificationsListAdapter);
         return binding.getRoot();
     }

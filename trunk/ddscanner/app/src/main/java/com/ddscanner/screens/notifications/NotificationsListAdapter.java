@@ -11,9 +11,11 @@ import android.widget.TextView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.NotificationEntity;
 import com.ddscanner.entities.PhotoOpenedSource;
 import com.ddscanner.entities.ReviewsOpenedSource;
+import com.ddscanner.screens.divespot.details.DiveSpotDetailsActivity;
 import com.ddscanner.screens.photo.slider.ImageSliderActivity;
 import com.ddscanner.screens.reiews.list.ReviewsActivity;
 import com.ddscanner.screens.user.profile.UserProfileActivity;
@@ -33,10 +35,12 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
     private static final int VIEW_TYPE_WITH_PHOTOS_LIST = 2;
 
     private Activity context;
+    private boolean isSelf;
     private ArrayList<NotificationEntity> notifications = new ArrayList<>();
 
-    public NotificationsListAdapter(Activity context) {
+    public NotificationsListAdapter(Activity context, boolean isSelf) {
         this.context = context;
+        this.isSelf = isSelf;
     }
 
     public void add(ArrayList<NotificationEntity> notifications) {
@@ -64,15 +68,17 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
         switch (getItemViewType(position)) {
             case VIEW_TYPE_AVATAR_TEXT:
                 TextAndPhotoItemViewHolder textAndPhotoItemViewHolder = (TextAndPhotoItemViewHolder) holder;
-                textAndPhotoItemViewHolder.notificationText.setText(notification.getText());
-                loadUserPhoto(notification.getUser().getPhoto(), textAndPhotoItemViewHolder.userAvatar);
+                textAndPhotoItemViewHolder.notificationText.setText(notification.getText(isSelf));
+                if (!isSelf) {
+                    loadUserPhoto(notification.getUser().getPhoto(), textAndPhotoItemViewHolder.userAvatar);
+                }
                 if (notifications.get(position).getLinks() != null) {
                     LinkBuilder.on(textAndPhotoItemViewHolder.notificationText).addLinks(notification.getLinks()).build();
                 }
                 break;
             case VIEW_TYPE_WITH_PHOTO:
                 SinglePhotoItemViewHolder singlePhotoItemViewHolder = (SinglePhotoItemViewHolder) holder;
-                singlePhotoItemViewHolder.notificationText.setText(notification.getText());
+                singlePhotoItemViewHolder.notificationText.setText(notification.getText(isSelf));
                 if (notification.getLinks() != null) {
                     LinkBuilder.on(singlePhotoItemViewHolder.notificationText).addLinks(notification.getLinks()).build();
                 }
@@ -81,7 +87,7 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
                 break;
             case VIEW_TYPE_WITH_PHOTOS_LIST:
                 PhotosListItemViewHolder photosListItemViewHolder = (PhotosListItemViewHolder) holder;
-                photosListItemViewHolder.notificationText.setText(notification.getText());
+                photosListItemViewHolder.notificationText.setText(notification.getText(isSelf));
                 if (notification.getLinks() != null) {
                     LinkBuilder.on(photosListItemViewHolder.notificationText).addLinks(notification.getLinks()).build();
                 }
@@ -153,6 +159,11 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
                         case DIVE_SPOT_REVIEW_DISLIKE:
                             ReviewsActivity.showForResult(context, notifications.get(getAdapterPosition()).getReview().getId() ,-1, ReviewsOpenedSource.SINGLE);
                             break;
+                        case DIVE_SPOT_ADDED:
+                        case DIVE_SPOT_CHANGED:
+                        case DIVE_SPOT_CHECKIN:
+                            DiveSpotDetailsActivity.show(context, notifications.get(getAdapterPosition()).getDiveSpot().getId().toString(), EventsTracker.SpotViewSource.FROM_ACTIVITIES);
+                            break;
                     }
                     break;
             }
@@ -174,6 +185,7 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
 
             photo.setOnClickListener(this);
             userAvatar.setOnClickListener(this);
+            view.setOnClickListener(this);
         }
 
         @Override
@@ -186,6 +198,12 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
                     DDScannerApplication.getInstance().getDiveSpotPhotosContainer().setPhotos(notifications.get(getAdapterPosition()).getPhotos());
                     ImageSliderActivity.showForResult(context, DDScannerApplication.getInstance().getDiveSpotPhotosContainer().getPhotos(), 0, 0, PhotoOpenedSource.NOTIFICATION, notifications.get(getAdapterPosition()).getId());
                     break;
+                default:
+                    switch (notifications.get(getAdapterPosition()).getActivityType()) {
+                        case DIVE_SPOT_PHOTOS_ADDED:
+                            DiveSpotDetailsActivity.show(context, notifications.get(getAdapterPosition()).getDiveSpot().getId().toString(), EventsTracker.SpotViewSource.FROM_ACTIVITIES);
+                            break;
+                    }
             }
         }
     }
@@ -204,6 +222,8 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
             photosList.setLayoutManager(new GridLayoutManager(context, 6));
             photosList.setNestedScrollingEnabled(false);
             photosList.setAdapter(new NotificationPhotosListAdapter(context));
+            view.setOnClickListener(this);
+            userAvatar.setOnClickListener(this);
         }
 
         @Override
@@ -212,6 +232,12 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
                 case R.id.user_avatar:
                     UserProfileActivity.show(context, notifications.get(getAdapterPosition()).getUser().getId(), notifications.get(getAdapterPosition()).getUser().getType());
                     break;
+                default:
+                    switch (notifications.get(getAdapterPosition()).getActivityType()) {
+                        case DIVE_SPOT_PHOTOS_ADDED:
+                            DiveSpotDetailsActivity.show(context, notifications.get(getAdapterPosition()).getDiveSpot().getId().toString(), EventsTracker.SpotViewSource.FROM_ACTIVITIES);
+                            break;
+                    }
             }
         }
     }
