@@ -194,6 +194,9 @@
             android:name=".screens.divespot.details.DiveSpotDetailsActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".ui.activities.PickLocationActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".ui.activities.SearchSealifeActivity"
             android:screenOrientation="portrait" />
         <activity
@@ -270,6 +273,9 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".screens.divecemter.profile.languages.DiveCenterProfileLanguagesActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activities.ChangeAddressActivity"
             android:screenOrientation="portrait" />
         <service
             android:name=".services.FirebaseMessagingService">

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="handlers"
+            type="com.ddscanner.ui.activities.ChangeAddressActivity" />
+    </data>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <include layout="@layout/view_toolbar" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/white">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:onClick="@{handlers::pickCountryClicked}">
+
+            <ImageView
+                android:id="@+id/icon_language"
+                android:layout_width="65dp"
+                android:layout_height="65dp"
+                android:scaleType="center"
+                android:src="@drawable/ic_ds_country" />
+
+            <TextView
+                android:id="@+id/country_text_view"
+                style="@style/AddDsCharTitleStyle"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/icon_language"
+                android:text="@string/country_characteristic"
+                android:textColor="#b2b2b2" />
+
+            <ImageView
+                style="@style/DividerStyleFull"
+                android:layout_alignParentBottom="true"
+                android:layout_toRightOf="@+id/icon_language" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/icon_address"
+                android:layout_width="65dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:scaleType="center"
+                android:src="@drawable/ic_addds_location" />
+
+            <EditText
+                android:id="@+id/address_input"
+                android:paddingTop="14dp"
+                android:paddingBottom="14dp"
+                android:paddingRight="20dp"
+                android:layout_toRightOf="@+id/icon_address"
+                android:background="@null"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColorHint="#b2b2b2"
+                android:hint="@string/address_edit_dc" />
+
+            <ImageView
+                android:layout_below="@+id/address_input"
+                style="@style/DividerStyleFull"
+                android:layout_toRightOf="@+id/icon_address" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/location"
+            android:visibility="visible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="7dp"
+            android:layout_marginBottom="14dp"
+            android:textColor="#a3a3a3"
+            android:textSize="13sp"
+            android:layout_marginLeft="65dp"
+            tools:text="23.1141441, 141.4343222"/>
+
+        <ImageView
+            style="@style/DividerStyleFull" />
+        </LinearLayout>
+        
+        <Button
+            android:onClick="@{handlers::openMapClicked}"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_margin="20dp"
+            style="@style/OrangeButtons"
+            android:text="@string/open_map_dit_address"/>
+        
+    </LinearLayout>
+</layout>

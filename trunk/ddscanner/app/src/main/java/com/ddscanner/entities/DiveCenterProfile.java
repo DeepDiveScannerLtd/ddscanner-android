@@ -62,6 +62,13 @@ public class DiveCenterProfile implements Serializable{
         return countryCode;
     }
 
+    public CountryEntity getCoutryEntity() {
+        CountryEntity countryEntity = new CountryEntity();
+        countryEntity.setCode(countryCode);
+        countryEntity.setName(countryName);
+        return countryEntity;
+    }
+
     public void setCountryCode(String countryCode) {
         this.countryCode = countryCode;
     }

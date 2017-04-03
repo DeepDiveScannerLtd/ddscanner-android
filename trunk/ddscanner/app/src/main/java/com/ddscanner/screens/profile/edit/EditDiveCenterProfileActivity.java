@@ -24,6 +24,8 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.databinding.EditDcProfileViewBinding;
+import com.ddscanner.entities.Country;
+import com.ddscanner.entities.CountryEntity;
 import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.entities.DiveCenterProfile;
 import com.ddscanner.entities.DiveSpotShort;
@@ -31,6 +33,7 @@ import com.ddscanner.entities.Language;
 import com.ddscanner.interfaces.ConfirmationDialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
+import com.ddscanner.ui.activities.ChangeAddressActivity;
 import com.ddscanner.ui.activities.PickLanguageActivity;
 import com.ddscanner.ui.activities.SearchSpotOrLocationActivity;
 import com.ddscanner.ui.adapters.DiveCenterLanguagesListAdapter;
@@ -92,6 +95,7 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
     private boolean isLanguagesDownloaded = false;
     private boolean isDiveSpotsDownloaded = false;
     private ColorStateList colorStateList;
+    private TextView editAddress;
 
     private EditDcProfileViewBinding binding;
 
@@ -274,6 +278,7 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
             locationLatitude = String.valueOf(binding.getDcViewModel().getDiveCenterProfile().getAddresses().get(0).getLat());
             locationLongitude = String.valueOf(binding.getDcViewModel().getDiveCenterProfile().getAddresses().get(0).getLng());
             addAddressesView(binding.getDcViewModel().getDiveCenterProfile().getAddresses().get(0).getName(), binding.getDcViewModel().getDiveCenterProfile().getCountryName());
+            binding.pickAddressButton.setVisibility(View.GONE);
         }
     }
 
@@ -324,7 +329,7 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
     }
 
     public void chooseAddressClicked(View view) {
-        showPickPlaceActivity();
+        ChangeAddressActivity.showForResult(this, ActivitiesRequestCodes.EDIT_DIVE_CENTER_ACTIVITY_CHOOSE_ADDRESS, new Gson().toJson(binding.getDcViewModel().getDiveCenterProfile().getCoutryEntity()), new Gson().toJson(binding.getDcViewModel().getDiveCenterProfile().getAddresses().get(0)));
     }
 
     public void pickCountryClicked(View view) {
@@ -416,18 +421,20 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
     }
 
     private void addAddressesView(String address, String country) {
-        if (countryEdiText == null) {
-            countryEdiText = (EditText) LayoutInflater.from(this).inflate(R.layout.edit_dive_center_address_edit_text, null);
-            countryEdiText.setHint("Country");
-            countryEdiText.setEnabled(false);
-            binding.addresses.addView(countryEdiText);
-        }
-        countryEdiText.setText(country);
         if (addressEditText == null) {
-            addressEditText  = (EditText) LayoutInflater.from(this).inflate(R.layout.edit_dive_center_address_edit_text, null);
-            binding.addresses.addView(addressEditText);
+            LinearLayout addressLayout = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.edit_dive_center_address_edit_text, null);
+            addressEditText  = (EditText) addressLayout.findViewById(R.id.address);
+            addressEditText.setEnabled(false);
+            editAddress = (TextView) addressLayout.findViewById(R.id.edit_dive_center_address);
+            binding.addresses.addView(addressLayout);
+            editAddress.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    chooseAddressClicked(editAddress);
+                }
+            });
         }
-        addressEditText.setText(address);
+        addressEditText.setText(country + ", " + address);
     }
 
     public void saveChangesClicked(View view) {

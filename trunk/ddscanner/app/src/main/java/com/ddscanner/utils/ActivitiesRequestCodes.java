@@ -185,6 +185,7 @@ public class ActivitiesRequestCodes {
     public static final int EDIT_DIVE_CENTER_ACTIVITY_ADD_SPOT = 4201;
     public static final int EDIT_DIVE_CENTER_ACTIVITY_PICK_LOCATION = 4202;
     public static final int EDIT_DIVE_CENTER_ACTIVITY_ADD_LANGUAGE = 4203;
+    public static final int EDIT_DIVE_CENTER_ACTIVITY_CHOOSE_ADDRESS = 4204;
 
     //Edit profile activity
     public static final int REQUEST_CODE_EDIT_PROFILE_ACTIVITY_CHOOSE_DIVE_CENTER = 4301;
@@ -207,5 +208,9 @@ public class ActivitiesRequestCodes {
 
     //SignUpActivity
     public static final int REQUEST_CODE_SIGN_UP_ACTIVITY_PICK_DIVECENTER = 4801;
+
+    //ChangeAddressActivity
+    public static final int REQUEST_CODE_ADDRESS_ACTIVITY_OPEN_MAP = 4901;
+    public static final int REQUEST_CODE_ADDRESS_ACTIVITY_CHOOSE_COUNTRY = 4902;
 
 }

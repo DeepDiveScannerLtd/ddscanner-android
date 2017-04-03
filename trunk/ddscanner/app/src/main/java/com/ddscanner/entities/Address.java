@@ -9,10 +9,10 @@ public class Address implements Serializable {
 
     @SerializedName("address")
     private String name;
-    private double lat;
-    private double lng;
+    private Double lat;
+    private Double lng;
 
-    public Address(String name, double lat, double lng) {
+    public Address(String name, Double lat, Double lng) {
         this.name = name;
         this.lat = lat;
         this.lng = lng;
@@ -22,11 +22,11 @@ public class Address implements Serializable {
         return name;
     }
 
-    public double getLat() {
+    public Double getLat() {
         return lat;
     }
 
-    public double getLng() {
+    public Double getLng() {
         return lng;
     }
 
