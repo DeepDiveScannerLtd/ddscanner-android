@@ -29,24 +29,13 @@ public class MainActivityPagerAdapter extends FragmentStatePagerAdapter implemen
     private DiveCenterProfileFragment diveCenterProfileFragment = new DiveCenterProfileFragment();
     private DiverNotificationsFragment diverNotificationsFragment = new DiverNotificationsFragment();
 
-    private ArrayList<String> titles = new ArrayList<>();
-
     public MainActivityPagerAdapter(FragmentManager manager) {
         super(manager);
-        titles.add("1");
-        titles.add("2");
-        titles.add("3");
-        titles.add("4");
-//        profileFragment.setTitle("3");
-//        diveCenterProfileFragment.setTitle("4");
-//        mapListFragment.setTitle("1");
-//        diverNotificationsFragment.setTitle("2");
 
     }
 
     @Override
     public Fragment getItem(int position) {
-        Log.i(TAG, "getItem position = " + position + " SharedPreferenceHelper.getIsUserSignedIn() = " + DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn());
         switch (position) {
             case 0:
                 return mapListFragment;
@@ -107,8 +96,8 @@ public class MainActivityPagerAdapter extends FragmentStatePagerAdapter implemen
         this.diverNotificationsFragment.setActivityNotificationsFragment(activityNotificationsFragment);
     }
 
-    public void setAllNotificationsFragment(PersonalNotificationsFragment allNotificationsFragment) {
-        this.diverNotificationsFragment.setPersonalNotificationsFragment(allNotificationsFragment);
+    public void setAllNotificationsFragment(PersonalNotificationsFragment personalNotificationsFragment) {
+        this.diverNotificationsFragment.setPersonalNotificationsFragment(personalNotificationsFragment);
     }
 
     public void setDiveCenterProfileFragment(DiveCenterProfileFragment diveCenterProfileFragment) {
