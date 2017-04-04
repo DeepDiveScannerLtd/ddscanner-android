@@ -102,6 +102,7 @@ public class AddSealifeActivity extends BaseAppCompatActivity implements View.On
     private DDScannerRestClient.ResultListener<Void> updateResultListener = new DDScannerRestClient.ResultListener<Void>() {
         @Override
         public void onSuccess(Void result) {
+            setResult(RESULT_OK);
             finish();
         }
 
@@ -227,10 +228,12 @@ public class AddSealifeActivity extends BaseAppCompatActivity implements View.On
             sealifeTranslation.setName(binding.name.getText().toString().trim());
             sealifeTranslations.add(sealifeTranslation);
             MultipartBody.Part body = null;
-            fileToSend = new File(filePath);
-            fileToSend = Helpers.compressFile(fileToSend, this);
-            RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), fileToSend);
-            body = MultipartBody.Part.createFormData("photo", fileToSend.getName(), requestFile);
+            if (filePath != null) {
+                fileToSend = new File(filePath);
+                fileToSend = Helpers.compressFile(fileToSend, this);
+                RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), fileToSend);
+                body = MultipartBody.Part.createFormData("photo", fileToSend.getName(), requestFile);
+            }
             if (!isForEdit) {
                 DDScannerApplication.getInstance().getDdScannerRestClient().postAddSealife(sealifeResultListener, body, Helpers.createRequestBodyForString(new Gson().toJson(sealifeTranslations)));
             } else {
@@ -247,7 +250,7 @@ public class AddSealifeActivity extends BaseAppCompatActivity implements View.On
             binding.nameError.setVisibility(View.VISIBLE);
         }
 
-        if (filePath == null) {
+        if (filePath == null && !isForEdit) {
             isSomethingWrong = true;
             binding.errorImage.setVisibility(View.VISIBLE);
         }

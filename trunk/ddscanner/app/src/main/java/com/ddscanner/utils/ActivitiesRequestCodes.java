@@ -213,4 +213,7 @@ public class ActivitiesRequestCodes {
     public static final int REQUEST_CODE_ADDRESS_ACTIVITY_OPEN_MAP = 4901;
     public static final int REQUEST_CODE_ADDRESS_ACTIVITY_CHOOSE_COUNTRY = 4902;
 
+    //SealifeDetailsActivity
+    public static final int REQUEST_CODE_SEALIFE_ACTIVITY_EDIT_SEALIFE = 5001;
+
 }

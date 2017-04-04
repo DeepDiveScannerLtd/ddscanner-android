@@ -20,6 +20,7 @@ import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.sealife.add.AddSealifeActivity;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
+import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.google.gson.Gson;
 
@@ -104,13 +105,27 @@ public class SealifeDetailsActivity extends BaseAppCompatActivity implements Dia
         super.onOptionsItemSelected(item);
         switch (item.getItemId()) {
             case R.id.edit_sealife:
-                AddSealifeActivity.showForEdit(this, new Gson().toJson(binding.getSealifeViewModel().getSealife()), -1);
+                AddSealifeActivity.showForEdit(this, new Gson().toJson(binding.getSealifeViewModel().getSealife()), ActivitiesRequestCodes.REQUEST_CODE_SEALIFE_ACTIVITY_EDIT_SEALIFE);
                 return true;
             case android.R.id.home:
                 finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case ActivitiesRequestCodes.REQUEST_CODE_SEALIFE_ACTIVITY_EDIT_SEALIFE:
+                if (resultCode == RESULT_OK) {
+                    binding.progressView.setVisibility(View.VISIBLE);
+                    binding.mainLayout.setVisibility(View.GONE);
+                    DDScannerApplication.getInstance().getDdScannerRestClient().getSealifeDetails(id, resultListener);
+                }
+                break;
         }
     }
 
