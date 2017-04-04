@@ -64,15 +64,7 @@ public class ReviewPhotosAdapter extends RecyclerView.Adapter<ReviewPhotosAdapte
             holder.morePhotos.setText("+" + String.valueOf(photosCount - 4));
             holder.morePhotos.setVisibility(View.VISIBLE);
         }
-        Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, photos.get(position).getId(), "1")).transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2, context)), 0, RoundedCornersTransformation.CornerType.ALL)).into(holder.photo,
-                new ImageLoadedCallback(holder.progressBar){
-                    @Override
-                    public void onSuccess() {
-                        if (holder.progressBar != null) {
-                            holder.progressBar.setVisibility(View.GONE);
-                        }
-                    }
-                });
+        Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, photos.get(position).getId(), "1")).placeholder(R.drawable.placeholder_photo_wit_round_corners).transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2, context)), 0, RoundedCornersTransformation.CornerType.ALL)).into(holder.photo);
     }
 
     @Override
@@ -87,14 +79,12 @@ public class ReviewPhotosAdapter extends RecyclerView.Adapter<ReviewPhotosAdapte
 
         protected ImageView photo;
         protected TextView morePhotos;
-        private ProgressBar progressBar;
 
         public ReviewPhotosAdapterViewHolder(View v) {
             super(v);
             v.setOnClickListener(this);
             photo = (ImageView) v.findViewById(R.id.image);
             morePhotos = (TextView) v.findViewById(R.id.number_of_more_images);
-            progressBar = (ProgressBar) v.findViewById(R.id.progressBar);
         }
 
         @Override

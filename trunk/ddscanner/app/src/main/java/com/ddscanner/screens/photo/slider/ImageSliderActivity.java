@@ -245,7 +245,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
                 .load(getString(R.string.base_photo_url, images.get(position).getAuthor().getPhoto(), "1"))
                 .resize(Math.round(Helpers.convertDpToPixel(35, this)), Math.round(Helpers.convertDpToPixel(35, this)))
                 .centerCrop()
-                .placeholder(R.drawable.avatar_profile_default)
+                .placeholder(R.drawable.gray_circle_placeholder)
                 .error(R.drawable.avatar_profile_default)
                 .transform(new CropCircleTransformation())
                 .into(avatar);

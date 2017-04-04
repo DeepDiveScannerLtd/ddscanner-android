@@ -24,7 +24,6 @@ import com.ddscanner.entities.NotificationEntity;
 import com.ddscanner.entities.NotificationOld;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.activities.MainActivity;
-import com.ddscanner.ui.adapters.NotificationsListAdapterOld;
 import com.ddscanner.ui.adapters.SectionedRecyclerViewAdapter;
 import com.ddscanner.utils.Helpers;
 

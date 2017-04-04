@@ -63,7 +63,7 @@ public class PhotosListAdapterWithoutCover extends RecyclerView.Adapter<Recycler
             EditReviewPhotoListViewHolder viewHolder = (EditReviewPhotoListViewHolder) holder;
             viewHolder.coverLabel.setVisibility(View.GONE);
             if (position < serverPhotos.size()) {
-                Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, allPhotos.get(position), "1")).resize(Math.round(Helpers.convertDpToPixel(70, context)),Math.round(Helpers.convertDpToPixel(70, context))).centerCrop().transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2, context)), 0, RoundedCornersTransformation.CornerType.ALL)).into(viewHolder.photo);
+                Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, allPhotos.get(position), "1")).resize(Math.round(Helpers.convertDpToPixel(70, context)),Math.round(Helpers.convertDpToPixel(70, context))).placeholder(R.drawable.placeholder_photo_wit_round_corners).centerCrop().transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2, context)), 0, RoundedCornersTransformation.CornerType.ALL)).into(viewHolder.photo);
             } else {
                 String path = allPhotos.get(holder.getAdapterPosition());
                 if (!path.contains("file:")) {

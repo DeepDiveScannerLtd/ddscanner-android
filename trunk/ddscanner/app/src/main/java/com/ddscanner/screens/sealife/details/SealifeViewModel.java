@@ -43,27 +43,8 @@ public class SealifeViewModel {
                     .load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, sealifeViewModel.getSealife().getImage(), "2"))
                     .resize(Math.round(sealifeViewModel.getImageWidth()), 239)
                     .centerCrop()
-                    .into(view, new ImageLoadedCallback(sealifeViewModel.getProgressBar()));
+                    .into(view);
         }
     }
 
-    private static class ImageLoadedCallback implements Callback {
-        ProgressBar progressBar;
-
-        public ImageLoadedCallback(ProgressBar progBar) {
-            progressBar = progBar;
-        }
-
-        @Override
-        public void onSuccess() {
-            if (progressBar != null) {
-                progressBar.setVisibility(View.GONE);
-            }
-        }
-
-        @Override
-        public void onError() {
-
-        }
-    }
 }

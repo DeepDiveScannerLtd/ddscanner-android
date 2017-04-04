@@ -44,7 +44,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserLi
     public void onBindViewHolder(UserListViewHolder holder, int position) {
         Picasso.with(context)
                 .load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, users.get(position).getPhoto(), "1"))
-                .placeholder(R.drawable.avatar_profile_default)
+                .placeholder(R.drawable.gray_circle_placeholder)
                 .error(R.drawable.avatar_profile_default)
                 .resize(Math.round(Helpers.convertDpToPixel(58, context)), Math.round(Helpers.convertDpToPixel(58, context)))
                 .centerCrop()

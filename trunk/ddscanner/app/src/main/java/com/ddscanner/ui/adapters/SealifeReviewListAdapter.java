@@ -42,7 +42,7 @@ public class SealifeReviewListAdapter extends RecyclerView.Adapter<SealifeReview
         Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, sealifes.get(position).getImage(), "1"))
                 .resize(Math.round(Helpers.convertDpToPixel(100, context)), Math.round(Helpers.convertDpToPixel(60, context)))
                 .centerCrop()
-                .placeholder(R.drawable.placeholder_photos_activity)
+                .placeholder(R.drawable.placeholder_photo_wit_round_corners)
                 .transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2, context)), 0, RoundedCornersTransformation.CornerType.ALL))
                 .into(holder.photo);
     }

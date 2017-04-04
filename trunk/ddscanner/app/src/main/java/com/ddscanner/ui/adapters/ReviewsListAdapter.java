@@ -137,11 +137,11 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
 
         switch (comments.get(reviewsListViewHolder.getAdapterPosition()).getReviewType()) {
             case DIVESPOT:
-                Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, commentEntity.getAuthor().getPhoto(), "1")).resize(Math.round(Helpers.convertDpToPixel(40, context)), Math.round(Helpers.convertDpToPixel(40, context))).transform(new CropCircleTransformation()).centerCrop().placeholder(R.drawable.avatar_profile_default).error(R.drawable.avatar_profile_default).into(reviewsListViewHolder.user_avatar);
+                Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, commentEntity.getAuthor().getPhoto(), "1")).resize(Math.round(Helpers.convertDpToPixel(40, context)), Math.round(Helpers.convertDpToPixel(40, context))).transform(new CropCircleTransformation()).centerCrop().placeholder(R.drawable.gray_circle_placeholder).error(R.drawable.avatar_profile_default).into(reviewsListViewHolder.user_avatar);
                 reviewsListViewHolder.user_name.setText(commentEntity.getAuthor().getName());
                 break;
             case USER:
-                Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, commentEntity.getDiveSpot().getImage(), "1")).resize(Math.round(Helpers.convertDpToPixel(40, context)), Math.round(Helpers.convertDpToPixel(40, context))).transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2, context)), 0, RoundedCornersTransformation.CornerType.ALL)).centerCrop().placeholder(R.drawable.avatar_profile_default).error(R.drawable.avatar_profile_default).into(reviewsListViewHolder.user_avatar);
+                Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, commentEntity.getDiveSpot().getImage(), "1")).resize(Math.round(Helpers.convertDpToPixel(40, context)), Math.round(Helpers.convertDpToPixel(40, context))).transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2, context)), 0, RoundedCornersTransformation.CornerType.ALL)).centerCrop().placeholder(R.drawable.gray_circle_placeholder).error(R.drawable.avatar_profile_default).into(reviewsListViewHolder.user_avatar);
                 reviewsListViewHolder.user_name.setText(commentEntity.getDiveSpot().getName());
                 break;
         }

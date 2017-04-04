@@ -60,13 +60,7 @@ public class DiveSpotsListAdapter
     public void onBindViewHolder(ProductListViewHolder productListViewHolder, int i) {
         DiveSpotShort divespot = new DiveSpotShort();
         divespot = divespots.get(i);
-        if (divespot.getImage() != null) {
-            String imageAddress = DDScannerApplication.getInstance().getString(R.string.base_photo_url, divespot.getImage(), "1");
-            Picasso.with(context).load(imageAddress).resize(Math.round(Helpers.convertDpToPixel(130, context)), Math.round(Helpers.convertDpToPixel(130, context))).centerCrop().transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2, context)), 0, RoundedCornersTransformation.CornerType.ALL)).placeholder(R.drawable.ds_list_photo_default).error(R.drawable.ds_list_photo_default).transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2, context)),0)).into(productListViewHolder.imageView);
-        } else {
-            productListViewHolder.imageView.setImageDrawable(ContextCompat.getDrawable(context,
-                    R.drawable.list_photo_default));
-        }
+        Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, divespot.getImage(), "1")).resize(Math.round(Helpers.convertDpToPixel(130, context)), Math.round(Helpers.convertDpToPixel(130, context))).centerCrop().transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2, context)), 0, RoundedCornersTransformation.CornerType.ALL)).placeholder(R.drawable.placeholder_photo_wit_round_corners).error(R.drawable.ds_list_photo_default).transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2, context)),0)).into(productListViewHolder.imageView);
         if (divespot.getName() != null) {
             productListViewHolder.title.setText(divespot.getName());
         }

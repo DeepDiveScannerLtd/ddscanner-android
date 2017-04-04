@@ -20,6 +20,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
+
 /**
  * Created by lashket on 17.2.16.
  */
@@ -45,7 +47,7 @@ public class SealifeListAdapter extends RecyclerView.Adapter<SealifeListAdapter.
     @Override
     public void onBindViewHolder(SealifeListViewHolder sealifeListViewHolder, int i) {
         SealifeShort sealife = sealifes.get(i);
-        Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, sealife.getImage(), "1")).resize(Math.round(Helpers.convertDpToPixel(125, context)), Math.round(Helpers.convertDpToPixel(70, context))).centerCrop().into(sealifeListViewHolder.sealifeLogo);
+        Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, sealife.getImage(), "1")).resize(Math.round(Helpers.convertDpToPixel(125, context)), Math.round(Helpers.convertDpToPixel(70, context))).centerCrop().placeholder(R.drawable.placeholder_photo_wit_round_corners).transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2, context)), 0, RoundedCornersTransformation.CornerType.ALL)).into(sealifeListViewHolder.sealifeLogo);
         sealifeListViewHolder.sealifeName.setText(sealife.getName());
     }
 

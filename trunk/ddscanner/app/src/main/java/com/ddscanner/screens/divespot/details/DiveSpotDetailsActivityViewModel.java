@@ -47,7 +47,7 @@ public class DiveSpotDetailsActivityViewModel {
                 return;
             }
             viewModel.getProgressView().setVisibility(View.GONE);
-            view.setImageResource(R.drawable.ds_head_photo_default);
+            view.setImageResource(R.drawable.ds_head_photo_def);
         }
     }
 

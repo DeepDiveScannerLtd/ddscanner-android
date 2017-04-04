@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.DiveCenter;
@@ -59,12 +60,7 @@ public class DiveCentersListAdapter extends RecyclerView.Adapter<DiveCentersList
             diveCentersListViewHolder.dcAddress.setVisibility(View.VISIBLE);
             diveCentersListViewHolder.dcAddress.setText(diveCenter.getAddress());
         }
-        if (diveCenter.getLogo() != null) {
-            String imageUrlPath = logoPath + diveCenter.getLogo();
-            Picasso.with(context).load(imageUrlPath).placeholder(R.drawable.avatar_dc_list_empty).into(diveCentersListViewHolder.imgLogo);
-        } else {
-            diveCentersListViewHolder.imgLogo.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.avatar_dc_list_empty));
-        }
+        Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, diveCenter.getLogo(), "1")).placeholder(R.drawable.placeholder_photo_wit_round_corners).error(R.drawable.avatar_dc_profile_def).into(diveCentersListViewHolder.imgLogo);
         rating = Math.round(diveCenter.getRating());
         diveCentersListViewHolder.starsLayout.removeAllViews();
         for (int k = 0; k < rating; k++) {

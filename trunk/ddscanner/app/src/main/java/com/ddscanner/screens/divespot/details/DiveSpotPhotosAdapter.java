@@ -50,21 +50,16 @@ public class DiveSpotPhotosAdapter extends RecyclerView.Adapter<DiveSpotPhotosAd
             Picasso.with(context)
                     .load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, photos.get(position), "1"))
                     .transform(new TransformationRoundImage(Math.round(Helpers.convertDpToPixel(2, context)),0))
+                    .placeholder(R.drawable.placeholder_photo_wit_round_corners)
                     .into(holder.photo);
             holder.morePhotos.setText("+" + String.valueOf(photosCount - 7));
             holder.morePhotos.setVisibility(View.VISIBLE);
         } else {
             Picasso.with(context)
                     .load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, photos.get(position), "1"))
+                    .placeholder(R.drawable.placeholder_photo_wit_round_corners)
                     .transform(new TransformationRoundImage(Math.round(Helpers.convertDpToPixel(2, context)),0))
-                    .into(holder.photo, new ImageLoadedCallback(holder.progressBar){
-                        @Override
-                        public void onSuccess() {
-                            if (holder.progressBar != null) {
-                                holder.progressBar.setVisibility(View.GONE);
-                            }
-                        }
-                    });
+                    .into(holder.photo);
         }
     }
 

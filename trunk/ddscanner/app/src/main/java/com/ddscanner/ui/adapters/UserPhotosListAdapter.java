@@ -65,14 +65,9 @@ public class UserPhotosListAdapter extends RecyclerView.Adapter<UserPhotosListAd
             Picasso.with(context)
                     .load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, photos.get(position).getId(), "1"))
                     .transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2, context)),0, RoundedCornersTransformation.CornerType.ALL))
-                    .into(holder.photo, new ImageLoadedCallback(holder.progressBar){
-                        @Override
-                        public void onSuccess() {
-                            if (holder.progressBar != null) {
-                                holder.progressBar.setVisibility(View.GONE);
-                            }
-                        }
-                    });
+                    .placeholder(R.drawable.placeholder_photo_wit_round_corners)
+                    .error(R.drawable.ds_list_photo_default)
+                    .into(holder.photo);
         }
     }
 
@@ -92,7 +87,6 @@ public class UserPhotosListAdapter extends RecyclerView.Adapter<UserPhotosListAd
             photo = (ImageView) v.findViewById(R.id.image);
             photo.setOnClickListener(this);
             morePhotos = (TextView) v.findViewById(R.id.number_of_more_images);
-            progressBar = (ProgressBar) v.findViewById(R.id.progressBar);
         }
 
         @Override

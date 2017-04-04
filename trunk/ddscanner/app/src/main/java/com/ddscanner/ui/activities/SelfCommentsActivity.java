@@ -52,7 +52,7 @@ public class SelfCommentsActivity extends AppCompatActivity implements DialogClo
             progressView.setVisibility(View.GONE);
             commentsRc.setVisibility(View.VISIBLE);
            // path = comments.getDiveSpotPathMedium();
-            commentsRc.setAdapter(new SelfReviewsListAdapter(result, SelfCommentsActivity.this));
+            commentsRc.setAdapter(new SelfReviewsListAdapter(result, null));
         }
 
         @Override

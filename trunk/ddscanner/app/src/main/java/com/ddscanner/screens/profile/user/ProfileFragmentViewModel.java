@@ -67,7 +67,7 @@ public class ProfileFragmentViewModel {
             Picasso.with(view.getContext()).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, profileFragmentViewModel.getUser().getPhoto(), "2"))
                     .resize(Math.round(Helpers.convertDpToPixel(100, view.getContext())),
                             Math.round(Helpers.convertDpToPixel(100, view.getContext()))).centerCrop()
-                    .placeholder(R.drawable.avatar_profile_default)
+                    .placeholder(R.drawable.gray_circle_placeholder)
                     .error(R.drawable.avatar_profile_default)
                     .transform(new CropCircleTransformation()).into(view);
         }
