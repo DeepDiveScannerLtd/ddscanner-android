@@ -33,4 +33,16 @@ public class Address implements Serializable {
     public LatLng getPosition() {
         return new LatLng(lat, lng);
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setLat(Double lat) {
+        this.lat = lat;
+    }
+
+    public void setLng(Double lng) {
+        this.lng = lng;
+    }
 }

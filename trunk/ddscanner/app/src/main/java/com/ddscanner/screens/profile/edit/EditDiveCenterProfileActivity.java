@@ -69,6 +69,8 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
     private static final String ARG_DIVECENTER = "divecenter";
     private static final String ARG_ISSPOTS = "isspots";
     private static final String ARG_ISLOGOUTABLE = "islogoutable";
+    private static final String ARG_COUNTRY = "country";
+    private static final String ARG_ADDRESS = "address";
     private boolean isLogoutable;
 
     private ArrayList<EditText> phonesEditTexts = new ArrayList<>();
@@ -277,7 +279,7 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
         if (binding.getDcViewModel().getDiveCenterProfile().getAddresses() != null) {
             locationLatitude = String.valueOf(binding.getDcViewModel().getDiveCenterProfile().getAddresses().get(0).getLat());
             locationLongitude = String.valueOf(binding.getDcViewModel().getDiveCenterProfile().getAddresses().get(0).getLng());
-            addAddressesView(binding.getDcViewModel().getDiveCenterProfile().getAddresses().get(0).getName(), binding.getDcViewModel().getDiveCenterProfile().getCountryName());
+            addAddressesView(binding.getDcViewModel().getDiveCenterProfile().getAddresses().get(0).getName(), binding.getDcViewModel().getDiveCenterProfile().getCountry().getName());
             binding.pickAddressButton.setVisibility(View.GONE);
         }
     }
@@ -329,7 +331,11 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
     }
 
     public void chooseAddressClicked(View view) {
-        ChangeAddressActivity.showForResult(this, ActivitiesRequestCodes.EDIT_DIVE_CENTER_ACTIVITY_CHOOSE_ADDRESS, new Gson().toJson(binding.getDcViewModel().getDiveCenterProfile().getCoutryEntity()), new Gson().toJson(binding.getDcViewModel().getDiveCenterProfile().getAddresses().get(0)));
+        if (binding.getDcViewModel().getDiveCenterProfile().getAddresses() != null) {
+            ChangeAddressActivity.showForResult(this, ActivitiesRequestCodes.EDIT_DIVE_CENTER_ACTIVITY_CHOOSE_ADDRESS, new Gson().toJson(binding.getDcViewModel().getDiveCenterProfile().getCountry()), new Gson().toJson(binding.getDcViewModel().getDiveCenterProfile().getAddresses().get(0)));
+        } else {
+            ChangeAddressActivity.showForResult(this, ActivitiesRequestCodes.EDIT_DIVE_CENTER_ACTIVITY_CHOOSE_ADDRESS, null, null);
+        }
     }
 
     public void pickCountryClicked(View view) {
@@ -396,6 +402,20 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
                         e.printStackTrace();
                         UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.empty_string, R.string.please_choose_right_loction, false);
                     }
+                }
+                break;
+            case ActivitiesRequestCodes.EDIT_DIVE_CENTER_ACTIVITY_CHOOSE_ADDRESS:
+                if (resultCode == RESULT_OK) {
+                    CountryEntity countryEntity = (CountryEntity) data.getSerializableExtra(ARG_COUNTRY);
+                    com.ddscanner.entities.Address address = (com.ddscanner.entities.Address) data.getSerializableExtra(ARG_ADDRESS);
+                    ArrayList<com.ddscanner.entities.Address> addresses= new ArrayList<>();
+                    addresses.add(address);
+                    binding.getDcViewModel().getDiveCenterProfile().setCountry(countryEntity);
+                    binding.getDcViewModel().getDiveCenterProfile().setAddresses(addresses);
+                    countryCode = countryEntity.getCode();
+                    locationLatitude = address.getLat().toString();
+                    locationLongitude = address.getLng().toString();
+                    addAddressesView(binding.getDcViewModel().getDiveCenterProfile().getAddresses().get(0).getName(), binding.getDcViewModel().getDiveCenterProfile().getCountry().getName());
                 }
                 break;
             case ActivitiesRequestCodes.EDIT_DIVE_CENTER_ACTIVITY_ADD_LANGUAGE:
@@ -511,6 +531,8 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
         for (TextView textView : emailsErrors) {
             textView.setVisibility(View.GONE);
         }
+        binding.diveSpotError.setVisibility(View.GONE);
+        binding.nameError.setVisibility(View.GONE);
         boolean isDataValid = true;
         for (EditText editText : phonesEditTexts) {
             if (!validCellPhone(editText.getText().toString()) && !editText.getText().toString().isEmpty()) {
@@ -524,6 +546,17 @@ public class EditDiveCenterProfileActivity extends BaseAppCompatActivity impleme
                 isDataValid = false;
             }
         }
+
+        if (diveSpotsListForEditDcAdapter.getItemCount() == 0) {
+            binding.diveSpotError.setVisibility(View.VISIBLE);
+            isDataValid = false;
+        }
+
+        if (binding.name.getText().toString().isEmpty()) {
+            binding.nameError.setVisibility(View.VISIBLE);
+            isDataValid = false;
+        }
+
         if (!isDataValid) {
             binding.mainLayout.scrollTo(0,0);
         }

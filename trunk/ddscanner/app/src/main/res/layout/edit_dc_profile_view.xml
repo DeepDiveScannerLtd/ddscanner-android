@@ -84,7 +84,15 @@
                                 android:layout_height="wrap_content"
                                 android:id="@+id/name"
                                 android:hint="@string/name"
+                                android:lines="1"
+                                android:maxLength="31"
                                 android:text="@{dcViewModel.diveCenterProfile.name}"/>
+
+                            <TextView
+                                android:text="@string/name_is_required_edit_dc"
+                                android:layout_marginLeft="0dp"
+                                android:id="@+id/name_error"
+                                style="@style/ValidationErrorTextView" />
 
                         </LinearLayout>
                     </LinearLayout>
@@ -203,6 +211,13 @@
                             android:text="@string/add_ds"
                             android:textColor="#a9a9a9" />
                     </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/dive_spot_error"
+                        style="@style/ValidationErrorTextView"
+                        android:text="@string/dive_spot_is_required"
+                        android:layout_marginLeft="20dp"
+                        android:visibility="gone"/>
 
                     <ImageView
                         android:layout_marginTop="20dp"

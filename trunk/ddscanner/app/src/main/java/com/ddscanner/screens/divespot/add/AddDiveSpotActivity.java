@@ -44,6 +44,7 @@ import com.ddscanner.events.ChangeTranslationEvent;
 import com.ddscanner.interfaces.ConfirmationDialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.divespot.details.DiveSpotDetailsActivity;
+import com.ddscanner.ui.activities.PickLocationActivity;
 import com.ddscanner.ui.adapters.PhotosListAdapterWithCover;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.activities.LoginActivity;
@@ -86,6 +87,7 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
 
     private static final String TAG = AddDiveSpotActivity.class.getSimpleName();
     private static final String DIVE_SPOT_NAME_PATTERN = "^[a-zA-Z0-9 ]*$";
+    private static final String ARG_LOCATION = "location";
 
     private LinearLayout btnAddSealife;
 
@@ -317,12 +319,7 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
         switch (requestCode) {
             case ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_LOCATION:
                 if (resultCode == RESULT_OK) {
-                    this.diveSpotLocation = data.getParcelableExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_LATLNG);
-                    if (data.getStringExtra(Constants.ADD_DIVE_SPOT_INTENT_LOCATION_NAME) != null && !data.getStringExtra(Constants.ADD_DIVE_SPOT_INTENT_LOCATION_NAME).isEmpty()) {
-                        locationTitle.setText(data.getStringExtra(Constants.ADD_DIVE_SPOT_INTENT_LOCATION_NAME));
-                    } else {
-                        locationTitle.setText(R.string.location);
-                    }
+                    this.diveSpotLocation = data.getParcelableExtra(ARG_LOCATION);
                     locationTitle.setTextColor(ContextCompat.getColor(this, R.color.black_text));
                 }
                 break;
@@ -380,20 +377,6 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
         }
     }
 
-    private void showPlacePikerIntent() {
-        try {
-            PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
-            if (diveSpotLatLngBounds != null) {
-                builder.setLatLngBounds(diveSpotLatLngBounds);
-            }
-            startActivityForResult(builder.build(this), ActivitiesRequestCodes.REQUEST_CODE_PICK_LOCATION_ACTIVITY_PLACE_AUTOCOMPLETE);
-        } catch (GooglePlayServicesRepairableException e) {
-            Log.i(TAG, e.toString());
-        } catch (GooglePlayServicesNotAvailableException e) {
-            Log.i(TAG, e.toString());
-        }
-    }
-
     private void setAppCompatSpinnerValues(AppCompatSpinner spinner, List<String> values, String tag) {
         ArrayList<String> objects = new ArrayList<String>();
         objects.add(tag);
@@ -412,7 +395,7 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.location_layout:
-                showPlacePikerIntent();
+                PickLocationActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_LOCATION, diveSpotLocation);
                 break;
             case R.id.btn_add_sealife:
                 SearchSealifeActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_SEALIFE, diveSpotLocation);

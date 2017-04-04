@@ -480,4 +480,7 @@
     <string name="save_address_result">SAVE</string>
     <string name="pattern_location_string">%1$s, %2$s</string>
     <string name="edit_addres">Edit</string>
+    <string name="popup_address_error">All the fields are required. Fill in the information and choose your location for users to see you on the map</string>
+    <string name="dive_spot_is_required">Dive spots is required</string>
+    <string name="name_is_required_edit_dc">Name is required</string>
 </resources>

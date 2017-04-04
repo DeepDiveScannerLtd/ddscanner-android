@@ -20,6 +20,7 @@ public class DiveCenterProfile implements Serializable{
     private String countryName;
     @SerializedName("country_code")
     private String countryCode;
+    private CountryEntity country;
     private ArrayList<Address> addresses;
     private ArrayList<String> emails;
     private ArrayList<String> phones;
@@ -54,19 +55,20 @@ public class DiveCenterProfile implements Serializable{
         }
     }
 
+    public CountryEntity getCountry() {
+        return country;
+    }
+
+    public void setCountry(CountryEntity country) {
+        this.country = country;
+    }
+
     public void setServiceType(int serviceType) {
         this.serviceType = serviceType;
     }
 
     public String getCountryCode() {
         return countryCode;
-    }
-
-    public CountryEntity getCoutryEntity() {
-        CountryEntity countryEntity = new CountryEntity();
-        countryEntity.setCode(countryCode);
-        countryEntity.setName(countryName);
-        return countryEntity;
     }
 
     public void setCountryCode(String countryCode) {

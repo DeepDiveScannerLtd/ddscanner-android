@@ -49,6 +49,7 @@ import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.activities.LoginActivity;
 import com.ddscanner.ui.activities.PickCountryActivity;
 import com.ddscanner.ui.activities.PickLanguageActivity;
+import com.ddscanner.ui.activities.PickLocationActivity;
 import com.ddscanner.ui.activities.SearchSealifeActivity;
 import com.ddscanner.ui.adapters.AddPhotoToDsListAdapter;
 import com.ddscanner.ui.adapters.CharacteristicSpinnerItemsAdapter;
@@ -87,7 +88,7 @@ import okhttp3.RequestBody;
 public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseAppCompatActivity.PictureTakenListener, CompoundButton.OnCheckedChangeListener, View.OnClickListener, DialogClosedListener, AddTranslationDialogFragment.TranslationChangedListener, ConfirmationDialogClosedListener {
 
     private static final String TAG = EditDiveSpotActivity.class.getSimpleName();
-
+    private static final String ARG_LOCATION = "location";
     private static final String DIVE_SPOT_NAME_PATTERN = "^[a-zA-Z0-9 ]*$";
     private PhotosListAdapterWithCover photosListAdapter = new PhotosListAdapterWithCover(EditDiveSpotActivity.this);
     private PhotosListAdapterWithoutCover mapsListAdapter = new PhotosListAdapterWithoutCover(EditDiveSpotActivity.this);
@@ -469,12 +470,7 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
         switch (requestCode) {
             case ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_LOCATION:
                 if (resultCode == RESULT_OK) {
-                    this.diveSpotLocation = data.getParcelableExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_LATLNG);
-                    if (data.getStringExtra(Constants.ADD_DIVE_SPOT_INTENT_LOCATION_NAME) != null && !data.getStringExtra(Constants.ADD_DIVE_SPOT_INTENT_LOCATION_NAME).isEmpty()) {
-                        locationTitle.setText(data.getStringExtra(Constants.ADD_DIVE_SPOT_INTENT_LOCATION_NAME));
-                    } else {
-                        locationTitle.setText(R.string.location);
-                    }
+                    this.diveSpotLocation = data.getParcelableExtra(ARG_LOCATION);
                     locationTitle.setTextColor(ContextCompat.getColor(this, R.color.black_text));
                 }
                 break;
@@ -540,23 +536,11 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
         DDScannerApplication.getInstance().getDdScannerRestClient().postUpdateDiveSpot(updateDiveSpotResultListener, sealife, newImages, deletedImages, newMaps, deletedMaps, requestId, requestLat, requestLng, requsetCountryCode, requestDepth, requestLevel, requestCurrents, requestMinVisibility, requestMaxVisibility, requestCoverNumber,translations, requestObject, requestIsEdit, requestIsWorkingHere, requestCoverId);
     }
 
-    private void showPlacePikerIntent() {
-        try {
-            PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
-            builder.setLatLngBounds(diveSpotLatLngBounds);
-            startActivityForResult(builder.build(this), ActivitiesRequestCodes.REQUEST_CODE_PICK_LOCATION_ACTIVITY_PLACE_AUTOCOMPLETE);
-        } catch (GooglePlayServicesRepairableException e) {
-            Log.i(TAG, e.toString());
-        } catch (GooglePlayServicesNotAvailableException e) {
-            Log.i(TAG, e.toString());
-        }
-    }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.location_layout:
-                showPlacePikerIntent();
+                PickLocationActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_EDIT_DIVE_SPOT_ACTIVITY_PICK_LOCATION, diveSpotLocation);
                 break;
             case R.id.btn_add_sealife:
                 SearchSealifeActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_ADD_DIVE_SPOT_ACTIVITY_PICK_SEALIFE, diveSpotLocation);
