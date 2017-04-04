@@ -42,6 +42,7 @@
             app:pv_circular="true"
             app:pv_progressMode="indeterminate"
             android:visibility="gone"
+            app:cpd_strokeSize="10dp"
             app:pv_progressStyle="@style/CircularProgress" />
     </RelativeLayout>
 </layout>
