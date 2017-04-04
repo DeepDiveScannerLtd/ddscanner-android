@@ -102,22 +102,35 @@ public class AddSealifeActivity extends BaseAppCompatActivity implements View.On
     private DDScannerRestClient.ResultListener<Void> updateResultListener = new DDScannerRestClient.ResultListener<Void>() {
         @Override
         public void onSuccess(Void result) {
-
+            finish();
         }
 
         @Override
         public void onConnectionFailure() {
-
+            progressDialogUpload.dismiss();
+            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-
+            progressDialogUpload.dismiss();
+            switch (errorType) {
+                case UNAUTHORIZED_401:
+                    DDScannerApplication.getInstance().getSharedPreferenceHelper().logout();
+                    LoginActivity.showForResult(AddSealifeActivity.this, ActivitiesRequestCodes.REQUEST_CODE_ADD_SEALIFE_ACTIVITY_LOGIN_TO_SEND);
+                    break;
+                case BAD_REQUEST_ERROR_400:
+                    Helpers.errorHandling(errorsMap, errorMessage);
+                    break;
+                default:
+                    Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);
+                    break;
+            }
         }
 
         @Override
         public void onInternetConnectionClosed() {
-
+            UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_internet_connection_title, R.string.error_internet_connection, false);
         }
     };
 
@@ -220,6 +233,8 @@ public class AddSealifeActivity extends BaseAppCompatActivity implements View.On
             body = MultipartBody.Part.createFormData("photo", fileToSend.getName(), requestFile);
             if (!isForEdit) {
                 DDScannerApplication.getInstance().getDdScannerRestClient().postAddSealife(sealifeResultListener, body, Helpers.createRequestBodyForString(new Gson().toJson(sealifeTranslations)));
+            } else {
+                DDScannerApplication.getInstance().getDdScannerRestClient().postUpdateSealife(updateResultListener, body, Helpers.createRequestBodyForString(new Gson().toJson(sealifeTranslations)), Helpers.createRequestBodyForString(binding.getSealifeViewModel().getSealife().getId()));
             }
         }
     }

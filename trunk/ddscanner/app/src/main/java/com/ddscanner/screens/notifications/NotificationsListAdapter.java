@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
+import com.ddscanner.entities.ActivityTypes;
 import com.ddscanner.entities.NotificationEntity;
 import com.ddscanner.entities.PhotoOpenedSource;
 import com.ddscanner.entities.ReviewsOpenedSource;
@@ -48,6 +49,11 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
         notifyDataSetChanged();
     }
 
+    public void setNotifications(ArrayList<NotificationEntity> notifications) {
+        this.notifications = notifications;
+        notifyDataSetChanged();
+    }
+
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
@@ -69,7 +75,7 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
             case VIEW_TYPE_AVATAR_TEXT:
                 TextAndPhotoItemViewHolder textAndPhotoItemViewHolder = (TextAndPhotoItemViewHolder) holder;
                 textAndPhotoItemViewHolder.notificationText.setText(notification.getText(isSelf));
-                if (!isSelf) {
+                if (!isSelf || (isSelf && !notification.getActivityType().equals(ActivityTypes.ACHIEVEMENT_GETTED))) {
                     loadUserPhoto(notification.getUser().getPhoto(), textAndPhotoItemViewHolder.userAvatar);
                 }
                 if (notifications.get(position).getLinks() != null) {
@@ -96,6 +102,17 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
                 adapter.setData(notification.getPhotos(), notification.getPhotosCount(), notification.getId());
                 break;
         }
+    }
+
+    public String getLastNotificationDate() {
+        return notifications.get(notifications.size() - 1).getDate();
+    }
+
+    public String getFirstNotificationId() {
+        if (notifications.size() > 0) {
+            return notifications.get(0).getId();
+        }
+        return "";
     }
 
     private void loadUserPhoto(String photoId, ImageView view) {

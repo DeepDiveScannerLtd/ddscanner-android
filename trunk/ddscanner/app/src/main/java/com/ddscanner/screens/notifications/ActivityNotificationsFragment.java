@@ -33,47 +33,15 @@ import java.util.Date;
 public class ActivityNotificationsFragment extends Fragment {
 
     private static final String TAG = ActivityNotificationsFragment.class.getName();
-    private static final int PAGE_SIZE = 15;
+    private static final int PAGE_SIZE = 20;
 
     private ArrayList<NotificationEntity> activities;
     private FragmnetActivityNotificationsBinding binding;
     private NotificationsListAdapter notificationsListAdapter;
     private LinearLayoutManager linearLayoutManager;
     private boolean isLoading = false;
-
-
-    private DDScannerRestClient.ResultListener<ArrayList<NotificationEntity>> resultListener = new DDScannerRestClient.ResultListener<ArrayList<NotificationEntity>>() {
-        @Override
-        public void onSuccess(ArrayList<NotificationEntity> result) {
-            activities = result;
-            isLoading = false;
-            if (binding != null) {
-                binding.progressBarPagination.setVisibility(View.GONE);
-                binding.progressBar.setVisibility(View.GONE);
-                binding.activityRc.setVisibility(View.VISIBLE);
-                if (activities == null || activities.size() == 0) {
-                    binding.noNotifsView.setVisibility(View.VISIBLE);
-                    return;
-                }
-                notificationsListAdapter.add(result);
-            }
-        }
-
-        @Override
-        public void onConnectionFailure() {
-
-        }
-
-        @Override
-        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-
-        }
-
-        @Override
-        public void onInternetConnectionClosed() {
-
-        }
-    };
+    private NotificationResultListener paginationResultListener = new NotificationResultListener(true);
+    private NotificationResultListener simpleResultListener = new NotificationResultListener(false);
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -133,7 +101,7 @@ public class ActivityNotificationsFragment extends Fragment {
     }
 
     public void loadNotifications() {
-        DDScannerApplication.getInstance().getDdScannerRestClient().getActivityNotifications(resultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient().getActivityNotifications(simpleResultListener, null);
     }
 
     private RecyclerView.OnScrollChangeListener listener = new View.OnScrollChangeListener() {
@@ -162,11 +130,58 @@ public class ActivityNotificationsFragment extends Fragment {
         int firstVisibleItemPosition = linearLayoutManager.findFirstVisibleItemPosition();
         if (!isLoading) {
             if ((visibleItemsCount + firstVisibleItemPosition) >= totalItemCount && firstVisibleItemPosition >= 0 && totalItemCount >= PAGE_SIZE) {
-                DDScannerApplication.getInstance().getDdScannerRestClient().getActivityNotifications(resultListener);
+                DDScannerApplication.getInstance().getDdScannerRestClient().getActivityNotifications(paginationResultListener, notificationsListAdapter.getLastNotificationDate());
                 binding.progressBarPagination.setVisibility(View.VISIBLE);
                 isLoading = true;
             }
         }
+    }
+
+    class NotificationResultListener extends DDScannerRestClient.ResultListener<ArrayList<NotificationEntity>> {
+
+        private boolean isFromPagination;
+
+        public NotificationResultListener(boolean isFromPagination) {
+            this.isFromPagination = isFromPagination;
+        }
+
+        @Override
+        public void onSuccess(ArrayList<NotificationEntity> result) {
+            isLoading = false;
+            activities = result;
+            if (binding != null) {
+                binding.progressBarPagination.setVisibility(View.GONE);
+                binding.progressBar.setVisibility(View.GONE);
+                binding.activityRc.setVisibility(View.VISIBLE);
+                if (activities == null || activities.size() == 0) {
+                    binding.noNotifsView.setVisibility(View.VISIBLE);
+                    return;
+                }
+                if (isFromPagination) {
+                    notificationsListAdapter.add(result);
+                } else {
+                    if (result.size() > 0 && !result.get(0).getId().equals(notificationsListAdapter.getFirstNotificationId())) {
+                        notificationsListAdapter.setNotifications(result);
+                    }
+                }
+            }
+        }
+
+        @Override
+        public void onConnectionFailure() {
+
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+
+        }
+
+        @Override
+        public void onInternetConnectionClosed() {
+
+        }
+
     }
 
 }

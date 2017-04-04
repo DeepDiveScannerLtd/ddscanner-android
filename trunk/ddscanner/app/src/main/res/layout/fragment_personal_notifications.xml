@@ -1,31 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#fbfbfb">
-    <include
-        android:id="@+id/no_notifs_view"
-        android:visibility="gone"
-        layout="@layout/view_no_notifications" />
-
-    <com.rey.material.widget.ProgressView
-        android:id="@+id/progressBarFull"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="25dp"
-        android:layout_marginTop="50dp"
-        app:pv_autostart="true"
-        app:pv_circular="true"
-        app:pv_progressMode="indeterminate"
-        app:pv_progressStyle="@style/CircularProgress" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="#fbfbfb">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/activity_rc"
-        android:scrollbars="vertical"
-        android:visibility="gone"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-</LinearLayout>
+        <include
+            android:id="@+id/no_notifs_view"
+            layout="@layout/view_no_notifications"
+            android:visibility="gone" />
+
+        <com.rey.material.widget.ProgressView
+            android:id="@+id/progress_bar"
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:layout_marginTop="50dp"
+            app:pv_autostart="true"
+            app:pv_circular="true"
+            app:pv_progressMode="indeterminate"
+            app:pv_progressStyle="@style/CircularProgress" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/activity_rc"
+            android:layout_above="@+id/progress_bar_pagination"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="vertical"
+            android:visibility="gone" />
+        <com.rey.material.widget.ProgressView
+            android:id="@+id/progress_bar_pagination"
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_alignParentBottom="true"
+            app:pv_autostart="true"
+            app:pv_circular="true"
+            app:pv_progressMode="indeterminate"
+            android:visibility="gone"
+            app:pv_progressStyle="@style/CircularProgress" />
+    </RelativeLayout>
     </layout>

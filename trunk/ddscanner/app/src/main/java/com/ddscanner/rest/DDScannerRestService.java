@@ -452,6 +452,14 @@ public interface DDScannerRestService {
             @Part("translations") RequestBody translations
     );
 
+    @Multipart
+    @POST("v2_0/sealife.update")
+    Call<ResponseBody> postUpdateSealife(
+            @Part MultipartBody.Part image,
+            @Part("translations") RequestBody translations,
+            @Part("id") RequestBody id
+    );
+
     @GET("v2_0/divespot.review.get")
     Call<ResponseBody> getSingleReview(@Query("id") String id, @Query("include_photo_details") int value);
 
@@ -462,10 +470,10 @@ public interface DDScannerRestService {
     Call<ResponseBody> getNotifications();
 
     @GET("v2_0/user.notifications.activity.get")
-    Call<ResponseBody> getActivityNotifications(@Query("limit") int limit, @Query("include_photo_details") int value);
+    Call<ResponseBody> getActivityNotifications(@Query("start_from") String date, @Query("limit") int limit, @Query("include_photo_details") int value);
 
     @GET("v2_0/user.notifications.personal.get")
-    Call<ResponseBody> getPersonalNotifications(@Query("include_photo_details") int value);
+    Call<ResponseBody> getPersonalNotifications(@Query("start_from") String date, @Query("limit") int limit, @Query("include_photo_details") int value);
 
     @GET("v2_0/user.notification.photos.get")
     Call<ResponseBody> getNotificationPhotos(@Query("id") String id, @Query("include_photo_details") int value);

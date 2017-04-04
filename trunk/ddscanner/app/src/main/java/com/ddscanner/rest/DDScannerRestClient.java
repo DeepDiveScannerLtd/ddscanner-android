@@ -199,6 +199,15 @@ public class DDScannerRestClient {
         });
     }
 
+    public void postUpdateSealife(final ResultListener<Void> resultListener, MultipartBody.Part image, RequestBody translations, RequestBody id) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postUpdateSealife(image, translations, id);
+        call.enqueue(new NoResponseEntityCallback(gson, resultListener));
+    }
+
     public void postValidateDiveSpot(String diveSpotId, boolean isValid, @NonNull final ResultListener<Void> resultListener) {
         ValidationRequest validationRequest = new ValidationRequest();
         validationRequest.setSocial(DDScannerApplication.getInstance().getSharedPreferenceHelper().getSn());
@@ -402,12 +411,12 @@ public class DDScannerRestClient {
         });
     }
 
-    public void getActivityNotifications(ResultListener<ArrayList<NotificationEntity>> resultListener) {
+    public void getActivityNotifications(ResultListener<ArrayList<NotificationEntity>> resultListener, String lastDate) {
         if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
             resultListener.onInternetConnectionClosed();
             return;
         }
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getActivityNotifications(40, 1);
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getActivityNotifications(lastDate, 20, 1);
         call.enqueue(new ResponseEntityCallback<ArrayList<NotificationEntity>>(gson, resultListener) {
             @Override
             void handleResponseString(ResultListener<ArrayList<NotificationEntity>> resultListener, String responseString) throws JSONException {
@@ -418,12 +427,12 @@ public class DDScannerRestClient {
         });
     }
 
-    public void getPersonalNotifications(ResultListener<ArrayList<NotificationEntity>> resultListener) {
+    public void getPersonalNotifications(ResultListener<ArrayList<NotificationEntity>> resultListener, String lastNotificationDate) {
         if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
             resultListener.onInternetConnectionClosed();
             return;
         }
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getPersonalNotifications(1);
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getPersonalNotifications(lastNotificationDate, 20, 1);
         call.enqueue(new ResponseEntityCallback<ArrayList<NotificationEntity>>(gson, resultListener) {
             @Override
             void handleResponseString(ResultListener<ArrayList<NotificationEntity>> resultListener, String responseString) throws JSONException {
