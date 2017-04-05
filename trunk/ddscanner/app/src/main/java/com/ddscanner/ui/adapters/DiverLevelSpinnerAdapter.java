@@ -23,10 +23,12 @@ public class DiverLevelSpinnerAdapter extends ArrayAdapter<String> {
     private ArrayList<String> data;
     public Resources res;
     LayoutInflater inflater;
+    private String title;
 
-    public DiverLevelSpinnerAdapter(Activity activitySpinner, int textViewResourceId, ArrayList<String> objects) {
+    public DiverLevelSpinnerAdapter(Activity activitySpinner, int textViewResourceId, ArrayList<String> objects, String title) {
         super(activitySpinner, textViewResourceId, objects);
         this.data = objects;
+        this.title = title;
         inflater = (LayoutInflater)activitySpinner.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -35,6 +37,8 @@ public class DiverLevelSpinnerAdapter extends ArrayAdapter<String> {
         View row = inflater.inflate(R.layout.spinner_level_first_item, parent, false);
         TextView textView = (TextView) row.findViewById(R.id.spinner_text);
         textView.setText(data.get(position));
+        TextView titleView = (TextView) row.findViewById(R.id.title);
+        titleView.setText(title);
         return row;
     }
 

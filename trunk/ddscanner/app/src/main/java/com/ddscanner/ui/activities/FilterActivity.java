@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -20,6 +21,8 @@ import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.entities.FiltersResponseEntity;
 import com.ddscanner.entities.SealifeShort;
 import com.ddscanner.events.FilterChosenEvent;
+import com.ddscanner.ui.adapters.CharacteristicSpinnerItemsAdapter;
+import com.ddscanner.ui.adapters.DiverLevelSpinnerAdapter;
 import com.ddscanner.ui.adapters.SealifeListAddingDiveSpotAdapter;
 import com.ddscanner.ui.adapters.SpinnerItemsAdapter;
 import com.ddscanner.utils.ActivitiesRequestCodes;
@@ -41,8 +44,8 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
 
     private Toolbar toolbar;
     private FiltersResponseEntity filters = new FiltersResponseEntity();
-    private Spinner objectSpinner;
-    private Spinner levelSpinner;
+    private AppCompatSpinner objectSpinner;
+    private AppCompatSpinner levelSpinner;
     private Button save;
     private Map<String,String> objectsMap = new HashMap<>();
     private Map<String, String> levelsMap = new HashMap<>();
@@ -72,8 +75,8 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
         progressView = (ProgressView) findViewById(R.id.progressBar);
         mainLayout = (LinearLayout) findViewById(R.id.main_layout);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        objectSpinner = (Spinner) findViewById(R.id.object_spinner);
-        levelSpinner = (Spinner) findViewById(R.id.level_spinner);
+        objectSpinner = (AppCompatSpinner) findViewById(R.id.object_spinner);
+        levelSpinner = (AppCompatSpinner) findViewById(R.id.level_spinner);
         save = (Button) findViewById(R.id.applyFilters);
         addSealifeButton = (LinearLayout) findViewById(R.id.btn_add_sealife);
         sealifesRecyclerView = (RecyclerView) findViewById(R.id.sealife_recycler_view);
@@ -84,8 +87,17 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
         progressView.setVisibility(View.GONE);
         mainLayout.setVisibility(View.VISIBLE);
         save.setVisibility(View.VISIBLE);
+        setAppCompatSpinnerValues(levelSpinner, Helpers.getDiveLevelTypes(), "Diver Level");
+        setAppCompatSpinnerValues(objectSpinner, Helpers.getDiveSpotTypes(), "Object");
     }
 
+    private void setAppCompatSpinnerValues(AppCompatSpinner spinner, List<String> values, String tag) {
+        ArrayList<String> objects = new ArrayList<String>();
+        objects.add(tag);
+        objects.addAll(values);
+        ArrayAdapter<String> adapter = new DiverLevelSpinnerAdapter(this, R.layout.spinner_item, objects, tag);
+        spinner.setAdapter(adapter);
+    }
 
     private void setFilerGroup(Spinner spinner, Map<String, String> values) {
         List<String> objects = new ArrayList<String>();

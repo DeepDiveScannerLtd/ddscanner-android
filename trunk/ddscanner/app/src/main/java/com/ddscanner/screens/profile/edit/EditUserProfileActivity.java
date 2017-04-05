@@ -153,7 +153,7 @@ public class EditUserProfileActivity extends BaseAppCompatActivity implements Ba
         }
         levels.add("Diver level");
         levels.addAll(Helpers.getDiveLevelTypes());
-        binding.levelSpinner.setAdapter(new DiverLevelSpinnerAdapter(this, R.layout.spinner_item, levels));
+        binding.levelSpinner.setAdapter(new DiverLevelSpinnerAdapter(this, R.layout.spinner_item, levels, "Diver level"));
         if (user.getDiverLevel() != null) {
             binding.levelSpinner.setSelection(user.getDiverLevel());
         } else {

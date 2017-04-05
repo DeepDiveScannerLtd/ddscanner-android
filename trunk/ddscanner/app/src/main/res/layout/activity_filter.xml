@@ -31,54 +31,29 @@
         android:orientation="vertical"
         android:paddingBottom="10dp">
 
-        <com.rey.material.widget.Spinner
+        <android.support.v7.widget.AppCompatSpinner
             android:id="@+id/object_spinner"
-            style="@style/Material.Widget.Spinner"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="10dp"
+            android:layout_height="match_parent"
             android:dropDownWidth="150dp"
             android:gravity="center_vertical"
             android:popupBackground="@color/white"
-            app:rd_style="@style/Material.Drawable.Ripple.Wave"
-            app:spn_arrowColor="@android:color/transparent"
-            app:spn_dividerColor="@android:color/transparent"
-            app:spn_label="@string/filter_object"
-            app:spn_labelEnable="true"
-            app:spn_labelTextColor="@color/defaultGrayTitleColor"
-            app:spn_labelTextSize="16sp"
-            app:spn_popupItemAnimation="@null" />
+            android:layout_margin="20dp"
+            />
 
-        <ImageView
-            android:id="@+id/divider"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/divider" />
-
-        <com.rey.material.widget.Spinner
+        <android.support.v7.widget.AppCompatSpinner
             android:id="@+id/level_spinner"
-            style="@style/Material.Widget.Spinner"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="10dp"
+            android:layout_height="match_parent"
             android:dropDownWidth="150dp"
             android:gravity="center_vertical"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="10dp"
             android:popupBackground="@color/white"
-            app:rd_style="@style/Material.Drawable.Ripple.Wave"
-            app:spn_arrowColor="@android:color/transparent"
-            app:spn_dividerColor="@android:color/transparent"
-            app:spn_label="@string/filter_label"
-            app:spn_labelEnable="true"
-            app:spn_labelTextColor="@color/defaultGrayTitleColor"
-            app:spn_labelTextSize="16sp"
-            app:spn_popupItemAnimation="@null" />
+            />
         <TextView
             android:layout_marginLeft="20dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="20dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="16sp"
