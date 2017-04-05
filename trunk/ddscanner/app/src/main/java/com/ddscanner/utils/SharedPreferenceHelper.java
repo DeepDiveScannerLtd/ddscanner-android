@@ -9,9 +9,11 @@ import android.util.Log;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.entities.BaseUser;
 import com.ddscanner.entities.DiveCenterProfile;
+import com.ddscanner.entities.SealifeShort;
 import com.ddscanner.entities.SignInType;
 import com.ddscanner.entities.User;
 import com.google.gson.Gson;
+import com.google.gson.internal.Streams;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
@@ -48,6 +50,7 @@ public class SharedPreferenceHelper {
     private static final String USER_TOKEN= "USER_TOKEN";
     private static final String IS_MUST_REFRESH_DIVE_SPOT_ACTIVITY = "IS_MUST_REFRESH_DIVE_SPOT_ACTIVITY";
     private static final String USERS_LiST = "USERS_LIST";
+    private static final String SEALIFES_LIST = "sealifes";
 
     private static SharedPreferences prefs;
 
@@ -80,23 +83,6 @@ public class SharedPreferenceHelper {
         Editor editor = prefs.edit();
         editor.putBoolean(IS_USER_APP_ID_RECEIVED, true);
         editor.commit();
-    }
-
-    public boolean isUserAppIdReceived() {
-        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
-        return prefs.getBoolean(IS_USER_APP_ID_RECEIVED, false);
-    }
-
-    public void setPhotolink(String value) {
-        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
-        Editor editor = prefs.edit();
-        editor.putString(PHOTOLINK, value);
-        editor.commit();
-    }
-
-    public String getPhotolink() {
-        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
-        return prefs.getString(PHOTOLINK, "");
     }
 
     public void setCurrents(String value) {
@@ -149,6 +135,26 @@ public class SharedPreferenceHelper {
         return prefs.getString(OBJECT, "");
     }
 
+    public void setSealifesList(ArrayList<SealifeShort> sealifesList) {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        Editor editor = prefs.edit();
+        if (sealifesList == null) {
+            editor.putString(SEALIFES_LIST, "");
+        } else {
+            editor.putString(SEALIFES_LIST, new Gson().toJson(sealifesList));
+        }
+        editor.commit();
+    }
+
+    public ArrayList<SealifeShort> getSealifesList() {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        if (prefs.getString(SEALIFES_LIST, "").isEmpty()) {
+            return null;
+        }
+        Type listType = new TypeToken<ArrayList<SealifeShort>>(){}.getType();
+        return new Gson().fromJson(prefs.getString(SEALIFES_LIST,""), listType);
+    }
+
     public void setGcmId(String appInstanceId) {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         Editor editor = prefs.edit();
@@ -165,23 +171,6 @@ public class SharedPreferenceHelper {
         Editor editor = prefs.edit();
         editor.putBoolean(IS_USER_SIGNED_IN, isUserSignedIn);
         editor.commit();
-    }
-
-    public boolean isFirstLaunch() {
-        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
-        return prefs.getBoolean(IS_FIRST_LAUNCH, true);
-    }
-
-    public void setIsFirstLaunch(boolean isFirstLaunch) {
-        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
-        Editor editor = prefs.edit();
-        editor.putBoolean(IS_FIRST_LAUNCH, isFirstLaunch);
-        editor.commit();
-    }
-
-    public String getGcmId() {
-        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
-        return prefs.getString(PREFERENCES_GCM_ID, "");
     }
 
     public void setToken(String token) {
@@ -249,32 +238,6 @@ public class SharedPreferenceHelper {
         editor.putLong("LASTNOTIF", time);
         editor.commit();
     }
-
-    public long getLastShowingNotificationTime() {
-        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
-        return prefs.getLong("LASTNOTIF", 0);
-    }
-
-    public void setLastShowingActivityTime(long time) {
-        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
-        Editor editor = prefs.edit();
-        editor.putLong("LASTACTIVITY", time);
-        editor.commit();
-    }
-
-    public long getLastShowingActivityTime() {
-        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
-        return prefs.getLong("LASTACTIVITY", 0);
-    }
-
-    public void clear() {
-        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
-        Editor editor = prefs.edit();
-        editor.clear();
-        editor.commit();
-    }
-
-
 
     /*Multi accounts mechanism*/
 

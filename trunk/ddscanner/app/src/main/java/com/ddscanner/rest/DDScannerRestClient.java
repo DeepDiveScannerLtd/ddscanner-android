@@ -269,12 +269,12 @@ public class DDScannerRestClient {
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 
-    public void getDiveSpotsByArea(DiveSpotsRequestMap diveSpotsRequestMap, ResultListener<List<DiveSpotShort>> resultListener) {
+    public void getDiveSpotsByArea(ArrayList<String> sealifes, DiveSpotsRequestMap diveSpotsRequestMap, ResultListener<List<DiveSpotShort>> resultListener) {
         if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
             resultListener.onInternetConnectionClosed();
             return;
         }
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveSpotsByFilter(diveSpotsRequestMap);
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveSpotsByFilter(diveSpotsRequestMap, sealifes);
         call.enqueue(new ResponseEntityCallback<List<DiveSpotShort>>(gson, resultListener) {
             @Override
             void handleResponseString(ResultListener<List<DiveSpotShort>> resultListener, String responseString) {

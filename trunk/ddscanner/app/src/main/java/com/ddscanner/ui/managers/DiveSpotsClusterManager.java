@@ -14,6 +14,7 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.DiveSpotShort;
 import com.ddscanner.entities.DivespotsWrapper;
+import com.ddscanner.entities.SealifeShort;
 import com.ddscanner.entities.request.DiveSpotsRequestMap;
 import com.ddscanner.events.CloseInfoWindowEvent;
 import com.ddscanner.events.FilterChosenEvent;
@@ -464,6 +465,7 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpotShort> imple
     }
 
     private void sendRequest(LatLng northeast, LatLng southwest) {
+        ArrayList<String> sealifesIds = null;
         diveSpotsRequestMap.clear();
         showProgressBar();
         isCanMakeRequest = true;
@@ -479,10 +481,17 @@ public class DiveSpotsClusterManager extends ClusterManager<DiveSpotShort> imple
         if (!TextUtils.isEmpty(DDScannerApplication.getInstance().getSharedPreferenceHelper().getObject())) {
             diveSpotsRequestMap.putObject(DDScannerApplication.getInstance().getSharedPreferenceHelper().getObject());
         }
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getSealifesList() != null) {
+            ArrayList<SealifeShort> sealifeShorts = DDScannerApplication.getInstance().getSharedPreferenceHelper().getSealifesList();
+            sealifesIds = new ArrayList<>();
+            for (SealifeShort sealifeShort : sealifeShorts) {
+                sealifesIds.add(sealifeShort.getId());
+            }
+        }
         for (Map.Entry<String, Object> entry : diveSpotsRequestMap.entrySet()) {
             Log.i(TAG, "get dive spots request parameter: " + entry.getKey() + " " + entry.getValue());
         }
-        DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotsByArea(diveSpotsRequestMap, getDiveSpotsByAreaResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotsByArea(sealifesIds, diveSpotsRequestMap, getDiveSpotsByAreaResultListener);
     }
 
     @Subscribe

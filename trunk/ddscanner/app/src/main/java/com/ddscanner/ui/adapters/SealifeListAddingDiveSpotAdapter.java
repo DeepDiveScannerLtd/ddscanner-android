@@ -21,10 +21,14 @@ import java.util.ArrayList;
 public class SealifeListAddingDiveSpotAdapter extends RecyclerView.Adapter<SealifeListAddingDiveSpotAdapter.SealifeListAddingDivespotViewHolder>{
 
     private Context context;
-    private ArrayList<SealifeShort> sealifes;
+    private ArrayList<SealifeShort> sealifes = new ArrayList<>();
 
     public SealifeListAddingDiveSpotAdapter(ArrayList<SealifeShort> sealifes, Context context) {
         this.sealifes = sealifes;
+        this.context = context;
+    }
+
+    public SealifeListAddingDiveSpotAdapter(Context context) {
         this.context = context;
     }
 
@@ -48,7 +52,6 @@ public class SealifeListAddingDiveSpotAdapter extends RecyclerView.Adapter<Seali
 
     public void add(SealifeShort sealife) {
         if (Helpers.checkIsSealifeAlsoInList(sealifes, sealife.getId())) {
-            Helpers.showToast(context, R.string.sealife_already_added);
             return;
         }
         sealifes.add(sealife);
@@ -70,6 +73,17 @@ public class SealifeListAddingDiveSpotAdapter extends RecyclerView.Adapter<Seali
             return new ArrayList<>();
         }
         return this.sealifes;
+    }
+
+    public ArrayList<String> getSealifesIds() {
+        if (this.sealifes.size() == 0) {
+            return null;
+        }
+        ArrayList<String> ids = new ArrayList<>();
+        for (SealifeShort sealifeShort : this.sealifes) {
+            ids.add(sealifeShort.getId());
+        }
+        return ids;
     }
 
     public class SealifeListAddingDivespotViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

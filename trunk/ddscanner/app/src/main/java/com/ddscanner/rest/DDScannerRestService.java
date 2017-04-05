@@ -193,7 +193,7 @@ public interface DDScannerRestService {
     Call<ResponseBody> getUserAchievements();
 
     @GET("v2_0/divespots.filter")
-    Call<ResponseBody> getDiveSpotsByFilter(@QueryMap Map<String, Object> map);
+    Call<ResponseBody> getDiveSpotsByFilter(@QueryMap Map<String, Object> map, @Query(value = "sealifes[]", encoded = true) List<String> s);
 
     @GET("v2_0/divespot.get")
     Call<ResponseBody> getDiveSpotDetails(@Query("id") String id);
