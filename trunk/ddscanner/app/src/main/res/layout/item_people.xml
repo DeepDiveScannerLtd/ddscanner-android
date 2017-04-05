@@ -62,7 +62,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/user_data"
-        android:layout_toRightOf="@+id/user_avatar"
+        android:layout_toRightOf="@+id/avatar_layout"
         android:scaleType="centerCrop"
         android:src="@drawable/divider" />
 </RelativeLayout>

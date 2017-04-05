@@ -143,6 +143,10 @@ public class NotificationEntity {
                 return ActivityTypes.DIVE_CENTER_INSTRUCTOR_REMOVE;
             case 11:
                 return ActivityTypes.DIVE_CENTER_INSTRUCTOR_ADD;
+            case 12:
+                return ActivityTypes.INSTRUCTOR_LEFT_DIVE_CENTER;
+            case 13:
+                return ActivityTypes.DIVE_SPOT_MAPS_ADDED;
             default:
                 return null;
         }
@@ -174,6 +178,13 @@ public class NotificationEntity {
                     returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_photo_added, user.getName(), String.valueOf(photos.size()), diveSpot.getName(), timeAgo);
                 }
                 return returnedString;
+            case DIVE_SPOT_MAPS_ADDED:
+                if (photos.size() == 1) {
+                    returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_single_map_added, user.getName(), diveSpot.getName(), timeAgo);
+                } else {
+                    returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_maps_added, user.getName(), String.valueOf(photos.size()), diveSpot.getName(), timeAgo);
+                }
+                return returnedString;
             case DIVE_SPOT_CHECKIN:
                 returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_checked_in, user.getName(), diveSpot.getName(), timeAgo);
                 return returnedString;
@@ -193,6 +204,9 @@ public class NotificationEntity {
                 }
                 returnedString = DDScannerApplication.getInstance().getString(R.string.activity_achievement_achieved, user.getName(), achievement.getName(), timeAgo);
                 return  returnedString;
+            case INSTRUCTOR_LEFT_DIVE_CENTER:
+                returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_instructor_left_dive_center, user.getName(), timeAgo);
+                return returnedString;
             default:
                 return "";
         }
@@ -234,6 +248,8 @@ public class NotificationEntity {
         switch (getActivityType()) {
             case DIVE_CENTER_INSTRUCTOR_ADD:
             case DIVE_SPOT_PHOTO_LIKE:
+            case INSTRUCTOR_LEFT_DIVE_CENTER:
+            case DIVE_CENTER_INSTRUCTOR_REMOVE:
                 links.add(userLink);
                 return links;
             case DIVE_SPOT_CHECKIN:
@@ -241,6 +257,7 @@ public class NotificationEntity {
             case DIVE_SPOT_CHANGED:
             case DIVE_SPOT_REVIEW_ADDED:
             case DIVE_SPOT_PHOTOS_ADDED:
+            case DIVE_SPOT_MAPS_ADDED:
                 links.add(userLink);
                 links.add(diveSpotLink);
                 return links;

@@ -57,8 +57,8 @@ public class NeedToLoginFragment extends Fragment implements View.OnClickListene
     private void findViews(View v) {
         titleTextView = (TextView) v.findViewById(R.id.need_to_login_message);
         privacyPolicy = (TextView) v.findViewById(R.id.privacy_policy);
-        fbCustomLogin = (Button) v.findViewById(R.id.fb_custom);
-        googleCustomSignIn = (Button) v.findViewById(R.id.custom_google);
+//        fbCustomLogin = (Button) v.findViewById(R.id.fb_custom);
+//        googleCustomSignIn = (Button) v.findViewById(R.id.custom_google);
     }
 
     @Override

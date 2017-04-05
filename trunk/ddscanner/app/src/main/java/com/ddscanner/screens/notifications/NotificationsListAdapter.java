@@ -22,6 +22,7 @@ import com.ddscanner.screens.reiews.list.ReviewsActivity;
 import com.ddscanner.screens.user.profile.UserProfileActivity;
 import com.ddscanner.utils.Helpers;
 import com.klinker.android.link_builder.LinkBuilder;
+import com.klinker.android.link_builder.LinkConsumableTextView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -136,10 +137,12 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
             case DIVE_SPOT_REVIEW_LIKE:
             case DIVE_CENTER_INSTRUCTOR_ADD:
             case DIVE_CENTER_INSTRUCTOR_REMOVE:
+            case INSTRUCTOR_LEFT_DIVE_CENTER:
                 return VIEW_TYPE_AVATAR_TEXT;
             case DIVE_SPOT_PHOTO_LIKE:
                 return VIEW_TYPE_WITH_PHOTO;
             case DIVE_SPOT_PHOTOS_ADDED:
+            case DIVE_SPOT_MAPS_ADDED:
                 if (notifications.get(position).getPhotos().size() == 1) {
                     return VIEW_TYPE_WITH_PHOTO;
                 }
@@ -151,13 +154,13 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
     private class TextAndPhotoItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private ImageView userAvatar;
-        private TextView notificationText;
+        private LinkConsumableTextView notificationText;
 
         TextAndPhotoItemViewHolder(View view) {
             super(view);
             view.setOnClickListener(this);
             userAvatar = (ImageView) view.findViewById(R.id.user_avatar);
-            notificationText = (TextView) view.findViewById(R.id.notification_text);
+            notificationText = (LinkConsumableTextView) view.findViewById(R.id.notification_text);
 
             userAvatar.setOnClickListener(this);
 
@@ -181,6 +184,11 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
                         case DIVE_SPOT_CHECKIN:
                             DiveSpotDetailsActivity.show(context, notifications.get(getAdapterPosition()).getDiveSpot().getId().toString(), EventsTracker.SpotViewSource.FROM_ACTIVITIES);
                             break;
+                        case INSTRUCTOR_LEFT_DIVE_CENTER:
+                        case DIVE_CENTER_INSTRUCTOR_ADD:
+                        case DIVE_CENTER_INSTRUCTOR_REMOVE:
+                            UserProfileActivity.show(context, notifications.get(getAdapterPosition()).getId(), notifications.get(getAdapterPosition()).getType());
+                        break;
                     }
                     break;
             }
@@ -191,13 +199,13 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
     private class SinglePhotoItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private ImageView userAvatar;
-        private TextView notificationText;
+        private LinkConsumableTextView notificationText;
         private ImageView photo;
 
         SinglePhotoItemViewHolder(View view) {
             super(view);
             userAvatar = (ImageView) view.findViewById(R.id.user_avatar);
-            notificationText = (TextView) view.findViewById(R.id.notification_text);
+            notificationText = (LinkConsumableTextView) view.findViewById(R.id.notification_text);
             photo = (ImageView) view.findViewById(R.id.added_photo);
 
             photo.setOnClickListener(this);
@@ -218,6 +226,7 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
                 default:
                     switch (notifications.get(getAdapterPosition()).getActivityType()) {
                         case DIVE_SPOT_PHOTOS_ADDED:
+                        case DIVE_SPOT_MAPS_ADDED:
                             DiveSpotDetailsActivity.show(context, notifications.get(getAdapterPosition()).getDiveSpot().getId().toString(), EventsTracker.SpotViewSource.FROM_ACTIVITIES);
                             break;
                     }
@@ -228,13 +237,13 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
     private class  PhotosListItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private ImageView userAvatar;
-        private TextView notificationText;
+        private LinkConsumableTextView notificationText;
         private RecyclerView photosList;
 
         PhotosListItemViewHolder(View view) {
             super(view);
             userAvatar = (ImageView) view.findViewById(R.id.user_avatar);
-            notificationText = (TextView) view.findViewById(R.id.notification_text);
+            notificationText = (LinkConsumableTextView) view.findViewById(R.id.notification_text);
             photosList = (RecyclerView) view.findViewById(R.id.photos_list);
             photosList.setLayoutManager(new GridLayoutManager(context, 6));
             photosList.setNestedScrollingEnabled(false);
@@ -252,6 +261,7 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
                 default:
                     switch (notifications.get(getAdapterPosition()).getActivityType()) {
                         case DIVE_SPOT_PHOTOS_ADDED:
+                        case DIVE_SPOT_MAPS_ADDED:
                             DiveSpotDetailsActivity.show(context, notifications.get(getAdapterPosition()).getDiveSpot().getId().toString(), EventsTracker.SpotViewSource.FROM_ACTIVITIES);
                             break;
                     }
