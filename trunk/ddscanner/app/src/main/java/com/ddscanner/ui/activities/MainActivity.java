@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.percent.PercentRelativeLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
@@ -159,7 +160,7 @@ public class MainActivity extends BaseAppCompatActivity
         super.onCreate(savedInstanceState);
         Log.i(TAG, "onCreate");
         isHasInternetConnection = getIntent().getBooleanExtra(Constants.IS_HAS_INTERNET, false);
-        clearFilterSharedPreferences();
+        DDScannerApplication.getInstance().getSharedPreferenceHelper().clearFilters();
         startActivity();
         Log.i(TAG, FirebaseInstanceId.getInstance().getToken());
        // DDScannerApplication.getInstance().getSharedPreferenceHelper().clear();
@@ -373,7 +374,7 @@ public class MainActivity extends BaseAppCompatActivity
                 break;
             case R.id.filter_menu_button:
                 Intent intent = new Intent(MainActivity.this, FilterActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_FILTERS);
                 //        EventsTracker.trackFiltersActivityOpened();
                 break;
             case R.id.change_account:
@@ -397,6 +398,15 @@ public class MainActivity extends BaseAppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
+            case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_FILTERS:
+                if (resultCode == RESULT_OK) {
+                    //TODO change icon
+                    btnFilter.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.mask_d));
+                }
+                if (resultCode == RESULT_CODE_FILTERS_RESETED) {
+                    btnFilter.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_ac_filter));
+                }
+                break;
             case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_PLACE_AUTOCOMPLETE:
                 materialDialog.dismiss();
                 switch (resultCode) {
@@ -753,12 +763,6 @@ public class MainActivity extends BaseAppCompatActivity
             startActivityForResult(intent, ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_LOGIN);
         }
     }
-
-    private void clearFilterSharedPreferences() {
-        DDScannerApplication.getInstance().getSharedPreferenceHelper().setObject("");
-        DDScannerApplication.getInstance().getSharedPreferenceHelper().setLevel("");
-    }
-
 
     @Subscribe
     public void chengeLoginView(SignupLoginButtonClicked event) {

@@ -146,6 +146,12 @@ public class SharedPreferenceHelper {
         editor.commit();
     }
 
+    public void clearFilters() {
+        setObject("");
+        setLevel("");
+        setSealifesList(null);
+    }
+
     public ArrayList<SealifeShort> getSealifesList() {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
         if (prefs.getString(SEALIFES_LIST, "").isEmpty()) {

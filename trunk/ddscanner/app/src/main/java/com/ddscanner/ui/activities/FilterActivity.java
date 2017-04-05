@@ -38,7 +38,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class FilterActivity extends AppCompatActivity implements View.OnClickListener, DialogClosedListener {
+public class FilterActivity extends BaseAppCompatActivity implements View.OnClickListener, DialogClosedListener {
 
     private static final String TAG = FilterActivity.class.getSimpleName();
 
@@ -153,10 +153,12 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
                 startActivityForResult(sealifeIntent, ActivitiesRequestCodes.FILTER_ACTIVITY_PICK_SEALIFE);
                 break;
             case R.id.applyFilters:
+                boolean isFiltersApplied = false;
                 if (objectSpinner.getSelectedItemPosition() == 0) {
                     filterChosedEvent.setObject(null);
                     DDScannerApplication.getInstance().getSharedPreferenceHelper().setObject("");
                 } else {
+                    isFiltersApplied = true;
                     filterChosedEvent.setObject(String.valueOf(objectSpinner.getSelectedItemPosition()));
                     DDScannerApplication.getInstance().getSharedPreferenceHelper().setObject(String.valueOf(objectSpinner.getSelectedItemPosition()));
                 }
@@ -165,6 +167,7 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
                     filterChosedEvent.setLevel(null);
                     DDScannerApplication.getInstance().getSharedPreferenceHelper().setLevel("");
                 } else {
+                    isFiltersApplied = true;
                     filterChosedEvent.setLevel(String.valueOf(levelSpinner.getSelectedItemPosition()));
                     DDScannerApplication.getInstance().getSharedPreferenceHelper().setLevel(String.valueOf(levelSpinner.getSelectedItemPosition()));
                 }
@@ -172,9 +175,15 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
                 if (sealifeListAddingDiveSpotAdapter.getSealifes().size() == 0) {
                     DDScannerApplication.getInstance().getSharedPreferenceHelper().setSealifesList(null);
                 } else {
+                    isFiltersApplied = true;
                     DDScannerApplication.getInstance().getSharedPreferenceHelper().setSealifesList(sealifeListAddingDiveSpotAdapter.getSealifes());
                 }
 
+                if (isFiltersApplied) {
+                    setResult(RESULT_OK);
+                } else {
+                    setResult(RESULT_CODE_FILTERS_RESETED);
+                }
                 DDScannerApplication.bus.post(filterChosedEvent);
                 //   EventsTracker.trackFilterApplyied(Helpers.getMirrorOfHashMap(levelsMap).get(levelSpinner.getSelectedItem().toString()), Helpers.getMirrorOfHashMap(objectsMap).get(objectSpinner.getSelectedItem().toString()));
                 finish();
@@ -196,8 +205,9 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
             case R.id.reset_filters:
                 filterChosedEvent.setLevel(null);
                 filterChosedEvent.setObject(null);
-                clearFilterSharedPrefences();
+                DDScannerApplication.getInstance().getSharedPreferenceHelper().clearFilters();
                 DDScannerApplication.bus.post(filterChosedEvent);
+                setResult(RESULT_CODE_FILTERS_RESETED);
                 finish();
                 return true;
             default:
@@ -209,11 +219,6 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_filter, menu);
         return true;
-    }
-
-    private void clearFilterSharedPrefences() {
-        DDScannerApplication.getInstance().getSharedPreferenceHelper().setObject("");
-        DDScannerApplication.getInstance().getSharedPreferenceHelper().setLevel("");
     }
 
     @Override
