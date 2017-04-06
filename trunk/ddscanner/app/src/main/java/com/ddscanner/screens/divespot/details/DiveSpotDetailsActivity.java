@@ -308,7 +308,11 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
         if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
             isFavorite = binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getFlags().isFavorite();
         }
-        updateMenuItems(menu, isFavorite, binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getFlags().isEditable());
+        if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
+            updateMenuItems(menu, isFavorite, true);
+        } else {
+            updateMenuItems(menu, isFavorite, binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getFlags().isEditable());
+        }
         binding.divePlaceDescription.post(new Runnable() {
             @Override
             public void run() {
