@@ -459,6 +459,37 @@ public class DDScannerRestClient {
         });
     }
 
+    public void getApproveCount(ResultListener<Integer> resultListener) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getApproveCount();
+        call.enqueue(new ResponseEntityCallback<Integer>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<Integer> resultListener, String responseString) throws JSONException {
+                Integer count = gson.fromJson(responseString, Integer.class);
+                resultListener.onSuccess(count);
+            }
+        });
+    }
+
+    public void getDiveSpotsForApprove(ResultListener<ArrayList<DiveSpotShort>> resultListener) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getDiveSpotsToApprove();
+        call.enqueue(new ResponseEntityCallback<ArrayList<DiveSpotShort>>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<ArrayList<DiveSpotShort>> resultListener, String responseString) throws JSONException {
+                Type listType = new TypeToken<ArrayList<DiveSpotShort>>(){}.getType();
+                ArrayList<DiveSpotShort> diveSpotShorts = gson.fromJson(responseString, listType);
+                resultListener.onSuccess(diveSpotShorts);
+            }
+        });
+    }
+
     public void getReviewPhotos(ResultListener<ArrayList<DiveSpotPhoto>> resultListener, String id) {
         if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
             resultListener.onInternetConnectionClosed();

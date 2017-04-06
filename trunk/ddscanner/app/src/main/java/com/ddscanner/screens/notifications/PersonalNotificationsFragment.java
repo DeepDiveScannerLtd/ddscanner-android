@@ -20,12 +20,15 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.databinding.FragmentPersonalNotificationsBinding;
+import com.ddscanner.entities.DiveSpotListSource;
 import com.ddscanner.entities.NotificationEntity;
 import com.ddscanner.entities.NotificationOld;
 import com.ddscanner.rest.DDScannerRestClient;
+import com.ddscanner.ui.activities.DiveSpotsListActivity;
 import com.ddscanner.ui.activities.MainActivity;
 import com.ddscanner.ui.adapters.SectionedRecyclerViewAdapter;
 import com.ddscanner.utils.Helpers;
+import com.ddscanner.utils.SharedPreferenceHelper;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -34,7 +37,7 @@ import java.util.List;
 /**
  * Created by lashket on 25.5.16.
  */
-public class PersonalNotificationsFragment extends Fragment {
+public class PersonalNotificationsFragment extends Fragment implements View.OnClickListener {
 
     private static final String TAG = PersonalNotificationsFragment.class.getName();
 
@@ -45,8 +48,39 @@ public class PersonalNotificationsFragment extends Fragment {
     private NotificationsListAdapter notificationsListAdapter;
     private LinearLayoutManager linearLayoutManager;
     private boolean isLoading = false;
+    private boolean isApprovedLoaded = false;
+    private boolean isNotificationsLoaded = false;
+
     private NotificationResultListener paginationResultListener = new NotificationResultListener(true);
     private NotificationResultListener simpleResultListener = new  NotificationResultListener(false);
+
+    private DDScannerRestClient.ResultListener<Integer> resultListener = new DDScannerRestClient.ResultListener<Integer>() {
+        @Override
+        public void onSuccess(Integer result) {
+            if (result > 0) {
+                isApprovedLoaded = true;
+                binding.approveCount.setText(DDScannerApplication.getInstance().getString(R.string.approve_count_pattern, result.toString()));
+                if (isNotificationsLoaded) {
+                    binding.approveLayout.setVisibility(View.VISIBLE);
+                }
+            }
+        }
+
+        @Override
+        public void onConnectionFailure() {
+
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+
+        }
+
+        @Override
+        public void onInternetConnectionClosed() {
+
+        }
+    };
 
     private FragmentPersonalNotificationsBinding binding;
 
@@ -71,7 +105,17 @@ public class PersonalNotificationsFragment extends Fragment {
         }
         notificationsListAdapter = new NotificationsListAdapter(getActivity(), true);
         binding.activityRc.setAdapter(notificationsListAdapter);
+        binding.approveLayout.setOnClickListener(this);
         return binding.getRoot();
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.approve_layout:
+                DiveSpotsListActivity.show(getContext(), DiveSpotListSource.APPROVE, "");
+                break;
+        }
     }
 
     @TargetApi(23)
@@ -142,6 +186,9 @@ public class PersonalNotificationsFragment extends Fragment {
     }
 
     public void loadNotifications() {
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType().equals(SharedPreferenceHelper.UserType.DIVECENTER)) {
+            DDScannerApplication.getInstance().getDdScannerRestClient().getApproveCount(resultListener);
+        }
         DDScannerApplication.getInstance().getDdScannerRestClient().getPersonalNotifications(simpleResultListener, null);
     }
 
@@ -157,10 +204,14 @@ public class PersonalNotificationsFragment extends Fragment {
         public void onSuccess(ArrayList<NotificationEntity> result) {
             isLoading = false;
             activities = result;
+            isNotificationsLoaded = true;
             if (binding != null) {
                 binding.progressBarPagination.setVisibility(View.GONE);
                 binding.progressBar.setVisibility(View.GONE);
                 binding.activityRc.setVisibility(View.VISIBLE);
+                if (isApprovedLoaded) {
+                    binding.approveLayout.setVisibility(View.VISIBLE);
+                }
                 if (activities == null || activities.size() == 0) {
                     binding.activityRc.setVisibility(View.GONE);
                     binding.noNotifsView.setVisibility(View.VISIBLE);
@@ -171,6 +222,7 @@ public class PersonalNotificationsFragment extends Fragment {
                 } else {
                     if (result.size() > 0 && !result.get(0).getId().equals(notificationsListAdapter.getFirstNotificationId())) {
                         notificationsListAdapter.setNotifications(result);
+                        binding.scrollView.scrollTo(0,0);
                     }
                 }
             }

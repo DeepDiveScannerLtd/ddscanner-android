@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:visibility="gone"
+    android:id="@+id/approve_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <RelativeLayout
+        android:layout_margin="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:background="@drawable/approve_count_background">
+
+        <TextView
+            android:layout_centerVertical="true"
+            android:id="@+id/new_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/new_spots"
+            android:textColor="#e74b1a"
+            android:textStyle="bold"
+            android:textSize="10sp"
+            android:layout_marginLeft="10dp"
+            />
+
+        <TextView
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/new_view"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/approve_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="#616161"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_arrow_notif"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"/>
+
+    </RelativeLayout>
+
+    <ImageView
+        android:layout_alignParentBottom="true"
+        style="@style/DividerStyleFull" />
+
+</RelativeLayout>

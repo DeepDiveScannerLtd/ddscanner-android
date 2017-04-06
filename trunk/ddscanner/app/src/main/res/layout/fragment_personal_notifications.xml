@@ -1,46 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <RelativeLayout
+
+    <ScrollView
+        android:id="@+id/scroll_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:background="#fbfbfb">
+        android:layout_height="wrap_content">
 
-        <include
-            android:id="@+id/no_notifs_view"
-            layout="@layout/view_no_notifications"
-            android:visibility="gone" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#fbfbfb"
+            android:orientation="vertical">
 
-        <com.rey.material.widget.ProgressView
-            android:id="@+id/progress_bar"
-            android:layout_width="match_parent"
-            android:layout_height="25dp"
-            android:layout_marginTop="50dp"
-            app:pv_autostart="true"
-            app:pv_circular="true"
-            app:pv_progressMode="indeterminate"
-            app:pv_progressStyle="@style/CircularProgress" />
+            <include
+                android:id="@+id/no_notifs_view"
+                layout="@layout/view_no_notifications"
+                android:visibility="gone" />
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/activity_rc"
-            android:layout_above="@+id/progress_bar_pagination"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scrollbars="vertical"
-            android:visibility="gone" />
-        <com.rey.material.widget.ProgressView
-            android:id="@+id/progress_bar_pagination"
-            android:layout_width="match_parent"
-            android:layout_height="25dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:layout_alignParentBottom="true"
-            app:pv_autostart="true"
-            app:pv_circular="true"
-            app:pv_progressMode="indeterminate"
-            android:visibility="gone"
-            app:cpd_strokeSize="10dp"
-            app:pv_progressStyle="@style/CircularProgress" />
-    </RelativeLayout>
-    </layout>
+            <com.rey.material.widget.ProgressView
+                android:id="@+id/progress_bar"
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:layout_marginTop="50dp"
+                app:pv_autostart="true"
+                app:pv_circular="true"
+                app:pv_progressMode="indeterminate"
+                app:pv_progressStyle="@style/CircularProgress" />
+
+            <RelativeLayout
+                android:id="@+id/approve_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:layout_margin="15dp"
+                    android:background="@drawable/approve_count_background">
+
+                    <TextView
+                        android:id="@+id/new_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="10dp"
+                        android:text="@string/new_spots"
+                        android:textColor="#e74b1a"
+                        android:textSize="10sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/approve_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="10dp"
+                        android:layout_toRightOf="@+id/new_view"
+                        android:textColor="#616161"
+                        android:textSize="12sp" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="10dp"
+                        android:src="@drawable/ic_arrow_notif" />
+
+                </RelativeLayout>
+
+                <ImageView
+                    style="@style/DividerStyleFull"
+                    android:layout_alignParentBottom="true" />
+
+            </RelativeLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:layout_below="@+id/approve_layout"
+                android:id="@+id/activity_rc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/progress_bar_pagination"
+                android:scrollbars="vertical"
+                android:visibility="gone" />
+
+            <com.rey.material.widget.ProgressView
+                android:id="@+id/progress_bar_pagination"
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:visibility="gone"
+                app:cpd_strokeSize="10dp"
+                app:pv_autostart="true"
+                app:pv_circular="true"
+                app:pv_progressMode="indeterminate"
+                app:pv_progressStyle="@style/CircularProgress" />
+        </RelativeLayout>
+    </ScrollView>
+</layout>

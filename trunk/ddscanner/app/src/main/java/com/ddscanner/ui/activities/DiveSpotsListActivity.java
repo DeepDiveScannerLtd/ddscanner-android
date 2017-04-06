@@ -41,7 +41,7 @@ public class DiveSpotsListActivity extends AppCompatActivity implements DialogCl
     private DiveSpotListSource diveSpotListSource;
     private String userId;
 
-    private DDScannerRestClient.ResultListener<ArrayList<DiveSpotShort>> divespotsWrapperResultListener = new DDScannerRestClient.ResultListener<ArrayList<DiveSpotShort>>() {
+    private DDScannerRestClient.ResultListener<ArrayList<DiveSpotShort>> divespotsListResultListener = new DDScannerRestClient.ResultListener<ArrayList<DiveSpotShort>>() {
 
         @Override
         public void onSuccess(ArrayList<DiveSpotShort> result) {
@@ -76,16 +76,19 @@ public class DiveSpotsListActivity extends AppCompatActivity implements DialogCl
         diveSpotListSource = (DiveSpotListSource) getIntent().getSerializableExtra("source");
         switch (diveSpotListSource) {
             case ADDED:
-                DDScannerApplication.getInstance().getDdScannerRestClient().getAddedDiveSpots(divespotsWrapperResultListener, userId);
+                DDScannerApplication.getInstance().getDdScannerRestClient().getAddedDiveSpots(divespotsListResultListener, userId);
                 break;
             case EDITED:
-                DDScannerApplication.getInstance().getDdScannerRestClient().getEditedDiveSpots(divespotsWrapperResultListener, userId);
+                DDScannerApplication.getInstance().getDdScannerRestClient().getEditedDiveSpots(divespotsListResultListener, userId);
                 break;
             case FAVORITES:
-                DDScannerApplication.getInstance().getDdScannerRestClient().getUsersFavourites(divespotsWrapperResultListener, userId);
+                DDScannerApplication.getInstance().getDdScannerRestClient().getUsersFavourites(divespotsListResultListener, userId);
                 break;
             case CHECKINS:
-                DDScannerApplication.getInstance().getDdScannerRestClient().getUsersCheckins(divespotsWrapperResultListener, userId);
+                DDScannerApplication.getInstance().getDdScannerRestClient().getUsersCheckins(divespotsListResultListener, userId);
+                break;
+            case APPROVE:
+                DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotsForApprove(divespotsListResultListener);
                 break;
         }
         findViews();
@@ -99,16 +102,19 @@ public class DiveSpotsListActivity extends AppCompatActivity implements DialogCl
                 if (resultCode == RESULT_OK) {
                     switch (diveSpotListSource) {
                         case ADDED:
-                            DDScannerApplication.getInstance().getDdScannerRestClient().getAddedDiveSpots(divespotsWrapperResultListener, userId);
+                            DDScannerApplication.getInstance().getDdScannerRestClient().getAddedDiveSpots(divespotsListResultListener, userId);
                             break;
                         case EDITED:
-                            DDScannerApplication.getInstance().getDdScannerRestClient().getEditedDiveSpots(divespotsWrapperResultListener, userId);
+                            DDScannerApplication.getInstance().getDdScannerRestClient().getEditedDiveSpots(divespotsListResultListener, userId);
                             break;
                         case FAVORITES:
-                            DDScannerApplication.getInstance().getDdScannerRestClient().getUsersFavourites(divespotsWrapperResultListener, userId);
+                            DDScannerApplication.getInstance().getDdScannerRestClient().getUsersFavourites(divespotsListResultListener, userId);
                             break;
                         case CHECKINS:
-                            DDScannerApplication.getInstance().getDdScannerRestClient().getUsersCheckins(divespotsWrapperResultListener, userId);
+                            DDScannerApplication.getInstance().getDdScannerRestClient().getUsersCheckins(divespotsListResultListener, userId);
+                            break;
+                        case APPROVE:
+                            DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotsForApprove(divespotsListResultListener);
                             break;
                     }
                     if (resultCode == RESULT_CANCELED) {
@@ -139,6 +145,8 @@ public class DiveSpotsListActivity extends AppCompatActivity implements DialogCl
             case FAVORITES:
                 title =getString(R.string.favorites);
                 break;
+            case APPROVE:
+                title = getString(R.string.dive_spot_approve);
         }
         getSupportActionBar().setTitle(title);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);

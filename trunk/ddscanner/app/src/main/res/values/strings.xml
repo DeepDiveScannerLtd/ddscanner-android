@@ -486,4 +486,7 @@
     <string name="popup_address_error">All the fields are required. Fill in the information and choose your location for users to see you on the map</string>
     <string name="dive_spot_is_required">Dive spots is required</string>
     <string name="name_is_required_edit_dc">Name is required</string>
+    <string name="new_spots">NEW!</string>
+    <string name="approve_count_pattern">%1$s new dive spots have to be approved</string>
+    <string name="dive_spot_approve">Dive spots</string>
 </resources>

@@ -478,4 +478,9 @@ public interface DDScannerRestService {
     @GET("v2_0/user.notification.photos.get")
     Call<ResponseBody> getNotificationPhotos(@Query("id") String id, @Query("include_photo_details") int value);
 
+    @GET("v2_0/divecenter.divespots.to_approve.count.get")
+    Call<ResponseBody> getApproveCount();
+
+    @GET("v2_0/divecenter.divespots.to_approve.get")
+    Call<ResponseBody> getDiveSpotsToApprove();
 }
