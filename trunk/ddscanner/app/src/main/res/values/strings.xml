@@ -410,7 +410,7 @@
     <string name="activity_type_maps_added">%1$s added %2$s maps to %3$s. %4$s</string>
     <string name="activity_type_single_map_added">%1$s added a map to %2$s. %3$s</string>
 
-    <string name="activity_type_review_liked">%1$s liked your review %2$s</string>
+    <string name="activity_type_review_liked">%1$s liked your review %2$s %3$s</string>
     <string name="activity_achievement_achieved">%1$s got the title of %2$s. %3$s</string>
     <string name="activity_type_review_disliked">%1$s disliked your review %2$s %3$s</string>
     <string name="activity_type_self_achievement_achieved">Congrats! You’ve got the title of %1$s! Stay active and improve your profile! %2$s</string>

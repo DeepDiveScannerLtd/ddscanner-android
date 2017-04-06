@@ -192,7 +192,7 @@ public class NotificationEntity {
                 returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_left_dive_center, user.getName(), timeAgo);
                 return returnedString;
             case DIVE_SPOT_REVIEW_LIKE:
-                returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_review_liked, user.getName(), cropString(review.getReview()));
+                returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_review_liked, user.getName(), cropString(review.getReview()), timeAgo);
                 return returnedString;
             case DIVE_SPOT_REVIEW_DISLIKE:
                 returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_review_disliked, user.getName(), cropString(review.getReview()), timeAgo);
