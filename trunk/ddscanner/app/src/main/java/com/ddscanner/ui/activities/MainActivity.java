@@ -401,7 +401,7 @@ public class MainActivity extends BaseAppCompatActivity
             case ActivitiesRequestCodes.REQUEST_CODE_MAIN_ACTIVITY_FILTERS:
                 if (resultCode == RESULT_OK) {
                     //TODO change icon
-                    btnFilter.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.mask_d));
+                    btnFilter.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_ac_filter_full));
                 }
                 if (resultCode == RESULT_CODE_FILTERS_RESETED) {
                     btnFilter.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_ac_filter));
