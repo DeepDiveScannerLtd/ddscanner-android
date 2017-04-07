@@ -53,14 +53,6 @@ public class SplashActivity extends BaseAppCompatActivity implements DialogClose
         setContentView(R.layout.activity_splash);
         activityShowTimestamp = System.currentTimeMillis();
 
-        Log.i(TAG, "Current ocale - " + Locale.getDefault().getISO3Language());
-        Log.i(TAG, "Current ocale - " + Locale.getDefault().getCountry());
-        Log.i(TAG, "Current ocale - " + Locale.getDefault().getLanguage());
-        Log.i(TAG, "Current ocale - " + Locale.getDefault().getDisplayLanguage());
-        Log.i(TAG, "Current ocale - " + Locale.getDefault().getDisplayName());
-        Log.i(TAG, "Current ocale - " + Locale.getDefault().toString());
-        Log.i(TAG, "Current ocale - " + Locale.getISOLanguages()[0]);
-
         progressMessage = (TextView) findViewById(R.id.message);
         skip = (TextView) findViewById(R.id.skip);
         loginButton = (Button) findViewById(R.id.login);
