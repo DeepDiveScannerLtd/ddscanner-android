@@ -330,6 +330,7 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
         DDScannerApplication.getInstance().getDdScannerRestClient().getDiveSpotMaps(String.valueOf(diveSpotDetailsEntity.getId()), mapsResultListener);
         isFromMap = getIntent().getBooleanExtra(Constants.ADD_DIVE_SPOT_INTENT_IS_FROM_MAP, false);
         languages.add("Language");
+        setupToolbar(R.string.edit_dive_spot, R.id.toolbar);
         findViewsAndSetupCurrentData(diveSpotDetailsEntity);
         makeErrorsMap();
         init();
@@ -414,9 +415,9 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
         isWorkingSwitch.setOnCheckedChangeListener(this);
 //        diveSpotDetailsEntity.setPhotos(userPhotosIds);
 //        diveSpotDetailsEntity.setMaps(userMapsIds);
-        requsetCountryCode = Helpers.createRequestBodyForString(diveSpotDetailsEntity.getCountryCode());
+        requsetCountryCode = Helpers.createRequestBodyForString(diveSpotDetailsEntity.getCountry().getCode());
         countryTitle.setTextColor(ContextCompat.getColor(this, R.color.black_text));
-        countryTitle.setText(diveSpotDetailsEntity.getCountryName());
+        countryTitle.setText(diveSpotDetailsEntity.getCountry().getName());
         photosListAdapter.addServerPhoto(userPhotosIds);
         mapsListAdapter.addServerPhoto(userMapsIds);
         if (diveSpotDetailsEntity.getMaps() != null) {
@@ -454,11 +455,7 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
         sealifesRc.setAdapter(sealifeListAddingDiveSpotAdapter);
 
         /*Toolbar settings*/
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(R.string.edit_dive_spot);
-
+    
         progressDialog.setCancelable(false);
         progressView.setVisibility(View.GONE);
         mainLayout.setVisibility(View.VISIBLE);

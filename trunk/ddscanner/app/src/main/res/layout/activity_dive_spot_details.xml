@@ -453,7 +453,7 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_below="@+id/country_title"
-                                        android:text="@{diveSpotViewModel.diveSpotDetailsEntity.countryName}"
+                                        android:text="@{diveSpotViewModel.diveSpotDetailsEntity.country.name}"
                                         tools:text="wall" />
                                 </RelativeLayout>
                             </RelativeLayout>

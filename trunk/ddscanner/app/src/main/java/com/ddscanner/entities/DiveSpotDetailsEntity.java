@@ -26,20 +26,33 @@ public class DiveSpotDetailsEntity extends DiveSpotShort {
     private FlagsEntity flags;
     @SerializedName("checkins_count")
     private int checkinCount;
-    @SerializedName("country_name")
-    private String countryName;
     private List<SealifeShort> sealifes;
     private List<String> maps;
     @SerializedName("photos_count")
     private int photosCount;
     @SerializedName("maps_count")
     private int mapsPhotosCount;
-    @SerializedName("country_code")
-    private String countryCode;
     @SerializedName("is_edit")
     private Boolean isEdit;
     @SerializedName("cover_id")
     private String coverPhotoId;
+    private CountryEntity country;
+
+    public Boolean getEdit() {
+        return isEdit;
+    }
+
+    public void setEdit(Boolean edit) {
+        isEdit = edit;
+    }
+
+    public CountryEntity getCountry() {
+        return country;
+    }
+
+    public void setCountry(CountryEntity country) {
+        this.country = country;
+    }
 
     public String getCoverPhotoId() {
         return coverPhotoId;
@@ -58,14 +71,6 @@ public class DiveSpotDetailsEntity extends DiveSpotShort {
 
     public void setEdit(boolean edit) {
         isEdit = edit;
-    }
-
-    public String getCountryCode() {
-        return countryCode;
-    }
-
-    public void setCountryCode(String countryCode) {
-        this.countryCode = countryCode;
     }
 
     public int getMapsPhotosCount() {
@@ -98,14 +103,6 @@ public class DiveSpotDetailsEntity extends DiveSpotShort {
 
     public void setSealifes(List<SealifeShort> sealifes) {
         this.sealifes = sealifes;
-    }
-
-    public String getCountryName() {
-        return countryName;
-    }
-
-    public void setCountryName(String countryName) {
-        this.countryName = countryName;
     }
 
     public int getCheckinCount() {

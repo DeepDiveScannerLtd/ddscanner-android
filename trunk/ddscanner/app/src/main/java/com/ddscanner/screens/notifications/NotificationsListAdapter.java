@@ -80,7 +80,11 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
                     loadUserPhoto(notification.getUser().getPhoto(), textAndPhotoItemViewHolder.userAvatar);
                 }
                 if (notifications.get(position).getLinks() != null) {
-                    LinkBuilder.on(textAndPhotoItemViewHolder.notificationText).addLinks(notification.getLinks()).build();
+                    try {
+                        LinkBuilder.on(textAndPhotoItemViewHolder.notificationText).addLinks(notification.getLinks()).build();
+                    } catch (Exception e) {
+
+                    }
                 }
                 break;
             case VIEW_TYPE_WITH_PHOTO:
@@ -117,7 +121,7 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
     }
 
     private void loadUserPhoto(String photoId, ImageView view) {
-        Picasso.with(context).load(context.getString(R.string.base_photo_url, photoId, "1")).placeholder(R.drawable.gray_circle_placeholder).error(R.drawable.avatar_profile_default).resize(Math.round(Helpers.convertDpToPixel(36, context)), Math.round(Helpers.convertDpToPixel(36, context))).centerCrop().transform(new CropCircleTransformation()).into(view);
+        Picasso.with(context).load(context.getString(R.string.base_photo_url, photoId, "1")).placeholder(R.drawable.gray_circle_placeholder).error(R.drawable.review_default_avatar).resize(Math.round(Helpers.convertDpToPixel(36, context)), Math.round(Helpers.convertDpToPixel(36, context))).centerCrop().transform(new CropCircleTransformation()).into(view);
     }
 
     @Override
