@@ -455,7 +455,7 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
         sealifesRc.setAdapter(sealifeListAddingDiveSpotAdapter);
 
         /*Toolbar settings*/
-    
+
         progressDialog.setCancelable(false);
         progressView.setVisibility(View.GONE);
         mainLayout.setVisibility(View.VISIBLE);

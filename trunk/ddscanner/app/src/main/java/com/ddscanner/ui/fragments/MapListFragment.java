@@ -416,7 +416,7 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
         addDsFab.animate().translationY(0);
         mapListFAB.animate().translationY(0);
         diveSpotInfo.animate()
-                .translationY(diveSpotInfo.getHeight())
+                .translationY(diveSpotInfoHeight)
                 .alpha(0.0f)
                 .setDuration(300)
                 .setListener(new AnimatorListenerAdapter() {

@@ -30,6 +30,7 @@ import com.ddscanner.events.DiveCenterMarkerClickEvent;
 import com.ddscanner.events.LocationReadyEvent;
 import com.ddscanner.events.OnMapClickEvent;
 import com.ddscanner.rest.DDScannerRestClient;
+import com.ddscanner.screens.user.profile.UserProfileActivity;
 import com.ddscanner.ui.adapters.DiveCentersListAdapter;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.ui.managers.DiveCentersClusterManager;
@@ -93,6 +94,7 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
     private Marker lastClickedMarker;
     private Marker diveSpotMarker;
     private String logoPath;
+    private int infoWindowHeight;
 
     private DDScannerRestClient.ResultListener<ArrayList<DiveCenter>> diveCentersResponseEntityResultListener = new DDScannerRestClient.ResultListener<ArrayList<DiveCenter>>() {
         @Override
@@ -130,6 +132,7 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
         diveSpotId = getIntent().getStringExtra("id");
         diveSpotLatLng = getIntent().getParcelableExtra("LATLNG");
         diveSpotName = getIntent().getStringExtra("NAME");
+        infoWindowHeight = Math.round(Helpers.convertDpToPixel(110, this));
         toggleMapListView();
 
         DDScannerApplication.getInstance().getDdScannerRestClient().getDiveCenters(diveSpotId, diveCentersResponseEntityResultListener);
@@ -235,7 +238,8 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
                 //  baseAppCompatActivity.getLocation();
                 break;
             case R.id.dive_spot_info_layout:
-                DiveCenterDetailsActivity.show(this, diveCenter, path, EventsTracker.SpotViewSource.FROM_MAP);
+                UserProfileActivity.show(this, diveCenter.getId(), 0);
+//                DiveCenterDetailsActivity.show(this, diveCenter, path, EventsTracker.SpotViewSource.FROM_MAP);
                 break;
         }
     }
@@ -299,7 +303,7 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
         }
         if (lastClickedMarker != null) {
             try {
-                lastClickedMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.pin_dc));
+                lastClickedMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_dc));
             } catch (IllegalStateException e) {
 
             } catch (IllegalArgumentException e) {
@@ -398,7 +402,7 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
     public void hideDiveCenterInfo(OnMapClickEvent event) {
         if (event.getMarker() != null) {
             try {
-                event.getMarker().setIcon(BitmapDescriptorFactory.fromResource(R.drawable.pin_dc));
+                event.getMarker().setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_dc));
             } catch (NullPointerException e) {
 
             } catch (IllegalArgumentException e) {
@@ -408,7 +412,7 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
         mapControlLayout.animate().translationY(0);
         mapListFAB.animate().translationY(0);
         diveCenterInfo.animate()
-                .translationY(diveCenterInfo.getHeight())
+                .translationY(infoWindowHeight)
                 .alpha(0.0f)
                 .setDuration(300)
                 .setListener(new AnimatorListenerAdapter() {
@@ -425,8 +429,8 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
     public void getdiveCenterInfow(DiveCenterMarkerClickEvent event) {
         path = event.getPath();
         diveCenter = event.getDiveCenter();
-        mapControlLayout.animate().translationY(-diveCenterInfo.getHeight());
-        mapListFAB.animate().translationY(-diveCenterInfo.getHeight());
+        mapControlLayout.animate().translationY(-infoWindowHeight);
+        mapListFAB.animate().translationY(-infoWindowHeight);
         diveCenterInfo.animate()
                 .translationY(0)
                 .alpha(1.0f)

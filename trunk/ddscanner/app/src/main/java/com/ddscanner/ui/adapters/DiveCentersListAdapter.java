@@ -15,6 +15,7 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.DiveCenter;
+import com.ddscanner.screens.user.profile.UserProfileActivity;
 import com.ddscanner.ui.activities.DiveCenterDetailsActivity;
 import com.squareup.picasso.Picasso;
 
@@ -115,7 +116,8 @@ public class DiveCentersListAdapter extends RecyclerView.Adapter<DiveCentersList
 
         @Override
         public void onClick(View v) {
-            DiveCenterDetailsActivity.show(context, diveCenters.get(getAdapterPosition()), DiveCentersListAdapter.this.getLogopath(), EventsTracker.SpotViewSource.FROM_LIST);
+            UserProfileActivity.show(context, diveCenters.get(getAdapterPosition()).getId(), 0);
+//            DiveCenterDetailsActivity.show(context, diveCenters.get(getAdapterPosition()), DiveCentersListAdapter.this.getLogopath(), EventsTracker.SpotViewSource.FROM_LIST);
         }
 
     }
