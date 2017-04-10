@@ -151,7 +151,7 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
     private FiltersResponseEntity filters;
     private boolean isShownMapsPhotos = false;
 
-    private RequestBody requestIsWorkingHere, requestIsEdit, translations, requestCoverNumber, requestCoverId, requestLat, requestLng, requestDepth, requestCurrents, requestLevel, requestObject, requestMinVisibility, requestMaxVisibility, requsetCountryCode, requestId;
+    private RequestBody requestIsWorkingHere, requestIsEdit = null, translations, requestCoverNumber, requestCoverId, requestLat, requestLng, requestDepth, requestCurrents, requestLevel, requestObject, requestMinVisibility, requestMaxVisibility, requsetCountryCode, requestId;
     private List<MultipartBody.Part> sealife = new ArrayList<>();
     private List<MultipartBody.Part> newImages = new ArrayList<>();
     private List<MultipartBody.Part> deletedImages = new ArrayList<>();
@@ -599,7 +599,7 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
                 }
             } else {
                 requestIsWorkingHere = Helpers.createRequestBodyForString("0");
-                requestIsEdit = Helpers.createRequestBodyForString("1");
+//                requestIsEdit = Helpers.createRequestBodyForString("1");
             }
         }
         if (photosListAdapter.getServerPhotoCoverId() != null) {

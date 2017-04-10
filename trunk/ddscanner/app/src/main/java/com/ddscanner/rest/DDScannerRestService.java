@@ -1,10 +1,9 @@
 package com.ddscanner.rest;
 
 
-import com.ddscanner.entities.Translation;
 import com.ddscanner.entities.request.DeleteImageRequest;
-import com.ddscanner.entities.request.IdentifyRequest;
 import com.ddscanner.entities.request.InstructorsSeeRequests;
+import com.ddscanner.entities.request.NotificationsReadRequest;
 import com.ddscanner.entities.request.RegisterRequest;
 import com.ddscanner.entities.request.ReportImageRequest;
 import com.ddscanner.entities.request.ReportRequest;
@@ -13,7 +12,6 @@ import com.ddscanner.entities.request.SignUpRequest;
 import com.ddscanner.entities.request.UpdateLocationRequest;
 import com.ddscanner.entities.request.ValidationRequest;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -24,7 +22,6 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
-import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
@@ -483,4 +480,11 @@ public interface DDScannerRestService {
 
     @GET("v2_0/divecenter.divespots.to_approve.get")
     Call<ResponseBody> getDiveSpotsToApprove();
+
+    @GET("v2_0/user.notifications.new.count.get")
+    Call<ResponseBody> getNewNotificationsCount();
+
+    @POST("v2_0/user.notifications.read")
+    Call<ResponseBody> postNotificationsRead(@Body NotificationsReadRequest notifictionsReadedRequest);
+
 }

@@ -75,6 +75,9 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         NotificationEntity notification = notifications.get(position);
+        if (notification.isNew()) {
+            DDScannerApplication.getInstance().addNotificationToList(notification.getId());
+        }
         switch (getItemViewType(position)) {
             case VIEW_TYPE_AVATAR_TEXT:
                 TextAndPhotoItemViewHolder textAndPhotoItemViewHolder = (TextAndPhotoItemViewHolder) holder;

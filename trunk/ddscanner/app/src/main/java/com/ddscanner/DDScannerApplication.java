@@ -15,6 +15,7 @@ import com.ddscanner.utils.SharedPreferenceHelper;
 import com.facebook.FacebookSdk;
 import com.squareup.otto.Bus;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
 import io.fabric.sdk.android.Fabric;
@@ -34,6 +35,7 @@ public class DDScannerApplication extends Application {
     private DDScannerRestClient ddScannerRestClient;
     private SharedPreferenceHelper sharedPreferenceHelper;
     private DiveSpotPhotosContainer diveSpotPhotosContainer = new DiveSpotPhotosContainer();
+    private ArrayList<String> notificationsContainer = new ArrayList<>();
 
     private static DDScannerApplication instance;
 
@@ -91,4 +93,17 @@ public class DDScannerApplication extends Application {
     public DiveSpotPhotosContainer getDiveSpotPhotosContainer() {
         return diveSpotPhotosContainer;
     }
+
+    public ArrayList<String> getNotificationsContainer() {
+        return notificationsContainer;
+    }
+
+    public void addNotificationToList(String id) {
+        notificationsContainer.add(id);
+    }
+
+    public void clearNotificationsContainer() {
+        this.notificationsContainer.clear();
+    }
+
 }

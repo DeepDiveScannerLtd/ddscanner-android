@@ -11,7 +11,6 @@ import com.ddscanner.entities.CommentEntity;
 import com.ddscanner.entities.Comments;
 import com.ddscanner.entities.DiveCenter;
 import com.ddscanner.entities.DiveCenterProfile;
-import com.ddscanner.entities.DiveCentersResponseEntity;
 import com.ddscanner.entities.DiveSpotDetailsEntity;
 import com.ddscanner.entities.DiveSpotPhoto;
 import com.ddscanner.entities.DiveSpotPhotosResponseEntity;
@@ -24,6 +23,7 @@ import com.ddscanner.entities.Instructor;
 import com.ddscanner.entities.Language;
 import com.ddscanner.entities.LikeEntity;
 import com.ddscanner.entities.NotificationEntity;
+import com.ddscanner.entities.NotificationsCountEntity;
 import com.ddscanner.entities.NotificationsResonseEntity;
 import com.ddscanner.entities.Sealife;
 import com.ddscanner.entities.SealifeListResponseEntity;
@@ -36,6 +36,7 @@ import com.ddscanner.entities.User;
 import com.ddscanner.entities.request.DeleteImageRequest;
 import com.ddscanner.entities.request.DiveSpotsRequestMap;
 import com.ddscanner.entities.request.InstructorsSeeRequests;
+import com.ddscanner.entities.request.NotificationsReadRequest;
 import com.ddscanner.entities.request.RegisterRequest;
 import com.ddscanner.entities.request.ReportImageRequest;
 import com.ddscanner.entities.request.ReportRequest;
@@ -377,6 +378,12 @@ public class DDScannerRestClient {
         }
         InstructorsSeeRequests instructorsSeeRequests = new InstructorsSeeRequests(ids);
         Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postInstructorsSees(instructorsSeeRequests);
+        call.enqueue(new NoResponseEntityCallback(gson, resultListener));
+    }
+
+    public void postNotificationsRead(ResultListener<Void> resultListener, ArrayList<String> id) {
+        NotificationsReadRequest request = new NotificationsReadRequest(id);
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().postNotificationsRead(request);
         call.enqueue(new NoResponseEntityCallback(gson, resultListener));
     }
 
@@ -1063,6 +1070,21 @@ public class DDScannerRestClient {
             void handleResponseString(ResultListener<Sealife> resultListener, String responseString) throws JSONException {
                 Sealife sealife = gson.fromJson(responseString, Sealife.class);
                 resultListener.onSuccess(sealife);
+            }
+        });
+    }
+
+    public void getNewNotificationsCount(ResultListener<NotificationsCountEntity> resultListener) {
+        if (!Helpers.hasConnection(DDScannerApplication.getInstance())) {
+            resultListener.onInternetConnectionClosed();
+            return;
+        }
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().getNewNotificationsCount();
+        call.enqueue(new ResponseEntityCallback<NotificationsCountEntity>(gson, resultListener) {
+            @Override
+            void handleResponseString(ResultListener<NotificationsCountEntity> resultListener, String responseString) throws JSONException {
+                NotificationsCountEntity notificationsCountEntity = gson.fromJson(responseString, NotificationsCountEntity.class);
+                resultListener.onSuccess(notificationsCountEntity);
             }
         });
     }

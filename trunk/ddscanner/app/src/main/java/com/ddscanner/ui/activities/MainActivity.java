@@ -21,6 +21,7 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.BaseUser;
+import com.ddscanner.entities.NotificationsCountEntity;
 import com.ddscanner.entities.SignInType;
 import com.ddscanner.entities.SignUpResponseEntity;
 import com.ddscanner.events.ChangeAccountEvent;
@@ -131,6 +132,57 @@ public class MainActivity extends BaseAppCompatActivity
 
     private SigningUserResultListener signUpResultListener = new SigningUserResultListener(true);
     private SigningUserResultListener signInResultListener = new SigningUserResultListener(false);
+
+    private DDScannerRestClient.ResultListener<Void> notificationReadResultListner = new DDScannerRestClient.ResultListener<Void>() {
+        @Override
+        public void onSuccess(Void result) {
+            DDScannerApplication.getInstance().clearNotificationsContainer();
+            getIsHasNewotifications();
+        }
+
+        @Override
+        public void onConnectionFailure() {
+
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+
+        }
+
+        @Override
+        public void onInternetConnectionClosed() {
+
+        }
+    };
+
+    private DDScannerRestClient.ResultListener<NotificationsCountEntity> newotificationsCountEntity = new DDScannerRestClient.ResultListener<NotificationsCountEntity>() {
+        @Override
+        public void onSuccess(NotificationsCountEntity result) {
+            if (result.getYou() > 0) {
+                toolbarTabLayout.getTabAt(1).setCustomView(null);
+                toolbarTabLayout.getTabAt(1).setCustomView(R.layout.tab_notification_item_new);
+            } else {
+                toolbarTabLayout.getTabAt(1).setCustomView(null);
+                toolbarTabLayout.getTabAt(1).setCustomView(R.layout.tab_notification_item);
+            }
+        }
+
+        @Override
+        public void onConnectionFailure() {
+
+        }
+
+        @Override
+        public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
+
+        }
+
+        @Override
+        public void onInternetConnectionClosed() {
+
+        }
+    };
 
     private DDScannerRestClient.ResultListener<Void> instructorsResultListene = new DDScannerRestClient.ResultListener<Void>() {
         @Override
@@ -293,6 +345,11 @@ public class MainActivity extends BaseAppCompatActivity
         toolbarTabLayout.getTabAt(2).setCustomView(R.layout.tab_profile_item);
         toolbarTabLayout.getTabAt(1).setCustomView(R.layout.tab_notification_item);
         toolbarTabLayout.getTabAt(0).setCustomView(R.layout.tab_map_item);
+        getIsHasNewotifications();
+    }
+
+    private void getIsHasNewotifications() {
+        DDScannerApplication.getInstance().getDdScannerRestClient().getNewNotificationsCount(newotificationsCountEntity);
     }
 
     public static void show(Context context, boolean isHasInternet) {
@@ -312,6 +369,9 @@ public class MainActivity extends BaseAppCompatActivity
                 showSearchFilterMenuItems();
                 changeVisibilityChangeAccountLayout(View.GONE);
                 Helpers.hideKeyboard(this);
+                if (DDScannerApplication.getInstance().getNotificationsContainer().size() > 0) {
+                    DDScannerApplication.getInstance().getDdScannerRestClient().postNotificationsRead(notificationReadResultListner, DDScannerApplication.getInstance().getNotificationsContainer());
+                }
                 break;
             case 1:
                 DDScannerApplication.bus.post(new GetNotificationsEvent());
@@ -323,6 +383,9 @@ public class MainActivity extends BaseAppCompatActivity
                 DDScannerApplication.bus.post(new LoadUserProfileInfoEvent());
                 EventsTracker.trackUserProfileView();
                 hideSearchFilterMenuItems();
+                if (DDScannerApplication.getInstance().getNotificationsContainer().size() > 0) {
+                    DDScannerApplication.getInstance().getDdScannerRestClient().postNotificationsRead(notificationReadResultListner, DDScannerApplication.getInstance().getNotificationsContainer());
+                }
                 break;
         }
     }

@@ -220,7 +220,7 @@ public class PersonalNotificationsFragment extends Fragment implements View.OnCl
                 if (isFromPagination) {
                     notificationsListAdapter.add(result);
                 } else {
-                    if (result.size() > 0 && !result.get(0).getId().equals(notificationsListAdapter.getFirstNotificationId())) {
+                    if (result.size() > 0) {
                         notificationsListAdapter.setNotifications(result);
                         binding.scrollView.scrollTo(0,0);
                     }

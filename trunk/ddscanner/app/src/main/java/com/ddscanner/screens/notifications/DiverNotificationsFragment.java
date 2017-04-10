@@ -68,7 +68,7 @@ public class DiverNotificationsFragment extends Fragment implements ViewPager.On
         } else {
             onLoggedOut();
         }
-        activityNotificationsFragment.loadNotifications();
+//        activityNotificationsFragment.loadNotifications();
         return view;
     }
 
