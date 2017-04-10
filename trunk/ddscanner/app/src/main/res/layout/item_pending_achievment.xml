@@ -63,7 +63,7 @@
                         android:layout_marginLeft="15dp"
                         android:textColor="#959595"
                         android:textSize="11sp"
-                        android:text="@{achievementViewModel.pendingAchievement.countryName}"/>
+                        android:text="@{achievementViewModel.pendingAchievement.country.name}"/>
                 </LinearLayout>
 
                 <TextView

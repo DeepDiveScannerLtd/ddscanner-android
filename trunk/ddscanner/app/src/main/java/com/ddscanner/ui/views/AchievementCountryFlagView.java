@@ -57,9 +57,13 @@ public class AchievementCountryFlagView extends View {
     }
 
     public void setFlagBitmap(int resourceId) {
-        flagBitmap = BitmapFactory.decodeResource(getResources(), resourceId);
-        flagBitmap = Bitmap.createScaledBitmap(flagBitmap, flagWidthPx, flagHeightPx, false);
-        invalidate();
+        try {
+            flagBitmap = BitmapFactory.decodeResource(getResources(), resourceId);
+            flagBitmap = Bitmap.createScaledBitmap(flagBitmap, flagWidthPx, flagHeightPx, false);
+            invalidate();
+        } catch (Exception e) {
+            Log.e(TAG, e.toString());
+        }
     }
 
     public void setFlagBitmap(Bitmap bitmap) {

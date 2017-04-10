@@ -27,7 +27,7 @@ public class CompletedAchievementItemViewModel {
     @BindingAdapter("loadCountryFlagFrom")
     public static void loadCountryFlag(final AchievementCountryFlagView view, CompletedAchievementItemViewModel viewModel) {
         if (viewModel != null) {
-            view.setFlagBitmap(Helpers.getResId(viewModel.getCompleteAchievement().getCountry().toLowerCase(), R.drawable.class));
+            view.setFlagBitmap(Helpers.getResId(viewModel.getCompleteAchievement().getCountry().getCode().toLowerCase(), R.drawable.class));
         }
     }
 
