@@ -103,7 +103,7 @@ public class PersonalNotificationsFragment extends Fragment implements View.OnCl
         } else {
             binding.activityRc.setOnScrollListener(scrollListener);
         }
-        notificationsListAdapter = new NotificationsListAdapter(getActivity(), true);
+        notificationsListAdapter = new NotificationsListAdapter(getActivity(), true, DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() );
         binding.activityRc.setAdapter(notificationsListAdapter);
         binding.approveLayout.setOnClickListener(this);
         return binding.getRoot();

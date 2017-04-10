@@ -62,7 +62,7 @@ public class ActivityNotificationsFragment extends Fragment {
         } else {
             binding.activityRc.setOnScrollListener(scrollListener);
         }
-        notificationsListAdapter = new NotificationsListAdapter(getActivity(), false);
+        notificationsListAdapter = new NotificationsListAdapter(getActivity(), false, DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType());
         binding.activityRc.setAdapter(notificationsListAdapter);
         return binding.getRoot();
     }

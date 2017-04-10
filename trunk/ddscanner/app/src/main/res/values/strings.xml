@@ -401,6 +401,7 @@
     <string name="activity_type_instructor_added">%1$s started working as an instructor at your dive center. %2$s</string>
     <string name="activity_type_photo_liked">%1$s liked your photo. %2$s</string>
     <string name="activity_type_dive_spot_added">%1$s added the spot %2$s near you. Please, approve the information. %3$s</string>
+    <string name="activity_type_dive_spot_added_user">%1$s added the spot %2$s near you. %3$s</string>
     <string name="activity_type_review_added">%1$s left a review on %2$s: %3$s %4$s</string>
     <string name="activity_type_dive_spot_changed">%1$s changed the spot %2$s. %3$s</string>
     <string name="activity_type_photo_added">%1$s added %2$s photos to %3$s. %4$s</string>

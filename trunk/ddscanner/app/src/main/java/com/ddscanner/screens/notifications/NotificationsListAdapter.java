@@ -21,6 +21,7 @@ import com.ddscanner.screens.photo.slider.ImageSliderActivity;
 import com.ddscanner.screens.reiews.list.ReviewsActivity;
 import com.ddscanner.screens.user.profile.UserProfileActivity;
 import com.ddscanner.utils.Helpers;
+import com.ddscanner.utils.SharedPreferenceHelper;
 import com.klinker.android.link_builder.LinkBuilder;
 import com.klinker.android.link_builder.LinkConsumableTextView;
 import com.squareup.picasso.Picasso;
@@ -39,10 +40,12 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
     private Activity context;
     private boolean isSelf;
     private ArrayList<NotificationEntity> notifications = new ArrayList<>();
+    private SharedPreferenceHelper.UserType userType;
 
-    public NotificationsListAdapter(Activity context, boolean isSelf) {
+    public NotificationsListAdapter(Activity context, boolean isSelf, SharedPreferenceHelper.UserType userType) {
         this.context = context;
         this.isSelf = isSelf;
+        this.userType = userType;
     }
 
     public void add(ArrayList<NotificationEntity> notifications) {
@@ -75,7 +78,7 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
         switch (getItemViewType(position)) {
             case VIEW_TYPE_AVATAR_TEXT:
                 TextAndPhotoItemViewHolder textAndPhotoItemViewHolder = (TextAndPhotoItemViewHolder) holder;
-                textAndPhotoItemViewHolder.notificationText.setText(notification.getText(isSelf));
+                textAndPhotoItemViewHolder.notificationText.setText(notification.getText(isSelf, userType));
                 if (!isSelf || (isSelf && !notification.getActivityType().equals(ActivityTypes.ACHIEVEMENT_GETTED))) {
                     loadUserPhoto(notification.getUser().getPhoto(), textAndPhotoItemViewHolder.userAvatar);
                 }
@@ -89,7 +92,7 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
                 break;
             case VIEW_TYPE_WITH_PHOTO:
                 SinglePhotoItemViewHolder singlePhotoItemViewHolder = (SinglePhotoItemViewHolder) holder;
-                singlePhotoItemViewHolder.notificationText.setText(notification.getText(isSelf));
+                singlePhotoItemViewHolder.notificationText.setText(notification.getText(isSelf, userType));
                 if (notification.getLinks() != null) {
                     LinkBuilder.on(singlePhotoItemViewHolder.notificationText).addLinks(notification.getLinks()).build();
                 }
@@ -98,7 +101,7 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
                 break;
             case VIEW_TYPE_WITH_PHOTOS_LIST:
                 PhotosListItemViewHolder photosListItemViewHolder = (PhotosListItemViewHolder) holder;
-                photosListItemViewHolder.notificationText.setText(notification.getText(isSelf));
+                photosListItemViewHolder.notificationText.setText(notification.getText(isSelf, userType));
                 if (notification.getLinks() != null) {
                     LinkBuilder.on(photosListItemViewHolder.notificationText).addLinks(notification.getLinks()).build();
                 }

@@ -9,6 +9,7 @@ import com.ddscanner.R;
 import com.ddscanner.events.OpenDiveSpotDetailsActivityEvent;
 import com.ddscanner.events.OpenUserProfileActivityFromNotifications;
 import com.ddscanner.utils.Helpers;
+import com.ddscanner.utils.SharedPreferenceHelper;
 import com.google.gson.annotations.SerializedName;
 import com.klinker.android.link_builder.Link;
 
@@ -152,13 +153,20 @@ public class NotificationEntity {
         }
     }
 
-    public String getText(boolean isSelf) {
+    public String getText(boolean isSelf, SharedPreferenceHelper.UserType userType) {
         String returnedString;
         String timeAgo = Helpers.getDate(date);
         switch (getActivityType()) {
             case DIVE_SPOT_ADDED:
-                returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_dive_spot_added, user.getName(), diveSpot.getName(), timeAgo);
-                return returnedString;
+                switch (userType) {
+                    case DIVECENTER:
+                        returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_dive_spot_added, user.getName(), diveSpot.getName(), timeAgo);
+                        return returnedString;
+                    default:
+                        returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_dive_spot_added_user, user.getName(), diveSpot.getName(), timeAgo);
+                        return returnedString;
+                }
+
             case DIVE_CENTER_INSTRUCTOR_ADD:
                 returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_instructor_added, user.getName(), timeAgo);
                 return returnedString;
