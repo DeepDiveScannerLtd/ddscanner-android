@@ -154,66 +154,69 @@ public class NotificationEntity {
     }
 
     public String getText(boolean isSelf, SharedPreferenceHelper.UserType userType) {
-        String returnedString;
+        String returnedString = "";
+        if (isNew) {
+            returnedString += "\u25CF ";
+        }
         String timeAgo = Helpers.getDate(date);
         switch (getActivityType()) {
             case DIVE_SPOT_ADDED:
                 switch (userType) {
                     case DIVECENTER:
-                        returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_dive_spot_added, user.getName(), diveSpot.getName(), timeAgo);
+                        returnedString += DDScannerApplication.getInstance().getString(R.string.activity_type_dive_spot_added, user.getName(), diveSpot.getName(), timeAgo);
                         return returnedString;
                     default:
-                        returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_dive_spot_added_user, user.getName(), diveSpot.getName(), timeAgo);
+                        returnedString += DDScannerApplication.getInstance().getString(R.string.activity_type_dive_spot_added_user, user.getName(), diveSpot.getName(), timeAgo);
                         return returnedString;
                 }
 
             case DIVE_CENTER_INSTRUCTOR_ADD:
-                returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_instructor_added, user.getName(), timeAgo);
+                returnedString += DDScannerApplication.getInstance().getString(R.string.activity_type_instructor_added, user.getName(), timeAgo);
                 return returnedString;
             case DIVE_SPOT_PHOTO_LIKE:
-                returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_photo_liked, user.getName(), timeAgo);
+                returnedString += DDScannerApplication.getInstance().getString(R.string.activity_type_photo_liked, user.getName(), timeAgo);
                 return returnedString;
             case DIVE_SPOT_REVIEW_ADDED:
-                returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_review_added, user.getName(), diveSpot.getName(), cropString(review.getReview()), timeAgo);
+                returnedString += DDScannerApplication.getInstance().getString(R.string.activity_type_review_added, user.getName(), diveSpot.getName(), cropString(review.getReview()), timeAgo);
                 return returnedString;
             case DIVE_SPOT_CHANGED:
-                returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_dive_spot_changed, user.getName(), diveSpot.getName(), timeAgo);
+                returnedString += DDScannerApplication.getInstance().getString(R.string.activity_type_dive_spot_changed, user.getName(), diveSpot.getName(), timeAgo);
                 return returnedString;
             case DIVE_SPOT_PHOTOS_ADDED:
                 if (photos.size() == 1) {
-                    returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_single_photo_added, user.getName(), diveSpot.getName(), timeAgo);
+                    returnedString += DDScannerApplication.getInstance().getString(R.string.activity_type_single_photo_added, user.getName(), diveSpot.getName(), timeAgo);
                 } else {
-                    returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_photo_added, user.getName(), String.valueOf(photos.size()), diveSpot.getName(), timeAgo);
+                    returnedString += DDScannerApplication.getInstance().getString(R.string.activity_type_photo_added, user.getName(), String.valueOf(photos.size()), diveSpot.getName(), timeAgo);
                 }
                 return returnedString;
             case DIVE_SPOT_MAPS_ADDED:
                 if (photos.size() == 1) {
-                    returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_single_map_added, user.getName(), diveSpot.getName(), timeAgo);
+                    returnedString += DDScannerApplication.getInstance().getString(R.string.activity_type_single_map_added, user.getName(), diveSpot.getName(), timeAgo);
                 } else {
-                    returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_maps_added, user.getName(), String.valueOf(photos.size()), diveSpot.getName(), timeAgo);
+                    returnedString += DDScannerApplication.getInstance().getString(R.string.activity_type_maps_added, user.getName(), String.valueOf(photos.size()), diveSpot.getName(), timeAgo);
                 }
                 return returnedString;
             case DIVE_SPOT_CHECKIN:
-                returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_checked_in, user.getName(), diveSpot.getName(), timeAgo);
+                returnedString += DDScannerApplication.getInstance().getString(R.string.activity_type_checked_in, user.getName(), diveSpot.getName(), timeAgo);
                 return returnedString;
             case DIVE_CENTER_INSTRUCTOR_REMOVE:
-                returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_left_dive_center, user.getName(), timeAgo);
+                returnedString += DDScannerApplication.getInstance().getString(R.string.activity_type_left_dive_center, user.getName(), timeAgo);
                 return returnedString;
             case DIVE_SPOT_REVIEW_LIKE:
-                returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_review_liked, user.getName(), cropString(review.getReview()), timeAgo);
+                returnedString += DDScannerApplication.getInstance().getString(R.string.activity_type_review_liked, user.getName(), cropString(review.getReview()), timeAgo);
                 return returnedString;
             case DIVE_SPOT_REVIEW_DISLIKE:
-                returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_review_disliked, user.getName(), cropString(review.getReview()), timeAgo);
+                returnedString += DDScannerApplication.getInstance().getString(R.string.activity_type_review_disliked, user.getName(), cropString(review.getReview()), timeAgo);
                 return returnedString;
             case ACHIEVEMENT_GETTED:
                 if (isSelf) {
-                    returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_self_achievement_achieved, achievement.getName(), timeAgo);
+                    returnedString += DDScannerApplication.getInstance().getString(R.string.activity_type_self_achievement_achieved, achievement.getName(), timeAgo);
                     return returnedString;
                 }
-                returnedString = DDScannerApplication.getInstance().getString(R.string.activity_achievement_achieved, user.getName(), achievement.getName(), timeAgo);
+                returnedString += DDScannerApplication.getInstance().getString(R.string.activity_achievement_achieved, user.getName(), achievement.getName(), timeAgo);
                 return  returnedString;
             case INSTRUCTOR_LEFT_DIVE_CENTER:
-                returnedString = DDScannerApplication.getInstance().getString(R.string.activity_type_instructor_left_dive_center, user.getName(), timeAgo);
+                returnedString += DDScannerApplication.getInstance().getString(R.string.activity_type_instructor_left_dive_center, user.getName(), timeAgo);
                 return returnedString;
             default:
                 return "";
@@ -224,11 +227,15 @@ public class NotificationEntity {
         ArrayList<Link> links = new ArrayList<>();
         Link userLink = new Link("");
         Link diveSpotLink = new Link("");
+        Link dotLink = new Link("\u25CF");
+        dotLink.setTextColor(ContextCompat.getColor(DDScannerApplication.getInstance(),R.color.orange));
+        dotLink.setUnderlined(false);
         String timeAgo = Helpers.getDate(date);
         Link timeLink = new Link(timeAgo);
         timeLink.setTextColor(ContextCompat.getColor(DDScannerApplication.getInstance(), R.color.notification_time_color));
         timeLink.setUnderlined(false);
         links.add(timeLink);
+        links.add(dotLink);
         if (user != null) {
             userLink = new Link(user.getName());
             userLink.setTextColor(ContextCompat.getColor(DDScannerApplication.getInstance(),R.color.notification_clickable_text_color));
@@ -258,6 +265,7 @@ public class NotificationEntity {
             case DIVE_SPOT_PHOTO_LIKE:
             case INSTRUCTOR_LEFT_DIVE_CENTER:
             case DIVE_CENTER_INSTRUCTOR_REMOVE:
+                links.add(dotLink);
                 links.add(userLink);
                 return links;
             case DIVE_SPOT_CHECKIN:
