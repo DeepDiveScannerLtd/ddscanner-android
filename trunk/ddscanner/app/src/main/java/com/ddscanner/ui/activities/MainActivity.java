@@ -214,7 +214,7 @@ public class MainActivity extends BaseAppCompatActivity
         isHasInternetConnection = getIntent().getBooleanExtra(Constants.IS_HAS_INTERNET, false);
         DDScannerApplication.getInstance().getSharedPreferenceHelper().clearFilters();
         startActivity();
-        Log.i(TAG, FirebaseInstanceId.getInstance().getToken());
+//        Log.i(TAG, FirebaseInstanceId.getInstance().getToken());
        // DDScannerApplication.getInstance().getSharedPreferenceHelper().clear();
 //        if (!isHasInternetConnection) {
 //            Log.i(TAG, "internetConnectionClosed 2");
