@@ -37,16 +37,15 @@ public class DiveSpotDetailsEntity extends DiveSpotShort {
     @SerializedName("cover_id")
     private String coverPhotoId;
     private CountryEntity country;
+    @SerializedName("is_somebody_working_here")
+    private boolean isSomebodyWorkingHere;
 
-    public Boolean getEdit() {
-        if (isEdit == null) {
-            return false;
-        }
-        return isEdit;
+    public boolean isSomebodyWorkingHere() {
+        return isSomebodyWorkingHere;
     }
 
-    public void setEdit(Boolean edit) {
-        isEdit = edit;
+    public void setSomebodyWorkingHere(boolean somebodyWorkingHere) {
+        isSomebodyWorkingHere = somebodyWorkingHere;
     }
 
     public CountryEntity getCountry() {
