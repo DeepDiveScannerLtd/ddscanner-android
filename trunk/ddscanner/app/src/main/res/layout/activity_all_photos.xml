@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,47 +7,69 @@
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true">
 
-        <include layout="@layout/view_toolbar" />
-
-        <android.support.design.widget.TabLayout
-            android:id="@+id/photos_tab_layout"
-            style="@style/tabLayout"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:background="@color/white"
-            app:tabMode="fixed" />
+        <include
+            layout="@layout/view_toolbar"
+            app:layout_collapseMode="pin"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed" />
     </android.support.design.widget.AppBarLayout>
 
-    <com.rey.material.widget.ProgressView
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:id="@+id/progressBar"
-        android:layout_width="match_parent"
-        android:layout_height="25dp"
-        android:layout_marginTop="50dp"
-        app:pv_autostart="true"
-        app:pv_circular="true"
-        app:pv_progressMode="indeterminate"
-        android:visibility="visible"
-        app:pv_progressStyle="@style/CircularProgress" />
-
-    <android.support.v4.view.ViewPager
-        android:visibility="gone"
-        android:id="@+id/photos_view_pager"
+    <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="4dp"
-        android:layout_marginTop="7dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        android:orientation="vertical">
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_add_photo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="20dp"
-        android:src="@drawable/ic_acb_plus"
-        app:backgroundTint="@color/orange"
-        android:scaleType="center"/>
-</android.support.design.widget.CoordinatorLayout>
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.design.widget.CollapsingToolbarLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_scrollFlags="scroll|enterAlways">
+
+                <android.support.design.widget.TabLayout
+                    android:id="@+id/photos_tab_layout"
+                    style="@style/tabLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:background="@color/white"
+                    app:tabMode="fixed" />
+            </android.support.design.widget.CollapsingToolbarLayout>
+        </android.support.design.widget.AppBarLayout>
+
+        <com.rey.material.widget.ProgressView
+            android:id="@+id/progressBar"
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:layout_marginTop="50dp"
+            android:visibility="visible"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            app:pv_autostart="true"
+            app:pv_circular="true"
+            app:pv_progressMode="indeterminate"
+            app:pv_progressStyle="@style/CircularProgress" />
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/photos_view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="4dp"
+            android:layout_marginTop="7dp"
+            android:visibility="gone"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_add_photo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="20dp"
+            android:scaleType="center"
+            android:src="@drawable/ic_acb_plus"
+            app:backgroundTint="@color/orange" />
+    </android.support.design.widget.CoordinatorLayout>
+</LinearLayout>
