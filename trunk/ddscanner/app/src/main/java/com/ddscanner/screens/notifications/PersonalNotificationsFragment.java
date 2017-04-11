@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -37,7 +38,7 @@ import java.util.List;
 /**
  * Created by lashket on 25.5.16.
  */
-public class PersonalNotificationsFragment extends Fragment implements View.OnClickListener {
+public class PersonalNotificationsFragment extends Fragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
 
     private static final String TAG = PersonalNotificationsFragment.class.getName();
 
@@ -106,6 +107,7 @@ public class PersonalNotificationsFragment extends Fragment implements View.OnCl
         notificationsListAdapter = new NotificationsListAdapter(getActivity(), true, DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() );
         binding.activityRc.setAdapter(notificationsListAdapter);
         binding.approveLayout.setOnClickListener(this);
+        binding.swipeRefreshLayout.setOnRefreshListener(this);
         return binding.getRoot();
     }
 
@@ -202,6 +204,11 @@ public class PersonalNotificationsFragment extends Fragment implements View.OnCl
         DDScannerApplication.getInstance().getDdScannerRestClient().getPersonalNotifications(simpleResultListener, null);
     }
 
+    @Override
+    public void onRefresh() {
+        loadNotifications();
+    }
+
     private class NotificationResultListener extends DDScannerRestClient.ResultListener<ArrayList<NotificationEntity>> {
 
         private boolean isFromPagination;
@@ -215,6 +222,7 @@ public class PersonalNotificationsFragment extends Fragment implements View.OnCl
             isLoading = false;
             activities = result;
             isNotificationsLoaded = true;
+            binding.swipeRefreshLayout.setRefreshing(false);
             if (binding != null) {
                 binding.progressBarPagination.setVisibility(View.GONE);
                 binding.progressBar.setVisibility(View.GONE);
@@ -233,7 +241,7 @@ public class PersonalNotificationsFragment extends Fragment implements View.OnCl
                 } else {
                     if (result.size() > 0) {
                         notificationsListAdapter.setNotifications(result);
-                        binding.scrollView.scrollTo(0,0);
+                        binding.activityRc.scrollToPosition(0);
                     }
                 }
             }
@@ -241,17 +249,17 @@ public class PersonalNotificationsFragment extends Fragment implements View.OnCl
 
         @Override
         public void onConnectionFailure() {
-
+            binding.swipeRefreshLayout.setRefreshing(false);
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-
+            binding.swipeRefreshLayout.setRefreshing(false);
         }
 
         @Override
         public void onInternetConnectionClosed() {
-
+            binding.swipeRefreshLayout.setRefreshing(false);
         }
 
     }

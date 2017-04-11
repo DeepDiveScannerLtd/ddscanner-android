@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -30,7 +31,7 @@ import java.util.Date;
 /**
  * Created by lashket on 25.5.16.
  */
-public class ActivityNotificationsFragment extends Fragment {
+public class ActivityNotificationsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private static final String TAG = ActivityNotificationsFragment.class.getName();
     private static final int PAGE_SIZE = 20;
@@ -64,6 +65,7 @@ public class ActivityNotificationsFragment extends Fragment {
         }
         notificationsListAdapter = new NotificationsListAdapter(getActivity(), false, DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType());
         binding.activityRc.setAdapter(notificationsListAdapter);
+        binding.swipeRefreshLayout.setOnRefreshListener(this);
         return binding.getRoot();
     }
 
@@ -88,6 +90,11 @@ public class ActivityNotificationsFragment extends Fragment {
         if (Build.VERSION.SDK_INT < 23) {
             onAttachToContext(context);
         }
+    }
+
+    @Override
+    public void onRefresh() {
+        loadNotifications();
     }
 
     protected void onAttachToContext(Context context) {
@@ -149,6 +156,7 @@ public class ActivityNotificationsFragment extends Fragment {
         public void onSuccess(ArrayList<NotificationEntity> result) {
             isLoading = false;
             activities = result;
+            binding.swipeRefreshLayout.setRefreshing(false);
             if (binding != null) {
                 binding.progressBarPagination.setVisibility(View.GONE);
                 binding.progressBar.setVisibility(View.GONE);
@@ -171,17 +179,17 @@ public class ActivityNotificationsFragment extends Fragment {
 
         @Override
         public void onConnectionFailure() {
-
+            binding.swipeRefreshLayout.setRefreshing(false);
         }
 
         @Override
         public void onError(DDScannerRestClient.ErrorType errorType, Object errorData, String url, String errorMessage) {
-
+            binding.swipeRefreshLayout.setRefreshing(false);
         }
 
         @Override
         public void onInternetConnectionClosed() {
-
+            binding.swipeRefreshLayout.setRefreshing(false);
         }
 
     }

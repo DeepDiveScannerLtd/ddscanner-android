@@ -2,10 +2,10 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <ScrollView
-        android:id="@+id/scroll_view"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -47,7 +47,7 @@
             <RelativeLayout
                 android:id="@+id/approve_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="65dp"
                 android:visibility="gone">
 
                 <RelativeLayout
@@ -116,5 +116,5 @@
                 app:pv_progressMode="indeterminate"
                 app:pv_progressStyle="@style/CircularProgress" />
         </RelativeLayout>
-    </ScrollView>
+    </android.support.v4.widget.SwipeRefreshLayout>
 </layout>
