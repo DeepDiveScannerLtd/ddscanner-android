@@ -153,8 +153,10 @@ public class ActivityNotificationsFragment extends Fragment {
                 binding.progressBarPagination.setVisibility(View.GONE);
                 binding.progressBar.setVisibility(View.GONE);
                 binding.activityRc.setVisibility(View.VISIBLE);
-                if (activities == null || activities.size() == 0) {
+                binding.noNotifsView.setVisibility(View.GONE);
+                if ((activities == null || activities.size() == 0) && !isFromPagination){
                     binding.noNotifsView.setVisibility(View.VISIBLE);
+                    binding.activityRc.setVisibility(View.GONE);
                     return;
                 }
                 if (isFromPagination) {

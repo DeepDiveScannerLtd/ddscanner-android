@@ -219,10 +219,11 @@ public class PersonalNotificationsFragment extends Fragment implements View.OnCl
                 binding.progressBarPagination.setVisibility(View.GONE);
                 binding.progressBar.setVisibility(View.GONE);
                 binding.activityRc.setVisibility(View.VISIBLE);
+                binding.noNotifsView.setVisibility(View.GONE);
                 if (isApprovedLoaded) {
                     binding.approveLayout.setVisibility(View.VISIBLE);
                 }
-                if (activities == null || activities.size() == 0) {
+                if ((activities == null || activities.size() == 0) && !isFromPagination) {
                     binding.activityRc.setVisibility(View.GONE);
                     binding.noNotifsView.setVisibility(View.VISIBLE);
                     return;

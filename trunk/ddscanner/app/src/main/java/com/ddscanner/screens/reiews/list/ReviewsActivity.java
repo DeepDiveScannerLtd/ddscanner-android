@@ -314,7 +314,11 @@ public class ReviewsActivity extends AppCompatActivity implements View.OnClickLi
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_ac_back);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(R.string.reviews);
+        if (openedSource.equals(ReviewsOpenedSource.SINGLE)) {
+            getSupportActionBar().setTitle(R.string.single_reiew_title);
+        } else {
+            getSupportActionBar().setTitle(R.string.reviews);
+        }
     }
 
     private void setContent() {

@@ -99,7 +99,7 @@
         android:layout_marginRight="20dp"
         android:layout_marginTop="20dp"
         android:background="@color/orange"
-        android:text="@string/btn_save"
+        android:text="@string/apply"
         style="@style/OrangeButtons"
         app:rd_style="@style/Material.Drawable.Ripple.Touch.MatchView" />
     </LinearLayout>

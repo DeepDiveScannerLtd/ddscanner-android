@@ -120,7 +120,7 @@ public class DiveSpotDetailsActivityViewModel {
     @BindingAdapter("loadCreatorAvatarFrom")
     public static void loadCreatorAvatar(ImageView view, DiveSpotDetailsActivityViewModel viewModel) {
         if (viewModel != null) {
-            Picasso.with(view.getContext()).load(DDScannerApplication.getInstance().getString(R.string.server_api_address) + Constants.USER_IMAGE_PATH_PREVIEW + viewModel.getDiveSpotDetailsEntity().getAuthor().getPhoto())
+            Picasso.with(view.getContext()).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, viewModel.getDiveSpotDetailsEntity().getAuthor().getPhoto(), "1"))
                     .resize(Math.round(Helpers.convertDpToPixel(20, view.getContext())), Math.round(Helpers.convertDpToPixel(20, view.getContext())))
                     .centerCrop()
                     .placeholder(R.drawable.gray_circle_placeholder)
