@@ -39,6 +39,9 @@ public class DiveSpotDetailsEntity extends DiveSpotShort {
     private CountryEntity country;
 
     public Boolean getEdit() {
+        if (isEdit == null) {
+            return false;
+        }
         return isEdit;
     }
 
@@ -60,17 +63,6 @@ public class DiveSpotDetailsEntity extends DiveSpotShort {
 
     public void setCoverPhotoId(String coverPhotoId) {
         this.coverPhotoId = coverPhotoId;
-    }
-
-    public boolean isEdit() {
-        if (isEdit == null) {
-            return false;
-        }
-        return isEdit;
-    }
-
-    public void setEdit(boolean edit) {
-        isEdit = edit;
     }
 
     public int getMapsPhotosCount() {

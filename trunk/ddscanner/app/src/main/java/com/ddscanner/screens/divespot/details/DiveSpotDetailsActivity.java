@@ -115,9 +115,9 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
         @Override
         public void onSuccess(FlagsEntity result) {
             binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().setFlags(result);
-            changeUiAccordingNewFlags(result);
+            updateMenuItems(menu);
             if (isClickedEdit) {
-                if (result.isEditable()) {
+                if (result.isEditable() || (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType().equals(SharedPreferenceHelper.UserType.DIVECENTER) && result.isWorkingHere())) {
                     EventsTracker.trackDiveSpotEdit();
                     Intent editDiveSpotIntent = new Intent(DiveSpotDetailsActivity.this, EditDiveSpotActivity.class);
                     editDiveSpotIntent.putExtra(Constants.DIVESPOTID, String.valueOf(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getId()));
@@ -152,10 +152,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
                 isWorkingHere = result.getFlags().isWorkingHere();
                 isFavorite = result.getFlags().isFavorite();
             }
-            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == SharedPreferenceHelper.UserType.DIVECENTER) {
-                menu.findItem(R.id.favorite).setVisible(false);
-            }
-            menu.findItem(R.id.menu_three_dots).setVisible(true);
             binding.setDiveSpotViewModel(new DiveSpotDetailsActivityViewModel(diveSpotDetailsEntity, binding.progressBar));
             setUi();
         }
@@ -223,11 +219,14 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
     }
 
     private void changeUiAccordingNewFlags(FlagsEntity flagsEntity) {
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType().equals(SharedPreferenceHelper.UserType.DIVECENTER) && flagsEntity.isWorkingHere()) {
+            flagsEntity.setEditable(true);
+        }
         DiveSpotDetailsActivityViewModel.setVisibilityReviewsBlock(binding.reviewsRatingLayout, binding.getDiveSpotViewModel());
         DiveSpotDetailsActivityViewModel.setVisibilityOfRatingLayout(binding.ratingLayout, binding.getDiveSpotViewModel());
         switch (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType()) {
             case DIVECENTER:
-                updateMenuItems(menu, false, flagsEntity.isEditable());
+                updateMenuItems(menu);
                 binding.fabCheckin.setVisibility(View.GONE);
                 binding.workinLayout.setVisibility(View.VISIBLE);
                 if (flagsEntity.isWorkingHere()) {
@@ -261,10 +260,10 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
                     }
                 }
                 isClickedCkeckin = false;
-                updateMenuItems(menu, flagsEntity.isFavorite(), flagsEntity.isEditable());
+                updateMenuItems(menu);
                 if (isClickedFavorite) {
                     if (flagsEntity.isFavorite()) {
-                        updateMenuItems(menu, true, flagsEntity.isEditable());
+                        updateMenuItems(menu);
                     } else {
                         addDiveSpotToFavorites();
                     }
@@ -309,9 +308,9 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
             isFavorite = binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getFlags().isFavorite();
         }
         if (!DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
-            updateMenuItems(menu, isFavorite, true);
+            updateMenuItems(menu);
         } else {
-            updateMenuItems(menu, isFavorite, binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getFlags().isEditable());
+            updateMenuItems(menu);
         }
         binding.divePlaceDescription.post(new Runnable() {
             @Override
@@ -429,7 +428,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
     private void tryToCallEditDiveSpotActivity() {
         EventsTracker.trackDiveSpotEdit();
         if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
-            EditDiveSpotActivity.showForResult(new Gson().toJson(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity()), this,  ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_EDIT_DIVE_SPOT);
+            EditDiveSpotActivity.showForResult(new Gson().toJson(binding.getDiveSpotViewModel().getDiveSpotDetailsEntity()), this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_EDIT_DIVE_SPOT);
         } else {
             isClickedEdit = true;
             LoginActivity.showForResult(this, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_EDIT_SPOT);
@@ -624,14 +623,14 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
                     reloadFlags();
                     addDiveSpotToFavorites();
                 } else {
-                    updateMenuItems(menu, false, binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getFlags().isEditable());
+                    updateMenuItems(menu);
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_LOGIN_TO_REMOVE_FROM_FAVOURITES:
                 if (resultCode == RESULT_OK) {
                     removeFromFavorites();
                 } else {
-                    updateMenuItems(menu, true, binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getFlags().isEditable());
+                    updateMenuItems(menu);
                 }
                 break;
             case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOT_DETAILS_ACTIVITY_SHOW_FOR_ADD_MAPS:
@@ -692,35 +691,38 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
         return super.onPrepareOptionsMenu(menu);
     }
 
-    private void updateMenuItems(Menu menu, boolean isFavorite, boolean isEditable) {
-        if (menu != null) {
-            if (!isEditable && DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType().equals(SharedPreferenceHelper.UserType.DIVECENTER)) {
-                menu.findItem(R.id.menu_three_dots).setVisible(false);
-                return;
-            }
-            menu.findItem(R.id.edit_dive_spot).setVisible(isEditable);
+    private void updateMenuItems(Menu menu) {
+        menu.findItem(R.id.favorite).setTitle(R.string.add_to_favorites);
+        menu.findItem(R.id.favorite).setTitle(R.string.reove_from_facorites);
+        menu.findItem(R.id.menu_three_dots).setVisible(false);
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
             switch (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType()) {
                 case DIVECENTER:
+                    menu.findItem(R.id.menu_three_dots).setVisible(true);
                     menu.findItem(R.id.favorite).setVisible(false);
+                    if (binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getFlags().isEditable() || binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getFlags().isWorkingHere()) {
+                        menu.findItem(R.id.edit_dive_spot).setVisible(true);
+                    } else {
+                        menu.findItem(R.id.menu_three_dots).setVisible(false);
+                    }
                     break;
-                case DIVER:
                 case INSTRUCTOR:
+                case DIVER:
                     menu.findItem(R.id.favorite).setVisible(true);
-                    if (isFavorite) {
+                    if (binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getFlags().isFavorite()) {
                         menu.findItem(R.id.favorite).setTitle(R.string.reove_from_facorites);
                     } else {
                         menu.findItem(R.id.favorite).setTitle(R.string.add_to_favorites);
                     }
+                    if (binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getFlags().isEditable()) {
+                        menu.findItem(R.id.edit_dive_spot).setVisible(true);
+                    } else {
+                        menu.findItem(R.id.edit_dive_spot).setVisible(false);
+                    }
                     break;
             }
-
-        }
-
-    }
-
-    private void updateMenuItemsAccordinUserType() {
-        if (!binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().isEdit()) {
-
+        } else {
+            menu.findItem(R.id.menu_three_dots).setVisible(true);
         }
     }
 
@@ -788,9 +790,11 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
         binding.switchWorkingButton.setClickable(false);
         if (!isWorkingHere) {
+//            updateMenuItems(menu, false, true);
             DDScannerApplication.getInstance().getDdScannerRestClient().postAddDiveSpotToDiveCenter(diveSpotId, addWorkingResultListener);
             return;
         }
+//        updateMenuItems(menu, false, false);
         DDScannerApplication.getInstance().getDdScannerRestClient().postRemoveDiveSpotToDiveCenter(diveSpotId, removeWorkngResultListener);
     }
 
@@ -903,7 +907,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
     }
 
     public void falseApproveDiveSpot(View view) {
-        MaterialDialog.Builder dialog =new MaterialDialog.Builder(this);
+        MaterialDialog.Builder dialog = new MaterialDialog.Builder(this);
         dialog.title("What do you want")
                 .content("bla bla bla")
                 .positiveText("edit")
@@ -990,9 +994,13 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
         public void onSuccess(Void result) {
             binding.switchWorkingButton.setClickable(true);
             if (isAddToWorking) {
+                binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getFlags().setWorkingHere(true);
+                updateMenuItems(menu);
                 DiveSpotDetailsActivity.this.isWorkingHere = true;
                 return;
             }
+            binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getFlags().setWorkingHere(false);
+            updateMenuItems(menu);
             DiveSpotDetailsActivity.this.isWorkingHere = false;
         }
 
@@ -1114,14 +1122,14 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
 
         @Override
         public void onSuccess(Void result) {
-            isFavorite = isAddToFavourites;
-            updateMenuItems(menu, isFavorite, binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getFlags().isEditable());
+            binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getFlags().setFavorite(isAddToFavourites);
+            updateMenuItems(menu);
             Toast.makeText(DiveSpotDetailsActivity.this, isAddToFavourites ? R.string.added_to_favorites : R.string.removed_from_favorites, Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void onConnectionFailure() {
-            updateMenuItems(menu, isFavorite, binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getFlags().isEditable());
+            updateMenuItems(menu);
             UserActionInfoDialogFragment.show(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, false);
         }
 
@@ -1148,7 +1156,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
                 default:
                     Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);
             }
-            updateMenuItems(menu, isFavorite, binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getFlags().isEditable());
+            updateMenuItems(menu);
         }
 
         @Override

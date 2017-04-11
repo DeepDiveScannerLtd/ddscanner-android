@@ -401,7 +401,7 @@ public class EditDiveSpotActivity extends BaseAppCompatActivity implements BaseA
             if (diveSpotDetailsEntity.getFlags().isWorkingHere()) {
                 isWorkingSwitch.setChecked(true);
                 isEditLayout.setVisibility(View.VISIBLE);
-                if (diveSpotDetailsEntity.isEdit()) {
+                if (diveSpotDetailsEntity.getEdit()) {
                     isEditSwitch.setChecked(true);
                 }
             }
