@@ -149,7 +149,8 @@ public class SplashActivity extends BaseAppCompatActivity implements DialogClose
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.skip:
-                showMainActivity();
+                MainActivity.show(SplashActivity.this, Helpers.hasConnection(SplashActivity.this));
+                SplashActivity.this.finish();
                 break;
             case R.id.login:
                 SignUpActivity.showForResult(this, false, ActivitiesRequestCodes.REQUEST_CODE_SPLASH_ACTIVITY_LOGIN);

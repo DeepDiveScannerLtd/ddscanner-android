@@ -692,9 +692,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
     }
 
     private void updateMenuItems(Menu menu) {
-        menu.findItem(R.id.favorite).setTitle(R.string.add_to_favorites);
-        menu.findItem(R.id.favorite).setTitle(R.string.reove_from_facorites);
-        menu.findItem(R.id.menu_three_dots).setVisible(false);
         if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsUserSignedIn()) {
             switch (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType()) {
                 case DIVECENTER:
@@ -708,6 +705,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
                     break;
                 case INSTRUCTOR:
                 case DIVER:
+                    menu.findItem(R.id.menu_three_dots).setVisible(true);
                     menu.findItem(R.id.favorite).setVisible(true);
                     if (binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getFlags().isFavorite()) {
                         menu.findItem(R.id.favorite).setTitle(R.string.reove_from_facorites);
