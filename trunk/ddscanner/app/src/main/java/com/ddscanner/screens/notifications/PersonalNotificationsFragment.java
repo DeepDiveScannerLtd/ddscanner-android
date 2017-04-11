@@ -182,7 +182,17 @@ public class PersonalNotificationsFragment extends Fragment implements View.OnCl
     @Override
     public void onResume() {
         super.onResume();
-        Log.i("RES", "resumed");
+        resultListener.setCancelled(false);
+        simpleResultListener.setCancelled(false);
+        paginationResultListener.setCancelled(false);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        simpleResultListener.setCancelled(true);
+        paginationResultListener.setCancelled(true);
+        resultListener.setCancelled(true);
     }
 
     public void loadNotifications() {

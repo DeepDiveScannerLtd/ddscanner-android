@@ -607,6 +607,7 @@ public class MainActivity extends BaseAppCompatActivity
     public void onStop() {
         super.onStop();
         Log.i(TAG, "onStop");
+        newotificationsCountEntity.setCancelled(true);
         DDScannerApplication.bus.unregister(this);
     }
 
@@ -622,6 +623,7 @@ public class MainActivity extends BaseAppCompatActivity
     protected void onResume() {
         super.onResume();
         Log.i(TAG, "onResume");
+        newotificationsCountEntity.setCancelled(false);
         AppEventsLogger.activateApp(this);
         DDScannerApplication.activityResumed();
         if (!Helpers.hasConnection(this)) {

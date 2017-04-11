@@ -184,4 +184,18 @@ public class ActivityNotificationsFragment extends Fragment {
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        simpleResultListener.setCancelled(false);
+        paginationResultListener.setCancelled(false);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        paginationResultListener.setCancelled(true);
+        simpleResultListener.setCancelled(true);
+    }
+
 }
