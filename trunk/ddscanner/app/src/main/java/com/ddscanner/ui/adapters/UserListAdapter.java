@@ -51,8 +51,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserLi
                 .transform(new CropCircleTransformation())
                 .into(holder.userAvatar);
         holder.userName.setText(users.get(position).getName());
-        holder.info.setText(users.get(position).getCounters().getCommentsCount() + " reviews, " +
-                users.get(position).getCounters().getLikesCount() + " likes");
+        holder.info.setText(DDScannerApplication.getInstance().getString(R.string.checkins_reiew_count, String.valueOf(users.get(position).getCounters().getCommentsCount())));
     }
 
     @Override

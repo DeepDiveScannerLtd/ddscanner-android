@@ -500,4 +500,5 @@
     <string name="slider_title_notification">Notification photos</string>
     <string name="slider_title_profile">Profile photos</string>
     <string name="slider_title_maps">Maps</string>
+    <string name="checkins_reiew_count">%1$s reviews</string>
 </resources>
