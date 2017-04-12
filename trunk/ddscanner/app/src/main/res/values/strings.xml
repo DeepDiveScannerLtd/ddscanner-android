@@ -492,4 +492,12 @@
     <string name="dive_spot_approve">Dive spots</string>
     <string name="apply">APPLY</string>
     <string name="single_reiew_title">Review</string>
+    <string name="slider_photos_count_pattern">%1$s of %2$s</string>
+    <string name="slider_title_all">All photos</string>
+    <string name="slider_title_dive_spot">Dive spot photos</string>
+    <string name="slider_title_reiews">Reviews photos</string>
+    <string name="slider_title_review">Review photos</string>
+    <string name="slider_title_notification">Notification photos</string>
+    <string name="slider_title_profile">Profile photos</string>
+    <string name="slider_title_maps">Maps</string>
 </resources>

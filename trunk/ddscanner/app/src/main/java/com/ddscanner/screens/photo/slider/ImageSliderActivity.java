@@ -1,5 +1,7 @@
 package com.ddscanner.screens.photo.slider;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -7,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
 import android.view.MenuInflater;
@@ -22,6 +25,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
+import com.ddscanner.events.HidePhotoInfoEvent;
 import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.entities.DiveSpotPhoto;
 import com.ddscanner.entities.DiveSpotPhotosResponseEntity;
@@ -37,7 +41,11 @@ import com.ddscanner.ui.views.SliderViewPager;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
+import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
+
+import org.simpleframework.xml.stream.OutputNode;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -66,13 +74,17 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     private MaterialDialog materialDialog;
     private SimpleGestureFilter detector;
     private RelativeLayout likesLayout;
+    private TextView title;
     private ImageView likeIcon;
     private TextView likesCount;
     private String sourceId;
+    private TextView photosCount;
     private LikeDislikeResultListener likeResultListener = new LikeDislikeResultListener(true);
     private LikeDislikeResultListener dislikeResultListener = new LikeDislikeResultListener(false);
     private ArrayList<DiveSpotPhoto> deletedPhotos = new ArrayList<>();
     private boolean isLikeRequestStarted = false;
+    private RelativeLayout topLayout;
+    private RelativeLayout bottomLayout;
 
     float x1, x2;
     float y1, y2;
@@ -234,6 +246,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     private void changeUiAccrodingPosition(final int position) {
         this.position = position;
         likesCount.setText(images.get(position).getLikesCount());
+        photosCount.setText(DDScannerApplication.getInstance().getString(R.string.slider_photos_count_pattern, String.valueOf(position + 1), String.valueOf(images.size())));
         if (images.get(position).isLiked()) {
             likeIcon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_like_photo_full));
         } else {
@@ -241,14 +254,7 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         }
         userName.setText(images.get(position).getAuthor().getName());
         date.setText(Helpers.convertDateToImageSliderActivity(images.get(position).getDate()));
-        Picasso.with(this)
-                .load(getString(R.string.base_photo_url, images.get(position).getAuthor().getPhoto(), "1"))
-                .resize(Math.round(Helpers.convertDpToPixel(35, this)), Math.round(Helpers.convertDpToPixel(35, this)))
-                .centerCrop()
-                .placeholder(R.drawable.gray_circle_placeholder)
-                .error(R.drawable.avatar_profile_default)
-                .transform(new CropCircleTransformation())
-                .into(avatar);
+        Picasso.with(this).load(getString(R.string.base_photo_url, images.get(position).getAuthor().getPhoto(), "1")).resize(Math.round(Helpers.convertDpToPixel(35, this)), Math.round(Helpers.convertDpToPixel(35, this))).centerCrop().placeholder(R.drawable.gray_circle_placeholder).error(R.drawable.avatar_profile_default).transform(new CropCircleTransformation()).into(avatar);
         if (!images.get(position).getAuthor().getId().equals(DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId())) {
             options.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -267,6 +273,10 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     }
 
     private void findViews() {
+        bottomLayout = (RelativeLayout) findViewById(R.id.bottom_layout);
+        topLayout = (RelativeLayout) findViewById(R.id.top_layout);
+        title = (TextView) findViewById(R.id.title);
+        photosCount = (TextView) findViewById(R.id.images_count);
         likesLayout = (RelativeLayout) findViewById(R.id.likes_layout);
         likeIcon = (ImageView) findViewById(R.id.icon);
         likesCount = (TextView) findViewById(R.id.likes_count);
@@ -280,6 +290,32 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
     }
 
     private void setUi() {
+        switch (photoOpenedSource) {
+            case ALL:
+                title.setText(R.string.slider_title_all);
+                break;
+            case DIVESPOT:
+                title.setText(R.string.slider_title_dive_spot);
+                break;
+            case REVIEW:
+                title.setText(R.string.slider_title_reiews);
+                break;
+            case REVIEWSLIST:
+                title.setText(R.string.slider_title_review);
+                break;
+            case REVIEWS:
+                title.setText(R.string.slider_title_review);
+                break;
+            case NOTIFICATION:
+                title.setText(R.string.slider_title_notification);
+                break;
+            case PROFILE:
+                title.setText(R.string.slider_title_profile);
+                break;
+            case MAPS:
+                title.setText(R.string.slider_title_maps);
+                break;
+        }
         options.setVisibility(View.VISIBLE);
         viewPager.setCurrentItem(position);
         if (photoOpenedSource.equals(PhotoOpenedSource.MAPS)) {
@@ -397,6 +433,12 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         }
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        DDScannerApplication.bus.register(this);
+    }
+
     private class MenuItemsClickListener implements PopupMenu.OnMenuItemClickListener {
 
         private String imageName;
@@ -436,17 +478,16 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
             intent.putExtra("deletedImages", deletedPhotos);
             setResult(RESULT_OK, intent);
             finish();
-            overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
         } else {
             setResult(RESULT_CANCELED);
             finish();
-            overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
         }
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+        DDScannerApplication.bus.unregister(this);
         DDScannerApplication.getInstance().getDiveSpotPhotosContainer().setPhotos(images);
     }
 
@@ -584,6 +625,74 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
         images.get(position).setLiked(false);
         images.get(position).setLikesCount(String.valueOf(Integer.parseInt(likesCount.getText().toString()) - 1));
         likesCount.setText(images.get(position).getLikesCount());
+    }
+
+    @Subscribe
+    public void changeLayoutStates(HidePhotoInfoEvent event) {
+        if (bottomLayout.getVisibility() == View.VISIBLE) {
+            hideLayouts();
+        } else {
+            showLayouts();
+            topLayout.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void hideLayouts() {
+        bottomLayout.animate()
+                .translationY(bottomLayout.getHeight())
+                .alpha(0.0f)
+                .setInterpolator(new FastOutSlowInInterpolator())
+                .setDuration(200)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        bottomLayout.setVisibility(View.GONE);
+                    }
+                });
+
+        topLayout.animate()
+                .translationY(-topLayout.getHeight())
+                .alpha(0.0f)
+                .setInterpolator(new FastOutSlowInInterpolator())
+                .setDuration(200)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        topLayout.setVisibility(View.GONE);
+                    }
+                });
+    }
+
+    private void showLayouts() {
+        bottomLayout.setVisibility(View.VISIBLE);
+        bottomLayout.setAlpha(0.0f);
+        topLayout.setVisibility(View.VISIBLE);
+        topLayout.setAlpha(0.0f);
+        bottomLayout.animate()
+                .translationY(0)
+                .alpha(1.0f)
+                .setDuration(100)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        bottomLayout.setVisibility(View.VISIBLE);
+                    }
+                });
+
+        topLayout.animate()
+                .translationY(0)
+                .alpha(1.0f)
+                .setDuration(100)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        topLayout.setVisibility(View.VISIBLE);
+                    }
+                });
     }
 
     private class LikeDislikeResultListener extends DDScannerRestClient.ResultListener<Void> {
