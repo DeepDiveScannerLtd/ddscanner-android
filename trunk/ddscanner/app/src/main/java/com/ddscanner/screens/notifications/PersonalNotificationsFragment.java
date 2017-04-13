@@ -6,12 +6,10 @@ import android.databinding.DataBindingUtil;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,21 +17,15 @@ import android.widget.LinearLayout;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
-import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.databinding.FragmentPersonalNotificationsBinding;
 import com.ddscanner.entities.DiveSpotListSource;
 import com.ddscanner.entities.NotificationEntity;
-import com.ddscanner.entities.NotificationOld;
 import com.ddscanner.rest.DDScannerRestClient;
-import com.ddscanner.ui.activities.DiveSpotsListActivity;
+import com.ddscanner.screens.divespots.list.DiveSpotsListActivity;
 import com.ddscanner.ui.activities.MainActivity;
-import com.ddscanner.ui.adapters.SectionedRecyclerViewAdapter;
-import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.SharedPreferenceHelper;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 /**
  * Created by lashket on 25.5.16.

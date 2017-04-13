@@ -17,7 +17,7 @@ import com.ddscanner.screens.divecemter.profile.languages.DiveCenterProfileLangu
 import com.ddscanner.screens.instructors.InstructorsActivity;
 import com.ddscanner.screens.profile.divecenter.DiveCenterProfileFragmentViewModel;
 import com.ddscanner.screens.profile.divecenter.DiveCenterSpotsActivity;
-import com.ddscanner.ui.activities.DiveSpotsListActivity;
+import com.ddscanner.screens.divespots.list.DiveSpotsListActivity;
 import com.ddscanner.ui.adapters.UserPhotosListAdapter;
 import com.google.android.gms.maps.model.LatLng;
 

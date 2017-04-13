@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.ddscanner.screens.divespots.list.DiveSpotListItemViewModel" />
+
+    </data>
+<RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="82dp"
-    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/white"
     android:clickable="true"
     android:focusable="true">
@@ -20,7 +29,8 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="15dp"
-            android:layout_marginRight="20dp" />
+            android:layout_marginRight="20dp"
+            app:loadDiveSpotPhotoFrom="@{viewModel}"/>
         <RelativeLayout
             android:id="@+id/product_data_layout"
             android:layout_width="wrap_content"
@@ -36,7 +46,8 @@
                 android:layout_height="wrap_content"
                 tools:text="Rock back"
                 android:textColor="@color/black_text"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:text="@{viewModel.diveSpot.name}"/>
 
             <com.ddscanner.ui.views.RatingView
                 android:id="@+id/stars"
@@ -45,7 +56,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
                 android:gravity="center_vertical"
-                android:orientation="horizontal" />
+                android:orientation="horizontal"
+                app:setRatingFrom="@{viewModel}"/>
             <TextView
                 android:id="@+id/object"
                 android:layout_width="wrap_content"
@@ -53,7 +65,8 @@
                 android:layout_below="@+id/stars"
                 android:textSize="15sp"
                 android:textColor="@color/shuffle_item_text"
-                tools:text="Wreck"/>
+                tools:text="Wreck"
+                android:text="@{viewModel.diveSpot.object}"/>
         </RelativeLayout>
         <ImageView
             android:layout_toRightOf="@+id/product_logo"
@@ -64,3 +77,4 @@
             android:src="@drawable/divider"/>
     </RelativeLayout>
 </RelativeLayout>
+    </layout>

@@ -1,10 +1,9 @@
-package com.ddscanner.ui.activities;
+package com.ddscanner.screens.divespots.list;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -20,7 +19,7 @@ import com.ddscanner.entities.DiveSpotShort;
 import com.ddscanner.entities.DiveSpotListSource;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.divespot.details.DiveSpotDetailsActivity;
-import com.ddscanner.ui.adapters.DiveSpotsListAdapter;
+import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogsRequestCodes;

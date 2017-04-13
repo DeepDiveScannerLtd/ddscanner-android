@@ -33,7 +33,7 @@ import com.ddscanner.events.LocationReadyEvent;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.divespot.details.DiveSpotDetailsActivity;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
-import com.ddscanner.ui.adapters.DiveSpotsListAdapter;
+import com.ddscanner.screens.divespots.list.DiveSpotsListAdapter;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.ui.managers.DiveCenterSpotsClusterManager;
 import com.ddscanner.utils.ActivitiesRequestCodes;

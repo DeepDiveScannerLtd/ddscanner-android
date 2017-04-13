@@ -39,7 +39,7 @@ import com.ddscanner.screens.reiews.list.ReviewsActivity;
 import com.ddscanner.screens.user.profile.UserProfileActivity;
 import com.ddscanner.ui.activities.AboutActivity;
 import com.ddscanner.events.ChangeLoginViewEvent;
-import com.ddscanner.ui.activities.DiveSpotsListActivity;
+import com.ddscanner.screens.divespots.list.DiveSpotsListActivity;
 import com.ddscanner.ui.activities.MainActivity;
 import com.ddscanner.ui.activities.PhotosGalleryActivity;
 import com.ddscanner.ui.activities.UserLikesDislikesActivity;

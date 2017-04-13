@@ -1,28 +1,20 @@
-package com.ddscanner.ui.adapters;
+package com.ddscanner.screens.divespots.list;
 
 import android.app.Activity;
-import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.ddscanner.DDScannerApplication;
-import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
+import com.ddscanner.databinding.ProductItemBinding;
 import com.ddscanner.entities.DiveSpotShort;
 import com.ddscanner.events.ShowDIveSpotDetailsActivityEvent;
 import com.ddscanner.screens.divespot.details.DiveSpotDetailsActivity;
-import com.ddscanner.ui.views.RatingView;
-import com.ddscanner.utils.ActivitiesRequestCodes;
-import com.ddscanner.utils.Helpers;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-
-import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
 /**
  * Created by lashket on 23.12.15.
@@ -44,24 +36,14 @@ public class DiveSpotsListAdapter
 
     @Override
     public ProductListViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View itemView = LayoutInflater.
-                from(viewGroup.getContext()).
-                inflate(R.layout.product_item, viewGroup, false);
-        return new ProductListViewHolder(itemView);
+        ProductItemBinding binding = ProductItemBinding.inflate(LayoutInflater.from(viewGroup.getContext()), viewGroup, false);
+        return new ProductListViewHolder(binding.getRoot());
 
     }
 
     @Override
     public void onBindViewHolder(ProductListViewHolder productListViewHolder, int i) {
-        DiveSpotShort divespot = new DiveSpotShort();
-        divespot = divespots.get(i);
-        Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, divespot.getImage(), "1")).resize(Math.round(Helpers.convertDpToPixel(130, context)), Math.round(Helpers.convertDpToPixel(130, context))).centerCrop().transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2, context)), 0, RoundedCornersTransformation.CornerType.ALL)).placeholder(R.drawable.placeholder_photo_wit_round_corners).error(R.drawable.ds_list_photo_default).transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2, context)),0)).into(productListViewHolder.imageView);
-        if (divespot.getName() != null) {
-            productListViewHolder.title.setText(divespot.getName());
-        }
-        productListViewHolder.stars.removeAllViews();
-        productListViewHolder.stars.setRating(Math.round(divespot.getRating()), R.drawable.ic_list_star_full, R.drawable.ic_list_star_empty);
-        productListViewHolder.object.setText(divespot.getObject());
+        productListViewHolder.binding.setViewModel(new DiveSpotListItemViewModel(divespots.get(productListViewHolder.getAdapterPosition())));
     }
 
     public void removeSpotFromList(int position) {
@@ -78,24 +60,22 @@ public class DiveSpotsListAdapter
     }
 
     public class ProductListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        protected ImageView imageView;
-        protected TextView title;
-        protected RatingView stars;
-        protected TextView object;
-        private int position;
-        private final String PRODUCT = "PRODUCT";
+
+        ProductItemBinding binding;
 
         public ProductListViewHolder(View v) {
             super(v);
             v.setOnClickListener(this);
-            imageView = (ImageView) v.findViewById(R.id.product_logo);
-            title = (TextView) v.findViewById(R.id.product_title);
-            stars = (RatingView) v.findViewById(R.id.stars);
-            object = (TextView) v.findViewById(R.id.object);
+            binding = DataBindingUtil.bind(v);
         }
 
         @Override
         public void onClick(View v) {
+
+            if (spotViewSource == EventsTracker.SpotViewSource.FROM_LIST) {
+                DiveSpotDetailsActivity.show(context, String.valueOf(divespots.get(getAdapterPosition()).getId()),EventsTracker.SpotViewSource.FROM_LIST);
+                return;
+            }
             DDScannerApplication.bus.post(new ShowDIveSpotDetailsActivityEvent(getAdapterPosition(), String.valueOf(divespots.get(getAdapterPosition()).getId())));
 //            DiveSpotDetailsActivity.showForResult(context, String.valueOf(divespots.get(getAdapterPosition()).getId()), spotViewSource, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOTS_LIST_ADAPTER);
         }

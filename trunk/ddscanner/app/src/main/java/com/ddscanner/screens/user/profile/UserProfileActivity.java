@@ -25,7 +25,7 @@ import com.ddscanner.screens.profile.divecenter.DiveCenterProfileFragment;
 import com.ddscanner.screens.profile.user.ProfileFragment;
 import com.ddscanner.screens.reiews.list.ReviewsActivity;
 import com.ddscanner.ui.activities.BaseAppCompatActivity;
-import com.ddscanner.ui.activities.DiveSpotsListActivity;
+import com.ddscanner.screens.divespots.list.DiveSpotsListActivity;
 import com.ddscanner.ui.activities.PhotosGalleryActivity;
 import com.ddscanner.ui.activities.UserLikesDislikesActivity;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
