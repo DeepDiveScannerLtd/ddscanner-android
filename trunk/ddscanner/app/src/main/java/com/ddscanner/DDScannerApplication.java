@@ -10,6 +10,7 @@ import com.crashlytics.android.Crashlytics;
 import com.ddscanner.analytics.AnalyticsSystemsManager;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.activities.InternetClosedActivity;
+import com.ddscanner.utils.DialogHelpers;
 import com.ddscanner.utils.DiveSpotPhotosContainer;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.facebook.FacebookSdk;
@@ -34,6 +35,7 @@ public class DDScannerApplication extends Application {
     // These are now application member fields, no static methods involved. This is done for mocking them during instrumentation tests
     private DDScannerRestClient ddScannerRestClient;
     private SharedPreferenceHelper sharedPreferenceHelper;
+    private DialogHelpers dialogHelpers;
     private DiveSpotPhotosContainer diveSpotPhotosContainer = new DiveSpotPhotosContainer();
     private ArrayList<String> notificationsContainer = new ArrayList<>();
 
@@ -56,6 +58,7 @@ public class DDScannerApplication extends Application {
 
         ddScannerRestClient = new DDScannerRestClient();
         sharedPreferenceHelper = new SharedPreferenceHelper();
+        dialogHelpers = new DialogHelpers();
     }
 
     protected void attachBaseContext(Context base) {
@@ -68,6 +71,10 @@ public class DDScannerApplication extends Application {
 //        Intent error = new Intent(context, InternetClosedActivity.class);
 //        error.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //        context.startActivity(error);
+    }
+
+    public DialogHelpers getDialogHelpers() {
+        return dialogHelpers;
     }
 
     public static boolean isActivityVisible() {

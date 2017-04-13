@@ -501,4 +501,7 @@
     <string name="slider_title_profile">Profile photos</string>
     <string name="slider_title_maps">Maps</string>
     <string name="checkins_reiew_count">%1$s reviews</string>
+    <string name="what_to_do_with_dive_spot">Choose what you want to do with this dive spot</string>
+    <string name="edit_spot_dialog">EDIT</string>
+    <string name="dialog_remove_spot">REMOVE</string>
 </resources>

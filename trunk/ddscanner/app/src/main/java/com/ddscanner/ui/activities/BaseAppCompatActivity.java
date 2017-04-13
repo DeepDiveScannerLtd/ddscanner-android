@@ -35,6 +35,7 @@ public class BaseAppCompatActivity extends AppCompatActivity {
     private static final String TAG = BaseAppCompatActivity.class.getName();
     public static final int RESULT_CODE_PROFILE_LOGOUT = 1010;
     public static final int RESULT_CODE_FILTERS_RESETED = 1011;
+    public static final int RESULT_CODE_DIVE_SPOT_REMOVED = 1012;
 
 
     private LocationHelper locationHelper;

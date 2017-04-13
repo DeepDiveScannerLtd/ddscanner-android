@@ -20,7 +20,7 @@ import java.lang.ref.WeakReference;
 
 public class DialogHelpers {
 
-    private DialogHelpers() {
+    public DialogHelpers() {
 
     }
 
@@ -82,6 +82,10 @@ public class DialogHelpers {
 
     public static void showInstructorConfirmationDialog(FragmentManager fragmentManager) {
         ConfirmationDialogFragment.showForActivity(fragmentManager, R.string.empty_string, R.string.are_you_an_instructor, R.string.yes, R.string.no);
+    }
+
+    public void showNegativeApproveDialog(FragmentManager fragmentManager) {
+        ConfirmationDialogFragment.showForActivity(fragmentManager, R.string.empty_string, R.string.what_to_do_with_dive_spot, R.string.dialog_remove_spot, R.string.edit_spot_dialog);
     }
 
 }

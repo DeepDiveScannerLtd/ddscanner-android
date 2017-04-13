@@ -34,6 +34,7 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.databinding.ActivityDiveSpotDetailsBinding;
+import com.ddscanner.interfaces.ConfirmationDialogClosedListener;
 import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.entities.DiveSpotDetailsEntity;
 import com.ddscanner.entities.FlagsEntity;
@@ -43,6 +44,7 @@ import com.ddscanner.entities.SealifeShort;
 import com.ddscanner.events.OpenPhotosActivityEvent;
 import com.ddscanner.events.PickPhotoForCheckedInDialogEvent;
 import com.ddscanner.rest.DDScannerRestClient;
+import com.ddscanner.ui.activities.BaseAppCompatActivity;
 import com.ddscanner.ui.activities.EditorsListActivity;
 import com.ddscanner.ui.activities.PhotosGalleryActivity;
 import com.ddscanner.ui.activities.AddPhotosDoDiveSpotActivity;
@@ -59,6 +61,7 @@ import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.ui.dialogs.CheckedInDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
+import com.ddscanner.utils.DialogHelpers;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.SharedPreferenceHelper;
@@ -76,7 +79,7 @@ import com.squareup.otto.Subscribe;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DiveSpotDetailsActivity extends AppCompatActivity implements RatingBar.OnRatingBarChangeListener, DialogClosedListener, CompoundButton.OnCheckedChangeListener {
+public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements RatingBar.OnRatingBarChangeListener, DialogClosedListener, CompoundButton.OnCheckedChangeListener, ConfirmationDialogClosedListener {
 
     private static final String TAG = DiveSpotDetailsActivity.class.getName();
 
@@ -186,10 +189,18 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
         if (spotViewSource != null) {
             EventsTracker.trackDiveSpotView(id, spotViewSource);
         }
-
         Intent intent = new Intent(context, DiveSpotDetailsActivity.class);
         intent.putExtra(EXTRA_ID, id);
         context.startActivity(intent);
+    }
+
+    public static void showForResult(Activity context, String id, EventsTracker.SpotViewSource spotViewSource, int requestCode) {
+        if (spotViewSource != null) {
+            EventsTracker.trackDiveSpotView(id, spotViewSource);
+        }
+        Intent intent = new Intent(context, DiveSpotDetailsActivity.class);
+        intent.putExtra(EXTRA_ID, id);
+        context.startActivityForResult(intent, requestCode);
     }
 
     @Override
@@ -905,26 +916,17 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
     }
 
     public void falseApproveDiveSpot(View view) {
-        MaterialDialog.Builder dialog = new MaterialDialog.Builder(this);
-        dialog.title("What do you want")
-                .content("bla bla bla")
-                .positiveText("edit")
-                .positiveColor(ContextCompat.getColor(this, R.color.primary))
-                .negativeColor(ContextCompat.getColor(this, R.color.primary))
-                .negativeText("remove")
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        tryToCallEditDiveSpotActivity();
-                    }
-                })
-                .onNegative(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        DDScannerApplication.getInstance().getDdScannerRestClient().postApproveDiveSpot(diveSpotId, false, falseApproveResultListener);
-                    }
-                });
-        dialog.show();
+        DDScannerApplication.getInstance().getDialogHelpers().showNegativeApproveDialog(getSupportFragmentManager());
+    }
+
+    @Override
+    public void onPositiveDialogClicked() {
+        DDScannerApplication.getInstance().getDdScannerRestClient().postApproveDiveSpot(diveSpotId, false, falseApproveResultListener);
+    }
+
+    @Override
+    public void onNegativeDialogClicked() {
+        tryToCallEditDiveSpotActivity();
     }
 
     public void writeReviewClicked(View view) {
@@ -956,6 +958,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
         @Override
         public void onSuccess(Void result) {
             if (!isTrue) {
+                setResult(RESULT_CODE_DIVE_SPOT_REMOVED);
                 finish();
                 return;
             }
@@ -1175,9 +1178,6 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
         public void onSuccess(Void result) {
 
             materialDialog.dismiss();
-            if (menu != null && menu.findItem(R.id.edit_dive_spot) != null) {
-                menu.findItem(R.id.edit_dive_spot).setVisible(false);
-            }
             if (isValid) {
                 EventsTracker.trackDiveSpotValid();
             } else {
@@ -1186,6 +1186,7 @@ public class DiveSpotDetailsActivity extends AppCompatActivity implements Rating
             if (isValid) {
                 binding.approveLayout.setVisibility(View.GONE);
             } else {
+                setResult(RESULT_CODE_DIVE_SPOT_REMOVED);
                 finish();
             }
         }

@@ -1,32 +1,27 @@
 package com.ddscanner.ui.adapters;
 
+import android.app.Activity;
 import android.content.Context;
-import android.graphics.PorterDuff;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.DiveSpotShort;
+import com.ddscanner.events.ShowDIveSpotDetailsActivityEvent;
 import com.ddscanner.screens.divespot.details.DiveSpotDetailsActivity;
 import com.ddscanner.ui.views.RatingView;
-import com.ddscanner.ui.views.TransformationRoundImage;
-import com.ddscanner.utils.Constants;
+import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Helpers;
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-import jp.wasabeef.picasso.transformations.CropSquareTransformation;
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
 /**
@@ -38,10 +33,10 @@ public class DiveSpotsListAdapter
     private static final String TAG = DiveSpotsListAdapter.class.getSimpleName();
 
     public ArrayList<DiveSpotShort> divespots;
-    private Context context;
+    private Activity context;
     private EventsTracker.SpotViewSource spotViewSource;
 
-    public DiveSpotsListAdapter(ArrayList<DiveSpotShort> divespots, Context context, EventsTracker.SpotViewSource spotViewSource) {
+    public DiveSpotsListAdapter(ArrayList<DiveSpotShort> divespots, Activity context, EventsTracker.SpotViewSource spotViewSource) {
         this.divespots = divespots;
         this.context = context;
         this.spotViewSource = spotViewSource;
@@ -69,6 +64,11 @@ public class DiveSpotsListAdapter
         productListViewHolder.object.setText(divespot.getObject());
     }
 
+    public void removeSpotFromList(int position) {
+        divespots.remove(position);
+        notifyItemRemoved(position);
+    }
+
     @Override
     public int getItemCount() {
         if (divespots == null) {
@@ -83,12 +83,10 @@ public class DiveSpotsListAdapter
         protected RatingView stars;
         protected TextView object;
         private int position;
-        private Context context;
         private final String PRODUCT = "PRODUCT";
 
         public ProductListViewHolder(View v) {
             super(v);
-            context = itemView.getContext();
             v.setOnClickListener(this);
             imageView = (ImageView) v.findViewById(R.id.product_logo);
             title = (TextView) v.findViewById(R.id.product_title);
@@ -98,13 +96,9 @@ public class DiveSpotsListAdapter
 
         @Override
         public void onClick(View v) {
-            DiveSpotDetailsActivity.show(context, String.valueOf(divespots.get(getAdapterPosition()).getId()), spotViewSource);
+            DDScannerApplication.bus.post(new ShowDIveSpotDetailsActivityEvent(getAdapterPosition(), String.valueOf(divespots.get(getAdapterPosition()).getId())));
+//            DiveSpotDetailsActivity.showForResult(context, String.valueOf(divespots.get(getAdapterPosition()).getId()), spotViewSource, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOTS_LIST_ADAPTER);
         }
-    }
-
-    public void setDiveSpots(ArrayList<DiveSpotShort> diveSpotShorts) {
-        this.divespots = diveSpotShorts;
-        notifyDataSetChanged();
     }
 
 }

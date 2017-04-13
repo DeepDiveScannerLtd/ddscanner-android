@@ -14,21 +14,24 @@ import android.view.View;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
+import com.ddscanner.events.ShowDIveSpotDetailsActivityEvent;
 import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.entities.DiveSpotShort;
 import com.ddscanner.entities.DiveSpotListSource;
 import com.ddscanner.rest.DDScannerRestClient;
+import com.ddscanner.screens.divespot.details.DiveSpotDetailsActivity;
 import com.ddscanner.ui.adapters.DiveSpotsListAdapter;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
 import com.rey.material.widget.ProgressView;
+import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DiveSpotsListActivity extends AppCompatActivity implements DialogClosedListener {
+public class DiveSpotsListActivity extends BaseAppCompatActivity implements DialogClosedListener {
 
     private static final String BUNDLE_KEY_SPOT_VIEW_SOURCE = "BUNDLE_KEY_SPOT_VIEW_SOURCE";
     
@@ -40,12 +43,15 @@ public class DiveSpotsListActivity extends AppCompatActivity implements DialogCl
     private EventsTracker.SpotViewSource spotViewSource;
     private DiveSpotListSource diveSpotListSource;
     private String userId;
+    private DiveSpotsListAdapter diveSpotsListAdapter;
+    private int positionToDelete;
 
     private DDScannerRestClient.ResultListener<ArrayList<DiveSpotShort>> divespotsListResultListener = new DDScannerRestClient.ResultListener<ArrayList<DiveSpotShort>>() {
 
         @Override
         public void onSuccess(ArrayList<DiveSpotShort> result) {
             DiveSpotsListActivity.this.diveSpotShorts = result;
+            diveSpotsListAdapter = new DiveSpotsListAdapter(result, DiveSpotsListActivity.this, spotViewSource);
             setUi();
         }
 
@@ -122,6 +128,11 @@ public class DiveSpotsListActivity extends AppCompatActivity implements DialogCl
                     }
                 }
                 break;
+            case ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOTS_LIST_ADAPTER:
+                if (resultCode == RESULT_CODE_DIVE_SPOT_REMOVED) {
+                    diveSpotsListAdapter.removeSpotFromList(positionToDelete);
+                }
+                break;
         }
     }
     
@@ -153,10 +164,9 @@ public class DiveSpotsListActivity extends AppCompatActivity implements DialogCl
     }
 
     private void setUi() {
-        rc.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         rc.setLayoutManager(linearLayoutManager);
-        rc.setAdapter(new DiveSpotsListAdapter((ArrayList<DiveSpotShort>) diveSpotShorts, this, spotViewSource));
+        rc.setAdapter(diveSpotsListAdapter);
         progressBarFull.setVisibility(View.GONE);
         rc.setVisibility(View.VISIBLE);
     }
@@ -207,6 +217,25 @@ public class DiveSpotsListActivity extends AppCompatActivity implements DialogCl
                 break;
         }
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        DDScannerApplication.bus.register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        DDScannerApplication.bus.unregister(this);
+    }
+
+    @Subscribe
+    public void showDiveSpotDetailsActivity(ShowDIveSpotDetailsActivityEvent event) {
+        positionToDelete = event.getPosition();
+        DiveSpotDetailsActivity.showForResult(this, event.getId(), spotViewSource, ActivitiesRequestCodes.REQUEST_CODE_DIVE_SPOTS_LIST_ADAPTER);
+    }
+
 }
 
 

@@ -217,4 +217,7 @@ public class ActivitiesRequestCodes {
     //SealifeDetailsActivity
     public static final int REQUEST_CODE_SEALIFE_ACTIVITY_EDIT_SEALIFE = 5001;
 
+    //DiveSpotListAdapter
+    public static final int REQUEST_CODE_DIVE_SPOTS_LIST_ADAPTER = 6001;
+
 }
