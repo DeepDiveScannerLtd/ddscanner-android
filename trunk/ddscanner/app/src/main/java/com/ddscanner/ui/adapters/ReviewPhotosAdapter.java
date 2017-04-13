@@ -46,8 +46,13 @@ public class ReviewPhotosAdapter extends RecyclerView.Adapter<ReviewPhotosAdapte
        // Helpers.appendImagesWithPath(photos, path);
     }
 
-    public ReviewPhotosAdapter(Activity context) {
+    public ReviewPhotosAdapter(Activity context, ArrayList<DiveSpotPhoto> photos, boolean isSelfPhotos, int commentPosition, int photosCount, String commentId) {
         this.context = context;
+        this.photos = photos;
+        this.isSelfPhotos =  isSelfPhotos;
+        this.commentPosition = commentPosition;
+        this.photosCount = photosCount;
+        this.commentId = commentId;
     }
 
     @Override

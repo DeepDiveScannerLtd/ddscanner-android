@@ -25,6 +25,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
+import com.ddscanner.entities.ReloadSliderImagesEvent;
 import com.ddscanner.events.HidePhotoInfoEvent;
 import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.entities.DiveSpotPhoto;
@@ -693,6 +694,11 @@ public class ImageSliderActivity extends AppCompatActivity implements ViewPager.
                         topLayout.setVisibility(View.VISIBLE);
                     }
                 });
+    }
+
+    @Subscribe
+    public void dismissActivity(ReloadSliderImagesEvent event) {
+        finish();
     }
 
     private class LikeDislikeResultListener extends DDScannerRestClient.ResultListener<Void> {

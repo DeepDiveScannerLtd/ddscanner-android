@@ -8,6 +8,7 @@ import android.support.v13.app.FragmentStatePagerAdapter;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.DiveSpotPhoto;
+import com.ddscanner.entities.ReloadSliderImagesEvent;
 
 import java.util.ArrayList;
 
@@ -35,6 +36,10 @@ public class SliderImagesAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public  int getCount() {
+        if (photos == null) {
+            DDScannerApplication.bus.post(new ReloadSliderImagesEvent());
+            return 0;
+        }
         return photos.size();
     }
 

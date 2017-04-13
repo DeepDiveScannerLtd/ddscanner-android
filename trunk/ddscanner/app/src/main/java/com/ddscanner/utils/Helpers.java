@@ -578,7 +578,7 @@ public class Helpers {
     }
 
     public static String getDiverLevel(Integer position) {
-        if (position != null) {
+        if (position != null && position > 0) {
             List<String> levels = getDiveLevelTypes();
             if (levels.get(position - 1) == null) {
                 return "";

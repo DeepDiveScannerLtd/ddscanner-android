@@ -94,8 +94,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         Log.i(TAG, reviewsListViewHolder.toString());
         if (commentEntity.getComment().getPhotos() != null) {
             reviewsListViewHolder.photos.setVisibility(View.VISIBLE);
-            ReviewPhotosAdapter adapter = (ReviewPhotosAdapter) reviewsListViewHolder.photos.getAdapter();
-            adapter.setData(commentEntity.getComment().getPhotos(), false, reviewsListViewHolder.getAdapterPosition(), commentEntity.getComment().getPhotosCount(), commentEntity.getComment().getId());
+            reviewsListViewHolder.photos.setAdapter(new ReviewPhotosAdapter(context, commentEntity.getComment().getPhotos(), false, reviewsListViewHolder.getAdapterPosition(), commentEntity.getComment().getPhotosCount(), commentEntity.getComment().getId()));
         }
         reviewsListViewHolder.likeView.setOnClickListener(null);
         reviewsListViewHolder.dislikeView.setOnClickListener(null);
@@ -150,8 +149,7 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
         reviewsListViewHolder.date.setText(Helpers.getCommentDate(commentEntity.getComment().getDate()));
         if (commentEntity.getSealifes() != null) {
             reviewsListViewHolder.sealifesLayout.setVisibility(View.VISIBLE);
-            SealifeReviewListAdapter adapter = (SealifeReviewListAdapter) reviewsListViewHolder.sealifesList.getAdapter();
-            adapter.setData(commentEntity.getSealifes());
+            reviewsListViewHolder.sealifesList.setAdapter(new SealifeReviewListAdapter(context, commentEntity.getSealifes()));
         } else {
             reviewsListViewHolder.sealifesLayout.setVisibility(View.GONE);
         }
@@ -311,12 +309,9 @@ public class ReviewsListAdapter extends RecyclerView.Adapter<ReviewsListAdapter.
             LinearLayoutManager sealifeLayoutManager = new LinearLayoutManager(context);
             sealifeLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
             sealifesList.setLayoutManager(sealifeLayoutManager);
-            sealifesList.setAdapter(new SealifeReviewListAdapter(context));
-            ReviewPhotosAdapter reviewPhotosAdapter = new ReviewPhotosAdapter(context);
             GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 5);
             photos.setNestedScrollingEnabled(false);
             photos.setLayoutManager(gridLayoutManager);
-            photos.setAdapter(reviewPhotosAdapter);
 
         }
 
