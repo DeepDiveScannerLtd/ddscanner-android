@@ -197,7 +197,7 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
                         case INSTRUCTOR_LEFT_DIVE_CENTER:
                         case DIVE_CENTER_INSTRUCTOR_ADD:
                         case DIVE_CENTER_INSTRUCTOR_REMOVE:
-                            UserProfileActivity.show(context, notifications.get(getAdapterPosition()).getId(), notifications.get(getAdapterPosition()).getType());
+                            UserProfileActivity.show(context, notifications.get(getAdapterPosition()).getUser().getId(), notifications.get(getAdapterPosition()).getUser().getType());
                         break;
                     }
                     break;

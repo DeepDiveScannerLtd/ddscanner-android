@@ -609,6 +609,9 @@ public class MainActivity extends BaseAppCompatActivity
         Log.i(TAG, "onStop");
         newotificationsCountEntity.setCancelled(true);
         DDScannerApplication.bus.unregister(this);
+        if (mainViewPager.getCurrentItem() == 1) {
+            DDScannerApplication.getInstance().getDdScannerRestClient().postNotificationsRead(notificationReadResultListner, DDScannerApplication.getInstance().getNotificationsContainer());
+        }
     }
 
     @Override
@@ -626,6 +629,7 @@ public class MainActivity extends BaseAppCompatActivity
         newotificationsCountEntity.setCancelled(false);
         AppEventsLogger.activateApp(this);
         DDScannerApplication.activityResumed();
+        getIsHasNewotifications();
         if (!Helpers.hasConnection(this)) {
             DDScannerApplication.showErrorActivity(this);
         }
