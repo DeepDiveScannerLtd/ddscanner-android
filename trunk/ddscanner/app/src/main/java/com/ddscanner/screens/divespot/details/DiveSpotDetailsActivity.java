@@ -119,6 +119,7 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
         public void onSuccess(FlagsEntity result) {
             binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().setFlags(result);
             updateMenuItems(menu);
+            changeUiAccordingNewFlags(result);
             if (isClickedEdit) {
                 if (result.isEditable() || (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType().equals(SharedPreferenceHelper.UserType.DIVECENTER) && result.isWorkingHere())) {
                     EventsTracker.trackDiveSpotEdit();
@@ -237,7 +238,6 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
         DiveSpotDetailsActivityViewModel.setVisibilityOfRatingLayout(binding.ratingLayout, binding.getDiveSpotViewModel());
         switch (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType()) {
             case DIVECENTER:
-                updateMenuItems(menu);
                 binding.fabCheckin.setVisibility(View.GONE);
                 binding.workinLayout.setVisibility(View.VISIBLE);
                 if (flagsEntity.isWorkingHere()) {
@@ -498,7 +498,7 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
                 onBackPressed();
                 return true;
             case R.id.favorite:
-                if (!isFavorite) {
+                if (binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getFlags() != null && !binding.getDiveSpotViewModel().getDiveSpotDetailsEntity().getFlags().isFavorite()) {
                     addDiveSpotToFavorites();
                 } else {
                     removeFromFavorites();
