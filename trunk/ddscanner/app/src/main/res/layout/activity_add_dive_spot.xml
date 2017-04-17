@@ -218,7 +218,7 @@
 
                     <ImageView
                         style="@style/CharacteristicsDiveSpotListIcons"
-                        android:src="@drawable/ic_addds_deep" />
+                        android:src="@drawable/ic_ds_deep_2" />
 
                     <android.support.v7.widget.AppCompatEditText
                         android:id="@+id/depth"
@@ -340,7 +340,7 @@
 
                     <ImageView
                         style="@style/CharacteristicsDiveSpotListIcons"
-                        android:src="@drawable/ic_addds_currents" />
+                        android:src="@drawable/ic_ds_currents" />
                     
 
                         <android.support.v7.widget.AppCompatSpinner
@@ -367,7 +367,7 @@
 
                     <ImageView
                         style="@style/CharacteristicsDiveSpotListIcons"
-                        android:src="@drawable/ic_addds_level" />
+                        android:src="@drawable/ic_ds_level" />
 
                         <android.support.v7.widget.AppCompatSpinner
                             android:id="@+id/level_spinner"
