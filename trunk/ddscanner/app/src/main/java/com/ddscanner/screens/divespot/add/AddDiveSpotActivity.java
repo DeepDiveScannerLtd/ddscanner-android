@@ -106,6 +106,7 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
     private EditText visibilityMin;
     private EditText visibilityMax;
     private Button btnSave;
+    private String createdSpotId;
     private RecyclerView sealifesRc;
     private SealifeListAddingDiveSpotAdapter sealifeListAddingDiveSpotAdapter = null;
     private ScrollView mainLayout;
@@ -173,6 +174,7 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
         @Override
         public void onConnectionFailure() {
             progressDialogUpload.dismiss();
+            UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_connection_error_title, R.string.error_connection_failed, DialogsRequestCodes.DRC_ADD_DIVE_SPOT_ACTIVITY_CONNECTION_ERROR, false);
         }
 
         @Override
@@ -188,6 +190,7 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
                     break;
                 case SERVER_INTERNAL_ERROR_500:
                 default:
+                    UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.error_server_error_title, R.string.error_unexpected_error, DialogsRequestCodes.DRC_ADD_DIVE_SPOT_ACTIVITY_UNEXPECTED_ERROR, false);
                     Helpers.handleUnexpectedServerError(getSupportFragmentManager(), url, errorMessage);
             }
         }
@@ -215,7 +218,7 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
         findViews();
         setUi();
         requsetCountryCode = RequestBody.create(MediaType.parse(Constants.MULTIPART_TYPE_TEXT), "RU");
-      //  DDScannerApplication.getInstance().getDdScannerRestClient().getFilters(filtersResultListener);
+        //  DDScannerApplication.getInstance().getDdScannerRestClient().getFilters(filtersResultListener);
         makeErrorsMap();
     }
 
@@ -358,7 +361,7 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
                 if (resultCode == RESULT_OK) {
                     isCountryChosed = true;
                     countryTitle.setTextColor(ContextCompat.getColor(this, R.color.black_text));
-                    BaseIdNamePhotoEntity baseIdNamePhotoEntity = (BaseIdNamePhotoEntity)data.getSerializableExtra("country");
+                    BaseIdNamePhotoEntity baseIdNamePhotoEntity = (BaseIdNamePhotoEntity) data.getSerializableExtra("country");
                     countryTitle.setText(baseIdNamePhotoEntity.getName());
                     requsetCountryCode = Helpers.createRequestBodyForString(baseIdNamePhotoEntity.getCode());
                 }
@@ -387,7 +390,7 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
 
     private void makeAddDiveSpotRequest() {
         progressDialogUpload.show();
-     //   DDScannerApplication.getInstance().getDdScannerRestClient().postAddDiveSpot(addDiveSpotResultListener, sealife, images, requestName, requestLat, requestLng, requestDepth, requestMinVisibility, requestMaxVisibility, requestCurrents, requestLevel, requestObject, requestDescription, requestToken, requestSocial, requestSecret);
+        //   DDScannerApplication.getInstance().getDdScannerRestClient().postAddDiveSpot(addDiveSpotResultListener, sealife, images, requestName, requestLat, requestLng, requestDepth, requestMinVisibility, requestMaxVisibility, requestCurrents, requestLevel, requestObject, requestDescription, requestToken, requestSocial, requestSecret);
         DDScannerApplication.getInstance().getDdScannerRestClient().postAddDiveSpot(resultListener, sealife, images, mapsList, requestLat, requestLng, requsetCountryCode, requestDepth, requestLevel, requestCurrents, requestMinVisibility, requestMaxVisibility, requestCoverNumber, translations, requestObject, requestIsEdit, requestIsWorkingHere);
     }
 
@@ -687,37 +690,39 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
     }
 
     private void showSuccessDialog(final String diveSpotId) {
-        MaterialDialog.Builder dialog = new MaterialDialog.Builder(this)
-                .title(R.string.thank_you_title)
-                .content(R.string.success_added)
-                .positiveText(R.string.ok)
-                .positiveColor(ContextCompat.getColor(this, R.color.primary))
-                .cancelable(false)
-                .dismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialogInterface) {
-                        EventsTracker.trackCheckIn(EventsTracker.CheckInStatus.CANCELLED);
-                    }
-                })
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog,
-                                        @NonNull DialogAction which) {
-                        if (!isFromMap) {
-                            DiveSpotDetailsActivity.show(AddDiveSpotActivity.this, diveSpotId, EventsTracker.SpotViewSource.UNKNOWN);
-                            finish();
-                        } else {
-                            Intent intent = new Intent();
-                            LatLng latLng = new LatLng(diveSpotLocation.latitude, diveSpotLocation.longitude);
-                            intent.putExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_RESULT_LAT_LNG, latLng);
-                            intent.putExtra(Constants.ADD_DIVE_SPOT_INTENT_DIVESPOT_ID, diveSpotId);
-                            setResult(RESULT_OK, intent);
-                            finish();
-                        }
-                    }
-                });
+        this.createdSpotId = diveSpotId;
+        UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.thank_you_title, R.string.success_added, DialogsRequestCodes.DRC_ADD_DIVE_SPOT_ACTIVITY_DIVE_SPOT_CREATED, false);
+//        MaterialDialog.Builder dialog = new MaterialDialog.Builder(this)
+//                .title(R.string.thank_you_title)
+//                .content(R.string.success_added)
+//                .positiveText(R.string.ok)
+//                .positiveColor(ContextCompat.getColor(this, R.color.primary))
+//                .cancelable(false)
+//                .dismissListener(new DialogInterface.OnDismissListener() {
+//                    @Override
+//                    public void onDismiss(DialogInterface dialogInterface) {
+//                        EventsTracker.trackCheckIn(EventsTracker.CheckInStatus.CANCELLED);
+//                    }
+//                })
+//                .onPositive(new MaterialDialog.SingleButtonCallback() {
+//                    @Override
+//                    public void onClick(@NonNull MaterialDialog dialog,
+//                                        @NonNull DialogAction which) {
+//                        if (!isFromMap) {
+//                            DiveSpotDetailsActivity.show(AddDiveSpotActivity.this, diveSpotId, EventsTracker.SpotViewSource.UNKNOWN);
+//                            finish();
+//                        } else {
+//                            Intent intent = new Intent();
+//                            LatLng latLng = new LatLng(diveSpotLocation.latitude, diveSpotLocation.longitude);
+//                            intent.putExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_RESULT_LAT_LNG, latLng);
+//                            intent.putExtra(Constants.ADD_DIVE_SPOT_INTENT_DIVESPOT_ID, diveSpotId);
+//                            setResult(RESULT_OK, intent);
+//                            finish();
+//                        }
+//                    }
+//                });
 
-        dialog.show();
+//        dialog.show();
     }
 
     public static void showForResult(Activity context, int requestCode, boolean isFromMap) {
@@ -732,6 +737,20 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
             case DialogsRequestCodes.DRC_ADD_DIVE_SPOT_ACTIVITY_CONNECTION_ERROR:
             case DialogsRequestCodes.DRC_ADD_DIVE_SPOT_ACTIVITY_UNEXPECTED_ERROR:
                 finish();
+                break;
+            case DialogsRequestCodes.DRC_ADD_DIVE_SPOT_ACTIVITY_DIVE_SPOT_CREATED:
+                if (!isFromMap) {
+                            DiveSpotDetailsActivity.show(AddDiveSpotActivity.this, createdSpotId, EventsTracker.SpotViewSource.UNKNOWN);
+                            finish();
+                        } else {
+                            Intent intent = new Intent();
+                            LatLng latLng = new LatLng(diveSpotLocation.latitude, diveSpotLocation.longitude);
+                            intent.putExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_RESULT_LAT_LNG, latLng);
+                            intent.putExtra(Constants.ADD_DIVE_SPOT_INTENT_DIVESPOT_ID, createdSpotId);
+                            setResult(RESULT_OK, intent);
+                            finish();
+                        }
+                break;
         }
     }
 
