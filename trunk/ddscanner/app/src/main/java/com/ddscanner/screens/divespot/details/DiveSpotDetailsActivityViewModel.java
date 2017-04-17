@@ -54,7 +54,7 @@ public class DiveSpotDetailsActivityViewModel {
     @BindingAdapter("changeVisibilityAccording")
     public static void changeViewSate(RelativeLayout view, DiveSpotDetailsActivityViewModel viewModel) {
         if (viewModel != null) {
-            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() != SharedPreferenceHelper.UserType.DIVECENTER) {
+            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == SharedPreferenceHelper.UserType.DIVER) {
                 view.setVisibility(View.GONE);
             } else {
                 if (!viewModel.getDiveSpotDetailsEntity().getFlags().isApproved()) {
@@ -150,7 +150,7 @@ public class DiveSpotDetailsActivityViewModel {
     @BindingAdapter("visibilityForBookButtonFrom")
     public static void setBookButtonVisibility(Button view, DiveSpotDetailsActivityViewModel viewModel) {
         if (viewModel != null) {
-            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() == SharedPreferenceHelper.UserType.DIVECENTER || !viewModel.getDiveSpotDetailsEntity().isSomebodyWorkingHere()) {
+            if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType() != SharedPreferenceHelper.UserType.DIVER || !viewModel.getDiveSpotDetailsEntity().isSomebodyWorkingHere()) {
                 view.setVisibility(View.GONE);
             }
         }

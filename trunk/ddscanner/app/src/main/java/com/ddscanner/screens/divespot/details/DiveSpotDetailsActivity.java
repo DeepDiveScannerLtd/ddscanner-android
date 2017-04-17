@@ -236,6 +236,7 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
         }
         DiveSpotDetailsActivityViewModel.setVisibilityReviewsBlock(binding.reviewsRatingLayout, binding.getDiveSpotViewModel());
         DiveSpotDetailsActivityViewModel.setVisibilityOfRatingLayout(binding.ratingLayout, binding.getDiveSpotViewModel());
+        DiveSpotDetailsActivityViewModel.setBookButtonVisibility(binding.buttonShowDivecenters, binding.getDiveSpotViewModel());
         switch (DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType()) {
             case DIVECENTER:
                 binding.fabCheckin.setVisibility(View.GONE);
@@ -248,10 +249,8 @@ public class DiveSpotDetailsActivity extends BaseAppCompatActivity implements Ra
                 }
                 if (!flagsEntity.isApproved()) {
                     binding.approveLayout.setVisibility(View.VISIBLE);
-                    binding.buttonShowDivecenters.setVisibility(View.GONE);
                 } else {
                     binding.approveLayout.setVisibility(View.GONE);
-                    binding.buttonShowDivecenters.setVisibility(View.VISIBLE);
                 }
                 break;
             case INSTRUCTOR:
