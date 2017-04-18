@@ -425,193 +425,39 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@color/white"
-                            android:orientation="vertical">
+                            android:orientation="vertical"
+                            android:paddingBottom="20dp">
 
-                            <RelativeLayout
+                            <com.ddscanner.ui.views.DiveSpotCharacteristicView
                                 android:layout_width="match_parent"
-                                android:layout_height="64dp"
-                                android:gravity="center_vertical">
+                                android:layout_height="wrap_content"
+                                app:setCountryFrom="@{diveSpotViewModel}"/>
 
-                                <ImageView
-                                    android:id="@+id/country_icon"
-                                    style="@style/CharacteristicsDiveSpotListIcons"
-                                    android:src="@drawable/ic_ds_country" />
-
-                                <RelativeLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:layout_toRightOf="@+id/country_icon"
-                                    android:gravity="center_vertical">
-
-                                    <TextView
-                                        android:id="@+id/country_title"
-                                        style="@style/CharacteristicsDiveSpotListTitle"
-                                        android:text="@string/country_characteristic" />
-
-                                    <TextView
-                                        android:id="@+id/country"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_below="@+id/country_title"
-                                        android:text="@{diveSpotViewModel.diveSpotDetailsEntity.country.name}"
-                                        tools:text="wall" />
-                                </RelativeLayout>
-                            </RelativeLayout>
-
-                            <RelativeLayout
+                            <com.ddscanner.ui.views.DiveSpotCharacteristicView
                                 android:layout_width="match_parent"
-                                android:layout_height="64dp"
-                                android:gravity="center_vertical">
+                                android:layout_height="wrap_content"
+                                app:setObjectFrom="@{diveSpotViewModel}"/>
 
-                                <ImageView
-                                    android:id="@+id/object_icon"
-                                    style="@style/CharacteristicsDiveSpotListIcons"
-                                    android:src="@drawable/ic_ds_object" />
-
-                                <RelativeLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:layout_toRightOf="@+id/object_icon"
-                                    android:gravity="center_vertical">
-
-                                    <TextView
-                                        android:id="@+id/object_title"
-                                        style="@style/CharacteristicsDiveSpotListTitle"
-                                        android:text="@string/object_characteristic" />
-
-                                    <TextView
-                                        android:id="@+id/object"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_below="@+id/object_title"
-                                        android:text="@{diveSpotViewModel.diveSpotDetailsEntity.object}"
-                                        tools:text="wall" />
-                                </RelativeLayout>
-                            </RelativeLayout>
-
-                            <RelativeLayout
+                            <com.ddscanner.ui.views.DiveSpotCharacteristicView
                                 android:layout_width="match_parent"
-                                android:layout_height="64dp"
-                                android:gravity="center_vertical">
+                                android:layout_height="wrap_content"
+                                app:setLevelFrom="@{diveSpotViewModel}"/>
 
-                                <ImageView
-                                    android:id="@+id/level_icon"
-                                    style="@style/CharacteristicsDiveSpotListIcons"
-                                    android:src="@drawable/ic_ds_level" />
-
-                                <RelativeLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:layout_toRightOf="@+id/level_icon"
-                                    android:gravity="center_vertical">
-
-                                    <TextView
-                                        android:id="@+id/level_title"
-                                        style="@style/CharacteristicsDiveSpotListTitle"
-                                        android:text="@string/details_level" />
-
-                                    <TextView
-                                        android:id="@+id/level"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_below="@+id/level_title"
-                                        android:text="@{diveSpotViewModel.diveSpotDetailsEntity.diverLevel}"
-                                        tools:text="Advanced+" />
-                                </RelativeLayout>
-                            </RelativeLayout>
-
-                            <RelativeLayout
+                            <com.ddscanner.ui.views.DiveSpotCharacteristicView
                                 android:layout_width="match_parent"
-                                android:layout_height="64dp"
-                                android:gravity="center_vertical">
+                                android:layout_height="wrap_content"
+                                app:setDepthFrom="@{diveSpotViewModel}"/>
 
-                                <ImageView
-                                    android:id="@+id/depth_icon"
-                                    style="@style/CharacteristicsDiveSpotListIcons"
-                                    android:src="@drawable/ic_ds_deep" />
-
-                                <RelativeLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:layout_toRightOf="@+id/depth_icon"
-                                    android:gravity="center_vertical">
-
-                                    <TextView
-                                        android:id="@+id/depth_title"
-                                        style="@style/CharacteristicsDiveSpotListTitle"
-                                        android:text="@string/details_depth" />
-
-                                    <TextView
-                                        android:id="@+id/depth"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_below="@+id/depth_title"
-                                        android:text="@{diveSpotViewModel.diveSpotDetailsEntity.depth}"
-                                        tools:text="Advanced+" />
-                                </RelativeLayout>
-                            </RelativeLayout>
-
-                            <RelativeLayout
+                            <com.ddscanner.ui.views.DiveSpotCharacteristicView
                                 android:layout_width="match_parent"
-                                android:layout_height="64dp"
-                                android:gravity="center_vertical">
+                                android:layout_height="wrap_content"
+                                app:setVisibilityFrom="@{diveSpotViewModel}"/>
 
-                                <ImageView
-                                    android:id="@+id/visibility_icon"
-                                    style="@style/CharacteristicsDiveSpotListIcons"
-                                    android:src="@drawable/ic_ds_visibility" />
-
-                                <RelativeLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:layout_toRightOf="@+id/visibility_icon"
-                                    android:gravity="center_vertical">
-
-                                    <TextView
-                                        android:id="@+id/visibility_title"
-                                        style="@style/CharacteristicsDiveSpotListTitle"
-                                        android:text="@string/details_visibility" />
-
-                                    <TextView
-                                        android:id="@+id/visibility"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_below="@+id/visibility_title"
-                                        app:changeVisibilityFrom="@{diveSpotViewModel}"
-                                        tools:text="Advanced+" />
-                                </RelativeLayout>
-                            </RelativeLayout>
-
-                            <RelativeLayout
+                            <com.ddscanner.ui.views.DiveSpotCharacteristicView
                                 android:layout_width="match_parent"
-                                android:layout_height="64dp"
-                                android:gravity="center_vertical">
+                                android:layout_height="wrap_content"
+                                app:setCurrentFrom="@{diveSpotViewModel}"/>
 
-                                <ImageView
-                                    android:id="@+id/currents_icon"
-                                    style="@style/CharacteristicsDiveSpotListIcons"
-                                    android:src="@drawable/ic_ds_currents" />
-
-                                <RelativeLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:layout_toRightOf="@+id/currents_icon"
-                                    android:gravity="center_vertical">
-
-                                    <TextView
-                                        android:id="@+id/currents_title"
-                                        style="@style/CharacteristicsDiveSpotListTitle"
-                                        android:text="@string/details_currents" />
-
-                                    <TextView
-                                        android:id="@+id/currents"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_below="@+id/currents_title"
-                                        android:text="@{diveSpotViewModel.diveSpotDetailsEntity.currents}"
-                                        tools:text="Advanced+" />
-                                </RelativeLayout>
-                            </RelativeLayout>
                         </LinearLayout>
 
                         <ImageView

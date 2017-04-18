@@ -100,7 +100,8 @@
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/progress_bar_pagination"
                 android:scrollbars="vertical"
-                android:visibility="gone" />
+                android:visibility="gone"
+                android:overScrollMode="never"/>
 
             <com.rey.material.widget.ProgressView
                 android:id="@+id/progress_bar_pagination"

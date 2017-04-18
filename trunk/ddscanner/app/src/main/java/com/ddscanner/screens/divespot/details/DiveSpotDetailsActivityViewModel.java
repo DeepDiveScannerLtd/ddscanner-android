@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.DiveSpotDetailsEntity;
+import com.ddscanner.ui.views.DiveSpotCharacteristicView;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.SharedPreferenceHelper;
@@ -129,13 +130,6 @@ public class DiveSpotDetailsActivityViewModel {
         }
     }
 
-    @BindingAdapter("changeVisibilityFrom")
-    public static void setVisibilityText(TextView view, DiveSpotDetailsActivityViewModel viewModel) {
-        if (viewModel != null) {
-            view.setText(DDScannerApplication.getInstance().getString(R.string.visibility_pattern, viewModel.getDiveSpotDetailsEntity().getVisibilityMin(), viewModel.getDiveSpotDetailsEntity().getVisibilityMax()));
-        }
-    }
-
     @BindingAdapter("setCountReviewsFrom")
     public static void setReviewsCount(Button view, DiveSpotDetailsActivityViewModel viewModel) {
         if (viewModel != null) {
@@ -179,6 +173,49 @@ public class DiveSpotDetailsActivityViewModel {
             } else {
                 layout.setVisibility(View.VISIBLE);
             }
+        }
+    }
+
+    @BindingAdapter("setCountryFrom")
+    public static void setCountryFrom(DiveSpotCharacteristicView view, DiveSpotDetailsActivityViewModel viewModel) {
+        if (viewModel != null) {
+            view.setViewData(R.drawable.ic_ds_country, R.string.country_characteristic, viewModel.getDiveSpotDetailsEntity().getCountry().getName());
+        }
+    }
+
+    @BindingAdapter("setObjectFrom")
+    public static void setObjectFrom(DiveSpotCharacteristicView view, DiveSpotDetailsActivityViewModel viewModel) {
+        if (viewModel != null) {
+            view.setViewData(R.drawable.ic_ds_object, R.string.object_characteristic, viewModel.getDiveSpotDetailsEntity().getObject());
+        }
+    }
+
+    @BindingAdapter("setLevelFrom")
+    public static void setLevelFrom(DiveSpotCharacteristicView view, DiveSpotDetailsActivityViewModel viewModel) {
+        if (viewModel != null) {
+            view.setViewData(R.drawable.ic_ds_level, R.string.details_level, viewModel.getDiveSpotDetailsEntity().getDiverLevel());
+        }
+    }
+
+    @BindingAdapter("setDepthFrom")
+    public static void setDepthFrom(DiveSpotCharacteristicView view, DiveSpotDetailsActivityViewModel viewModel) {
+        if (viewModel != null) {
+            view.setViewData(R.drawable.ic_ds_deep_2, R.string.details_depth, viewModel.getDiveSpotDetailsEntity().getDepth());
+        }
+    }
+
+    @BindingAdapter("setVisibilityFrom")
+    public static void setVisibilityFrom(DiveSpotCharacteristicView view, DiveSpotDetailsActivityViewModel viewModel) {
+        if (viewModel != null) {
+            String visibility = DDScannerApplication.getInstance().getString(R.string.visibility_pattern, viewModel.getDiveSpotDetailsEntity().getVisibilityMin(), viewModel.getDiveSpotDetailsEntity().getVisibilityMax());
+            view.setViewData(R.drawable.ic_ds_visibility, R.string.details_visibility, visibility);
+        }
+    }
+
+    @BindingAdapter("setCurrentFrom")
+    public static void setCurrentFrom(DiveSpotCharacteristicView view, DiveSpotDetailsActivityViewModel viewModel) {
+        if (viewModel != null) {
+            view.setViewData(R.drawable.ic_ds_currents, R.string.details_currents, viewModel.getDiveSpotDetailsEntity().getCurrents());
         }
     }
 
