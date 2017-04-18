@@ -43,12 +43,12 @@ public class SearchDiveSpotsFragment extends Fragment implements View.OnClickLis
         diveSpotsListRc.setLayoutManager(linearLayoutManager);
         addManually.setOnClickListener(this);
         if (diveSpotShorts != null) {
-            setDiveSpotShorts(diveSpotShorts);
+            setDiveSpotShorts(diveSpotShorts, false);
         }
         return view;
     }
 
-    public void setDiveSpotShorts(ArrayList<DiveSpotShort> diveSpotShorts) {
+    public void setDiveSpotShorts(ArrayList<DiveSpotShort> diveSpotShorts, boolean isVisible) {
         if (diveSpotsListRc == null) {
             this.diveSpotShorts = diveSpotShorts;
             return;
@@ -56,7 +56,9 @@ public class SearchDiveSpotsFragment extends Fragment implements View.OnClickLis
         if (diveSpotShorts == null || diveSpotShorts.size() == 0) {
             noResultsView.setVisibility(View.VISIBLE);
             diveSpotsListRc.setVisibility(View.GONE);
-            Helpers.hideKeyboard(getActivity());
+            if (isVisible) {
+                Helpers.hideKeyboard(getActivity());
+            }
         } else {
             noResultsView.setVisibility(View.GONE);
             diveSpotsListRc.setVisibility(View.VISIBLE);

@@ -40,7 +40,7 @@ public class SearchLocationFragment extends Fragment implements View.OnClickList
         View view = inflater.inflate(R.layout.fragment_search_location, container, false);
         findViews(view);
         if (places != null && googleApiClient != null) {
-            setList(places, googleApiClient);
+            setList(places, googleApiClient, false);
         }
         return view;
 
@@ -57,7 +57,7 @@ public class SearchLocationFragment extends Fragment implements View.OnClickList
         locationRecyclerView.setLayoutManager(linearLayoutManager);
     }
 
-    public void setList(ArrayList<String> places, GoogleApiClient googleApiClient) {
+    public void setList(ArrayList<String> places, GoogleApiClient googleApiClient, boolean isVisible) {
         if (locationRecyclerView == null) {
             this.places = places;
             this.googleApiClient = googleApiClient;
@@ -66,7 +66,9 @@ public class SearchLocationFragment extends Fragment implements View.OnClickList
         if (places == null || places.size() == 0) {
             noResultsView.setVisibility(View.VISIBLE);
             content.setVisibility(View.GONE);
-            Helpers.hideKeyboard(getActivity());
+            if (isVisible) {
+                Helpers.hideKeyboard(getActivity());
+            }
         } else {
             noResultsView.setVisibility(View.GONE);
             content.setVisibility(View.VISIBLE);

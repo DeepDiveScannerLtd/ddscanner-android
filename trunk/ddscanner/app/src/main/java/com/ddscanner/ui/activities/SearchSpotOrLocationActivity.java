@@ -71,7 +71,7 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
     private DDScannerRestClient.ResultListener<ArrayList<DiveSpotShort>> divespotsWrapperResultListener = new DDScannerRestClient.ResultListener<ArrayList<DiveSpotShort>>() {
         @Override
         public void onSuccess(ArrayList<DiveSpotShort> result) {
-            searchDiveSpotFragment.setDiveSpotShorts(result);
+            searchDiveSpotFragment.setDiveSpotShorts(result, viewPager.getCurrentItem() == 1);
         }
 
         @Override
@@ -211,7 +211,7 @@ public class SearchSpotOrLocationActivity extends AppCompatActivity implements S
                                                 });
                                                 // searchLocationFragment.setList((ArrayList<Place>) placeList, googleApiClient);
                                             }
-                                            searchLocationFragment.setList((ArrayList<String>) placeList, googleApiClient);
+                                            searchLocationFragment.setList((ArrayList<String>) placeList, googleApiClient, viewPager.getCurrentItem() == 0);
                                         }
                                     }
                                 });
