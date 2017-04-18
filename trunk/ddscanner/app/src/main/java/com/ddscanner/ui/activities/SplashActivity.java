@@ -42,6 +42,10 @@ public class SplashActivity extends BaseAppCompatActivity implements DialogClose
         super.onCreate(savedInstanceState);
         //TODO remove after creating working login mechanism
        // DDScannerApplication.getInstance().getSharedPreferenceHelper().logout();
+        if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getIsFirstLaunch()) {
+            DDScannerApplication.getInstance().getSharedPreferenceHelper().clear();
+            DDScannerApplication.getInstance().getSharedPreferenceHelper().setIsFirstLaunch(false);
+        }
         getWindow().getDecorView().setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                         | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
