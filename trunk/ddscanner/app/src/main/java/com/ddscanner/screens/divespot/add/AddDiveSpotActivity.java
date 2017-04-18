@@ -440,6 +440,13 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
         disableTextView.setOnClickListener(this);
     }
 
+    private boolean isSomethingEntered() {
+        if (diveSpotLocation != null || isCountryChosed || !depth.getText().toString().isEmpty() || languagesList.size() > 0 || photosListAdapter.getItemCount() > 1 || mapsListAdapter.getItemCount() > 1 || !visibilityMin.getText().toString().isEmpty() || !visibilityMax.getText().toString().isEmpty() || currentsAppCompatSpinner.getSelectedItemPosition() != 0 || levelAppCompatSpinner.getSelectedItemPosition() != 0 || objectAppCompatSpinner.getSelectedItemPosition() != 0 || sealifes.size() > 0) {
+            return true;
+        }
+        return false;
+    }
+
     private void createRequestBodyies() {
         hideErrorsFields();
         if (validatefields()) {
@@ -514,7 +521,12 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                DialogHelpers.showDialogAfterChangesInActivity(getSupportFragmentManager());
+                if (isSomethingEntered()) {
+                    DialogHelpers.showDialogAfterChangesInActivity(getSupportFragmentManager());
+                }
+                else {
+                    finish();
+                }
                 // onBackPressed();
                 return true;
         }
@@ -692,37 +704,6 @@ public class AddDiveSpotActivity extends BaseAppCompatActivity implements Compou
     private void showSuccessDialog(final String diveSpotId) {
         this.createdSpotId = diveSpotId;
         UserActionInfoDialogFragment.showForActivityResult(getSupportFragmentManager(), R.string.thank_you_title, R.string.success_added, DialogsRequestCodes.DRC_ADD_DIVE_SPOT_ACTIVITY_DIVE_SPOT_CREATED, false);
-//        MaterialDialog.Builder dialog = new MaterialDialog.Builder(this)
-//                .title(R.string.thank_you_title)
-//                .content(R.string.success_added)
-//                .positiveText(R.string.ok)
-//                .positiveColor(ContextCompat.getColor(this, R.color.primary))
-//                .cancelable(false)
-//                .dismissListener(new DialogInterface.OnDismissListener() {
-//                    @Override
-//                    public void onDismiss(DialogInterface dialogInterface) {
-//                        EventsTracker.trackCheckIn(EventsTracker.CheckInStatus.CANCELLED);
-//                    }
-//                })
-//                .onPositive(new MaterialDialog.SingleButtonCallback() {
-//                    @Override
-//                    public void onClick(@NonNull MaterialDialog dialog,
-//                                        @NonNull DialogAction which) {
-//                        if (!isFromMap) {
-//                            DiveSpotDetailsActivity.show(AddDiveSpotActivity.this, diveSpotId, EventsTracker.SpotViewSource.UNKNOWN);
-//                            finish();
-//                        } else {
-//                            Intent intent = new Intent();
-//                            LatLng latLng = new LatLng(diveSpotLocation.latitude, diveSpotLocation.longitude);
-//                            intent.putExtra(Constants.ADD_DIVE_SPOT_ACTIVITY_RESULT_LAT_LNG, latLng);
-//                            intent.putExtra(Constants.ADD_DIVE_SPOT_INTENT_DIVESPOT_ID, diveSpotId);
-//                            setResult(RESULT_OK, intent);
-//                            finish();
-//                        }
-//                    }
-//                });
-
-//        dialog.show();
     }
 
     public static void showForResult(Activity context, int requestCode, boolean isFromMap) {
