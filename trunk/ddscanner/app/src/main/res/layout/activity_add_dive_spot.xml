@@ -531,15 +531,12 @@
             <Button
                 android:id="@+id/button_create"
                 android:layout_width="match_parent"
-                android:layout_height="45dp"
                 android:layout_marginBottom="30dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="30dp"
-                android:background="@drawable/border_button_orange_2px"
-                android:text="@string/btn_save"
-                android:textColor="@color/black_text"
-                android:textSize="15sp" />
+                style="@style/OrangeButtons"
+                android:text="@string/btn_save" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

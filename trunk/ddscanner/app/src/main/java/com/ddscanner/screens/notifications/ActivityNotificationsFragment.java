@@ -59,9 +59,9 @@ public class ActivityNotificationsFragment extends Fragment implements SwipeRefr
         binding.activityRc.setLayoutManager(linearLayoutManager);
         binding.activityRc.setItemAnimator(new DefaultItemAnimator());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            binding.activityRc.setOnScrollChangeListener(listener);
+            initializeListenerForHighVersions();
         } else {
-            binding.activityRc.setOnScrollListener(scrollListener);
+            initilizeListenerForLowVersions();
         }
         notificationsListAdapter = new NotificationsListAdapter(getActivity(), false, DDScannerApplication.getInstance().getSharedPreferenceHelper().getActiveUserType());
         binding.activityRc.setAdapter(notificationsListAdapter);
@@ -111,25 +111,33 @@ public class ActivityNotificationsFragment extends Fragment implements SwipeRefr
         DDScannerApplication.getInstance().getDdScannerRestClient().getActivityNotifications(simpleResultListener, null);
     }
 
-    private RecyclerView.OnScrollChangeListener listener = new View.OnScrollChangeListener() {
-        @Override
-        public void onScrollChange(View view, int i, int i1, int i2, int i3) {
-            tryingToReloadData();
-        }
-    };
+    @TargetApi(23)
+    private void initializeListenerForHighVersions() {
+        RecyclerView.OnScrollChangeListener listener = new View.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(View view, int i, int i1, int i2, int i3) {
+                tryingToReloadData();
+            }
+        };
+        binding.activityRc.setOnScrollChangeListener(listener);
+    }
 
-    private RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener() {
-        @Override
-        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-            super.onScrollStateChanged(recyclerView, newState);
-        }
+    @SuppressWarnings("deprecation")
+    private void initilizeListenerForLowVersions() {
+        RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
 
-        @Override
-        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-            super.onScrolled(recyclerView, dx, dy);
-            tryingToReloadData();
-        }
-    };
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                tryingToReloadData();
+            }
+        };
+        binding.activityRc.setOnScrollListener(scrollListener);
+    }
 
     private void tryingToReloadData() {
         int visibleItemsCount = linearLayoutManager.getChildCount();

@@ -11,6 +11,12 @@
         <item name="colorControlActivated">@color/primary</item>
     </style>
 
+    <style name="customSpinnerTheme" parent="AppTheme">
+        <item name="colorControlNormal">@color/spinner_triangle_color</item>
+        <item name="colorControlActivated">@color/spinner_triangle_color</item>
+        <item name="colorControlHighlight">@color/spinner_triangle_color</item>
+    </style>
+
     <style name="ToolbarMenuStyle" parent="ThemeOverlay.AppCompat.Light">
         <item name="android:colorBackground">@color/white</item>
         <item name="android:textColor">@color/black_text</item>
@@ -197,7 +203,7 @@
     </style>
     <style name="OrangeButtons">
         <item name="android:fontFamily">sans-serif-medium</item>
-        <item name="android:layout_height">50dp</item>
+        <item name="android:layout_height">45dp</item>
         <item name="android:textSize">15sp</item>
         <item name="android:textColor">@color/black_text</item>
         <item name="android:background">@drawable/border_button_orange_2px</item>
@@ -373,6 +379,22 @@
         <item name="android:paddingRight">20dp</item>
         <item name="android:paddingBottom">20dp</item>
         <item name="android:paddingTop">16dp</item>
+    </style>
+
+    <style name="NewNotApprovedSpotsLabelBackground">
+        <item name="android:background">@drawable/approve_count_background</item>
+    </style>
+
+    <style name="DialogCloseButtonStyle">
+        <item name="android:background">@drawable/dialog_achievement_button_background</item>
+    </style>
+
+    <style name="YesButtonDialogStyle">
+        <item name="android:background">@drawable/dialog_yes_button</item>
+    </style>
+
+    <style name="NoButtonDialogStyle">
+        <item name="android:background">@drawable/dialog_no_button</item>
     </style>
 
 </resources>

@@ -38,11 +38,16 @@
             android:dropDownWidth="150dp"
             android:gravity="center_vertical"
             android:popupBackground="@color/white"
-            android:layout_margin="20dp"
+            android:theme="@style/customSpinnerTheme"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="10dp"
             />
 
         <android.support.v7.widget.AppCompatSpinner
             android:id="@+id/level_spinner"
+            android:theme="@style/customSpinnerTheme"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:dropDownWidth="150dp"
@@ -75,32 +80,25 @@
             android:layout_marginRight="20dp"
             android:orientation="horizontal"
             android:gravity="center">
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_addds_plus"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/add_sea_life"
-                android:textColor="#a9a9a9"
-                android:layout_marginLeft="7dp"/>
+                android:textColor="#a9a9a9" />
         </LinearLayout>
     </LinearLayout>
 
     <ImageView
         style="@style/DividerStyleFull"/>
 
-    <com.rey.material.widget.Button
+    <Button
         android:id="@+id/applyFilters"
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="20dp"
-        android:background="@color/orange"
         android:text="@string/apply"
-        style="@style/OrangeButtons"
-        app:rd_style="@style/Material.Drawable.Ripple.Touch.MatchView" />
+        style="@style/OrangeButtons"/>
     </LinearLayout>
 </LinearLayout>

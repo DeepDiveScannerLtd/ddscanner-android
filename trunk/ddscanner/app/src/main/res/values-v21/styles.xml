@@ -52,4 +52,29 @@
         <item name="android:padding">10dp</item>
     </style>
 
+    <style name="OrangeButtons">
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:layout_height">45dp</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/black_text</item>
+        <item name="android:background">@drawable/orange_ripple_drawable</item>
+        <item name="android:layout_centerHorizontal">true</item>
+    </style>
+
+    <style name="NewNotApprovedSpotsLabelBackground">
+        <item name="android:background">@drawable/approve_spots_ripple_background</item>
+    </style>
+
+    <style name="DialogCloseButtonStyle">
+        <item name="android:background">@drawable/dialog_button_ripple</item>
+    </style>
+
+    <style name="YesButtonDialogStyle">
+        <item name="android:background">@drawable/dialog_yes_button_ripple</item>
+    </style>
+
+    <style name="NoButtonDialogStyle">
+        <item name="android:background">@drawable/dialog_no_button_ripple</item>
+    </style>
+
 </resources>

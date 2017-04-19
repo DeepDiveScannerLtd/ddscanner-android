@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -29,9 +30,7 @@ import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
-import com.rey.material.widget.Button;
 import com.rey.material.widget.ProgressView;
-import com.rey.material.widget.Spinner;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -111,21 +110,6 @@ public class FilterActivity extends BaseAppCompatActivity implements View.OnClic
         objects.addAll(values);
         ArrayAdapter<String> adapter = new DiverLevelSpinnerAdapter(this, R.layout.spinner_item, objects, tag);
         spinner.setAdapter(adapter);
-    }
-
-    private void setFilerGroup(Spinner spinner, Map<String, String> values) {
-        List<String> objects = new ArrayList<String>();
-        objects.add("All");
-        int selectedIndex = 0;
-        for (Map.Entry<String, String> entry : values.entrySet()) {
-            objects.add(entry.getValue());
-            if (entry.getKey().equals(DDScannerApplication.getInstance().getSharedPreferenceHelper().getObject()) || entry.getKey().equals(DDScannerApplication.getInstance().getSharedPreferenceHelper().getLevel())) {
-                selectedIndex = objects.size() - 1;
-            }
-        }
-        ArrayAdapter<String> adapter = new SpinnerItemsAdapter(this, R.layout.spinner_item, objects);
-        spinner.setAdapter(adapter);
-        spinner.setSelection(selectedIndex);
     }
 
     @Override
