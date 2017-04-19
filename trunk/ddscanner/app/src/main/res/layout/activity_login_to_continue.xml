@@ -36,7 +36,6 @@
             android:text="@string/sign_up"
             android:id="@+id/sign_up"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
             android:layout_below="@+id/need_to_login_message"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="133dp"
@@ -47,12 +46,10 @@
             android:layout_marginRight="25dp"
             android:id="@+id/login"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
             android:layout_below="@+id/sign_up"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="13dp"
             android:text="@string/login"
-            android:textColor="@color/white"
-            android:background="@drawable/primary_button" />
+            style="@style/BlueButton" />
     </RelativeLayout>
 </LinearLayout>

@@ -49,15 +49,12 @@
         <Button
             android:id="@+id/login"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
             android:layout_below="@+id/sign_up"
-            android:layout_centerHorizontal="true"
             android:layout_marginLeft="25dp"
             android:layout_marginRight="25dp"
             android:layout_marginTop="13dp"
-            android:background="@drawable/primary_button"
-            android:text="@string/login"
-            android:textColor="@color/white" />
+            style="@style/BlueButton"
+            android:text="@string/login" />
     </RelativeLayout>
 
     <include

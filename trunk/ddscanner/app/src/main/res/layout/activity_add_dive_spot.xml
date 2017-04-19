@@ -452,13 +452,11 @@
                     android:layout_marginLeft="20dp"
                     android:visibility="visible" />
                 <LinearLayout
+                    style="@style/AddSealifeButtonStyle"
                     android:id="@+id/btn_add_sealife"
                     android:layout_marginTop="11dp"
                     android:layout_marginBottom="20dp"
                     android:layout_below="@+id/sealifes_rc"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:background="@drawable/gray_rectangle"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:orientation="horizontal"

@@ -4,11 +4,12 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="windowActionBar">false</item>
-        <item name="colorAccent">@color/orange</item>
+        <item name="colorAccent">@color/accent</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
         <item name="android:actionMenuTextColor">@color/orange</item>
         <item name="android:popupMenuStyle">@style/popupMenuStyle</item>
         <item name="colorControlActivated">@color/primary</item>
+        <item name="colorControlHighlight">@color/spinner_triangle_color</item>
     </style>
 
     <style name="customSpinnerTheme" parent="AppTheme">
@@ -201,12 +202,22 @@
         <item name="android:textStyle">bold</item>
         <item name="android:layout_centerHorizontal">true</item>
     </style>
-    <style name="OrangeButtons">
+
+    <style name="OrangeButtons" parent="Base.Widget.AppCompat.Button.Borderless">
         <item name="android:fontFamily">sans-serif-medium</item>
-        <item name="android:layout_height">45dp</item>
-        <item name="android:textSize">15sp</item>
+        <item name="android:layout_height">@dimen/button_height</item>
+        <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/black_text</item>
         <item name="android:background">@drawable/border_button_orange_2px</item>
+        <item name="android:layout_centerHorizontal">true</item>
+    </style>
+
+    <style name="BlueButton" parent="Base.Widget.AppCompat.Button.Borderless">
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:layout_height">@dimen/button_height</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:background">@drawable/primary_button</item>
         <item name="android:layout_centerHorizontal">true</item>
     </style>
 
@@ -395,6 +406,12 @@
 
     <style name="NoButtonDialogStyle">
         <item name="android:background">@drawable/dialog_no_button</item>
+    </style>
+
+    <style name="AddSealifeButtonStyle">
+        <item name="android:background">@drawable/gray_rectangle</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/button_height</item>
     </style>
 
 </resources>

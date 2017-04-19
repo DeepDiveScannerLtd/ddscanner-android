@@ -102,7 +102,7 @@
             <LinearLayout
                 android:id="@+id/fb_custom"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="@dimen/button_height"
                 android:background="@drawable/fb_login_btn_background"
                 android:gravity="center"
                 android:orientation="horizontal">
@@ -125,7 +125,7 @@
             <LinearLayout
                 android:id="@+id/custom_google"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="@dimen/button_height"
                 android:layout_below="@+id/fb_custom"
                 android:layout_marginTop="8dp"
                 android:background="@drawable/google_login_button"

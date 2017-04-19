@@ -57,7 +57,6 @@
         <Button
             android:id="@+id/sign_up"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
             style="@style/OrangeButtons"
             android:text="@string/register"/>
 
@@ -66,8 +65,7 @@
             android:layout_marginTop="13dp"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            style="@style/OrangeButtons"
-            android:background="@drawable/splash_activity_login"
+            style="@style/BlueButton"
             android:textColor="#c4ceee"
             android:text="@string/login"/>
     </LinearLayout>

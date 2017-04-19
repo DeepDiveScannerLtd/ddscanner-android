@@ -547,12 +547,10 @@
 
                             <Button
                                 android:id="@+id/btn_show_all_reviews"
-                                android:layout_width="320dp"
-                                android:layout_height="45dp"
+                                android:layout_width="match_parent"
+                                android:layout_margin="20dp"
                                 android:layout_gravity="center_horizontal"
-                                android:layout_marginBottom="22dp"
-                                android:layout_marginTop="22dp"
-                                android:background="@drawable/border_button_blue_2px"
+                                style="@style/BlueButton"
                                 android:onClick="@{handlers::writeReviewClicked}"
                                 android:textAllCaps="false"
                                 android:textColor="@color/white"

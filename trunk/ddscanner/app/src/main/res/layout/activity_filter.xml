@@ -73,9 +73,7 @@
             android:id="@+id/btn_add_sealife"
             android:layout_marginTop="11dp"
             android:layout_marginBottom="20dp"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@drawable/gray_rectangle"
+            style="@style/AddSealifeButtonStyle"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:orientation="horizontal"
@@ -94,10 +92,7 @@
     <Button
         android:id="@+id/applyFilters"
         android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="20dp"
+        android:layout_margin="20dp"
         android:text="@string/apply"
         style="@style/OrangeButtons"/>
     </LinearLayout>

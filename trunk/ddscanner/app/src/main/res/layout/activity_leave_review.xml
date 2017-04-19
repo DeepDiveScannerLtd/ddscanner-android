@@ -99,10 +99,8 @@
 
                 <LinearLayout
                     android:id="@+id/btn_add_sealife"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    style="@style/AddSealifeButtonStyle"
                     android:layout_marginTop="12dp"
-                    android:background="@drawable/gray_rectangle"
                     android:gravity="center"
                     android:orientation="horizontal">
 
