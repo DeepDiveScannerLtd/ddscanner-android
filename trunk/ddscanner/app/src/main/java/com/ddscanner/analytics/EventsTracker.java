@@ -147,6 +147,9 @@ public class EventsTracker {
         appsflyerParams.put(EVENT_PARAMETER_NAME_DIVE_SPOT_ID, diveSpotId);
         appsflyerParams.put(EVENT_PARAMETER_NAME_VIEW_SOURCE, spotViewSource.getName());
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_DIVE_SPOT_VIEW, appsflyerParams);
+
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_DIVE_SPOT_VIEW, params);
     }
 
     public static void trackDiveCenterView(String diveCenterId, SpotViewSource spotViewSource) {
@@ -171,6 +174,10 @@ public class EventsTracker {
         appsflyerParams.put(EVENT_PARAMETER_NAME_DIVE_CENTER_ID, diveCenterId);
         appsflyerParams.put(EVENT_PARAMETER_NAME_VIEW_SOURCE, spotViewSource.getName());
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_DIVE_CENTER_VIEW, appsflyerParams);
+
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_DIVE_CENTER_VIEW, params);
+
     }
 
     public static void trackGuideUseful(String question) {
@@ -193,6 +200,9 @@ public class EventsTracker {
         Map<String, Object> appsflyerParams = new HashMap<>();
         appsflyerParams.put(EVENT_PARAMETER_NAME_QUESTION, question);
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_GUIDE_USEFUL, appsflyerParams);
+
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_GUIDE_USEFUL, params);
 
     }
 
@@ -217,7 +227,8 @@ public class EventsTracker {
         appsflyerParams.put(EVENT_PARAMETER_NAME_QUESTION, question);
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_GUIDE_NOT_USEFUL, appsflyerParams);
 
-
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_GUIDE_NOT_USEFUL, params);
     }
 
     public static void trackDiveSpotValid() {
@@ -236,6 +247,9 @@ public class EventsTracker {
 
         // Appsflyer
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_DIVE_SPOT_VALID, null);
+
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_DIVE_SPOT_VALID);
     }
 
     public static void trackDiveSpotInvalid() {
@@ -254,6 +268,9 @@ public class EventsTracker {
 
         // Appsflyer
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_DIVE_SPOT_INVALID, null);
+
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_DIVE_SPOT_INVALID);
     }
 
     public static void trackDiveSpotEdit() {
@@ -269,6 +286,10 @@ public class EventsTracker {
 
         // Appsflyer
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_EDIT_DIVE_SPOT, null);
+
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_EDIT_DIVE_SPOT);
+
     }
 
     public static void trackDiveSpotCreation() {
@@ -284,6 +305,9 @@ public class EventsTracker {
 
         // Appsflyer
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_CREATE_DIVE_SPOT, null);
+
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_CREATE_DIVE_SPOT);
     }
 
     public static void trackSealifeCreation() {
@@ -299,6 +323,9 @@ public class EventsTracker {
 
         // Appsflyer
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_SEALIFE_CREATE, null);
+
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_SEALIFE_CREATE);
     }
 
     public static void trackSealifeCreated() {
@@ -314,6 +341,9 @@ public class EventsTracker {
 
         // Appsflyer
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_SEALIFE_CREATED, null);
+
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_SEALIFE_CREATED);
     }
 
     public static void trackReviewEdited() {
@@ -329,6 +359,10 @@ public class EventsTracker {
 
         // Appsflyer
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_EDITED_REVIEW, null);
+
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_EDITED_REVIEW);
+
     }
 
     public static void trackReviewrFacebookOpened() {
@@ -344,6 +378,9 @@ public class EventsTracker {
 
         // Appsflyer
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_REVIEWER_FACEBOOK_OPENED, null);
+
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_REVIEWER_FACEBOOK_OPENED);
     }
 
     public static void trackDiveSpotReviewReportSent() {
@@ -359,6 +396,9 @@ public class EventsTracker {
 
         // Appsflyer
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_REVIEWER_REVIEW_REPORT_SENT, null);
+
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_REVIEWER_REVIEW_REPORT_SENT);
     }
 
     public static void trackDiveSpotphotoReportSent() {
@@ -374,6 +414,10 @@ public class EventsTracker {
 
         // Appsflyer
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_DIVE_SPOT__PHOTO_REPORT_SENT, null);
+
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_DIVE_SPOT__PHOTO_REPORT_SENT);
+
     }
 
     public static void trackDivespotCreated() {
@@ -389,9 +433,13 @@ public class EventsTracker {
 
         // Appsflyer
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_DIVE_SPOT_CREATED, null);
+
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_DIVE_SPOT_CREATED);
+
     }
 
-     public static void trackDivespotEdited() {
+    public static void trackDivespotEdited() {
         if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
             return;
         }
@@ -404,6 +452,10 @@ public class EventsTracker {
 
         // Appsflyer
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_DIVE_SPOT_EDITED, null);
+
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_DIVE_SPOT_EDITED);
+
     }
 
     public static void trackReviewShowAll() {
@@ -419,6 +471,10 @@ public class EventsTracker {
 
         // Appsflyer
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_REVIEW_SHOW_ALL, null);
+
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_REVIEW_SHOW_ALL);
+
     }
 
 
@@ -441,6 +497,9 @@ public class EventsTracker {
         Map<String, Object> appsflyerParams = new HashMap<>();
         appsflyerParams.put(EVENT_PARAMETER_NAME_CHECK_IN_STATUS, status.getName());
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_CHECK_IN, appsflyerParams);
+
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_CHECK_IN, params);
     }
 
     public static void trackCheckOut() {
@@ -456,6 +515,10 @@ public class EventsTracker {
 
         // Appsflyer
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_CHECK_OUT, null);
+
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_CHECK_OUT);
+
     }
 
     public static void trackSendReview(SendReviewSource sendReviewSource) {
@@ -477,6 +540,9 @@ public class EventsTracker {
         Map<String, Object> appsflyerParams = new HashMap<>();
         appsflyerParams.put(EVENT_PARAMETER_NAME_SEND_REVIEW_SOURCE, sendReviewSource.getName());
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_SEND_REVIEW, appsflyerParams);
+
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_SEND_REVIEW, params);
     }
 
     public static void trackCommentLiked() {
@@ -492,6 +558,10 @@ public class EventsTracker {
 
         // Appsflyer
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_COMMENT_LIKED, null);
+
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_COMMENT_LIKED);
+
     }
 
     public static void trackCommentDisliked() {
@@ -507,6 +577,10 @@ public class EventsTracker {
 
         // Appsflyer
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_COMMENT_DISLIKED, null);
+
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_COMMENT_DISLIKED);
+
     }
 
     public static void trackDiveSpotPhotoAdded() {
@@ -522,6 +596,10 @@ public class EventsTracker {
 
         // Appsflyer
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_DIVE_SPOT_PHOTO_ADDED, null);
+
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_DIVE_SPOT_PHOTO_ADDED);
+
     }
 
     public static void trackContactDiveCenter(ContactDiveCenterMethod method) {
@@ -543,6 +621,10 @@ public class EventsTracker {
         Map<String, Object> appsflyerParams = new HashMap<>();
         appsflyerParams.put(EVENT_PARAMETER_NAME_CONTACT_DIVE_CENTER_METHOD, method.getName());
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_CONTACT_DIVE_CENTER, appsflyerParams);
+
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_CONTACT_DIVE_CENTER, params);
+
     }
 
     public static void trackDiveSpotMapView() {
@@ -558,6 +640,10 @@ public class EventsTracker {
 
         // Appsflyer
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_DIVE_SPOTS_MAP_VIEW, null);
+
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_DIVE_SPOTS_MAP_VIEW);
+
     }
 
     public static void trackDiveSpotListView() {
@@ -573,6 +659,9 @@ public class EventsTracker {
 
         // Appsflyer
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_DIVE_SPOTS_LIST_VIEW, null);
+
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_DIVE_SPOTS_LIST_VIEW);
     }
 
     public static void trackDiveCentersMapView() {
@@ -588,6 +677,9 @@ public class EventsTracker {
 
         // Appsflyer
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_DIVE_CENTERS_MAP_VIEW, null);
+
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_DIVE_CENTERS_MAP_VIEW);
     }
 
     public static void trackDiveCentersListView() {
@@ -603,6 +695,9 @@ public class EventsTracker {
 
         // Appsflyer
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_DIVE_CENTERS_LIST_VIEW, null);
+
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_DIVE_CENTERS_LIST_VIEW);
     }
 
     public static void trackNotificationsView() {
@@ -618,6 +713,10 @@ public class EventsTracker {
 
         // Appsflyer
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_NOTIFICATIONS_VIEW, null);
+
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_NOTIFICATIONS_VIEW);
+
     }
 
     public static void trackActivityView() {
@@ -633,6 +732,9 @@ public class EventsTracker {
 
         // Appsflyer
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_ACTIVITY_VIEW, null);
+
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_ACTIVITY_VIEW);
     }
 
     public static void trackUserProfileView() {
@@ -648,6 +750,10 @@ public class EventsTracker {
 
         // Appsflyer
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_USER_PROFILE_VIEW, null);
+
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_USER_PROFILE_VIEW);
+
     }
 
     public static void trackUserCheckinsView() {
@@ -663,6 +769,9 @@ public class EventsTracker {
 
         // Appsflyer
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_USER_CHECK_INS_VIEW, null);
+
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_USER_CHECK_INS_VIEW);
     }
 
     public static void trackUserEditedView() {
@@ -678,6 +787,10 @@ public class EventsTracker {
 
         // Appsflyer
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_USER_EDITED_VIEW, null);
+
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_USER_EDITED_VIEW);
+
     }
 
     public static void trackUserCreatedView() {
@@ -693,6 +806,9 @@ public class EventsTracker {
 
         // Appsflyer
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_USER_CREATED_VIEW, null);
+
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_USER_CREATED_VIEW);
     }
 
     public static void trackUserFavoritesView() {
@@ -708,6 +824,10 @@ public class EventsTracker {
 
         // Appsflyer
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_USER_FAVORITES_VIEW, null);
+
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_USER_FAVORITES_VIEW);
+
     }
 
     public static void trackDiveSpotCheckinsView() {
@@ -723,6 +843,10 @@ public class EventsTracker {
 
         // Appsflyer
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_DIVE_SPOT_CHECK_INS_VIEW, null);
+
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_DIVE_SPOT_CHECK_INS_VIEW);
+
     }
 
     public static void trackDiveSpotPhotosView() {
@@ -738,6 +862,9 @@ public class EventsTracker {
 
         // Appsflyer
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_DIVE_SPOT_PHOTOS_VIEW, null);
+
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_DIVE_SPOT_PHOTOS_VIEW);
     }
 
     public static void trackDiveSpotSealifeView() {
@@ -753,6 +880,10 @@ public class EventsTracker {
 
         // Appsflyer
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_DIVE_SPOT_SEALIFE_VIEW, null);
+
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_DIVE_SPOT_SEALIFE_VIEW);
+
     }
 
     public static void trackDeviSpotReviewsView() {
@@ -768,6 +899,9 @@ public class EventsTracker {
 
         // Appsflyer
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_DIVE_SPOT_REVIEWS_VIEW, null);
+
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_DIVE_SPOT_REVIEWS_VIEW);
     }
 
     public static void trackReviewerProfileView() {
@@ -783,6 +917,10 @@ public class EventsTracker {
 
         // Appsflyer
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_REVIEWER_PROFILE_VIEW, null);
+
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_REVIEWER_PROFILE_VIEW);
+
     }
 
     public static void trackSearchByDiveSpot() {
@@ -798,6 +936,10 @@ public class EventsTracker {
 
         // Appsflyer
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_SEARCH_BY_DIVE_SPOT, null);
+
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_SEARCH_BY_DIVE_SPOT);
+
     }
 
     public static void trackSearchByLocation() {
@@ -813,6 +955,10 @@ public class EventsTracker {
 
         // Appsflyer
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_SEARCH_BY_LOCATION, null);
+
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_SEARCH_BY_LOCATION);
+
     }
 
     public static void trackSearchSeaLife() {
@@ -828,6 +974,10 @@ public class EventsTracker {
 
         // Appsflyer
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_SEARCH_SEA_LIFE, null);
+
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_SEARCH_SEA_LIFE);
+
     }
 
     public static void trackPhotoReport() {
@@ -843,6 +993,9 @@ public class EventsTracker {
 
         // Appsflyer
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_DIVE_SPOT_REPORT_PHOTO, null);
+
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_DIVE_SPOT_REPORT_PHOTO);
     }
 
     public static void trackReviewReport() {
@@ -858,6 +1011,10 @@ public class EventsTracker {
 
         // Appsflyer
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_REPORT_REVIEW, null);
+
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_REPORT_REVIEW);
+
     }
 
     public static void trackDeleteReview() {
@@ -873,6 +1030,10 @@ public class EventsTracker {
 
         // Appsflyer
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_DELETE_REVIEW, null);
+
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_DELETE_REVIEW);
+
     }
 
     public static void trackReviewDeleted() {
@@ -888,6 +1049,10 @@ public class EventsTracker {
 
         // Appsflyer
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_DELETED_REVIEW, null);
+
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_DELETED_REVIEW);
+
     }
 
     public static void trackEditReview() {
@@ -903,6 +1068,9 @@ public class EventsTracker {
 
         // Appsflyer
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_EDIT_REVIEW, null);
+
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_EDIT_REVIEW);
     }
 
     public static void trackUserLikesView() {
@@ -918,6 +1086,9 @@ public class EventsTracker {
 
         // Appsflyer
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_USER_LIKES_VIEW, null);
+
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_USER_LIKES_VIEW);
     }
 
     public static void trackUserDislikesView() {
@@ -933,6 +1104,10 @@ public class EventsTracker {
 
         // Appsflyer
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_USER_DISLIKES_VIEW, null);
+
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_USER_DISLIKES_VIEW);
+
     }
 
     public static void trackUserAchievementsView() {
@@ -948,6 +1123,10 @@ public class EventsTracker {
 
         // Appsflyer
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_USER_ACHIEVEMENTS_VIEW, null);
+
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_USER_ACHIEVEMENTS_VIEW);
+
     }
 
     public static void trackUserReviewsView() {
@@ -963,6 +1142,10 @@ public class EventsTracker {
 
         // Appsflyer
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_USER_REVIEWS_VIEW, null);
+
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_USER_REVIEWS_VIEW);
+
     }
 
     public static void trackReviewerReviewsView() {
@@ -978,6 +1161,9 @@ public class EventsTracker {
 
         // Appsflyer
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_REVIEWER_REVIEWS_VIEW, null);
+
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_REVIEWER_REVIEWS_VIEW);
     }
 
     public static void trackReviewerCreatedView() {
@@ -993,6 +1179,10 @@ public class EventsTracker {
 
         // Appsflyer
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_REVIEWER_CREATED_VIEW, null);
+
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_REVIEWER_CREATED_VIEW);
+
     }
 
     public static void trackReviewerEditedView() {
@@ -1008,6 +1198,10 @@ public class EventsTracker {
 
         // Appsflyer
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_REVIEWER_EDITED_VIEW, null);
+
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_REVIEWER_EDITED_VIEW);
+
     }
 
     public static void trackReviewerCheckInsView() {
@@ -1023,6 +1217,10 @@ public class EventsTracker {
 
         // Appsflyer
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_REVIEWER_CHECK_INS_VIEW, null);
+
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_REVIEWER_CHECK_INS_VIEW);
+
     }
 
     public static void trackUnknownServerError(String url, String errorText) {
@@ -1031,9 +1229,9 @@ public class EventsTracker {
         }
 
         // Google Firebase
-//        Bundle params = new Bundle();
-//        params.putString(EVENT_PARAMETER_NAME_ERROR_TEXT, errorText);
-//        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_UNKNOWN_SERVER_ERROR, params);
+        Bundle params = new Bundle();
+        params.putString(EVENT_PARAMETER_NAME_ERROR_TEXT, errorText);
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_UNKNOWN_SERVER_ERROR, params);
 
         // Flurry
         Map<String, String> flurryParams = new HashMap<>();
@@ -1046,6 +1244,9 @@ public class EventsTracker {
         appsflyerParams.put(EVENT_PARAMETER_NAME_ERROR_URL, url);
         appsflyerParams.put(EVENT_PARAMETER_NAME_ERROR_TEXT, errorText);
         AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_UNKNOWN_SERVER_ERROR, appsflyerParams);
+
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_UNKNOWN_SERVER_ERROR, params);
     }
 
     public enum SpotViewSource {
