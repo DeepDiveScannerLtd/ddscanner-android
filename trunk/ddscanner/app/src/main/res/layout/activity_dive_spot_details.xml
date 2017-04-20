@@ -588,7 +588,7 @@
                                 android:id="@+id/button_show_divecenters"
                                 android:layout_width="match_parent"
                                 android:layout_height="45dp"
-                                android:background="@color/orange"
+                                android:background="@drawable/contact_dive_center_background"
                                 android:onClick="@{handlers::showDiveCentersButtonClicked}"
                                 android:text="@string/contact_dive_centers"
                                 android:visibility="visible"
