@@ -13,10 +13,10 @@ import android.view.View;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
-import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.entities.DiveSpotPhoto;
 import com.ddscanner.entities.PhotoAuthor;
 import com.ddscanner.entities.PhotoOpenedSource;
+import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.divespot.photos.AllPhotosDiveSpotAdapter;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;

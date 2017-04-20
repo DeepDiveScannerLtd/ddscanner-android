@@ -15,7 +15,6 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.databinding.DialogYesNoBinding;
 import com.ddscanner.interfaces.ConfirmationDialogClosedListener;
-import com.ddscanner.utils.Helpers;
 
 public class ConfirmationDialogFragment extends DialogFragment {
 

@@ -6,7 +6,6 @@ import android.widget.TextView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
-import com.ddscanner.entities.Comment;
 import com.ddscanner.entities.LikeEntity;
 import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;

@@ -10,11 +10,8 @@ import android.widget.TextView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
-import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.SealifeShort;
-import com.ddscanner.entities.Sealife;
 import com.ddscanner.screens.sealife.details.SealifeDetailsActivity;
-import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;
 

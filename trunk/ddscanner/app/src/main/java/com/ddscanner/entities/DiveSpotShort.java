@@ -8,7 +8,6 @@ import com.google.gson.annotations.SerializedName;
 import com.google.maps.android.clustering.ClusterItem;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * Created by lashket on 20.1.16.

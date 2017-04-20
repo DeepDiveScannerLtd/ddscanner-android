@@ -8,8 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.ddscanner.entities.AboutScreenItem;
 import com.ddscanner.R;
+import com.ddscanner.entities.AboutScreenItem;
 
 import java.util.ArrayList;
 

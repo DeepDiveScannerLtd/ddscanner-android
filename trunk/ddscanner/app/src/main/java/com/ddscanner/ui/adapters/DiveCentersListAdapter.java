@@ -1,7 +1,6 @@
 package com.ddscanner.ui.adapters;
 
 import android.content.Context;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,10 +12,8 @@ import android.widget.TextView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
-import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.DiveCenter;
 import com.ddscanner.screens.user.profile.UserProfileActivity;
-import com.ddscanner.ui.activities.DiveCenterDetailsActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;

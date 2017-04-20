@@ -14,10 +14,10 @@ import com.ddscanner.databinding.FragmentDiveCenterProfileBinding;
 import com.ddscanner.entities.DiveCenterProfile;
 import com.ddscanner.entities.DiveSpotListSource;
 import com.ddscanner.screens.divecemter.profile.languages.DiveCenterProfileLanguagesActivity;
+import com.ddscanner.screens.divespots.list.DiveSpotsListActivity;
 import com.ddscanner.screens.instructors.InstructorsActivity;
 import com.ddscanner.screens.profile.divecenter.DiveCenterProfileFragmentViewModel;
 import com.ddscanner.screens.profile.divecenter.DiveCenterSpotsActivity;
-import com.ddscanner.screens.divespots.list.DiveSpotsListActivity;
 import com.ddscanner.ui.adapters.UserPhotosListAdapter;
 import com.google.android.gms.maps.model.LatLng;
 

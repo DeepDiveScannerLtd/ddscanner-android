@@ -7,11 +7,8 @@ import com.appsflyer.AppsFlyerLib;
 import com.ddscanner.BuildConfig;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
-import com.ddscanner.utils.SharedPreferenceHelper;
 import com.facebook.appevents.AppEventsLogger;
 import com.flurry.android.FlurryAgent;
-import com.google.android.gms.analytics.GoogleAnalytics;
-import com.google.android.gms.analytics.Tracker;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.iid.FirebaseInstanceId;
 

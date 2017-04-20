@@ -11,12 +11,9 @@ import android.widget.TextView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
-import com.ddscanner.entities.Photo;
 import com.ddscanner.events.OpenPhotosActivityEvent;
 import com.ddscanner.ui.views.TransformationRoundImage;
-import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
-import com.ddscanner.utils.ImageLoadedCallback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;

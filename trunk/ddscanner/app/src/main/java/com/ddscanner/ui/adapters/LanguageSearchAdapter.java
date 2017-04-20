@@ -10,12 +10,10 @@ import android.widget.TextView;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.Language;
-import com.ddscanner.events.LanguageChangedEvent;
 import com.ddscanner.events.LanguageChosedEvent;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.Inflater;
 
 public class LanguageSearchAdapter extends RecyclerView.Adapter<LanguageSearchAdapter.LanguageSearchViewHolder> {
 

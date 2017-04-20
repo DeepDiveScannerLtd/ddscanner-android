@@ -8,12 +8,9 @@ import android.util.Log;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.entities.BaseUser;
-import com.ddscanner.entities.DiveCenterProfile;
 import com.ddscanner.entities.SealifeShort;
 import com.ddscanner.entities.SignInType;
-import com.ddscanner.entities.User;
 import com.google.gson.Gson;
-import com.google.gson.internal.Streams;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;

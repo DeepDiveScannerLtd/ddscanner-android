@@ -9,10 +9,8 @@ import android.widget.TextView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
-import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.entities.DiveSpotChosedFromSearch;
 import com.ddscanner.entities.DiveSpotShort;
-import com.ddscanner.screens.divespot.details.DiveSpotDetailsActivity;
 
 import java.util.ArrayList;
 

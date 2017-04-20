@@ -2,14 +2,11 @@ package com.ddscanner;
 
 import android.app.Application;
 import android.content.Context;
-import android.content.Intent;
 import android.support.multidex.MultiDex;
-import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 import com.ddscanner.analytics.AnalyticsSystemsManager;
 import com.ddscanner.rest.DDScannerRestClient;
-import com.ddscanner.ui.activities.InternetClosedActivity;
 import com.ddscanner.utils.DialogHelpers;
 import com.ddscanner.utils.DiveSpotPhotosContainer;
 import com.ddscanner.utils.SharedPreferenceHelper;

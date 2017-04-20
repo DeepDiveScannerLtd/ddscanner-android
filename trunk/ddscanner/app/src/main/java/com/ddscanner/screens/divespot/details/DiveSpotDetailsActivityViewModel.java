@@ -12,7 +12,6 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.DiveSpotDetailsEntity;
 import com.ddscanner.ui.views.DiveSpotCharacteristicView;
-import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
 import com.ddscanner.utils.SharedPreferenceHelper;
 import com.rey.material.widget.FloatingActionButton;

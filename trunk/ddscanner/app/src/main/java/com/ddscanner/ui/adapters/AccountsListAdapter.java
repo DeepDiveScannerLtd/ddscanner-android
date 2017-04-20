@@ -1,6 +1,5 @@
 package com.ddscanner.ui.adapters;
 
-import android.accounts.AccountsException;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,8 +11,6 @@ import android.widget.TextView;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.BaseUser;
-import com.ddscanner.entities.DiveCenterProfile;
-import com.ddscanner.entities.User;
 import com.ddscanner.events.ChangeAccountEvent;
 import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;

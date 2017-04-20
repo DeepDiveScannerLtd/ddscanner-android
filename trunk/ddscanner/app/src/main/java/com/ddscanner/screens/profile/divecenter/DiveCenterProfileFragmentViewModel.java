@@ -1,6 +1,5 @@
 package com.ddscanner.screens.profile.divecenter;
 
-import android.content.Intent;
 import android.databinding.BindingAdapter;
 import android.view.View;
 import android.widget.Button;

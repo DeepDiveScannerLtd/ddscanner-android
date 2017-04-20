@@ -36,7 +36,6 @@ import com.ddscanner.interfaces.ConfirmationDialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.profile.edit.divecenter.search.SearchDiveCenterActivity;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
-import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogHelpers;

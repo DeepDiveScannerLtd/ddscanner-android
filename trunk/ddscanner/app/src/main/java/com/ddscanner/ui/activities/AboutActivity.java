@@ -9,8 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-import com.ddscanner.entities.AboutScreenItem;
 import com.ddscanner.R;
+import com.ddscanner.entities.AboutScreenItem;
 import com.ddscanner.ui.adapters.AboutListAdapter;
 
 import java.util.ArrayList;

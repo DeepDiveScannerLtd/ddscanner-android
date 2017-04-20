@@ -16,14 +16,11 @@ import android.view.ViewGroup;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.databinding.FragmentDiveCenterProfileNotificationsBinding;
-import com.ddscanner.entities.NotificationEntity;
 import com.ddscanner.entities.NotificationsResonseEntity;
 import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.activities.MainActivity;
 import com.ddscanner.ui.views.LoginView;
-
-import java.util.ArrayList;
 
 public class DiveCenterNotificationsFragment extends Fragment implements LoginView.LoginStateChangeListener, DialogClosedListener {
 

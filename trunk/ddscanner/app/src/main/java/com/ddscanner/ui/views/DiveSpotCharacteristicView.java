@@ -1,14 +1,11 @@
 package com.ddscanner.ui.views;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.databinding.DataBindingUtil;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.ddscanner.R;
 import com.ddscanner.databinding.ViewDiveSpotCharachteristicBinding;

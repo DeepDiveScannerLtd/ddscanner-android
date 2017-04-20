@@ -1,8 +1,6 @@
 package com.ddscanner.entities;
 
 import android.support.v4.content.ContextCompat;
-import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;

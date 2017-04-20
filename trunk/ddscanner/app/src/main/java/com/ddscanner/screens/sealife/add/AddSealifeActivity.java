@@ -5,15 +5,10 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.AppCompatImageButton;
-import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -34,7 +29,6 @@ import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.DialogHelpers;
 import com.ddscanner.utils.Helpers;
 import com.google.gson.Gson;
-import com.rey.material.widget.EditText;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;

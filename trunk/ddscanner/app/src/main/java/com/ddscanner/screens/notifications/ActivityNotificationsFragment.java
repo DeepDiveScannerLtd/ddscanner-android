@@ -14,19 +14,15 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
-import com.ddscanner.databinding.FragmentDiveCenterProfileNotificationsBinding;
 import com.ddscanner.databinding.FragmnetActivityNotificationsBinding;
-import com.ddscanner.entities.Activity;
 import com.ddscanner.entities.NotificationEntity;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.activities.MainActivity;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * Created by lashket on 25.5.16.

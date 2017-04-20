@@ -7,8 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -17,7 +15,6 @@ import com.ddscanner.R;
 import com.ddscanner.databinding.ActivityChangeAddressBinding;
 import com.ddscanner.entities.Address;
 import com.ddscanner.entities.BaseIdNamePhotoEntity;
-import com.ddscanner.entities.Country;
 import com.ddscanner.entities.CountryEntity;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.utils.ActivitiesRequestCodes;

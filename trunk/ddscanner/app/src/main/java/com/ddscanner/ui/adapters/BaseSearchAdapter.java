@@ -10,7 +10,6 @@ import android.widget.TextView;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.BaseIdNamePhotoEntity;
-import com.ddscanner.events.DiveCenterCheckedEvent;
 import com.ddscanner.events.ObjectChosedEvent;
 
 import java.util.ArrayList;

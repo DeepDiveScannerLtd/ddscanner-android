@@ -16,9 +16,9 @@ import android.view.View;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
-import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.entities.Language;
 import com.ddscanner.events.LanguageChosedEvent;
+import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.adapters.LanguageSearchAdapter;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;

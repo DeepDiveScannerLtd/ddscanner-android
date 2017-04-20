@@ -1,15 +1,12 @@
 package com.ddscanner.screens.sealife.details;
 
 import android.databinding.BindingAdapter;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.Sealife;
-import com.ddscanner.rest.DDScannerRestClient;
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 

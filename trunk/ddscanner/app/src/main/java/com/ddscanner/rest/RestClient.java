@@ -5,7 +5,6 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 
 import java.io.IOException;
-import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Interceptor;

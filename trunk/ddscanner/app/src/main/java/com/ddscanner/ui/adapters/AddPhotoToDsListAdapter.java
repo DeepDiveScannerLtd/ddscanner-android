@@ -6,12 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.events.AddPhotoDoListEvent;
-import com.ddscanner.events.ImageDeletedEvent;
 import com.ddscanner.utils.Constants;
 import com.ddscanner.utils.Helpers;
 import com.squareup.picasso.Picasso;

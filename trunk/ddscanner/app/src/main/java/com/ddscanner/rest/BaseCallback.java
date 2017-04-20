@@ -1,7 +1,5 @@
 package com.ddscanner.rest;
 
-import android.util.Log;
-
 import com.ddscanner.entities.errors.Field;
 import com.ddscanner.entities.errors.GeneralError;
 import com.ddscanner.entities.errors.ValidationError;

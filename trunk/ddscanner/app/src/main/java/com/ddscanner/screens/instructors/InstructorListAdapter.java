@@ -11,7 +11,6 @@ import android.widget.TextView;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.Instructor;
-import com.ddscanner.events.IsCommentLikedEvent;
 import com.ddscanner.events.RemoveInstructorEvent;
 import com.ddscanner.screens.user.profile.UserProfileActivity;
 import com.ddscanner.utils.Helpers;

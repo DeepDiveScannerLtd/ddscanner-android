@@ -19,7 +19,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.HashSet;
-import java.util.Set;
 
 public class LocationHelper implements LocationListener {
 

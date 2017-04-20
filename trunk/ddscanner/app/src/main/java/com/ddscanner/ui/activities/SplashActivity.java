@@ -14,15 +14,13 @@ import android.widget.TextView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
-import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.events.InstanceIDReceivedEvent;
+import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.ui.views.DDProgressBarView;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
 import com.squareup.otto.Subscribe;
-
-import java.util.Locale;
 
 public class SplashActivity extends BaseAppCompatActivity implements DialogClosedListener, View.OnClickListener {
 

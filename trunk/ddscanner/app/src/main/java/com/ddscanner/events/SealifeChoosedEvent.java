@@ -1,6 +1,5 @@
 package com.ddscanner.events;
 
-import com.ddscanner.entities.Sealife;
 import com.ddscanner.entities.SealifeShort;
 
 /**

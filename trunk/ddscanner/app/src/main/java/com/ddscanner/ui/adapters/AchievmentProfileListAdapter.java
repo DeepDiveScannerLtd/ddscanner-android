@@ -1,25 +1,18 @@
 package com.ddscanner.ui.adapters;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
-import com.ddscanner.entities.AchievmentProfile;
 import com.ddscanner.entities.ProfileAchievement;
 import com.ddscanner.ui.views.AchievementCountryFlagView;
 import com.ddscanner.utils.Helpers;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Arrays;

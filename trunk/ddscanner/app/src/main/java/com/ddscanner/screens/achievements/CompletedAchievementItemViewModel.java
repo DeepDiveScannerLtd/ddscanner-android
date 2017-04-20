@@ -1,16 +1,11 @@
 package com.ddscanner.screens.achievements;
 
 import android.databinding.BindingAdapter;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
-import android.view.View;
 
 import com.ddscanner.R;
 import com.ddscanner.entities.CompleteAchievement;
 import com.ddscanner.ui.views.AchievementCountryFlagView;
 import com.ddscanner.utils.Helpers;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 public class CompletedAchievementItemViewModel {
 

@@ -1,9 +1,6 @@
 package com.ddscanner.screens.photo.slider;
 
 import android.app.Fragment;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -11,14 +8,12 @@ import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.ddscanner.R;
 import com.ddscanner.ui.views.ScallingImageView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 /**
  * Created by lashket on 4.3.16.

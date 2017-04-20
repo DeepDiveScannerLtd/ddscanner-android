@@ -1,7 +1,5 @@
 package com.ddscanner.entities;
 
-import com.google.gson.annotations.SerializedName;
-
 public class CompleteAchievement {
 
     private String type;

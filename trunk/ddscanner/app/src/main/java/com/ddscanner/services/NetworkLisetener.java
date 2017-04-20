@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.ddscanner.DDScannerApplication;
-import com.ddscanner.events.InternerConnectionOpenedEvent;
 import com.ddscanner.utils.Helpers;
 
 /**

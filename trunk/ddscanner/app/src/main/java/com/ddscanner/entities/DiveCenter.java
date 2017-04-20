@@ -7,8 +7,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.SerializedName;
 import com.google.maps.android.clustering.ClusterItem;
 
-import java.io.Serializable;
-
 /**
  * Created by lashket on 5.2.16.
  */

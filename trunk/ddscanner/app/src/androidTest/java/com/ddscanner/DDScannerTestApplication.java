@@ -2,7 +2,6 @@ package com.ddscanner;
 
 
 import com.ddscanner.rest.DDScannerRestClient;
-import com.ddscanner.ui.screens.profile.ProfileTestRestClient;
 import com.ddscanner.utils.SharedPreferenceHelper;
 
 public class DDScannerTestApplication extends DDScannerApplication {

@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import com.ddscanner.R;
 import com.ddscanner.entities.Language;
-import com.ddscanner.entities.Language;
 
 import java.util.ArrayList;
 

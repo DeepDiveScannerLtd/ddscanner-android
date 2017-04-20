@@ -10,14 +10,13 @@ import android.view.MenuItem;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
-import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.entities.User;
+import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.ui.adapters.EditorsUsersListAdapter;
 import com.ddscanner.ui.dialogs.UserActionInfoDialogFragment;
 import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
-import com.google.gson.Gson;
 
 import java.util.ArrayList;
 

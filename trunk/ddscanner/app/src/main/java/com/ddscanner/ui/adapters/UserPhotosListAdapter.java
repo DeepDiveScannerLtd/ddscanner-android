@@ -1,8 +1,6 @@
 package com.ddscanner.ui.adapters;
 
 import android.app.Activity;
-import android.content.Context;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,12 +14,9 @@ import com.ddscanner.R;
 import com.ddscanner.entities.DiveSpotPhoto;
 import com.ddscanner.entities.PhotoOpenedSource;
 import com.ddscanner.events.OpenPhotosActivityEvent;
-import com.ddscanner.screens.divespot.details.DiveSpotPhotosAdapter;
 import com.ddscanner.screens.photo.slider.ImageSliderActivity;
-import com.ddscanner.ui.views.TransformationRoundImage;
 import com.ddscanner.utils.ActivitiesRequestCodes;
 import com.ddscanner.utils.Helpers;
-import com.ddscanner.utils.ImageLoadedCallback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;

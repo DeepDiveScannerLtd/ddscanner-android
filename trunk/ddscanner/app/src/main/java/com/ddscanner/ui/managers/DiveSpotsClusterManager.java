@@ -13,7 +13,6 @@ import com.crashlytics.android.Crashlytics;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.entities.DiveSpotShort;
-import com.ddscanner.entities.DivespotsWrapper;
 import com.ddscanner.entities.SealifeShort;
 import com.ddscanner.entities.request.DiveSpotsRequestMap;
 import com.ddscanner.events.CloseInfoWindowEvent;

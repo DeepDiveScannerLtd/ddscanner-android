@@ -2,7 +2,6 @@ package com.ddscanner.screens.divespots.list;
 
 import android.databinding.BindingAdapter;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;

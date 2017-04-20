@@ -25,14 +25,14 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
 import com.ddscanner.analytics.EventsTracker;
-import com.ddscanner.entities.ReloadSliderImagesEvent;
-import com.ddscanner.events.HidePhotoInfoEvent;
-import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.entities.DiveSpotPhoto;
 import com.ddscanner.entities.DiveSpotPhotosResponseEntity;
 import com.ddscanner.entities.FiltersResponseEntity;
 import com.ddscanner.entities.PhotoOpenedSource;
+import com.ddscanner.entities.ReloadSliderImagesEvent;
 import com.ddscanner.entities.request.ReportImageRequest;
+import com.ddscanner.events.HidePhotoInfoEvent;
+import com.ddscanner.interfaces.DialogClosedListener;
 import com.ddscanner.rest.DDScannerRestClient;
 import com.ddscanner.screens.user.profile.UserProfileActivity;
 import com.ddscanner.ui.activities.LoginActivity;
@@ -44,9 +44,6 @@ import com.ddscanner.utils.DialogsRequestCodes;
 import com.ddscanner.utils.Helpers;
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
-
-import org.simpleframework.xml.stream.OutputNode;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 

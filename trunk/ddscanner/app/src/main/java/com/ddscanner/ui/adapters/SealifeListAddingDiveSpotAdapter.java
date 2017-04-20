@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ddscanner.R;
-import com.ddscanner.entities.Sealife;
 import com.ddscanner.entities.SealifeShort;
 import com.ddscanner.utils.Helpers;
 

@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import com.ddscanner.R;
 import com.ddscanner.entities.DiveSpotPhoto;
 import com.ddscanner.entities.PhotoOpenedSource;
-import com.ddscanner.screens.divespot.photos.AllPhotosDiveSpotAdapter;
 import com.ddscanner.utils.Helpers;
 
 import java.util.ArrayList;
