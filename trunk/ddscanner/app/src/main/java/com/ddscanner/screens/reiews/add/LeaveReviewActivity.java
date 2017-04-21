@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.ddscanner.DDScannerApplication;
@@ -72,6 +73,7 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements View.O
     private DDScannerRestClient.ResultListener<Void> commentAddedResultListener = new DDScannerRestClient.ResultListener<Void>() {
         @Override
         public void onSuccess(Void result) {
+            Toast.makeText(LeaveReviewActivity.this, R.string.review_sent_toast, Toast.LENGTH_SHORT).show();
             setResult(RESULT_OK);
             finish();
         }
@@ -207,7 +209,7 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements View.O
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                DialogHelpers.showDialogAfterChangesInActivity(getSupportFragmentManager());
+                onBackPressed();
                 return true;
             case R.id.send_review:
                 sendReview();
@@ -215,6 +217,15 @@ public class LeaveReviewActivity extends BaseAppCompatActivity implements View.O
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (addPhotoToDsListAdapter.getItemCount() > 1 || sealifesAdapter.getItemCount() > 0 || text.getText().toString().length() > 0) {
+            DialogHelpers.showDialogAfterChangesInActivity(getSupportFragmentManager());
+            return;
+        }
+        finish();
     }
 
     @Override
