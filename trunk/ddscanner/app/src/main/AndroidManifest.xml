@@ -4,7 +4,7 @@
 
     <uses-sdk
         android:minSdkVersion="16"
-        android:targetSdkVersion="22" />
+        android:targetSdkVersion="25" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -40,7 +40,7 @@
         android:theme="@style/AppTheme" >
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="com.ddscanner.debug"
+            android:authorities="${applicationId}"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
@@ -90,11 +90,6 @@
             android:name=".ui.activities.MainActivity"
             android:screenOrientation="portrait"
             android:launchMode="singleTask">
-            <intent-filter>
-                <data android:scheme="com.ddscanner" />
-
-                <action android:name="android.intent.action.VIEW" />
-            </intent-filter>
         </activity>
 
         <activity
