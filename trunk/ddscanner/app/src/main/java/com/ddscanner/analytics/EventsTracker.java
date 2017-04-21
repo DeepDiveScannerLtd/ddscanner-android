@@ -102,6 +102,9 @@ public class EventsTracker {
 
     private static final String EVENT_NAME_USER_PROFILE_EDITED = "user_profile_edited";
 
+    private static final String EVENT_NAME_EDIT_SEALIFE = "edit_sea_life";
+    private static final String EVENT_NAME_EDITED_SEALIFE = "sea_life_edited";
+
     // ----------------------------------------------------
     // Logging
     // ----------------------------------------------------
@@ -602,28 +605,22 @@ public class EventsTracker {
 
     }
 
-    public static void trackContactDiveCenter(ContactDiveCenterMethod method) {
+    public static void trackContactDiveCenter() {
         if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
             return;
         }
 
         // Google Firebase
-        Bundle params = new Bundle();
-        params.putString(EVENT_PARAMETER_NAME_CONTACT_DIVE_CENTER_METHOD, method.getName());
-        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_CONTACT_DIVE_CENTER, params);
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_CONTACT_DIVE_CENTER, null);
 
         // Flurry
-        Map<String, String> flurryParams = new HashMap<>();
-        flurryParams.put(EVENT_PARAMETER_NAME_CONTACT_DIVE_CENTER_METHOD, method.getName());
-        FlurryAgent.logEvent(EVENT_NAME_CONTACT_DIVE_CENTER, flurryParams);
+        FlurryAgent.logEvent(EVENT_NAME_CONTACT_DIVE_CENTER);
 
         // Appsflyer
-        Map<String, Object> appsflyerParams = new HashMap<>();
-        appsflyerParams.put(EVENT_PARAMETER_NAME_CONTACT_DIVE_CENTER_METHOD, method.getName());
-        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_CONTACT_DIVE_CENTER, appsflyerParams);
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_CONTACT_DIVE_CENTER, null);
 
         //Facebook
-        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_CONTACT_DIVE_CENTER, params);
+        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_CONTACT_DIVE_CENTER);
 
     }
 
@@ -846,6 +843,44 @@ public class EventsTracker {
 
         //Facebook
         AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_DIVE_SPOT_CHECK_INS_VIEW);
+
+    }
+
+    public static void trackEditSealife() {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+
+        // Google Firebase
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_EDIT_SEALIFE, null);
+
+        // Flurry
+        FlurryAgent.logEvent(EVENT_NAME_EDIT_SEALIFE);
+
+        // Appsflyer
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_EDIT_SEALIFE, null);
+
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_EDIT_SEALIFE);
+
+    }
+
+    public static void trackSealifeEdited() {
+        if (!BuildConfig.COLLECT_ANALYTICS_DATA) {
+            return;
+        }
+
+        // Google Firebase
+        AnalyticsSystemsManager.getFirebaseAnalytics().logEvent(EVENT_NAME_EDITED_SEALIFE, null);
+
+        // Flurry
+        FlurryAgent.logEvent(EVENT_NAME_EDITED_SEALIFE);
+
+        // Appsflyer
+        AppsFlyerLib.getInstance().trackEvent(DDScannerApplication.getInstance(), EVENT_NAME_EDITED_SEALIFE, null);
+
+        //Facebook
+        AnalyticsSystemsManager.getLogger().logEvent(EVENT_NAME_EDITED_SEALIFE);
 
     }
 

@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.databinding.FragmnetActivityNotificationsBinding;
 import com.ddscanner.entities.NotificationEntity;
 import com.ddscanner.rest.DDScannerRestClient;
@@ -203,6 +204,7 @@ public class ActivityNotificationsFragment extends Fragment implements SwipeRefr
         super.onResume();
         simpleResultListener.setCancelled(false);
         paginationResultListener.setCancelled(false);
+        EventsTracker.trackActivityView();
     }
 
     @Override

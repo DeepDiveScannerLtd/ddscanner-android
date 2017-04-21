@@ -132,6 +132,7 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
         diveSpotLatLng = getIntent().getParcelableExtra("LATLNG");
         diveSpotName = getIntent().getStringExtra("NAME");
         infoWindowHeight = Math.round(Helpers.convertDpToPixel(110, this));
+        EventsTracker.trackDiveCentersListView();
         toggleMapListView();
 
         DDScannerApplication.getInstance().getDdScannerRestClient().getDiveCenters(diveSpotId, diveCentersResponseEntityResultListener);
@@ -238,6 +239,7 @@ public class DiveCentersActivity extends BaseAppCompatActivity implements View.O
                 break;
             case R.id.dive_spot_info_layout:
                 UserProfileActivity.show(this, diveCenter.getId(), 0);
+                EventsTracker.trackDiveCenterView(diveCenter.getId(), EventsTracker.SpotViewSource.FROM_MAP);
 //                DiveCenterDetailsActivity.show(this, diveCenter, path, EventsTracker.SpotViewSource.FROM_MAP);
                 break;
         }

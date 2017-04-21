@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 
 import com.ddscanner.DDScannerApplication;
 import com.ddscanner.R;
+import com.ddscanner.analytics.EventsTracker;
 import com.ddscanner.databinding.FragmentPersonalNotificationsBinding;
 import com.ddscanner.entities.DiveSpotListSource;
 import com.ddscanner.entities.NotificationEntity;
@@ -187,6 +188,7 @@ public class PersonalNotificationsFragment extends Fragment implements View.OnCl
         resultListener.setCancelled(false);
         simpleResultListener.setCancelled(false);
         paginationResultListener.setCancelled(false);
+        EventsTracker.trackNotificationsView();
     }
 
     @Override

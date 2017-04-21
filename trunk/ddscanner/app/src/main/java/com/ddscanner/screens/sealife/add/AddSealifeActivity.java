@@ -96,6 +96,7 @@ public class AddSealifeActivity extends BaseAppCompatActivity implements View.On
     private DDScannerRestClient.ResultListener<Void> updateResultListener = new DDScannerRestClient.ResultListener<Void>() {
         @Override
         public void onSuccess(Void result) {
+            EventsTracker.trackSealifeEdited();
             setResult(RESULT_OK);
             finish();
         }
@@ -136,6 +137,7 @@ public class AddSealifeActivity extends BaseAppCompatActivity implements View.On
         binding.setHandlers(this);
         isForEdit = getIntent().getBooleanExtra(ARG_IS_EDIT, false);
         if (isForEdit) {
+            EventsTracker.trackEditSealife();
             binding.setSealifeViewModel(new EditSealifeActivityViewModel(new Gson().fromJson(getIntent().getStringExtra(ARG_SEALIFE), Sealife.class)));
             if (binding.getSealifeViewModel().getSealife().getImage() != null) {
                 setBackImage(binding.getSealifeViewModel().getSealife().getImage(), true);
