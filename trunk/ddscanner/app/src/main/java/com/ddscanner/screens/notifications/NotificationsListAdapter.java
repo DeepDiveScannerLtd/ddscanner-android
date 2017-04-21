@@ -3,6 +3,7 @@ package com.ddscanner.screens.notifications;
 import android.app.Activity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +32,8 @@ import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
 public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+    private static final String TAG = NotificationsListAdapter.class.getSimpleName();
 
     private static final int VIEW_TYPE_AVATAR_TEXT = 0;
     private static final int VIEW_TYPE_WITH_PHOTO = 1;
@@ -77,40 +80,46 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
         if (notification.isNew()) {
             DDScannerApplication.getInstance().addNotificationToList(notification.getId());
         }
-        switch (getItemViewType(position)) {
-            case VIEW_TYPE_AVATAR_TEXT:
-                TextAndPhotoItemViewHolder textAndPhotoItemViewHolder = (TextAndPhotoItemViewHolder) holder;
-                textAndPhotoItemViewHolder.notificationText.setText(notification.getText(isSelf, userType));
-                if (!isSelf || (isSelf && !notification.getActivityType().equals(ActivityTypes.ACHIEVEMENT_GETTED))) {
-                    loadUserPhoto(notification.getUser().getPhoto(), textAndPhotoItemViewHolder.userAvatar);
-                }
-                if (notifications.get(position).getLinks() != null) {
-                    try {
-                        LinkBuilder.on(textAndPhotoItemViewHolder.notificationText).addLinks(notification.getLinks()).build();
-                    } catch (Exception e) {
-
+        try {
+            switch (getItemViewType(position)) {
+                case VIEW_TYPE_AVATAR_TEXT:
+                    TextAndPhotoItemViewHolder textAndPhotoItemViewHolder = (TextAndPhotoItemViewHolder) holder;
+                    textAndPhotoItemViewHolder.notificationText.setText(notification.getText(isSelf, userType));
+                    if (!isSelf || (isSelf && !notification.getActivityType().equals(ActivityTypes.ACHIEVEMENT_GETTED))) {
+                        loadUserPhoto(notification.getUser().getPhoto(), textAndPhotoItemViewHolder.userAvatar);
                     }
-                }
-                break;
-            case VIEW_TYPE_WITH_PHOTO:
-                SinglePhotoItemViewHolder singlePhotoItemViewHolder = (SinglePhotoItemViewHolder) holder;
-                singlePhotoItemViewHolder.notificationText.setText(notification.getText(isSelf, userType));
-                if (notification.getLinks() != null) {
-                    LinkBuilder.on(singlePhotoItemViewHolder.notificationText).addLinks(notification.getLinks()).build();
-                }
-                loadUserPhoto(notification.getUser().getPhoto(), singlePhotoItemViewHolder.userAvatar);
-                Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, notification.getPhotos().get(0).getId(), "1")).resize(Math.round(Helpers.convertDpToPixel(36, context)), Math.round(Helpers.convertDpToPixel(36, context))).placeholder(R.drawable.placeholder_photo_wit_round_corners).transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2, context)), 0, RoundedCornersTransformation.CornerType.ALL)).centerCrop().into(singlePhotoItemViewHolder.photo);
-                break;
-            case VIEW_TYPE_WITH_PHOTOS_LIST:
-                PhotosListItemViewHolder photosListItemViewHolder = (PhotosListItemViewHolder) holder;
-                photosListItemViewHolder.notificationText.setText(notification.getText(isSelf, userType));
-                if (notification.getLinks() != null) {
-                    LinkBuilder.on(photosListItemViewHolder.notificationText).addLinks(notification.getLinks()).build();
-                }
-                loadUserPhoto(notification.getUser().getPhoto(), photosListItemViewHolder.userAvatar);
-                NotificationPhotosListAdapter adapter = (NotificationPhotosListAdapter) photosListItemViewHolder.photosList.getAdapter();
-                adapter.setData(notification.getPhotos(), notification.getPhotosCount(), notification.getId());
-                break;
+                    if (notifications.get(position).getLinks() != null) {
+                        try {
+                            LinkBuilder.on(textAndPhotoItemViewHolder.notificationText).addLinks(notification.getLinks()).build();
+                        } catch (Exception e) {
+
+                        }
+                    }
+                    break;
+                case VIEW_TYPE_WITH_PHOTO:
+                    SinglePhotoItemViewHolder singlePhotoItemViewHolder = (SinglePhotoItemViewHolder) holder;
+                    singlePhotoItemViewHolder.notificationText.setText(notification.getText(isSelf, userType));
+                    if (notification.getLinks() != null) {
+                        LinkBuilder.on(singlePhotoItemViewHolder.notificationText).addLinks(notification.getLinks()).build();
+                    }
+                    loadUserPhoto(notification.getUser().getPhoto(), singlePhotoItemViewHolder.userAvatar);
+                    Picasso.with(context).load(DDScannerApplication.getInstance().getString(R.string.base_photo_url, notification.getPhotos().get(0).getId(), "1")).resize(Math.round(Helpers.convertDpToPixel(36, context)), Math.round(Helpers.convertDpToPixel(36, context))).placeholder(R.drawable.placeholder_photo_wit_round_corners).transform(new RoundedCornersTransformation(Math.round(Helpers.convertDpToPixel(2, context)), 0, RoundedCornersTransformation.CornerType.ALL)).centerCrop().into(singlePhotoItemViewHolder.photo);
+                    break;
+                case VIEW_TYPE_WITH_PHOTOS_LIST:
+                    PhotosListItemViewHolder photosListItemViewHolder = (PhotosListItemViewHolder) holder;
+                    photosListItemViewHolder.notificationText.setText(notification.getText(isSelf, userType));
+                    if (notification.getLinks() != null) {
+                        LinkBuilder.on(photosListItemViewHolder.notificationText).addLinks(notification.getLinks()).build();
+                    }
+                    loadUserPhoto(notification.getUser().getPhoto(), photosListItemViewHolder.userAvatar);
+                    NotificationPhotosListAdapter adapter = (NotificationPhotosListAdapter) photosListItemViewHolder.photosList.getAdapter();
+                    if (notification.getPhotos() != null) {
+                        adapter.setData(notification.getPhotos(), notification.getPhotosCount(), notification.getId());
+                    }
+                    break;
+            }
+        } catch (Exception e) {
+            Log.e(TAG, e.toString());
         }
     }
 
@@ -229,8 +238,10 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<RecyclerView.
                     UserProfileActivity.show(context, notifications.get(getAdapterPosition()).getUser().getId(), notifications.get(getAdapterPosition()).getUser().getType());
                     break;
                 case R.id.added_photo:
-                    DDScannerApplication.getInstance().getDiveSpotPhotosContainer().setPhotos(notifications.get(getAdapterPosition()).getPhotos());
-                    ImageSliderActivity.showForResult(context, DDScannerApplication.getInstance().getDiveSpotPhotosContainer().getPhotos(), 0, 0, PhotoOpenedSource.NOTIFICATION, notifications.get(getAdapterPosition()).getId());
+                    if (notifications.get(getAdapterPosition()).getPhotos() != null) {
+                        DDScannerApplication.getInstance().getDiveSpotPhotosContainer().setPhotos(notifications.get(getAdapterPosition()).getPhotos());
+                        ImageSliderActivity.showForResult(context, DDScannerApplication.getInstance().getDiveSpotPhotosContainer().getPhotos(), 0, 0, PhotoOpenedSource.NOTIFICATION, notifications.get(getAdapterPosition()).getId());
+                    }
                     break;
                 default:
                     switch (notifications.get(getAdapterPosition()).getActivityType()) {

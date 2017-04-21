@@ -412,15 +412,12 @@
 
                 <Button
                     android:layout_width="match_parent"
-                    android:layout_height="45dp"
                     android:layout_marginBottom="20dp"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
-                    android:background="@drawable/dive_center_profile_dive_spots"
+                    style="@style/BlueButton"
                     android:fontFamily="sans-serif-medium"
                     android:textAllCaps="false"
-                    android:textColor="#e3e9fb"
-                    android:textSize="15sp"
                     android:visibility="gone"
                     app:myDiveSpotsCount="@{diveCenterViewModel}"
                     android:onClick="@{handlers::showDiveSpots}"/>

@@ -184,7 +184,7 @@ public class NotificationEntity {
                 if (photos.size() == 1) {
                     returnedString += DDScannerApplication.getInstance().getString(R.string.activity_type_single_photo_added, user.getName(), diveSpot.getName(), timeAgo);
                 } else {
-                    returnedString += DDScannerApplication.getInstance().getString(R.string.activity_type_photo_added, user.getName(), String.valueOf(photos.size()), diveSpot.getName(), timeAgo);
+                    returnedString += DDScannerApplication.getInstance().getString(R.string.activity_type_photo_added, user.getName(), String.valueOf(photosCount), diveSpot.getName(), timeAgo);
                 }
                 return returnedString;
             case DIVE_SPOT_MAPS_ADDED:

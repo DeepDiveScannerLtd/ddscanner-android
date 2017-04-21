@@ -51,6 +51,8 @@ public class NotificationPhotosListAdapter extends RecyclerView.Adapter<Notifica
         if (position == MAX_PHOTOS - 1) {
             holder.morePhotos.setText(DDScannerApplication.getInstance().getString(R.string.plus_photos_pattern, String.valueOf(photosCount - MAX_PHOTOS - 1)));
             holder.morePhotos.setVisibility(View.VISIBLE);
+        } else {
+            holder.morePhotos.setVisibility(View.GONE);
         }
     }
 

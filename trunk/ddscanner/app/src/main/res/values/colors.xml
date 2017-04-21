@@ -74,4 +74,7 @@
     <color name="photos_placeholder">#EFEFEF</color>
 
     <color name="spinner_triangle_color">#b9b9b9</color>
+
+    <color name="blue_button_text_color">#e3e9fb</color>
+
 </resources>

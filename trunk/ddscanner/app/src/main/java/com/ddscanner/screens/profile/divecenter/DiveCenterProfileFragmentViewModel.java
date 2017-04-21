@@ -46,7 +46,11 @@ public class DiveCenterProfileFragmentViewModel {
         if (diveCenterProfileFragmentViewModel !=null) {
             if (diveCenterProfileFragmentViewModel.getDiveCenterProfile().getWorkingCount() > 0) {
                 view.setVisibility(View.VISIBLE);
-                view.setText(DDScannerApplication.getInstance().getString(R.string.dive_center_spots_count, String.valueOf(diveCenterProfileFragmentViewModel.getDiveCenterProfile().getWorkingCount())));
+                if (DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserServerId().equals(diveCenterProfileFragmentViewModel.diveCenterProfile.getId().toString())) {
+                    view.setText(DDScannerApplication.getInstance().getString(R.string.dive_center_spots_count, String.valueOf(diveCenterProfileFragmentViewModel.getDiveCenterProfile().getWorkingCount())));
+                    return;
+                }
+                view.setText(DDScannerApplication.getInstance().getString(R.string.dive_center_spots_count_foreign, String.valueOf(diveCenterProfileFragmentViewModel.getDiveCenterProfile().getWorkingCount())));
             }
         }
     }

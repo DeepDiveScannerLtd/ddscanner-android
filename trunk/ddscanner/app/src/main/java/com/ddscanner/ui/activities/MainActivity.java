@@ -232,7 +232,6 @@ public class MainActivity extends BaseAppCompatActivity
         setupTabLayout();
         mainViewPager.setCurrentItem(0);
         DDScannerApplication.bus.post(new LoadUserProfileInfoEvent());
-        EventsTracker.trackDiveSpotMapView();
     }
 
     private void initGoogleLoginManager() {
