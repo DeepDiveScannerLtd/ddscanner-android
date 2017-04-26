@@ -10,6 +10,7 @@ import com.ddscanner.DDScannerApplication;
 import com.ddscanner.entities.BaseUser;
 import com.ddscanner.entities.SealifeShort;
 import com.ddscanner.entities.SignInType;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -48,8 +49,42 @@ public class SharedPreferenceHelper {
     private static final String IS_MUST_REFRESH_DIVE_SPOT_ACTIVITY = "IS_MUST_REFRESH_DIVE_SPOT_ACTIVITY";
     private static final String USERS_LiST = "USERS_LIST";
     private static final String SEALIFES_LIST = "sealifes";
+    private static final String LAST_USER_KNOWN_LATITUDE = "latitude";
+    private static final String LAST_USER_KNOWN_LONGITUDE = "longitude";
 
     private static SharedPreferences prefs;
+
+    public void setUserLocation(LatLng latLng) {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        Editor editor = prefs.edit();
+        editor.putString(LAST_USER_KNOWN_LATITUDE, String.valueOf(latLng.latitude));
+        editor.putString(LAST_USER_KNOWN_LONGITUDE, String.valueOf(latLng.longitude));
+        editor.commit();
+    }
+
+    private boolean isLocationSaved() {
+        prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+        if (prefs.getString(LAST_USER_KNOWN_LATITUDE, "").isEmpty() || prefs.getString(LAST_USER_KNOWN_LONGITUDE, "").isEmpty()) {
+            return false;
+        }
+        return true;
+    }
+
+    public String getUserLattitude() {
+        if (isLocationSaved()) {
+            prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+            return prefs.getString(LAST_USER_KNOWN_LATITUDE, "");
+        }
+        return null;
+    }
+
+    public String getUserLongitude() {
+        if (isLocationSaved()) {
+            prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());
+            return prefs.getString(LAST_USER_KNOWN_LONGITUDE, "");
+        }
+        return null;
+    }
 
     public void setIsMustRefreshDiveSpotActivity(boolean value) {
         prefs = PreferenceManager.getDefaultSharedPreferences(DDScannerApplication.getInstance());

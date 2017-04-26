@@ -504,7 +504,9 @@ public class MapListFragment extends Fragment implements View.OnClickListener {
                                 .strokeColor(android.R.color.transparent)
                                 .fillColor(Color.parseColor("#1A0668a1"));
                         circle = mGoogleMap.addCircle(circleOptions);
-                        diveSpotsClusterManager.setUserCurrentLocationMarker(myLocationMarker);
+                        if (diveSpotsClusterManager != null) {
+                            diveSpotsClusterManager.setUserCurrentLocationMarker(myLocationMarker);
+                        }
                     } else {
                         circle.setCenter(myLocation);
                         myLocationMarker.setPosition(new LatLng(event.getLocation().getLatitude(), event.getLocation().getLongitude()));

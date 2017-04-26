@@ -648,7 +648,7 @@ public class MainActivity extends BaseAppCompatActivity
     private void sendLoginRequest(SignInType signInType, String token) {
         materialDialog.show();
         // TODO Debug: switch calls after tests
-        DDScannerApplication.getInstance().getDdScannerRestClient().postUserLogin(null, null, "21", "32", signInType, token, signInResultListener);
+        DDScannerApplication.getInstance().getDdScannerRestClient().postUserLogin(null, null, null, null, signInType, token, signInResultListener);
 //        DDScannerApplication.getDdScannerRestClient().postLogin(FirebaseInstanceId.getInstance().getId(), signInType, token, loginResultListener);
     }
 
@@ -686,9 +686,9 @@ public class MainActivity extends BaseAppCompatActivity
         //TODO remove hardcoded coordinates
         materialDialog.show();
         if (event.isSignUp()) {
-            DDScannerApplication.getInstance().getDdScannerRestClient().postUserSignUp(event.getEmail(), event.getPassword(), event.getUserType(), "23", "22", event.getName(), signUpResultListener);
+            DDScannerApplication.getInstance().getDdScannerRestClient().postUserSignUp(event.getEmail(), event.getPassword(), event.getUserType(), null, null, event.getName(), signUpResultListener);
         } else {
-            DDScannerApplication.getInstance().getDdScannerRestClient().postUserLogin(event.getEmail(), event.getPassword(), "24", "25", null, null, signInResultListener);
+            DDScannerApplication.getInstance().getDdScannerRestClient().postUserLogin(event.getEmail(), event.getPassword(), null, null, null, null, signInResultListener);
         }
     }
 

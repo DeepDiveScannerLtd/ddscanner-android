@@ -863,7 +863,7 @@ public class DDScannerRestClient {
             resultListener.onInternetConnectionClosed();
             return;
         }
-        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().loginUser(getSignInRequest(email, password, lat, lng, signInType, token));
+        Call<ResponseBody> call = RestClient.getDdscannerServiceInstance().loginUser(getSignInRequest(email, password, DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserLattitude(), DDScannerApplication.getInstance().getSharedPreferenceHelper().getUserLongitude(), signInType, token));
         call.enqueue(new ResponseEntityCallback<SignUpResponseEntity>(gson, resultListener) {
             @Override
             void handleResponseString(ResultListener<SignUpResponseEntity> resultListener, String responseString) throws JSONException {
